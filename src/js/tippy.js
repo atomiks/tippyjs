@@ -1,0 +1,521 @@
+import Popper from './popper'
+
+// .closest() polyfill
+if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector
+if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
+    var el = this
+    while (el) {
+        if (el.matches(selector)) {
+            return el
+        }
+        el = el.parentElement
+    }
+}
+
+/**!
+    * @file tippy.js | Pure JS Tooltip Library
+    * @version 0.1.0
+    * @license MIT
+*/
+
+class Tippy {
+    constructor(selector, settings = {}) {
+        // Use default browser tooltip on old browsers (IE < 10)
+        if (!('addEventListener' in window)
+            || navigator.appVersion.indexOf("MSIE 9.") !== -1
+        ) return
+
+        this.selector = selector
+        this.callbacks = {}
+        this.classNames = {
+            popper: 'tippy-popper',
+            tooltip: 'tippy-tooltip',
+            content: 'tippy-tooltip-content'
+        }
+        this.tooltippedEls = [].slice.call(document.querySelectorAll(selector))
+        this.settings = this._applyGlobalSettings(settings)
+
+        if (!Tippy.bus) {
+            Tippy.bus = {}
+            Tippy.bus.refs = []
+        }
+
+        // Determine if touch user
+        const handleTouch = () => {
+            this.touchUser = true
+            document.body.classList.add('tippy-touch')
+            window.removeEventListener('touchstart', handleTouch)
+        }
+        window.addEventListener('touchstart', handleTouch)
+
+        this._createTooltips()
+        this._handleDocumentHidingEvents()
+    }
+
+    _setCaches() {
+        this.poppers = [].slice.call(
+            document.querySelectorAll(
+                `.${this.classNames.popper}[x-init="${this.selector}"]`
+            )
+        )
+        this.popperMap = Tippy.bus.refs.map(ref => ref.popper)
+        this.tooltippedElMap = Tippy.bus.refs.map(ref => ref.tooltippedEl)
+    }
+
+    _applyGlobalSettings(settings) {
+        this.callbacks.beforeShown = settings.beforeShown || new Function()
+        this.callbacks.shown = settings.shown || new Function()
+        this.callbacks.beforeHidden = settings.beforeHidden || new Function()
+        this.callbacks.hidden = settings.hidden || new Function()
+
+        const defaults = {
+            html: false,
+            position: 'top',
+            animation: 'shift',
+            animateFill: true,
+            arrow: false,
+            delay: 0,
+            trigger: 'mouseenter focus',
+            duration: 400,
+            interactive: false,
+            theme: 'dark',
+            offset: 0,
+            hideOnClick: true
+        }
+
+        return {
+            html: settings.html || defaults.html,
+            position: settings.position || defaults.position,
+            animation: settings.animation || defaults.animation,
+            animateFill: settings.animateFill === false ? false : (settings.animateFill || defaults.animateFill),
+            arrow: settings.arrow || defaults.arrow,
+            delay: settings.delay || defaults.delay,
+            trigger: settings.trigger || defaults.trigger,
+            duration: settings.duration === 0 ? 0 : (settings.duration || defaults.duration),
+            interactive: settings.interactive || defaults.interactive,
+            theme: settings.theme || defaults.theme,
+            offset: settings.offset || defaults.offset,
+            hideOnClick: settings.hideOnClick === false ? false : (settings.hideOnClick || defaults.hideOnClick)
+        }
+    }
+
+    getPopperElement(el) {
+        try {
+            el.getAttribute('data-tooltipped')
+        } catch (e) {
+            throw new Error('[Tippy error]: getPopperElement() requires a tooltipped element')
+        }
+        try {
+            return Tippy.bus.refs[this.tooltippedElMap.indexOf(el)].popper
+        } catch (e) {
+            throw new Error('[Tippy error]: Element does not exist in the instance')
+        }
+    }
+
+    show(popper, duration = 400) {
+        this.callbacks.beforeShown()
+
+        const tooltip = popper.querySelector(`.${this.classNames.tooltip}`)
+        const circle = popper.querySelector('[x-circle]')
+
+        tooltip.style.WebkitTransitionDuration = duration + 'ms'
+        tooltip.style.transitionDuration = duration + 'ms'
+        tooltip.classList.add('enter')
+        tooltip.classList.remove('leave')
+
+        if (circle) {
+            circle.style.WebkitTransitionDuration = duration + 'ms'
+            circle.style.transitionDuration = duration + 'ms'
+            circle.classList.add('enter')
+            circle.classList.remove('leave')
+        }
+
+        popper.style.visibility = 'visible'
+        popper.focus()
+
+        setTimeout(() => {
+            if (popper.style.visibility === 'hidden') return
+            this.callbacks.shown()
+        }, duration)
+    }
+
+    hide(popper) {
+        // Clear unwanted timeouts due to `delay` setting
+        clearTimeout(popper.getAttribute('data-timeout'))
+
+        // Hidden anyway
+        if (getComputedStyle(popper).getPropertyValue('visibility') === 'hidden') return
+
+        this.callbacks.beforeHidden()
+
+        const ref = Tippy.bus.refs[this.popperMap.indexOf(popper)]
+        ref.tooltippedEl.classList.remove('active')
+
+        const tooltip = popper.querySelector(`.${this.classNames.tooltip}`)
+        tooltip.classList.add('leave')
+        tooltip.classList.remove('enter')
+
+        const circle = popper.querySelector('[x-circle]')
+        if (circle) {
+            circle.classList.add('leave')
+            circle.classList.remove('enter')
+        }
+
+        popper.style.visibility = 'hidden'
+
+        const duration = parseInt(tooltip.style.transitionDuration.replace('ms', '')) ||
+                         parseInt(tooltip.style.WebkitTransitionDuration.replace('ms', ''))
+
+        setTimeout(() => {
+            if (popper.style.visibility === 'visible') return
+            this.callbacks.hidden()
+        }, duration)
+    }
+
+    _handleDocumentHidingEvents() {
+        const actualElement = target => {
+            const tooltippedEl = target.closest('[data-tooltipped]')
+            const popper = target.closest(`.${this.classNames.popper}`)
+            let obj = {}
+
+            if (tooltippedEl) {
+                obj.type = 'tooltippedEl'
+                obj.target = tooltippedEl
+            } else if (popper) {
+                obj.type = 'popper'
+                obj.target = popper
+            } else {
+                obj = null
+            }
+
+            return obj
+        }
+
+        const getRefIndices = target => {
+            let tooltippedElIndex = -1
+            let popperIndex = -1
+
+            // Ensure the target gets the actual element or popper (bubbles up from inner els)
+            const eventTarget = actualElement(target)
+
+            // Is a tooltipped element or popper
+            if (eventTarget) {
+                if (eventTarget.type === 'tooltippedEl') {
+                    tooltippedElIndex = this.tooltippedElMap.indexOf(eventTarget.target)
+                } else if (eventTarget.type === 'popper') {
+                    popperIndex = this.popperMap.indexOf(eventTarget.target)
+                }
+            }
+
+            return {
+                tooltippedElIndex,
+                popperIndex
+            }
+        }
+
+        const handleClickHide = event => {
+            if (!this.poppers) return
+
+            const clearActive = () => [].slice.call(document.querySelectorAll('.active[data-tooltipped]'))
+                                  .forEach(el => el.classList.remove('active'))
+
+            const refIndices = getRefIndices(event.target)
+            const clickedOnTooltippedEl = refIndices.tooltippedElIndex >= 0
+            const clickedOnPopper = refIndices.popperIndex >= 0
+
+            if (clickedOnPopper) {
+                // Clicked on a popper, check if it's interactive, if so, do not hide
+                const ref = Tippy.bus.refs[refIndices.popperIndex]
+                if (ref.interactive) return
+            }
+
+            if (clickedOnTooltippedEl) {
+                // Clicked on a tooltipped element
+                // Do not hide if:
+                // - It has hideOnClick: false, or
+                // - It has a click trigger, or
+                // - It has a focus trigger
+                const ref = Tippy.bus.refs[refIndices.tooltippedElIndex]
+
+                // Mobile
+                if (this.touchUser) {
+                    // Hide all except active tooltip
+                    this.poppers.forEach(p => {
+                        if (p !== ref.popper) {
+                            clearActive()
+                            this.hide(p)
+                        }
+                    })
+                    return
+                }
+
+                // Desktop
+                if (!ref.hideOnClick || ref.trigger.indexOf('click') >= 0) return
+
+            } else {
+                clearActive()
+            }
+
+            this.poppers.forEach(p => this.hide(p))
+        }
+
+        // Remove any previous event listeners placed by instances
+        if (Tippy.bus.listeners) {
+            document.removeEventListener('click', Tippy.bus.click)
+        } else {
+            Tippy.bus.listeners = {}
+        }
+
+        // Update with latest instance
+        document.addEventListener('click', handleClickHide)
+        Tippy.bus.listeners.click = handleClickHide
+    }
+
+    _createPopperInstance(tooltippedEl, popper, settings) {
+
+        const config = {
+            placement: settings.position,
+            modifiers: {
+                offset: {
+                    offset: parseInt(settings.offset)
+                }
+            }
+        }
+
+        setTimeout(() => {
+            const instance = new Popper(
+                tooltippedEl,
+                popper,
+                config
+            )
+            instance.enableEventListeners()
+        }, 0)
+    }
+
+    _createPopperElement(title, settings) {
+        const popper = document.createElement('div')
+        popper.setAttribute('class', this.classNames.popper)
+        popper.setAttribute('x-init', this.selector)
+
+        const tooltip = document.createElement('div')
+        tooltip.setAttribute('class', `${this.classNames.tooltip} ${settings.theme} leave`)
+        tooltip.setAttribute('data-position', settings.position)
+        tooltip.setAttribute('data-animation', settings.animation)
+
+        if (settings.arrow) {
+            // Add an arrow
+            const arrow = document.createElement('div')
+            arrow.setAttribute('x-arrow', '')
+            tooltip.appendChild(arrow)
+        }
+
+        if (settings.animateFill) {
+            // Create animateFill circle element for animation
+            tooltip.setAttribute('data-animatefill', '')
+            const circle = document.createElement('div')
+            circle.setAttribute('class', 'leave')
+            circle.setAttribute('x-circle', '')
+            tooltip.appendChild(circle)
+        }
+
+        // Tooltip content (text or HTML)
+        const content = document.createElement('div')
+        content.setAttribute('class', this.classNames.content)
+
+        if (settings.html) {
+            content.innerHTML = document.getElementById(settings.html.replace('#', '')).innerHTML
+            popper.classList.add('html-template')
+            popper.setAttribute('tabindex', '0')
+            tooltip.setAttribute('data-template-id', settings.html)
+        } else {
+            content.innerHTML = title
+        }
+
+        tooltip.appendChild(content)
+        popper.appendChild(tooltip)
+        document.body.appendChild(popper)
+
+        return popper
+    }
+
+    _applyIndividualSettings(el) {
+
+        // Some falsey values require more verbose defining
+
+        // false, 'false', or a template id
+        let html = el.getAttribute('data-html') || this.settings.html
+        if (!html || html === 'false') html = false
+
+        // 'top', 'bottom', 'left', 'right'
+        let position = el.getAttribute('data-position') || this.settings.position
+
+        // 'shift', 'perspective', 'scale', 'fade'
+        let animation = el.getAttribute('data-animation') || this.settings.animation
+
+        // 'true', true, 'false', 'false'
+        let animateFill = el.getAttribute('data-animatefill') || this.settings.animateFill
+        if (animateFill === 'false') animateFill = false
+
+        // 'true', true, 'false', false
+        let arrow = el.getAttribute('data-arrow') || this.settings.arrow
+        if (!arrow || arrow === 'false') arrow = false
+        else animateFill = false
+
+        // 'mouseenter focus' string to array
+        let trigger = el.getAttribute('data-trigger') || this.settings.trigger
+        if (trigger) trigger = trigger.trim().split(' ')
+
+        // 'dark', 'light', '{custom}'
+        let theme = el.getAttribute('data-theme') || this.settings.theme
+        if (theme) theme += '-theme'
+
+        // 0, '0'
+        let delay = parseInt(el.getAttribute('data-delay'))
+        if (!delay && delay !== 0) delay = this.settings.delay
+
+        // 0, '0'
+        let duration = parseInt(el.getAttribute('data-duration'))
+        if (!duration && duration !== 0) duration = this.settings.duration
+
+        // 'true', true, 'false', 'false'
+        let interactive = el.getAttribute('data-interactive') || this.settings.interactive
+        if (interactive === 'false') interactive = false
+
+        // '0', 0
+        let offset = parseInt(el.getAttribute('data-offset'))
+        if (!offset && offset !== 0) offset = this.settings.offset
+
+        // 'true', true, 'false', 'false'
+        let hideOnClick = el.getAttribute('data-hideonclick') || this.settings.hideOnClick
+        if (hideOnClick === 'false') hideOnClick = false
+
+        return {
+            html,
+            position,
+            animation,
+            animateFill,
+            arrow,
+            delay,
+            trigger,
+            duration,
+            interactive,
+            theme,
+            offset,
+            hideOnClick
+        }
+    }
+
+    _createTooltips() {
+        this.tooltippedEls.forEach(el => {
+
+            // Individual tooltip settings with data-* attribute settings to override global
+            const settings = this._applyIndividualSettings(el)
+
+            const title = el.getAttribute('title')
+            // Do not create a tooltip for title attributeless, empty strings or no html els
+            if ((title === null || title === '') && !settings.html) return
+
+            // Remove default browser tooltip
+            el.setAttribute('data-original-title', title || 'html')
+            el.removeAttribute('title')
+
+            // Give elements a data-tooltipped attribute (needed for document click handler)
+            el.setAttribute('data-tooltipped', '')
+
+            // Create a new popper element and instance
+            const popper = this._createPopperElement(title, settings)
+            this._createPopperInstance(el, popper, settings)
+
+            // Add the element-popper pair reference object to global refs array
+            Tippy.bus.refs.push({
+                tooltippedEl: el,
+                popper,
+                interactive: settings.interactive,
+                trigger: settings.trigger,
+                hideOnClick: settings.hideOnClick
+            })
+
+            // Turn trigger string like "mouseenter focus" into an array
+            if (!Array.isArray(settings.trigger)) {
+                settings.trigger = settings.trigger.trim().split(' ')
+            }
+
+            const handleTrigger = event => {
+                if (event === 'click' && popper.style.visibility === 'visible') {
+                    return this.hide(popper)
+                }
+                if (settings.delay) {
+                    const timeout = setTimeout(
+                        () => this.show(popper, settings.duration),
+                        settings.delay
+                    )
+                    // Allow the hide() function to clear any unwanted timeouts due to delays
+                    popper.setAttribute('data-timeout', timeout)
+                } else {
+                    this.show(popper, settings.duration)
+                }
+                if (settings.interactive) {
+                    event.target.classList.add('active')
+                }
+            }
+
+            const getRef = target => {
+                const tooltippedElIndex = this.tooltippedElMap.indexOf(target)
+                return Tippy.bus.refs[tooltippedElIndex]
+            }
+
+            const handleMouseleave = event => {
+                const ref = getRef(event.target)
+
+                // If interactive, only hide if the mouse left somewhere other than the popper
+                if (ref.interactive) {
+                    // Temporarily handle mousemove to check if the mouse left somewhere
+                    // other than its popper
+                    const handleMousemove = event => {
+                        if (event.target.closest(`.${this.classNames.popper}`)
+                            !== ref.popper && !event.target.closest('[data-tooltipped]')
+                            && ref.trigger.indexOf('click') === -1) {
+                                ref.tooltippedEl.classList.remove('active')
+                                this.hide(ref.popper)
+                                document.removeEventListener('mousemove', handleMousemove)
+                        }
+                    }
+                    document.addEventListener('mousemove', handleMousemove)
+                    return
+                }
+                this.hide(ref.popper)
+            }
+
+            const handleBlur = event => {
+                const ref = getRef(event.target)
+                this.hide(ref.popper)
+            }
+
+            // Add event listeners for each trigger specified
+            settings.trigger.forEach(event => {
+                if (event === 'manual') return
+
+                // Enter
+                el.addEventListener(event, handleTrigger)
+
+                // Leave
+                if (event === 'mouseenter') {
+                    el.addEventListener('mouseleave', handleMouseleave)
+                }
+                if (event === 'focus') {
+                    el.addEventListener('blur', handleBlur)
+                }
+            })
+
+            // If last el in loop, ready to set DOM/map caches
+            if (el === this.tooltippedEls[this.tooltippedEls.length - 1]) {
+                this._setCaches()
+            }
+
+        })
+    }
+}
+
+window.Tippy = Tippy
+
+module.exports = Tippy

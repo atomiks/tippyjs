@@ -1,0 +1,346 @@
+html {
+    font-size: 14px;
+}
+body {
+    font-family: Avenir, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #3751cc;
+    background:-webkit-linear-gradient(left,#5733ea, #4894ff 70%,#a5bcff);
+    background:linear-gradient(90deg,#5733ea, #4894ff 70%,#a5bcff);
+    color: #203d5d;
+}
+
+body::before, body::after {
+    content: '';
+    position: fixed;
+    background: url('../img/bubbles.svg') no-repeat;
+    background-position: 500px -200px;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
+body::after {
+    background-position: -600px 100px;
+    background-size: contain;
+    z-index: -1;
+    top: 0;
+    left: 0;
+}
+
+.text-muted {
+    color: #5d7997 !important;
+}
+
+a:focus {
+    text-decoration: none;
+}
+
+a span {
+    color: #528cff;
+}
+
+a i {
+    color: #00caf9;
+}
+
+p, ul {
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+code, pre {
+    background-color: #f5f6f9;
+    color: #7a3cea;
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+pre {
+    padding: 0.5rem 1rem;
+}
+
+h2 {
+    margin-bottom: 1.25rem;
+}
+
+h5 {
+    font-weight: 300;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.material-icons {
+    font-size: 1.1em;
+    vertical-align: middle;
+    position: relative;
+    top: -0.05em;
+}
+
+.icon-left {
+    margin-right: 0.25em;
+}
+
+.icon-right {
+    margin-left: 0.25em;
+}
+
+.icon-big {
+    font-size: 2em;
+}
+
+.opacity-low {
+    opacity: 0.8;
+}
+
+.hero-badge {
+    border: 1px solid rgba(223, 255, 123, 0.5);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.2rem;
+    margin: 0 0.5rem;
+}
+
+.hero-badge {
+    margin-bottom: 1rem;
+}
+
+.hero-badge:nth-child(1) {
+    border-color: transparent;
+}
+
+.hero-badge:nth-child(1) span {
+    color: #fff9b0;
+    background: -webkit-linear-gradient(135deg, #fff9b0, #7dffc3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-badge:nth-child(1) i {
+    color: pink;
+}
+
+.hero-badge:nth-child(2) {
+    border-color: rgba(255,255,255,0.25);
+}
+
+.hero-badge:nth-child(2) i {
+    color: #ffe79e;
+}
+
+.green-text {
+    color: #3ba065;
+    font-weight: 600;
+}
+
+.badge {
+    font-size: 80%;
+}
+
+.html-template .tippy-tooltip {
+    padding: 2rem;
+}
+
+.logo {
+    width: 80px;
+    margin-left: -40px;
+    position: absolute;
+    top: -75px;
+    left: 50%;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+:focus {
+    outline: auto 5px #5ba8ff !important;
+    outline: auto 5px -webkit-focus-ring-color !important;
+}
+
+:focus:not(.focus-ring) {
+    outline: 0 !important;
+}
+
+.btn {
+    font-size: 1.25rem;
+    font-family: inherit;
+}
+
+.result-box {
+    padding: 1rem;
+    background-color: #f5f6f9;
+    margin-bottom: 1rem;
+}
+
+.result-box p {
+    margin: -0.5rem 0 0.5rem;
+    font-weight: 500;
+}
+
+.hero {
+    padding: 8rem 0 4rem;
+    color: white;
+    text-align: center;
+    visibility: hidden;
+    -webkit-transform: translateY(-50px);
+            transform: translateY(-50px);
+    opacity: 0;
+    -webkit-transition: opacity 1.5s cubic-bezier(0, 0, 0.15, 1.01), -webkit-transform 1.5s cubic-bezier(0, 0, 0.15, 1.01);
+    transition: opacity 1.5s cubic-bezier(0, 0, 0.15, 1.01), -webkit-transform 1.5s cubic-bezier(0, 0, 0.15, 1.01);
+    transition: opacity 1.5s cubic-bezier(0, 0, 0.15, 1.01), transform 1.5s cubic-bezier(0, 0, 0.15, 1.01);
+    transition: opacity 1.5s cubic-bezier(0, 0, 0.15, 1.01), transform 1.5s cubic-bezier(0, 0, 0.15, 1.01), -webkit-transform 1.5s cubic-bezier(0, 0, 0.15, 1.01);
+}
+
+.hero.enter {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.hero-heading {
+    display: inline-block;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    font-size: 4rem;
+    color: #7dffc3;
+    background: -webkit-linear-gradient(135deg, #fff9b0, #7dffc3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tippy-tooltip[data-template-id="#template"] {
+    padding: 2rem;
+}
+
+.tippy-tooltip[data-template-id="#my-template-id"] {
+    padding: 2rem;
+}
+
+.hero-subheading {
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1.7;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+section {
+    padding: 2rem 0;
+}
+
+hr {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    border-top: 1px solid rgba(0, 31, 255, 0.1);
+}
+
+.button-showcase .btn, section .btn {
+    color: white;
+    margin: 1.5rem 1rem;
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
+    background: -webkit-linear-gradient(315deg,#73a5ff, #5477f5);
+    background: linear-gradient(135deg,#73a5ff, #5477f5);
+    letter-spacing: 0.5px;
+    border: none;
+}
+
+section .btn {
+    margin: 0;
+}
+section .btn:focus {
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
+}
+
+.button-showcase .btn:hover, section .btn:hover, .btn.active {
+    background: -webkit-linear-gradient(315deg,#8cc8ff, #6d8dff);
+    background: linear-gradient(135deg,#8cc8ff, #6d8dff);
+}
+
+.heading-top {
+    font-size: 2.5rem;
+    color: #9079ff;
+    font-weight: 300;
+}
+
+main .container-fluid {
+    visibility: hidden;
+    background-color: white;
+    max-width: 980px;
+    padding: 2rem 1.25rem;
+    box-shadow: 0 0 80px -4px rgba(0,20,40,0.1);
+    opacity: 0;
+    -webkit-transition: opacity 1s ease;
+    transition: opacity 1s ease;
+}
+
+main .container-fluid.enter {
+    opacity: 1;
+    visibility: visible;
+}
+
+.table-wrapper {
+    position: relative;
+}
+
+.table-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 25px;
+    background: -webkit-linear-gradient(left, rgba(255,255,255,0.01), white);
+    background: linear-gradient(90deg, rgba(255,255,255,0.01), white);
+}
+
+.tippy-tooltip.honeybee-theme {
+    background-color: yellow;
+    border: 2px solid orange;
+    color: black;
+}
+
+.tippy-tooltip.honeybee-theme [x-arrow] {
+    background-color: yellow;
+    border: 2px solid;
+    border-color: transparent transparent orange orange;
+}
+
+@media (min-width: 576px) {
+    html {
+        font-size: 15px;
+    }
+    main .container-fluid {
+        padding: 2rem;
+    }
+    a span {
+        background: -webkit-linear-gradient(left,#00caf9, #4d8cff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+@media (min-width: 768px) {
+    .table-wrapper::after {
+        width: 0;
+        background: none;
+    }
+    html {
+        font-size: 16px;
+    }
+    main .container-fluid {
+        padding: 2.5rem 5rem;
+        margin: 2rem auto;
+        border-radius: 10px;
+    }
+    .content-wrapper {
+        padding: 0 1%;
+    }
+    .hero {
+        padding: 8rem 0 2rem;
+    }
+}

@@ -1,0 +1,314 @@
+@mixin enter-transform ($position, $animation) {
+    @if ($animation == 'perspective') {
+        @if ($position == 'top') {
+            transform: translateY(-10px) rotateX(0);
+        } @else if ($position == 'bottom') {
+            transform: translateY(10px) rotateX(0);
+        } @else if ($position == 'left') {
+            transform: translateX(-10px) rotateY(0);
+        } @else if ($position == 'right') {
+            transform: translateX(10px) rotateY(0);
+        }
+    } @else if ($animation == 'fade') {
+        @if ($position == 'top') {
+            transform: translateY(-10px);
+        } @else if ($position == 'bottom') {
+            transform: translateY(10px);
+        } @else if ($position == 'left') {
+            transform: translateX(-10px);
+        } @else if ($position == 'right') {
+            transform: translateX(10px);
+        }
+    } @else if ($animation == 'scale') {
+        @if ($position == 'top') {
+            transform: translateY(-10px) scale(1);
+        } @else if ($position == 'bottom') {
+            transform: translateY(10px) scale(1);
+        } @else if ($position == 'left') {
+            transform: translateX(-10px) scale(1);
+        } @else if ($position == 'right') {
+            transform: translateX(10px) scale(1);
+        }
+    }
+}
+
+@mixin leave-transform ($position, $animation) {
+    @if ($animation == 'perspective') {
+        @if ($position == 'top') {
+            transform: translateY(0) rotateX(90deg);
+        } @else if ($position == 'bottom') {
+            transform: translateY(0) rotateX(-90deg);
+        } @else if ($position == 'left') {
+            transform: translateX(0) rotateY(-90deg);
+        } @else if ($position == 'right') {
+            transform: translateX(0) rotateY(90deg);
+        }
+    } @else if ($animation == 'shift') {
+        @if ($position == 'top') {
+            transform: translateY(0);
+        } @else if ($position == 'bottom') {
+            transform: translateY(0);
+        } @else if ($position == 'left') {
+            transform: translateX(0);
+        } @else if ($position == 'right') {
+            transform: translateX(0);
+        }
+    } @else if ($animation == 'scale') {
+        @if ($position == 'top') {
+            transform: translateY(0) scale(0);
+        } @else if ($position == 'bottom') {
+            transform: translateY(0) scale(0);
+        } @else if ($position == 'left') {
+            transform: translateX(0) scale(0);
+        } @else if ($position == 'right') {
+            transform: translateX(0) scale(0);
+        }
+    } @else if ($animation == 'none') {
+        @if ($position == 'top') {
+            transform: translateY(-10px);
+        } @else if ($position == 'bottom') {
+            transform: translateY(10px);
+        } @else if ($position == 'left') {
+            transform: translateX(-10px);
+        } @else if ($position == 'right') {
+            transform: translateX(10px);
+        }
+    }
+}
+
+@mixin circle-transform-leave ($position, $scale) {
+    @if ($position == 'top') {
+        transform: scale($scale) translate(-50%, -50%);
+    } @else if ($position == 'bottom') {
+        transform: scale($scale) translate(-50%, -50%);
+    } @else if ($position == 'left') {
+        transform: scale($scale) translate(-50%, -33%);
+    } @else if ($position == 'right') {
+        transform: scale($scale) translate(-50%, -33%);
+    }
+}
+
+@mixin arrow ($position, $width) {
+    @if ($position == 'top') {
+        transform: rotate(-45deg);
+        bottom: -$width/2;
+    } @else if ($position == 'bottom') {
+        transform: rotate(135deg);
+        top: -$width/2;
+    } @else if ($position == 'left') {
+        transform: rotate(135deg);
+        right: -$width/2;
+        top: 50%;
+    } @else if ($position == 'right') {
+        transform: rotate(-45deg);
+        left: -$width/2;
+        top: 50%;
+    }
+}
+
+@mixin arrow-styling ($position, $color) {
+    @if ($position == 'top') {
+        border-top: 8px solid $color;
+    } @else if ($position == 'bottom') {
+        border-bottom: 8px solid $color;
+    } @else if ($position == 'left') {
+        border-left: 8px solid $color;
+    } @else if ($position == 'right') {
+        border-right: 8px solid $color;
+    }
+}
+
+$positions: 'top', 'bottom', 'left', 'right';
+$origins: bottom, top, right, left;
+
+.tippy-popper {
+    visibility: hidden;
+    max-width: 400px;
+    perspective: 1000px;
+    z-index: 9999;
+
+    &.enter {
+        opacity: 1;
+        transition-property: all;
+        transition-timing-function: ease-out;
+    }
+
+    &.leave {
+        opacity: 0;
+        transition-property: all;
+        transition-timing-function: ease-in;
+    }
+
+    &.html-template {
+        max-width: calc(100% - 2rem);
+    }
+}
+
+.tippy-tooltip {
+    position: relative;
+    color: white;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    will-change: transform;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #333;
+
+    $arrow-width: 10px;
+
+    [x-arrow] {
+        z-index: -1;
+        position: absolute;
+        width: $arrow-width;
+        height: $arrow-width;
+        background-color: #333;
+        border: 1px solid;
+        border-color: transparent transparent #333 #333;
+    }
+
+    &[data-animatefill] {
+        overflow: hidden;
+        background-color: transparent;
+    }
+
+    [x-circle] {
+        position: absolute;
+        background-color: #333;
+        border-radius: 50%;
+        width: calc(125% + 2rem);
+        height: 0;
+        padding-bottom: calc(125% + 2rem);
+        left: 50%;
+        transition: all ease-out;
+        z-index: -1;
+        opacity: 0;
+    }
+
+    @each $position in $positions {
+        &[data-position="#{$position}"] {
+
+            [x-arrow] {
+                @include arrow($position, $arrow-width);
+            }
+
+            $circle-origins: 0% 33%, 0% -33%, 50% 8%, -50% 8%;
+
+            [x-circle] {
+                transform-origin: nth($circle-origins, index($positions, $position));
+
+                &.enter {
+                    opacity: 1;
+                    transform: scale(1) translate(-50%, -50%);
+                }
+
+                &.leave {
+                    opacity: 0;
+                    @include circle-transform-leave(#{$position}, 0);
+                }
+            }
+
+            // No animation
+            &[data-animation="none"] {
+                &.enter {
+                    opacity: 1;
+                    @include enter-transform($position, 'fade');
+                }
+
+                &.leave {
+                    opacity: 1;
+                    @include leave-transform($position, 'none');
+                }
+            }
+
+            // Perspective animation
+            &[data-animation="perspective"] {
+                transform-origin: nth($origins, index($positions, $position));
+
+                &.enter {
+                    opacity: 1;
+                    @include enter-transform($position, 'perspective');
+                }
+
+                &.leave {
+                    opacity: 0;
+                    @include leave-transform($position, 'perspective');
+                }
+            }
+
+            // Fade animation
+            &[data-animation="fade"] {
+                &.enter {
+                    opacity: 1;
+                    @include enter-transform($position, 'fade')
+                }
+                &.leave {
+                    opacity: 0;
+                    @include enter-transform($position, 'fade')
+                }
+            }
+
+            // shift animation
+            &[data-animation="shift"] {
+                &.enter {
+                    opacity: 1;
+                    @include enter-transform($position, 'fade')
+                }
+                &.leave {
+                    opacity: 0;
+                    @include leave-transform($position, 'shift')
+                }
+            }
+
+            // Scale animation
+            &[data-animation="scale"] {
+                &.enter {
+                    opacity: 1;
+                    @include enter-transform($position, 'scale')
+                }
+                &.leave {
+                    opacity: 0;
+                    @include leave-transform($position, 'scale')
+                }
+            }
+
+        }
+    }
+
+    // Themes
+
+    &.light-theme {
+        color: #203d5d;
+        box-shadow: 0 0 16px -4px rgba(0,20,40,0.2), 0 0 80px -10px rgba(0,20,40,0.3);
+        background-color: #f3f6f9;
+        border: 1px solid #ced2e2;
+
+        [x-circle] {
+            background-color: #f3f6f9;
+        }
+
+        [x-arrow] {
+            background-color: #f3f6f9;
+            border-color: transparent transparent #ced2e2 #ced2e2;
+        }
+
+        &[data-animatefill] {
+            background-color: transparent;
+        }
+
+        @each $position in $positions {
+            &[data-position="#{$position}"] {
+                &::after {
+                    background-color: #f3f6f9;
+                    border-color: transparent transparent #ced2e2 #ced2e2;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 500px) {
+    .tippy-popper {
+        max-width: calc(100% - 2rem);
+    }
+}
