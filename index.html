@@ -525,7 +525,7 @@ new Tippy('.tippy', {
         theme: 'light',
         arrow: true
     })
-    const instance = new Tippy('#callback-tippy', {
+    var instance = new Tippy('#callback-tippy', {
       shown: function() {
         alert('Hello from the shown() callback!')
         document.getElementById('callback-tippy').blur()
