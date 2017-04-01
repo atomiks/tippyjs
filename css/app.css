@@ -185,7 +185,6 @@ a:hover {
     padding: 8rem 0 4rem;
     color: white;
     text-align: center;
-    visibility: hidden;
     -webkit-transform: translateY(-50px);
             transform: translateY(-50px);
     opacity: 0;
@@ -199,7 +198,6 @@ a:hover {
     -webkit-transform: translateY(0);
             transform: translateY(0);
     opacity: 1;
-    visibility: visible;
 }
 
 .hero-heading {
@@ -268,7 +266,6 @@ section .btn:focus {
 }
 
 main .container-fluid {
-    visibility: hidden;
     background-color: white;
     max-width: 980px;
     padding: 2rem 1.25rem;
@@ -280,7 +277,6 @@ main .container-fluid {
 
 main .container-fluid.enter {
     opacity: 1;
-    visibility: visible;
 }
 
 .table-wrapper {
