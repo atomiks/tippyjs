@@ -44,7 +44,6 @@ class Tippy {
         // Determine if touch user
         const handleTouch = () => {
             this.touchUser = true
-            document.body.classList.add('tippy-touch')
             window.removeEventListener('touchstart', handleTouch)
         }
         window.addEventListener('touchstart', handleTouch)
@@ -442,8 +441,6 @@ class Tippy {
             }
 
             const handleTrigger = event => {
-                if (this.touchUser && event.type === 'mouseenter') return
-
                 if (event.type === 'click' && popper.style.visibility === 'visible'
                 && settings.hideOnClick) {
                     return this.hide(popper)
