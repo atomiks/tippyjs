@@ -2,16 +2,13 @@ const path              = require('path')
 const webpack           = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-const extractSass = new ExtractTextPlugin({
-  filename: "tippy.css",
-  disable: process.env.NODE_ENV === "development"
-});
+const extractSass = new ExtractTextPlugin('css/tippy.css');
 
 module.exports = {
   entry: ['./app.js'],
   output: {
-    path: path.join(__dirname, 'js'),
-    filename: 'tippy.js'
+    path: path.join(__dirname, 'docs'),
+    filename: 'js/tippy.js'
   },
   module: {
     rules: [{

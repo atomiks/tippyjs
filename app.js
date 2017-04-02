@@ -1,2 +1,2 @@
-import styles     from './src/scss/tippy.scss'
-import javascript from './src/js/tippy.js'
+import './src/scss/tippy.scss'
+import './src/js/tippy.js'
