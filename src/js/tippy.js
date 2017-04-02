@@ -14,7 +14,7 @@ if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.1.0
+    * @version 0.1.1
     * @license MIT
 */
 
@@ -444,7 +444,7 @@ class Tippy {
             const handleTrigger = event => {
                 if (this.touchUser && event.type === 'mouseenter') return
 
-                if ((event.type === 'click' || event.type === 'focus')
+                if ((event.type === 'click' || (event.type === 'focus' && !this.touchUser))
                     && popper.style.visibility === 'visible' && settings.hideOnClick) {
                     return this.hide(popper)
                 }
