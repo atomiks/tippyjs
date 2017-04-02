@@ -39,7 +39,7 @@
         <h1 class="hero-heading">Tippy.js</h1>
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center flex-wrap">
-          <small class="hero-badge"><i class="material-icons icon-left">code</i><span>v0.1.1</span></small>
+          <small class="hero-badge"><i class="material-icons icon-left">code</i><span>v0.1.2</span></small>
           <small class="hero-badge"><i class="material-icons icon-left">flash_on</i><span>Powered by Popper.js</span></small>
         </div>
       </div>
@@ -86,8 +86,14 @@
           <hr>
 
           <section id="browser-support">
-            <h2><a href="#browser-support"><i class="material-icons icon-left">important_devices</i><span>Browser support</span></a></h2>
-            <p>Most browsers from 2012 onwards (IE10+). As of early 2017, it should support <span class="green-text">95-98%</span> of users (caniuse.com); depending on your target audience it could be higher or lower. Tippy gracefully degrades on older browsers (and with JavaScript disabled) by using the browser's default <code>title</code> tooltip.</p>
+            <h2><a href="#browser-support"><i class="material-icons icon-left">important_devices</i>
+                <span>Browser support</span>
+            </a></h2>
+            <p>Most browsers from 2012 onwards (IE10+). As of early 2017, it should support
+                <span class="green-text">95-98%</span> of users (caniuse.com); depending on your
+                target audience it could be higher or lower. Tippy gracefully degrades on older
+                browsers (and with JavaScript disabled) by using the browser's default
+                <code>title</code> tooltip.</p>
           </section>
 
           <hr>
@@ -96,7 +102,7 @@
             <h2><a href="#getting-started"><i class="material-icons icon-left">tag_faces</i><span>Getting started</span></a></h2>
             <ul>
               <li><strong>Production:
-                  <a href="releases/v0-1-1/tippy-v0-1-1.zip" title="<strong>11KB</strong> gzipped"
+                  <a href="releases/v0.1.2/tippy-v0.1.2.zip" title="<strong>11KB</strong> gzipped"
                       class="tippy-link" data-arrow="true" data-theme="light"
                       data-duration="250" data-animation="fade">
                       <i class="material-icons">file_download</i>
@@ -107,7 +113,7 @@
               </li>
 
               <li><strong>Development:
-                  <a href="releases/v0-1-1/tippy-v0-1-1--dev.zip">
+                  <a href="releases/v0.1.2/tippy-v0.1.2--dev.zip">
                       <i class="material-icons">file_download</i>
                       <span>Download</span>
                   </a>
@@ -444,7 +450,7 @@ new Tippy('.tippy', {
             <h2>
                 <a href="#manual-tooltips">
                     <i class="material-icons icon-left">settings_remote</i>
-                    <span>Manually showing/hiding tooltips</span>
+                    <span>Showing, hiding, or destroying tooltips manually</span>
                 </a>
             </h2>
 
@@ -459,12 +465,16 @@ new Tippy('.tippy', {
 
           <div class="alert alert-warning">It must be a <strong>single</strong> tooltipped element.</div>
 
-          <p>Now you can show or hide it.</p>
+          <p>Now you can show, hide, or destroy it.</p>
 
           <p><code>instance.show(popper)</code></p>
           <p><code>instance.hide(popper)</code></p>
+          <p><code>instance.destroy(popper)</code></p>
 
           <p>The <code>show</code> method takes a transition duration as its second (optional) parameter.</p>
+
+          <p><code>destroy</code>ing a popper removes listeners from its element, removes it from the global references array, and removes it from the document.
+          </p>
 
           </section>
 

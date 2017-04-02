@@ -14,7 +14,7 @@ if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.1.1
+    * @version 0.1.2
     * @license MIT
 */
 
@@ -37,17 +37,22 @@ class Tippy {
 
         // Tippy bus to handle events between different instances
         if (!Tippy.bus) {
-            Tippy.bus = {}
-            Tippy.bus.refs = []
+            Tippy.bus = {
+                refs: [],
+                listeners: {}
+            }
         }
 
         // Determine if touch user
-        const handleTouch = () => {
-            this.touchUser = true
-            document.body.classList.add('tippy-touch')
-            window.removeEventListener('touchstart', handleTouch)
+        if (!Tippy.bus.listeners.touchstart) {
+            const handleTouch = () => {
+                this.touchUser = true
+                document.body.classList.add('tippy-touch')
+                window.removeEventListener('touchstart', handleTouch)
+            }
+            window.addEventListener('touchstart', handleTouch)
+            Tippy.bus.listeners.touchstart = true
         }
-        window.addEventListener('touchstart', handleTouch)
 
         this._createTooltips()
         this._handleDocumentHidingEvents()
@@ -168,6 +173,24 @@ class Tippy {
         }, duration)
     }
 
+    destroy(popper) {
+        const index = Tippy.bus.popperMap.indexOf(popper)
+
+        // Remove Tippy-only event listeners from tooltipped element
+        const el = Tippy.bus.tooltippedElMap[index]
+        Tippy.bus.refs[index].listeners.forEach(
+            listener => el.removeEventListener(listener.event, listener.method)
+        )
+
+        // Remove from global ref arrays
+        Tippy.bus.popperMap.splice(index, 1)
+        Tippy.bus.tooltippedElMap.splice(index, 1)
+        Tippy.bus.refs.splice(index, 1)
+
+        // Remove popper from body
+        document.body.removeChild(popper)
+    }
+
     _handleDocumentHidingEvents() {
         const actualElement = target => {
             const tooltippedEl = target.closest('[data-tooltipped]')
@@ -252,7 +275,7 @@ class Tippy {
             Tippy.bus.refs.forEach(ref => this.hide(ref.popper))
         }
 
-        const handleKeydown = event => {
+        const handleKeydownHide = event => {
             const refIndices = getRefIndices(event.target)
             if (refIndices.tooltippedElIndex === -1) return
             if (event.keyCode === 9 &&
@@ -262,13 +285,13 @@ class Tippy {
         }
 
         // Ensure only 1 instance makes a document handler
-        if (!Tippy.bus.listeners) {
+        if (!Tippy.bus.listeners.click) {
             Tippy.bus.listeners = {
                 click: handleClickHide,
-                keydown: handleKeydown
+                keydown: handleKeydownHide
             }
             document.addEventListener('click', handleClickHide)
-            document.addEventListener('keydown', handleKeydown) // Keyboard nav
+            document.addEventListener('keydown', handleKeydownHide) // Keyboard nav
         }
     }
 
@@ -296,7 +319,6 @@ class Tippy {
     _createPopperElement(title, settings) {
         const popper = document.createElement('div')
         popper.setAttribute('class', this.classNames.popper)
-        popper.setAttribute('x-init', this.selector)
 
         const tooltip = document.createElement('div')
         tooltip.setAttribute('class', `${this.classNames.tooltip} ${settings.theme} leave`)
@@ -427,15 +449,6 @@ class Tippy {
             const popper = this._createPopperElement(title, settings)
             this._createPopperInstance(el, popper, settings)
 
-            // Add the element-popper pair reference object to global refs array
-            Tippy.bus.refs.push({
-                tooltippedEl: el,
-                popper,
-                interactive: settings.interactive,
-                trigger: settings.trigger,
-                hideOnClick: settings.hideOnClick
-            })
-
             // Turn trigger string like "mouseenter focus" into an array
             if (!Array.isArray(settings.trigger)) {
                 settings.trigger = settings.trigger.trim().split(' ')
@@ -489,19 +502,43 @@ class Tippy {
             }
 
             // Add event listeners for each trigger specified
+            const listeners = []
+
             settings.trigger.forEach(event => {
                 if (event === 'manual') return
 
                 // Enter
                 el.addEventListener(event, handleTrigger)
+                listeners.push({
+                    event,
+                    method: handleTrigger
+                })
 
                 // Leave
                 if (event === 'mouseenter') {
                     el.addEventListener('mouseleave', handleMouseleave)
+                    listeners.push({
+                        event: 'mouseleave',
+                        method: handleMouseleave
+                    })
                 }
                 if (event === 'focus') {
                     el.addEventListener('blur', handleBlur)
+                    listeners.push({
+                        event: 'blur',
+                        method: handleBlur
+                    })
                 }
+            })
+
+            // Add the element-popper pair reference object to global refs array
+            Tippy.bus.refs.push({
+                tooltippedEl: el,
+                popper,
+                interactive: settings.interactive,
+                trigger: settings.trigger,
+                hideOnClick: settings.hideOnClick,
+                listeners
             })
 
             // If last el in loop, ready to set map cache
