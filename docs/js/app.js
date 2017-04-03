@@ -1,6 +1,6 @@
 if (!Element.prototype.matches) {
     var isWebkit = 'WebkitAppearance' in document.documentElement.style
-    if (isWebkit) {
+    if (isWebkit && !(/Edge\/\d./i.test(navigator.userAgent))) {
         Element.prototype.matches = Element.prototype.webkitMatchesSelector
     } else {
         Element.prototype.matches = Element.prototype.msMatchesSelector

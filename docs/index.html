@@ -103,22 +103,22 @@
                 need to include this polyfill before your scripts.
 
 <pre>// .closest() polyfill
-if (!Element.prototype.matches) {
-    var isWebkit = 'WebkitAppearance' in document.documentElement.style
-    if (isWebkit) {
-        Element.prototype.matches = Element.prototype.webkitMatchesSelector
-    } else {
-        Element.prototype.matches = Element.prototype.msMatchesSelector
-    }
-}
-if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
-    var el = this
-    while (el) {
-        if (el.matches(selector)) {
-            return el
+    if (!Element.prototype.matches) {
+        var isWebkit = 'WebkitAppearance' in document.documentElement.style
+        if (isWebkit &amp;&amp; !(/Edge\/\d./i.test(navigator.userAgent))) {
+            Element.prototype.matches = Element.prototype.webkitMatchesSelector
+        } else {
+            Element.prototype.matches = Element.prototype.msMatchesSelector
         }
-        el = el.parentElement
     }
+    if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
+        var el = this
+        while (el) {
+            if (el.matches(selector)) {
+                return el
+            }
+            el = el.parentElement
+        }
 }
 </pre>
             </p>
