@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.1.2
+    * @version 0.1.4
     * @license MIT
 */
 
@@ -49,6 +49,27 @@ class Tippy {
     _setMaps() {
         Tippy.bus.popperMap = Tippy.bus.refs.map(ref => ref.popper)
         Tippy.bus.tooltippedElMap = Tippy.bus.refs.map(ref => ref.tooltippedEl)
+    }
+
+    _closest(element, parent) {
+        if (!Element.prototype.matches) {
+            var isWebkit = 'WebkitAppearance' in document.documentElement.style
+            if (isWebkit && !(/Edge\/\d./i.test(navigator.userAgent))) {
+                Element.prototype.matches = Element.prototype.webkitMatchesSelector
+            } else {
+                Element.prototype.matches = Element.prototype.msMatchesSelector
+            }
+        }
+        if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
+            var el = this
+            while (el) {
+                if (el.matches(selector)) {
+                    return el
+                }
+                el = el.parentElement
+            }
+        }
+        return element.closest(parent)
     }
 
     _applyGlobalSettings(settings) {
@@ -181,8 +202,8 @@ class Tippy {
 
     _handleDocumentHidingEvents() {
         const actualElement = target => {
-            const tooltippedEl = target.closest('[data-tooltipped]')
-            const popper = target.closest(`.${this.classNames.popper}`)
+            const tooltippedEl = this._closest(target, '[data-tooltipped]')
+            const popper = this._closest(target, `.${this.classNames.popper}`)
             let obj = {}
 
             if (tooltippedEl) {
@@ -470,8 +491,8 @@ class Tippy {
                     // Temporarily handle mousemove to check if the mouse left somewhere
                     // other than its popper
                     const handleMousemove = event => {
-                        if (event.target.closest(`.${this.classNames.popper}`)
-                            !== popper && !event.target.closest('[data-tooltipped]')
+                        if (this._closest(event.target,`.${this.classNames.popper}`)
+                            !== popper && !this._closest(event.target, '[data-tooltipped]')
                             && settings.trigger.indexOf('click') === -1) {
                                 el.classList.remove('active')
                                 this.hide(popper)

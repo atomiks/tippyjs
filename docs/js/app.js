@@ -1,21 +1,3 @@
-if (!Element.prototype.matches) {
-    var isWebkit = 'WebkitAppearance' in document.documentElement.style
-    if (isWebkit && !(/Edge\/\d./i.test(navigator.userAgent))) {
-        Element.prototype.matches = Element.prototype.webkitMatchesSelector
-    } else {
-        Element.prototype.matches = Element.prototype.msMatchesSelector
-    }
-}
-if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
-    var el = this
-    while (el) {
-        if (el.matches(selector)) {
-            return el
-        }
-        el = el.parentElement
-    }
-}
-
 var timeout = 800
 if (window.pageYOffset > 250 || document.documentElement.scrollTop > 250) {
     timeout = 0
