@@ -120,6 +120,7 @@
 
 $positions: 'top', 'bottom', 'left', 'right';
 $origins: bottom, top, right, left;
+$arrow-width: 10px;
 
 .tippy-touch {
     cursor: pointer !important;
@@ -147,6 +148,96 @@ $origins: bottom, top, right, left;
         max-width: 95%;
         max-width: calc(100% - 2rem);
     }
+
+    @each $position in $positions {
+        &[x-placement="#{$position}"] {
+
+            [x-arrow] {
+                @include arrow($position, $arrow-width);
+            }
+
+            $circle-origins: 0% 33%, 0% -33%, 50% 5%, -50% 5%;
+
+            [x-circle] {
+                transform-origin: nth($circle-origins, index($positions, $position));
+
+                &.enter {
+                    opacity: 1;
+                    transform: scale(1) translate(-50%, -50%);
+                }
+
+                &.leave {
+                    opacity: 0;
+                    @include circle-transform-leave(#{$position}, 0);
+                }
+            }
+
+            // No animation
+            [data-animation="none"] {
+                &.enter {
+                    opacity: 1;
+                    @include enter-transform($position, 'fade');
+                }
+
+                &.leave {
+                    opacity: 1;
+                    @include leave-transform($position, 'none');
+                }
+            }
+
+            // Perspective animation
+            [data-animation="perspective"] {
+                transform-origin: nth($origins, index($positions, $position));
+
+                &.enter {
+                    opacity: 1;
+                    @include enter-transform($position, 'perspective');
+                }
+
+                &.leave {
+                    opacity: 0;
+                    @include leave-transform($position, 'perspective');
+                }
+            }
+
+            // Fade animation
+            [data-animation="fade"] {
+                &.enter {
+                    opacity: 1;
+                    @include enter-transform($position, 'fade')
+                }
+                &.leave {
+                    opacity: 0;
+                    @include enter-transform($position, 'fade')
+                }
+            }
+
+            // Shift animation
+            [data-animation="shift"] {
+                &.enter {
+                    opacity: 1;
+                    @include enter-transform($position, 'fade')
+                }
+                &.leave {
+                    opacity: 0;
+                    @include leave-transform($position, 'shift')
+                }
+            }
+
+            // Scale animation
+            [data-animation="scale"] {
+                &.enter {
+                    opacity: 1;
+                    @include enter-transform($position, 'scale')
+                }
+                &.leave {
+                    opacity: 0;
+                    @include leave-transform($position, 'scale')
+                }
+            }
+
+        }
+    }
 }
 
 .tippy-tooltip {
@@ -159,8 +250,6 @@ $origins: bottom, top, right, left;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #333;
-
-    $arrow-width: 10px;
 
     [x-arrow] {
         z-index: -1;
@@ -190,96 +279,6 @@ $origins: bottom, top, right, left;
         transition: all ease-out;
         z-index: -1;
         opacity: 0;
-    }
-
-    @each $position in $positions {
-        &[data-position="#{$position}"] {
-
-            [x-arrow] {
-                @include arrow($position, $arrow-width);
-            }
-
-            $circle-origins: 0% 33%, 0% -33%, 50% 5%, -50% 5%;
-
-            [x-circle] {
-                transform-origin: nth($circle-origins, index($positions, $position));
-
-                &.enter {
-                    opacity: 1;
-                    transform: scale(1) translate(-50%, -50%);
-                }
-
-                &.leave {
-                    opacity: 0;
-                    @include circle-transform-leave(#{$position}, 0);
-                }
-            }
-
-            // No animation
-            &[data-animation="none"] {
-                &.enter {
-                    opacity: 1;
-                    @include enter-transform($position, 'fade');
-                }
-
-                &.leave {
-                    opacity: 1;
-                    @include leave-transform($position, 'none');
-                }
-            }
-
-            // Perspective animation
-            &[data-animation="perspective"] {
-                transform-origin: nth($origins, index($positions, $position));
-
-                &.enter {
-                    opacity: 1;
-                    @include enter-transform($position, 'perspective');
-                }
-
-                &.leave {
-                    opacity: 0;
-                    @include leave-transform($position, 'perspective');
-                }
-            }
-
-            // Fade animation
-            &[data-animation="fade"] {
-                &.enter {
-                    opacity: 1;
-                    @include enter-transform($position, 'fade')
-                }
-                &.leave {
-                    opacity: 0;
-                    @include enter-transform($position, 'fade')
-                }
-            }
-
-            // shift animation
-            &[data-animation="shift"] {
-                &.enter {
-                    opacity: 1;
-                    @include enter-transform($position, 'fade')
-                }
-                &.leave {
-                    opacity: 0;
-                    @include leave-transform($position, 'shift')
-                }
-            }
-
-            // Scale animation
-            &[data-animation="scale"] {
-                &.enter {
-                    opacity: 1;
-                    @include enter-transform($position, 'scale')
-                }
-                &.leave {
-                    opacity: 0;
-                    @include leave-transform($position, 'scale')
-                }
-            }
-
-        }
     }
 
     // Themes
