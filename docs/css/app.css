@@ -101,11 +101,7 @@ a:hover {
     color: #fff;
     font-weight: 500;
     font-size: 1.2rem;
-    margin: 0 0.5rem;
-}
-
-.hero-badge {
-    margin-bottom: 1rem;
+    margin: 0 0.5rem 1rem;
 }
 
 .hero-badge:nth-child(1) {

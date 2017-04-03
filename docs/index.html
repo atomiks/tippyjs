@@ -6,7 +6,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="helpers/focus-ring.js" defer></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/tippy.css">
+  <link rel="stylesheet" href="tippy/tippy.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="icon" href="favicon.ico">
 
@@ -19,10 +19,6 @@
             opacity: 1;
             -webkit-transform: translateY(0);
             transform: translateY(0);
-        }
-        .hero-badge {
-            -webkit-transform: scale(1);
-            transform: scale(1);
         }
       </style>
   </noscript>
@@ -94,6 +90,31 @@
                 target audience it could be higher or lower. Tippy gracefully degrades on older
                 browsers (and with JavaScript disabled) by using the browser's default
                 <code>title</code> tooltip.</p>
+
+            <h4><code>.closest()</code> pollyfill</h4>
+
+            <p>
+                Tippy requires
+                <code><a class="tippy-link" title="caniuse.com"
+                href="http://caniuse.com/#search=element.closest" target="_blank">
+                closest</a></code>
+                in order to function. On newer browsers, this
+                is already implemented, but in order to support older ones (including IE11 and Edge), you
+                need to include this polyfill before your scripts.
+
+<pre>// .closest() polyfill
+if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector
+if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
+    var el = this
+    while (el) {
+        if (el.matches(selector)) {
+            return el
+        }
+        el = el.parentElement
+    }
+}
+</pre>
+            </p>
           </section>
 
           <hr>
@@ -103,8 +124,7 @@
             <ul>
               <li><strong>Production:
                   <a href="releases/v0.1.2/tippy-v0.1.2.zip" title="<strong>11KB</strong> gzipped"
-                      class="tippy-link" data-arrow="true" data-theme="light"
-                      data-duration="250" data-animation="fade">
+                      class="tippy-link">
                       <i class="material-icons">file_download</i>
                       <span>Download</span>
                   </a>
@@ -277,7 +297,7 @@
                     <tr>
                       <td><code>offset</code></td>
                       <td><code>0</code></td>
-                      <td>Any number >= 0</td>
+                      <td>Any number (pixels)</td>
                       <td>Offsets the tooltip on its opposite axis. For position top and bottom, it acts as offsetX. For position left and right, it acts as offsetY.</td>
                     </tr>
                     <tr>
@@ -516,36 +536,7 @@ new Tippy('.tippy', {
       <button class="btn btn-danger" onclick="hideHtml()">Close</button>
     </div>
 
-    <script src="js/tippy.js"></script>
-    <script>
-    var timeout = 800
-    if (window.pageYOffset > 250 || document.documentElement.scrollTop > 250) {
-        timeout = 0
-    }
-    setTimeout(function() {
-        document.querySelector('.hero').classList.add('enter')
-    }, timeout/4)
-    setTimeout(function() {
-        document.querySelector('main .container-fluid').classList.add('enter')
-    }, timeout)
-
-    new Tippy('.tippy')
-
-    new Tippy('.tippy-link', {
-        theme: 'light',
-        arrow: true
-    })
-    var instance = new Tippy('#callback-tippy', {
-      shown: function() {
-        alert('Hello from the shown() callback!')
-        document.getElementById('callback-tippy').blur()
-      }
-    })
-
-    function hideHtml() {
-        var el = instance.getPopperElement(document.querySelector('#html-tippy'))
-        instance.hide(el)
-    }
-    </script>
+    <script src="tippy/tippy.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>

@@ -1,16 +1,4 @@
-import Popper from './popper'
-
-// .closest() polyfill
-if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector
-if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
-    var el = this
-    while (el) {
-        if (el.matches(selector)) {
-            return el
-        }
-        el = el.parentElement
-    }
-}
+import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library

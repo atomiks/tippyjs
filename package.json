@@ -7,8 +7,8 @@
     "dev": "webpack-dev-server --inline --content-base docs/",
     "build": "webpack --config webpack.config.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "atomiks",
+  "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.24.0",
@@ -23,5 +23,8 @@
     "style-loader": "^0.14.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.2"
+  },
+  "dependencies": {
+    "popper.js": "^1.0.8"
   }
 }
