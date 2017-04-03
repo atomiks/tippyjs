@@ -1,4 +1,11 @@
-if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector
+if (!Element.prototype.matches) {
+    var isWebkit = 'WebkitAppearance' in document.documentElement.style
+    if (isWebkit) {
+        Element.prototype.matches = Element.prototype.webkitMatchesSelector
+    } else {
+        Element.prototype.matches = Element.prototype.msMatchesSelector
+    }
+}
 if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
     var el = this
     while (el) {
