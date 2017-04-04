@@ -185,11 +185,11 @@
 
               <p>You can also specify settings on the element itself by adding <code>data-*</code> attributes. This overrides any global settings specified in the Tippy instance.</p>
 
-              <pre><code>&lt;button class="btn tippy" title="I'm a tooltip!" data-animatefill="false" data-animation="scale" data-delay="0" data-position="bottom"&gt;Overridden&lt;/button&gt;</code></pre>
+              <pre><code>&lt;button class="btn tippy" title="I'm a tooltip!" data-animatefill="false" data-animation="scale" data-position="bottom"&gt;Overridden&lt;/button&gt;</code></pre>
 
               <div class="result-box">
                 <p class="text-muted">Result:</p>
-                <button class="btn tippy" title="I'm a tooltip!" data-animatefill="false" data-animation="scale" data-delay="0" data-position="bottom">Overridden</button>
+                <button class="btn tippy" title="I'm a tooltip!" data-animatefill="false" data-animation="scale" data-position="bottom">Overridden</button>
               </div>
 
               <p>This is helpful if you want to globally define settings, but make a few tooltips different without having to make a new Tippy instance.</p>
@@ -407,7 +407,9 @@ new Tippy('.tippy', {
           <p>In your instance, specify its template <code>id</code> in the <code>html</code> setting.</p>
 
 <pre>new Tippy('#tooltip-with-my-template', {
-  html: '#my-template-id'
+  html: '#my-template-id',
+  arrow: true,
+  animation: 'fade'
 })</pre>
 
           <div class="result-box">
@@ -442,12 +444,12 @@ new Tippy('.tippy', {
 
         <hr>
 
-        <section id="manual-tooltips">
+        <section id="controlling-tooltips-manually">
 
             <h2>
-                <a href="#manual-tooltips">
+                <a href="#controlling-tooltips-manually">
                     <i class="material-icons icon-left">settings_remote</i>
-                    <span>Showing, hiding, or destroying tooltips manually</span>
+                    <span>Controlling tooltips manually</span>
                 </a>
             </h2>
 
