@@ -102,6 +102,7 @@ a:hover {
     font-weight: 500;
     font-size: 1.2rem;
     margin: 0 0.5rem 1rem;
+    min-width: 104px;
 }
 
 .hero-badge:nth-child(1), .hero-badge:nth-child(3) {
