@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.1.6
+    * @version 0.1.7
     * @license MIT
 */
 
@@ -33,13 +33,13 @@ class Tippy {
 
         // Determine if touch user
         if (!Tippy.bus.listeners.touchstart) {
+            Tippy.bus.listeners.touchstart = true
             const handleTouch = () => {
-                this.touchUser = true
+                Tippy.touchUser = true
                 document.body.classList.add('tippy-touch')
                 window.removeEventListener('touchstart', handleTouch)
             }
             window.addEventListener('touchstart', handleTouch)
-            Tippy.bus.listeners.touchstart = true
         }
 
         this._createTooltips()
@@ -270,7 +270,7 @@ class Tippy {
                 const ref = Tippy.bus.refs[refIndices.tooltippedElIndex]
 
                 // Mobile/touch
-                if (this.touchUser) {
+                if (Tippy.touchUser) {
                     // Ensure only 1 tooltip is open at a time on touch devices
                     Tippy.bus.refs.forEach(r => {
                         if (r.popper !== ref.popper) this.hide(r.popper)
@@ -510,7 +510,7 @@ class Tippy {
             }
 
             const handleBlur = event => {
-                if (this.touchUser || settings.interactive) return
+                if (Tippy.touchUser || settings.interactive) return
                 this.hide(popper)
             }
 
