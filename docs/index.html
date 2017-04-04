@@ -35,7 +35,7 @@
         <h1 class="hero-heading">Tippy.js</h1>
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
-          <small class="hero-badge"><i class="material-icons icon-left">code</i><span>v0.1.8</span></small>
+          <small class="hero-badge"><i class="material-icons icon-left">code</i><span>v0.1.9</span></small>
           <small class="hero-badge"><i class="material-icons icon-left">flash_on</i><span>Powered by Popper.js</span></small>
           <small class="hero-badge d-flex align-items-center"><a class="github-button" href="https://github.com/atomiks/tippyjs" data-style="mega" data-count-href="/atomiks/tippyjs/stargazers" data-count-api="/repos/atomiks/tippyjs#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star atomiks/tippyjs on GitHub">Star</a></small>
         </div>
@@ -100,7 +100,7 @@
             <h2><a href="#getting-started"><i class="material-icons icon-left">tag_faces</i><span>Getting started</span></a></h2>
             <ul>
               <li><strong>Production:
-                  <a href="releases/v0.1.8/tippy-v0.1.8.zip" title="<strong>11KB</strong> gzipped"
+                  <a href="releases/v0.1.9/tippy-v0.1.9.zip" title="<strong>11KB</strong> gzipped"
                       class="tippy-link">
                       <i class="material-icons">file_download</i>
                       <span>Download</span>
@@ -142,6 +142,9 @@
               <p class="text-muted">Result:</p>
               <button class="btn tippy" title="I'm a tooltip!">Text</button>
             </div>
+
+            <p>You can also directly pass in a DOM element:</p>
+            <p><code>new Tippy(document.querySelector('#myElement'))</code></p>
 
             <p>Elements without a <code>title</code> attribute or an HTML template will not receive a tooltip. You can pass in any CSS selector to initialize it. See <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
 

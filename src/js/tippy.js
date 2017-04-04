@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.1.8
+    * @version 0.1.9
     * @license MIT
 */
 
@@ -11,15 +11,22 @@ class Tippy {
         // Use default browser tooltip on old browsers (IE < 10)
         if (!('addEventListener' in window) || /MSIE 9/i.test(navigator.userAgent)) return
 
-        this.selector = selector
         this.callbacks = {}
+        this.settings = this._applyGlobalSettings(settings)
         this.classNames = {
             popper: 'tippy-popper',
             tooltip: 'tippy-tooltip',
             content: 'tippy-tooltip-content'
         }
-        this.tooltippedEls = [].slice.call(document.querySelectorAll(selector))
-        this.settings = this._applyGlobalSettings(settings)
+
+        // Check if selector is a DOM element
+        if (selector instanceof Element) {
+            // DOM element
+            this.tooltippedEls = [selector]
+        } else {
+            // CSS selector
+            this.tooltippedEls = [].slice.call(document.querySelectorAll(selector))
+        }
 
         // Tippy bus to handle events between different instances
         if (!Tippy.bus) {
