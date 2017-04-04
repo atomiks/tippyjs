@@ -1,6 +1,6 @@
 {
   "name": "tippy",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Pure JS Tooltip Library",
   "main": "app.js",
   "scripts": {

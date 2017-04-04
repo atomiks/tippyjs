@@ -2,16 +2,14 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.1.7
+    * @version 0.1.8
     * @license MIT
 */
 
 class Tippy {
     constructor(selector, settings = {}) {
         // Use default browser tooltip on old browsers (IE < 10)
-        if (!('addEventListener' in window)
-            || navigator.appVersion.indexOf("MSIE 9.") !== -1
-        ) return
+        if (!('addEventListener' in window) || /MSIE 9/i.test(navigator.userAgent)) return
 
         this.selector = selector
         this.callbacks = {}
@@ -46,12 +44,25 @@ class Tippy {
         this._handleDocumentHidingEvents()
     }
 
+    /**
+    * ================================PRIVATE METHODS================================
+    */
+
+    /**
+    * Sets arrays of DOMElements for poppers and tooltipped elements
+    */
     _setMaps() {
         Tippy.bus.popperMap = Tippy.bus.refs.map(ref => ref.popper)
         Tippy.bus.tooltippedElMap = Tippy.bus.refs.map(ref => ref.tooltippedEl)
     }
 
-    _closest(element, parent) {
+    /**
+    * In-class polyfill to get closest parent based on a selector
+    * @param {DOMElement} - element
+    * @param {String} - parentSelector
+    * @return {DOMElement}
+    */
+    _closest(element, parentSelector) {
         if (!Element.prototype.matches) {
             var isWebkit = 'WebkitAppearance' in document.documentElement.style
             if (isWebkit && !(/Edge\/\d./i.test(navigator.userAgent))) {
@@ -69,9 +80,14 @@ class Tippy {
                 el = el.parentElement
             }
         }
-        return element.closest(parent)
+        return element.closest(parentSelector)
     }
 
+    /**
+    * Returns a global settings object to be applied to the instance
+    * @param {Object} - settings
+    * @return {Object}
+    */
     _applyGlobalSettings(settings) {
         this.callbacks.beforeShown = settings.beforeShown || new Function()
         this.callbacks.shown = settings.shown || new Function()
@@ -109,102 +125,16 @@ class Tippy {
         }
     }
 
-    getPopperElement(el) {
-        try {
-            el.getAttribute('data-tooltipped')
-        } catch (e) {
-            throw new Error('[Tippy error]: getPopperElement() requires a tooltipped element')
-        }
-        try {
-            return Tippy.bus.refs[Tippy.bus.tooltippedElMap.indexOf(el)].popper
-        } catch (e) {
-            throw new Error('[Tippy error]: Element does not exist in the instance')
-        }
-    }
-
-    show(popper, duration = 400) {
-        this.callbacks.beforeShown()
-
-        const tooltip = popper.querySelector(`.${this.classNames.tooltip}`)
-        const circle = popper.querySelector('[x-circle]')
-
-        tooltip.style.WebkitTransitionDuration = duration + 'ms'
-        tooltip.style.transitionDuration = duration + 'ms'
-        tooltip.classList.add('enter')
-        tooltip.classList.remove('leave')
-
-        if (circle) {
-            circle.style.WebkitTransitionDuration = duration + 'ms'
-            circle.style.transitionDuration = duration + 'ms'
-            circle.classList.add('enter')
-            circle.classList.remove('leave')
-        }
-
-        popper.style.visibility = 'visible'
-        popper.focus()
-
-        setTimeout(() => {
-            if (popper.style.visibility === 'hidden') return
-            this.callbacks.shown()
-        }, duration)
-    }
-
-    hide(popper) {
-        // Clear unwanted timeouts due to `delay` setting
-        clearTimeout(popper.getAttribute('data-timeout'))
-
-        // Hidden anyway
-        if (getComputedStyle(popper).getPropertyValue('visibility') === 'hidden') return
-
-        this.callbacks.beforeHidden()
-
-        const ref = Tippy.bus.refs[Tippy.bus.popperMap.indexOf(popper)]
-        ref.tooltippedEl.classList.remove('active')
-
-        const tooltip = popper.querySelector(`.${this.classNames.tooltip}`)
-        tooltip.classList.add('leave')
-        tooltip.classList.remove('enter')
-
-        const circle = popper.querySelector('[x-circle]')
-        if (circle) {
-            circle.classList.add('leave')
-            circle.classList.remove('enter')
-        }
-
-        popper.style.visibility = 'hidden'
-
-        let duration = 0
-        if (tooltip.style.transitionDuration) {
-            duration = parseInt(tooltip.style.transitionDuration.replace('ms', ''))
-        } else if (tooltip.style.WebkitTransitionDuration) {
-            duration = parseInt(tooltip.style.WebkitTransitionDuration.replace('ms', ''))
-        }
-
-        setTimeout(() => {
-            if (popper.style.visibility === 'visible') return
-            this.callbacks.hidden()
-        }, duration)
-    }
-
-    destroy(popper) {
-        const index = Tippy.bus.popperMap.indexOf(popper)
-
-        // Remove Tippy-only event listeners from tooltipped element
-        const el = Tippy.bus.tooltippedElMap[index]
-        Tippy.bus.refs[index].listeners.forEach(
-            listener => el.removeEventListener(listener.event, listener.method)
-        )
-
-        // Remove from global ref arrays
-        Tippy.bus.popperMap.splice(index, 1)
-        Tippy.bus.tooltippedElMap.splice(index, 1)
-        Tippy.bus.refs.splice(index, 1)
-
-        // Remove popper from body
-        document.body.removeChild(popper)
-    }
-
+    /**
+    * Creates document event listeners to handle clicks and keydowns
+    */
     _handleDocumentHidingEvents() {
+
+        /**
+        * Gets the actual popper or tooltipped element from child element event bubbling
+        * @param {DOMElement} - target
+        * @return {Object} or {null}
+        */
         const actualElement = target => {
             const tooltippedEl = this._closest(target, '[data-tooltipped]')
             const popper = this._closest(target, `.${this.classNames.popper}`)
@@ -223,6 +153,11 @@ class Tippy {
             return obj
         }
 
+        /**
+        * Returns the indices of the target in the DOMElement maps
+        * @param {DOMElement} - target
+        * @return {Object}
+        */
         const getRefIndices = target => {
             let tooltippedElIndex = -1
             let popperIndex = -1
@@ -245,9 +180,11 @@ class Tippy {
             }
         }
 
+        /**
+        * Event listener method for document click
+        * @param {Object} - event
+        */
         const handleClickHide = event => {
-            // For clicks anywhere on document
-
             const clearActive = () => [].slice.call(document.querySelectorAll('.active[data-tooltipped]'))
                                   .forEach(el => el.classList.remove('active'))
 
@@ -265,8 +202,7 @@ class Tippy {
                 // Clicked on a tooltipped element
                 // Do not hide if:
                 // - It has hideOnClick: false, or
-                // - It has a click trigger, or
-                // - It has a focus trigger
+                // - It has a click trigger
                 const ref = Tippy.bus.refs[refIndices.tooltippedElIndex]
 
                 // Mobile/touch
@@ -288,6 +224,10 @@ class Tippy {
             Tippy.bus.refs.forEach(ref => this.hide(ref.popper))
         }
 
+        /**
+        * Event listener method for document keydown
+        * @param {Object} - event
+        */
         const handleKeydownHide = event => {
             const refIndices = getRefIndices(event.target)
             if (refIndices.tooltippedElIndex === -1) return
@@ -304,12 +244,17 @@ class Tippy {
                 keydown: handleKeydownHide
             }
             document.addEventListener('click', handleClickHide)
-            document.addEventListener('keydown', handleKeydownHide) // Keyboard nav
+            document.addEventListener('keydown', handleKeydownHide)
         }
     }
 
+    /**
+    * Creates a new popper instance
+    * @param {DOMElement} - tooltippedEl
+    * @param {DOMElement} - popper
+    * @param {Object} - settings
+    */
     _createPopperInstance(tooltippedEl, popper, settings) {
-
         const config = {
             placement: settings.position,
             modifiers: {
@@ -329,6 +274,12 @@ class Tippy {
         }, 0)
     }
 
+    /**
+    * Creates a popper element and appends it to the body, then returns it
+    * @param {String} - title
+    * @param {Object} - settings
+    * @return {DOMElement}
+    */
     _createPopperElement(title, settings) {
         const popper = document.createElement('div')
         popper.setAttribute('class', this.classNames.popper)
@@ -374,8 +325,12 @@ class Tippy {
         return popper
     }
 
+    /**
+    * Returns an object of settings to override global settings
+    * @param {DOMElement}
+    * @return {Object} - settings
+    */
     _applyIndividualSettings(el) {
-
         // Some falsey values require more verbose defining
 
         // false, 'false', or a template id
@@ -388,7 +343,7 @@ class Tippy {
         // 'shift', 'perspective', 'scale', 'fade'
         let animation = el.getAttribute('data-animation') || this.settings.animation
 
-        // 'true', true, 'false', 'false'
+        // 'true', true, 'false', false
         let animateFill = el.getAttribute('data-animatefill') || this.settings.animateFill
         if (animateFill === 'false') animateFill = false
 
@@ -413,7 +368,7 @@ class Tippy {
         let duration = parseInt(el.getAttribute('data-duration'))
         if (!duration && duration !== 0) duration = this.settings.duration
 
-        // 'true', true, 'false', 'false'
+        // 'true', true, 'false', false
         let interactive = el.getAttribute('data-interactive') || this.settings.interactive
         if (interactive === 'false') interactive = false
 
@@ -421,7 +376,7 @@ class Tippy {
         let offset = parseInt(el.getAttribute('data-offset'))
         if (!offset && offset !== 0) offset = this.settings.offset
 
-        // 'true', true, 'false', 'false'
+        // 'true', true, 'false', false
         let hideOnClick = el.getAttribute('data-hideonclick') || this.settings.hideOnClick
         if (hideOnClick === 'false') hideOnClick = false
 
@@ -441,6 +396,9 @@ class Tippy {
         }
     }
 
+    /**
+    * Creates tooltips for all elements that match the instance's selector
+    */
     _createTooltips() {
         this.tooltippedEls.forEach(el => {
 
@@ -467,6 +425,10 @@ class Tippy {
                 settings.trigger = settings.trigger.trim().split(' ')
             }
 
+            /**
+            * Event listener method for each trigger specified in settings
+            * @param {Object} - event
+            */
             const handleTrigger = event => {
                 if (event.type === 'click' && popper.style.visibility === 'visible'
                 && settings.hideOnClick) {
@@ -489,27 +451,38 @@ class Tippy {
                 }
             }
 
+            /**
+            * Event listener method for mouseleave
+            * @param {Object} - event
+            */
             const handleMouseleave = event => {
                 // If interactive, only hide if the mouse left somewhere other than the popper
                 if (settings.interactive) {
                     // Temporarily handle mousemove to check if the mouse left somewhere
                     // other than its popper
                     const handleMousemove = event => {
-                        if (this._closest(event.target,`.${this.classNames.popper}`)
-                            !== popper && !this._closest(event.target, '[data-tooltipped]')
-                            && settings.trigger.indexOf('click') === -1) {
-                                el.classList.remove('active')
-                                this.hide(popper)
-                                document.removeEventListener('mousemove', handleMousemove)
+                        if (this._closest(event.target,`.${this.classNames.popper}`) !== popper
+                        && !this._closest(event.target, '[data-tooltipped]')
+                        && settings.trigger.indexOf('click') === -1)
+                        {
+                            el.classList.remove('active')
+                            this.hide(popper)
+                            document.removeEventListener('mousemove', handleMousemove)
                         }
                     }
                     document.addEventListener('mousemove', handleMousemove)
                     return
                 }
+                // If it's not interactive, just hide it
                 this.hide(popper)
             }
 
+            /**
+            * Event listener method for blur
+            * @param {Object} - event
+            */
             const handleBlur = event => {
+                // Do not hide on blur if touch user or it's interactive
                 if (Tippy.touchUser || settings.interactive) return
                 this.hide(popper)
             }
@@ -561,8 +534,119 @@ class Tippy {
 
         })
     }
+
+    /**
+    * ================================PUBLIC METHODS================================
+    */
+
+    /**
+    * Returns a tooltipped element's popper reference
+    * @param {DOMElement}
+    * @return {DOMElement}
+    */
+    getPopperElement(el) {
+        try {
+            return Tippy.bus.refs[Tippy.bus.tooltippedElMap.indexOf(el)].popper
+        } catch (e) {
+            throw new Error('[Tippy error]: Element does not exist in any Tippy instances')
+        }
+    }
+
+    /**
+    * Shows a popper
+    * @param {DOMElement} - popper
+    * @param {Number} - duration (optional)
+    */
+    show(popper, duration = 400) {
+        this.callbacks.beforeShown()
+
+        const tooltip = popper.querySelector(`.${this.classNames.tooltip}`)
+        const circle = popper.querySelector('[x-circle]')
+
+        tooltip.style.WebkitTransitionDuration = duration + 'ms'
+        tooltip.style.transitionDuration = duration + 'ms'
+        tooltip.classList.add('enter')
+        tooltip.classList.remove('leave')
+
+        if (circle) {
+            circle.style.WebkitTransitionDuration = duration + 'ms'
+            circle.style.transitionDuration = duration + 'ms'
+            circle.classList.add('enter')
+            circle.classList.remove('leave')
+        }
+
+        popper.style.visibility = 'visible'
+        popper.focus()
+
+        setTimeout(() => {
+            if (popper.style.visibility === 'hidden') return
+            this.callbacks.shown()
+        }, duration)
+    }
+
+    /**
+    * Hides a popper
+    * @param {DOMElement} - popper
+    */
+    hide(popper) {
+        // Clear unwanted timeouts due to `delay` setting
+        clearTimeout(popper.getAttribute('data-timeout'))
+
+        // Hidden anyway
+        if (getComputedStyle(popper).getPropertyValue('visibility') === 'hidden') return
+
+        this.callbacks.beforeHidden()
+
+        const ref = Tippy.bus.refs[Tippy.bus.popperMap.indexOf(popper)]
+        ref.tooltippedEl.classList.remove('active')
+
+        const tooltip = popper.querySelector(`.${this.classNames.tooltip}`)
+        tooltip.classList.add('leave')
+        tooltip.classList.remove('enter')
+
+        const circle = popper.querySelector('[x-circle]')
+        if (circle) {
+            circle.classList.add('leave')
+            circle.classList.remove('enter')
+        }
+
+        popper.style.visibility = 'hidden'
+
+        let duration = 0
+        if (tooltip.style.transitionDuration) {
+            duration = parseInt(tooltip.style.transitionDuration.replace('ms', ''))
+        } else if (tooltip.style.WebkitTransitionDuration) {
+            duration = parseInt(tooltip.style.WebkitTransitionDuration.replace('ms', ''))
+        }
+
+        setTimeout(() => {
+            if (popper.style.visibility === 'visible') return
+            this.callbacks.hidden()
+        }, duration)
+    }
+
+    /**
+    * Destroys a popper
+    * @param {DOMElement} - popper
+    */
+    destroy(popper) {
+        const index = Tippy.bus.popperMap.indexOf(popper)
+
+        // Remove Tippy-only event listeners from tooltipped element
+        const el = Tippy.bus.tooltippedElMap[index]
+        Tippy.bus.refs[index].listeners.forEach(
+            listener => el.removeEventListener(listener.event, listener.method)
+        )
+
+        // Remove from global ref arrays
+        Tippy.bus.popperMap.splice(index, 1)
+        Tippy.bus.tooltippedElMap.splice(index, 1)
+        Tippy.bus.refs.splice(index, 1)
+
+        // Remove popper from body
+        document.body.removeChild(popper)
+    }
 }
 
 window.Tippy = Tippy
-
 module.exports = Tippy
