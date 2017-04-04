@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.1.5
+    * @version 0.1.6
     * @license MIT
 */
 
@@ -173,8 +173,12 @@ class Tippy {
 
         popper.style.visibility = 'hidden'
 
-        const duration = parseInt(tooltip.style.transitionDuration.replace('ms', '')) ||
-                         parseInt(tooltip.style.WebkitTransitionDuration.replace('ms', ''))
+        let duration = 0
+        if (tooltip.style.transitionDuration) {
+            duration = parseInt(tooltip.style.transitionDuration.replace('ms', ''))
+        } else if (tooltip.style.WebkitTransitionDuration) {
+            duration = parseInt(tooltip.style.WebkitTransitionDuration.replace('ms', ''))
+        }
 
         setTimeout(() => {
             if (popper.style.visibility === 'visible') return
