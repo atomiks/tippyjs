@@ -40,7 +40,10 @@ module.exports = {
       use: [
         {
           loader: 'babel-loader',
-          options: { presets: ['es2015'] }
+          options: {
+            presets: ['es2015'],
+            plugins: ['transform-object-rest-spread']
+          }
         }
       ],
       exclude: /node_modules/

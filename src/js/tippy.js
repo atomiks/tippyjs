@@ -113,7 +113,8 @@ class Tippy {
             interactive: false,
             theme: 'dark',
             offset: 0,
-            hideOnClick: true
+            hideOnClick: true,
+            popperOptions: {}
         }
 
         return {
@@ -128,7 +129,8 @@ class Tippy {
             interactive: settings.interactive || defaults.interactive,
             theme: settings.theme || defaults.theme,
             offset: settings.offset || defaults.offset,
-            hideOnClick: settings.hideOnClick === false ? false : (settings.hideOnClick || defaults.hideOnClick)
+            hideOnClick: settings.hideOnClick === false ? false : (settings.hideOnClick || defaults.hideOnClick),
+            popperOptions: settings.popperOptions || defaults.popperOptions
         }
     }
 
@@ -264,12 +266,17 @@ class Tippy {
     _createPopperInstance(tooltippedEl, popper, settings) {
         const config = {
             placement: settings.position,
+            ...(settings.popperOptions || {}),
             modifiers: {
+                ...(settings.popperOptions ? settings.popperOptions.modifiers : {}),
                 offset: {
-                    offset: parseInt(settings.offset)
+                    offset: parseInt(settings.offset),
+                    ...(settings.popperOptions && settings.popperOptions.modifiers ? settings.popperOptions.modifiers.offset : {})
                 }
             }
         }
+        
+        console.log(config);
 
         setTimeout(() => {
             const instance = new Popper(
@@ -386,6 +393,9 @@ class Tippy {
         // 'true', true, 'false', false
         let hideOnClick = el.getAttribute('data-hideonclick') || this.settings.hideOnClick
         if (hideOnClick === 'false') hideOnClick = false
+        
+        // just take the provided value
+        const popperOptions = this.settings.popperOptions
 
         return {
             html,
@@ -399,7 +409,8 @@ class Tippy {
             interactive,
             theme,
             offset,
-            hideOnClick
+            hideOnClick,
+            popperOptions
         }
     }
 
