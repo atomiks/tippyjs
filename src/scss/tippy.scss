@@ -301,15 +301,6 @@ $arrow-width: 10px;
         &[data-animatefill] {
             background-color: transparent;
         }
-
-        @each $position in $positions {
-            &[data-position="#{$position}"] {
-                &::after {
-                    background-color: #f3f6f9;
-                    border-color: transparent transparent #ced2e2 #ced2e2;
-                }
-            }
-        }
     }
 }
 

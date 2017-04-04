@@ -11,7 +11,7 @@ body {
 
 body::before, body::after {
     content: '';
-    position: fixed;
+    position: absolute;
     background: url('../img/bubbles.svg') no-repeat;
     background-position: 500px -200px;
     background-size: cover;
