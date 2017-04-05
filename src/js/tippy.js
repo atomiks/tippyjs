@@ -275,8 +275,6 @@ class Tippy {
                 }
             }
         }
-        
-        console.log(config);
 
         setTimeout(() => {
             const instance = new Popper(
@@ -393,7 +391,7 @@ class Tippy {
         // 'true', true, 'false', false
         let hideOnClick = el.getAttribute('data-hideonclick') || this.settings.hideOnClick
         if (hideOnClick === 'false') hideOnClick = false
-        
+
         // just take the provided value
         const popperOptions = this.settings.popperOptions
 
@@ -437,11 +435,6 @@ class Tippy {
             // Create a new popper element and instance
             const popper = this._createPopperElement(title, settings)
             this._createPopperInstance(el, popper, settings)
-
-            // Turn trigger string like "mouseenter focus" into an array
-            if (!Array.isArray(settings.trigger)) {
-                settings.trigger = settings.trigger.trim().split(' ')
-            }
 
             /**
             * Event listener method for each trigger specified in settings

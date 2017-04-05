@@ -168,7 +168,7 @@ $arrow-width: 10px;
 
                 &.leave {
                     opacity: 0;
-                    @include circle-transform-leave(#{$position}, 0);
+                    @include circle-transform-leave($position, 0);
                 }
             }
 
