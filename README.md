@@ -7,5 +7,5 @@ View the documentation and demo here: https://atomiks.github.io/tippyjs/
 ## Installation
 
 ```
-npm install --save typpy.js
+npm install --save tippy.js
 ```
