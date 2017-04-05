@@ -136,6 +136,7 @@ a:hover {
     color: #68f6ff;
     background: -webkit-linear-gradient(left,#bef9ff, #9aecff);
     -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 .green-text {
     color: #3ba065;
@@ -319,8 +320,13 @@ main .container-fluid.enter {
     main .container-fluid {
         padding: 2rem;
     }
-    a span {
+    .hero-link span {
         color: #68f6ff;
+        background: -webkit-linear-gradient(left,#bef9ff, #9aecff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    a span {
         background: -webkit-linear-gradient(left,#00caf9, #4d8cff);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
