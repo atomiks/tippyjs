@@ -2,14 +2,16 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.1.9
+    * @version 0.1.11
     * @license MIT
 */
 
 class Tippy {
     constructor(selector, settings = {}) {
-        // Use default browser tooltip on old browsers (IE < 10)
-        if (!('addEventListener' in window) || /MSIE 9/i.test(navigator.userAgent)) return
+        // Use default browser tooltip on old browsers (IE < 10) and Opera Mini
+        if (!('addEventListener' in window)
+        || /MSIE 9/i.test(navigator.userAgent)
+        || window.operamini) return
 
         this.callbacks = {}
         this.settings = this._applyGlobalSettings(settings)
@@ -114,6 +116,7 @@ class Tippy {
             theme: 'dark',
             offset: 0,
             hideOnClick: true,
+            multiple: false,
             popperOptions: {}
         }
 
@@ -130,6 +133,7 @@ class Tippy {
             theme: settings.theme || defaults.theme,
             offset: settings.offset || defaults.offset,
             hideOnClick: settings.hideOnClick === false ? false : (settings.hideOnClick || defaults.hideOnClick),
+            multiple: settings.multiple === false ? false : (settings.multiple || defaults.multiple),
             popperOptions: settings.popperOptions || defaults.popperOptions
         }
     }
@@ -171,7 +175,8 @@ class Tippy {
             let tooltippedElIndex = -1
             let popperIndex = -1
 
-            // Ensure the target gets the actual element or popper (bubbles up from inner els)
+            // Ensure the target gets the actual element or popper as they could have clicked
+            // on an inner element
             const eventTarget = actualElement(target)
 
             // Is a tooltipped element or popper
@@ -194,8 +199,6 @@ class Tippy {
         * @param {Object} - event
         */
         const handleClickHide = event => {
-            const clearActive = () => [].slice.call(document.querySelectorAll('.active[data-tooltipped]'))
-                                  .forEach(el => el.classList.remove('active'))
 
             const refIndices = getRefIndices(event.target)
             const clickedOnTooltippedEl = refIndices.tooltippedElIndex !== -1
@@ -204,7 +207,7 @@ class Tippy {
             if (clickedOnPopper) {
                 // Clicked on a popper, check if it's interactive, if so, do not hide
                 const ref = Tippy.bus.refs[refIndices.popperIndex]
-                if (ref.interactive) return
+                if (ref.settings.interactive) return
             }
 
             if (clickedOnTooltippedEl) {
@@ -214,20 +217,25 @@ class Tippy {
                 // - It has a click trigger
                 const ref = Tippy.bus.refs[refIndices.tooltippedElIndex]
 
-                // Mobile/touch
-                if (Tippy.touchUser) {
-                    // Ensure only 1 tooltip is open at a time on touch devices
+                if (!ref.settings.multiple
+                 && (ref.settings.trigger.indexOf('click') !== -1 || Tippy.touchUser)) {
+                    // Hide all except popper belonging to the element that was clicked on
                     Tippy.bus.refs.forEach(r => {
-                        if (r.popper !== ref.popper) this.hide(r.popper)
+                        if (r.popper !== ref.popper) {
+                            this.hide(r.popper)
+                        }
                     })
                     return
                 }
 
-                // Desktop/mouse
-                if (!ref.hideOnClick || ref.trigger.indexOf('click') !== -1) return
+                if (!ref.settings.hideOnClick || ref.settings.trigger.indexOf('click') !== -1) {
+                    return
+                }
 
             } else {
-                clearActive()
+                // Clear 'active' class
+                [].slice.call(document.querySelectorAll('.active[data-tooltipped]'))
+                        .forEach(el => el.classList.remove('active'))
             }
 
             Tippy.bus.refs.forEach(ref => this.hide(ref.popper))
@@ -392,6 +400,10 @@ class Tippy {
         let hideOnClick = el.getAttribute('data-hideonclick') || this.settings.hideOnClick
         if (hideOnClick === 'false') hideOnClick = false
 
+        // 'true', true, 'false', false
+        let multiple = el.getAttribute('data-multiple') || this.settings.multiple
+        if (multiple === 'false') multiple = false
+
         // just take the provided value
         const popperOptions = this.settings.popperOptions
 
@@ -408,6 +420,7 @@ class Tippy {
             theme,
             offset,
             hideOnClick,
+            multiple,
             popperOptions
         }
     }
@@ -493,8 +506,8 @@ class Tippy {
             * @param {Object} - event
             */
             const handleBlur = event => {
-                // Do not hide on blur if touch user or it's interactive
-                if (Tippy.touchUser || settings.interactive) return
+                // Do not hide on blur if interactive and not a touch user
+                if (settings.interactive && !Tippy.touchUser) return
                 this.hide(popper)
             }
 
@@ -532,9 +545,7 @@ class Tippy {
             Tippy.bus.refs.push({
                 tooltippedEl: el,
                 popper,
-                interactive: settings.interactive,
-                trigger: settings.trigger,
-                hideOnClick: settings.hideOnClick,
+                settings,
                 listeners
             })
 
