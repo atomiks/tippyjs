@@ -132,18 +132,6 @@ $arrow-width: 10px;
     perspective: 1000px;
     z-index: 9999;
 
-    &.enter {
-        opacity: 1;
-        transition-property: all;
-        transition-timing-function: ease-out;
-    }
-
-    &.leave {
-        opacity: 0;
-        transition-property: all;
-        transition-timing-function: ease-in;
-    }
-
     &.html-template {
         max-width: 95%;
         max-width: calc(100% - 2rem);
@@ -268,6 +256,7 @@ $arrow-width: 10px;
 
     [x-circle] {
         position: absolute;
+        will-change: transform;
         background-color: #333;
         border-radius: 50%;
         width: 130%;

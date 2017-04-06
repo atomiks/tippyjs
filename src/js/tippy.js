@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.1.11
+    * @version 0.2
     * @license MIT
 */
 
@@ -232,10 +232,6 @@ class Tippy {
                     return
                 }
 
-            } else {
-                // Clear 'active' class
-                [].slice.call(document.querySelectorAll('.active[data-tooltipped]'))
-                        .forEach(el => el.classList.remove('active'))
             }
 
             Tippy.bus.refs.forEach(ref => this.hide(ref.popper))
@@ -270,6 +266,7 @@ class Tippy {
     * @param {DOMElement} - tooltippedEl
     * @param {DOMElement} - popper
     * @param {Object} - settings
+    * @return {Object}
     */
     _createPopperInstance(tooltippedEl, popper, settings) {
         const config = {
@@ -284,14 +281,14 @@ class Tippy {
             }
         }
 
-        setTimeout(() => {
-            const instance = new Popper(
-                tooltippedEl,
-                popper,
-                config
-            )
-            instance.enableEventListeners()
-        }, 0)
+        const instance = new Popper(
+            tooltippedEl,
+            popper,
+            config
+        )
+        instance.disableEventListeners()
+
+        return instance
     }
 
     /**
@@ -340,7 +337,6 @@ class Tippy {
 
         tooltip.appendChild(content)
         popper.appendChild(tooltip)
-        document.body.appendChild(popper)
 
         return popper
     }
@@ -429,25 +425,26 @@ class Tippy {
     * Creates tooltips for all elements that match the instance's selector
     */
     _createTooltips() {
-        this.tooltippedEls.forEach(el => {
+        this.tooltippedEls.forEach((el, index) => {
 
-            // Individual tooltip settings with data-* attribute settings to override global
             const settings = this._applyIndividualSettings(el)
 
             const title = el.getAttribute('title')
-            // Do not create a tooltip for title attributeless, empty strings or no html els
             if ((title === null || title === '') && !settings.html) return
 
             // Remove default browser tooltip
             el.setAttribute('data-original-title', title || 'html')
             el.removeAttribute('title')
 
-            // Give elements a data-tooltipped attribute (needed for document click handler)
             el.setAttribute('data-tooltipped', '')
 
-            // Create a new popper element and instance
             const popper = this._createPopperElement(title, settings)
-            this._createPopperInstance(el, popper, settings)
+
+            // Temporarily append popper to body for Popper.js
+            document.body.appendChild(popper)
+
+            const instance = this._createPopperInstance(el, popper, settings)
+            document.body.removeChild(popper)
 
             /**
             * Event listener method for each trigger specified in settings
@@ -546,11 +543,12 @@ class Tippy {
                 tooltippedEl: el,
                 popper,
                 settings,
-                listeners
+                listeners,
+                instance
             })
 
             // If last el in loop, ready to set map cache
-            if (el === this.tooltippedEls[this.tooltippedEls.length - 1]) {
+            if (index === this.tooltippedEls.length - 1) {
                 this._setMaps()
             }
 
@@ -584,6 +582,17 @@ class Tippy {
 
         const tooltip = popper.querySelector(`.${this.classNames.tooltip}`)
         const circle = popper.querySelector('[x-circle]')
+        const arrow = popper.querySelector('[x-arrow]')
+
+        document.body.appendChild(popper)
+
+        const ref = Tippy.bus.refs[Tippy.bus.popperMap.indexOf(popper)]
+        ref.instance.update()
+
+        // Repaint
+        getComputedStyle(popper).opacity
+        getComputedStyle(tooltip).opacity
+        if (arrow) getComputedStyle(arrow).opacity
 
         tooltip.style.WebkitTransitionDuration = duration + 'ms'
         tooltip.style.transitionDuration = duration + 'ms'
@@ -591,6 +600,11 @@ class Tippy {
         tooltip.classList.remove('leave')
 
         if (circle) {
+            // Repaint
+            const style = getComputedStyle(circle)
+            style.WebkitTransformOrigin
+            style.transformOrigin
+
             circle.style.WebkitTransitionDuration = duration + 'ms'
             circle.style.transitionDuration = duration + 'ms'
             circle.classList.add('enter')
@@ -598,12 +612,20 @@ class Tippy {
         }
 
         popper.style.visibility = 'visible'
-        popper.focus()
 
+        // Focus click triggered tooltips (popovers) only
         setTimeout(() => {
+            if (ref.settings.trigger.indexOf('click') !== -1) {
+                popper.focus()
+            }
+        }, 0)
+
+        const onShown = () => {
             if (popper.style.visibility === 'hidden') return
             this.callbacks.shown()
-        }, duration)
+        }
+
+        setTimeout(onShown, duration)
     }
 
     /**
@@ -641,10 +663,17 @@ class Tippy {
             duration = parseInt(tooltip.style.WebkitTransitionDuration.replace('ms', ''))
         }
 
-        setTimeout(() => {
+        const onHidden = () => {
             if (popper.style.visibility === 'visible') return
+
+            if (document.body.contains(popper)) {
+                document.body.removeChild(popper)
+            }
+
             this.callbacks.hidden()
-        }, duration)
+        }
+
+        setTimeout(onHidden, duration)
     }
 
     /**
@@ -664,9 +693,6 @@ class Tippy {
         Tippy.bus.popperMap.splice(index, 1)
         Tippy.bus.tooltippedElMap.splice(index, 1)
         Tippy.bus.refs.splice(index, 1)
-
-        // Remove popper from body
-        document.body.removeChild(popper)
     }
 }
 
