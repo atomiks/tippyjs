@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.2
+    * @version 0.2.1
     * @license MIT
 */
 
@@ -588,6 +588,7 @@ class Tippy {
 
         const ref = Tippy.bus.refs[Tippy.bus.popperMap.indexOf(popper)]
         ref.instance.update()
+        ref.instance.enableEventListeners()
 
         // Repaint
         getComputedStyle(popper).opacity
@@ -613,15 +614,12 @@ class Tippy {
 
         popper.style.visibility = 'visible'
 
-        // Focus click triggered tooltips (popovers) only
-        setTimeout(() => {
+        const onShown = () => {
+            if (popper.style.visibility === 'hidden') return
+            // Focus click triggered tooltips (popovers) only
             if (ref.settings.trigger.indexOf('click') !== -1) {
                 popper.focus()
             }
-        }, 0)
-
-        const onShown = () => {
-            if (popper.style.visibility === 'hidden') return
             this.callbacks.shown()
         }
 
@@ -669,6 +667,8 @@ class Tippy {
             if (document.body.contains(popper)) {
                 document.body.removeChild(popper)
             }
+
+            ref.instance.disableEventListeners()
 
             this.callbacks.hidden()
         }
