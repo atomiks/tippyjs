@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.2.1
+    * @version 0.2.2
     * @license MIT
 */
 
@@ -292,7 +292,7 @@ class Tippy {
     }
 
     /**
-    * Creates a popper element and appends it to the body, then returns it
+    * Creates a popper element then returns it
     * @param {String} - title
     * @param {Object} - settings
     * @return {DOMElement}
@@ -622,8 +622,10 @@ class Tippy {
             }
             this.callbacks.shown()
         }
-
-        setTimeout(onShown, duration)
+        
+        // Clear unwanted timeouts set previously
+        clearTimeout(ref.showTimeout)
+        ref.showTimeout = setTimeout(onShown, duration)
     }
 
     /**
@@ -673,7 +675,9 @@ class Tippy {
             this.callbacks.hidden()
         }
 
-        setTimeout(onHidden, duration)
+        // Clear unwanted timeouts set previously
+        clearTimeout(ref.hideTimeout)
+        ref.hideTimeout = setTimeout(onHidden, duration)
     }
 
     /**
