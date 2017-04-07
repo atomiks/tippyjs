@@ -703,7 +703,7 @@ class Tippy {
 
         popper.style.visibility = 'hidden'
 
-        let duration = 0
+        let duration = 1
         if (tooltip.style.transitionDuration) {
             duration = parseInt(tooltip.style.transitionDuration.replace('ms', ''))
         } else if (tooltip.style.WebkitTransitionDuration) {
@@ -733,6 +733,13 @@ class Tippy {
         // Wait for transition to end
         popper.addEventListener('webkitTransitionEnd', onHidden)
         popper.addEventListener('transitionend', onHidden)
+
+        // Bug: if a user VERY briefly hovers over an element, it won't hide (no transitionend fired)
+        // and will stay stuck on the dom
+
+        // We can force it to be removed with a setTimeout
+        clearTimeout(ref.hideTimeout)
+        ref.hideTimeout = setTimeout(onHidden, duration)
     }
 
     /**
