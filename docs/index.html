@@ -37,7 +37,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.2.2</span>
+            <i class="material-icons icon-left">code</i><span>v0.2.3</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -94,6 +94,8 @@
               <button class="btn tippy" id="html-tippy" data-theme="light" data-html="template" data-trigger="click" data-interactive="true" data-animatefill="false" data-arrow="true"><i class="material-icons icon-left">code</i>Popover HTML <small class="opacity-low">(click)</small></button>
 
               <button class="btn flippy" title="I'll flip to the bottom if there's not enough room on the right."><i class="material-icons icon-left">flip</i>Custom flips</button>
+
+              <button class="btn tippy" title="I'll follow your cursor! (Mouse devices only)" data-followcursor="true" data-animation="fade"><i class="material-icons icon-left">mouse</i>Follow cursor</button>
             </div>
           </section>
 
@@ -163,7 +165,7 @@
             <h2><a href="#getting-started"><i class="material-icons icon-left">tag_faces</i><span>Getting started</span></a></h2>
             <ul>
               <li><strong>Production:
-                  <a href="https://github.com/atomiks/tippyjs/releases/tag/v0.2.2" title="<strong>11KB</strong> gzipped"
+                  <a href="https://github.com/atomiks/tippyjs/releases/tag/v0.2.3" title="<strong>12KB</strong> gzipped"
                       class="tippy-link">
                       <i class="material-icons">file_download</i>
                       <span>Download</span>
@@ -355,14 +357,19 @@
                       <td><code>true</code> <code>false</code></td>
                       <td>Specifies whether to allow multiple tooltips open on the page (click trigger only).</td>
                     </tr>
+                    <tr>
+                      <td><code>followCursor</code></td>
+                      <td><code>false</code></td>
+                      <td><code>true</code> <code>false</code></td>
+                      <td>Specifies whether to follow the user's mouse cursor (mouse devices only).</td>
+                    </tr>
+                      <tr>
+                        <td><code>popperOptions</code></td>
+                        <td><code>{}</code></td>
+                        <td><code>Object</code></td>
+                        <td>Allows deeper control over tooltip positioning and behaviour. See right below.</td>
+                      </tr>
                   </tbody>
-                  <tr>
-                    <td><code>popperOptions</code></td>
-                    <td><code>{}</code></td>
-                    <td><code>Object</code></td>
-                    <td>Allows deeper control over tooltip positioning and behaviour. See right below.</td>
-                  </tr>
-                </tbody>
                 </table>
               </div>
 

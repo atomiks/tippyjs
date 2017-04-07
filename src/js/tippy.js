@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.2.2
+    * @version 0.2.3
     * @license MIT
 */
 
@@ -117,9 +117,12 @@ class Tippy {
             offset: 0,
             hideOnClick: true,
             multiple: false,
+            followCursor: false,
             popperOptions: {}
         }
 
+        // If default is truthy, we need ternary operator
+        // duration: transitionend event listener needs to have a non-zero transition duration
         return {
             html: settings.html || defaults.html,
             position: settings.position || defaults.position,
@@ -128,12 +131,13 @@ class Tippy {
             arrow: settings.arrow || defaults.arrow,
             delay: settings.delay || defaults.delay,
             trigger: settings.trigger || defaults.trigger,
-            duration: settings.duration === 0 ? 0 : (settings.duration || defaults.duration),
+            duration: settings.duration === 0 ? 1 : (settings.duration || defaults.duration),
             interactive: settings.interactive || defaults.interactive,
             theme: settings.theme || defaults.theme,
             offset: settings.offset || defaults.offset,
             hideOnClick: settings.hideOnClick === false ? false : (settings.hideOnClick || defaults.hideOnClick),
-            multiple: settings.multiple === false ? false : (settings.multiple || defaults.multiple),
+            multiple: settings.multiple || defaults.multiple,
+            followCursor: settings.followCursor || defaults.followCursor,
             popperOptions: settings.popperOptions || defaults.popperOptions
         }
     }
@@ -144,7 +148,7 @@ class Tippy {
     _handleDocumentHidingEvents() {
 
         /**
-        * Gets the actual popper or tooltipped element from child element event bubbling
+        * Gets the actual popper or tooltipped element due to inner element event targets
         * @param {DOMElement} - target
         * @return {Object} or {null}
         */
@@ -381,8 +385,10 @@ class Tippy {
         if (!delay && delay !== 0) delay = this.settings.delay
 
         // 0, '0'
+        // transitionend event listener needs to have a non-zero transition duration
         let duration = parseInt(el.getAttribute('data-duration'))
         if (!duration && duration !== 0) duration = this.settings.duration
+        else if (duration === 0) duration = 1
 
         // 'true', true, 'false', false
         let interactive = el.getAttribute('data-interactive') || this.settings.interactive
@@ -399,6 +405,10 @@ class Tippy {
         // 'true', true, 'false', false
         let multiple = el.getAttribute('data-multiple') || this.settings.multiple
         if (multiple === 'false') multiple = false
+
+        // 'true', true, 'false', false
+        let followCursor = el.getAttribute('data-followcursor') || this.settings.followCursor
+        if (followCursor === 'false') followCursor = false
 
         // just take the provided value
         const popperOptions = this.settings.popperOptions
@@ -417,6 +427,7 @@ class Tippy {
             offset,
             hideOnClick,
             multiple,
+            followCursor,
             popperOptions
         }
     }
@@ -555,6 +566,29 @@ class Tippy {
         })
     }
 
+    _followCursor(e) {
+        const ref = Tippy.bus.refs[Tippy.bus.tooltippedElMap.indexOf(this)]
+        const position = ref.settings.position
+        const offset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+
+        // Default = top
+        let x = e.clientX - ref.popper.offsetWidth / 2
+        let y = e.clientY + offset - 50
+
+        if (position === 'left') {
+            x = e.clientX - ref.popper.offsetWidth - 10
+            y = e.clientY + offset - ref.popper.offsetHeight / 2
+        } else if (position === 'right') {
+            x = e.clientX + 15
+            y = e.clientY + offset - ref.popper.offsetHeight / 2
+        } else if (position === 'bottom') {
+            y = e.clientY + offset + 10
+        }
+
+        ref.popper.style.WebkitTransform = `translate3d(${x}px, ${y}px, 0)`
+        ref.popper.style.transform = `translate3d(${x}px, ${y}px, 0)`
+    }
+
     /**
     * ================================PUBLIC METHODS================================
     */
@@ -588,7 +622,16 @@ class Tippy {
 
         const ref = Tippy.bus.refs[Tippy.bus.popperMap.indexOf(popper)]
         ref.instance.update()
-        ref.instance.enableEventListeners()
+
+        // Follow cursor setting, not applicable to touch users
+        if (ref.settings.followCursor && !Tippy.touchUser) {
+            if (!ref.hasFollowCursorListener) {
+                ref.hasFollowCursorListener = true
+                ref.tooltippedEl.addEventListener('mousemove', this._followCursor)
+            }
+        } else {
+            ref.instance.enableEventListeners()
+        }
 
         // Repaint
         getComputedStyle(popper).opacity
@@ -615,17 +658,21 @@ class Tippy {
         popper.style.visibility = 'visible'
 
         const onShown = () => {
+            popper.removeEventListener('webkitTransitionEnd', onShown)
+            popper.removeEventListener('transitionend', onShown)
+
             if (popper.style.visibility === 'hidden') return
+
             // Focus click triggered tooltips (popovers) only
             if (ref.settings.trigger.indexOf('click') !== -1) {
                 popper.focus()
             }
             this.callbacks.shown()
         }
-        
-        // Clear unwanted timeouts set previously
-        clearTimeout(ref.showTimeout)
-        ref.showTimeout = setTimeout(onShown, duration)
+
+        // Wait for transition to end
+        popper.addEventListener('webkitTransitionEnd', onShown)
+        popper.addEventListener('transitionend', onShown)
     }
 
     /**
@@ -664,7 +711,15 @@ class Tippy {
         }
 
         const onHidden = () => {
+            popper.removeEventListener('webkitTransitionEnd', onHidden)
+            popper.removeEventListener('transitionend', onHidden)
+
             if (popper.style.visibility === 'visible') return
+
+            if (ref.hasFollowCursorListener) {
+                ref.tooltippedEl.removeEventListener('mousemove', this._followCursor)
+                ref.hasFollowCursorListener = false
+            }
 
             if (document.body.contains(popper)) {
                 document.body.removeChild(popper)
@@ -675,9 +730,9 @@ class Tippy {
             this.callbacks.hidden()
         }
 
-        // Clear unwanted timeouts set previously
-        clearTimeout(ref.hideTimeout)
-        ref.hideTimeout = setTimeout(onHidden, duration)
+        // Wait for transition to end
+        popper.addEventListener('webkitTransitionEnd', onHidden)
+        popper.addEventListener('transitionend', onHidden)
     }
 
     /**
