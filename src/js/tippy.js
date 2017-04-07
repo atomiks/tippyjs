@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.2.5
+    * @version 0.2.6
     * @license MIT
 */
 
@@ -658,21 +658,18 @@ class Tippy {
         popper.style.visibility = 'visible'
 
         const onShown = () => {
-            popper.removeEventListener('webkitTransitionEnd', onShown)
-            popper.removeEventListener('transitionend', onShown)
-
             if (popper.style.visibility === 'hidden') return
 
             // Focus click triggered tooltips (popovers) only
             if (ref.settings.trigger.indexOf('click') !== -1) {
                 popper.focus()
             }
+
             this.callbacks.shown()
         }
 
-        // Wait for transition to end
-        popper.addEventListener('webkitTransitionEnd', onShown)
-        popper.addEventListener('transitionend', onShown)
+        clearTimeout(ref.showTimeout)
+        ref.showTimeout = setTimeout(onShown, duration)
     }
 
     /**
@@ -684,7 +681,7 @@ class Tippy {
         clearTimeout(popper.getAttribute('data-timeout'))
 
         // Hidden anyway
-        if (getComputedStyle(popper).getPropertyValue('visibility') === 'hidden') return
+        if (!document.body.contains(popper)) return
 
         this.callbacks.beforeHidden()
 
@@ -703,21 +700,14 @@ class Tippy {
 
         popper.style.visibility = 'hidden'
 
-        let duration = 1
+        let duration = 0
         if (tooltip.style.transitionDuration) {
             duration = parseInt(tooltip.style.transitionDuration.replace('ms', ''))
         } else if (tooltip.style.WebkitTransitionDuration) {
             duration = parseInt(tooltip.style.WebkitTransitionDuration.replace('ms', ''))
         }
 
-        let hasFired = false
-
         const onHidden = () => {
-            hasFired = true
-
-            popper.removeEventListener('webkitTransitionEnd', onHidden)
-            popper.removeEventListener('transitionend', onHidden)
-
             if (popper.style.visibility === 'visible') return
 
             if (ref.hasFollowCursorListener) {
@@ -734,18 +724,8 @@ class Tippy {
             this.callbacks.hidden()
         }
 
-        // Wait for transition to end
-        popper.addEventListener('webkitTransitionEnd', onHidden)
-        popper.addEventListener('transitionend', onHidden)
-
-        // Bug: if a user VERY briefly hovers over an element, it won't hide (no transitionend fired)
-        // and will stay stuck on the dom
-
-        // We can force it to be removed with a setTimeout
         clearTimeout(ref.hideTimeout)
-        ref.hideTimeout = setTimeout(() => {
-            if (!hasFired) onHidden()
-        }, duration)
+        ref.hideTimeout = setTimeout(onHidden, duration)
     }
 
     /**
