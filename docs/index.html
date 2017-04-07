@@ -92,6 +92,8 @@
               <button class="btn" id="callback-tippy" title="Call ya back!" data-animatefill="false"><i class="material-icons icon-left">call</i>Callbacks</button>
 
               <button class="btn tippy" id="html-tippy" data-theme="light" data-html="template" data-trigger="click" data-interactive="true" data-animatefill="false" data-arrow="true"><i class="material-icons icon-left">code</i>Popover HTML <small class="opacity-low">(click)</small></button>
+
+              <button class="btn flippy" title="I'll flip to the bottom if there's not enough room on the right."><i class="material-icons icon-left">flip</i>Custom flips</button>
             </div>
           </section>
 
@@ -370,6 +372,23 @@
                   View the <a class="tippy-link" title="popper.js.org" target="_blank" href="https://popper.js.org/popper-documentation.html">Popper.js documentation</a>
                   to see the settings you can specify.
               </p>
+
+              <p>
+                  Here's an example of how to integrate Popper.js settings into Tippy, so that a tooltip will flip
+                  to the bottom from the right if there's not enough room in the viewport.
+              </p>
+
+<pre>new Tippy('.my-selector', {
+    position: 'right',
+    popperOptions: {
+        modifiers: {
+            flip: {
+                behavior: ['right', 'bottom']
+            }
+        }
+    }
+})
+</pre>
 
               <h4>Callbacks</h4>
 

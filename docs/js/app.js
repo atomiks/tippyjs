@@ -11,10 +11,24 @@ setTimeout(function() {
 
 new Tippy('.tippy')
 
+new Tippy('.flippy', {
+    position: 'right',
+    animation: 'fade',
+    arrow: true,
+    popperOptions: {
+        modifiers: {
+            flip: {
+                behavior: ['right', 'bottom']
+            }
+        }
+    }
+})
+
 new Tippy('.tippy-link', {
     theme: 'light',
     arrow: true
 })
+
 var instance = new Tippy('#callback-tippy', {
   shown: function() {
     alert('Hello from the shown() callback!')
