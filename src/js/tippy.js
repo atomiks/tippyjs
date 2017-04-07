@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.2.3
+    * @version 0.2.5
     * @license MIT
 */
 
@@ -710,7 +710,11 @@ class Tippy {
             duration = parseInt(tooltip.style.WebkitTransitionDuration.replace('ms', ''))
         }
 
+        let hasFired = false
+
         const onHidden = () => {
+            hasFired = true
+
             popper.removeEventListener('webkitTransitionEnd', onHidden)
             popper.removeEventListener('transitionend', onHidden)
 
@@ -739,7 +743,9 @@ class Tippy {
 
         // We can force it to be removed with a setTimeout
         clearTimeout(ref.hideTimeout)
-        ref.hideTimeout = setTimeout(onHidden, duration)
+        ref.hideTimeout = setTimeout(() => {
+            if (!hasFired) onHidden()
+        }, duration)
     }
 
     /**
