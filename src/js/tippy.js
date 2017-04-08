@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.2.7
+    * @version 0.2.8
     * @license MIT
 */
 
@@ -75,11 +75,16 @@ class Tippy {
     */
     _closest(element, parentSelector) {
         if (!Element.prototype.matches) {
-            var isWebkit = 'WebkitAppearance' in document.documentElement.style
-            if (isWebkit && !(/Edge\/\d./i.test(navigator.userAgent))) {
+            if (element.matchesSelector) {
+                Element.prototype.matches = Element.prototype.matchesSelector
+            } else if (element.webkitMatchesSelector) {
                 Element.prototype.matches = Element.prototype.webkitMatchesSelector
-            } else {
+            } else if (element.mozMatchesSelector) {
+                Element.prototype.matches = Element.prototype.mozMatchesSelector
+            } else if (element.msMatchesSelector) {
                 Element.prototype.matches = Element.prototype.msMatchesSelector
+            } else {
+                return element
             }
         }
         if (!Element.prototype.closest) Element.prototype.closest = function(selector) {
