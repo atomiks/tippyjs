@@ -602,10 +602,26 @@ new Tippy('.tippy', {
                   when hidden. Popper.js only listens to scroll and resize events when a popper (tooltip) is showing,
                   and also updates the position on show.
               </p>
+              <p>
+                  However, you'll need to consider initial instantiation time. You can test out the performance by pressing the button below.
+                  You can append as many as you'd like to see the effects increasing numbers of tooltipped elements has on performance.
+              </p>
+
+              <div class="form-group">
+                  <label for="performance-model"><strong>Elements to append</strong></label>
+                  <input value="20" type="text" class="form-control" id="performance-model">
+              </div>
+
+              <button id="performance-btn" class="btn"></button>
+
+              <br><br>
+
+              <div id="performance-result"></div>
+              <div id="performance-test"></div>
 
             </section>
 
-            <hr />
+            <hr>
 
             <section id="planned-features">
 

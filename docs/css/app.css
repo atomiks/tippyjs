@@ -168,7 +168,7 @@ a:hover {
     outline: auto 5px -webkit-focus-ring-color !important;
 }
 
-:focus:not(.focus-ring) {
+:focus:not(.focus-ring), input:focus {
     outline: 0 !important;
 }
 
@@ -311,6 +311,29 @@ main .container-fluid.enter {
     background-color: yellow;
     border: 2px solid;
     border-color: transparent transparent orange orange;
+}
+
+.test-element {
+    width: 50px;
+    background-color: #f3f6f9;
+    color: #555;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    margin: 0.5rem;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: default;
+}
+
+#performance-test {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#performance-model {
+    width: 70px;
 }
 
 @media (min-width: 576px) {
