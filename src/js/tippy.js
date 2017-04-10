@@ -163,7 +163,7 @@ class Tippy {
     }
 
     /**
-    * Creates document event listener to handle click on the document
+    * Creates event listener to handle clicks on the document
     */
     _handleDocumentClick() {
 
@@ -218,10 +218,6 @@ class Tippy {
             }
         }
 
-        /**
-        * Event listener method for document click
-        * @param {Object} - event
-        */
         const handleClickHide = event => {
 
             const refIndices = getRefIndices(event.target)
@@ -450,6 +446,7 @@ class Tippy {
     * Returns relevant listeners for each ref
     * @param {DOMElement} - tooltippedEl
     * @param {DOMElement} - popper
+    * @param {Object} - settings
     * @return {Object}
     */
     _getEventListenerMethods(tooltippedEl, popper, settings) {
@@ -547,9 +544,10 @@ class Tippy {
 
     /**
     * Creates a trigger for each one specified
+    * @param {Object} - event
     * @param {DOMElement} - tooltippedEl
     * @param {Object} - methods
-    * @param {Object} - event
+    * @param {Array} - listeners
     * @return {Array}
     */
     _createTrigger(event, tooltippedEl, methods, listeners) {
@@ -663,7 +661,7 @@ class Tippy {
 
     /**
     * Returns a tooltipped element's popper reference
-    * @param {DOMElement}
+    * @param {DOMElement} - el
     * @return {DOMElement}
     */
     getPopperElement(el) {
