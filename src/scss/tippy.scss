@@ -160,7 +160,6 @@ $arrow-width: 10px;
                 }
             }
 
-            // No animation
             [data-animation="none"] {
                 &.enter {
                     opacity: 1;
@@ -173,7 +172,6 @@ $arrow-width: 10px;
                 }
             }
 
-            // Perspective animation
             [data-animation="perspective"] {
                 transform-origin: nth($origins, index($positions, $position));
 
@@ -188,7 +186,6 @@ $arrow-width: 10px;
                 }
             }
 
-            // Fade animation
             [data-animation="fade"] {
                 &.enter {
                     opacity: 1;
@@ -200,7 +197,6 @@ $arrow-width: 10px;
                 }
             }
 
-            // Shift animation
             [data-animation="shift"] {
                 &.enter {
                     opacity: 1;
@@ -212,7 +208,6 @@ $arrow-width: 10px;
                 }
             }
 
-            // Scale animation
             [data-animation="scale"] {
                 &.enter {
                     opacity: 1;
@@ -252,6 +247,12 @@ $arrow-width: 10px;
     &[data-animatefill] {
         overflow: hidden;
         background-color: transparent;
+    }
+
+    &[data-inertia] {
+        // Safari/Webkit can't go out of range
+        -webkit-transition-timing-function: cubic-bezier(.53,1,.36,.85);
+        transition-timing-function: cubic-bezier(.53,2,.36,.85);
     }
 
     [x-circle] {

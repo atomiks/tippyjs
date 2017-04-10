@@ -37,7 +37,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.2.8</span>
+            <i class="material-icons icon-left">code</i><span>v0.3.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -65,15 +65,15 @@
             <div class="button-showcase d-flex justify-content-center flex-wrap">
               <button class="btn tippy" title="I'm the default tooltip!"><i class="material-icons icon-left">remove</i>Default</button>
 
-              <button class="btn tippy" title="Look at me on the bottom!" data-position="bottom"><i class="material-icons icon-left">compare_arrows</i>Positioning</button>
+              <button class="btn tippy" title="Look at me on the bottom! 🙃" data-animatefill="false" data-position="bottom"><i class="material-icons icon-left">compare_arrows</i>Positioning</button>
 
-              <button class="btn tippy" title="I have a nice pointy arrow." data-arrow="true" data-animation="fade"><i class="material-icons icon-left">play_arrow</i>Arrows</button>
+              <button class="btn tippy" title="I have a nice pointy arrow. 👆🏻" data-arrow="true" data-animation="fade"><i class="material-icons icon-left">play_arrow</i>Arrows</button>
 
               <button class="btn tippy" title="You can interact with me as much as you like!" data-interactive="true"><i class="material-icons icon-left">pan_tool</i> Interactivity</button>
 
-              <button class="btn tippy" title="Thanks for clicking :D" data-trigger="click"><i class="material-icons icon-left">touch_app</i>Triggers <small class="opacity-low">(click)</small></button>
+              <button class="btn tippy" title="Thanks for clicking 👍🏻" data-trigger="click"><i class="material-icons icon-left">touch_app</i>Triggers <small class="opacity-low">(click)</small></button>
 
-              <button class="btn tippy" title="I'm a light theme!" data-theme="light"><i class="material-icons icon-left">brush</i>Themes</button>
+              <button class="btn tippy" title="I'm a light 💡 theme!" data-theme="light"><i class="material-icons icon-left">brush</i>Themes</button>
 
               <button class="btn tippy" title="I scaled from nothingness..." data-animation="scale" data-animatefill="false"><i class="material-icons icon-left">loupe</i>Scale animation</button>
 
@@ -83,11 +83,17 @@
 
               <button class="btn tippy" title="Am I fancy enough for you?" data-animation="perspective" data-animatefill="false"><i class="material-icons icon-left">panorama_horizontal</i>Perspective animation</button>
 
-              <button class="btn tippy" title="Sorry for making you wait D:" data-delay="600"><i class="material-icons icon-left">timer</i>Delays</button>
+              <button class="btn tippy" title="Sorry for making you wait" data-delay="600"><i class="material-icons icon-left">timer</i>Show delay</button>
 
-              <button class="btn tippy" title="BAM!" data-duration="0"><i class="material-icons icon-left">flash_on</i>Instant</button>
+              <button class="btn tippy" title="I won't leave for a while" data-hidedelay="600"><i class="material-icons icon-left">timer</i>Hide delay</button>
 
-              <button class="btn tippy" title="I'm a sloth, don't mind me." data-duration="1500" data-animatefill="false" data-animation="fade"><i class="material-icons icon-left">timer_3</i>Transition duration</button>
+              <button class="btn tippy" title="BAM! 😱" data-duration="0"><i class="material-icons icon-left">flash_on</i>Instant</button>
+
+              <button class="btn tippy" title="Physics, bitch" data-inertia="true" data-animation="scale" data-animatefill="false"><i class="material-icons icon-left">blur_linear</i>Inertia</button>
+
+              <button class="btn tippy" title="By default, hide duration is the same as show" data-duration="3000" data-animatefill="false" data-animation="fade"><i class="material-icons icon-left">timer_3</i>Show duration</button>
+
+              <button class="btn tippy" title="1s in, instant out" data-duration="1000" data-hideduration="0" data-animatefill="false" data-animation="fade"><i class="material-icons icon-left">timer_3</i>Hide duration</button>
 
               <button class="btn" id="callback-tippy" title="Call ya back!" data-animatefill="false"><i class="material-icons icon-left">call</i>Callbacks</button>
 
@@ -95,7 +101,7 @@
 
               <button class="btn flippy" title="I'll flip to the bottom if there's not enough room on the right."><i class="material-icons icon-left">flip</i>Custom flips</button>
 
-              <button class="btn tippy" title="I'll follow your cursor! (Mouse devices only)" data-followcursor="true" data-animation="fade"><i class="material-icons icon-left">mouse</i>Follow cursor</button>
+              <button class="btn tippy" title="I'll follow your cursor 🖱️! (Mouse only)" data-followcursor="true" data-animation="fade"><i class="material-icons icon-left">mouse</i>Follow cursor</button>
             </div>
           </section>
 
@@ -165,7 +171,7 @@
             <h2><a href="#getting-started"><i class="material-icons icon-left">tag_faces</i><span>Getting started</span></a></h2>
             <ul>
               <li><strong>Production:
-                  <a href="https://github.com/atomiks/tippyjs/releases/tag/v0.2.8" title="<strong>12KB</strong> gzipped"
+                  <a href="https://github.com/atomiks/tippyjs/releases/tag/v0.3.0" title="<strong>12KB</strong> gzipped"
                       class="tippy-link">
                       <i class="material-icons">file_download</i>
                       <span>Download</span>
@@ -187,7 +193,7 @@
             <p>Place the <code>tippy.css</code> stylesheet in your document's <code>head</code>.</p>
             <p><code>&lt;link rel="stylesheet" href="css/tippy.css"&gt;</code></p>
             <h4>JS</h4>
-            <p>Include the <code>tippy.js</code> file in your document <strong>before</strong> your own scripts:</p>
+            <p>Include the <code>tippy.js</code> file in your document before your own scripts:</p>
             <p><code>&lt;script src="js/tippy.js"&gt;&lt;/script&gt;</code></p>
             <p>If you're using Node/Webpack, you can import the <code>Tippy</code> module:</p>
             <p><code>import Tippy from './js/tippy'</code></p>
@@ -295,13 +301,19 @@
                       <td><code>interactive</code></td>
                       <td><code>false</code></td>
                       <td><code>true</code> <code>false</code></td>
-                      <td>Makes a tooltip interactive, i.e. will not close when the user hovers over or clicks on the tooltip. This lets you create a <strong>popover</strong> when used in conjunction with a <code>click</code> trigger.</td>
+                      <td>Makes a tooltip interactive, i.e. will not close when the user hovers over or clicks on the tooltip. This lets you create a popover (similar to Bootstrap) when used in conjunction with a <code>click</code> trigger.</td>
                     </tr>
                     <tr>
                       <td><code>delay</code></td>
                       <td><code>0</code></td>
                       <td>Any integer >= 0 (milliseconds)</td>
-                      <td>Specifies how long it takes after a trigger event is fired for a tooltip to show.</td>
+                      <td>Specifies how long it takes after a trigger event is fired for a tooltip to <strong>show</strong>.</td>
+                    </tr>
+                    <tr>
+                      <td><code>hideDelay</code></td>
+                      <td><code>0</code></td>
+                      <td>Any integer >= 0 (milliseconds)</td>
+                      <td>Specifies how long it takes after a leave event is fired for a tooltip to <strong>hide</strong>.</td>
                     </tr>
                     <tr>
                       <td><code>animation</code></td>
@@ -325,7 +337,13 @@
                       <td><code>duration</code></td>
                       <td><code>400</code></td>
                       <td>Any integer >= 0 (milliseconds)</td>
-                      <td>Specifies how long the transition animation takes to complete. Setting this to <code>0</code> will make it appear instantly. <small class="text-muted"><strong>Tip!</strong> Large tooltips with <code>animateFill</code> look nicer with longer durations.</small></td>
+                      <td>Specifies how long the transition animation takes to complete when showing a tooltip.</td>
+                    </tr>
+                    <tr>
+                      <td><code>hideDuration</code></td>
+                      <td><code>duration</code></td>
+                      <td>Any integer >= 0 (milliseconds)</td>
+                      <td>Specifies how long the transition animation takes to complete when hiding a tooltip.</td>
                     </tr>
                     <tr>
                       <td><code>html</code></td>
@@ -363,11 +381,17 @@
                       <td><code>true</code> <code>false</code></td>
                       <td>Specifies whether to follow the user's mouse cursor (mouse devices only).</td>
                     </tr>
+                    <tr>
+                      <td><code>inertia</code></td>
+                      <td><code>false</code></td>
+                      <td><code>true</code> <code>false</code></td>
+                      <td>Modifies the <code>transition-timing-function</code> with a cubic bezier to create a "slingshot" intertial effect.</td>
+                    </tr>
                       <tr>
                         <td><code>popperOptions</code></td>
                         <td><code>{}</code></td>
                         <td><code>Object</code></td>
-                        <td>Allows deeper control over tooltip positioning and behaviour. See right below.</td>
+                        <td>Allows more control over tooltip positioning and behavior. See right below.</td>
                       </tr>
                   </tbody>
                 </table>
@@ -385,7 +409,7 @@
                   to the bottom from the right if there's not enough room in the viewport.
               </p>
 
-<pre>new Tippy('.my-selector', {
+<pre>new Tippy('.mySelector', {
     position: 'right',
     popperOptions: {
         modifiers: {
@@ -529,10 +553,10 @@ new Tippy('.tippy', {
 
           <h4>Styling tooltips with HTML content</h4>
 
-          <p>Use this selector to target your tooltip template. Replace "my-template-id" with
-              your own template's <code>id</code>.</p>
+          <p>Use this selector to target your tooltip template. Replace "#my-template-id" with
+              your own template's <code>id</code>, including the leading hash.</p>
 
-<pre>.tippy-tooltip[data-template-id="my-template-id"] {
+<pre>.tippy-tooltip[data-template-id="#my-template-id"] {
   /* Your styling here. Example: */
   padding: 2rem;
 }</pre>
@@ -579,9 +603,9 @@ new Tippy('.tippy', {
           <p><code>instance.hide(popper)</code></p>
           <p><code>instance.destroy(popper)</code></p>
 
-          <p>The <code>show</code> method takes a transition duration as its second (optional) parameter.</p>
+          <p>The <code>show</code> and <code>hide</code> methods take a transition duration as their second (optional) parameters.</p>
 
-          <p><code>destroy</code>ing a popper removes listeners from its element and removes it from the global references array.
+          <p><code>destroy</code>ing a popper removes listeners from its tooltipped element reference, destroys its popper instance, and removes it from the global references array.
           </p>
 
           </section>
@@ -618,25 +642,6 @@ new Tippy('.tippy', {
 
               <div id="performance-result"></div>
               <div id="performance-test"></div>
-
-            </section>
-
-            <hr>
-
-            <section id="planned-features">
-
-              <h2>
-                  <a href="#planned-features">
-                      <i class="material-icons icon-left">schedule</i><span>Planned features</span>
-                  </a>
-              </h2>
-
-              <ul>
-                <li><code>leaveDelay</code> setting</li>
-                <li>More, cooler animations like <code>inertia</code></li>
-                <li>Tooltips within HTML tooltips support</li>
-                <li>...and some more as I think of them</li>
-              </ul>
 
             </section>
 

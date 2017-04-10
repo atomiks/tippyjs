@@ -1,15 +1,23 @@
+function hideHtml() {
+    var popper = instance.getPopperElement(document.querySelector('#html-tippy'))
+    instance.hide(popper)
+}
+
 var timeout = 800
+
 if (window.pageYOffset > 250 || document.documentElement.scrollTop > 250) {
     timeout = 0
 }
+
 setTimeout(function() {
     document.querySelector('.hero').classList.add('enter')
 }, timeout/4)
+
 setTimeout(function() {
     document.querySelector('main .container-fluid').classList.add('enter')
 }, timeout)
 
-new Tippy('.tippy')
+var instance = new Tippy('.tippy')
 
 new Tippy('.flippy', {
     position: 'right',
@@ -29,18 +37,12 @@ new Tippy('.tippy-link', {
     arrow: true
 })
 
-var hideHtml = (function(){
-    var instance = new Tippy('#callback-tippy', {
-        shown: function() {
-            alert('Hello from the shown() callback!')
-            document.getElementById('callback-tippy').blur()
-        }
-    })
-    return function() {
-        var popper = instance.getPopperElement(document.querySelector('#html-tippy'))
-        instance.hide(popper)
+new Tippy('#callback-tippy', {
+    shown: function() {
+        alert('Hello from the shown() callback!')
+        document.getElementById('callback-tippy').blur()
     }
-})()
+})
 
 var performanceTest = document.getElementById('performance-test')
 var performanceResult = document.getElementById('performance-result')
@@ -89,7 +91,7 @@ var jsperf = (function() {
 
             tippyTime += (t2 - t1)
 
-            var innerHTML = '<p><strong>In total, Tippy instantiation has taken</strong>: ' + tippyTime.toFixed(1) + ' milliseconds</p>' +
+            var innerHTML = '<p><strong>In total, Tippy instantiation has taken</strong> ' + tippyTime.toFixed(1) + ' milliseconds</p>' +
             '<p><strong>Current Tippy instantiation took</strong> ' + (t2 - t1).toFixed(1) + ' milliseconds</p>' +
             '<p><strong>Elements appended so far:</strong> ' + (counter - base) + '</p><hr>'
 
