@@ -248,6 +248,7 @@ class Tippy {
 
         Tippy.bus.listeners.click = handleClickHide
         document.addEventListener('click', handleClickHide)
+        document.addEventListener('touchend', handleClickHide)
     }
 
     /**
