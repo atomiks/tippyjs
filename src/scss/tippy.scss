@@ -295,7 +295,7 @@ $arrow-width: 10px;
 }
 
 // Desktop Safari does not like the iOS translate3d hack
-@media (min-width: 768px) {
+@media (min-width: 992px) {
     .tippy-popper[x-placement=top] [x-circle].leave {
         transform: scale(0) translate(-50%, -50%)
     }
