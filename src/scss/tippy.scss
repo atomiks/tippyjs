@@ -122,10 +122,6 @@ $positions: 'top', 'bottom', 'left', 'right';
 $origins: bottom, top, right, left;
 $arrow-width: 10px;
 
-.tippy-touch {
-    cursor: pointer !important;
-}
-
 .tippy-popper {
     visibility: hidden;
     max-width: 400px;

@@ -4,7 +4,7 @@
   "description": "Pure JS Tooltip Library",
   "main": "app.js",
   "scripts": {
-    "dev": "webpack-dev-server --inline --content-base docs/",
+    "dev": "webpack-dev-server --inline --content-base docs/testing/",
     "build": "webpack --config webpack.config.js"
   },
   "author": "atomiks",

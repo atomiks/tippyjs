@@ -59,10 +59,8 @@ class Tippy {
         if (!Tippy.bus.listeners.touchstart) {
             // Only needs to be determined in one instance
             Tippy.bus.listeners.touchstart = true
-
             const handleTouch = () => {
                 Tippy.touchUser = true
-                document.body.classList.add('tippy-touch')
                 window.removeEventListener('touchstart', handleTouch)
             }
             window.addEventListener('touchstart', handleTouch)
@@ -238,8 +236,7 @@ class Tippy {
                    )
                 {
                     // Hide all except popper belonging to the element that was clicked on
-                    this._hideAllPoppers(ref)
-                    return
+                    return this._hideAllPoppers(ref)
                 }
 
                 // If hideOnClick is false or it's triggered by a click don't hide poppers
@@ -550,8 +547,10 @@ class Tippy {
     * @param {Array} - listeners
     * @return {Array}
     */
-    _createTrigger(event, tooltippedEl, methods, listeners) {
-        if (event === 'manual') return
+    _createTrigger(event, tooltippedEl, methods) {
+        if (event === 'manual' || (Tippy.touchUser && event === 'focus')) return
+
+        const listeners = []
 
         // Enter
         tooltippedEl.addEventListener(event, methods.handleTrigger)
@@ -609,10 +608,10 @@ class Tippy {
             const popper = this._createPopperElement(title, settings)
             const instance = this._createPopperInstance(tooltippedEl, popper, settings)
             const methods = this._getEventListenerMethods(tooltippedEl, popper, settings)
-            let listeners = []
+            const listeners = []
 
             settings.trigger.forEach(event => {
-                listeners = this._createTrigger(event, tooltippedEl, methods, listeners)
+                listeners.concat(this._createTrigger(event, tooltippedEl, methods))
             })
 
             this._pushIntoTippyBus({
