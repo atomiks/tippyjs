@@ -613,7 +613,7 @@ class Tippy {
             let listeners = []
 
             settings.trigger.forEach(event => {
-                listeners = this._createTrigger(event, tooltippedEl, methods, listeners)
+                listeners = this._createTrigger(event, tooltippedEl, methods, listeners) || []
             })
 
             this._pushIntoTippyBus({

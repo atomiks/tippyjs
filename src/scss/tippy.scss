@@ -76,15 +76,15 @@
     }
 }
 
-@mixin circle-transform-leave ($position, $scale) {
+@mixin circle-transform-leave ($position) {
     @if ($position == 'top') {
-        transform: scale($scale) translate(-50%, -50%);
+        transform: scale(0) translate3d(-50%, -50%, 0);
     } @else if ($position == 'bottom') {
-        transform: scale($scale) translate(-50%, -50%);
+        transform: scale(0) translate3d(-50%, -50%, 0);
     } @else if ($position == 'left') {
-        transform: scale($scale) translate(-50%, -33%);
+        transform: scale(0) translate3d(-50%, -33%, 0);
     } @else if ($position == 'right') {
-        transform: scale($scale) translate(-50%, -33%);
+        transform: scale(0) translate3d(-50%, -33%, 0);
     }
 }
 
@@ -129,7 +129,7 @@ $arrow-width: 10px;
 .tippy-popper {
     visibility: hidden;
     max-width: 400px;
-    perspective: 1000px;
+    perspective: 800px;
     z-index: 9999;
 
     &.html-template {
@@ -156,7 +156,7 @@ $arrow-width: 10px;
 
                 &.leave {
                     opacity: 0;
-                    @include circle-transform-leave($position, 0);
+                    @include circle-transform-leave($position);
                 }
             }
 
@@ -257,7 +257,6 @@ $arrow-width: 10px;
 
     [x-circle] {
         position: absolute;
-        transform-style: preserve-3d;
         will-change: transform;
         background-color: #333;
         border-radius: 50%;
@@ -292,6 +291,22 @@ $arrow-width: 10px;
         &[data-animatefill] {
             background-color: transparent;
         }
+    }
+}
+
+// Desktop Safari does not like the iOS translate3d hack
+@media (min-width: 768px) {
+    .tippy-popper[x-placement=top] [x-circle].leave {
+        transform: scale(0) translate(-50%, -50%)
+    }
+    .tippy-popper[x-placement=bottom] [x-circle].leave {
+        transform: scale(0) translate(-50%, -50%)
+    }
+    .tippy-popper[x-placement=left] [x-circle].leave {
+        transform: scale(0) translate(-50%, -33%)
+    }
+    .tippy-popper[x-placement=right] [x-circle].leave {
+        transform: scale(0) translate(-50%, -33%)
     }
 }
 
