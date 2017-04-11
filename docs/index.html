@@ -163,6 +163,16 @@
                 </tbody>
               </table>
             </div>
+
+            <h4>Touch devices</h4>
+            <p>
+                Tippy works on touch devices almost the same as on desktop/mouse devices. However, in order for tooltips to close
+                when tapping anywhere on the body on touch devices (at least on iOS), it adds a <code>.tippy-touch {cursor: pointer !important; }</code>
+                class to the body.
+                If you have a better solution please <a href="https://github.com/atomiks/tippyjs/issues">start an issue</a>,
+                it would be very helpful!
+            </p>
+
           </section>
 
           <hr>
@@ -295,7 +305,7 @@
                       <td><code>trigger</code></td>
                       <td><code>'mouseenter focus'</code></td>
                       <td><code>'mouseenter'</code> <code>'focus'</code> <code>'click'</code> <code>'manual'</code></td>
-                      <td>Specifies which type of events will trigger a tooltip to show. <code>mouseenter</code> is for mouse/desktop devices and <code>focus</code> is for keyboard or touch/mobile devices. Use <code>manual</code> if you want to show/hide the tooltip manually/programmatically (see <a href="#controlling-tooltips-manually">below</a>).</td>
+                      <td>Specifies which type of events will trigger a tooltip to show. <code>mouseenter</code> is for hovering and touch on mobile, and <code>focus</code> is for keyboard navigation. Use <code>manual</code> if you want to show/hide the tooltip manually/programmatically (see <a href="#controlling-tooltips-manually">below</a>).</td>
                     </tr>
                     <tr>
                       <td><code>interactive</code></td>
@@ -313,7 +323,7 @@
                       <td><code>hideDelay</code></td>
                       <td><code>0</code></td>
                       <td>Any integer >= 0 (milliseconds)</td>
-                      <td>Specifies how long it takes after a leave event is fired for a tooltip to <strong>hide</strong>.</td>
+                      <td>Specifies how long it takes after a leave event is fired for a tooltip to <strong>hide</strong>. Not applicable when clicking on the document to hide tooltips.</td>
                     </tr>
                     <tr>
                       <td><code>animation</code></td>
