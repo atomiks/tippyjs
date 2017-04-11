@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.3.0
+    * @version 0.3.1
     * @license MIT
 */
 
@@ -59,8 +59,10 @@ class Tippy {
         if (!Tippy.bus.listeners.touchstart) {
             // Only needs to be determined in one instance
             Tippy.bus.listeners.touchstart = true
+
             const handleTouch = () => {
                 Tippy.touchUser = true
+                document.body.classList.add('tippy-touch')
                 window.removeEventListener('touchstart', handleTouch)
             }
             window.addEventListener('touchstart', handleTouch)
@@ -151,17 +153,17 @@ class Tippy {
             if (!document.body.contains(r.popper)) return
 
             if (!ref) {
-                this.hide(r.popper)
+                this.hide(r.popper, r.settings.hideDuration)
             } else {
                 if (r.popper !== ref.popper) {
-                    this.hide(r.popper)
+                    this.hide(r.popper, r.settings.hideDuration)
                 }
             }
         })
     }
 
     /**
-    * Creates event listener to handle clicks on the document
+    * Creates document event listener to handle click on the document
     */
     _handleDocumentClick() {
 
@@ -216,6 +218,10 @@ class Tippy {
             }
         }
 
+        /**
+        * Event listener method for document click
+        * @param {Object} - event
+        */
         const handleClickHide = event => {
 
             const refIndices = getRefIndices(event.target)
@@ -248,7 +254,6 @@ class Tippy {
 
         Tippy.bus.listeners.click = handleClickHide
         document.addEventListener('click', handleClickHide)
-        document.addEventListener('touchend', handleClickHide)
     }
 
     /**
@@ -444,7 +449,6 @@ class Tippy {
     * Returns relevant listeners for each ref
     * @param {DOMElement} - tooltippedEl
     * @param {DOMElement} - popper
-    * @param {Object} - settings
     * @return {Object}
     */
     _getEventListenerMethods(tooltippedEl, popper, settings) {
@@ -542,16 +546,13 @@ class Tippy {
 
     /**
     * Creates a trigger for each one specified
-    * @param {Object} - event
     * @param {DOMElement} - tooltippedEl
     * @param {Object} - methods
-    * @param {Array} - listeners
+    * @param {Object} - event
     * @return {Array}
     */
-    _createTrigger(event, tooltippedEl, methods) {
-        if (event === 'manual' || (Tippy.touchUser && event === 'focus')) return
-
-        const listeners = []
+    _createTrigger(event, tooltippedEl, methods, listeners) {
+        if (event === 'manual') return
 
         // Enter
         tooltippedEl.addEventListener(event, methods.handleTrigger)
@@ -609,10 +610,10 @@ class Tippy {
             const popper = this._createPopperElement(title, settings)
             const instance = this._createPopperInstance(tooltippedEl, popper, settings)
             const methods = this._getEventListenerMethods(tooltippedEl, popper, settings)
-            const listeners = []
+            let listeners = []
 
             settings.trigger.forEach(event => {
-                listeners.concat(this._createTrigger(event, tooltippedEl, methods))
+                listeners = this._createTrigger(event, tooltippedEl, methods, listeners)
             })
 
             this._pushIntoTippyBus({
@@ -661,7 +662,7 @@ class Tippy {
 
     /**
     * Returns a tooltipped element's popper reference
-    * @param {DOMElement} - el
+    * @param {DOMElement}
     * @return {DOMElement}
     */
     getPopperElement(el) {
@@ -707,9 +708,7 @@ class Tippy {
         }
 
         // Repaint is required for CSS transition when appending
-        getComputedStyle(popper).opacity
         getComputedStyle(tooltip).opacity
-        if (arrow) getComputedStyle(arrow).opacity
 
         tooltip.style.WebkitTransitionDuration = duration + 'ms'
         tooltip.style.transitionDuration = duration + 'ms'
@@ -719,8 +718,8 @@ class Tippy {
         if (circle) {
             // Repaint
             const style = getComputedStyle(circle)
-            style.WebkitTransformOrigin
-            style.transformOrigin
+            if (!style.transform) style.WebkitTransform
+            style.transform
 
             circle.style.WebkitTransitionDuration = duration + 'ms'
             circle.style.transitionDuration = duration + 'ms'

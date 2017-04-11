@@ -122,6 +122,10 @@ $positions: 'top', 'bottom', 'left', 'right';
 $origins: bottom, top, right, left;
 $arrow-width: 10px;
 
+.tippy-touch {
+    cursor: pointer !important;
+}
+
 .tippy-popper {
     visibility: hidden;
     max-width: 400px;
@@ -253,6 +257,7 @@ $arrow-width: 10px;
 
     [x-circle] {
         position: absolute;
+        transform-style: preserve-3d;
         will-change: transform;
         background-color: #333;
         border-radius: 50%;

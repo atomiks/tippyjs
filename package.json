@@ -1,10 +1,10 @@
 {
   "name": "tippy.js",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Pure JS Tooltip Library",
   "main": "app.js",
   "scripts": {
-    "dev": "webpack-dev-server --inline --content-base docs/testing/",
+    "dev": "webpack-dev-server --inline --content-base docs/",
     "build": "webpack --config webpack.config.js"
   },
   "author": "atomiks",

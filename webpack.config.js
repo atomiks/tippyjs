@@ -7,7 +7,7 @@ const extractSass = new ExtractTextPlugin('tippy/tippy.css');
 module.exports = {
   entry: ['./app.js'],
   output: {
-    path: path.join(__dirname, 'docs/testing'),
+    path: path.join(__dirname, 'docs'),
     filename: 'tippy/tippy.js'
   },
   module: {
