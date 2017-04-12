@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.3.3
+    * @version 0.3.5
     * @license MIT
 */
 
@@ -144,20 +144,28 @@ class Tippy {
 
     /**
     * Hides all poppers
-    * @param {Object} - ref
+    * @param {Object} - currentRef
     */
-    _hideAllPoppers(ref = null) {
-        Tippy.bus.refs.forEach(r => {
+    _hideAllPoppers(currentRef = null) {
+        Tippy.bus.refs.forEach(ref => {
             // Don't hide already hidden ones
-            if (!document.body.contains(r.popper)) return
+            if (!document.body.contains(ref.popper)) return
 
-            if (!ref) {
-                this.hide(r.popper, r.settings.hideDuration)
+            if (!currentRef) {
+                if (ref.settings.hideOnClick && ref.settings.hideOnClick !== 'persistent') {
+                    this.hide(ref.popper, ref.settings.hideDuration)
+                }
             } else {
-                if (r.popper !== ref.popper) {
-                    this.hide(r.popper, r.settings.hideDuration)
+                if (
+                    ref.popper !== currentRef.popper
+                    && ref.settings.hideOnClick
+                    && ref.settings.hideOnClick !== 'persistent'
+                    )
+                {
+                    this.hide(ref.popper, ref.settings.hideDuration)
                 }
             }
+
         })
     }
 
@@ -244,7 +252,7 @@ class Tippy {
                     return this._hideAllPoppers(ref)
                 }
 
-                // If hideOnClick is false or it's triggered by a click don't hide poppers
+                // If hideOnClick is false or triggered by a click don't hide poppers
                 if (!ref.settings.hideOnClick || ref.settings.trigger.indexOf('click') !== -1) return
             }
 
@@ -479,7 +487,7 @@ class Tippy {
             if (
                 event.type === 'click'
                 && popper.style.visibility === 'visible'
-                && settings.hideOnClick
+                && settings.hideOnClick !== 'persistent'
                )
             {
                 return hide()
