@@ -78,13 +78,13 @@
 
 @mixin circle-transform-leave ($position) {
     @if ($position == 'top') {
-        transform: scale(0) translate3d(-50%, -50%, 0);
+        transform: scale(0) translate(-50%, -50%);
     } @else if ($position == 'bottom') {
-        transform: scale(0) translate3d(-50%, -50%, 0);
+        transform: scale(0) translate(-50%, -50%);
     } @else if ($position == 'left') {
-        transform: scale(0) translate3d(-50%, -33%, 0);
+        transform: scale(0) translate(-50%, -33%);
     } @else if ($position == 'right') {
-        transform: scale(0) translate3d(-50%, -33%, 0);
+        transform: scale(0) translate(-50%, -33%);
     }
 }
 
@@ -96,11 +96,11 @@
         transform: rotate(135deg);
         top: -$width/2;
     } @else if ($position == 'left') {
-        transform: rotate(135deg);
+        transform: rotate(225deg);
         right: -$width/2;
         top: 50%;
     } @else if ($position == 'right') {
-        transform: rotate(-45deg);
+        transform: rotate(45deg);
         left: -$width/2;
         top: 50%;
     }
@@ -138,7 +138,7 @@ $arrow-width: 10px;
     }
 
     @each $position in $positions {
-        &[x-placement="#{$position}"] {
+        &[x-placement=#{$position}] {
 
             [x-arrow] {
                 @include arrow($position, $arrow-width);
@@ -160,7 +160,7 @@ $arrow-width: 10px;
                 }
             }
 
-            [data-animation="none"] {
+            [data-animation=none] {
                 &.enter {
                     opacity: 1;
                     @include enter-transform($position, 'fade');
@@ -172,7 +172,7 @@ $arrow-width: 10px;
                 }
             }
 
-            [data-animation="perspective"] {
+            [data-animation=perspective] {
                 transform-origin: nth($origins, index($positions, $position));
 
                 &.enter {
@@ -186,7 +186,7 @@ $arrow-width: 10px;
                 }
             }
 
-            [data-animation="fade"] {
+            [data-animation=fade] {
                 &.enter {
                     opacity: 1;
                     @include enter-transform($position, 'fade')
@@ -197,7 +197,7 @@ $arrow-width: 10px;
                 }
             }
 
-            [data-animation="shift"] {
+            [data-animation=shift] {
                 &.enter {
                     opacity: 1;
                     @include enter-transform($position, 'fade')
@@ -208,7 +208,7 @@ $arrow-width: 10px;
                 }
             }
 
-            [data-animation="scale"] {
+            [data-animation=scale] {
                 &.enter {
                     opacity: 1;
                     @include enter-transform($position, 'scale')
@@ -294,25 +294,25 @@ $arrow-width: 10px;
     }
 }
 
-// Desktop Safari does not like the iOS translate3d hack
-@media (min-width: 992px) {
-    .tippy-popper[x-placement=top] [x-circle].leave {
-        transform: scale(0) translate(-50%, -50%)
+// Fix for iOS animateFill circle
+.tippy-iOS-fix {
+    &.tippy-popper[x-placement=top] [x-circle].leave {
+        transform: scale(0) translate3d(-50%, -50%, 0)
     }
-    .tippy-popper[x-placement=bottom] [x-circle].leave {
-        transform: scale(0) translate(-50%, -50%)
+    &.tippy-popper[x-placement=bottom] [x-circle].leave {
+        transform: scale(0) translate3d(-50%, -50%, 0)
     }
-    .tippy-popper[x-placement=left] [x-circle].leave {
-        transform: scale(0) translate(-50%, -33%)
+    &.tippy-popper[x-placement=left] [x-circle].leave {
+        transform: scale(0) translate3d(-50%, -33%, 0)
     }
-    .tippy-popper[x-placement=right] [x-circle].leave {
-        transform: scale(0) translate(-50%, -33%)
+    &.tippy-popper[x-placement=right] [x-circle].leave {
+        transform: scale(0) translate3d(-50%, -33%, 0)
     }
 }
 
 @media (max-width: 500px) {
     .tippy-popper {
-        max-width: 95%;
-        max-width: calc(100% - 2rem);
+        max-width: 96%;
+        max-width: calc(100% - 20px);
     }
 }
