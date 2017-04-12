@@ -1,0 +1,119 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'publish' ]
+2 info using npm@3.10.9
+3 info using node@v6.9.2
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   escapedName: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/carboncopy/Sites/tippyjs',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/carboncopy/.npm/tippy.js/0.3.3/package.tgz not in flight; packing
+9 verbose correctMkdir /Users/carboncopy/.npm correctMkdir not in flight; initializing
+10 info lifecycle tippy.js@0.3.3~prepublish: tippy.js@0.3.3
+11 silly lifecycle tippy.js@0.3.3~prepublish: no script for prepublish, continuing
+12 verbose tar pack [ '/Users/carboncopy/.npm/tippy.js/0.3.3/package.tgz',
+12 verbose tar pack   '/Users/carboncopy/Sites/tippyjs' ]
+13 verbose tarball /Users/carboncopy/.npm/tippy.js/0.3.3/package.tgz
+14 verbose folder /Users/carboncopy/Sites/tippyjs
+15 verbose addLocalTarball adding from inside cache /Users/carboncopy/.npm/tippy.js/0.3.3/package.tgz
+16 verbose correctMkdir /Users/carboncopy/.npm correctMkdir not in flight; initializing
+17 silly cache afterAdd tippy.js@0.3.3
+18 verbose afterAdd /Users/carboncopy/.npm/tippy.js/0.3.3/package/package.json not in flight; writing
+19 verbose correctMkdir /Users/carboncopy/.npm correctMkdir not in flight; initializing
+20 verbose afterAdd /Users/carboncopy/.npm/tippy.js/0.3.3/package/package.json written
+21 silly publish { name: 'tippy.js',
+21 silly publish   version: '0.3.3',
+21 silly publish   description: 'Pure JS Tooltip Library',
+21 silly publish   main: 'app.js',
+21 silly publish   scripts:
+21 silly publish    { dev: 'webpack-dev-server --inline --content-base docs/',
+21 silly publish      build: 'webpack --config webpack.config.js' },
+21 silly publish   author: { name: 'atomiks' },
+21 silly publish   license: 'MIT',
+21 silly publish   devDependencies:
+21 silly publish    { autoprefixer: '^6.7.7',
+21 silly publish      'babel-core': '^6.24.0',
+21 silly publish      'babel-loader': '^6.4.1',
+21 silly publish      'babel-plugin-transform-object-rest-spread': '^6.23.0',
+21 silly publish      'babel-preset-es2015': '^6.24.0',
+21 silly publish      'css-loader': '^0.27.3',
+21 silly publish      'extract-text-webpack-plugin': '^2.1.0',
+21 silly publish      'node-sass': '^4.5.0',
+21 silly publish      postcss: '^5.2.16',
+21 silly publish      'postcss-loader': '^1.3.3',
+21 silly publish      'sass-loader': '^6.0.3',
+21 silly publish      'style-loader': '^0.14.1',
+21 silly publish      webpack: '^2.2.1',
+21 silly publish      'webpack-dev-server': '^2.4.2' },
+21 silly publish   dependencies: { 'popper.js': '^1.0.8' },
+21 silly publish   readme: '# Tippy.js\n\nTippy.js is a lightweight, pure JS tooltip library powered by Popper.js.\n\nView the documentation and demo here: https://atomiks.github.io/tippyjs/\n\n## Installation\n\nSee releases for the CSS and JS files needed: https://github.com/atomiks/tippyjs/releases\n\nIt\'s also available on npm:\n```\nnpm install --save tippy.js\n```\n\n\n',
+21 silly publish   readmeFilename: 'README.md',
+21 silly publish   gitHead: 'dda2d85aa5c43e94f08be3aad3c012bd7b3e73b9',
+21 silly publish   _id: 'tippy.js@0.3.3',
+21 silly publish   _shasum: '0f38a826897d1ce8cef0c5dd44f2b892242fc05d',
+21 silly publish   _from: '.' }
+22 verbose getPublishConfig undefined
+23 silly mapToRegistry name tippy.js
+24 silly mapToRegistry using default registry
+25 silly mapToRegistry registry https://registry.npmjs.org/
+26 silly mapToRegistry data Result {
+26 silly mapToRegistry   raw: 'tippy.js',
+26 silly mapToRegistry   scope: null,
+26 silly mapToRegistry   escapedName: 'tippy.js',
+26 silly mapToRegistry   name: 'tippy.js',
+26 silly mapToRegistry   rawSpec: '',
+26 silly mapToRegistry   spec: 'latest',
+26 silly mapToRegistry   type: 'tag' }
+27 silly mapToRegistry uri https://registry.npmjs.org/tippy.js
+28 verbose publish registryBase https://registry.npmjs.org/
+29 silly publish uploading /Users/carboncopy/.npm/tippy.js/0.3.3/package.tgz
+30 verbose request uri https://registry.npmjs.org/tippy.js
+31 verbose request sending authorization for write operation
+32 info attempt registry request try #1 at 4:22:50 AM
+33 verbose request using bearer token for auth
+34 verbose request id 8a7cc4bde3c5a20e
+35 http request PUT https://registry.npmjs.org/tippy.js
+36 http 403 https://registry.npmjs.org/tippy.js
+37 verbose headers { 'content-type': 'application/json',
+37 verbose headers   'cache-control': 'max-age=300',
+37 verbose headers   'content-length': '95',
+37 verbose headers   'accept-ranges': 'bytes',
+37 verbose headers   date: 'Wed, 12 Apr 2017 18:22:51 GMT',
+37 verbose headers   via: '1.1 varnish',
+37 verbose headers   connection: 'keep-alive',
+37 verbose headers   'x-served-by': 'cache-mel6521-MEL',
+37 verbose headers   'x-cache': 'MISS',
+37 verbose headers   'x-cache-hits': '0',
+37 verbose headers   'x-timer': 'S1492021371.567544,VS0,VE872',
+37 verbose headers   vary: 'Accept-Encoding' }
+38 verbose request invalidating /Users/carboncopy/.npm/registry.npmjs.org/tippy.js on PUT
+39 error publish Failed PUT 403
+40 verbose stack Error: "You cannot publish over the previously published version 0.3.3." : tippy.js
+40 verbose stack     at makeError (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:302:12)
+40 verbose stack     at CachingRegistryClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:290:14)
+40 verbose stack     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:210:14)
+40 verbose stack     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:187:22)
+40 verbose stack     at emitTwo (events.js:106:13)
+40 verbose stack     at Request.emit (events.js:191:7)
+40 verbose stack     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1048:10)
+40 verbose stack     at emitOne (events.js:96:13)
+40 verbose stack     at Request.emit (events.js:188:7)
+40 verbose stack     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:969:12)
+41 verbose statusCode 403
+42 verbose pkgid tippy.js
+43 verbose cwd /Users/carboncopy/Sites/tippyjs
+44 error Darwin 16.5.0
+45 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "publish"
+46 error node v6.9.2
+47 error npm  v3.10.9
+48 error code E403
+49 error "You cannot publish over the previously published version 0.3.3." : tippy.js
+50 error If you need help, you may report this error at:
+50 error     <https://github.com/npm/npm/issues>
+51 verbose exit [ 1, true ]
