@@ -59,22 +59,22 @@ var jsperf = (function() {
         updateModel: function() {
             var value = parseInt(performanceModel.value) || 1
             performanceBtn.innerHTML = 'Append ' + value + (value === 1 ? ' element!' : ' elements!')
-            jsperf.reset(value)
+            this.reset(value)
         },
         reset: function(value) {
             i = 1
             tippyTime = 0
             counter = base = value
             performanceTest.innerHTML = performanceResult.innerHTML = ''
-            if (value > 1000) {
+            if (value >= 1000) {
                 performanceResult.innerHTML = "You probably shouldn't do that, but it's your choice ¯\\_(ツ)_/¯"
             }
         },
         run: function() {
             for (i; i <= counter; i++) {
                 var el = document.createElement('div')
-                el.setAttribute('title', 'Performance test')
-                el.setAttribute('class', 'test-element')
+                el.title = 'Performance test'
+                el.className = 'test-element'
                 el.innerHTML = '#' + i
                 performanceTest.appendChild(el)
             }
@@ -99,6 +99,6 @@ var jsperf = (function() {
         }
     }
 })()
-performanceModel.addEventListener('keyup', jsperf.updateModel)
+performanceModel.addEventListener('input', jsperf.updateModel.bind(jsperf))
 performanceBtn.addEventListener('click', jsperf.run)
 jsperf.updateModel()

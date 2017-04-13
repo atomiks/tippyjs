@@ -546,6 +546,7 @@ class Tippy {
     * @param {DOMElement} - tooltippedEl
     * @param {Object} - methods
     * @param {Object} - event
+    * @param {Array} - listeners
     * @return {Array}
     */
     _createTrigger(event, tooltippedEl, methods, listeners) {
@@ -763,7 +764,7 @@ class Tippy {
         ref.tooltippedEl.classList.remove('active')
 
         // Use the same duration as the show if it's the default
-        if (duration === this.settings.duration) {
+        if (duration === this.defaultSettings.hideDuration) {
             if (tooltip.style.transitionDuration) {
                 duration = parseInt(tooltip.style.transitionDuration.replace('ms', ''))
             } else if (tooltip.style.WebkitTransitionDuration) {
