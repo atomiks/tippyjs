@@ -584,8 +584,8 @@
 
           <pre><code class="language-javascript">const instance = new Tippy('.tippy')</code></pre>
 
-          <p>Find the element's popper reference by calling the method
-              <code>getPopperElement</code> and passing in the element directly:</p>
+          <p>Find the tooltipped element's popper element reference by calling the method
+              <code>getPopperElement</code> and passing in the tooltipped element (not the popper) directly:</p>
 
 <pre><code class="language-javascript">const popper = instance.getPopperElement(document.querySelector('#myElement'))</code></pre>
 
