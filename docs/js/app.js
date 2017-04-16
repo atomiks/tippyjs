@@ -10,6 +10,7 @@ function toggle(e) {
 
 function destroy(e) {
     var popper = instance.getPopperElement(document.getElementById('neighbor-tippy'))
+    if (popper.style.visibility === 'visible') instance.hide(popper, 0)
     instance.destroy(popper)
     var toggler = document.getElementById('toggle-tippy')
     toggler.setAttribute('disabled', '')
