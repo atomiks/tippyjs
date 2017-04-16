@@ -238,15 +238,28 @@ section {
     padding: 2rem 0;
 }
 
+#controlling-tooltips-manually .btn {
+    margin-bottom: 1rem;
+}
+
+.btn.btn-secondary, .btn.btn-secondary:hover {
+    background: #94a0b5;
+    color: white;
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.1), 0 15px 25px -4px rgba(100, 100, 150, 0.1);
+}
+
 hr {
     margin-top: 0;
     margin-bottom: 0.5rem;
     border-top: 1px solid rgba(0, 31, 255, 0.1);
 }
 
-.button-showcase .btn, section .btn {
-    color: white;
+.button-showcase .btn, .button-showcase .btn:active {
     margin: 1.5rem 1rem;
+}
+
+.button-showcase .btn, section .btn, section .btn:active {
+    color: white;
     box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
     background: -webkit-linear-gradient(315deg,#73a5ff, #5477f5);
     background: linear-gradient(135deg,#73a5ff, #5477f5);
@@ -254,16 +267,13 @@ hr {
     border: none;
 }
 
-section .btn {
+section .btn, section .btn:active {
     margin: 0;
 }
-section .btn:focus {
-    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
-}
 
-.button-showcase .btn:hover, section .btn:hover, .btn.active {
-    background: -webkit-linear-gradient(315deg,#8cc8ff, #6d8dff);
-    background: linear-gradient(135deg,#8cc8ff, #6d8dff);
+.btn:hover, .btn.active, .btn:active {
+    opacity: 0.8;
+    box-shadow: 0 10px 15px -1px rgba(0, 0, 0, 0.1), 0 25px 50px -4px rgba(100, 100, 255, 0.3);
 }
 
 .heading-top {

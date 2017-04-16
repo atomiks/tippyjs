@@ -3,6 +3,39 @@ function hideHtml() {
     instance.hide(popper)
 }
 
+function toggle(e) {
+    var popper = instance.getPopperElement(document.getElementById('neighbor-tippy'))
+    popper.style.visibility === 'visible' ? instance.hide(popper) : instance.show(popper)
+}
+
+function destroy(e) {
+    var popper = instance.getPopperElement(document.getElementById('neighbor-tippy'))
+    instance.destroy(popper)
+    var toggler = document.getElementById('toggle-tippy')
+    toggler.setAttribute('disabled', '')
+    toggler.removeEventListener('click', toggle)
+    e.target.setAttribute('disabled', '')
+    e.target.removeEventListener('click', destroy)
+}
+
+function update(e) {
+    var template = document.getElementById('manual-template')
+    var btn1 = document.getElementById('title-neighbor-tippy')
+    var btn2 = document.getElementById('html-neighbor-tippy')
+
+    btn1.title = 'Updated'
+    template.querySelector('h2').innerHTML = 'DOG!'
+    template.querySelector('img').src = 'https://i.ytimg.com/vi/opKg3fyqWt4/hqdefault.jpg'
+
+    var popper1 = instance.getPopperElement(btn1)
+    var popper2 = instance.getPopperElement(btn2)
+    instance.update(popper1)
+    instance.update(popper2)
+
+    e.target.innerHTML = 'Updated'
+    e.target.setAttribute('disabled', '')
+}
+
 var timeout = 800
 
 if (window.pageYOffset > 250 || document.documentElement.scrollTop > 250) {
@@ -43,6 +76,10 @@ new Tippy('#callback-tippy', {
         document.getElementById('callback-tippy').blur()
     }
 })
+
+document.getElementById('toggle-tippy').addEventListener('click', toggle)
+document.getElementById('destroy-tippy').addEventListener('click', destroy)
+document.getElementById('update-tippy').addEventListener('click', update)
 
 var performanceTest = document.getElementById('performance-test')
 var performanceResult = document.getElementById('performance-result')

@@ -3,6 +3,7 @@
 <head>
   <title>Tippy.js - Pure JS Tooltip Library</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script defer src="js/focus-ring.js"></script>
   <script async src="https://buttons.github.io/buttons.js"></script>
@@ -38,7 +39,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.3.5</span>
+            <i class="material-icons icon-left">code</i><span>v0.4.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -178,33 +179,29 @@
 
           <section id="getting-started">
             <h2><a href="#getting-started"><i class="material-icons icon-left">tag_faces</i><span>Getting started</span></a></h2>
-            <ul>
-              <li><strong>Production:
-                  <a href="https://github.com/atomiks/tippyjs/releases/tag/v0.3.5" title="<strong>12KB</strong> gzipped"
-                      class="tippy-link">
-                      <i class="material-icons">file_download</i>
-                      <span>Download</span>
-                  </a>
-              </strong>
-              the minified package (use this on your website)
-              </li>
+            <p><strong>
+                <a href="https://github.com/atomiks/tippyjs/releases/tag/v0.4.0" title="<strong>12KB</strong> gzipped"
+                    class="tippy-link">
+                    <i class="material-icons">file_download</i>
+                    <span>Download the latest release (.zip)</span>
+                </a></strong>
+            </p>
+            <p>
+                Alternatively, install through npm:
+            </p>
+            <pre><code>npm install --save tippy.js</code></pre>
 
-              <li><strong>Development:
-                  <a href="https://github.com/atomiks/tippyjs/tree/master/src">
-                      <i class="material-icons">file_download</i>
-                      <span>Download</span>
-                  </a>
-                  </strong>
-                  the development package (use this to extend functionality)
-              </li>
-            </ul>
             <p>1. Place the <code>tippy.css</code> stylesheet in your document's <code>head</code>.</p>
             <pre><code class="language-markup">&lt;link rel="stylesheet" href="css/tippy.css"&gt;</code></pre>
             <p>2. Include the <code>tippy.js</code> file in your document before your own scripts:</p>
             <pre><code class="language-markup">&lt;script src="js/tippy.js"&gt;&lt;/script&gt;</code></pre>
-            <p>If you're using Node/Webpack, you can import the <code>Tippy</code> module:</p>
-            <pre><code class="language-javascript">import Tippy from './js/tippy'</code></pre>
-            <p>Tippy is dependent on <a class="tippy-link" title="popper.js.org" data-theme="light" data-arrow="true" target="_blank" href="https://popper.js.org">Popper.js</a> - an awesome positioning library that takes the headache out of positioning all the tooltips nicely. The production file comes bundled with it.</p>
+
+            <p>If you installed the npm package, the JS and CSS files are available in the dist folder:</p>
+<pre><code class="language-javascript">node_modules/tippy.js/dist/tippy.js
+node_modules/tippy.js/dist/tippy.standalone.js
+node_modules/tippy.js/dist/tippy.css</code></pre>
+
+            <p><code>tippy.js</code> comes bundled with <code>popper.js</code>, and <code>tippy.standalone.js</code> is Tippy by itself if you want use a different version of Popper.js.</p>
           </section>
           <hr>
           <section id="creating-a-tooltip">
@@ -424,9 +421,28 @@
     }
 })</code></pre>
 
+              <h4>Flipping</h4>
+
+              <p>
+                  By default, tooltips will flip on their opposite axis if there is not enough room in the viewport.
+                  (v0.4.x's new Popper.js version fixed top-positioned tooltips so they will also flip). If you want
+                  to force no flip, then use:
+              </p>
+
+<pre><code class="language-javascript">// Force no flip for a top-positioned tooltip
+new Tippy('.mySelector', {
+  popperOptions: {
+      modifiers: {
+          flip: {
+              behavior: ['top']
+          }
+      }
+  }
+})</code></pre>
+
               <h4>Callbacks</h4>
 
-              <p>If you want things to happen at certain times during a tooltip's show/hide events, you can add callback functions in the settings object. There are 4 to use:</p>
+              <p>If you want things to happen at certain times during a tooltip's show/hide events, you can add callback functions in the settings object. There are 5 to use:</p>
 
 <pre><code class="language-javascript">new Tippy('.tippy', {
   beforeShown: function() {
@@ -440,9 +456,40 @@
   },
   hidden: function() {
     // When the tooltip has fully transitioned out and is hidden
+  },
+  wait: function(show) {
+    // See below for an explanation
   }
 })</code>
 </pre>
+
+            <p>
+                <code>wait</code> is a special callback that allows you to control the <code>show</code> method
+                for easier integration into UI libraries like React when using HTML tooltips with components.
+                The function itself takes a callback as a parameter, which is just the <code>show</code> method for the tooltip.
+            </p>
+
+            <p>
+                Example usage (ES6 syntax):
+            </p>
+
+<pre><code class="language-javascript">new Tippy('.tippy', {
+    wait(show) {
+        // Change your app model to be rendered by the UI library/framework
+
+        // Queue show to run once rendering is complete
+        setTimeout(() => {
+            // update(popper) content
+
+            show()
+        }, 0)
+    }
+})</code>
+</pre>
+
+            <p>
+                See <a target="_blank" href="https://github.com/atomiks/tippyjs/issues/24">here</a> for reference.
+            </p>
 
             </section>
 
@@ -532,10 +579,10 @@
   <img alt="cat" height="150" src="img/cat.jpg">
 </div>
 
-          <p>In your instance, specify its template <code>id</code> in the <code>html</code> setting.</p>
+          <p>In your instance, specify either the <code>id</code> in the <code>html</code> setting, or the element itself.</p>
 
 <pre><code class="language-javascript">new Tippy('#tooltip-with-my-template', {
-  html: '#my-template-id',
+  html: '#my-template-id', // or document.querySelector('#my-template-id')
   arrow: true,
   animation: 'fade'
 })</code></pre>
@@ -548,7 +595,9 @@
           <h4>Styling tooltips with HTML content</h4>
 
           <p>Use this selector to target your tooltip template. Replace "#my-template-id" with
-              your own template's <code>id</code>, including the leading hash.</p>
+              your own template's <code>id</code>, including the leading hash. If you're using a DOM element
+              in the <code>html</code> setting and no <code>id</code> is found,
+          it defaults to <code>tippy-html-template</code>.</p>
 
 <pre><code class="language-css">.tippy-tooltip[data-template-id="#my-template-id"] {
   /* Your styling here. Example: */
@@ -584,27 +633,54 @@
 
           <pre><code class="language-javascript">const instance = new Tippy('.tippy')</code></pre>
 
-          <p>Find the tooltipped element's popper element reference by calling the method
-              <code>getPopperElement</code> and passing in the tooltipped element (not the popper) directly:</p>
+          <p>Find the tooltipped element's popper by calling the method
+              <code>getPopperElement</code> and passing it in (the tooltipped element, not the popper) directly:</p>
 
 <pre><code class="language-javascript">const popper = instance.getPopperElement(document.querySelector('#myElement'))</code></pre>
 
           <div class="alert alert-warning">It must be a <strong>single</strong> tooltipped element.</div>
 
-          <p>Now you can show, hide, or destroy it.</p>
+          <p>Now you can show, hide, update or destroy it.</p>
 
 <pre><code class="language-javascript">instance.show(popper)
 instance.hide(popper)
+instance.update(popper)
 instance.destroy(popper)</code></pre>
 
           <p>The <code>show</code> and <code>hide</code> methods take a transition duration as their second (optional) parameters.</p>
 
-          <p><code>destroy</code>ing a popper removes listeners from its tooltipped element reference, destroys its popper instance, and removes it from the global references array.
+          <p>
+              The <code>update</code> method will update the popper's tooltip content by checking if there is a new <code>title</code>
+              attribute on its tooltipped element. If it's a HTML tooltip, it will inject the new HTML of the template.
           </p>
+
+          <p><code>destroy</code>ing a popper removes listeners from its tooltipped element reference,
+              destroys its popper instance, and removes it from the global references array.
+          </p>
+
+          <h4>Examples</h4>
+
+          <p>
+              In this example, we use another button to control the tooltip. Give controllers
+              a <code>data-tippy-controller</code> attribute (doesn't need a value).
+          </p>
+
+          <button class="btn" data-tippy-controller id="toggle-tippy">Toggle tooltip</button>
+          <button class="btn" data-tippy-controller id="destroy-tippy">Destroy tooltip</button>
+          <button class="btn btn-secondary tippy" id="neighbor-tippy" title="Hey!">I have the tooltip</button>
+
+          <p>
+              First, hover over the two buttons on the right to see their original content.
+              If you click the button on the left, it will update the tooltips with new content.
+          </p>
+
+          <button class="btn" data-tippy-controller id="update-tippy">Click to update my neighbors</button>
+          <button class="btn btn-secondary tippy" id="title-neighbor-tippy" title="Hello there">Title attribute</button>
+          <button class="btn btn-secondary tippy" id="html-neighbor-tippy" data-arrow="true" data-html="#manual-template">HTML template</button>
 
           </section>
 
-            <hr>
+          <hr>
 
             <section id="performance">
 
@@ -654,6 +730,11 @@ instance.destroy(popper)</code></pre>
     <div id="template" style="display: none">
       <p>This is an example of an <strong>interactive HTML tooltip</strong> created with a template.</p>
       <button class="btn btn-danger" onclick="hideHtml()">Close</button>
+    </div>
+
+    <div id="manual-template" style="display: none;">
+      <h2>CAT!</h2>
+      <img height="200" alt="cat" src="img/cat.jpg">
     </div>
 
     <script src="tippy/tippy.js"></script>

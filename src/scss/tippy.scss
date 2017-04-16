@@ -144,14 +144,14 @@ $arrow-width: 10px;
                 @include arrow($position, $arrow-width);
             }
 
-            $circle-origins: 0% 33%, 0% -33%, 50% 5%, -50% 5%;
+            $circle-origins: 0% 50%, 0% -50%, 50% 0%, -50% 0%;
 
             [x-circle] {
                 transform-origin: nth($circle-origins, index($positions, $position));
 
                 &.enter {
                     opacity: 1;
-                    transform: scale(1) translate(-50%, -50%);
+                    transform: scale(1) translate(-50%, -47.5%);
                 }
 
                 &.leave {
@@ -260,15 +260,20 @@ $arrow-width: 10px;
         will-change: transform;
         background-color: #333;
         border-radius: 50%;
-        width: 130%;
-        width: calc(125% + 2rem);
-        height: 0;
-        padding-bottom: 130%;
-        padding-bottom: calc(125% + 2rem);
+        width: 120%;
+        width: calc(100% + 2rem);
         left: 50%;
         transition: all ease-out;
         z-index: -1;
         opacity: 0;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            padding-top: 110%;
+            padding-top: calc(90% + 2rem);
+            float: left;
+        }
     }
 
     // Themes

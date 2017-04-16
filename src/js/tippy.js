@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.3.5
+    * @version 0.4.0
     * @license MIT
 */
 
@@ -10,8 +10,8 @@ class Tippy {
     constructor(selector, settings = {}) {
         // Use default browser tooltip on old browsers (IE < 10) and Opera Mini
         if (!('addEventListener' in window)
-        || /MSIE 9/i.test(navigator.userAgent)
-        || window.operamini) return
+          || /MSIE 9/i.test(navigator.userAgent)
+          || window.operamini) return
 
         this.defaultSettings = {
             html: false,
@@ -44,31 +44,9 @@ class Tippy {
                              ? [selector]
                              : [].slice.call(document.querySelectorAll(selector))
 
-        // Tippy bus to handle events between different instances
-        if (!Tippy.bus) {
-            Tippy.bus = {
-                refs: [],
-                tooltippedEls: [],
-                poppers: [],
-                listeners: {}
-            }
-        }
-
-        // Determine if touch user
-        if (!Tippy.bus.listeners.touchstart) {
-            // Only needs to be determined in one instance
-            Tippy.bus.listeners.touchstart = true
-
-            const handleTouch = () => {
-                Tippy.touchUser = true
-                document.body.classList.add('tippy-touch')
-                window.removeEventListener('touchstart', handleTouch)
-            }
-            window.addEventListener('touchstart', handleTouch)
-        }
-
+        this._createBus()
         this._createTooltips()
-        if (!Tippy.bus.listeners.click) this._handleDocumentClick()
+        this._handleDocumentEvents()
     }
 
     /**
@@ -76,10 +54,59 @@ class Tippy {
     */
 
     /**
+    * Returns a global settings object to be applied to the instance
+    * @param {Object} - settings
+    * @return {Object}
+    */
+    _applyGlobalSettings(settings) {
+        // Object.assign polyfill
+        if (typeof Object.assign != 'function') {
+            Object.assign = function(target, varArgs) {
+                'use strict'
+                var to = Object(target);
+                for (var index = 1; index < arguments.length; index++) {
+                    var nextSource = arguments[index];
+                    if (nextSource != null) {
+                        for (var nextKey in nextSource) {
+                            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                                to[nextKey] = nextSource[nextKey];
+                            }
+                        }
+                    }
+                }
+                return to;
+            };
+        }
+
+        this.callbacks = {
+            wait: settings.wait,
+            beforeShown: settings.beforeShown || new Function,
+            shown: settings.shown || new Function,
+            beforeHidden: settings.beforeHidden || new Function,
+            hidden: settings.hidden || new Function
+        }
+
+        return Object.assign(this.defaultSettings, settings)
+    }
+
+    /**
+    * Creates the global bus to store all tooltip references from instance instantiation
+    */
+    _createBus() {
+        if (Tippy.bus) return
+
+        Tippy.bus = {
+            refs: [],
+            tooltippedEls: [],
+            poppers: []
+        }
+    }
+
+    /**
     * In-class polyfill to get closest parent based on a selector
-    * @param {DOMElement} - element
-    * @param {String} - parentSelector
-    * @return {DOMElement}
+    * @param {Element} element
+    * @param {String} parentSelector
+    * @return {Element}
     */
     _closest(element, parentSelector) {
         if (!Element.prototype.matches) {
@@ -108,58 +135,23 @@ class Tippy {
     }
 
     /**
-    * Returns a global settings object to be applied to the instance
-    * @param {Object} - settings
-    * @return {Object}
-    */
-    _applyGlobalSettings(settings) {
-        // Object.assign polyfill
-        if (typeof Object.assign != 'function') {
-            Object.assign = function(target, varArgs) {
-                'use strict'
-                var to = Object(target);
-                for (var index = 1; index < arguments.length; index++) {
-                    var nextSource = arguments[index];
-                    if (nextSource != null) {
-                        for (var nextKey in nextSource) {
-                            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                                to[nextKey] = nextSource[nextKey];
-                            }
-                        }
-                    }
-                }
-                return to;
-            };
-        }
-
-        this.callbacks = {
-            beforeShown: settings.beforeShown || new Function,
-            shown: settings.shown || new Function,
-            beforeHidden: settings.beforeHidden || new Function,
-            hidden: settings.hidden || new Function
-        }
-
-        return Object.assign(this.defaultSettings, settings)
-    }
-
-    /**
     * Hides all poppers
     * @param {Object} - currentRef
     */
-    _hideAllPoppers(currentRef = null) {
+    _hideAllPoppers(currentRef) {
         Tippy.bus.refs.forEach(ref => {
             // Don't hide already hidden ones
             if (!document.body.contains(ref.popper)) return
 
             if (!currentRef) {
-                if (ref.settings.hideOnClick && ref.settings.hideOnClick !== 'persistent') {
+                // hideOnClick can have the truthy value of 'persistent', so strict check is needed
+                if (ref.settings.hideOnClick === true) {
                     this.hide(ref.popper, ref.settings.hideDuration)
                 }
             } else {
                 if (
                     ref.popper !== currentRef.popper
-                    && ref.settings.hideOnClick
-                    && ref.settings.hideOnClick !== 'persistent'
+                    && ref.settings.hideOnClick === true
                     )
                 {
                     this.hide(ref.popper, ref.settings.hideDuration)
@@ -170,13 +162,13 @@ class Tippy {
     }
 
     /**
-    * Creates document event listener to handle click on the document
+    * Creates listeners on the document for click and touch start (to determine touch users)
     */
-    _handleDocumentClick() {
+    _handleDocumentEvents() {
 
         /**
         * Gets the actual popper or tooltipped element due to inner element event targets
-        * @param {DOMElement} - target
+        * @param {Element} target
         * @return {Object} or {null}
         */
         const actualElement = target => {
@@ -198,8 +190,8 @@ class Tippy {
         }
 
         /**
-        * Returns the indices of the target in the DOMElement arrays
-        * @param {DOMElement} - target
+        * Returns the indices of the target in the Element arrays
+        * @param {Element} target
         * @return {Object}
         */
         const getRefIndices = target => {
@@ -227,9 +219,9 @@ class Tippy {
 
         /**
         * Event listener method for document click
-        * @param {Object} - event
+        * @param {Object} event
         */
-        const handleClickHide = event => {
+        const handleClick = event => {
 
             const refIndices = getRefIndices(event.target)
             const clickedOnTooltippedEl = refIndices.tooltippedElIndex !== -1
@@ -252,23 +244,37 @@ class Tippy {
                     return this._hideAllPoppers(ref)
                 }
 
-                // If hideOnClick is false or triggered by a click don't hide poppers
-                if (!ref.settings.hideOnClick || ref.settings.trigger.indexOf('click') !== -1) return
+                // If hideOnClick is not strictly true or triggered by a click don't hide poppers
+                if (ref.settings.hideOnClick !== true || ref.settings.trigger.indexOf('click') !== -1) return
             }
 
-            this._hideAllPoppers()
+            if (!this._closest(event.target, '[data-tippy-controller]')) {
+                this._hideAllPoppers()
+            }
         }
 
-        Tippy.bus.listeners.click = handleClickHide
-        document.addEventListener('click', handleClickHide)
+        const handleTouch = () => {
+            Tippy.touchUser = true
+            document.body.classList.add('tippy-touch')
+            document.removeEventListener('touchstart', handleTouch)
+        }
+
+        if (!Tippy.bus.listeners) {
+            Tippy.bus.listeners = {
+                touchstart: handleTouch,
+                click: handleClick
+            }
+            document.addEventListener('touchstart', handleTouch)
+            document.addEventListener('click', handleClick)
+        }
     }
 
     /**
     * Creates a new popper instance
-    * @param {DOMElement} - tooltippedEl
-    * @param {DOMElement} - popper
-    * @param {Object} - settings
-    * @return {Object}
+    * @param {Element} tooltippedEl
+    * @param {Element} popper
+    * @param {Object} settings
+    * @return {Object} - the popper instance
     */
     _createPopperInstance(tooltippedEl, popper, settings) {
         const config = {
@@ -300,9 +306,9 @@ class Tippy {
 
     /**
     * Creates a popper element then returns it
-    * @param {String} - title
-    * @param {Object} - settings
-    * @return {DOMElement}
+    * @param {String} title - the tooltip's `title` attribute
+    * @param {Object} settings - individual settings
+    * @return {Element} - the popper element
     */
     _createPopperElement(title, settings) {
         const popper = document.createElement('div')
@@ -343,10 +349,21 @@ class Tippy {
         content.setAttribute('class', this.classNames.content)
 
         if (settings.html) {
-            content.innerHTML = document.getElementById(settings.html.replace('#', '')).innerHTML
+
+            let templateId
+
+            if (settings.html instanceof Element) {
+                content.innerHTML = settings.html.innerHTML
+                templateId = settings.html.id || 'tippy-html-template'
+            } else {
+                content.innerHTML = document.getElementById(settings.html.replace('#', '')).innerHTML
+                templateId = settings.html
+            }
+
             popper.classList.add('html-template')
             popper.setAttribute('tabindex', '0')
-            tooltip.setAttribute('data-template-id', settings.html)
+            tooltip.setAttribute('data-template-id', templateId)
+
         } else {
             content.innerHTML = title
         }
@@ -359,11 +376,11 @@ class Tippy {
 
     /**
     * Returns an object of settings to override global settings
-    * @param {DOMElement} - el
-    * @return {Object}
+    * @param {Element} el - the tooltipped element
+    * @return {Object} - individual settings
     */
     _applyIndividualSettings(el) {
-        // Some falsey values require more verbose defining
+        // Some falsy values require more verbose defining
 
         // false, 'false', or a template id
         let html = el.getAttribute('data-html') || this.settings.html
@@ -453,16 +470,16 @@ class Tippy {
     }
 
     /**
-    * Returns relevant listeners for each ref
-    * @param {DOMElement} - tooltippedEl
-    * @param {DOMElement} - popper
-    * @return {Object}
+    * Returns relevant listeners methods for each ref
+    * @param {Element} tooltippedEl
+    * @param {Element} popper
+    * @param {Object} settings
+    * @return {Object} - relevant listener methods
     */
     _getEventListenerMethods(tooltippedEl, popper, settings) {
 
         // Avoid creating unnecessary timeouts
-
-        const show = () => {
+        const _show = () => {
             if (settings.delay) {
                 const delay = setTimeout(
                     () => this.show(popper, settings.duration),
@@ -474,6 +491,7 @@ class Tippy {
             }
         }
 
+        const show = () => this.callbacks.wait ? this.callbacks.wait(_show) : _show()
         const hide = () => this.hide(popper, settings.hideDuration)
 
         const handleTrigger = event => {
@@ -543,14 +561,15 @@ class Tippy {
 
     /**
     * Creates a trigger for each one specified
-    * @param {DOMElement} - tooltippedEl
-    * @param {Object} - methods
-    * @param {Object} - event
-    * @param {Array} - listeners
-    * @return {Array}
+    * @param {Object} event - the custom event specified in the `trigger` setting
+    * @param {Element} tooltippedEl
+    * @param {Object} methods - the methods for each listener
+    * @return {Array} - array of listener objects
     */
-    _createTrigger(event, tooltippedEl, methods, listeners) {
+    _createTrigger(event, tooltippedEl, methods) {
         if (event === 'manual') return
+
+        const listeners = []
 
         // Enter
         tooltippedEl.addEventListener(event, methods.handleTrigger)
@@ -581,12 +600,22 @@ class Tippy {
     /**
     * Adds each reference (tooltipped element, popper and its settings/listeners etc)
     * into global bus
-    * @param {Object} - ref
+    * @param {Object} ref - current ref in the forEach loop to be pushed
     */
-    _pushIntoTippyBus(ref) {
+    _pushIntoBus(ref) {
         Tippy.bus.refs.push(ref)
         Tippy.bus.tooltippedEls.push(ref.tooltippedEl)
         Tippy.bus.poppers.push(ref.popper)
+    }
+
+    /**
+    * Removes the title from the tooltipped element
+    * @param {Element} tooltippedEl
+    */
+    _removeTitle(tooltippedEl) {
+        const title = tooltippedEl.getAttribute('title')
+        tooltippedEl.setAttribute('data-original-title', title || 'html')
+        tooltippedEl.removeAttribute('title')
     }
 
     /**
@@ -595,15 +624,14 @@ class Tippy {
     _createTooltips() {
         this.tooltippedEls.forEach(tooltippedEl => {
 
+            tooltippedEl.setAttribute('data-tooltipped', '')
+
             const settings = this._applyIndividualSettings(tooltippedEl)
 
             const title = tooltippedEl.getAttribute('title')
-            if ((title === null || title === '') && !settings.html) return
+            if (!title && !settings.html) return
 
-            // Remove default browser tooltip
-            tooltippedEl.setAttribute('data-tooltipped', '')
-            tooltippedEl.setAttribute('data-original-title', title || 'html')
-            tooltippedEl.removeAttribute('title')
+            this._removeTitle(tooltippedEl)
 
             const popper = this._createPopperElement(title, settings)
             const instance = this._createPopperInstance(tooltippedEl, popper, settings)
@@ -611,10 +639,10 @@ class Tippy {
             let listeners = []
 
             settings.trigger.forEach(event => {
-                listeners = this._createTrigger(event, tooltippedEl, methods, listeners) || []
+                listeners = listeners.concat(this._createTrigger(event, tooltippedEl, methods))
             })
 
-            this._pushIntoTippyBus({
+            this._pushIntoBus({
                 tooltippedEl,
                 popper,
                 settings,
@@ -627,11 +655,11 @@ class Tippy {
 
     /**
     * Mousemove event listener method for follow cursor setting
-    * @param {Object} - e (event)
+    * @param {Object} e (event)
     */
     _followCursor(e) {
         const ref = Tippy.bus.refs[Tippy.bus.tooltippedEls.indexOf(this)]
-        const position = ref.settings.position
+        const position = ref.popper.getAttribute('x-placement')
         const offset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
         const halfPopperWidth = Math.round( ref.popper.offsetWidth / 2 )
         const halfPopperHeight = Math.round( ref.popper.offsetHeight / 2 )
@@ -655,13 +683,34 @@ class Tippy {
     }
 
     /**
+    * Fixes CSS transition when showing a flipped tooltip
+    * @param {Object} ref - the popper/element reference
+    * @param {Number} duration
+    */
+    _adjustFlip(ref, duration) {
+        const flipAdjust = () => {
+            this.hide(ref.popper, 0, false)
+            setTimeout(() => this.show(ref.popper, duration, false), 0)
+        }
+        setTimeout(() => {
+            if (!ref.adjusted && ref.settings.position !== ref.popper.getAttribute('x-placement')) {
+                ref.adjusted = true
+                flipAdjust()
+            } else if (ref.adjusted && ref.settings.position === ref.popper.getAttribute('x-placement')) {
+                ref.adjusted = false
+                flipAdjust()
+            }
+        }, 0)
+    }
+
+    /**
     * ================================== PUBLIC METHODS ==================================
     */
 
     /**
     * Returns a tooltipped element's popper reference
-    * @param {DOMElement}
-    * @return {DOMElement}
+    * @param {Element} el
+    * @return {Element}
     */
     getPopperElement(el) {
         try {
@@ -673,24 +722,27 @@ class Tippy {
 
     /**
     * Shows a popper
-    * @param {DOMElement} - popper
-    * @param {Number} - duration (optional)
+    * @param {Element} popper
+    * @param {Number} duration (optional)
+    * @param {Boolean} enableCallback (optional)
     */
-    show(popper, duration = this.defaultSettings.duration) {
+    show(popper, duration = this.defaultSettings.duration, enableCallback = true) {
 
         // Already visible
         if (popper.style.visibility === 'visible') return
-
-        this.callbacks.beforeShown()
-
-        popper.style.visibility = 'visible'
 
         const ref = Tippy.bus.refs[Tippy.bus.poppers.indexOf(popper)]
         const tooltip = popper.querySelector(`.${this.classNames.tooltip}`)
         const circle = popper.querySelector('[x-circle]')
         const arrow = popper.querySelector('[x-arrow]')
 
+        this._adjustFlip(ref, duration)
+
+        if (enableCallback) this.callbacks.beforeShown()
+
         document.body.appendChild(popper)
+
+        popper.style.visibility = 'visible'
 
         // Follow cursor setting, not applicable to touch users
         if (ref.settings.followCursor && !Tippy.touchUser) {
@@ -713,7 +765,7 @@ class Tippy {
         tooltip.classList.remove('leave')
 
         if (circle) {
-            // Repaint
+            // Reflow
             const style = getComputedStyle(circle)
             if (!style.transform) style.WebkitTransform
             style.transform
@@ -743,17 +795,18 @@ class Tippy {
 
     /**
     * Hides a popper
-    * @param {DOMElement} - popper
-    * @param {Number} - duration (optional)
+    * @param {Element} popper
+    * @param {Number} duration (optional)
+    * @param {Boolean} enableCallback (optional)
     */
-    hide(popper, duration = this.settings.duration) {
+    hide(popper, duration = this.settings.duration, enableCallback = true) {
         // Clear unwanted timeouts due to `delay` setting
         clearTimeout(popper.getAttribute('data-delay'))
 
         // Hidden anyway
         if (!document.body.contains(popper)) return
 
-        this.callbacks.beforeHidden()
+        if (enableCallback) this.callbacks.beforeHidden()
 
         popper.style.visibility = 'hidden'
 
@@ -800,13 +853,11 @@ class Tippy {
                 ref.hasFollowCursorListener = false
             }
 
-            if (document.body.contains(popper)) {
-                document.body.removeChild(popper)
-            }
-
             ref.instance.disableEventListeners()
 
-            this.callbacks.hidden()
+            if (document.body.contains(popper)) document.body.removeChild(popper)
+
+            if (enableCallback) this.callbacks.hidden()
         }
 
         // Wait for transitions to complete
@@ -817,7 +868,7 @@ class Tippy {
 
     /**
     * Destroys a popper
-    * @param {DOMElement} - popper
+    * @param {Element} popper
     */
     destroy(popper) {
         const index = Tippy.bus.poppers.indexOf(popper)
@@ -835,7 +886,26 @@ class Tippy {
         Tippy.bus.tooltippedEls.splice(index, 1)
         Tippy.bus.refs.splice(index, 1)
     }
+
+    /**
+    * Updates a popper with new content
+    * @param {Element} popper
+    */
+    update(popper) {
+        const index = Tippy.bus.poppers.indexOf(popper)
+        const ref = Tippy.bus.refs[index]
+        const content = popper.querySelector(`.${this.classNames.content}`)
+
+        if (ref.settings.html) {
+            content.innerHTML = (ref.settings.html instanceof Element)
+                                ? ref.settings.html.innerHTML
+                                : document.getElementById(ref.settings.html.replace('#', '')).innerHTML
+        } else {
+            content.innerHTML = ref.tooltippedEl.getAttribute('title') ||
+                                ref.tooltippedEl.getAttribute('data-original-title')
+            this._removeTitle(ref.tooltippedEl)
+        }
+    }
 }
 
 window.Tippy = Tippy
-module.exports = Tippy

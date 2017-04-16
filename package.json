@@ -1,11 +1,12 @@
 {
   "name": "tippy.js",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "description": "Pure JS Tooltip Library",
-  "main": "app.js",
+  "main": "dist/",
   "scripts": {
-    "dev": "webpack-dev-server --inline --content-base docs/",
-    "build": "webpack --config webpack.config.js"
+    "dev": "rollup -c scripts/rollup.dev.config.js --watch",
+    "build": "rollup -c scripts/rollup.build.config.js",
+    "bundle": "rollup -c scripts/rollup.bundle.config.js"
   },
   "author": "atomiks",
   "license": "MIT",
@@ -15,17 +16,18 @@
     "babel-loader": "^6.4.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-es2015": "^6.24.0",
-    "css-loader": "^0.27.3",
-    "extract-text-webpack-plugin": "^2.1.0",
-    "node-sass": "^4.5.0",
+    "cssnano": "^3.10.0",
     "postcss": "^5.2.16",
-    "postcss-loader": "^1.3.3",
-    "sass-loader": "^6.0.3",
-    "style-loader": "^0.14.1",
-    "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.4.2"
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-livereload": "^0.4.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-sass": "^0.4.10",
+    "rollup-plugin-serve": "^0.3.0",
+    "rollup-plugin-uglify": "^1.0.1",
+    "rollup-watch": "^3.2.2"
   },
   "dependencies": {
-    "popper.js": "^1.0.8"
+    "popper.js": "^1.5.1"
   }
 }
