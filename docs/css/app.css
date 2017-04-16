@@ -9,24 +9,6 @@ body {
     color: #203d5d;
 }
 
-body::before, body::after {
-    content: '';
-    position: absolute;
-    background: url('../img/bubbles.svg') no-repeat;
-    background-position: 500px -200px;
-    background-size: cover;
-    width: 100%;
-    height: 100%;
-}
-
-body::after {
-    background-position: -600px 100px;
-    background-size: contain;
-    z-index: -1;
-    top: 0;
-    left: 0;
-}
-
 .text-muted {
     color: #5d7997 !important;
 }
