@@ -2,11 +2,11 @@ import Popper from 'popper.js'
 
 /**!
     * @file tippy.js | Pure JS Tooltip Library
-    * @version 0.4.0
+    * @version 0.4.1
     * @license MIT
 */
 
-class Tippy {
+export default class Tippy {
     constructor(selector, settings = {}) {
         // Use default browser tooltip on old browsers (IE < 10) and Opera Mini
         if (!('addEventListener' in window)

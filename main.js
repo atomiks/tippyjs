@@ -1,2 +1,4 @@
 import './src/scss/tippy.scss'
-import './src/js/tippy.js'
+import Tippy from './src/js/tippy.js'
+
+export default Tippy
