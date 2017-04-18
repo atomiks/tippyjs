@@ -1,6 +1,5 @@
 import base from './rollup.base.config'
 import babel from 'rollup-plugin-babel'
-import es2015 from 'babel-preset-es2015-rollup'
 import sass from 'rollup-plugin-sass'
 import uglify from 'rollup-plugin-uglify'
 import postcss from 'postcss'
@@ -18,9 +17,7 @@ export default Object.assign(base, {
             .then(result => result.css)
         }),
         babel({
-            presets: [
-                [es2015]
-            ],
+            presets: ['es2015-rollup'],
             plugins: ['transform-object-rest-spread'],
             exclude: 'node_modules/**',
         }),

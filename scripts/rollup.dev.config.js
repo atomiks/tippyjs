@@ -1,6 +1,5 @@
 import base from './rollup.base.config'
 import babel from 'rollup-plugin-babel'
-import es2015 from 'babel-preset-es2015-rollup'
 import sass from 'rollup-plugin-sass'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
@@ -15,11 +14,9 @@ export default Object.assign(base, {
             output: true
         }),
         babel({
-            presets: [
-                [es2015]
-            ],
+            presets: ['es2015-rollup'],
             plugins: ['transform-object-rest-spread'],
-            exclude: 'node_modules/**'
+            exclude: 'node_modules/**',
         }),
         commonjs({
           namedExports: {

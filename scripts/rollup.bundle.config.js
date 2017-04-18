@@ -20,12 +20,11 @@ export default Object.assign(base, {
             .then(result => result.css)
         }),
         babel({
-            presets: [
-                ['es2015', { modules: false }]
-            ],
+            presets: ['es2015-rollup'],
             plugins: ['transform-object-rest-spread'],
             exclude: 'node_modules/**',
         }),
+        uglify({}, minify),
         commonjs({
           namedExports: {
             'node_modules/popper.js/dist/popper.js': [ 'Popper' ]
@@ -33,7 +32,6 @@ export default Object.assign(base, {
         }),
         resolve({
               browser: true
-        }),
-        uglify({}, minify)
+        })
     ]
 })

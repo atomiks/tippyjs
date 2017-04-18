@@ -1,4 +1,6 @@
-import Popper from 'popper.js'
+// For some reason the ES6 version won't transpile, will find a fix later
+//import Popper from 'popper.js'
+import Popper from '../../node_modules/popper.js/dist/popper.es5.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
