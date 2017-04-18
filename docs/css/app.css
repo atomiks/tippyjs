@@ -30,6 +30,10 @@ p, ul {
     line-height: 1.7;
 }
 
+h4 {
+    margin-top: 1rem;
+}
+
 code, pre {
     background-color: #f5f6f9;
     color: #7a3cea;

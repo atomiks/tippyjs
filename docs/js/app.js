@@ -26,7 +26,9 @@ function update(e) {
 
     btn1.title = 'Updated'
     template.querySelector('h2').innerHTML = 'DOG!'
-    template.querySelector('img').src = 'https://i.ytimg.com/vi/opKg3fyqWt4/hqdefault.jpg'
+    var img = template.querySelector('img')
+    img.width = 270
+    img.src = 'https://i.ytimg.com/vi/opKg3fyqWt4/hqdefault.jpg'
 
     var popper1 = instance.getPopperElement(btn1)
     var popper2 = instance.getPopperElement(btn2)

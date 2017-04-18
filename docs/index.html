@@ -39,7 +39,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.4.1</span>
+            <i class="material-icons icon-left">code</i><span>v0.5.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -180,7 +180,7 @@
           <section id="getting-started">
             <h2><a href="#getting-started"><i class="material-icons icon-left">tag_faces</i><span>Getting started</span></a></h2>
             <p><strong>
-                <a href="https://github.com/atomiks/tippyjs/releases/tag/v0.4.1" title="<strong>12KB</strong> gzipped"
+                <a href="https://github.com/atomiks/tippyjs/releases/tag/v0.5.0" title="<strong>12KB</strong> gzipped"
                     class="tippy-link">
                     <i class="material-icons">file_download</i>
                     <span>Download the latest release (.zip)</span>
@@ -685,6 +685,19 @@ instance.destroy(popper)</code></pre>
           <button class="btn btn-secondary tippy" id="title-neighbor-tippy" title="Hello there">Title attribute</button>
           <button class="btn btn-secondary tippy" id="html-neighbor-tippy" data-arrow="true" data-html="#manual-template">HTML template</button>
 
+          <h4>Finding the reverse reference</h4>
+
+          <p>
+              In v0.5.x it's now possible to find the reverse reference (i.e., the tooltipped element from a popper element).
+          </p>
+
+          <pre><code class="language-javascript">const el = instance.getTooltippedElement(popper)</code></pre>
+
+          <p>
+              An example of this being useful is clicking inside a popper, and getting the popper by doing <code>event.target.closest('.tippy-popper')</code>.
+              Then, you might want to do something with its element reference.
+          </p>
+
           </section>
 
           <hr>
@@ -744,7 +757,7 @@ instance.destroy(popper)</code></pre>
       <img height="200" alt="cat" src="img/cat.jpg">
     </div>
 
-    <script src="tippy/tippy.js"></script>
+    <script src="tippy/tippy.min.js"></script>
     <script src="js/prism.js"></script>
     <script src="js/app.js"></script>
   </body>

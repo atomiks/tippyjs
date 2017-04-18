@@ -133,8 +133,8 @@ $arrow-width: 10px;
     z-index: 9999;
 
     &.html-template {
-        max-width: 95%;
-        max-width: calc(100% - 2rem);
+        max-width: 96%;
+        max-width: calc(100% - 20px);
     }
 
     @each $position in $positions {
@@ -270,8 +270,8 @@ $arrow-width: 10px;
 
         &::before {
             content: '';
-            padding-top: 110%;
-            padding-top: calc(90% + 2rem);
+            padding-top: 100%;
+            padding-top: calc(75% + 2rem);
             float: left;
         }
     }

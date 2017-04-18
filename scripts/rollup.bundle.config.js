@@ -7,9 +7,10 @@ import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
+import { minify } from 'uglify-js-harmony';
 
 export default Object.assign(base, {
-    dest: './dist/tippy.js',
+    dest: './dist/tippy.min.js',
     external: [ 'Popper' ],
     plugins: [
         sass({
@@ -25,7 +26,6 @@ export default Object.assign(base, {
             plugins: ['transform-object-rest-spread'],
             exclude: 'node_modules/**',
         }),
-        uglify(),
         commonjs({
           namedExports: {
             'node_modules/popper.js/dist/popper.js': [ 'Popper' ]
@@ -33,6 +33,7 @@ export default Object.assign(base, {
         }),
         resolve({
               browser: true
-        })
+        }),
+        uglify({}, minify)
     ]
 })
