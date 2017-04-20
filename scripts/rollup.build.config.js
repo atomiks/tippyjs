@@ -5,7 +5,6 @@ import uglify from 'rollup-plugin-uglify'
 import postcss from 'postcss'
 import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
-import { minify } from 'uglify-js-harmony';
 
 export default Object.assign(base, {
     dest: './dist/tippy.standalone.js',
@@ -18,9 +17,9 @@ export default Object.assign(base, {
         }),
         babel({
             presets: ['es2015-rollup'],
-            plugins: ['transform-object-rest-spread'],
+            plugins: ['transform-object-rest-spread', 'transform-object-assign'],
             exclude: 'node_modules/**',
         }),
-        uglify({}, minify)
+        uglify()
     ]
 })

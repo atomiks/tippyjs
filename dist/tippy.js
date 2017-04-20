@@ -2092,9 +2092,6 @@ Popper.Utils = window.PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = DEFAULTS$1;
 
-
-//# sourceMappingURL=popper.js.map
-
 var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -2139,6 +2136,13 @@ var _extends$1 = Object.assign || function (target) {
   return target;
 };
 
+/**!
+* @file tippy.js | Pure JS Tooltip Library
+* @version 0.6.1
+* @license MIT
+*/
+
+// Touch user is assumed false until a `touchstart` event is fired
 var touchUser = false;
 
 // Storage object to hold all references from instance instantiation
@@ -2599,7 +2603,7 @@ var Tippy$1 = function () {
         // Use default browser tooltip on old browsers (IE < 10) and Opera Mini
         if (!('addEventListener' in window) || /MSIE 9/i.test(navigator.userAgent) || window.operamini) return;
 
-        this.settings = Object.assign(JSON.parse(JSON.stringify(DEFAULTS)), settings);
+        this.settings = _extends$1(JSON.parse(JSON.stringify(DEFAULTS)), settings);
 
         this.callbacks = {
             wait: settings.wait,

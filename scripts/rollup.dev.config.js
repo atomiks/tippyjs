@@ -15,7 +15,7 @@ export default Object.assign(base, {
         }),
         babel({
             presets: ['es2015-rollup'],
-            plugins: ['transform-object-rest-spread'],
+            plugins: ['transform-object-rest-spread', 'transform-object-assign'],
             exclude: 'node_modules/**',
         }),
         commonjs({
