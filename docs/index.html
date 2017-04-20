@@ -39,7 +39,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.5.1</span>
+            <i class="material-icons icon-left">code</i><span>v0.6.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -97,11 +97,15 @@
 
               <button class="btn" id="callback-tippy" title="Call ya back!" data-animatefill="false"><i class="material-icons icon-left">call</i>Callbacks</button>
 
-              <button class="btn tippy" id="html-tippy" data-theme="light" data-html="template" data-trigger="click" data-interactive="true" data-animatefill="false" data-arrow="true"><i class="material-icons icon-left">code</i>Popover HTML <small class="opacity-low">(click)</small></button>
+              <button class="btn tippy" id="html-tippy" data-theme="light" data-animation="fade" data-duration="300" data-html="#template" data-arrowsize="big" data-trigger="click" data-interactive="true" data-animatefill="false" data-arrow="true"><i class="material-icons icon-left">code</i>Popover HTML <small class="opacity-low">(click)</small></button>
 
               <button class="btn flippy" title="I'll flip to the bottom if there's not enough room on the right."><i class="material-icons icon-left">flip</i>Custom flips</button>
 
               <button class="btn tippy" title="I'll follow your cursor! (Mouse only)" data-followcursor="true" data-animation="fade"><i class="material-icons icon-left">mouse</i>Follow cursor</button>
+
+              <button class="btn tippy" title="I'm just a cute little tooltip" data-theme="transparent" data-size="small">Small</button>
+
+              <button class="btn tippy" title="I'm a big scary tooltip" data-theme="transparent" data-size="big">Big</button>
             </div>
           </section>
 
@@ -180,7 +184,7 @@
           <section id="getting-started">
             <h2><a href="#getting-started"><i class="material-icons icon-left">tag_faces</i><span>Getting started</span></a></h2>
             <p><strong>
-                <a href="https://github.com/atomiks/tippyjs/releases/tag/v0.5.1" title="<strong>12KB</strong> gzipped"
+                <a href="https://github.com/atomiks/tippyjs/releases/tag/v0.6.0" title="<strong>12KB</strong> gzipped"
                     class="tippy-link">
                     <i class="material-icons">file_download</i>
                     <span>Download the latest release (.zip)</span>
@@ -192,10 +196,10 @@
             <pre><code>npm install --save tippy.js</code></pre>
 
             <p>
-                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.5.1/dist/">unpkg.com CDN</a>:
+                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.6.0/dist/">unpkg.com CDN</a>:
             </p>
 
-            <pre><code>https://unpkg.com/tippy.js@0.5.1/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js@0.6.0/dist/</code></pre>
 
             <p>1. Place the <code>tippy.css</code> stylesheet in your document's <code>head</code>.</p>
             <pre><code class="language-markup">&lt;link rel="stylesheet" href="css/tippy.css"&gt;</code></pre>
@@ -342,6 +346,12 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td>Adds an arrow pointing to the tooltipped element. Setting this to <code>true</code> disables <code>animateFill</code>.</td>
                     </tr>
                     <tr>
+                      <td><code>arrowSize</code></td>
+                      <td><code>'regular'</code></td>
+                      <td><code>'small'</code> <code>'regular'</code> <code>'big'</code></td>
+                      <td>Specifies how big the tooltip's arrow is.</td>
+                    </tr>
+                    <tr>
                       <td><code>animateFill</code></td>
                       <td><code>true</code></td>
                       <td><code>true</code> <code>false</code></td>
@@ -366,10 +376,17 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td>Allows you to add HTML to a tooltip. See <a href="#creating-html-templates">Creating HTML templates</a>.</td>
                     </tr>
                     <tr>
+                      <td><code>size</code></td>
+                      <td><code>'regular'</code></td>
+                      <td><code>'small'</code> <code>'regular'</code> <code>'big'</code></td>
+                      <td>Specifies how big the tooltip is.</td>
+                    </tr>
+                    <tr>
                       <td><code>theme</code></td>
                       <td><code>'dark'</code></td>
-                      <td><code>'dark'</code> <code>'light'</code></td>
-                      <td>The CSS styling theme. You can add your own easily. See <a href="#creating-themes">Creating themes</a>.</td>
+                      <td><code>'dark'</code> <code>'light'</code> <code>'transparent'</code></td>
+                      <td>The CSS styling theme. You can add your own easily. See <a href="#creating-themes">Creating themes</a>.
+                      The <code>'transparent'</code> theme changes the arrow to a triangle instead of a square (otherwise it overlaps).</td>
                     </tr>
                     <tr>
                       <td><code>offset</code></td>

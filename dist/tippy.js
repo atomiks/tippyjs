@@ -4,21 +4,6 @@
 	(global.Tippy = factory());
 }(this, (function () { 'use strict';
 
-var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-
-
-
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
-
-var popper_es5 = createCommonjsModule(function (module, exports) {
-(function (global, factory) {
-	module.exports = factory();
-}(commonjsGlobal, (function () { 'use strict';
-
 var nativeHints = ['native code', '[object MutationObserverConstructor]'];
 
 /**
@@ -457,11 +442,13 @@ function getBoundingClientRect(element) {
   if (isIE10$1) {
     try {
       rect = element.getBoundingClientRect();
+      var scrollTop = getScroll(element, 'top');
+      var scrollLeft = getScroll(element, 'left');
+      rect.top += scrollTop;
+      rect.left += scrollLeft;
+      rect.bottom += scrollTop;
+      rect.right += scrollLeft;
     } catch (err) {}
-    var scrollTop = getScroll(element, 'top');
-    var scrollLeft = getScroll(element, 'left');
-    rect.top += scrollTop;
-    rect.left += scrollLeft;
   } else {
     rect = element.getBoundingClientRect();
   }
@@ -1515,152 +1502,335 @@ function inner(data) {
 
 /**
  * Modifiers are plugins used to alter the behavior of your poppers.
- * Popper.js uses a set of 7 modifiers to provide all the basic functionalities
+ * Popper.js uses a set of 9 modifiers to provide all the basic functionalities
  * needed by the library.
  *
- * Each modifier is an object containing several properties listed below.
- * @namespace Modifiers
- * @param {Object} modifier - Modifier descriptor
- * @param {Integer} modifier.order
- *      The `order` property defines the execution order of the modifiers.
- *      The built-in modifiers have orders with a gap of 100 units in between,
- *      this allows you to inject additional modifiers between the existing ones
- *      without having to redefine the order of all of them.
- *      The modifiers are executed starting from the one with the lowest order.
- * @param {Boolean} modifier.enabled - When `true`, the modifier will be used.
- * @param {Modifiers~modifier} modifier.function - Modifier function.
- * @param {Modifiers~onLoad} modifier.onLoad - Function executed on popper initalization
- * @return {Object} data - Each modifier must return the modified `data` object.
+ * Usually you don't want to override the `order`, `function` and `onLoad` props.
+ * All the other properties are configurations that could be tweaked.
+ * @namespace modifiers
  */
 var modifiers = {
+  /**
+   * Modifier used to shift the popper on the start or end of its reference element side
+   * @memberof modifiers
+   * @inner
+   */
   shift: {
+    /** @prop {Number} order=100 - Index used to define the order of execution */
     order: 100,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
+    /** @prop {Function} */
     function: shift
   },
+
+  /**
+   * Modifier used to add an offset to the popper, useful if you more granularity positioning your popper.
+   * The offsets will shift the popper on the side of its reference element.
+   * @memberof modifiers
+   * @inner
+   */
   offset: {
+    /** @prop {Number} order=200 - Index used to define the order of execution */
     order: 200,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
+    /** @prop {Function} */
     function: offset,
-    // nudges popper from its origin by the given amount of pixels (can be negative)
+    /** @prop {Number|String} offset=0
+     * Basic usage allows a number used to nudge the popper by the given amount of pixels.
+     * You can pass a percentage value as string (eg. `20%`) to nudge by the given percentage (relative to reference element size)
+     * Other supported units are `vh` and `vw` (relative to viewport)
+     * Additionally, you can pass a pair of values (eg. `10 20` or `2vh 20%`) to nudge the popper
+     * on both axis.
+     * A note about percentage values, if you want to refer a percentage to the popper size instead of the reference element size,
+     * use `%p` instead of `%` (eg: `20%p`). To make it clearer, you can replace `%` with `%r` and use eg.`10%p 25%r`.
+     * **Heads up!** The order of the axis is relative to the popper placement: `bottom` or `top` are `X,Y`, the other are `Y,X`
+     */
     offset: 0
   },
+
+  /**
+   * Modifier used to prevent the popper from being positioned outside the boundary.
+   *
+   * A scenario exists where the reference itself is not within the boundaries. We can
+   * say it has "escaped the boundaries" — or just "escaped". In this case we need to
+   * decide whether the popper should either:
+   *
+   * - detach from the reference and remain "trapped" in the boundaries, or
+   * - if it should be ignore the boundary and "escape with the reference"
+   *
+   * When `escapeWithReference` is `true`, and reference is completely outside the
+   * boundaries, the popper will overflow (or completely leave) the boundaries in order
+   * to remain attached to the edge of the reference.
+   * @memberof modifiers
+   * @inner
+   */
   preventOverflow: {
+    /** @prop {Number} order=300 - Index used to define the order of execution */
     order: 300,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
+    /** @prop {Function} */
     function: preventOverflow,
-    // popper will try to prevent overflow following these priorities
-    //  by default, then, it could overflow on the left and on top of the boundariesElement
+    /**
+     * @prop {Array} priority=['left', 'right', 'top', 'bottom']
+     * Popper will try to prevent overflow following these priorities by default,
+     * then, it could overflow on the left and on top of the `boundariesElement`
+     */
     priority: ['left', 'right', 'top', 'bottom'],
-    // amount of pixel used to define a minimum distance between the boundaries and the popper
-    // this makes sure the popper has always a little padding between the edges of its container
+    /**
+     * @prop {Number} padding=5
+     * Amount of pixel used to define a minimum distance between the boundaries
+     * and the popper this makes sure the popper has always a little padding
+     * between the edges of its container
+     */
     padding: 5,
+    /**
+     * @prop {String|HTMLElement} boundariesElement='scrollParent'
+     * Boundaries used by the modifier, can be `scrollParent`, `window`,
+     * `viewport` or any DOM element.
+     */
     boundariesElement: 'scrollParent'
   },
+
+  /**
+   * Modifier used to make sure the reference and its popper stay near eachothers
+   * without leaving any gap between the two. Expecially useful when the arrow is
+   * enabled and you want to assure it to point to its reference element.
+   * It cares only about the first axis, you can still have poppers with margin
+   * between the popper and its reference element.
+   * @memberof modifiers
+   * @inner
+   */
   keepTogether: {
+    /** @prop {Number} order=400 - Index used to define the order of execution */
     order: 400,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
+    /** @prop {Function} */
     function: keepTogether
   },
+
+  /**
+   * Modifier used to move the `arrowElement` on the edge of the popper to make
+   * sure it's always between the popper and its reference element.
+   * It will use the CSS outer size of the `arrowElement` element to know how
+   * many pixels of conjuction are needed.
+   * @memberof modifiers
+   * @inner
+   */
   arrow: {
+    /** @prop {Number} order=500 - Index used to define the order of execution */
     order: 500,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
+    /** @prop {Function} */
     function: arrow,
-    // selector or node used as arrow
+    /** @prop {String|HTMLElement} element='[x-arrow]' - Selector or node used as arrow */
     element: '[x-arrow]'
   },
+
+  /**
+   * Modifier used to flip the placement of the popper when the latter starts
+   * overlapping its reference element.
+   * Requires the `preventOverflow` modifier before it in order to work.
+   * **NOTE:** this modifier will run all its previous modifiers everytime it
+   * tries to flip the popper!
+   * @memberof modifiers
+   * @inner
+   */
   flip: {
+    /** @prop {Number} order=600 - Index used to define the order of execution */
     order: 600,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
+    /** @prop {Function} */
     function: flip,
-    // the behavior used to change the popper's placement
+    /**
+     * @prop {String|Array} behavior='flip'
+     * The behavior used to change the popper's placement. It can be one of
+     * `flip`, `clockwise`, `counterclockwise` or an array with a list of valid
+     * placements (with optional variations).
+     */
     behavior: 'flip',
-    // the popper will flip if it hits the edges of the boundariesElement - padding
+    /**
+     * @prop {Number} padding=5
+     * The popper will flip if it hits the edges of the `boundariesElement`
+     */
     padding: 5,
+    /**
+     * @prop {String|HTMLElement} boundariesElement='viewport'
+     * The element which will define the boundaries of the popper position,
+     * the popper will never be placed outside of the defined boundaries
+     * (except if keepTogether is enabled)
+     */
     boundariesElement: 'viewport'
   },
+
+  /**
+   * Modifier used to make the popper flow toward the inner of the reference element.
+   * By default, when this modifier is disabled, the popper will be placed outside
+   * the reference element.
+   * @memberof modifiers
+   * @inner
+   */
   inner: {
+    /** @prop {Number} order=700 - Index used to define the order of execution */
     order: 700,
+    /** @prop {Boolean} enabled=false - Whether the modifier is enabled or not */
     enabled: false,
+    /** @prop {Function} */
     function: inner
   },
+
+  /**
+   * Modifier used to hide the popper when its reference element is outside of the
+   * popper boundaries. It will set an x-hidden attribute which can be used to hide
+   * the popper when its reference is out of boundaries.
+   * @memberof modifiers
+   * @inner
+   */
   hide: {
+    /** @prop {Number} order=800 - Index used to define the order of execution */
     order: 800,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
+    /** @prop {Function} */
     function: hide
   },
+
+  /**
+   * Applies the computed styles to the popper element, disabling this modifier,
+   * no DOM changes will be performed by Popper.js. You may want to disble it
+   * while working with view librararies like React.
+   * @memberof modifiers
+   * @inner
+   */
   applyStyle: {
+    /** @prop {Number} order=900 - Index used to define the order of execution */
     order: 900,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
-    // if true, it uses the CSS 3d transformation to position the popper
-    gpuAcceleration: true,
+    /** @prop {Function} */
     function: applyStyle,
-    onLoad: applyStyleOnLoad
+    /** @prop {Function} */
+    onLoad: applyStyleOnLoad,
+    /**
+     * @prop {Boolean} gpuAcceleration=true
+     * If true, it uses the CSS 3d transformation to position the popper.
+     * Otherwise, it will use the `top` and `left` properties.
+     */
+    gpuAcceleration: true
   }
 };
 
 /**
-  * Modifiers can edit the `data` object to change the beheavior of the popper.
-  * This object contains all the informations used by Popper.js to compute the
-  * popper position.
-  * The modifier can edit the data as needed, and then `return` it as result.
-  *
-  * @callback Modifiers~modifier
-  * @param {dataObject} data
-  * @return {dataObject} modified data
-  */
+ * Modifiers can edit the `data` object to change the beheavior of the popper.
+ * This object contains all the informations used by Popper.js to compute the
+ * popper position.
+ * The modifier can edit the data as needed, and then `return` it as result.
+ *
+ * @callback Modifiers~modifier
+ * @param {dataObject} data
+ * @return {dataObject} modified data
+ */
 
 /**
-  * The `dataObject` is an object containing all the informations used by Popper.js
-  * this object get passed to modifiers and to the `onCreate` and `onUpdate` callbacks.
-  * @name dataObject
-  * @property {Object} data.instance The Popper.js instance
-  * @property {String} data.placement Placement applied to popper
-  * @property {String} data.originalPlacement Placement originally defined on init
-  * @property {Boolean} data.flipped True if popper has been flipped by flip modifier
-  * @property {Boolean} data.hide True if the reference element is out of boundaries, useful to know when to hide the popper.
-  * @property {HTMLElement} data.arrowElement Node used as arrow by arrow modifier
-  * @property {Object} data.styles Any CSS property defined here will be applied to the popper, it expects the JavaScript nomenclature (eg. `marginBottom`)
-  * @property {Object} data.boundaries Offsets of the popper boundaries
-  * @property {Object} data.offsets The measurements of popper, reference and arrow elements.
-  * @property {Object} data.offsets.popper `top`, `left`, `width`, `height` values
-  * @property {Object} data.offsets.reference `top`, `left`, `width`, `height` values
-  * @property {Object} data.offsets.arro] `top` and `left` offsets, only one of them will be different from 0
-  */
+ * The `dataObject` is an object containing all the informations used by Popper.js
+ * this object get passed to modifiers and to the `onCreate` and `onUpdate` callbacks.
+ * @name dataObject
+ * @property {Object} data.instance The Popper.js instance
+ * @property {String} data.placement Placement applied to popper
+ * @property {String} data.originalPlacement Placement originally defined on init
+ * @property {Boolean} data.flipped True if popper has been flipped by flip modifier
+ * @property {Boolean} data.hide True if the reference element is out of boundaries, useful to know when to hide the popper.
+ * @property {HTMLElement} data.arrowElement Node used as arrow by arrow modifier
+ * @property {Object} data.styles Any CSS property defined here will be applied to the popper, it expects the JavaScript nomenclature (eg. `marginBottom`)
+ * @property {Object} data.boundaries Offsets of the popper boundaries
+ * @property {Object} data.offsets The measurements of popper, reference and arrow elements.
+ * @property {Object} data.offsets.popper `top`, `left`, `width`, `height` values
+ * @property {Object} data.offsets.reference `top`, `left`, `width`, `height` values
+ * @property {Object} data.offsets.arro] `top` and `left` offsets, only one of them will be different from 0
+ */
 
 // Utils
 // Modifiers
-// default options
-var DEFAULTS = {
-  // placement of the popper
+/**
+ *
+ * @callback onCreateCallback
+ * @param {dataObject} data
+ */
+
+/**
+ *
+ * @callback onUpdateCallback
+ * @param {dataObject} data
+ */
+
+/**
+ * Default options provided to Popper.js constructor.
+ * These can be overriden using the `options` argument of Popper.js.
+ * To override an option, simply pass as 3rd argument an object with the same
+ * structure of {defaults}, example:
+ * ```
+ * new Popper(ref, pop, {
+ *   modifiers: {
+ *     preventOverflow: { enabled: false }
+ *   }
+ * })
+ * ```
+ * @namespace defaults
+ */
+var DEFAULTS$1 = {
+  /**
+   * Popper's placement
+   * @memberof defaults
+   * @prop {String} placement='bottom'
+   */
   placement: 'bottom',
 
-  // whether events (resize, scroll) are initially enabled
+  /**
+   * Whether events (resize, scroll) are initially enabled
+   * @memberof defaults
+   * @prop {Boolean} eventsEnabled=true
+   */
   eventsEnabled: true,
 
   /**
-     * Callback called when the popper is created.
-     * By default, is set to no-op.
-     * Access Popper.js instance with `data.instance`.
-     * @callback createCallback
-     * @static
-     * @param {dataObject} data
-     */
+   * Set to true if you want to automatically remove the popper when
+   * you call the `destroy` method.
+   * @memberof defaults
+   * @prop {Boolean} removeOnDestroy=false
+   */
+  removeOnDestroy: false,
+
+  /**
+   * Callback called when the popper is created.
+   * By default, is set to no-op.
+   * Access Popper.js instance with `data.instance`.
+   * @memberof defaults
+   * @prop {onCreateCallback}
+   */
   onCreate: function onCreate() {},
 
   /**
-     * Callback called when the popper is updated, this callback is not called
-     * on the initialization/creation of the popper, but only on subsequent
-     * updates.
-     * By default, is set to no-op.
-     * Access Popper.js instance with `data.instance`.
-     * @callback updateCallback
-     * @static
-     * @param {dataObject} data
-     */
+   * Callback called when the popper is updated, this callback is not called
+   * on the initialization/creation of the popper, but only on subsequent
+   * updates.
+   * By default, is set to no-op.
+   * Access Popper.js instance with `data.instance`.
+   * @memberof defaults
+   * @prop {onUpdateCallback}
+   */
   onUpdate: function onUpdate() {},
 
-  // list of functions used to modify the offsets before they are applied to the popper
+  /**
+   * List of modifiers used to modify the offsets before they are applied to the popper.
+   * They provide most of the functionalities of Popper.js
+   * @memberof defaults
+   * @prop {modifiers}
+   */
   modifiers: modifiers
 };
 
@@ -1669,72 +1839,7 @@ var DEFAULTS = {
  * @class Popper
  * @param {HTMLElement|referenceObject} reference - The reference element used to position the popper
  * @param {HTMLElement} popper - The HTML element used as popper.
- * @param {Object} options
- * @param {String} options.placement=bottom
- *      Placement of the popper accepted values: `top(-start, -end), right(-start, -end), bottom(-start, -end),
- *      left(-start, -end)`
- *
- * @param {Boolean} options.eventsEnabled=true
- *      Whether events (resize, scroll) are initially enabled
- * @param {Boolean} options.gpuAcceleration=true
- *      When this property is set to true, the popper position will be applied using CSS3 translate3d, allowing the
- *      browser to use the GPU to accelerate the rendering.
- *      If set to false, the popper will be placed using `top` and `left` properties, not using the GPU.
- *
- * @param {Boolean} options.removeOnDestroy=false
- *      Set to true if you want to automatically remove the popper when you call the `destroy` method.
- *
- * @param {Object} options.modifiers
- *      List of functions used to modify the data before they are applied to the popper (see source code for default values)
- *
- * @param {Object} options.modifiers.arrow - Arrow modifier configuration
- * @param {String|HTMLElement} options.modifiers.arrow.element='[x-arrow]'
- *      The DOM Node used as arrow for the popper, or a CSS selector used to get the DOM node. It must be child of
- *      its parent Popper. Popper.js will apply to the given element the style required to align the arrow with its
- *      reference element.
- *      By default, it will look for a child node of the popper with the `x-arrow` attribute.
- *
- * @param {Object} options.modifiers.offset - Offset modifier configuration
- * @param {Number} options.modifiers.offset.offset=0
- *      Amount of pixels the popper will be shifted (can be negative).
- *
- * @param {Object} options.modifiers.preventOverflow - PreventOverflow modifier configuration
- * @param {Array} [options.modifiers.preventOverflow.priority=['left', 'right', 'top', 'bottom']]
- *      Priority used when Popper.js tries to avoid overflows from the boundaries, they will be checked in order,
- *      this means that the last one will never overflow
- * @param {String|HTMLElement} options.modifiers.preventOverflow.boundariesElement='scrollParent'
- *      Boundaries used by the modifier, can be `scrollParent`, `window`, `viewport` or any DOM element.
- * @param {Number} options.modifiers.preventOverflow.padding=5
- *      Amount of pixels used to define a minimum distance between the boundaries and the popper
- *      this makes sure the popper has always a little padding between the edges of its container.
- *
- * @param {Object} options.modifiers.flip - Flip modifier configuration
- * @param {String|Array} options.modifiers.flip.behavior='flip'
- *      The behavior used by the `flip` modifier to change the placement of the popper when the latter is trying to
- *      overlap its reference element. Defining `flip` as value, the placement will be flipped on
- *      its axis (`right - left`, `top - bottom`).
- *      You can even pass an array of placements (eg: `['right', 'left', 'top']` ) to manually specify
- *      how alter the placement when a flip is needed. (eg. in the above example, it would first flip from right to left,
- *      then, if even in its new placement, the popper is overlapping its reference element, it will be moved to top)
- * @param {String|HTMLElement} options.modifiers.flip.boundariesElement='viewport'
- *      The element which will define the boundaries of the popper position, the popper will never be placed outside
- *      of the defined boundaries (except if `keepTogether` is enabled)
- *
- * @param {Object} options.modifiers.inner - Inner modifier configuration
- * @param {Number} options.modifiers.inner.enabled=false
- *      Set to `true` to make the popper flow toward the inner of the reference element.
- *
- * @param {Number} options.modifiers.flip.padding=5
- *      Amount of pixels used to define a minimum distance between the boundaries and the popper
- *      this makes sure the popper will flip before it touches the edge of the boundaries,
- *      making it have always a little padding between the edges of its container.
- *
- * @param {createCallback} options.onCreate - onCreate callback
- *      Function called after the Popper has been instantiated.
- *
- * @param {updateCallback} options.onUpdate - onUpdate callback
- *      Function called on subsequent updates of Popper.
- *
+ * @param {Object} options - Your custom options to override the ones defined in [DEFAULTS](#defaults)
  * @return {Object} instance - The generated Popper.js instance
  */
 
@@ -1985,21 +2090,18 @@ var Popper = function () {
 
 Popper.Utils = window.PopperUtils;
 Popper.placements = placements;
-Popper.Defaults = DEFAULTS;
+Popper.Defaults = DEFAULTS$1;
 
-return Popper;
 
-})));
+//# sourceMappingURL=popper.js.map
 
-});
-
-var classCallCheck = function (instance, Constructor) {
+var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
 };
 
-var createClass = function () {
+var createClass$1 = function () {
   function defineProperties(target, props) {
     for (var i = 0; i < props.length; i++) {
       var descriptor = props[i];
@@ -2023,7 +2125,7 @@ var createClass = function () {
 
 
 
-var _extends = Object.assign || function (target) {
+var _extends$1 = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
 
@@ -2037,20 +2139,11 @@ var _extends = Object.assign || function (target) {
   return target;
 };
 
-// For some reason the ES6 version won't transpile, will find a fix later
-//import Popper from 'popper.js'
-/**!
-* @file tippy.js | Pure JS Tooltip Library
-* @version 0.5.0
-* @license MIT
-*/
-
-// Touch user is assumed false until a `touchstart` event listener is fired
 var touchUser = false;
 
 // Storage object to hold all references from instance instantiation
 // Allows us to hide tooltips from other instances when clicking on the body
-var store = {
+var STORE = {
     refs: [],
     els: [],
     poppers: []
@@ -2062,12 +2155,14 @@ var DEFAULTS = {
     animation: 'shift',
     animateFill: true,
     arrow: false,
+    arrowSize: 'regular',
     delay: 0,
     trigger: 'mouseenter focus',
     duration: 400,
     hideDuration: 400,
     interactive: false,
     theme: 'dark',
+    size: 'regular',
     offset: 0,
     hideOnClick: true,
     multiple: false,
@@ -2076,7 +2171,7 @@ var DEFAULTS = {
     popperOptions: {}
 };
 
-var elementSelectors = {
+var SELECTORS = {
     popper: '.tippy-popper',
     tooltip: '.tippy-tooltip',
     content: '.tippy-tooltip-content',
@@ -2085,6 +2180,47 @@ var elementSelectors = {
     el: '[data-tooltipped]',
     controller: '[data-tippy-controller]'
 };
+
+// Determine touch users
+function handleDocumentTouchstart() {
+    touchUser = true;
+    document.body.classList.add('tippy-touch');
+    document.removeEventListener('touchstart', handleDocumentTouchstart);
+}
+
+// Handle clicks anywhere on the document
+function handleDocumentClick(event) {
+
+    var el = closest(event.target, SELECTORS.el);
+    var popper = closest(event.target, SELECTORS.popper);
+
+    if (popper) {
+        var ref = STORE.refs[STORE.poppers.indexOf(popper)];
+        if (ref.settings.interactive) return;
+    }
+
+    if (el) {
+        var _ref = STORE.refs[STORE.els.indexOf(el)];
+
+        // Hide all poppers except the one belonging to the element that was clicked IF
+        // `multiple` is false AND they are a touch user, OR
+        // `multiple` is false AND it's triggered by a click
+        if (!_ref.settings.multiple && touchUser || !_ref.settings.multiple && _ref.settings.trigger.indexOf('click') !== -1) {
+            return hideAllPoppers(_ref);
+        }
+
+        // If hideOnClick is not strictly true or triggered by a click don't hide poppers
+        if (_ref.settings.hideOnClick !== true || _ref.settings.trigger.indexOf('click') !== -1) return;
+    }
+
+    // Don't trigger a hide for tippy controllers
+    if (!closest(event.target, SELECTORS.controller)) {
+        hideAllPoppers();
+    }
+}
+
+document.addEventListener('click', handleDocumentClick);
+document.addEventListener('touchstart', handleDocumentTouchstart);
 
 /**
 * Returns the supported prefixed property - only `webkit` is needed, `moz`, `ms` and `o` are obsolete
@@ -2146,14 +2282,14 @@ function closest(element, parentSelector) {
 * @return {Object} - the popper instance
 */
 function createPopperInstance(el, popper, settings) {
-    var config = _extends({
+    var config = _extends$1({
         placement: settings.position
     }, settings.popperOptions || {}, {
-        modifiers: _extends({}, settings.popperOptions ? settings.popperOptions.modifiers : {}, {
-            flip: _extends({
+        modifiers: _extends$1({}, settings.popperOptions ? settings.popperOptions.modifiers : {}, {
+            flip: _extends$1({
                 padding: 15
             }, settings.popperOptions && settings.popperOptions.modifiers ? settings.popperOptions.modifiers.flip : {}),
-            offset: _extends({
+            offset: _extends$1({
                 offset: parseInt(settings.offset)
             }, settings.popperOptions && settings.popperOptions.modifiers ? settings.popperOptions.modifiers.offset : {})
         })
@@ -2162,7 +2298,7 @@ function createPopperInstance(el, popper, settings) {
     // Temporarily append popper for Popper.js
     document.body.appendChild(popper);
 
-    var instance = new popper_es5(el, popper, config);
+    var instance = new Popper(el, popper, config);
     instance.disableEventListeners();
 
     document.body.removeChild(popper);
@@ -2186,12 +2322,13 @@ function createPopperElement(title, settings) {
     }
 
     var tooltip = document.createElement('div');
-    tooltip.setAttribute('class', 'tippy-tooltip ' + settings.theme + ' leave');
+    tooltip.setAttribute('class', 'tippy-tooltip tippy-tooltip--' + settings.size + ' ' + settings.theme + ' leave');
     tooltip.setAttribute('data-animation', settings.animation);
 
     if (settings.arrow) {
         // Add an arrow
         var arrow = document.createElement('div');
+        arrow.setAttribute('class', 'arrow-' + settings.arrowSize);
         arrow.setAttribute('x-arrow', '');
         tooltip.appendChild(arrow);
     }
@@ -2246,31 +2383,31 @@ function createPopperElement(title, settings) {
 * @param {Object} methods - the methods for each listener
 * @return {Array} - array of listener objects
 */
-function createTrigger(event, el, methods) {
+function createTrigger(event, el, handlers) {
     if (event === 'manual') return;
 
     var listeners = [];
 
     // Enter
-    el.addEventListener(event, methods.handleTrigger);
+    el.addEventListener(event, handlers.handleTrigger);
     listeners.push({
         event: event,
-        method: methods.handleTrigger
+        handler: handlers.handleTrigger
     });
 
     // Leave
     if (event === 'mouseenter') {
-        el.addEventListener('mouseleave', methods.handleMouseleave);
+        el.addEventListener('mouseleave', handlers.handleMouseleave);
         listeners.push({
             event: 'mouseleave',
-            method: methods.handleMouseleave
+            handler: handlers.handleMouseleave
         });
     }
     if (event === 'focus') {
-        el.addEventListener('blur', methods.handleBlur);
+        el.addEventListener('blur', handlers.handleBlur);
         listeners.push({
             event: 'blur',
-            method: methods.handleBlur
+            handler: handlers.handleBlur
         });
     }
 
@@ -2283,9 +2420,9 @@ function createTrigger(event, el, methods) {
 * @param {Object} ref - current ref in the forEach loop to be pushed
 */
 function pushIntoStorage(ref) {
-    store.refs.push(ref);
-    store.els.push(ref.el);
-    store.poppers.push(ref.popper);
+    STORE.refs.push(ref);
+    STORE.els.push(ref.el);
+    STORE.poppers.push(ref.popper);
 }
 
 /**
@@ -2303,7 +2440,7 @@ function removeTitle(el) {
 * @param {Object} e (event)
 */
 function followCursor(e) {
-    var ref = store.refs[store.els.indexOf(this)];
+    var ref = STORE.refs[STORE.els.indexOf(this)];
     var position = ref.popper.getAttribute('x-placement');
     var offset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
     var halfPopperWidth = Math.round(ref.popper.offsetWidth / 2);
@@ -2311,47 +2448,19 @@ function followCursor(e) {
 
     // Default = top
     var x = e.clientX - halfPopperWidth;
-    var y = e.clientY + offset - 50;
+    var y = e.clientY + offset - 2.5 * halfPopperHeight;
 
     if (position === 'left') {
-        x = e.clientX - 2 * halfPopperWidth - 10;
+        x = e.clientX - 2 * halfPopperWidth - 15;
         y = e.clientY + offset - halfPopperHeight;
     } else if (position === 'right') {
-        x = e.clientX + 15;
+        x = e.clientX + halfPopperHeight;
         y = e.clientY + offset - halfPopperHeight;
     } else if (position === 'bottom') {
-        y = e.clientY + offset + 15;
+        y = e.clientY + offset + halfPopperHeight / 1.5;
     }
 
     ref.popper.style[prefix('transform')] = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
-}
-
-/**
-* Returns a global settings object to be applied to a Tippy instance
-* @param {Object} - settings
-* @return {Object}
-*/
-function applyGlobalSettings(settings) {
-    // Object.assign polyfill
-    if (typeof Object.assign != 'function') {
-        Object.assign = function (target, varArgs) {
-            var to = Object(target);
-            for (var index = 1; index < arguments.length; index++) {
-                var nextSource = arguments[index];
-                if (nextSource != null) {
-                    for (var nextKey in nextSource) {
-                        if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                            to[nextKey] = nextSource[nextKey];
-                        }
-                    }
-                }
-            }
-            return to;
-        };
-    }
-
-    // Object.assign mutates our default settings, so copy it
-    return Object.assign(JSON.parse(JSON.stringify(DEFAULTS)), settings);
 }
 
 /**
@@ -2366,22 +2475,131 @@ function elementIsInViewport(el) {
 }
 
 /**
+* Triggers a document repaint or reflow for CSS transition
+* @param {Element} el
+*/
+function triggerReflow(tooltip, circle) {
+    // Safari needs the specific 'transform' property to be accessed
+    circle ? window.getComputedStyle(circle)[prefix('transform')] : window.getComputedStyle(tooltip).opacity;
+}
+
+/**
+* Modifies elements' class lists
+* @param {Array} els - HTML elements
+* @param {Function} callback
+*/
+function modifyClassList(els, callback) {
+    els.forEach(function (el) {
+        if (!el) return;
+        callback(el.classList);
+    });
+}
+
+/**
+* Applies the transition duration to each element
+* @param {Array} els - HTML elements
+* @param {Number} duration
+*/
+function applyTransitionDuration(els, duration) {
+    els.forEach(function (el) {
+        if (!el) return;
+        el.style[prefix('transitionDuration')] = duration + 'ms';
+    });
+}
+
+/**
+* Prepares the callback functions for `show` and `hide` methods
+* @param {Object} ref -  the element/popper reference
+* @param {Boolean} immediatelyFire - whether to instantly fire the callback or wait
+* @param {Function} callback - callback function to fire once transitions complete
+*/
+function onTransitionEnd(ref, immediatelyFire, callback) {
+    var listenerCallback = function listenerCallback() {
+        if (!immediatelyFire) {
+            ref.popper.removeEventListener('webkitTransitionEnd', listenerCallback);
+            ref.popper.removeEventListener('transitionend', listenerCallback);
+        }
+        callback();
+    };
+
+    // transitionend may not fire for 0 duration, keep it safe and use ~1 frame of time
+    if (immediatelyFire) return listenerCallback();
+
+    // Wait for transitions to complete
+    ref.popper.addEventListener('webkitTransitionEnd', listenerCallback);
+    ref.popper.addEventListener('transitionend', listenerCallback);
+}
+
+/**
+* Appends the popper, updates its position and enables event listeners
+* @param {Object} ref -  the element/popper reference
+*/
+function awakenPopper(ref) {
+    document.body.appendChild(ref.popper);
+    ref.popper.style.visibility = 'visible';
+
+    ref.instance.update();
+
+    if (ref.settings.followCursor && !touchUser) {
+        if (!ref.hasFollowCursorListener) {
+            ref.hasFollowCursorListener = true;
+            ref.el.addEventListener('mousemove', followCursor);
+        }
+    } else {
+        ref.instance.enableEventListeners();
+    }
+}
+
+/**
+* Fixes CSS transition when showing a flipped tooltip
+* @param {Object} ref - the popper/element reference
+* @param {Number} duration
+*/
+function correctTransition(ref, callback) {
+    setTimeout(function () {
+        var position = ref.popper.getAttribute('x-placement');
+        var a = !ref.adjusted && ref.settings.position !== position;
+        var b = ref.adjusted && ref.settings.position === position;
+        if (a || b) {
+            ref.adjusted = a ? true : false;
+            callback();
+        }
+    }, 0);
+}
+
+/**
+* Hides all poppers
+* @param {Object} - currentRef
+*/
+function hideAllPoppers(currentRef) {
+    STORE.refs.forEach(function (ref) {
+        // Don't hide already hidden ones
+        if (!document.body.contains(ref.popper)) return;
+
+        // hideOnClick can have the truthy value of 'persistent', so strict check is needed
+        if (ref.settings.hideOnClick === true && (!currentRef || ref.popper !== currentRef.popper)) {
+            privateInstance.hide(ref.popper, ref.settings.hideDuration);
+        }
+    });
+}
+
+/**
 * The class to be exported to be used on the `window`
 * Private methods are prefixed with an underscore _
-* @param {String} || {Element} selector
+* @param {String|Element} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
 */
 
 var Tippy$1 = function () {
     function Tippy(selector) {
         var settings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-        classCallCheck(this, Tippy);
+        classCallCheck$1(this, Tippy);
 
 
         // Use default browser tooltip on old browsers (IE < 10) and Opera Mini
         if (!('addEventListener' in window) || /MSIE 9/i.test(navigator.userAgent) || window.operamini) return;
 
-        this.settings = applyGlobalSettings(settings);
+        this.settings = Object.assign(JSON.parse(JSON.stringify(DEFAULTS)), settings);
 
         this.callbacks = {
             wait: settings.wait,
@@ -2395,7 +2613,6 @@ var Tippy$1 = function () {
         this.els = selector instanceof Element ? [selector] : [].slice.call(document.querySelectorAll(selector));
 
         this._createTooltips();
-        this._handleDocumentEvents();
     }
 
     /**
@@ -2405,7 +2622,7 @@ var Tippy$1 = function () {
     */
 
 
-    createClass(Tippy, [{
+    createClass$1(Tippy, [{
         key: '_applyIndividualSettings',
         value: function _applyIndividualSettings(el) {
             // Some falsy values require more verbose defining
@@ -2428,6 +2645,9 @@ var Tippy$1 = function () {
             var arrow = el.getAttribute('data-arrow') || this.settings.arrow;
             if (!arrow || arrow === 'false') arrow = false;else animateFill = false;
 
+            // 'small', 'regular', 'big'
+            var arrowSize = el.getAttribute('data-arrowsize') || this.settings.arrowSize;
+
             // 'mouseenter focus' string to array
             var trigger = el.getAttribute('data-trigger') || this.settings.trigger;
             if (trigger) trigger = trigger.trim().split(' ');
@@ -2435,6 +2655,9 @@ var Tippy$1 = function () {
             // 'dark', 'light', '{custom}'
             var theme = el.getAttribute('data-theme') || this.settings.theme;
             if (theme) theme += '-theme';
+
+            // 'small', 'regular', 'big'
+            var size = el.getAttribute('data-size') || this.settings.size;
 
             // 0, '0'
             var delay = parseInt(el.getAttribute('data-delay'));
@@ -2481,12 +2704,14 @@ var Tippy$1 = function () {
                 animation: animation,
                 animateFill: animateFill,
                 arrow: arrow,
+                arrowSize: arrowSize,
                 delay: delay,
                 trigger: trigger,
                 duration: duration,
                 hideDuration: hideDuration,
                 interactive: interactive,
                 theme: theme,
+                size: size,
                 offset: offset,
                 hideOnClick: hideOnClick,
                 multiple: multiple,
@@ -2497,84 +2722,7 @@ var Tippy$1 = function () {
         }
 
         /**
-        * Hides all poppers
-        * @param {Object} - currentRef
-        */
-
-    }, {
-        key: '_hideAllPoppers',
-        value: function _hideAllPoppers(currentRef) {
-            var _this = this;
-
-            store.refs.forEach(function (ref) {
-                // Don't hide already hidden ones
-                if (!document.body.contains(ref.popper)) return;
-
-                // hideOnClick can have the truthy value of 'persistent', so strict check is needed
-                if (ref.settings.hideOnClick === true && (!currentRef || ref.popper !== currentRef.popper)) {
-                    _this.hide(ref.popper, ref.settings.hideDuration);
-                }
-            });
-        }
-
-        /**
-        * Creates listeners on the document for click and touch start (to determine touch users)
-        * Only relevant by the first Tippy instance that is created
-        */
-
-    }, {
-        key: '_handleDocumentEvents',
-        value: function _handleDocumentEvents() {
-            var _this2 = this;
-
-            var handleClick = function handleClick(event) {
-
-                var el = closest(event.target, elementSelectors.el);
-                var popper = closest(event.target, elementSelectors.popper);
-
-                if (popper) {
-                    var ref = store.refs[store.poppers.indexOf(popper)];
-                    if (ref.settings.interactive) return;
-                }
-
-                if (el) {
-                    var _ref = store.refs[store.els.indexOf(el)];
-
-                    // Hide all poppers except the one belonging to the element that was clicked IF
-                    // `multiple` is false AND they are a touch user, OR
-                    // `multiple` is false AND it's triggered by a click
-                    if (!_ref.settings.multiple && touchUser || !_ref.settings.multiple && _ref.settings.trigger.indexOf('click') !== -1) {
-                        return _this2._hideAllPoppers(_ref);
-                    }
-
-                    // If hideOnClick is not strictly true or triggered by a click don't hide poppers
-                    if (_ref.settings.hideOnClick !== true || _ref.settings.trigger.indexOf('click') !== -1) return;
-                }
-
-                // Don't trigger a hide for tippy controllers
-                if (!closest(event.target, elementSelectors.controller)) {
-                    _this2._hideAllPoppers();
-                }
-            };
-
-            var handleTouch = function handleTouch() {
-                touchUser = true;
-                document.body.classList.add('tippy-touch');
-                document.removeEventListener('touchstart', handleTouch);
-            };
-
-            if (!store.listeners) {
-                store.listeners = {
-                    click: handleClick,
-                    touchstart: handleTouch
-                };
-                document.addEventListener('click', handleClick);
-                document.addEventListener('touchstart', handleTouch);
-            }
-        }
-
-        /**
-        * Returns relevant listener callback methods for each ref
+        * Returns relevant listener callbacks for each ref
         * @param {Element} el
         * @param {Element} popper
         * @param {Object} settings
@@ -2582,27 +2730,27 @@ var Tippy$1 = function () {
         */
 
     }, {
-        key: '_getEventListenerMethods',
-        value: function _getEventListenerMethods(el, popper, settings) {
-            var _this3 = this;
+        key: '_getEventListenerHandlers',
+        value: function _getEventListenerHandlers(el, popper, settings) {
+            var _this = this;
 
             // Avoid creating unnecessary timeouts
             var _show = function _show() {
                 if (settings.delay) {
                     var delay = setTimeout(function () {
-                        return _this3.show(popper, settings.duration);
+                        return _this.show(popper, settings.duration);
                     }, settings.delay);
                     popper.setAttribute('data-delay', delay);
                 } else {
-                    _this3.show(popper, settings.duration);
+                    _this.show(popper, settings.duration);
                 }
             };
 
             var show = function show() {
-                return _this3.callbacks.wait ? _this3.callbacks.wait(_show) : _show();
+                return _this.callbacks.wait ? _this.callbacks.wait(_show) : _show();
             };
             var hide = function hide() {
-                return _this3.hide(popper, settings.hideDuration);
+                return _this.hide(popper, settings.hideDuration);
             };
 
             var handleTrigger = function handleTrigger(event) {
@@ -2629,13 +2777,12 @@ var Tippy$1 = function () {
                         // If cursor is NOT on the popper
                         // and it's NOT on the popper's tooltipped element
                         // and it's NOT triggered by a click, then hide
-                        if (closest(event.target, elementSelectors.popper) !== popper && closest(event.target, elementSelectors.el) !== el && settings.trigger.indexOf('click') === -1) {
+                        if (closest(event.target, SELECTORS.popper) !== popper && closest(event.target, SELECTORS.el) !== el && settings.trigger.indexOf('click') === -1) {
                             document.removeEventListener('mousemove', handleMousemove);
                             hide();
                         }
                     };
-                    document.addEventListener('mousemove', handleMousemove);
-                    return;
+                    return document.addEventListener('mousemove', handleMousemove);
                 }
 
                 // If it's not interactive, just hide it
@@ -2646,7 +2793,7 @@ var Tippy$1 = function () {
                 // Only hide if not a touch user and has a focus 'relatedtarget', of which is not
                 // a popper element
                 if (!touchUser && event.relatedTarget) {
-                    if (!closest(event.relatedTarget, elementSelectors.popper)) {
+                    if (!closest(event.relatedTarget, SELECTORS.popper)) {
                         hide();
                     }
                 }
@@ -2666,13 +2813,13 @@ var Tippy$1 = function () {
     }, {
         key: '_createTooltips',
         value: function _createTooltips() {
-            var _this4 = this;
+            var _this2 = this;
 
             this.els.forEach(function (el) {
 
                 el.setAttribute('data-tooltipped', '');
 
-                var settings = _this4._applyIndividualSettings(el);
+                var settings = _this2._applyIndividualSettings(el);
 
                 var title = el.getAttribute('title');
                 if (!title && !settings.html) return;
@@ -2681,11 +2828,11 @@ var Tippy$1 = function () {
 
                 var popper = createPopperElement(title, settings);
                 var instance = createPopperInstance(el, popper, settings);
-                var methods = _this4._getEventListenerMethods(el, popper, settings);
+                var handlers = _this2._getEventListenerHandlers(el, popper, settings);
                 var listeners = [];
 
                 settings.trigger.forEach(function (event) {
-                    listeners = listeners.concat(createTrigger(event, el, methods));
+                    return listeners = listeners.concat(createTrigger(event, el, handlers));
                 });
 
                 pushIntoStorage({
@@ -2697,37 +2844,7 @@ var Tippy$1 = function () {
                 });
             });
 
-            Tippy.store = store; // Allow others to access `store` if need be
-        }
-
-        /**
-        * Fixes CSS transition when showing a flipped tooltip
-        * @param {Object} ref - the popper/element reference
-        * @param {Number} duration
-        */
-
-    }, {
-        key: '_adjustFlip',
-        value: function _adjustFlip(ref, duration) {
-            var _this5 = this;
-
-            var flipAdjust = function flipAdjust() {
-                _this5.hide(ref.popper, 0, false);
-                setTimeout(function () {
-                    return _this5.show(ref.popper, duration, false);
-                }, 0);
-            };
-            setTimeout(function () {
-                var position = ref.popper.getAttribute('x-placement');
-
-                if (!ref.adjusted && ref.settings.position !== position) {
-                    ref.adjusted = true;
-                    flipAdjust();
-                } else if (ref.adjusted && ref.settings.position === position) {
-                    ref.adjusted = false;
-                    flipAdjust();
-                }
-            }, 0);
+            Tippy.store = STORE; // Allow others to access `STORE` if need be
         }
 
         /**
@@ -2740,7 +2857,7 @@ var Tippy$1 = function () {
         key: 'getPopperElement',
         value: function getPopperElement(el) {
             try {
-                return store.refs[store.els.indexOf(el)].popper;
+                return STORE.refs[STORE.els.indexOf(el)].popper;
             } catch (e) {
                 throw new Error('[Tippy error]: Element does not exist in any Tippy instances');
             }
@@ -2756,7 +2873,7 @@ var Tippy$1 = function () {
         key: 'getTooltippedElement',
         value: function getTooltippedElement(popper) {
             try {
-                return store.refs[store.poppers.indexOf(popper)].el;
+                return STORE.refs[STORE.poppers.indexOf(popper)].el;
             } catch (e) {
                 throw new Error('[Tippy error]: Popper does not exist in any Tippy instances');
             }
@@ -2772,7 +2889,7 @@ var Tippy$1 = function () {
     }, {
         key: 'show',
         value: function show(popper) {
-            var _this6 = this;
+            var _this3 = this;
 
             var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.settings.duration;
             var enableCallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
@@ -2781,50 +2898,33 @@ var Tippy$1 = function () {
             // Already visible
             if (popper.style.visibility === 'visible') return;
 
-            var ref = store.refs[store.poppers.indexOf(popper)];
-            var tooltip = popper.querySelector(elementSelectors.tooltip);
-            var circle = popper.querySelector(elementSelectors.circle);
+            var ref = STORE.refs[STORE.poppers.indexOf(popper)];
+            var tooltip = popper.querySelector(SELECTORS.tooltip);
+            var circle = popper.querySelector(SELECTORS.circle);
 
             if (enableCallback) this.callbacks.beforeShown();
 
-            document.body.appendChild(popper);
+            awakenPopper(ref);
 
-            popper.style.visibility = 'visible';
+            // Flipping causes CSS transition to go haywire
+            correctTransition(ref, function () {
+                _this3.hide(ref.popper, 0, false);
+                setTimeout(function () {
+                    return _this3.show(ref.popper, duration, false);
+                }, 0);
+            });
 
-            // Follow cursor setting, not applicable to touch users
-            if (ref.settings.followCursor && !touchUser) {
-                if (!ref.hasFollowCursorListener) {
-                    ref.hasFollowCursorListener = true;
-                    ref.el.addEventListener('mousemove', followCursor);
-                }
-            } else {
-                ref.instance.enableEventListeners();
-            }
+            // Repaint/reflow is required for CSS transition when appending
+            triggerReflow(tooltip, circle);
 
-            ref.instance.update();
+            modifyClassList([tooltip, circle], function (list) {
+                list.remove('leave');
+                list.add('enter');
+            });
 
-            this._adjustFlip(ref, duration);
+            applyTransitionDuration([tooltip, circle], duration);
 
-            // Repaint is required for CSS transition when appending
-            getComputedStyle(tooltip).opacity;
-
-            tooltip.style[prefix('transitionDuration')] = duration + 'ms';
-            tooltip.classList.add('enter');
-            tooltip.classList.remove('leave');
-
-            if (circle) {
-                // Reflow
-                getComputedStyle(circle)[prefix('transform')];
-
-                circle.style[prefix('transitionDuration')] = duration + 'ms';
-                circle.classList.add('enter');
-                circle.classList.remove('leave');
-            }
-
-            var onShown = function onShown() {
-                popper.removeEventListener('webkitTransitionEnd', onShown);
-                popper.removeEventListener('transitionend', onShown);
-
+            onTransitionEnd(ref, duration < 20, function () {
                 if (popper.style.visibility === 'hidden' || ref.onShownFired) return;
 
                 // Focus click triggered interactive tooltips (popovers) only
@@ -2834,16 +2934,8 @@ var Tippy$1 = function () {
 
                 ref.onShownFired = true;
 
-                _this6.callbacks.shown();
-            };
-
-            if (duration < 20) {
-                return onShown();
-            }
-
-            // Wait for transitions to complete
-            popper.addEventListener('webkitTransitionEnd', onShown);
-            popper.addEventListener('transitionend', onShown);
+                _this3.callbacks.shown();
+            });
         }
 
         /**
@@ -2856,7 +2948,7 @@ var Tippy$1 = function () {
     }, {
         key: 'hide',
         value: function hide(popper) {
-            var _this7 = this;
+            var _this4 = this;
 
             var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.settings.duration;
             var enableCallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
@@ -2867,9 +2959,9 @@ var Tippy$1 = function () {
             // Hidden anyway
             if (!document.body.contains(popper)) return;
 
-            var ref = store.refs[store.poppers.indexOf(popper)];
-            var tooltip = popper.querySelector(elementSelectors.tooltip);
-            var circle = popper.querySelector(elementSelectors.circle);
+            var ref = STORE.refs[STORE.poppers.indexOf(popper)];
+            var tooltip = popper.querySelector(SELECTORS.tooltip);
+            var circle = popper.querySelector(SELECTORS.circle);
 
             if (enableCallback) {
                 this.callbacks.beforeHidden();
@@ -2879,23 +2971,17 @@ var Tippy$1 = function () {
 
             popper.style.visibility = 'hidden';
 
-            // Use the same duration as the show if it's the default
-
+            // Use same duration as show if it's the default
             if (duration === DEFAULTS.hideDuration) {
-                if (prefix('transitionDuration')) {
-                    duration = parseInt(tooltip.style[prefix('transitionDuration')].replace('ms', ''));
-                }
+                duration = parseInt(tooltip.style[prefix('transitionDuration')]);
             } else {
-                tooltip.style[prefix('transitionDuration')] = duration + 'ms';
-                if (circle) circle.style[prefix('transitionDuration')] = duration + 'ms';
+                applyTransitionDuration([tooltip, circle], duration);
             }
 
-            tooltip.classList.add('leave');
-            tooltip.classList.remove('enter');
-            if (circle) {
-                circle.classList.add('leave');
-                circle.classList.remove('enter');
-            }
+            modifyClassList([tooltip, circle], function (list) {
+                list.remove('enter');
+                list.add('leave');
+            });
 
             // Re-focus tooltipped element if it's a HTML popover
             // and the tooltipped element IS in the viewport (otherwise it causes unsightly scrolling
@@ -2904,10 +2990,7 @@ var Tippy$1 = function () {
                 ref.el.focus();
             }
 
-            var onHidden = function onHidden() {
-                popper.removeEventListener('webkitTransitionEnd', onHidden);
-                popper.removeEventListener('transitionend', onHidden);
-
+            onTransitionEnd(ref, duration < 20, function () {
                 if (popper.style.visibility === 'visible' || !document.body.contains(popper)) return;
 
                 // Follow cursor setting
@@ -2920,18 +3003,8 @@ var Tippy$1 = function () {
 
                 document.body.removeChild(popper);
 
-                if (enableCallback) _this7.callbacks.hidden();
-            };
-
-            if (duration < 20) {
-                return onHidden();
-            }
-
-            // Wait for transitions to complete
-            ref.onHidden = onHidden;
-
-            popper.addEventListener('webkitTransitionEnd', onHidden);
-            popper.addEventListener('transitionend', onHidden);
+                _this4.callbacks.hidden();
+            });
         }
 
         /**
@@ -2942,12 +3015,12 @@ var Tippy$1 = function () {
     }, {
         key: 'destroy',
         value: function destroy(popper) {
-            var index = store.poppers.indexOf(popper);
-            var ref = store.refs[index];
+            var index = STORE.poppers.indexOf(popper);
+            var ref = STORE.refs[index];
 
             // Remove Tippy-only event listeners from tooltipped element
             ref.listeners.forEach(function (listener) {
-                return ref.el.removeEventListener(listener.event, listener.method);
+                return ref.el.removeEventListener(listener.event, listener.handler);
             });
 
             ref.el.removeAttribute('data-tooltipped');
@@ -2955,9 +3028,9 @@ var Tippy$1 = function () {
             ref.instance.destroy();
 
             // Remove from storage
-            store.refs.splice(index, 1);
-            store.els.splice(index, 1);
-            store.poppers.splice(index, 1);
+            STORE.refs.splice(index, 1);
+            STORE.els.splice(index, 1);
+            STORE.poppers.splice(index, 1);
         }
 
         /**
@@ -2968,8 +3041,8 @@ var Tippy$1 = function () {
     }, {
         key: 'update',
         value: function update(popper) {
-            var ref = store.refs[store.poppers.indexOf(popper)];
-            var content = popper.querySelector(elementSelectors.content);
+            var ref = STORE.refs[STORE.poppers.indexOf(popper)];
+            var content = popper.querySelector(SELECTORS.content);
             var template = ref.settings.html;
 
             if (template) {
@@ -2982,6 +3055,8 @@ var Tippy$1 = function () {
     }]);
     return Tippy;
 }();
+
+var privateInstance = new Tippy$1();
 
 return Tippy$1;
 

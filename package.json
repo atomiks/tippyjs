@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Pure JS Tooltip Library",
   "main": "dist/tippy.js",
   "scripts": {
@@ -26,8 +26,7 @@
     "rollup-plugin-sass": "^0.4.10",
     "rollup-plugin-serve": "^0.3.0",
     "rollup-plugin-uglify": "^1.0.1",
-    "rollup-watch": "^3.2.2",
-    "uglify-js-harmony": "^2.7.5"
+    "rollup-watch": "^3.2.2"
   },
   "dependencies": {
     "popper.js": "^1.8.2"

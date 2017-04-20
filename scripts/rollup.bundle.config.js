@@ -7,7 +7,6 @@ import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
-import { minify } from 'uglify-js-harmony';
 
 export default Object.assign(base, {
     dest: './dist/tippy.min.js',
@@ -21,10 +20,9 @@ export default Object.assign(base, {
         }),
         babel({
             presets: ['es2015-rollup'],
-            plugins: ['transform-object-rest-spread'],
-            exclude: 'node_modules/**',
+            plugins: ['transform-object-rest-spread', 'transform-object-assign']
         }),
-        uglify({}, minify),
+        uglify(),
         commonjs({
           namedExports: {
             'node_modules/popper.js/dist/popper.js': [ 'Popper' ]
@@ -32,6 +30,6 @@ export default Object.assign(base, {
         }),
         resolve({
               browser: true
-        })
+        }),
     ]
 })
