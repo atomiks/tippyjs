@@ -2092,6 +2092,9 @@ Popper.Utils = window.PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = DEFAULTS$1;
 
+
+//# sourceMappingURL=popper.js.map
+
 var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -2138,7 +2141,7 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.6.1
+* @version 0.7.0
 * @license MIT
 */
 
@@ -2161,9 +2164,10 @@ var DEFAULTS = {
     arrow: false,
     arrowSize: 'regular',
     delay: 0,
+    hideDelay: 0,
     trigger: 'mouseenter focus',
-    duration: 400,
-    hideDuration: 400,
+    duration: 375,
+    hideDuration: 375,
     interactive: false,
     theme: 'dark',
     size: 'regular',
@@ -2172,6 +2176,7 @@ var DEFAULTS = {
     multiple: false,
     followCursor: false,
     inertia: false,
+    transitionFlip: true,
     popperOptions: {}
 };
 
@@ -2217,8 +2222,8 @@ function handleDocumentClick(event) {
         if (_ref.settings.hideOnClick !== true || _ref.settings.trigger.indexOf('click') !== -1) return;
     }
 
-    // Don't trigger a hide for tippy controllers
-    if (!closest(event.target, SELECTORS.controller)) {
+    // Don't trigger a hide for tippy controllers, and don't needlessly run loop
+    if (!closest(event.target, SELECTORS.controller) && document.body.querySelector('.tippy-popper')) {
         hideAllPoppers();
     }
 }
@@ -2319,11 +2324,6 @@ function createPopperInstance(el, popper, settings) {
 function createPopperElement(title, settings) {
     var popper = document.createElement('div');
     popper.setAttribute('class', 'tippy-popper');
-
-    // Fix for iOS animateFill
-    if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
-        popper.classList.add('tippy-iOS-fix');
-    }
 
     var tooltip = document.createElement('div');
     tooltip.setAttribute('class', 'tippy-tooltip tippy-tooltip--' + settings.size + ' ' + settings.theme + ' leave');
@@ -2512,6 +2512,23 @@ function applyTransitionDuration(els, duration) {
 }
 
 /**
+* Fixes CSS transition
+* @param {Object} ref - element/popper reference
+* @param {Function} callback - the quick hide/show correction
+*/
+function correctTransition(ref, callback) {
+    setTimeout(function () {
+        if (ref.settings.position !== ref.popper.getAttribute('x-placement')) {
+            ref.flipped = true;
+            callback();
+        } else if (ref.flipped && ref.settings.position === ref.popper.getAttribute('x-placement')) {
+            ref.flipped = false;
+            callback();
+        }
+    }, 0);
+}
+
+/**
 * Prepares the callback functions for `show` and `hide` methods
 * @param {Object} ref -  the element/popper reference
 * @param {Boolean} immediatelyFire - whether to instantly fire the callback or wait
@@ -2552,23 +2569,6 @@ function awakenPopper(ref) {
     } else {
         ref.instance.enableEventListeners();
     }
-}
-
-/**
-* Fixes CSS transition when showing a flipped tooltip
-* @param {Object} ref - the popper/element reference
-* @param {Number} duration
-*/
-function correctTransition(ref, callback) {
-    setTimeout(function () {
-        var position = ref.popper.getAttribute('x-placement');
-        var a = !ref.adjusted && ref.settings.position !== position;
-        var b = ref.adjusted && ref.settings.position === position;
-        if (a || b) {
-            ref.adjusted = a ? true : false;
-            callback();
-        }
-    }, 0);
 }
 
 /**
@@ -2668,6 +2668,10 @@ var Tippy$1 = function () {
             if (!delay && delay !== 0) delay = this.settings.delay;
 
             // 0, '0'
+            var hideDelay = parseInt(el.getAttribute('data-hidedelay'));
+            if (!hideDelay && hideDelay !== 0) hideDelay = this.settings.hideDelay;
+
+            // 0, '0'
             var duration = parseInt(el.getAttribute('data-duration'));
             if (!duration && duration !== 0) duration = this.settings.duration;
 
@@ -2699,6 +2703,10 @@ var Tippy$1 = function () {
             var inertia = el.getAttribute('data-inertia') || this.settings.inertia;
             if (inertia === 'false') inertia = false;
 
+            // 'true', true, 'false', false
+            var transitionFlip = el.getAttribute('data-transitionflip') || this.settings.transitionFlip;
+            if (transitionFlip === 'false') transitionFlip = false;
+
             // just take the provided value
             var popperOptions = this.settings.popperOptions;
 
@@ -2710,6 +2718,7 @@ var Tippy$1 = function () {
                 arrow: arrow,
                 arrowSize: arrowSize,
                 delay: delay,
+                hideDelay: hideDelay,
                 trigger: trigger,
                 duration: duration,
                 hideDuration: hideDuration,
@@ -2721,6 +2730,7 @@ var Tippy$1 = function () {
                 multiple: multiple,
                 followCursor: followCursor,
                 inertia: inertia,
+                transitionFlip: transitionFlip,
                 popperOptions: popperOptions
             };
         }
@@ -2740,7 +2750,11 @@ var Tippy$1 = function () {
 
             // Avoid creating unnecessary timeouts
             var _show = function _show() {
+                clearTimeout(popper.getAttribute('data-delay'));
+                clearTimeout(popper.getAttribute('data-hidedelay'));
+
                 if (settings.delay) {
+
                     var delay = setTimeout(function () {
                         return _this.show(popper, settings.duration);
                     }, settings.delay);
@@ -2753,8 +2767,19 @@ var Tippy$1 = function () {
             var show = function show() {
                 return _this.callbacks.wait ? _this.callbacks.wait(_show) : _show();
             };
+
             var hide = function hide() {
-                return _this.hide(popper, settings.hideDuration);
+                clearTimeout(popper.getAttribute('data-hidedelay'));
+                clearTimeout(popper.getAttribute('data-delay'));
+
+                if (settings.hideDelay) {
+                    var delay = setTimeout(function () {
+                        return _this.hide(popper, settings.hideDuration);
+                    }, settings.hideDelay);
+                    popper.setAttribute('data-hidedelay', delay);
+                } else {
+                    _this.hide(popper, settings.hideDuration);
+                }
             };
 
             var handleTrigger = function handleTrigger(event) {
@@ -2898,7 +2923,6 @@ var Tippy$1 = function () {
             var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.settings.duration;
             var enableCallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-
             // Already visible
             if (popper.style.visibility === 'visible') return;
 
@@ -2906,17 +2930,18 @@ var Tippy$1 = function () {
             var tooltip = popper.querySelector(SELECTORS.tooltip);
             var circle = popper.querySelector(SELECTORS.circle);
 
-            if (enableCallback) this.callbacks.beforeShown();
+            if (enableCallback) {
+                this.callbacks.beforeShown();
+                // Flipping causes CSS transition to go haywire
+                correctTransition(ref, function () {
+                    _this3.hide(popper, 0, false);
+                    setTimeout(function () {
+                        return _this3.show(popper, duration, false);
+                    }, 0);
+                });
+            }
 
             awakenPopper(ref);
-
-            // Flipping causes CSS transition to go haywire
-            correctTransition(ref, function () {
-                _this3.hide(ref.popper, 0, false);
-                setTimeout(function () {
-                    return _this3.show(ref.popper, duration, false);
-                }, 0);
-            });
 
             // Repaint/reflow is required for CSS transition when appending
             triggerReflow(tooltip, circle);
@@ -2931,14 +2956,17 @@ var Tippy$1 = function () {
             onTransitionEnd(ref, duration < 20, function () {
                 if (popper.style.visibility === 'hidden' || ref.onShownFired) return;
 
+                if (!ref.settings.transitionFlip) tooltip.classList.add('tippy-notransition');
+
                 // Focus click triggered interactive tooltips (popovers) only
                 if (ref.settings.interactive && ref.settings.trigger.indexOf('click') !== -1) {
                     popper.focus();
                 }
 
+                // Prevents shown() from firing more than once from early transition cancellations
                 ref.onShownFired = true;
 
-                _this3.callbacks.shown();
+                if (enableCallback) _this3.callbacks.shown();
             });
         }
 
@@ -2957,9 +2985,6 @@ var Tippy$1 = function () {
             var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.settings.duration;
             var enableCallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-            // Clear unwanted timeouts due to `delay` setting
-            clearTimeout(popper.getAttribute('data-delay'));
-
             // Hidden anyway
             if (!document.body.contains(popper)) return;
 
@@ -2969,8 +2994,14 @@ var Tippy$1 = function () {
 
             if (enableCallback) {
                 this.callbacks.beforeHidden();
+
                 ref.el.classList.remove('active');
+
                 ref.onShownFired = false;
+
+                if (!ref.settings.transitionFlip) tooltip.classList.remove('tippy-notransition');
+
+                ref.flipped = ref.settings.position !== popper.getAttribute('x-placement') ? true : false;
             }
 
             popper.style.visibility = 'hidden';
@@ -3007,7 +3038,7 @@ var Tippy$1 = function () {
 
                 document.body.removeChild(popper);
 
-                _this4.callbacks.hidden();
+                if (enableCallback) _this4.callbacks.hidden();
             });
         }
 

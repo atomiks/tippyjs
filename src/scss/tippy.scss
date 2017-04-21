@@ -78,13 +78,13 @@
 
 @mixin circle-transform-leave ($position) {
     @if ($position == 'top') {
-        transform: scale(0) translate(-50%, -50%);
+        transform: scale(0.25) translate(-50%, -50%);
     } @else if ($position == 'bottom') {
-        transform: scale(0) translate(-50%, -50%);
+        transform: scale(0.25) translate(-50%, -50%);
     } @else if ($position == 'left') {
-        transform: scale(0) translate(-50%, -33%);
+        transform: scale(0.25) translate(-50%, -33%);
     } @else if ($position == 'right') {
-        transform: scale(0) translate(-50%, -33%);
+        transform: scale(0.25) translate(-50%, -33%);
     }
 }
 
@@ -108,6 +108,10 @@
 
 $positions: 'top', 'bottom', 'left', 'right';
 $origins: bottom, top, right, left;
+
+.tippy-notransition {
+    transition: none !important;
+}
 
 .tippy-touch {
     cursor: pointer !important;
@@ -335,22 +339,6 @@ $origins: bottom, top, right, left;
               border-width: 0.5rem;
           }
         }
-    }
-}
-
-// Fix for iOS animateFill circle
-.tippy-iOS-fix {
-    &.tippy-popper[x-placement=top] [x-circle].leave {
-        transform: scale(0) translate3d(-50%, -50%, 0)
-    }
-    &.tippy-popper[x-placement=bottom] [x-circle].leave {
-        transform: scale(0) translate3d(-50%, -50%, 0)
-    }
-    &.tippy-popper[x-placement=left] [x-circle].leave {
-        transform: scale(0) translate3d(-50%, -33%, 0)
-    }
-    &.tippy-popper[x-placement=right] [x-circle].leave {
-        transform: scale(0) translate3d(-50%, -33%, 0)
     }
 }
 

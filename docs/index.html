@@ -39,7 +39,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.6.1</span>
+            <i class="material-icons icon-left">code</i><span>v0.7.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -86,6 +86,8 @@
               <button class="btn tippy" title="Am I fancy enough for you?" data-animation="perspective" data-animatefill="false"><i class="material-icons icon-left">panorama_horizontal</i>Perspective animation</button>
 
               <button class="btn tippy" title="Sorry for making you wait" data-delay="600"><i class="material-icons icon-left">timer</i>Show delay</button>
+
+              <button class="btn tippy" title="I won't leave for a while" data-hidedelay="600"><i class="material-icons icon-left">timer</i>Hide delay</button>
 
               <button class="btn tippy" title="BAM! 😱" data-duration="0"><i class="material-icons icon-left">flash_on</i>Instant</button>
 
@@ -196,10 +198,10 @@
             <pre><code>npm install --save tippy.js</code></pre>
 
             <p>
-                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.6.1/dist/">unpkg.com CDN</a>:
+                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.7.0/dist/">unpkg.com CDN</a>:
             </p>
 
-            <pre><code>https://unpkg.com/tippy.js@0.6.1/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js@0.7.0/dist/</code></pre>
 
             <p>1. Place the <code>tippy.css</code> stylesheet in your document's <code>head</code>.</p>
             <pre><code class="language-markup">&lt;link rel="stylesheet" href="css/tippy.css"&gt;</code></pre>
@@ -283,11 +285,11 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
 
               <p>You can also specify settings on the element itself by adding <code>data-*</code> attributes. This overrides any global settings specified in the Tippy instance.</p>
 
-              <pre><code class="language-markup">&lt;button class="btn tippy" title="I'm a tooltip!" data-duration="600" data-arrow="false" data-animation="shift" data-position="bottom"&gt;Overridden&lt;/button&gt;</code></pre>
+              <pre><code class="language-markup">&lt;button class="btn tippy" title="I'm a tooltip!" data-duration="300" data-arrow="false" data-animation="shift" data-position="bottom"&gt;Overridden&lt;/button&gt;</code></pre>
 
               <div class="result-box">
                 <p class="text-muted">Result:</p>
-                <button class="btn tippy" title="I'm a tooltip!" data-duration="600" data-arrow="false" data-animation="shift" data-position="bottom">Overridden</button>
+                <button class="btn tippy" title="I'm a tooltip!" data-duration="300" data-arrow="false" data-animation="shift" data-position="bottom">Overridden</button>
               </div>
 
               <p>This is helpful if you want to globally define settings, but make a few tooltips different without having to make a new Tippy instance.</p>
@@ -318,8 +320,13 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                     <tr>
                       <td><code>trigger</code></td>
                       <td><code>'mouseenter focus'</code></td>
-                      <td><code>'mouseenter'</code> <code>'focus'</code> <code>'click'</code> <code>'manual'</code></td>
-                      <td>Specifies which type of events will trigger a tooltip to show. Separate each by a space. <code>mouseenter</code> is for hovering and touch on mobile, and <code>focus</code> is for keyboard navigation. Use <code>manual</code> if you want to show/hide the tooltip manually/programmatically (see <a href="#controlling-tooltips-manually">below</a>).</td>
+                      <td><code>'mouseenter'</code> <code>'focus'</code> <code>'click'</code> <code>'manual'</code> <code>{custom}</code></td>
+                      <td>Specifies which type of events will trigger a tooltip to show. Separate each by a space.
+                          <code>mouseenter</code> is for hovering and touch on mobile, and <code>focus</code> is for keyboard navigation.
+                          Use <code>manual</code> if you want to show/hide the tooltip manually/programmatically
+                          (see <a href="#controlling-tooltips-manually">below</a>).
+                          <code>{custom}</code> refers to the fact that you can have any event listener, but it won't have the opposite "hide" event.
+                      </td>
                     </tr>
                     <tr>
                       <td><code>interactive</code></td>
@@ -331,7 +338,13 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td><code>delay</code></td>
                       <td><code>0</code></td>
                       <td>Any integer >= 0 (milliseconds)</td>
-                      <td>Specifies how long it takes after a trigger event is fired for a tooltip to <strong>show</strong>.</td>
+                      <td>Specifies how long it takes after a trigger event is fired for a tooltip to show.</td>
+                    </tr>
+                    <tr>
+                      <td><code>hideDelay</code></td>
+                      <td><code>0</code></td>
+                      <td>Any integer >= 0 (milliseconds)</td>
+                      <td>Specifies how long it takes after a leave event is fired for a tooltip to hide. Does not apply when clicking on the document to hide tooltips.</td>
                     </tr>
                     <tr>
                       <td><code>animation</code></td>
@@ -359,7 +372,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                     </tr>
                     <tr>
                       <td><code>duration</code></td>
-                      <td><code>400</code></td>
+                      <td><code>375</code></td>
                       <td>Any integer >= 0 (milliseconds)</td>
                       <td>Specifies how long the transition animation takes to complete when showing a tooltip.</td>
                     </tr>
@@ -418,6 +431,12 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td><code>false</code></td>
                       <td><code>true</code> <code>false</code></td>
                       <td>Modifies the <code>transition-timing-function</code> with a cubic bezier to create a "slingshot" intertial effect.</td>
+                    </tr>
+                    <tr>
+                      <td><code>transitionFlip</code></td>
+                      <td><code>true</code></td>
+                      <td><code>true</code> <code>false</code></td>
+                      <td>Specifies whether to transition between flips or not. Uses the same transition timing as <code>duration</code>.</td>
                     </tr>
                       <tr>
                         <td><code>popperOptions</code></td>
