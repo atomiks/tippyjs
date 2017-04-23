@@ -39,15 +39,13 @@ function update(e) {
     e.target.setAttribute('disabled', '')
 }
 
-var timeout = 800
+var timeout = 500
 
 if (window.pageYOffset > 250 || document.documentElement.scrollTop > 250) {
     timeout = 0
 }
 
-setTimeout(function() {
-    document.querySelector('.hero').classList.add('enter')
-}, timeout/4)
+document.querySelector('.hero').classList.add('enter')
 
 setTimeout(function() {
     document.querySelector('main .container-fluid').classList.add('enter')
@@ -91,7 +89,7 @@ var performanceModel = document.getElementById('performance-model')
 
 var jsperf = (function() {
     var i = 1
-    var base = 20
+    var base = 200
     var counter = base
     var tippyTime = 0
 
@@ -99,6 +97,13 @@ var jsperf = (function() {
         updateModel: function() {
             var value = parseInt(performanceModel.value) || 1
             performanceBtn.innerHTML = 'Append ' + value + (value === 1 ? ' element!' : ' elements!')
+
+            var els = [].slice.call(performanceTest.querySelectorAll('.test-element'))
+            els.forEach(function(el) {
+                var popper = instance.getPopperElement(el)
+                instance.destroy(popper)
+            })
+
             this.reset(value)
         },
         reset: function(value) {
@@ -106,9 +111,6 @@ var jsperf = (function() {
             tippyTime = 0
             counter = base = value
             performanceTest.innerHTML = performanceResult.innerHTML = ''
-            if (value >= 1000) {
-                performanceResult.innerHTML = "You probably shouldn't do that, but it's your choice ¯\\_(ツ)_/¯"
-            }
         },
         run: function() {
             for (i; i <= counter; i++) {

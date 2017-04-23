@@ -240,11 +240,11 @@ hr {
     border-top: 1px solid rgba(0, 31, 255, 0.1);
 }
 
-.button-showcase .btn, .button-showcase .btn:active {
+.button-showcase .btn, .button-showcase .btn:active, .button-showcase:focus {
     margin: 1.5rem 1rem;
 }
 
-.button-showcase .btn, section .btn, section .btn:active {
+.button-showcase .btn, section .btn, section .btn:active, section .btn:focus {
     color: white;
     box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
     background: -webkit-linear-gradient(315deg,#73a5ff, #5477f5);

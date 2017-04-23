@@ -78,13 +78,13 @@
 
 @mixin circle-transform-leave ($position) {
     @if ($position == 'top') {
-        transform: scale(0.25) translate(-50%, -50%);
+        transform: scale(0.33) translate(-50%, -50%);
     } @else if ($position == 'bottom') {
-        transform: scale(0.25) translate(-50%, -50%);
+        transform: scale(0.33) translate(-50%, 0%);
     } @else if ($position == 'left') {
-        transform: scale(0.25) translate(-50%, -33%);
+        transform: scale(0.33) translate(-50%, -33%);
     } @else if ($position == 'right') {
-        transform: scale(0.25) translate(-50%, -33%);
+        transform: scale(0.33) translate(-50%, -33%);
     }
 }
 
@@ -132,20 +132,20 @@ $origins: bottom, top, right, left;
         &[x-placement=#{$position}] {
 
             [x-arrow] {
-                width: 0.75rem;
-                height: 0.75rem;
-                @include arrow($position, 0.75rem);
+                width: 12px;
+                height: 12px;
+                @include arrow($position, 12px);
 
                 &.arrow-small {
-                    width: 0.5rem;
-                    height: 0.5rem;
-                    @include arrow($position, 0.5rem);
+                    width: 8px;
+                    height: 8px;
+                    @include arrow($position, 8px);
                 }
 
                 &.arrow-big {
-                    width: 1rem;
-                    height: 1rem;
-                    @include arrow($position, 1rem);
+                    width: 16px;
+                    height: 16px;
+                    @include arrow($position, 16px);
                 }
             }
 
@@ -232,7 +232,7 @@ $origins: bottom, top, right, left;
     position: relative;
     color: white;
     border-radius: 4px;
-    padding: 0.5rem 1rem;
+    padding: 8px 16px;
     text-align: center;
     will-change: transform;
     -webkit-font-smoothing: antialiased;
@@ -245,7 +245,7 @@ $origins: bottom, top, right, left;
     }
 
     &--big {
-        padding: 0.75rem 1.25rem;
+        padding: 12px 1.25rem;
         font-size: 120%;
     }
 
@@ -336,7 +336,7 @@ $origins: bottom, top, right, left;
           }
 
           &.arrow-big {
-              border-width: 0.5rem;
+              border-width: 8px;
           }
         }
     }

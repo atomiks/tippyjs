@@ -40,7 +40,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.7.0</span>
+            <i class="material-icons icon-left">code</i><span>v0.8.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -199,10 +199,10 @@
             <pre><code>npm install --save tippy.js</code></pre>
 
             <p>
-                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.7.0/dist/">unpkg.com CDN</a>:
+                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.8.0/dist/">unpkg.com CDN</a>:
             </p>
 
-            <pre><code>https://unpkg.com/tippy.js@0.7.0/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js@0.8.0/dist/</code></pre>
 
             <p>1. Place the <code>tippy.css</code> stylesheet in your document's <code>head</code>.</p>
             <pre><code class="language-markup">&lt;link rel="stylesheet" href="css/tippy.css"&gt;</code></pre>
@@ -755,19 +755,18 @@ instance.destroy(popper)</code></pre>
               </h2>
 
               <p>
-                  As of v0.2.x, you can have hundreds of tooltipped elements without affecting page
+                  As of v0.8.x, you can have thousands of tooltipped elements without affecting page
                   performance. Tooltips are only appended to the DOM when shown, and removed
                   when hidden. Popper.js only listens to scroll and resize events when a popper (tooltip) is showing,
                   and also updates the position on show.
               </p>
               <p>
-                  However, you'll need to consider initial instantiation time. You can test out the performance by pressing the button below.
-                  You can append as many as you'd like to see the effects increasing numbers of tooltipped elements has on performance.
+                  Instantiation time has also decreased 10x over v0.7.x and prior.
               </p>
 
               <div class="form-group">
                   <label for="performance-model"><strong>Elements to append</strong></label>
-                  <input value="20" type="text" class="form-control" id="performance-model">
+                  <input value="200" type="text" class="form-control" id="performance-model">
               </div>
 
               <button id="performance-btn" class="btn"></button>
