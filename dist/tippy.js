@@ -2092,9 +2092,6 @@ Popper.Utils = window.PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = DEFAULTS$1;
 
-
-//# sourceMappingURL=popper.js.map
-
 var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -2141,7 +2138,7 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.8.1
+* @version 0.8.2
 * @license MIT
 */
 
@@ -2642,7 +2639,7 @@ var Tippy$1 = function () {
 
             DEFAULTS_KEYS.forEach(function (key) {
                 var val = el.getAttribute('data-' + key.toLowerCase()) || _this.settings[key];
-                if (val === null || val === 'false') val = false;
+                if (val === 'false') val = false;
 
                 settings[key] = val;
             });
@@ -2650,7 +2647,7 @@ var Tippy$1 = function () {
             // animateFill is disabled if an arrow is true
             if (settings.arrow) settings['animateFill'] = false;
 
-            return _extends$1(JSON.parse(JSON.stringify(this.settings)), settings);
+            return _extends$1(_extends$1({}, this.settings), settings);
         }
 
         /**
@@ -2841,6 +2838,9 @@ var Tippy$1 = function () {
 
             var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.settings.duration;
             var enableCallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+            // Already visible. For clicking when it also has a `focus` event listener
+            if (popper.style.visibility === 'visible') return;
 
             var ref = STORE.refs[STORE.poppers.indexOf(popper)];
             var tooltip = popper.querySelector(SELECTORS.tooltip);

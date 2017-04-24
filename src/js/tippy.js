@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.8.1
+* @version 0.8.2
 * @license MIT
 */
 
@@ -525,7 +525,7 @@ export default class Tippy {
 
         DEFAULTS_KEYS.forEach(key => {
             let val = el.getAttribute(`data-${ key.toLowerCase() }`) || this.settings[key]
-            if (val === null || val === 'false') val = false
+            if (val === 'false') val = false
 
             settings[key] = val
         })
@@ -533,7 +533,7 @@ export default class Tippy {
         // animateFill is disabled if an arrow is true
         if (settings.arrow) settings['animateFill'] = false
 
-        return Object.assign(JSON.parse(JSON.stringify(this.settings)), settings)
+        return Object.assign(Object.assign({}, this.settings), settings)
     }
 
     /**
@@ -712,6 +712,9 @@ export default class Tippy {
     * @param {Boolean} enableCallback (optional)
     */
     show(popper, duration = this.settings.duration, enableCallback = true) {
+        // Already visible. For clicking when it also has a `focus` event listener
+        if (popper.style.visibility === 'visible') return
+
         const ref = STORE.refs[STORE.poppers.indexOf(popper)]
         const tooltip = popper.querySelector(SELECTORS.tooltip)
         const circle = popper.querySelector(SELECTORS.circle)
