@@ -2,12 +2,16 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.8.0
+* @version 0.8.1
 * @license MIT
 */
 
 // Touch user is assumed false until a `touchstart` event is fired
-let touchUser = false
+// id counter for our aria-describedby labelling (tooltip IDs)
+const GLOBALS = {
+    touchUser: false,
+    idCounter: 0
+}
 
 // Storage object to hold all references from instance instantiation
 // Allows us to hide tooltips from other instances when clicking on the body
@@ -55,7 +59,7 @@ const SELECTORS = {
 
 // Determine touch users
 function handleDocumentTouchstart() {
-    touchUser = true
+    GLOBALS.touchUser = true
     document.body.classList.add('tippy-touch')
     document.removeEventListener('touchstart', handleDocumentTouchstart)
 }
@@ -78,7 +82,7 @@ function handleDocumentClick(event) {
         // `multiple` is false AND they are a touch user, OR
         // `multiple` is false AND it's triggered by a click
         if (
-            (!ref.settings.multiple && touchUser) ||
+            (!ref.settings.multiple && GLOBALS.touchUser) ||
             (!ref.settings.multiple && ref.settings.trigger.indexOf('click') !== -1)
         )
         {
@@ -187,9 +191,12 @@ function createPopperInstance(ref) {
 * @param {Object} settings - individual settings
 * @return {Element} - the popper element
 */
-function createPopperElement(title, settings) {
+function createPopperElement(id, title, settings) {
     const popper = document.createElement('div')
     popper.setAttribute('class', 'tippy-popper')
+    popper.setAttribute('role', 'tooltip')
+    popper.setAttribute('aria-hidden', 'true')
+    popper.setAttribute('id', `tippy-tooltip-${id}`)
 
     const tooltip = document.createElement('div')
     tooltip.setAttribute('class', `tippy-tooltip tippy-tooltip--${settings.size} ${settings.theme}-theme leave`)
@@ -431,9 +438,11 @@ function onTransitionEnd(ref, immediatelyFire, callback) {
 */
 function awakenPopper(ref) {
     document.body.appendChild(ref.popper)
-    ref.popper.style.visibility = 'visible'
 
-    if (ref.settings.followCursor && !ref.hasFollowCursorListener && !touchUser) {
+    ref.popper.style.visibility = 'visible'
+    ref.popper.setAttribute('aria-hidden', 'false')
+
+    if (ref.settings.followCursor && !ref.hasFollowCursorListener && !GLOBALS.touchUser) {
         ref.hasFollowCursorListener = true
         ref.el.addEventListener('mousemove', followCursor)
     }
@@ -441,7 +450,7 @@ function awakenPopper(ref) {
     if (!ref.instance) {
         // Create instance if it hasn't been created yet
         ref.instance = createPopperInstance(ref)
-        if (ref.settings.followCursor && !touchUser) {
+        if (ref.settings.followCursor && !GLOBALS.touchUser) {
             ref.instance.disableEventListeners()
         }
     } else {
@@ -618,7 +627,7 @@ export default class Tippy {
         const handleBlur = event => {
             // Only hide if not a touch user and has a focus 'relatedtarget', of which is not
             // a popper element
-            if (!touchUser && event.relatedTarget) {
+            if (!GLOBALS.touchUser && event.relatedTarget) {
                 if (!closest(event.relatedTarget, SELECTORS.popper)) {
                     hide()
                 }
@@ -637,17 +646,18 @@ export default class Tippy {
     */
     _createTooltips(els) {
         els.forEach(el => {
-
-            el.setAttribute('data-tooltipped', '')
-
             const settings = this._applyIndividualSettings(el)
 
             const title = el.getAttribute('title')
             if (!title && !settings.html) return
 
+            const id = GLOBALS.idCounter
+            el.setAttribute('data-tooltipped', '')
+            el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
+
             removeTitle(el)
 
-            const popper = createPopperElement(title, settings)
+            const popper = createPopperElement(id, title, settings)
             const handlers = this._getEventListenerHandlers(el, popper, settings)
             let listeners = []
 
@@ -656,12 +666,14 @@ export default class Tippy {
             )
 
             pushIntoStorage({
+                id,
                 el,
                 popper,
                 settings,
                 listeners
             })
 
+            GLOBALS.idCounter++
         })
 
         Tippy.store = STORE // Allow others to access `STORE` if need be
@@ -764,6 +776,7 @@ export default class Tippy {
         const ref = STORE.refs[STORE.poppers.indexOf(popper)]
         const tooltip = popper.querySelector(SELECTORS.tooltip)
         const circle = popper.querySelector(SELECTORS.circle)
+        const content = popper.querySelector(SELECTORS.content)
 
         if (enableCallback) {
             this.callbacks.beforeHidden()
@@ -782,6 +795,7 @@ export default class Tippy {
         }
 
         popper.style.visibility = 'hidden'
+        popper.setAttribute('aria-hidden', 'true')
 
         // Use same duration as show if it's the default
         if (duration === DEFAULTS.hideDuration) {
@@ -832,6 +846,7 @@ export default class Tippy {
         )
 
         ref.el.removeAttribute('data-tooltipped')
+        ref.el.removeAttribute('aria-describedby')
 
         if (ref.instance) ref.instance.destroy()
 

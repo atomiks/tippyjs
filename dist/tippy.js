@@ -2141,12 +2141,16 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.8.0
+* @version 0.8.1
 * @license MIT
 */
 
 // Touch user is assumed false until a `touchstart` event is fired
-var touchUser = false;
+// id counter for our aria-describedby labelling (tooltip IDs)
+var GLOBALS = {
+    touchUser: false,
+    idCounter: 0
+};
 
 // Storage object to hold all references from instance instantiation
 // Allows us to hide tooltips from other instances when clicking on the body
@@ -2194,7 +2198,7 @@ var SELECTORS = {
 
 // Determine touch users
 function handleDocumentTouchstart() {
-    touchUser = true;
+    GLOBALS.touchUser = true;
     document.body.classList.add('tippy-touch');
     document.removeEventListener('touchstart', handleDocumentTouchstart);
 }
@@ -2216,7 +2220,7 @@ function handleDocumentClick(event) {
         // Hide all poppers except the one belonging to the element that was clicked IF
         // `multiple` is false AND they are a touch user, OR
         // `multiple` is false AND it's triggered by a click
-        if (!_ref.settings.multiple && touchUser || !_ref.settings.multiple && _ref.settings.trigger.indexOf('click') !== -1) {
+        if (!_ref.settings.multiple && GLOBALS.touchUser || !_ref.settings.multiple && _ref.settings.trigger.indexOf('click') !== -1) {
             return hideAllPoppers(_ref);
         }
 
@@ -2311,9 +2315,12 @@ function createPopperInstance(ref) {
 * @param {Object} settings - individual settings
 * @return {Element} - the popper element
 */
-function createPopperElement(title, settings) {
+function createPopperElement(id, title, settings) {
     var popper = document.createElement('div');
     popper.setAttribute('class', 'tippy-popper');
+    popper.setAttribute('role', 'tooltip');
+    popper.setAttribute('aria-hidden', 'true');
+    popper.setAttribute('id', 'tippy-tooltip-' + id);
 
     var tooltip = document.createElement('div');
     tooltip.setAttribute('class', 'tippy-tooltip tippy-tooltip--' + settings.size + ' ' + settings.theme + '-theme leave');
@@ -2548,9 +2555,11 @@ function onTransitionEnd(ref, immediatelyFire, callback) {
 */
 function awakenPopper(ref) {
     document.body.appendChild(ref.popper);
-    ref.popper.style.visibility = 'visible';
 
-    if (ref.settings.followCursor && !ref.hasFollowCursorListener && !touchUser) {
+    ref.popper.style.visibility = 'visible';
+    ref.popper.setAttribute('aria-hidden', 'false');
+
+    if (ref.settings.followCursor && !ref.hasFollowCursorListener && !GLOBALS.touchUser) {
         ref.hasFollowCursorListener = true;
         ref.el.addEventListener('mousemove', followCursor);
     }
@@ -2558,7 +2567,7 @@ function awakenPopper(ref) {
     if (!ref.instance) {
         // Create instance if it hasn't been created yet
         ref.instance = createPopperInstance(ref);
-        if (ref.settings.followCursor && !touchUser) {
+        if (ref.settings.followCursor && !GLOBALS.touchUser) {
             ref.instance.disableEventListeners();
         }
     } else {
@@ -2729,7 +2738,7 @@ var Tippy$1 = function () {
             var handleBlur = function handleBlur(event) {
                 // Only hide if not a touch user and has a focus 'relatedtarget', of which is not
                 // a popper element
-                if (!touchUser && event.relatedTarget) {
+                if (!GLOBALS.touchUser && event.relatedTarget) {
                     if (!closest(event.relatedTarget, SELECTORS.popper)) {
                         hide();
                     }
@@ -2753,17 +2762,18 @@ var Tippy$1 = function () {
             var _this3 = this;
 
             els.forEach(function (el) {
-
-                el.setAttribute('data-tooltipped', '');
-
                 var settings = _this3._applyIndividualSettings(el);
 
                 var title = el.getAttribute('title');
                 if (!title && !settings.html) return;
 
+                var id = GLOBALS.idCounter;
+                el.setAttribute('data-tooltipped', '');
+                el.setAttribute('aria-describedby', 'tippy-tooltip-' + id);
+
                 removeTitle(el);
 
-                var popper = createPopperElement(title, settings);
+                var popper = createPopperElement(id, title, settings);
                 var handlers = _this3._getEventListenerHandlers(el, popper, settings);
                 var listeners = [];
 
@@ -2772,11 +2782,14 @@ var Tippy$1 = function () {
                 });
 
                 pushIntoStorage({
+                    id: id,
                     el: el,
                     popper: popper,
                     settings: settings,
                     listeners: listeners
                 });
+
+                GLOBALS.idCounter++;
             });
 
             Tippy.store = STORE; // Allow others to access `STORE` if need be
@@ -2901,6 +2914,7 @@ var Tippy$1 = function () {
             var ref = STORE.refs[STORE.poppers.indexOf(popper)];
             var tooltip = popper.querySelector(SELECTORS.tooltip);
             var circle = popper.querySelector(SELECTORS.circle);
+            var content = popper.querySelector(SELECTORS.content);
 
             if (enableCallback) {
                 this.callbacks.beforeHidden();
@@ -2919,6 +2933,7 @@ var Tippy$1 = function () {
             }
 
             popper.style.visibility = 'hidden';
+            popper.setAttribute('aria-hidden', 'true');
 
             // Use same duration as show if it's the default
             if (duration === DEFAULTS.hideDuration) {
@@ -2967,6 +2982,7 @@ var Tippy$1 = function () {
             });
 
             ref.el.removeAttribute('data-tooltipped');
+            ref.el.removeAttribute('aria-describedby');
 
             if (ref.instance) ref.instance.destroy();
 
