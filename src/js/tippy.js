@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.8.2
+* @version 0.9.0
 * @license MIT
 */
 
@@ -415,10 +415,12 @@ function correctTransition(ref, callback) {
 * @param {Function} callback - callback function to fire once transitions complete
 */
 function onTransitionEnd(ref, immediatelyFire, callback) {
+    const tooltip = ref.popper.querySelector(SELECTORS.tooltip)
+
     const listenerCallback = () => {
         if (!immediatelyFire) {
-            ref.popper.removeEventListener('webkitTransitionEnd', listenerCallback)
-            ref.popper.removeEventListener('transitionend', listenerCallback)
+            tooltip.removeEventListener('webkitTransitionEnd', listenerCallback)
+            tooltip.removeEventListener('transitionend', listenerCallback)
         }
         callback()
     }
@@ -427,8 +429,8 @@ function onTransitionEnd(ref, immediatelyFire, callback) {
     if (immediatelyFire) return listenerCallback()
 
     // Wait for transitions to complete
-    ref.popper.addEventListener('webkitTransitionEnd', listenerCallback)
-    ref.popper.addEventListener('transitionend', listenerCallback)
+    tooltip.addEventListener('webkitTransitionEnd', listenerCallback)
+    tooltip.addEventListener('transitionend', listenerCallback)
 }
 
 /**
@@ -549,6 +551,9 @@ export default class Tippy {
         const _show = () => {
             clearTimeout(popper.getAttribute('data-delay'))
             clearTimeout(popper.getAttribute('data-hidedelay'))
+
+            // Already visible. For clicking when it also has a `focus` event listener
+            if (popper.style.visibility === 'visible') return
 
             if (settings.delay) {
                 const delay = setTimeout(
@@ -712,9 +717,6 @@ export default class Tippy {
     * @param {Boolean} enableCallback (optional)
     */
     show(popper, duration = this.settings.duration, enableCallback = true) {
-        // Already visible. For clicking when it also has a `focus` event listener
-        if (popper.style.visibility === 'visible') return
-
         const ref = STORE.refs[STORE.poppers.indexOf(popper)]
         const tooltip = popper.querySelector(SELECTORS.tooltip)
         const circle = popper.querySelector(SELECTORS.circle)

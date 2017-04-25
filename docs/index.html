@@ -40,7 +40,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.8.2</span>
+            <i class="material-icons icon-left">code</i><span>v0.9.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -204,10 +204,10 @@
             <pre><code>npm install --save tippy.js</code></pre>
 
             <p>
-                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.8.2/dist/">unpkg.com CDN</a>:
+                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.9.0/dist/">unpkg.com CDN</a>:
             </p>
 
-            <pre><code>https://unpkg.com/tippy.js@0.8.2/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js@0.9.0/dist/</code></pre>
 
             <p>1. Place the <code>tippy.css</code> stylesheet in your document's <code>head</code>.</p>
             <pre><code class="language-markup">&lt;link rel="stylesheet" href="css/tippy.css"&gt;</code></pre>
@@ -355,7 +355,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                     <tr>
                       <td><code>animation</code></td>
                       <td><code>'shift'</code></td>
-                      <td><code>'shift'</code> <code>'perspective'</code> <code>'fade'</code>  <code>'scale'</code> <code>'none'</code></td>
+                      <td><code>'shift'</code> <code>'perspective'</code> <code>'fade'</code>  <code>'scale'</code></td>
                       <td>Specifies the type of transition animation a tooltip has.</td>
                     </tr>
                     <tr>
@@ -405,7 +405,6 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td><code>'dark'</code></td>
                       <td><code>'dark'</code> <code>'light'</code> <code>'transparent'</code></td>
                       <td>The CSS styling theme. You can add your own easily. See <a href="#creating-themes">Creating themes</a>.
-                      The <code>'transparent'</code> theme changes the arrow to a triangle instead of a square (otherwise it overlaps).</td>
                     </tr>
                     <tr>
                       <td><code>offset</code></td>
@@ -567,10 +566,7 @@ new Tippy('.mySelector', {
               <p>To style the arrow, target the element with an <code>x-arrow</code> attribute:</p>
 
 <pre><code class="language-css">.tippy-tooltip.honeybee-theme [x-arrow] {
-  /* Your arrow styling here. Uses transform: rotate() so no need for CSS triangle shenanigans. */
-  background-color: yellow;
-  border: 2px solid;
-  border-color: transparent transparent orange orange; /* same for any position */
+  /* Your arrow styling here. */
 }</code></pre>
 
               <p>In case you want to target the content directly:</p>
@@ -599,7 +595,7 @@ new Tippy('.mySelector', {
 
             <div class="result-box">
               <p class="text-muted">Example custom theme:</p>
-              <button class="btn tippy" title="I'm a tooltip!" data-theme="honeybee" data-arrow="true">Honeybee theme</button>
+              <button class="btn tippy" title="I'm a tooltip!" data-theme="honeybee" data-animatefill="false">Honeybee theme</button>
             </div>
 
           </section>

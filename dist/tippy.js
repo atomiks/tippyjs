@@ -2092,6 +2092,9 @@ Popper.Utils = window.PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = DEFAULTS$1;
 
+
+//# sourceMappingURL=popper.js.map
+
 var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -2138,7 +2141,7 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.8.2
+* @version 0.9.0
 * @license MIT
 */
 
@@ -2529,10 +2532,12 @@ function correctTransition(ref, callback) {
 * @param {Function} callback - callback function to fire once transitions complete
 */
 function onTransitionEnd(ref, immediatelyFire, callback) {
+    var tooltip = ref.popper.querySelector(SELECTORS.tooltip);
+
     var listenerCallback = function listenerCallback() {
         if (!immediatelyFire) {
-            ref.popper.removeEventListener('webkitTransitionEnd', listenerCallback);
-            ref.popper.removeEventListener('transitionend', listenerCallback);
+            tooltip.removeEventListener('webkitTransitionEnd', listenerCallback);
+            tooltip.removeEventListener('transitionend', listenerCallback);
         }
         callback();
     };
@@ -2541,8 +2546,8 @@ function onTransitionEnd(ref, immediatelyFire, callback) {
     if (immediatelyFire) return listenerCallback();
 
     // Wait for transitions to complete
-    ref.popper.addEventListener('webkitTransitionEnd', listenerCallback);
-    ref.popper.addEventListener('transitionend', listenerCallback);
+    tooltip.addEventListener('webkitTransitionEnd', listenerCallback);
+    tooltip.addEventListener('transitionend', listenerCallback);
 }
 
 /**
@@ -2667,6 +2672,9 @@ var Tippy$1 = function () {
             var _show = function _show() {
                 clearTimeout(popper.getAttribute('data-delay'));
                 clearTimeout(popper.getAttribute('data-hidedelay'));
+
+                // Already visible. For clicking when it also has a `focus` event listener
+                if (popper.style.visibility === 'visible') return;
 
                 if (settings.delay) {
                     var delay = setTimeout(function () {
@@ -2838,9 +2846,6 @@ var Tippy$1 = function () {
 
             var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.settings.duration;
             var enableCallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
-            // Already visible. For clicking when it also has a `focus` event listener
-            if (popper.style.visibility === 'visible') return;
 
             var ref = STORE.refs[STORE.poppers.indexOf(popper)];
             var tooltip = popper.querySelector(SELECTORS.tooltip);

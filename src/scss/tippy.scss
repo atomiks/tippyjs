@@ -1,33 +1,33 @@
 @mixin enter-transform ($position, $animation) {
     @if ($animation == 'perspective') {
         @if ($position == 'top') {
-            transform: translateY(-0.75rem) rotateX(0);
+            transform: translateY(-0.625rem) rotateX(0);
         } @else if ($position == 'bottom') {
-            transform: translateY(0.75rem) rotateX(0);
+            transform: translateY(0.625rem) rotateX(0);
         } @else if ($position == 'left') {
-            transform: translateX(-0.75rem) rotateY(0);
+            transform: translateX(-0.625rem) rotateY(0);
         } @else if ($position == 'right') {
-            transform: translateX(0.75rem) rotateY(0);
+            transform: translateX(0.625rem) rotateY(0);
         }
     } @else if ($animation == 'fade') {
         @if ($position == 'top') {
-            transform: translateY(-0.75rem);
+            transform: translateY(-0.625rem);
         } @else if ($position == 'bottom') {
-            transform: translateY(0.75rem);
+            transform: translateY(0.625rem);
         } @else if ($position == 'left') {
-            transform: translateX(-0.75rem);
+            transform: translateX(-0.625rem);
         } @else if ($position == 'right') {
-            transform: translateX(0.75rem);
+            transform: translateX(0.625rem);
         }
     } @else if ($animation == 'scale') {
         @if ($position == 'top') {
-            transform: translateY(-0.75rem) scale(1);
+            transform: translateY(-0.625rem) scale(1);
         } @else if ($position == 'bottom') {
-            transform: translateY(0.75rem) scale(1);
+            transform: translateY(0.625rem) scale(1);
         } @else if ($position == 'left') {
-            transform: translateX(-0.75rem) scale(1);
+            transform: translateX(-0.625rem) scale(1);
         } @else if ($position == 'right') {
-            transform: translateX(0.75rem) scale(1);
+            transform: translateX(0.625rem) scale(1);
         }
     }
 }
@@ -65,13 +65,13 @@
         }
     } @else if ($animation == 'none') {
         @if ($position == 'top') {
-            transform: translateY(-0.75rem);
+            transform: translateY(-0.625rem);
         } @else if ($position == 'bottom') {
-            transform: translateY(0.75rem);
+            transform: translateY(0.625rem);
         } @else if ($position == 'left') {
-            transform: translateX(-0.75rem);
+            transform: translateX(-0.625rem);
         } @else if ($position == 'right') {
-            transform: translateX(0.75rem);
+            transform: translateX(0.625rem);
         }
     }
 }
@@ -88,20 +88,28 @@
     }
 }
 
-@mixin arrow ($position, $width) {
+@mixin arrow ($position, $width, $color) {
     @if ($position == 'top') {
-        transform: rotate(-45deg);
-        bottom: -$width/2;
+        border-top: $width solid $color;
+        border-right: $width solid transparent;
+        border-left: $width solid transparent;
+        bottom: -$width;
     } @else if ($position == 'bottom') {
-        transform: rotate(135deg);
-        top: -$width/2;
+        border-bottom: $width solid $color;
+        border-right: $width solid transparent;
+        border-left: $width solid transparent;
+        top: -$width;
     } @else if ($position == 'left') {
-        transform: rotate(225deg);
-        right: -$width/2;
+        border-left: $width solid $color;
+        border-top: $width solid transparent;
+        border-bottom: $width solid transparent;
+        right: -$width;
         top: 50%;
     } @else if ($position == 'right') {
-        transform: rotate(45deg);
-        left: -$width/2;
+        border-right: $width solid $color;
+        border-top: $width solid transparent;
+        border-bottom: $width solid transparent;
+        left: -$width;
         top: 50%;
     }
 }
@@ -118,6 +126,7 @@ $origins: bottom, top, right, left;
 }
 
 .tippy-popper {
+    position: relative;
     visibility: hidden;
     max-width: 400px;
     perspective: 800px;
@@ -132,20 +141,17 @@ $origins: bottom, top, right, left;
         &[x-placement=#{$position}] {
 
             [x-arrow] {
-                width: 12px;
-                height: 12px;
-                @include arrow($position, 12px);
+                position: absolute;
+                width: 0;
+                height: 0;
+                @include arrow($position, 7px, #333);
 
                 &.arrow-small {
-                    width: 8px;
-                    height: 8px;
-                    @include arrow($position, 8px);
+                    @include arrow($position, 5px, #333);
                 }
 
                 &.arrow-big {
-                    width: 16px;
-                    height: 16px;
-                    @include arrow($position, 16px);
+                    @include arrow($position, 9px, #333);
                 }
             }
 
@@ -156,7 +162,7 @@ $origins: bottom, top, right, left;
 
                 &.enter {
                     opacity: 1;
-                    transform: scale(1) translate(-50%, -47.5%);
+                    transform: scale(1) translate(-50%, -50%);
                 }
 
                 &.leave {
@@ -165,15 +171,37 @@ $origins: bottom, top, right, left;
                 }
             }
 
-            [data-animation=none] {
-                &.enter {
-                    opacity: 1;
-                    @include enter-transform($position, 'fade');
+            .tippy-tooltip.light-theme {
+                [x-circle] {
+                    background-color: white;
                 }
+                [x-arrow] {
+                    @include arrow($position, 7px, white);
 
-                &.leave {
-                    opacity: 1;
-                    @include leave-transform($position, 'none');
+                    &.arrow-small {
+                        @include arrow($position, 5px, white);
+                    }
+
+                    &.arrow-big {
+                        @include arrow($position, 9px, white);
+                    }
+                }
+            }
+
+            .tippy-tooltip.transparent-theme {
+                [x-circle] {
+                    background-color: rgba(0,0,0,0.8);
+                }
+                [x-arrow] {
+                    @include arrow($position, 7px, rgba(0,0,0,0.8));
+
+                    &.arrow-small {
+                        @include arrow($position, 5px, rgba(0,0,0,0.8));
+                    }
+
+                    &.arrow-big {
+                        @include arrow($position, 9px, rgba(0,0,0,0.8));
+                    }
                 }
             }
 
@@ -226,13 +254,47 @@ $origins: bottom, top, right, left;
 
         }
     }
+
+    [x-circle] {
+        background-color: white;
+    }
+
+    &[data-animatefill] {
+        background-color: transparent;
+    }
+
+    [x-arrow] {
+        position: absolute;
+        width: 0;
+        height: 0;
+    }
+
+    .tippy-tooltip.transparent-theme {
+        background-color: rgba(0,0,0,0.8);
+
+        &[data-animatefill] {
+            background-color: transparent;
+        }
+    }
+
+    .tippy-tooltip.light-theme {
+        color: #203d5d;
+        box-shadow: 0 4px 20px 4px rgba(0, 20, 60, 0.1),
+                    0 4px 80px -8px rgba(0, 20, 60, 0.2);
+        background-color: white;
+
+        &[data-animatefill] {
+            background-color: transparent;
+        }
+    }
 }
 
 .tippy-tooltip {
     position: relative;
     color: white;
     border-radius: 4px;
-    padding: 8px 16px;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
     text-align: center;
     will-change: transform;
     -webkit-font-smoothing: antialiased;
@@ -241,20 +303,12 @@ $origins: bottom, top, right, left;
 
     &--small {
         padding: 0.4rem 0.8rem;
-        font-size: 90%;
+        font-size: 0.85rem;
     }
 
     &--big {
-        padding: 12px 1.25rem;
-        font-size: 120%;
-    }
-
-    [x-arrow] {
-        z-index: -1;
-        position: absolute;
-        background-color: #333;
-        border: 1px solid;
-        border-color: transparent transparent #333 #333;
+        padding: 0.6rem 1.2rem;
+        font-size: 1.2rem;
     }
 
     &[data-animatefill] {
@@ -286,58 +340,6 @@ $origins: bottom, top, right, left;
             padding-top: 100%;
             padding-top: calc(75% + 2rem);
             float: left;
-        }
-    }
-
-    // Themes
-
-    &.light-theme {
-        color: #203d5d;
-        box-shadow: 0 0 16px -4px rgba(0,20,40,0.2), 0 0 80px -12px rgba(0,20,40,0.3);
-        background-color: #f3f6f9;
-        border: 1px solid #ced2e2;
-
-        [x-circle] {
-            background-color: #f3f6f9;
-        }
-
-        [x-arrow] {
-            background-color: #f3f6f9;
-            border-color: transparent transparent #ced2e2 #ced2e2;
-        }
-
-        &[data-animatefill] {
-            background-color: transparent;
-        }
-    }
-
-    &.transparent-theme {
-        background-color: rgba(0,0,0,0.8);
-
-        &[data-animatefill] {
-            background-color: transparent;
-        }
-
-        [x-circle] {
-            background-color: rgba(0,0,0,0.8);
-        }
-
-        [x-arrow] {
-          width: 0;
-          height: 0;
-          background-color: transparent;
-          border: 0.375rem solid transparent;
-          border-bottom-color: rgba(0,0,0,0.8);
-          border-left-color: rgba(0,0,0,0.8);
-          border-radius: 0;
-
-          &.arrow-small {
-              border-width: 0.25rem;
-          }
-
-          &.arrow-big {
-              border-width: 8px;
-          }
         }
     }
 }

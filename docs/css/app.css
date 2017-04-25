@@ -1,6 +1,7 @@
 html {
-    font-size: 14px;
+    font-size: 15px;
 }
+
 body {
     font-family: 'Nunito', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background: #3751cc;
@@ -133,8 +134,9 @@ a:hover {
     font-size: 80%;
 }
 
-.html-template .tippy-tooltip {
+.tippy-popper.html-template .tippy-tooltip {
     padding: 2rem;
+    box-shadow: 0 4px 80px -8px rgba(0, 20, 60, 0.25);
 }
 
 .logo {
@@ -206,6 +208,8 @@ a:hover {
 
 .tippy-tooltip[data-template-id="#template"] {
     padding: 2rem;
+    max-width: 500px;
+    width: 100%;
 }
 
 .tippy-tooltip[data-template-id="#my-template-id"] {
@@ -241,7 +245,7 @@ hr {
 }
 
 .button-showcase .btn, .button-showcase .btn:active, .button-showcase:focus {
-    margin: 1.5rem 1rem;
+    margin: 1.25rem 1rem;
 }
 
 .button-showcase .btn, section .btn, section .btn:active, section .btn:focus {
@@ -303,12 +307,6 @@ main .container-fluid.enter {
     color: black;
 }
 
-.tippy-tooltip.honeybee-theme [x-arrow] {
-    background-color: yellow;
-    border: 2px solid;
-    border-color: transparent transparent orange orange;
-}
-
 .test-element {
     width: 50px;
     background-color: #f3f6f9;
@@ -333,9 +331,6 @@ main .container-fluid.enter {
 }
 
 @media (min-width: 576px) {
-    html {
-        font-size: 15px;
-    }
     main .container-fluid {
         padding: 2rem;
     }
