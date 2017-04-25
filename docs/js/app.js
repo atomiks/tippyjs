@@ -45,7 +45,9 @@ if (window.pageYOffset > 250 || document.documentElement.scrollTop > 250) {
     timeout = 0
 }
 
-document.querySelector('.hero').classList.add('enter')
+setTimeout(function() {
+    document.querySelector('.hero').classList.add('enter')
+}, 0)
 
 setTimeout(function() {
     document.querySelector('main .container-fluid').classList.add('enter')
