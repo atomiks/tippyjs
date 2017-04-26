@@ -70,7 +70,8 @@ new Tippy('.flippy', {
 
 new Tippy('.tippy-link', {
     theme: 'light',
-    arrow: true
+    arrow: true,
+    animation: 'fade'
 })
 
 new Tippy('#callback-tippy', {

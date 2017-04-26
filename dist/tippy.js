@@ -2141,7 +2141,7 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.9.0
+* @version 0.10.0
 * @license MIT
 */
 
@@ -2175,6 +2175,7 @@ var DEFAULTS = {
     interactive: false,
     theme: 'dark',
     size: 'regular',
+    distance: 10,
     offset: 0,
     hideOnClick: true,
     multiple: false,
@@ -2292,6 +2293,7 @@ function closest(element, parentSelector) {
 function createPopperInstance(ref) {
 
     var settings = ref.settings;
+    var tooltip = ref.popper.querySelector(SELECTORS.tooltip);
 
     var config = _extends$1({
         placement: settings.position
@@ -2303,7 +2305,14 @@ function createPopperInstance(ref) {
             offset: _extends$1({
                 offset: parseInt(settings.offset)
             }, settings.popperOptions && settings.popperOptions.modifiers ? settings.popperOptions.modifiers.offset : {})
-        })
+        }),
+        onUpdate: function onUpdate() {
+            tooltip.style.top = '';
+            tooltip.style.bottom = '';
+            tooltip.style.left = '';
+            tooltip.style.right = '';
+            tooltip.style[ref.popper.getAttribute('x-placement')] = -(settings.distance - 10) + 'px';
+        }
     });
 
     return new Popper(ref.el, ref.popper, config);
@@ -2370,6 +2379,9 @@ function createPopperElement(id, title, settings) {
     } else {
         content.innerHTML = title;
     }
+
+    // Init distance. Further updates are made in the popper instance's `onUpdate()` method
+    tooltip.style[settings.position] = -(settings.distance - 10) + 'px';
 
     tooltip.appendChild(content);
     popper.appendChild(tooltip);
@@ -2542,6 +2554,8 @@ function onTransitionEnd(ref, immediatelyFire, callback) {
         callback();
     };
 
+    ref.transititionendListener = listenerCallback;
+
     // transitionend may not fire for 0 duration, keep it safe and use ~1 frame of time
     if (immediatelyFire) return listenerCallback();
 
@@ -2557,9 +2571,6 @@ function onTransitionEnd(ref, immediatelyFire, callback) {
 */
 function awakenPopper(ref) {
     document.body.appendChild(ref.popper);
-
-    ref.popper.style.visibility = 'visible';
-    ref.popper.setAttribute('aria-hidden', 'false');
 
     if (ref.settings.followCursor && !ref.hasFollowCursorListener && !GLOBALS.touchUser) {
         ref.hasFollowCursorListener = true;
@@ -2851,6 +2862,9 @@ var Tippy$1 = function () {
             var tooltip = popper.querySelector(SELECTORS.tooltip);
             var circle = popper.querySelector(SELECTORS.circle);
 
+            tooltip.removeEventListener('webkitTransitionEnd', ref.transitionendListener);
+            tooltip.removeEventListener('transitionend', ref.transitionendListener);
+
             if (enableCallback) {
                 this.callbacks.beforeShown();
                 // Flipping causes CSS transition to go haywire
@@ -2870,9 +2884,13 @@ var Tippy$1 = function () {
                 }
             }
 
-            ref.hidden = false;
+            if (!document.body.contains(popper)) {
+                awakenPopper(ref);
+            }
 
-            awakenPopper(ref);
+            ref.hidden = false;
+            ref.popper.style.visibility = 'visible';
+            ref.popper.setAttribute('aria-hidden', 'false');
 
             // Repaint/reflow is required for CSS transition when appending
             triggerReflow(tooltip, circle);
@@ -2884,13 +2902,21 @@ var Tippy$1 = function () {
 
             applyTransitionDuration([tooltip, circle], duration);
 
-            onTransitionEnd(ref, duration < 20, function () {
+            // Wait for transitions to complete
+
+            var transitionendFired = false;
+
+            var transitionendCallback = function transitionendCallback() {
+                transitionendFired = true;
+
                 if (popper.style.visibility === 'hidden' || ref.onShownFired) return;
 
-                if (!ref.settings.transitionFlip) tooltip.classList.add('tippy-notransition');
+                if (!ref.settings.transitionFlip) {
+                    tooltip.classList.add('tippy-notransition');
+                }
 
-                // Focus click triggered interactive tooltips (popovers) only
-                if (ref.settings.interactive && ref.settings.trigger.indexOf('click') !== -1) {
+                // Focus interactive tooltips only
+                if (ref.settings.interactive) {
                     popper.focus();
                 }
 
@@ -2898,7 +2924,17 @@ var Tippy$1 = function () {
                 ref.onShownFired = true;
 
                 if (enableCallback) _this4.callbacks.shown();
-            });
+            };
+
+            onTransitionEnd(ref, duration < 20, transitionendCallback);
+
+            // transitionend listener sometimes may not fire
+            clearTimeout(ref.transitionendTimeout);
+            ref.transitionendTimeout = setTimeout(function () {
+                if (!transitionendFired) {
+                    transitionendCallback();
+                }
+            }, duration);
         }
 
         /**
@@ -2921,6 +2957,9 @@ var Tippy$1 = function () {
             var circle = popper.querySelector(SELECTORS.circle);
             var content = popper.querySelector(SELECTORS.content);
 
+            tooltip.removeEventListener('webkitTransitionEnd', ref.transitionendListener);
+            tooltip.removeEventListener('transitionend', ref.transitionendListener);
+
             if (enableCallback) {
                 this.callbacks.beforeHidden();
 
@@ -2932,7 +2971,9 @@ var Tippy$1 = function () {
 
                 ref.onShownFired = false;
 
-                if (!ref.settings.transitionFlip) tooltip.classList.remove('tippy-notransition');
+                if (!ref.settings.transitionFlip) {
+                    tooltip.classList.remove('tippy-notransition');
+                }
 
                 ref.flipped = ref.settings.position !== popper.getAttribute('x-placement');
             }
@@ -2959,7 +3000,13 @@ var Tippy$1 = function () {
                 ref.el.focus();
             }
 
-            onTransitionEnd(ref, duration < 20, function () {
+            // Wait for transitions to complete
+
+            var transitionendFired = false;
+
+            var transitionendCallback = function transitionendCallback() {
+                transitionendFired = true;
+
                 if (popper.style.visibility === 'visible' || !document.body.contains(popper)) return;
 
                 ref.instance.disableEventListeners();
@@ -2967,7 +3014,17 @@ var Tippy$1 = function () {
                 document.body.removeChild(popper);
 
                 if (enableCallback) _this5.callbacks.hidden();
-            });
+            };
+
+            onTransitionEnd(ref, duration < 20, transitionendCallback);
+
+            // transitionend listener sometimes may not fire
+            clearTimeout(ref.transitionendTimeout);
+            ref.transitionendTimeout = setTimeout(function () {
+                if (!transitionendFired) {
+                    transitionendCallback();
+                }
+            }, duration);
         }
 
         /**
@@ -2989,7 +3046,9 @@ var Tippy$1 = function () {
             ref.el.removeAttribute('data-tooltipped');
             ref.el.removeAttribute('aria-describedby');
 
-            if (ref.instance) ref.instance.destroy();
+            if (ref.instance) {
+                ref.instance.destroy();
+            }
 
             // Remove from storage
             STORE.refs.splice(index, 1);

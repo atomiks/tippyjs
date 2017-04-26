@@ -1,33 +1,33 @@
 @mixin enter-transform ($position, $animation) {
     @if ($animation == 'perspective') {
         @if ($position == 'top') {
-            transform: translateY(-0.625rem) rotateX(0);
+            transform: translateY(-10px) rotateX(0);
         } @else if ($position == 'bottom') {
-            transform: translateY(0.625rem) rotateX(0);
+            transform: translateY(10px) rotateX(0);
         } @else if ($position == 'left') {
-            transform: translateX(-0.625rem) rotateY(0);
+            transform: translateX(-10px) rotateY(0);
         } @else if ($position == 'right') {
-            transform: translateX(0.625rem) rotateY(0);
+            transform: translateX(10px) rotateY(0);
         }
     } @else if ($animation == 'fade') {
         @if ($position == 'top') {
-            transform: translateY(-0.625rem);
+            transform: translateY(-10px);
         } @else if ($position == 'bottom') {
-            transform: translateY(0.625rem);
+            transform: translateY(10px);
         } @else if ($position == 'left') {
-            transform: translateX(-0.625rem);
+            transform: translateX(-10px);
         } @else if ($position == 'right') {
-            transform: translateX(0.625rem);
+            transform: translateX(10px);
         }
     } @else if ($animation == 'scale') {
         @if ($position == 'top') {
-            transform: translateY(-0.625rem) scale(1);
+            transform: translateY(-10px) scale(1);
         } @else if ($position == 'bottom') {
-            transform: translateY(0.625rem) scale(1);
+            transform: translateY(10px) scale(1);
         } @else if ($position == 'left') {
-            transform: translateX(-0.625rem) scale(1);
+            transform: translateX(-10px) scale(1);
         } @else if ($position == 'right') {
-            transform: translateX(0.625rem) scale(1);
+            transform: translateX(10px) scale(1);
         }
     }
 }
@@ -65,13 +65,13 @@
         }
     } @else if ($animation == 'none') {
         @if ($position == 'top') {
-            transform: translateY(-0.625rem);
+            transform: translateY(-10px);
         } @else if ($position == 'bottom') {
-            transform: translateY(0.625rem);
+            transform: translateY(10px);
         } @else if ($position == 'left') {
-            transform: translateX(-0.625rem);
+            transform: translateX(-10px);
         } @else if ($position == 'right') {
-            transform: translateX(0.625rem);
+            transform: translateX(10px);
         }
     }
 }
@@ -127,7 +127,6 @@ $origins: bottom, top, right, left;
 
 .tippy-popper {
     position: relative;
-    visibility: hidden;
     max-width: 400px;
     perspective: 800px;
     z-index: 9999;
@@ -294,7 +293,7 @@ $origins: bottom, top, right, left;
     color: white;
     border-radius: 4px;
     font-size: 0.95rem;
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0.8rem;
     text-align: center;
     will-change: transform;
     -webkit-font-smoothing: antialiased;
@@ -302,8 +301,8 @@ $origins: bottom, top, right, left;
     background-color: #333;
 
     &--small {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
+        padding: 0.25rem 0.5    rem;
+        font-size: 0.8rem;
     }
 
     &--big {

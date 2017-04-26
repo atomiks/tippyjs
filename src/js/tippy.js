@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.9.0
+* @version 0.10.0
 * @license MIT
 */
 
@@ -36,6 +36,7 @@ const DEFAULTS = {
     interactive: false,
     theme: 'dark',
     size: 'regular',
+    distance: 10,
     offset: 0,
     hideOnClick: true,
     multiple: false,
@@ -165,6 +166,7 @@ function closest(element, parentSelector) {
 function createPopperInstance(ref) {
 
     const settings = ref.settings
+    const tooltip = ref.popper.querySelector(SELECTORS.tooltip)
 
     const config = {
         placement: settings.position,
@@ -179,6 +181,13 @@ function createPopperInstance(ref) {
                 offset: parseInt(settings.offset),
                 ...(settings.popperOptions && settings.popperOptions.modifiers ? settings.popperOptions.modifiers.offset : {})
             }
+        },
+        onUpdate() {
+            tooltip.style.top = ''
+            tooltip.style.bottom = ''
+            tooltip.style.left = ''
+            tooltip.style.right = ''
+            tooltip.style[ref.popper.getAttribute('x-placement')] = -(settings.distance - 10) + 'px'
         }
     }
 
@@ -247,6 +256,9 @@ function createPopperElement(id, title, settings) {
     } else {
         content.innerHTML = title
     }
+
+    // Init distance. Further updates are made in the popper instance's `onUpdate()` method
+    tooltip.style[settings.position] = -(settings.distance - 10) + 'px'
 
     tooltip.appendChild(content)
     popper.appendChild(tooltip)
@@ -425,6 +437,8 @@ function onTransitionEnd(ref, immediatelyFire, callback) {
         callback()
     }
 
+    ref.transititionendListener = listenerCallback
+
     // transitionend may not fire for 0 duration, keep it safe and use ~1 frame of time
     if (immediatelyFire) return listenerCallback()
 
@@ -440,9 +454,6 @@ function onTransitionEnd(ref, immediatelyFire, callback) {
 */
 function awakenPopper(ref) {
     document.body.appendChild(ref.popper)
-
-    ref.popper.style.visibility = 'visible'
-    ref.popper.setAttribute('aria-hidden', 'false')
 
     if (ref.settings.followCursor && !ref.hasFollowCursorListener && !GLOBALS.touchUser) {
         ref.hasFollowCursorListener = true
@@ -721,6 +732,9 @@ export default class Tippy {
         const tooltip = popper.querySelector(SELECTORS.tooltip)
         const circle = popper.querySelector(SELECTORS.circle)
 
+        tooltip.removeEventListener('webkitTransitionEnd', ref.transitionendListener)
+        tooltip.removeEventListener('transitionend', ref.transitionendListener)
+
         if (enableCallback) {
             this.callbacks.beforeShown()
             // Flipping causes CSS transition to go haywire
@@ -740,9 +754,13 @@ export default class Tippy {
             }
         }
 
-        ref.hidden = false
+        if (!document.body.contains(popper)) {
+            awakenPopper(ref)
+        }
 
-        awakenPopper(ref)
+        ref.hidden = false
+        ref.popper.style.visibility = 'visible'
+        ref.popper.setAttribute('aria-hidden', 'false')
 
         // Repaint/reflow is required for CSS transition when appending
         triggerReflow(tooltip, circle)
@@ -754,13 +772,21 @@ export default class Tippy {
 
         applyTransitionDuration([tooltip, circle], duration)
 
-        onTransitionEnd(ref, duration < 20, () => {
+        // Wait for transitions to complete
+
+        let transitionendFired = false
+
+        const transitionendCallback = () => {
+            transitionendFired = true
+
             if (popper.style.visibility === 'hidden' || ref.onShownFired) return
 
-            if (!ref.settings.transitionFlip) tooltip.classList.add('tippy-notransition')
+            if (!ref.settings.transitionFlip) {
+                tooltip.classList.add('tippy-notransition')
+            }
 
-            // Focus click triggered interactive tooltips (popovers) only
-            if (ref.settings.interactive && ref.settings.trigger.indexOf('click') !== -1) {
+            // Focus interactive tooltips only
+            if (ref.settings.interactive) {
                 popper.focus()
             }
 
@@ -768,7 +794,17 @@ export default class Tippy {
             ref.onShownFired = true
 
             if (enableCallback) this.callbacks.shown()
-        })
+        }
+
+        onTransitionEnd(ref, duration < 20, transitionendCallback)
+
+        // transitionend listener sometimes may not fire
+        clearTimeout(ref.transitionendTimeout)
+        ref.transitionendTimeout = setTimeout(() => {
+            if (!transitionendFired) {
+                transitionendCallback()
+            }
+        }, duration)
     }
 
     /**
@@ -783,6 +819,9 @@ export default class Tippy {
         const circle = popper.querySelector(SELECTORS.circle)
         const content = popper.querySelector(SELECTORS.content)
 
+        tooltip.removeEventListener('webkitTransitionEnd', ref.transitionendListener)
+        tooltip.removeEventListener('transitionend', ref.transitionendListener)
+
         if (enableCallback) {
             this.callbacks.beforeHidden()
 
@@ -794,7 +833,9 @@ export default class Tippy {
 
             ref.onShownFired = false
 
-            if (!ref.settings.transitionFlip) tooltip.classList.remove('tippy-notransition')
+            if (!ref.settings.transitionFlip) {
+                tooltip.classList.remove('tippy-notransition')
+            }
 
             ref.flipped = (ref.settings.position !== popper.getAttribute('x-placement'))
         }
@@ -826,7 +867,14 @@ export default class Tippy {
             ref.el.focus()
         }
 
-        onTransitionEnd(ref, duration < 20, () => {
+
+        // Wait for transitions to complete
+
+        let transitionendFired = false
+
+        const transitionendCallback = () => {
+            transitionendFired = true
+
             if (popper.style.visibility === 'visible' || !document.body.contains(popper)) return
 
             ref.instance.disableEventListeners()
@@ -834,7 +882,17 @@ export default class Tippy {
             document.body.removeChild(popper)
 
             if (enableCallback) this.callbacks.hidden()
-        })
+        }
+
+        onTransitionEnd(ref, duration < 20, transitionendCallback)
+
+        // transitionend listener sometimes may not fire
+        clearTimeout(ref.transitionendTimeout)
+        ref.transitionendTimeout = setTimeout(() => {
+            if (!transitionendFired) {
+                transitionendCallback()
+            }
+        }, duration)
     }
 
     /**
@@ -853,7 +911,9 @@ export default class Tippy {
         ref.el.removeAttribute('data-tooltipped')
         ref.el.removeAttribute('aria-describedby')
 
-        if (ref.instance) ref.instance.destroy()
+        if (ref.instance) {
+            ref.instance.destroy()
+        }
 
         // Remove from storage
         STORE.refs.splice(index, 1)
