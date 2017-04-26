@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.10.0
+* @version 0.10.1
 * @license MIT
 */
 
@@ -174,7 +174,7 @@ function createPopperInstance(ref) {
         modifiers: {
             ...(settings.popperOptions ? settings.popperOptions.modifiers : {}),
             flip: {
-                padding: 15,
+                padding: parseInt(settings.distance) + 3 /* 3px from viewport boundary */,
                 ...(settings.popperOptions && settings.popperOptions.modifiers ? settings.popperOptions.modifiers.flip : {})
             },
             offset: {
@@ -423,24 +423,16 @@ function correctTransition(ref, callback) {
 /**
 * Prepares the callback functions for `show` and `hide` methods
 * @param {Object} ref -  the element/popper reference
-* @param {Boolean} immediatelyFire - whether to instantly fire the callback or wait
 * @param {Function} callback - callback function to fire once transitions complete
 */
-function onTransitionEnd(ref, immediatelyFire, callback) {
+function onTransitionEnd(ref, callback) {
     const tooltip = ref.popper.querySelector(SELECTORS.tooltip)
 
     const listenerCallback = () => {
-        if (!immediatelyFire) {
-            tooltip.removeEventListener('webkitTransitionEnd', listenerCallback)
-            tooltip.removeEventListener('transitionend', listenerCallback)
-        }
+        tooltip.removeEventListener('webkitTransitionEnd', listenerCallback)
+        tooltip.removeEventListener('transitionend', listenerCallback)
         callback()
     }
-
-    ref.transititionendListener = listenerCallback
-
-    // transitionend may not fire for 0 duration, keep it safe and use ~1 frame of time
-    if (immediatelyFire) return listenerCallback()
 
     // Wait for transitions to complete
     tooltip.addEventListener('webkitTransitionEnd', listenerCallback)
@@ -595,12 +587,6 @@ export default class Tippy {
         }
 
         const handleTrigger = event => {
-
-            // Interactive tooltips receive a class of 'active'
-            if (settings.interactive) {
-                event.target.classList.add('active')
-            }
-
             // Toggle show/hide when clicking click-triggered tooltips
             if (
                 event.type === 'click'
@@ -732,11 +718,9 @@ export default class Tippy {
         const tooltip = popper.querySelector(SELECTORS.tooltip)
         const circle = popper.querySelector(SELECTORS.circle)
 
-        tooltip.removeEventListener('webkitTransitionEnd', ref.transitionendListener)
-        tooltip.removeEventListener('transitionend', ref.transitionendListener)
-
         if (enableCallback) {
             this.callbacks.beforeShown()
+
             // Flipping causes CSS transition to go haywire
             if (duration >= 20) {
                 correctTransition(ref, () => {
@@ -756,6 +740,11 @@ export default class Tippy {
 
         if (!document.body.contains(popper)) {
             awakenPopper(ref)
+        }
+
+        // Interactive tooltips receive a class of 'active'
+        if (ref.settings.interactive) {
+            ref.el.classList.add('active')
         }
 
         ref.hidden = false
@@ -796,7 +785,7 @@ export default class Tippy {
             if (enableCallback) this.callbacks.shown()
         }
 
-        onTransitionEnd(ref, duration < 20, transitionendCallback)
+        onTransitionEnd(ref, transitionendCallback)
 
         // transitionend listener sometimes may not fire
         clearTimeout(ref.transitionendTimeout)
@@ -818,9 +807,6 @@ export default class Tippy {
         const tooltip = popper.querySelector(SELECTORS.tooltip)
         const circle = popper.querySelector(SELECTORS.circle)
         const content = popper.querySelector(SELECTORS.content)
-
-        tooltip.removeEventListener('webkitTransitionEnd', ref.transitionendListener)
-        tooltip.removeEventListener('transitionend', ref.transitionendListener)
 
         if (enableCallback) {
             this.callbacks.beforeHidden()
@@ -884,7 +870,7 @@ export default class Tippy {
             if (enableCallback) this.callbacks.hidden()
         }
 
-        onTransitionEnd(ref, duration < 20, transitionendCallback)
+        onTransitionEnd(ref, transitionendCallback)
 
         // transitionend listener sometimes may not fire
         clearTimeout(ref.transitionendTimeout)
