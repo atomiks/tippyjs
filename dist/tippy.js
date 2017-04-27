@@ -2165,7 +2165,7 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.10.2
+* @version 0.11.0
 * @license MIT
 */
 
@@ -2414,7 +2414,7 @@ function createPopperElement(id, title, settings) {
     }
 
     // Init distance. Further updates are made in the popper instance's `onUpdate()` method
-    tooltip.style[settings.position] = -(settings.distance - 10) + 'px';
+    tooltip.style[getCorePlacement(settings.position)] = -(settings.distance - 10) + 'px';
 
     tooltip.appendChild(content);
     popper.appendChild(tooltip);
