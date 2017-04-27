@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.10.1
+* @version 0.10.2
 * @license MIT
 */
 
@@ -452,16 +452,16 @@ function awakenPopper(ref) {
         ref.el.addEventListener('mousemove', followCursor)
     }
 
-    if (!ref.instance) {
+    if (!ref.popperInstance) {
         // Create instance if it hasn't been created yet
-        ref.instance = createPopperInstance(ref)
+        ref.popperInstance = createPopperInstance(ref)
         if (ref.settings.followCursor && !GLOBALS.touchUser) {
-            ref.instance.disableEventListeners()
+            ref.popperInstance.disableEventListeners()
         }
     } else {
-        ref.instance.update()
+        ref.popperInstance.update()
         if (!ref.settings.followCursor) {
-            ref.instance.enableEventListeners()
+            ref.popperInstance.enableEventListeners()
         }
     }
 }
@@ -480,7 +480,7 @@ function hideAllPoppers(currentRef) {
             && (!currentRef || ref.popper !== currentRef.popper)
            )
         {
-            privateInstance.hide(ref.popper, ref.settings.hideDuration)
+            ref.tippyInstance.hide(ref.popper, ref.settings.hideDuration)
         }
 
     })
@@ -672,7 +672,8 @@ export default class Tippy {
                 el,
                 popper,
                 settings,
-                listeners
+                listeners,
+                tippyInstance: this
             })
 
             GLOBALS.idCounter++
@@ -863,7 +864,7 @@ export default class Tippy {
 
             if (popper.style.visibility === 'visible' || !document.body.contains(popper)) return
 
-            ref.instance.disableEventListeners()
+            ref.popperInstance.disableEventListeners()
 
             document.body.removeChild(popper)
 
@@ -897,8 +898,8 @@ export default class Tippy {
         ref.el.removeAttribute('data-tooltipped')
         ref.el.removeAttribute('aria-describedby')
 
-        if (ref.instance) {
-            ref.instance.destroy()
+        if (ref.popperInstance) {
+            ref.popperInstance.destroy()
         }
 
         // Remove from storage
@@ -926,5 +927,3 @@ export default class Tippy {
         }
     }
 }
-
-const privateInstance = new Tippy()

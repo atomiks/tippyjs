@@ -1,7 +1,7 @@
 /**!
 * Copyright 2017 atomiks (Tippy) & FezVrasta (Popper)
 * @file tippy.js (popper.js 1.8.5 included) | Pure JS Tooltip Library
-* @version 0.10.1
+* @version 0.10.2
 * @license MIT
 */
 
@@ -2116,6 +2116,9 @@ Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = DEFAULTS$1;
 
+
+//# sourceMappingURL=popper.js.map
+
 var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -2160,14 +2163,6 @@ var _extends$1 = Object.assign || function (target) {
   return target;
 };
 
-/**!
-* @file tippy.js | Pure JS Tooltip Library
-* @version 0.10.1
-* @license MIT
-*/
-
-// Touch user is assumed false until a `touchstart` event is fired
-// id counter for our aria-describedby labelling (tooltip IDs)
 var GLOBALS = {
     touchUser: false,
     idCounter: 0
@@ -2590,16 +2585,16 @@ function awakenPopper(ref) {
         ref.el.addEventListener('mousemove', followCursor);
     }
 
-    if (!ref.instance) {
+    if (!ref.popperInstance) {
         // Create instance if it hasn't been created yet
-        ref.instance = createPopperInstance(ref);
+        ref.popperInstance = createPopperInstance(ref);
         if (ref.settings.followCursor && !GLOBALS.touchUser) {
-            ref.instance.disableEventListeners();
+            ref.popperInstance.disableEventListeners();
         }
     } else {
-        ref.instance.update();
+        ref.popperInstance.update();
         if (!ref.settings.followCursor) {
-            ref.instance.enableEventListeners();
+            ref.popperInstance.enableEventListeners();
         }
     }
 }
@@ -2615,7 +2610,7 @@ function hideAllPoppers(currentRef) {
 
         // hideOnClick can have the truthy value of 'persistent', so strict check is needed
         if (ref.settings.hideOnClick === true && (!currentRef || ref.popper !== currentRef.popper)) {
-            privateInstance.hide(ref.popper, ref.settings.hideDuration);
+            ref.tippyInstance.hide(ref.popper, ref.settings.hideDuration);
         }
     });
 }
@@ -2809,7 +2804,8 @@ var Tippy$1 = function () {
                     el: el,
                     popper: popper,
                     settings: settings,
-                    listeners: listeners
+                    listeners: listeners,
+                    tippyInstance: _this3
                 });
 
                 GLOBALS.idCounter++;
@@ -3016,7 +3012,7 @@ var Tippy$1 = function () {
 
                 if (popper.style.visibility === 'visible' || !document.body.contains(popper)) return;
 
-                ref.instance.disableEventListeners();
+                ref.popperInstance.disableEventListeners();
 
                 document.body.removeChild(popper);
 
@@ -3053,8 +3049,8 @@ var Tippy$1 = function () {
             ref.el.removeAttribute('data-tooltipped');
             ref.el.removeAttribute('aria-describedby');
 
-            if (ref.instance) {
-                ref.instance.destroy();
+            if (ref.popperInstance) {
+                ref.popperInstance.destroy();
             }
 
             // Remove from storage
@@ -3085,8 +3081,6 @@ var Tippy$1 = function () {
     }]);
     return Tippy;
 }();
-
-var privateInstance = new Tippy$1();
 
 return Tippy$1;
 
