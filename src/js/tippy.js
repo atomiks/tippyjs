@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.10.2
+* @version 0.11.0
 * @license MIT
 */
 
@@ -127,6 +127,15 @@ function prefix(property) {
 }
 
 /**
+* Returns the non-shifted placement (e.g., 'bottom-start' => 'bottom')
+* @param {String} str - placement
+* @return {String}
+*/
+function getCorePlacement(str) {
+    return str.replace(/-.+/, '')
+}
+
+/**
 * Polyfill to get the closest parent element
 * @param {Element} element - child of parent to be returned
 * @param {String} parentSelector - selector to match the parent if found
@@ -187,7 +196,7 @@ function createPopperInstance(ref) {
             tooltip.style.bottom = ''
             tooltip.style.left = ''
             tooltip.style.right = ''
-            tooltip.style[ref.popper.getAttribute('x-placement')] = -(settings.distance - 10) + 'px'
+            tooltip.style[getCorePlacement(ref.popper.getAttribute('x-placement'))] = -(settings.distance - 10) + 'px'
         }
     }
 
@@ -347,7 +356,7 @@ function elementIsInViewport(el) {
 */
 function followCursor(e) {
     const ref = STORE.refs[STORE.els.indexOf(this)]
-    const position = ref.popper.getAttribute('x-placement')
+    const position = getCorePlacement(ref.popper.getAttribute('x-placement'))
     const halfPopperWidth = Math.round( ref.popper.offsetWidth / 2 )
     const halfPopperHeight = Math.round( ref.popper.offsetHeight / 2 )
 

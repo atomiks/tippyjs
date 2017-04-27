@@ -1,7 +1,7 @@
 /**!
 * Copyright 2017 atomiks (Tippy) & FezVrasta (Popper)
 * @file tippy.js (popper.js 1.8.5 included) | Pure JS Tooltip Library
-* @version 0.10.2
+* @version 0.11.0
 * @license MIT
 */
 
@@ -2163,6 +2163,14 @@ var _extends$1 = Object.assign || function (target) {
   return target;
 };
 
+/**!
+* @file tippy.js | Pure JS Tooltip Library
+* @version 0.10.2
+* @license MIT
+*/
+
+// Touch user is assumed false until a `touchstart` event is fired
+// id counter for our aria-describedby labelling (tooltip IDs)
 var GLOBALS = {
     touchUser: false,
     idCounter: 0
@@ -2275,6 +2283,15 @@ function prefix(property) {
 }
 
 /**
+* Returns the non-shifted placement (e.g., 'bottom-start' => 'bottom')
+* @param {String} str - placement
+* @return {String}
+*/
+function getCorePlacement(str) {
+    return str.replace(/-.+/, '');
+}
+
+/**
 * Polyfill to get the closest parent element
 * @param {Element} element - child of parent to be returned
 * @param {String} parentSelector - selector to match the parent if found
@@ -2327,7 +2344,7 @@ function createPopperInstance(ref) {
             tooltip.style.bottom = '';
             tooltip.style.left = '';
             tooltip.style.right = '';
-            tooltip.style[ref.popper.getAttribute('x-placement')] = -(settings.distance - 10) + 'px';
+            tooltip.style[getCorePlacement(ref.popper.getAttribute('x-placement'))] = -(settings.distance - 10) + 'px';
         }
     });
 
@@ -2481,7 +2498,7 @@ function elementIsInViewport(el) {
 */
 function followCursor(e) {
     var ref = STORE.refs[STORE.els.indexOf(this)];
-    var position = ref.popper.getAttribute('x-placement');
+    var position = getCorePlacement(ref.popper.getAttribute('x-placement'));
     var halfPopperWidth = Math.round(ref.popper.offsetWidth / 2);
     var halfPopperHeight = Math.round(ref.popper.offsetHeight / 2);
 

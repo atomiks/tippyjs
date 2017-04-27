@@ -137,7 +137,7 @@ $origins: bottom, top, right, left;
     }
 
     @each $position in $positions {
-        &[x-placement=#{$position}] {
+        &[x-placement^=#{$position}] {
 
             [x-arrow] {
                 position: absolute;
