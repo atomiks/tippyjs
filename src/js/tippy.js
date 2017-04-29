@@ -491,7 +491,7 @@ export default class Tippy {
             }
         }
 
-        const show = () => this.callbacks.wait ? this.callbacks.wait(_show) : _show()
+        const show = (event) => this.callbacks.wait ? this.callbacks.wait(_show, event) : _show()
         const hide = () => this.hide(popper, settings.hideDuration)
 
         const handleTrigger = event => {
@@ -511,7 +511,7 @@ export default class Tippy {
                 return hide()
             }
 
-            show()
+            show(event)
         }
 
         const handleMouseleave = event => {
