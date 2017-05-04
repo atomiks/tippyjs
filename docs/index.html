@@ -40,7 +40,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.11.1</span>
+            <i class="material-icons icon-left">code</i><span>v0.11.2</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -50,7 +50,7 @@
           <small class="hero-badge d-flex align-items-center">
             <a class="github-button"
                href="https://github.com/atomiks/tippyjs"
-               data-style="mega"
+               data-size="large"
                data-count-href="/atomiks/tippyjs/stargazers"
                data-show-count="true"
                data-count-aria-label="# stargazers on GitHub"
@@ -174,10 +174,8 @@
             <h4>Touch devices</h4>
             <p>
                 Tippy works on touch devices almost the same as on desktop/mouse devices. However, in order for tooltips to close
-                when tapping anywhere on the body on touch devices (at least on iOS), it adds a <code class="language-css">.tippy-touch { cursor: pointer !important; }</code>
+                when tapping anywhere on the body on iOS devices, it adds a <code class="language-css">.tippy-touch { cursor: pointer !important; }</code>
                 class to the body.
-                If you have a better solution please <a href="https://github.com/atomiks/tippyjs/issues">start an issue</a>,
-                it would be very helpful!
             </p>
 
             <h4>Accessibility</h4>
@@ -204,10 +202,10 @@
             <pre><code>npm install --save tippy.js</code></pre>
 
             <p>
-                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.11.1/dist/">unpkg.com CDN</a>:
+                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.11.2/dist/">unpkg.com CDN</a>:
             </p>
 
-            <pre><code>https://unpkg.com/tippy.js@0.11.1/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js@0.11.2/dist/</code></pre>
 
             <p>1. Place the <code>tippy.css</code> stylesheet in your document's <code>head</code>.</p>
             <pre><code class="language-markup">&lt;link rel="stylesheet" href="css/tippy.css"&gt;</code></pre>
@@ -523,7 +521,7 @@ new Tippy('.mySelector', {
   hidden: function() {
     // When the tooltip has fully transitioned out and is hidden
   },
-  wait: function(show) {
+  wait: function(show, event) {
     // See below for an explanation
   }
 })</code>
@@ -540,12 +538,13 @@ new Tippy('.mySelector', {
             </p>
 
 <pre><code class="language-javascript">new Tippy('.tippy', {
-    wait(show) {
+    wait(show, event) {
         // Change your app model to be rendered by the UI library/framework
 
         // Queue show to run once rendering is complete
         setTimeout(() => {
             // update(popper) content
+            // event.type to see what trigger fired the event
 
             show()
         }, 0)

@@ -181,19 +181,10 @@ a:hover {
     padding: 8rem 0 4rem;
     color: white;
     text-align: center;
-    -webkit-transform: translateY(-50px);
-            transform: translateY(-50px);
-    opacity: 0;
     -webkit-transition: opacity 1.5s cubic-bezier(0, 0, 0.15, 1.01), -webkit-transform 1.5s cubic-bezier(0, 0, 0.15, 1.01);
     transition: opacity 1.5s cubic-bezier(0, 0, 0.15, 1.01), -webkit-transform 1.5s cubic-bezier(0, 0, 0.15, 1.01);
     transition: opacity 1.5s cubic-bezier(0, 0, 0.15, 1.01), transform 1.5s cubic-bezier(0, 0, 0.15, 1.01);
     transition: opacity 1.5s cubic-bezier(0, 0, 0.15, 1.01), transform 1.5s cubic-bezier(0, 0, 0.15, 1.01), -webkit-transform 1.5s cubic-bezier(0, 0, 0.15, 1.01);
-}
-
-.hero.enter {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
-    opacity: 1;
 }
 
 .hero-heading {
@@ -278,13 +269,8 @@ main .container-fluid {
     max-width: 980px;
     padding: 2rem 1.25rem;
     box-shadow: 0 0 80px -4px rgba(0,20,40,0.1);
-    opacity: 0;
     -webkit-transition: opacity 1s ease;
     transition: opacity 1s ease;
-}
-
-main .container-fluid.enter {
-    opacity: 1;
 }
 
 .table-wrapper {

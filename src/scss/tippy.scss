@@ -126,7 +126,6 @@ $origins: bottom, top, right, left;
 }
 
 .tippy-popper {
-    position: relative;
     max-width: 400px;
     perspective: 800px;
     z-index: 9999;
@@ -340,12 +339,5 @@ $origins: bottom, top, right, left;
             padding-top: calc(75% + 2rem);
             float: left;
         }
-    }
-}
-
-@media (max-width: 500px) {
-    .tippy-popper {
-        max-width: 96%;
-        max-width: calc(100% - 20px);
     }
 }

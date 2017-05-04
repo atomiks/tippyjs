@@ -1,7 +1,7 @@
 /**!
 * Copyright 2017 atomiks (Tippy) & FezVrasta (Popper)
-* @file tippy.js (popper.js 1.8.5 included) | Pure JS Tooltip Library
-* @version 0.11.0
+* @file tippy.js (popper.js 1.9.1 included) | Pure JS Tooltip Library
+* @version 0.11.2
 * @license MIT
 */
 
@@ -210,7 +210,7 @@ function findCommonOffsetParent(element1, element2) {
 
   // Both nodes are inside #document
 
-  if (element1 !== commonAncestorContainer && element2 !== commonAncestorContainer) {
+  if (element1 !== commonAncestorContainer && element2 !== commonAncestorContainer || start.contains(end)) {
     if (isOffsetContainer(commonAncestorContainer)) {
       return commonAncestorContainer;
     }
@@ -1256,6 +1256,137 @@ function keepTogether(data) {
 }
 
 /**
+ * Converts a string containing value + unit into a px value number
+ * @function
+ * @memberof {modifiers~offset}
+ * @private
+ * @argument {String} str - Value + unit string
+ * @argument {String} measurement - `height` or `width`
+ * @argument {Object} popperOffsets
+ * @argument {Object} referenceOffsets
+ * @returns {Number|String}
+ * Value in pixels, or original string if no values were extracted
+ */
+function toValue(str, measurement, popperOffsets, referenceOffsets) {
+  // separate value from unit
+  var split = str.match(/((?:\-|\+)?\d*\.?\d*)(.*)/);
+  var value = +split[1];
+  var unit = split[2];
+
+  // If it's not a number it's an operator, I guess
+  if (!value) {
+    return str;
+  }
+
+  if (unit.indexOf('%') === 0) {
+    var element = void 0;
+    switch (unit) {
+      case '%p':
+        element = popperOffsets;
+        break;
+      case '%':
+      case '%r':
+      default:
+        element = referenceOffsets;
+    }
+
+    var rect = getClientRect(element);
+    return rect[measurement] / 100 * value;
+  } else if (unit === 'vh' || unit === 'vw') {
+    // if is a vh or vw, we calculate the size based on the viewport
+    var size = void 0;
+    if (unit === 'vh') {
+      size = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    } else {
+      size = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    }
+    return size / 100 * value;
+  } else {
+    // if is an explicit pixel unit, we get rid of the unit and keep the value
+    // if is an implicit unit, it's px, and we return just the value
+    return value;
+  }
+}
+
+/**
+ * Parse an `offset` string to extrapolate `x` and `y` numeric offsets.
+ * @function
+ * @memberof {modifiers~offset}
+ * @private
+ * @argument {String} offset
+ * @argument {Object} popperOffsets
+ * @argument {Object} referenceOffsets
+ * @argument {String} basePlacement
+ * @returns {Array} a two cells array with x and y offsets in numbers
+ */
+function parseOffset(offset, popperOffsets, referenceOffsets, basePlacement) {
+  var offsets = [0, 0];
+
+  // Use height if placement is left or right and index is 0 otherwise use width
+  // in this way the first offset will use an axis and the second one
+  // will use the other one
+  var useHeight = ['right', 'left'].indexOf(basePlacement) !== -1;
+
+  // Split the offset string to obtain a list of values and operands
+  // The regex addresses values with the plus or minus sign in front (+10, -20, etc)
+  var fragments = offset.split(/(\+|\-)/).map(function (frag) {
+    return frag.trim();
+  });
+
+  // Detect if the offset string contains a pair of values or a single one
+  // they could be separated by comma or space
+  var divider = fragments.indexOf(find(fragments, function (frag) {
+    return frag.search(/,|\s/) !== -1;
+  }));
+
+  if (fragments[divider] && fragments[divider].indexOf(',') === -1) {
+    console.warn('Offsets separated by white space(s) are deprecated, use a comma (,) instead.');
+  }
+
+  // If divider is found, we divide the list of values and operands to divide
+  // them by ofset X and Y.
+  var splitRegex = /\s*,\s*|\s+/;
+  var ops = divider !== -1 ? [fragments.slice(0, divider).concat([fragments[divider].split(splitRegex)[0]]), [fragments[divider].split(splitRegex)[1]].concat(fragments.slice(divider + 1))] : [fragments];
+
+  // Convert the values with units to absolute pixels to allow our computations
+  ops = ops.map(function (op, index) {
+    // Most of the units rely on the orientation of the popper
+    var measurement = (index === 1 ? !useHeight : useHeight) ? 'height' : 'width';
+    var mergeWithPrevious = false;
+    return op
+    // This aggregates any `+` or `-` sign that aren't considered operators
+    // e.g.: 10 + +5 => [10, +, +5]
+    .reduce(function (a, b) {
+      if (a[a.length - 1] === '' && ['+', '-'].indexOf(b) !== -1) {
+        a[a.length - 1] = b;
+        mergeWithPrevious = true;
+        return a;
+      } else if (mergeWithPrevious) {
+        a[a.length - 1] += b;
+        mergeWithPrevious = false;
+        return a;
+      } else {
+        return a.concat(b);
+      }
+    }, [])
+    // Here we convert the string values into number values (in px)
+    .map(function (str) {
+      return toValue(str, measurement, popperOffsets, referenceOffsets);
+    });
+  });
+
+  // Loop trough the offsets arrays and execute the operations
+  ops.forEach(function (op, index) {
+    op.forEach(function (frag, index2) {
+      if (isNumeric(frag)) {
+        offsets[index] += frag * (op[index2 - 1] === '-' ? -1 : 1);
+      }
+    });
+  });
+  return offsets;
+}
+
+/**
  * @function
  * @memberof Modifiers
  * @argument {Object} data - The data object generated by update method
@@ -1264,87 +1395,37 @@ function keepTogether(data) {
  * The offset value as described in the modifier description
  * @returns {Object} The data object, properly modified
  */
-function offset(data, options) {
-  var placement = data.placement;
-  var popper = data.offsets.popper;
+function offset(data, _ref) {
+  var offset = _ref.offset;
+  var placement = data.placement,
+      _data$offsets = data.offsets,
+      popper = _data$offsets.popper,
+      reference = _data$offsets.reference;
+
+  var basePlacement = placement.split('-')[0];
 
   var offsets = void 0;
-  if (isNumeric(options.offset)) {
-    offsets = [options.offset, 0];
+  if (isNumeric(+offset)) {
+    offsets = [+offset, 0];
   } else {
-    // split the offset in case we are providing a pair of offsets separated
-    // by a blank space
-    offsets = options.offset.split(' ');
-
-    // itherate through each offset to compute them in case they are percentages
-    offsets = offsets.map(function (offset, index) {
-      // separate value from unit
-      var split = offset.match(/(\-?\d*\.?\d*)(.*)/);
-      var value = +split[1];
-      var unit = split[2];
-
-      // use height if placement is left or right and index is 0 otherwise use width
-      // in this way the first offset will use an axis and the second one
-      // will use the other one
-      var useHeight = placement.indexOf('right') !== -1 || placement.indexOf('left') !== -1;
-
-      if (index === 1) {
-        useHeight = !useHeight;
-      }
-
-      var measurement = useHeight ? 'height' : 'width';
-
-      // if is a percentage relative to the popper (%p), we calculate the value of it using
-      // as base the sizes of the popper
-      // if is a percentage (% or %r), we calculate the value of it using as base the
-      // sizes of the reference element
-      if (unit.indexOf('%') === 0) {
-        var element = void 0;
-        switch (unit) {
-          case '%p':
-            element = data.offsets.popper;
-            break;
-          case '%':
-          case '$r':
-          default:
-            element = data.offsets.reference;
-        }
-
-        var rect = getClientRect(element);
-        var len = rect[measurement];
-        return len / 100 * value;
-      } else if (unit === 'vh' || unit === 'vw') {
-        // if is a vh or vw, we calculate the size based on the viewport
-        var size = void 0;
-        if (unit === 'vh') {
-          size = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-        } else {
-          size = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-        }
-        return size / 100 * value;
-      } else if (unit === 'px') {
-        // if is an explicit pixel unit, we get rid of the unit and keep the value
-        return +value;
-      } else {
-        // if is an implicit unit, it's px, and we return just the value
-        return +offset;
-      }
-    });
+    offsets = parseOffset(offset, popper, reference, basePlacement);
   }
 
-  if (data.placement.indexOf('left') !== -1) {
+  if (basePlacement === 'left') {
     popper.top += offsets[0];
-    popper.left -= offsets[1] || 0;
-  } else if (data.placement.indexOf('right') !== -1) {
+    popper.left -= offsets[1];
+  } else if (basePlacement === 'right') {
     popper.top += offsets[0];
-    popper.left += offsets[1] || 0;
-  } else if (data.placement.indexOf('top') !== -1) {
+    popper.left += offsets[1];
+  } else if (basePlacement === 'top') {
     popper.left += offsets[0];
-    popper.top -= offsets[1] || 0;
-  } else if (data.placement.indexOf('bottom') !== -1) {
+    popper.top -= offsets[1];
+  } else if (basePlacement === 'bottom') {
     popper.left += offsets[0];
-    popper.top += offsets[1] || 0;
+    popper.top += offsets[1];
   }
+
+  data.popper = popper;
   return data;
 }
 
@@ -1514,7 +1595,7 @@ var modifiers = {
    * The `offset` modifier can shift your popper on both its axis.
    *
    * It accepts the following units:
-   * - unitless, interpreted as pixels
+   * - `px` or unitless, interpreted as pixels
    * - `%` or `%r`, percentage relative to the length of the reference element
    * - `%p`, percentage relative to the length of the popper element
    * - `vw`, CSS viewport width unit
@@ -1525,13 +1606,23 @@ var modifiers = {
    * `width`. In case of `left` or `right`, it will be the height.
    *
    * You can provide a single value (as `Number` or `String`), or a pair of values
-   * as `String` divided by one white space.
+   * as `String` divided by a comma or one (or more) white spaces.
+   * The latter is a deprecated method because it leads to confusion and will be
+   * removed in v2.
+   * Additionally, it accepts additions and subtractions between different units.
+   * Note that multiplications and divisions aren't supported.
    *
    * Valid examples are:
-   * - offset: 10
-   * - offset: '10%'
-   * - offset: '10 10'
-   * - offset: '10% 10'
+   * ```
+   * 10
+   * '10%'
+   * '10, 10'
+   * '10%, 10'
+   * '10 + 10%'
+   * '10 - 5vh + 3%'
+   * '-10px + 5vh, 5px - 6%'
+   * ```
+   *
    * @memberof modifiers
    * @inner
    */
@@ -1980,6 +2071,7 @@ var Popper = function () {
 
       // compute the popper offsets
       data.offsets.popper = getPopperOffsets(this.state, this.popper, data.offsets.reference, data.placement);
+      data.offsets.popper.position = 'absolute';
 
       // run the modifiers
       data = runModifiers(this.modifiers, data);
@@ -2165,7 +2257,7 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.11.0
+* @version 0.11.2
 * @license MIT
 */
 
@@ -2224,7 +2316,12 @@ var SELECTORS = {
 // Determine touch users
 function handleDocumentTouchstart() {
     GLOBALS.touchUser = true;
-    document.body.classList.add('tippy-touch');
+
+    // iOS needs a `cursor: pointer` on the body to register clicks
+    if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent) && !window.MSStream) {
+        document.body.classList.add('tippy-touch');
+    }
+
     document.removeEventListener('touchstart', handleDocumentTouchstart);
 }
 
@@ -2242,6 +2339,11 @@ function handleDocumentClick(event) {
     if (el) {
         var _ref = STORE.refs[STORE.els.indexOf(el)];
 
+        // If they clicked before the show() was to fire, clear it
+        if (_ref.settings.hideOnClick === true && !GLOBALS.touchUser) {
+            clearTimeout(_ref.popper.getAttribute('data-delay'));
+        }
+
         // Hide all poppers except the one belonging to the element that was clicked IF
         // `multiple` is false AND they are a touch user, OR
         // `multiple` is false AND it's triggered by a click
@@ -2254,9 +2356,9 @@ function handleDocumentClick(event) {
     }
 
     // Don't trigger a hide for tippy controllers, and don't needlessly run loop
-    if (!closest(event.target, SELECTORS.controller) && document.body.querySelector(SELECTORS.popper)) {
-        hideAllPoppers();
-    }
+    if (closest(event.target, SELECTORS.controller) || !document.body.querySelector(SELECTORS.popper)) return;
+
+    hideAllPoppers();
 }
 
 document.addEventListener('click', handleDocumentClick);
@@ -2333,7 +2435,7 @@ function createPopperInstance(ref) {
     }, settings.popperOptions || {}, {
         modifiers: _extends$1({}, settings.popperOptions ? settings.popperOptions.modifiers : {}, {
             flip: _extends$1({
-                padding: parseInt(settings.distance) + 3 /* 3px from viewport boundary */
+                padding: parseInt(settings.distance) + 5 /* 5px from viewport boundary */
             }, settings.popperOptions && settings.popperOptions.modifiers ? settings.popperOptions.modifiers.flip : {}),
             offset: _extends$1({
                 offset: parseInt(settings.offset)
@@ -2429,7 +2531,7 @@ function createPopperElement(id, title, settings) {
 * @param {Object} methods - the methods for each listener
 * @return {Array} - array of listener objects
 */
-function createTrigger(event, el, handlers) {
+function createTrigger(event, el, handlers, settings) {
     var listeners = [];
 
     if (event === 'manual') return listeners;
@@ -2575,10 +2677,12 @@ function correctTransition(ref, callback) {
 * @param {Object} ref -  the element/popper reference
 * @param {Function} callback - callback function to fire once transitions complete
 */
-function onTransitionEnd(ref, callback) {
+function onTransitionEnd(ref, duration, callback) {
     var tooltip = ref.popper.querySelector(SELECTORS.tooltip);
+    var transitionendFired = false;
 
     var listenerCallback = function listenerCallback() {
+        transitionendFired = true;
         tooltip.removeEventListener('webkitTransitionEnd', listenerCallback);
         tooltip.removeEventListener('transitionend', listenerCallback);
         callback();
@@ -2587,29 +2691,48 @@ function onTransitionEnd(ref, callback) {
     // Wait for transitions to complete
     tooltip.addEventListener('webkitTransitionEnd', listenerCallback);
     tooltip.addEventListener('transitionend', listenerCallback);
+
+    // transitionend listener sometimes may not fire
+    clearTimeout(ref.transitionendTimeout);
+    ref.transitionendTimeout = setTimeout(function () {
+        if (!transitionendFired) {
+            listenerCallback();
+        }
+    }, duration);
 }
 
 /**
-* Creates a popper instance if one does not exist, then appends the popper
+* Appends the popper and creates a popper instance if one does not exist
 * Also updates its position if need be and enables event listeners
 * @param {Object} ref -  the element/popper reference
 */
 function awakenPopper(ref) {
     document.body.appendChild(ref.popper);
 
-    if (ref.settings.followCursor && !ref.hasFollowCursorListener && !GLOBALS.touchUser) {
-        ref.hasFollowCursorListener = true;
-        ref.el.addEventListener('mousemove', followCursor);
-    }
-
     if (!ref.popperInstance) {
         // Create instance if it hasn't been created yet
         ref.popperInstance = createPopperInstance(ref);
+
+        // Follow cursor setting
+        if (ref.settings.followCursor && !GLOBALS.touchUser) {
+            ref.el.addEventListener('mousemove', followCursor);
+        }
+
         if (ref.settings.followCursor && !GLOBALS.touchUser) {
             ref.popperInstance.disableEventListeners();
         }
     } else {
         ref.popperInstance.update();
+
+        // In cases where the window is resized, the update() method won't always move it
+        // back into the viewport properly, it slowly moves back in with each update
+        // Here we make 10 updates: hackish but works for the most part
+        if (window.innerWidth <= ref.popper.getBoundingClientRect().right) {
+            for (var i = 0; i < 10; i++) {
+                setTimeout(ref.popperInstance.update, 0);
+            }
+        }
+
         if (!ref.settings.followCursor) {
             ref.popperInstance.enableEventListeners();
         }
@@ -2722,8 +2845,8 @@ var Tippy$1 = function () {
                 }
             };
 
-            var show = function show() {
-                return _this2.callbacks.wait ? _this2.callbacks.wait(_show) : _show();
+            var show = function show(event) {
+                return _this2.callbacks.wait ? _this2.callbacks.wait(_show, event) : _show();
             };
 
             var hide = function hide() {
@@ -2746,11 +2869,10 @@ var Tippy$1 = function () {
                     return hide();
                 }
 
-                show();
+                show(event);
             };
 
             var handleMouseleave = function handleMouseleave(event) {
-
                 if (settings.interactive) {
                     // Temporarily handle mousemove to check if the mouse left somewhere
                     // other than its popper
@@ -2813,7 +2935,7 @@ var Tippy$1 = function () {
                 var listeners = [];
 
                 settings.trigger.trim().split(' ').forEach(function (event) {
-                    return listeners = listeners.concat(createTrigger(event, el, handlers));
+                    return listeners = listeners.concat(createTrigger(event, el, handlers, settings));
                 });
 
                 pushIntoStorage({
@@ -2886,20 +3008,18 @@ var Tippy$1 = function () {
                 this.callbacks.beforeShown();
 
                 // Flipping causes CSS transition to go haywire
-                if (duration >= 20) {
-                    correctTransition(ref, function () {
-                        _this4.hide(popper, 0, false);
-                        setTimeout(function () {
-                            // Under fast-moving cursor cases, the tooltip can stay stuck because
-                            // the mouseleave triggered before this show
-                            // hidden only becomes `true` in the `hide` method if callback is enabled
-                            // (i.e. legitimate hide, not triggered by this correcttransition function)
-                            if (ref.hidden) return;
+                correctTransition(ref, function () {
+                    _this4.hide(popper, 0, false);
+                    setTimeout(function () {
+                        // Under fast-moving cursor cases, the tooltip can stay stuck because
+                        // the mouseleave triggered before this show
+                        // hidden only becomes `true` in the `hide` method if callback is enabled
+                        // (i.e. legitimate hide, not triggered by this correcttransition function)
+                        if (ref.hidden) return;
 
-                            _this4.show(popper, duration, false);
-                        }, 0);
-                    });
-                }
+                        _this4.show(popper, duration, false);
+                    }, 0);
+                });
             }
 
             if (!document.body.contains(popper)) {
@@ -2926,12 +3046,7 @@ var Tippy$1 = function () {
             applyTransitionDuration([tooltip, circle], duration);
 
             // Wait for transitions to complete
-
-            var transitionendFired = false;
-
-            var transitionendCallback = function transitionendCallback() {
-                transitionendFired = true;
-
+            onTransitionEnd(ref, duration, function () {
                 if (popper.style.visibility === 'hidden' || ref.onShownFired) return;
 
                 if (!ref.settings.transitionFlip) {
@@ -2947,17 +3062,7 @@ var Tippy$1 = function () {
                 ref.onShownFired = true;
 
                 if (enableCallback) _this4.callbacks.shown();
-            };
-
-            onTransitionEnd(ref, transitionendCallback);
-
-            // transitionend listener sometimes may not fire
-            clearTimeout(ref.transitionendTimeout);
-            ref.transitionendTimeout = setTimeout(function () {
-                if (!transitionendFired) {
-                    transitionendCallback();
-                }
-            }, duration);
+            });
         }
 
         /**
@@ -3021,12 +3126,7 @@ var Tippy$1 = function () {
             }
 
             // Wait for transitions to complete
-
-            var transitionendFired = false;
-
-            var transitionendCallback = function transitionendCallback() {
-                transitionendFired = true;
-
+            onTransitionEnd(ref, duration, function () {
                 if (popper.style.visibility === 'visible' || !document.body.contains(popper)) return;
 
                 ref.popperInstance.disableEventListeners();
@@ -3034,17 +3134,7 @@ var Tippy$1 = function () {
                 document.body.removeChild(popper);
 
                 if (enableCallback) _this5.callbacks.hidden();
-            };
-
-            onTransitionEnd(ref, transitionendCallback);
-
-            // transitionend listener sometimes may not fire
-            clearTimeout(ref.transitionendTimeout);
-            ref.transitionendTimeout = setTimeout(function () {
-                if (!transitionendFired) {
-                    transitionendCallback();
-                }
-            }, duration);
+            });
         }
 
         /**
