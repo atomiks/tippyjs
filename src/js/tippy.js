@@ -217,7 +217,7 @@ function createPopperInstance(ref) {
 
 /**
 * Creates a popper element then returns it
-* @param {Number} id
+* @param {Number} id - the popper id
 * @param {String} title - the tooltip's `title` attribute
 * @param {Object} settings - individual settings
 * @return {Element} - the popper element
@@ -289,10 +289,10 @@ function createPopperElement(id, title, settings) {
 }
 
 /**
-* Creates a trigger for each one specified
+* Creates a trigger
 * @param {Object} event - the custom event specified in the `trigger` setting
-* @param {Element} el
-* @param {Object} methods - the methods for each listener
+* @param {Element} el - tooltipped element
+* @param {Object} handlers - the handlers for each listener
 * @return {Array} - array of listener objects
 */
 function createTrigger(event, el, handlers) {
@@ -446,6 +446,7 @@ function correctTransition(ref, callback) {
 /**
 * Prepares the callback functions for `show` and `hide` methods
 * @param {Object} ref -  the element/popper reference
+* @param {Number} duration
 * @param {Function} callback - callback function to fire once transitions complete
 */
 function onTransitionEnd(ref, duration, callback) {
@@ -495,18 +496,16 @@ function awakenPopper(ref) {
     } else {
         // In cases where the window is resized, the update() method won't always move it
         // back into the viewport properly, it slowly moves back in with each update
-        // Here we make updates until it's shifted all the way into the viewport
-        // Waiting on popper.js fix
-
-        let lim = 0 // limit it to 50 updates max
+        // Here we make 10 updates: hackish but works for the most part
+        let updateCounter = 0 // 50 max updates
         ;(function shiftIntoViewport() {
             setTimeout(() => {
                 ref.popperInstance.scheduleUpdate()
-                if (lim < 50 && window.innerWidth <= ref.popper.getBoundingClientRect().right) {
+                if (updateCounter < 50 && window.innerWidth <= ref.popper.getBoundingClientRect().right) {
                     shiftIntoViewport()
                 }
             }, 0)
-            lim++
+            updateCounter++
         })()
 
         if (!ref.settings.followCursor) {
@@ -798,14 +797,15 @@ export default class Tippy {
         ref.popper.style.visibility = 'visible'
         ref.popper.setAttribute('aria-hidden', 'false')
 
+        // Repaint/reflow is required for CSS transition when appending
         triggerReflow(tooltip, circle)
-
-        applyTransitionDuration([tooltip, circle], duration)
 
         modifyClassList([tooltip, circle], list => {
             list.remove('leave')
             list.add('enter')
         })
+
+        applyTransitionDuration([tooltip, circle], duration)
 
         // Wait for transitions to complete
         onTransitionEnd(ref, duration, () => {
