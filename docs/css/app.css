@@ -354,3 +354,10 @@ main .container-fluid {
         padding: 8rem 0 2rem;
     }
 }
+
+@media (max-width: 500px) {
+    .tippy-popper {
+        max-width: 96%;
+        max-width: calc(100% - 20px);
+    }
+}
