@@ -78,13 +78,13 @@
 
 @mixin circle-transform-leave ($position) {
     @if ($position == 'top') {
-        transform: scale(0.33) translate(-50%, -50%);
+        transform: scale(0.4) translate(-50%, -50%);
     } @else if ($position == 'bottom') {
-        transform: scale(0.33) translate(-50%, 0%);
+        transform: scale(0.4) translate(-50%, 0%);
     } @else if ($position == 'left') {
-        transform: scale(0.33) translate(-50%, -33%);
+        transform: scale(0.4) translate(-50%, -33%);
     } @else if ($position == 'right') {
-        transform: scale(0.33) translate(-50%, -33%);
+        transform: scale(0.4) translate(-50%, -33%);
     }
 }
 
@@ -93,22 +93,30 @@
         border-top: $width solid $color;
         border-right: $width solid transparent;
         border-left: $width solid transparent;
-        bottom: -$width;
     } @else if ($position == 'bottom') {
         border-bottom: $width solid $color;
         border-right: $width solid transparent;
         border-left: $width solid transparent;
-        top: -$width;
     } @else if ($position == 'left') {
         border-left: $width solid $color;
         border-top: $width solid transparent;
         border-bottom: $width solid transparent;
-        right: -$width;
-        top: 50%;
     } @else if ($position == 'right') {
         border-right: $width solid $color;
         border-top: $width solid transparent;
         border-bottom: $width solid transparent;
+    }
+}
+
+@mixin arrow-position ($position, $width) {
+    @if ($position == 'top') {
+        bottom: -$width;
+    } @else if ($position == 'bottom') {
+        top: -$width;
+    } @else if ($position == 'left') {
+        right: -$width;
+        top: 50%;
+    } @else if ($position == 'right') {
         left: -$width;
         top: 50%;
     }
@@ -116,10 +124,7 @@
 
 $positions: 'top', 'bottom', 'left', 'right';
 $origins: bottom, top, right, left;
-
-.tippy-notransition {
-    transition: none !important;
-}
+$circle-origins: 0% 50%, 0% -50%, 50% 5%, -50% 5%;
 
 .tippy-touch {
     cursor: pointer !important;
@@ -143,17 +148,18 @@ $origins: bottom, top, right, left;
                 width: 0;
                 height: 0;
                 @include arrow($position, 7px, #333);
+                @include arrow-position($position, 7px);
 
                 &.arrow-small {
                     @include arrow($position, 5px, #333);
+                    @include arrow-position($position, 5px);
                 }
 
                 &.arrow-big {
                     @include arrow($position, 9px, #333);
+                    @include arrow-position($position, 9px);
                 }
             }
-
-            $circle-origins: 0% 50%, 0% -50%, 50% 5%, -50% 5%;
 
             [x-circle] {
                 transform-origin: nth($circle-origins, index($positions, $position));
@@ -188,17 +194,17 @@ $origins: bottom, top, right, left;
 
             .tippy-tooltip.transparent-theme {
                 [x-circle] {
-                    background-color: rgba(0,0,0,0.8);
+                    background-color: rgba(0,0,0,0.7);
                 }
                 [x-arrow] {
-                    @include arrow($position, 7px, rgba(0,0,0,0.8));
+                    @include arrow($position, 7px, rgba(0,0,0,0.7));
 
                     &.arrow-small {
-                        @include arrow($position, 5px, rgba(0,0,0,0.8));
+                        @include arrow($position, 5px, rgba(0,0,0,0.7));
                     }
 
                     &.arrow-big {
-                        @include arrow($position, 9px, rgba(0,0,0,0.8));
+                        @include arrow($position, 9px, rgba(0,0,0,0.7));
                     }
                 }
             }
@@ -327,8 +333,8 @@ $origins: bottom, top, right, left;
         border-radius: 50%;
         width: 120%;
         width: calc(100% + 2rem);
-        left: 50%;
         transition: all ease-out;
+        left: 50%;
         z-index: -1;
         opacity: 0;
         overflow: hidden;
@@ -336,8 +342,15 @@ $origins: bottom, top, right, left;
         &::before {
             content: '';
             padding-top: 100%;
-            padding-top: calc(75% + 2rem);
+            padding-top: calc(60% + 2rem);
             float: left;
         }
+    }
+}
+
+@media (max-width: 500px) {
+    .tippy-popper {
+        max-width: 96%;
+        max-width: calc(100% - 20px);
     }
 }

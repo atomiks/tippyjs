@@ -39,20 +39,6 @@ function update(e) {
     e.target.setAttribute('disabled', '')
 }
 
-var timeout = 500
-
-if (window.pageYOffset > 250 || document.documentElement.scrollTop > 250) {
-    timeout = 0
-}
-
-setTimeout(function() {
-    document.querySelector('.hero').classList.add('enter')
-}, 0)
-
-setTimeout(function() {
-    document.querySelector('main .container-fluid').classList.add('enter')
-}, timeout)
-
 var instance = new Tippy('.tippy')
 
 new Tippy('.flippy', {
