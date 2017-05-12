@@ -27,7 +27,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.11.3</span>
+            <i class="material-icons icon-left">code</i><span>v0.12.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -189,10 +189,10 @@
             <pre><code>npm install --save tippy.js</code></pre>
 
             <p>
-                or use the <a target="_blank" href="https://unpkg.com/tippy.js@0.11.3/dist/">unpkg.com CDN</a>:
+                or use the <a target="_blank" href="https://unpkg.com/tippy.js/dist/">unpkg.com CDN</a>:
             </p>
 
-            <pre><code>https://unpkg.com/tippy.js@0.11.3/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js/dist/</code></pre>
 
             <p>1. Place the <code>tippy.css</code> stylesheet in your document's <code>head</code>.</p>
             <pre><code class="language-markup">&lt;link rel="stylesheet" href="css/tippy.css"&gt;</code></pre>
@@ -224,6 +224,9 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
 
             <p>You can also directly pass in a DOM element:</p>
 <pre><code class="language-javascript">new Tippy(document.querySelector('#myElement'))</code></pre>
+
+            <p>Or a Popper instance:</p>
+            <pre><code class="language-javascript">new Tippy(new Popper(...))</code></pre>
 
             <p>Elements without a <code>title</code> attribute or an HTML template will not receive a tooltip. You can pass in any CSS selector to initialize it. See <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
 

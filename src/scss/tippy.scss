@@ -130,6 +130,10 @@ $circle-origins: 0% 50%, 0% -50%, 50% 5%, -50% 5%;
     cursor: pointer !important;
 }
 
+.tippy-notransition {
+    transition: none !important;
+}
+
 .tippy-popper {
     max-width: 400px;
     perspective: 800px;
