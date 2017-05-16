@@ -27,7 +27,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.12.0</span>
+            <i class="material-icons icon-left">code</i><span>v0.12.1</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -106,7 +106,7 @@
                 <span>Browser support</span>
             </a></h2>
             <p>Most browsers from 2012 onwards (IE10+). As of early 2017, it should support
-                <span class="green-text">95%</span> of users (caniuse.com); depending on your
+                <span class="green-text">96%</span> of users (caniuse.com); depending on your
                 target audience it could be higher or lower. Tippy gracefully degrades on older
                 browsers (and with JavaScript disabled) by using the browser's default
                 <code>title</code> tooltip.</p>
@@ -132,7 +132,7 @@
                   <tr>
                     <td>Opera Mini</td>
                     <td>2015</td>
-                    <td>3%</td>
+                    <td>2.7%</td>
                   </tr>
                   <tr>
                     <td>Firefox &lt;= 15</td>
@@ -225,9 +225,6 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
             <p>You can also directly pass in a DOM element:</p>
 <pre><code class="language-javascript">new Tippy(document.querySelector('#myElement'))</code></pre>
 
-            <p>Or a Popper instance:</p>
-            <pre><code class="language-javascript">new Tippy(new Popper(...))</code></pre>
-
             <p>Elements without a <code>title</code> attribute or an HTML template will not receive a tooltip. You can pass in any CSS selector to initialize it. See <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
 
             <p>Here's how to create a tooltip for an element with an <code>id</code> of <code>hello</code>:</p>
@@ -254,7 +251,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
 
               <h2><a href="#customizing-tooltips"><i class="material-icons icon-left">settings</i><span>Customizing tooltips</span></a></h2>
 
-              <p>Tippy's constructor takes an object as a second parameter for you to customize all tooltips being instantiated. Here's an example:</p>
+              <p>Tippy's constructor takes an object as a second argument for you to customize all tooltips being instantiated. Here's an example:</p>
 
 <pre><code class="language-javascript">new Tippy('.tippy', {
     position: 'right',
@@ -481,7 +478,7 @@ new Tippy('.mySelector', {
   popperOptions: {
       modifiers: {
           flip: {
-              behavior: ['top']
+              enabled: false
           }
       }
   }
@@ -801,6 +798,7 @@ instance.destroy(popper)</code></pre>
       <img height="200" alt="cat" src="img/cat.jpg">
     </div>
 
+    <script src="https://unpkg.com/popper.js@1.9.3"></script>
     <script src="tippy/tippy.js"></script>
     <script src="js/prism.js"></script>
     <script src="js/app.js"></script>

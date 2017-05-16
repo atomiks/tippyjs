@@ -77,14 +77,15 @@
 }
 
 @mixin circle-transform-leave ($position) {
+    $scale: 0.45;
     @if ($position == 'top') {
-        transform: scale(0.4) translate(-50%, -50%);
+        transform: scale($scale) translate(-50%, -100%);
     } @else if ($position == 'bottom') {
-        transform: scale(0.4) translate(-50%, 0%);
+        transform: scale($scale) translate(-50%, 5%);
     } @else if ($position == 'left') {
-        transform: scale(0.4) translate(-50%, -33%);
+        transform: scale($scale) translate(-50%, -50%);
     } @else if ($position == 'right') {
-        transform: scale(0.4) translate(-50%, -33%);
+        transform: scale($scale) translate(-50%, -50%);
     }
 }
 
@@ -124,7 +125,7 @@
 
 $positions: 'top', 'bottom', 'left', 'right';
 $origins: bottom, top, right, left;
-$circle-origins: 0% 50%, 0% -50%, 50% 5%, -50% 5%;
+$circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
 
 .tippy-touch {
     cursor: pointer !important;
@@ -339,20 +340,20 @@ $circle-origins: 0% 50%, 0% -50%, 50% 5%, -50% 5%;
         width: calc(100% + 2rem);
         transition: all ease-out;
         left: 50%;
+        top: 50%;
         z-index: -1;
         opacity: 0;
         overflow: hidden;
 
         &::before {
             content: '';
-            padding-top: 100%;
-            padding-top: calc(60% + 2rem);
+            padding-top: 75%;
             float: left;
         }
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 450px) {
     .tippy-popper {
         max-width: 96%;
         max-width: calc(100% - 20px);
