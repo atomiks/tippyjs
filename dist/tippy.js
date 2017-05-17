@@ -1,7 +1,7 @@
 /**!
 * (c) 2017 atomiks (Tippy) & FezVrasta (Popper)
-* @file tippy.js (popper.js 1.9.3 included) | Pure JS Tooltip Library
-* @version 0.12.1
+* @file tippy.js (popper.js 1.9.4 included) | Pure JS Tooltip Library
+* @version 0.12.2
 * @license MIT
 */
 

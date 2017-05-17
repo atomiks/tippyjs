@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.12.1
+* @version 0.12.2
 * @license MIT
 */
 
@@ -392,8 +392,7 @@ function followCursor(e) {
     const halfPopperWidth = Math.round( popper.offsetWidth / 2 )
     const halfPopperHeight = Math.round( popper.offsetHeight / 2 )
     const viewportPadding = 5
-    const viewportWidth = window.innerWidth
-    const viewportHeight = window.innerHeight
+    const pageWidth = document.documentElement.offsetWidth || document.body.offsetWidth
     
     const { pageX, pageY } = e
     
@@ -415,9 +414,9 @@ function followCursor(e) {
     
     // Prevent left/right overflow
     if (position === 'top' || position === 'bottom') {
-        if (pageX + viewportPadding + halfPopperWidth > viewportWidth) {
+        if (pageX + viewportPadding + halfPopperWidth > pageWidth) {
             // Right overflow
-            x = viewportWidth - viewportPadding - ( 2 * halfPopperWidth)
+            x = pageWidth - viewportPadding - ( 2 * halfPopperWidth)
         } else if (pageX - viewportPadding - halfPopperWidth < 0) {
             // Left overflow
             x = viewportPadding
@@ -561,15 +560,15 @@ function awakenPopper(ref) {
 */
 function hideAllPoppers(currentRef) {
     STORE.refs.forEach(ref => {
-        const { popper, tippyInstance, settings: { hideOnClick, hideDuration } } = ref
+        const { popper, tippyInstance, settings: { hideOnClick, hideDuration, trigger } } = ref
                 
         // Don't hide already hidden ones
         if (!document.body.contains(popper)) return
 
         // hideOnClick can have the truthy value of 'persistent', so strict check is needed
-        const isHideOnClick = hideOnClick === true
+        const isHideOnClick = hideOnClick === true || trigger.indexOf('focus') !== -1
         const isNotCurrentRef = !currentRef || popper !== currentRef.popper
-
+        
         if (isHideOnClick && isNotCurrentRef) {
             tippyInstance.hide(popper, hideDuration)
         }
