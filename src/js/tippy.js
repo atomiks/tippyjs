@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.12.2
+* @version 0.13.0
 * @license MIT
 */
 
@@ -41,6 +41,8 @@ const DEFAULTS = {
     followCursor: false,
     inertia: false,
     transitionFlip: true,
+    sticky: false,
+    stickyDuration: 200,
     popperOptions: {}
 }
 
@@ -220,6 +222,7 @@ function createPopperInstance(ref) {
             }
         },
         onUpdate() {
+            popper.style[prefix('transitionDuration')] = ''
             tooltip.style.top = ''
             tooltip.style.bottom = ''
             tooltip.style.left = ''
@@ -533,12 +536,12 @@ function isExpectedState(popper, type) {
 */
 function awakenPopper(ref) {
     
-    const { popperInstance, el, popper } = ref
+    const { el, popper } = ref
     const shouldFollowCursor = ref.settings.followCursor
     
     document.body.appendChild(ref.popper)
 
-    if (!popperInstance) {
+    if (!ref.popperInstance) {
         // Create instance if it hasn't been created yet
         ref.popperInstance = createPopperInstance(ref)
 
@@ -549,9 +552,45 @@ function awakenPopper(ref) {
         }
         
     } else {
-        popperInstance.update()
-        !shouldFollowCursor && popperInstance.enableEventListeners()
+        ref.popperInstance.update()
+        shouldFollowCursor || ref.popperInstance.enableEventListeners()            
     }
+}
+
+/**
+* Updates a popper's position on each animation frame to make it stick to a moving element
+* @param {Object} ref
+*/
+function sticky(ref) {
+    const { popper, popperInstance, settings: { stickyDuration } } = ref
+    
+    const applyTransitionDuration = () => 
+        popper.style[prefix('transitionDuration')] = `${stickyDuration}ms`
+        
+    const removeTransitionDuration = () => 
+        popper.style[prefix('transitionDuration')] = ''
+        
+    const updatePosition = () => { 
+        popperInstance && popperInstance.scheduleUpdate() 
+        
+        applyTransitionDuration()
+        
+        const isVisible = !ref.hidden
+        
+        if (window.requestAnimationFrame) {
+            if (isVisible) {
+                window.requestAnimationFrame(updatePosition) 
+            } else {
+                window.cancelAnimationFrame(updatePosition)
+                removeTransitionDuration()
+            }
+        } else {
+            isVisible ? setTimeout(updatePosition, 20) : removeTransitionDuration()
+        }
+    }
+    
+    // Wait until Popper's position has been updated initially
+    setTimeout(updatePosition, 0)
 }
 
 /**
@@ -591,7 +630,7 @@ function getSelectorElementsArray(selector) {
 /**
 * The class to be exported to be used on the `window`
 * Private methods are prefixed with an underscore _
-* @param {String|Element|Popper} selector
+* @param {String|Element} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
 */
 export default class Tippy {
@@ -832,15 +871,18 @@ export default class Tippy {
             })
         }
         
-        !document.body.contains(popper) && awakenPopper(ref)
-        
-        // Interactive tooltips receive a class of 'active'
-        ref.settings.interactive && ref.el.classList.add('active')
-
         ref.hidden = false
         popper.style.visibility = 'visible'
         popper.setAttribute('aria-hidden', 'false')
-
+        
+        // Interactive tooltips receive a class of 'active'
+        ref.settings.interactive && ref.el.classList.add('active')
+        
+        !document.body.contains(popper) && awakenPopper(ref)
+        
+        // Update popper's position on every animation frame
+        ref.settings.sticky && sticky(ref)
+        
         // Repaint/reflow is required for CSS transition when appending
         triggerReflow(tooltip, circle)
 

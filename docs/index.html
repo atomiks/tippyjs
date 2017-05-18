@@ -27,7 +27,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.12.2</span>
+            <i class="material-icons icon-left">code</i><span>v0.13.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -96,7 +96,8 @@
               <button class="btn tippy" title="I'm just a cute little tooltip" data-theme="transparent" data-size="small">Small</button>
 
               <button class="btn tippy" title="I'm a big scary tooltip" data-theme="transparent" data-size="big">Big</button>
-            
+              
+              <button class="btn tippy" id="animated-tippy" title="Sticky tooltip! Click my element to hide me." data-theme="transparent" data-sticky="true" data-hideonclick="false" data-trigger="click">Animated element</button>
             </div>
           </section>
 
@@ -432,6 +433,18 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td><code>true</code></td>
                       <td><code>true</code> <code>false</code></td>
                       <td>Specifies whether to transition between flips or not. Uses the same transition timing as <code>duration</code>.</td>
+                    </tr>
+                    <tr>
+                      <td><code>sticky</code></td>
+                      <td><code>false</code></td>
+                      <td><code>true</code> <code>false</code></td>
+                      <td>Specifies whether the tooltip should stick to its element reference when it's showing (for example, if the element is animated/moves).</td>
+                    </tr>
+                    <tr>
+                      <td><code>stickyDuration</code></td>
+                      <td><code>200</code></td>
+                      <td>Any number (milliseconds)</td>
+                      <td>Specifies the 'smoothing' transition when the popper's position updates as its element moves.</td>
                     </tr>
                       <tr>
                         <td><code>popperOptions</code></td>
@@ -799,7 +812,6 @@ instance.destroy(popper)</code></pre>
       <img height="200" alt="cat" src="img/cat.jpg">
     </div>
 
-    <script src="https://unpkg.com/popper.js@1.9.3"></script>
     <script src="tippy/tippy.js"></script>
     <script src="js/prism.js"></script>
     <script src="js/app.js"></script>

@@ -40,6 +40,7 @@ function update(e) {
 }
 
 var instance = new Tippy('.tippy')
+instance.show(instance.getPopperElement(document.querySelector('#animated-tippy')))
 
 new Tippy('.flippy', {
     position: 'right',

@@ -1,7 +1,7 @@
 /**!
 * (c) 2017 atomiks (Tippy) & FezVrasta (Popper)
 * @file tippy.js (popper.js 1.9.4 included) | Pure JS Tooltip Library
-* @version 0.12.2
+* @version 0.13.0
 * @license MIT
 */
 
@@ -2292,6 +2292,14 @@ var _extends$1 = Object.assign || function (target) {
   return target;
 };
 
+/**!
+* @file tippy.js | Pure JS Tooltip Library
+* @version 0.13.0
+* @license MIT
+*/
+
+// Touch user is assumed false until a `touchstart` event is fired
+// id counter for our aria-describedby labelling (tooltip IDs)
 var GLOBALS = {
     touchUser: false,
     idCounter: 0
@@ -2325,6 +2333,8 @@ var DEFAULTS = {
     followCursor: false,
     inertia: false,
     transitionFlip: true,
+    sticky: false,
+    stickyDuration: 200,
     popperOptions: {}
 };
 
@@ -2507,6 +2517,7 @@ function createPopperInstance(ref) {
             }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
         }),
         onUpdate: function onUpdate() {
+            popper.style[prefix('transitionDuration')] = '';
             tooltip.style.top = '';
             tooltip.style.bottom = '';
             tooltip.style.left = '';
@@ -2687,8 +2698,7 @@ function followCursor(e) {
     var halfPopperWidth = Math.round(popper.offsetWidth / 2);
     var halfPopperHeight = Math.round(popper.offsetHeight / 2);
     var viewportPadding = 5;
-    var viewportWidth = window.innerWidth;
-    var viewportHeight = window.innerHeight;
+    var pageWidth = document.documentElement.offsetWidth || document.body.offsetWidth;
 
     var pageX = e.pageX,
         pageY = e.pageY;
@@ -2713,9 +2723,9 @@ function followCursor(e) {
 
     // Prevent left/right overflow
     if (position === 'top' || position === 'bottom') {
-        if (pageX + viewportPadding + halfPopperWidth > viewportWidth) {
+        if (pageX + viewportPadding + halfPopperWidth > pageWidth) {
             // Right overflow
-            x = viewportWidth - viewportPadding - 2 * halfPopperWidth;
+            x = pageWidth - viewportPadding - 2 * halfPopperWidth;
         } else if (pageX - viewportPadding - halfPopperWidth < 0) {
             // Left overflow
             x = viewportPadding;
@@ -2830,15 +2840,14 @@ function isExpectedState(popper, type) {
 * @param {Object} ref -  the element/popper reference
 */
 function awakenPopper(ref) {
-    var popperInstance = ref.popperInstance,
-        el = ref.el,
+    var el = ref.el,
         popper = ref.popper;
 
     var shouldFollowCursor = ref.settings.followCursor;
 
     document.body.appendChild(ref.popper);
 
-    if (!popperInstance) {
+    if (!ref.popperInstance) {
         // Create instance if it hasn't been created yet
         ref.popperInstance = createPopperInstance(ref);
 
@@ -2848,9 +2857,50 @@ function awakenPopper(ref) {
             ref.popperInstance.disableEventListeners();
         }
     } else {
-        popperInstance.update();
-        !shouldFollowCursor && popperInstance.enableEventListeners();
+        ref.popperInstance.update();
+        shouldFollowCursor || ref.popperInstance.enableEventListeners();
     }
+}
+
+/**
+* Updates a popper's position on each animation frame to make it stick to a moving element
+* @param {Object} ref
+*/
+function sticky(ref) {
+    var popper = ref.popper,
+        popperInstance = ref.popperInstance,
+        stickyDuration = ref.settings.stickyDuration;
+
+
+    var applyTransitionDuration = function applyTransitionDuration() {
+        return popper.style[prefix('transitionDuration')] = stickyDuration + 'ms';
+    };
+
+    var removeTransitionDuration = function removeTransitionDuration() {
+        return popper.style[prefix('transitionDuration')] = '';
+    };
+
+    var updatePosition = function updatePosition() {
+        popperInstance && popperInstance.scheduleUpdate();
+
+        applyTransitionDuration();
+
+        var isVisible = !ref.hidden;
+
+        if (window.requestAnimationFrame) {
+            if (isVisible) {
+                window.requestAnimationFrame(updatePosition);
+            } else {
+                window.cancelAnimationFrame(updatePosition);
+                removeTransitionDuration();
+            }
+        } else {
+            isVisible ? setTimeout(updatePosition, 20) : removeTransitionDuration();
+        }
+    };
+
+    // Wait until Popper's position has been updated initially
+    setTimeout(updatePosition, 0);
 }
 
 /**
@@ -2863,14 +2913,15 @@ function hideAllPoppers(currentRef) {
             tippyInstance = ref.tippyInstance,
             _ref$settings3 = ref.settings,
             hideOnClick = _ref$settings3.hideOnClick,
-            hideDuration = _ref$settings3.hideDuration;
+            hideDuration = _ref$settings3.hideDuration,
+            trigger = _ref$settings3.trigger;
 
         // Don't hide already hidden ones
 
         if (!document.body.contains(popper)) return;
 
         // hideOnClick can have the truthy value of 'persistent', so strict check is needed
-        var isHideOnClick = hideOnClick === true;
+        var isHideOnClick = hideOnClick === true || trigger.indexOf('focus') !== -1;
         var isNotCurrentRef = !currentRef || popper !== currentRef.popper;
 
         if (isHideOnClick && isNotCurrentRef) {
@@ -2895,7 +2946,7 @@ function getSelectorElementsArray(selector) {
 /**
 * The class to be exported to be used on the `window`
 * Private methods are prefixed with an underscore _
-* @param {String|Element|Popper} selector
+* @param {String|Element} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
 */
 
@@ -3183,14 +3234,17 @@ var Tippy$1 = function () {
                 });
             }
 
-            !document.body.contains(popper) && awakenPopper(ref);
+            ref.hidden = false;
+            popper.style.visibility = 'visible';
+            popper.setAttribute('aria-hidden', 'false');
 
             // Interactive tooltips receive a class of 'active'
             ref.settings.interactive && ref.el.classList.add('active');
 
-            ref.hidden = false;
-            popper.style.visibility = 'visible';
-            popper.setAttribute('aria-hidden', 'false');
+            !document.body.contains(popper) && awakenPopper(ref);
+
+            // Update popper's position on every animation frame
+            ref.settings.sticky && sticky(ref);
 
             // Repaint/reflow is required for CSS transition when appending
             triggerReflow(tooltip, circle);
