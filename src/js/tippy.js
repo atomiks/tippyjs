@@ -114,10 +114,13 @@ function handleDocumentClick(event) {
     hideAllPoppers()
 }
 
-// Prevent errors in <= IE8
-if (document.addEventListener) {
-    document.addEventListener('click', handleDocumentClick)
-    document.addEventListener('touchstart', handleDocumentTouchstart)
+// Hook events only if rendered on a browser
+if (!( typeof window === 'undefined' || typeof document === 'undefined' )) {
+    // Prevent errors in <= IE8
+    if (document.addEventListener) {
+        document.addEventListener('click', handleDocumentClick);
+        document.addEventListener('touchstart', handleDocumentTouchstart);
+    }
 }
 
 /**
