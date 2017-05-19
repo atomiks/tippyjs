@@ -27,7 +27,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.13.0</span>
+            <i class="material-icons icon-left">code</i><span>v0.14.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -169,7 +169,7 @@
 
             <h4>Accessibility</h4>
             <p>
-                Tooltips in v0.8.1+ should now be properly accessible.
+                Tooltips have ARIA labelling to ensure accessibility.
             </p>
 
           </section>
@@ -326,6 +326,12 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td>Makes a tooltip interactive, i.e. will not close when the user hovers over or clicks on the tooltip. This lets you create a popover (similar to Bootstrap) when used in conjunction with a <code>click</code> trigger.</td>
                     </tr>
                     <tr>
+                      <td><code>interactiveBorder</code></td>
+                      <td><code>2</code></td>
+                      <td>Any number (pixels)</td>
+                      <td>Specifies the size of the invisible border around an interactive tooltip that will prevent it from closing. Only applies to <code>mouseenter</code> triggered tooltips.</td>
+                    </tr>
+                    <tr>
                       <td><code>delay</code></td>
                       <td><code>0</code></td>
                       <td>Any integer >= 0 (milliseconds)</td>
@@ -446,6 +452,12 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td>Any number (milliseconds)</td>
                       <td>Specifies the 'smoothing' transition when the popper's position updates as its element moves.</td>
                     </tr>
+                    <tr>
+                      <td><code>appendTo</code></td>
+                      <td><code>document.body</code></td>
+                      <td><code>Element</code></td>
+                      <td>Specifies which element the tooltip popper is appended to.</td>
+                    </tr>
                       <tr>
                         <td><code>popperOptions</code></td>
                         <td><code>{}</code></td>
@@ -483,12 +495,10 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
 
               <p>
                   By default, tooltips will flip on their opposite axis if there is not enough room in the viewport.
-                  (v0.4.x's new Popper.js version fixed top-positioned tooltips so they will also flip). If you want
-                  to force no flip, then use:
+                  If you want to force no flip, then use:
               </p>
 
-<pre><code class="language-javascript">// Force no flip for a top-positioned tooltip
-new Tippy('.mySelector', {
+<pre><code class="language-javascript">new Tippy('.mySelector', {
   popperOptions: {
       modifiers: {
           flip: {
@@ -520,6 +530,8 @@ new Tippy('.mySelector', {
   }
 })</code>
 </pre>
+
+            <p><code>this</code> inside the callbacks refers to the popper being shown or hidden.</p>
 
             <p>
                 <code>wait</code> is a special callback that allows you to control the <code>show</code> method
@@ -574,7 +586,7 @@ new Tippy('.mySelector', {
 }</code></pre>
 
               <p>
-                  Arrows since v0.9.0 are CSS triangles, read
+                  Arrows are CSS triangles, read
                   <a target="_blank"
                      href="https://github.com/atomiks/tippyjs/issues/35#issuecomment-297398972"
                   >this comment</a> to see how to style arrows properly.
@@ -744,7 +756,7 @@ instance.destroy(popper)</code></pre>
           <h4>Finding the reverse reference</h4>
 
           <p>
-              In v0.5.x it's now possible to find the reverse reference (i.e., the tooltipped element from a popper element).
+              You can also find the reverse reference (i.e., the tooltipped element from a popper element).
           </p>
 
           <pre><code class="language-javascript">const el = instance.getTooltippedElement(popper)</code></pre>
@@ -767,13 +779,10 @@ instance.destroy(popper)</code></pre>
               </h2>
 
               <p>
-                  As of v0.8.x, you can have thousands of tooltipped elements without affecting page
+                  You can have thousands of tooltipped elements without affecting page
                   performance. Tooltips are only appended to the DOM when shown, and removed
                   when hidden. Popper.js only listens to scroll and resize events when a popper (tooltip) is showing,
                   and also updates the position on show.
-              </p>
-              <p>
-                  Instantiation time has also decreased 10x over v0.7.x and prior.
               </p>
 
               <div class="form-group">
@@ -802,7 +811,7 @@ instance.destroy(popper)</code></pre>
       </main>
     </div>
 
-    <div id="template" style="display: none">
+    <div id="template" style="display: none;">
       <p>This is an example of an <strong>interactive HTML tooltip</strong> created with a template.</p>
       <button class="btn btn-danger" onclick="hideHtml()">Close</button>
     </div>

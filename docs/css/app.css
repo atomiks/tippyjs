@@ -345,7 +345,7 @@ main .container-fluid {
         filter: brightness(1);
     }
     50% {
-        transform: translateY(4px);
+        transform: translateY(8px);
         box-shadow: 0 25px 30px rgba(0, 0, 0, 0.1), 0 0 80px 15px rgba(173, 168, 255, 0.3);
         filter: brightness(1.3);
     }
