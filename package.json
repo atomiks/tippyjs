@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "Pure JS Tooltip Library",
   "main": "dist/tippy.js",
   "scripts": {
@@ -29,6 +29,6 @@
     "rollup-watch": "^3.2.2"
   },
   "dependencies": {
-    "popper.js": "^1.9.4"
+    "popper.js": "^1.9.6"
   }
 }
