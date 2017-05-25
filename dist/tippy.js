@@ -1,7 +1,7 @@
 /**!
 * (c) 2017 atomiks (Tippy) & FezVrasta (Popper)
-* @file tippy.js (popper.js 1.9.6 included) | Pure JS Tooltip Library
-* @version 0.14.1
+* @file tippy.js (popper.js 1.9.9 included) | Pure JS Tooltip Library
+* @version 0.14.2
 * @license MIT
 */
 
@@ -529,7 +529,7 @@ function getOffsetRectRelativeToArbitraryNode(children, parent) {
     offsets.marginLeft = marginLeft;
   }
 
-  if (parent.contains(scrollParent) && (isIE10 || scrollParent.nodeName !== 'BODY')) {
+  if (isIE10 ? parent.contains(scrollParent) : parent === scrollParent && scrollParent.nodeName !== 'BODY') {
     offsets = includeScroll(offsets, parent);
   }
 
@@ -633,6 +633,13 @@ function getBoundaries(popper, reference, padding, boundariesElement) {
   return boundaries;
 }
 
+function getArea(_ref) {
+  var width = _ref.width,
+      height = _ref.height;
+
+  return width * height;
+}
+
 /**
  * Utility used to transform the `auto` placement to the placement with more
  * available space.
@@ -643,22 +650,51 @@ function getBoundaries(popper, reference, padding, boundariesElement) {
  * @returns {Object} The data object, properly modified
  */
 function computeAutoPlacement(placement, refRect, popper, reference, boundariesElement) {
+  var padding = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
+
   if (placement.indexOf('auto') === -1) {
     return placement;
   }
 
-  var boundaries = getBoundaries(popper, reference, 0, boundariesElement);
+  var boundaries = getBoundaries(popper, reference, padding, boundariesElement);
 
-  var sides = {
-    top: refRect.top - boundaries.top,
-    right: boundaries.right - refRect.right,
-    bottom: boundaries.bottom - refRect.bottom,
-    left: refRect.left - boundaries.left
+  var rects = {
+    top: {
+      width: boundaries.width,
+      height: refRect.top - boundaries.top
+    },
+    right: {
+      width: boundaries.right - refRect.right,
+      height: boundaries.height
+    },
+    bottom: {
+      width: boundaries.width,
+      height: boundaries.bottom - refRect.bottom
+    },
+    left: {
+      width: refRect.left - boundaries.left,
+      height: boundaries.height
+    }
   };
 
-  var computedPlacement = Object.keys(sides).sort(function (a, b) {
-    return sides[b] - sides[a];
-  })[0];
+  var sortedAreas = Object.keys(rects).map(function (key) {
+    return _extends({
+      key: key
+    }, rects[key], {
+      area: getArea(rects[key])
+    });
+  }).sort(function (a, b) {
+    return b.area - a.area;
+  });
+
+  var filteredAreas = sortedAreas.filter(function (_ref2) {
+    var width = _ref2.width,
+        height = _ref2.height;
+    return width >= popper.clientWidth && height >= popper.clientHeight;
+  });
+
+  var computedPlacement = filteredAreas.length > 0 ? filteredAreas[0].key : sortedAreas[0].key;
+
   var variation = placement.split('-')[1];
 
   return computedPlacement + (variation ? '-' + variation : '');
@@ -845,7 +881,7 @@ function update() {
   // compute auto placement, store placement inside the data object,
   // modifiers will be able to edit `placement` if needed
   // and refer to originalPlacement to know the original value
-  data.placement = computeAutoPlacement(this.options.placement, data.offsets.reference, this.popper, this.reference, this.options.modifiers.flip.boundariesElement);
+  data.placement = computeAutoPlacement(this.options.placement, data.offsets.reference, this.popper, this.reference, this.options.modifiers.flip.boundariesElement, this.options.modifiers.flip.padding);
 
   // store the computed placement inside `originalPlacement`
   data.originalPlacement = data.placement;
@@ -1103,7 +1139,7 @@ function applyStyleOnLoad(reference, popper, options, modifierOptions, state) {
   // compute auto placement, store placement inside the data object,
   // modifiers will be able to edit `placement` if needed
   // and refer to originalPlacement to know the original value
-  var placement = computeAutoPlacement(options.placement, referenceOffsets, popper, reference, options.modifiers.flip.boundariesElement);
+  var placement = computeAutoPlacement(options.placement, referenceOffsets, popper, reference, options.modifiers.flip.boundariesElement, options.modifiers.flip.padding);
 
   popper.setAttribute('x-placement', placement);
   return options;
@@ -1204,7 +1240,7 @@ function arrow(data, options) {
 
   data.arrowElement = arrowElement;
   data.offsets.arrow = {};
-  data.offsets.arrow[side] = isVertical ? Math.round(sideValue) : Math.floor(sideValue);
+  data.offsets.arrow[side] = Math.round(sideValue);
   data.offsets.arrow[altSide] = ''; // make sure to unset any eventual altSide value from the DOM node
 
   return data;
@@ -2119,35 +2155,20 @@ var Popper = function () {
     // make sure to apply the popper position before any computation
     setStyles(this.popper, { position: 'absolute' });
 
-    // refactoring modifiers' list (Object => Array)
-    this.modifiers = Object.keys(Popper.Defaults.modifiers).map(function (name) {
+    // Deep merge modifiers options
+    this.options.modifiers = {};
+    Object.keys(_extends({}, Popper.Defaults.modifiers, options.modifiers)).forEach(function (name) {
+      _this.options.modifiers[name] = _extends({}, Popper.Defaults.modifiers[name] || {}, options.modifiers ? options.modifiers[name] : {});
+    });
+
+    // Refactoring modifiers' list (Object => Array)
+    this.modifiers = Object.keys(this.options.modifiers).map(function (name) {
       return _extends({
         name: name
-      }, Popper.Defaults.modifiers[name]);
-    });
-
-    // assign default values to modifiers, making sure to override them with
-    // the ones defined by user
-    this.modifiers = this.modifiers.map(function (defaultConfig) {
-      var userConfig = options.modifiers && options.modifiers[defaultConfig.name] || {};
-      return _extends({}, defaultConfig, userConfig);
-    });
-
-    // add custom modifiers to the modifiers list
-    if (options.modifiers) {
-      this.options.modifiers = _extends({}, Popper.Defaults.modifiers, options.modifiers);
-      Object.keys(options.modifiers).forEach(function (name) {
-        // take in account only custom modifiers
-        if (Popper.Defaults.modifiers[name] === undefined) {
-          var modifier = options.modifiers[name];
-          modifier.name = name;
-          _this.modifiers.push(modifier);
-        }
-      });
-    }
-
+      }, _this.options.modifiers[name]);
+    })
     // sort the modifiers by order
-    this.modifiers = this.modifiers.sort(function (a, b) {
+    .sort(function (a, b) {
       return a.order - b.order;
     });
 
@@ -2297,7 +2318,7 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.14.1
+* @version 0.14.2
 * @license MIT
 */
 
