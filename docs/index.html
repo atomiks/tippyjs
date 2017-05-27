@@ -27,7 +27,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.14.2</span>
+            <i class="material-icons icon-left">code</i><span>v0.15.0</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -370,13 +370,13 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                     <tr>
                       <td><code>duration</code></td>
                       <td><code>375</code></td>
-                      <td>Any integer >= 0 (milliseconds)</td>
+                      <td>Any number (milliseconds)</td>
                       <td>Specifies how long the transition animation takes to complete when showing a tooltip.</td>
                     </tr>
                     <tr>
                       <td><code>hideDuration</code></td>
                       <td><code>duration</code></td>
-                      <td>Any integer >= 0 (milliseconds)</td>
+                      <td>Any number (milliseconds)</td>
                       <td>Specifies how long the transition animation takes to complete when hiding a tooltip.</td>
                     </tr>
                     <tr>
@@ -435,10 +435,10 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td>Modifies the <code>transition-timing-function</code> with a cubic bezier to create a "slingshot" intertial effect.</td>
                     </tr>
                     <tr>
-                      <td><code>transitionFlip</code></td>
-                      <td><code>true</code></td>
-                      <td><code>true</code> <code>false</code></td>
-                      <td>Specifies whether to transition between flips.</td>
+                      <td><code>flipDuration</code></td>
+                      <td><code>300</code></td>
+                      <td>Any number (milliseconds)</td>
+                      <td>Specifies the transition duration between flips and when updating a tooltip's position on window resize.</td>
                     </tr>
                     <tr>
                       <td><code>sticky</code></td>
@@ -457,6 +457,12 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td><code>document.body</code></td>
                       <td><code>Element</code></td>
                       <td>Specifies which element the tooltip popper is appended to.</td>
+                    </tr>
+                    <tr>
+                      <td><code>zIndex</code></td>
+                      <td><code>9999</code></td>
+                      <td><code>Any number</code></td>
+                      <td>Specifies the z-index of the tooltip popper.</td>
                     </tr>
                       <tr>
                         <td><code>popperOptions</code></td>

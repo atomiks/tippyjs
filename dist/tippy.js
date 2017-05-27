@@ -1,7 +1,7 @@
 /**!
 * (c) 2017 atomiks (Tippy) & FezVrasta (Popper)
 * @file tippy.js (popper.js 1.9.9 included) | Pure JS Tooltip Library
-* @version 0.14.2
+* @version 0.15.0
 * @license MIT
 */
 
@@ -2318,7 +2318,7 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.14.2
+* @version 0.15.0
 * @license MIT
 */
 
@@ -2360,10 +2360,11 @@ var DEFAULTS = !IS_UNSUPPORTED_BROWSER && Object.freeze({
     multiple: false,
     followCursor: false,
     inertia: false,
-    transitionFlip: true,
+    flipDuration: 300,
     sticky: false,
     stickyDuration: 200,
     appendTo: typeof document !== 'undefined' ? document.body : null,
+    zIndex: 9999,
     popperOptions: {}
 });
 
@@ -2522,13 +2523,13 @@ function find(arr, checkFn) {
 * @return {Object} - the popper instance
 */
 function createPopperInstance(ref) {
-    var _ref$settings2 = ref.settings,
+    var el = ref.el,
+        popper = ref.popper,
+        _ref$settings2 = ref.settings,
         position = _ref$settings2.position,
         popperOptions = _ref$settings2.popperOptions,
         offset = _ref$settings2.offset,
-        distance = _ref$settings2.distance,
-        el = ref.el,
-        popper = ref.popper;
+        distance = _ref$settings2.distance;
 
 
     var tooltip = popper.querySelector(SELECTORS.tooltip);
@@ -2538,14 +2539,13 @@ function createPopperInstance(ref) {
     }, popperOptions || {}, {
         modifiers: _extends$1({}, popperOptions ? popperOptions.modifiers : {}, {
             flip: _extends$1({
-                padding: parseInt(distance) + 5 /* 5px from viewport boundary */
+                padding: distance + 5 /* 5px from viewport boundary */
             }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {}),
             offset: _extends$1({
-                offset: parseInt(offset)
+                offset: offset
             }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
         }),
         onUpdate: function onUpdate() {
-            popper.style[prefix('transitionDuration')] = '';
             tooltip.style.top = '';
             tooltip.style.bottom = '';
             tooltip.style.left = '';
@@ -2574,7 +2574,8 @@ function createPopperElement(id, title, settings) {
         arrowSize = settings.arrowSize,
         size = settings.size,
         theme = settings.theme,
-        html = settings.html;
+        html = settings.html,
+        zIndex = settings.zIndex;
 
 
     var popper = document.createElement('div');
@@ -2582,6 +2583,7 @@ function createPopperElement(id, title, settings) {
     popper.setAttribute('role', 'tooltip');
     popper.setAttribute('aria-hidden', 'true');
     popper.setAttribute('id', 'tippy-tooltip-' + id);
+    popper.style.zIndex = zIndex;
 
     var tooltip = document.createElement('div');
     tooltip.setAttribute('class', 'tippy-tooltip tippy-tooltip--' + size + ' ' + theme + '-theme leave');
@@ -2902,13 +2904,12 @@ function makeSticky(ref) {
 
         applyTransitionDuration();
 
-        var isVisible = !ref.hidden;
+        var isVisible = popper.style.visibility === 'visible';
 
         if (window.requestAnimationFrame) {
             if (isVisible) {
                 window.requestAnimationFrame(updatePosition);
             } else {
-                window.cancelAnimationFrame(updatePosition);
                 removeTransitionDuration();
             }
         } else {
@@ -2963,6 +2964,45 @@ function getSelectorElementsArray(selector) {
 }
 
 /**
+* Determines if the mouse's cursor is outside the interactive border
+* @param {MouseEvent} event
+* @param {Element} popper
+* @param {Object} settings
+* @return {Boolean}
+*/
+function exceedsInteractiveBorder(event, popper, settings) {
+    if (!popper.getAttribute('x-placement')) return false;
+
+    var x = event.clientX;
+    var y = event.clientY;
+
+    var interactiveBorder = settings.interactiveBorder,
+        distance = settings.distance;
+
+
+    var rect = popper.getBoundingClientRect();
+    var corePosition = getCorePlacement(popper.getAttribute('x-placement'));
+    var borderWithDistance = interactiveBorder + distance;
+
+    var exceedsTop = rect.top - y > interactiveBorder;
+    var exceedsBottom = y - rect.bottom > interactiveBorder;
+    var exceedsLeft = rect.left - x > interactiveBorder;
+    var exceedsRight = x - rect.right > interactiveBorder;
+
+    if (corePosition === 'top') {
+        exceedsTop = rect.top - y > borderWithDistance;
+    } else if (corePosition === 'bottom') {
+        exceedsBottom = y - rect.bottom > borderWithDistance;
+    } else if (corePosition === 'left') {
+        exceedsLeft = rect.left - x > borderWithDistance;
+    } else if (corePosition === 'right') {
+        exceedsRight = x - rect.right > borderWithDistance;
+    }
+
+    return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight;
+}
+
+/**
 * The class to be exported to be used on the `window`
 * Private methods are prefixed with an underscore _
 * @param {String|Element} selector
@@ -3008,13 +3048,25 @@ var Tippy$1 = function () {
 
             DEFAULTS_KEYS.forEach(function (key) {
                 var val = el.getAttribute('data-' + key.toLowerCase()) || _this2.settings[key];
-                if (val === 'false') val = false;
+
+                // Convert strings to booleans
+                if (val === 'false') {
+                    val = false;
+                } else if (val === 'true') {
+                    val = true;
+                }
+                // Convert number strings to true numbers
+                if (!isNaN(parseFloat(val))) {
+                    val = parseFloat(val);
+                }
 
                 settings[key] = val;
             });
 
             // animateFill is disabled if an arrow is true
-            if (settings.arrow) settings['animateFill'] = false;
+            if (settings.arrow) {
+                settings.animateFill = false;
+            }
 
             return _extends$1({}, this.settings, settings);
         }
@@ -3115,33 +3167,7 @@ var Tippy$1 = function () {
 
                         if (isOverPopper || isOverEl || isClickTriggered) return;
 
-                        // Interactive border logic
-                        if (!popper.getAttribute('x-placement')) return;
-
-                        var x = event.clientX;
-                        var y = event.clientY;
-
-                        var rect = popper.getBoundingClientRect();
-                        var corePosition = getCorePlacement(popper.getAttribute('x-placement'));
-                        var border = parseInt(interactiveBorder);
-                        var borderWithDistance = border + parseInt(distance);
-
-                        var exceedsTop = rect.top - y > border;
-                        var exceedsBottom = y - rect.bottom > border;
-                        var exceedsLeft = rect.left - x > border;
-                        var exceedsRight = x - rect.right > border;
-
-                        if (corePosition === 'top') {
-                            exceedsTop = rect.top - y > borderWithDistance;
-                        } else if (corePosition === 'bottom') {
-                            exceedsBottom = y - rect.bottom > borderWithDistance;
-                        } else if (corePosition === 'left') {
-                            exceedsLeft = rect.left - x > borderWithDistance;
-                        } else if (corePosition === 'right') {
-                            exceedsRight = x - rect.right > borderWithDistance;
-                        }
-
-                        if (exceedsTop || exceedsBottom || exceedsLeft || exceedsRight) {
+                        if (exceedsInteractiveBorder(event, popper, settings)) {
                             triggerHide();
                         }
                     };
@@ -3194,7 +3220,6 @@ var Tippy$1 = function () {
                 removeTitle(el);
 
                 var popper = createPopperElement(id, title, settings);
-
                 var handlers = _this4._getEventListenerHandlers(el, popper, settings);
                 var listeners = [];
 
@@ -3281,26 +3306,27 @@ var Tippy$1 = function () {
                 sticky = _ref$settings4.sticky,
                 interactive = _ref$settings4.interactive,
                 followCursor = _ref$settings4.followCursor,
-                transitionFlip = _ref$settings4.transitionFlip;
+                flipDuration = _ref$settings4.flipDuration;
 
             // Remove transition duration (prevent a transition when popper changes posiiton)
 
-            applyTransitionDuration([tooltip, circle], 0);
+            applyTransitionDuration([popper, tooltip, circle], 0);
 
             !appendTo.contains(popper) && awakenPopper(ref);
 
-            ref.hidden = false;
             popper.style.visibility = 'visible';
             popper.setAttribute('aria-hidden', 'false');
 
-            // Wait for popper to update position and alter x-placement
-            setTimeout(function () {
+            var onceUpdated = function onceUpdated() {
+                if (!isExpectedState(popper, 'show')) return;
+
                 // Sometimes the arrow will not be in the correct position,
                 // force another update
                 !followCursor && ref.popperInstance.update();
 
                 // Re-apply transition durations
                 applyTransitionDuration([tooltip, circle], duration);
+                !followCursor && applyTransitionDuration([popper], flipDuration);
 
                 // Interactive tooltips receive a class of 'active'
                 interactive && el.classList.add('active');
@@ -3320,17 +3346,27 @@ var Tippy$1 = function () {
                 onTransitionEnd(ref, duration, function () {
                     if (!isExpectedState(popper, 'show') || ref.onShownFired) return;
 
-                    !transitionFlip && tooltip.classList.add('tippy-notransition');
-
                     // Focus interactive tooltips only
                     interactive && popper.focus();
+
+                    // Remove transitions from tooltip
+                    tooltip.classList.add('tippy-notransition');
 
                     // Prevents shown() from firing more than once from early transition cancellations
                     ref.onShownFired = true;
 
                     _this5.callbacks.shown.call(popper);
                 });
-            }, 0);
+            };
+
+            // Wait for popper to update position and alter x-placement
+            if (window.requestAnimationFrame) {
+                window.requestAnimationFrame(function () {
+                    setTimeout(onceUpdated, 0);
+                });
+            } else {
+                setTimeout(onceUpdated, 0);
+            }
         }
 
         /**
@@ -3363,15 +3399,13 @@ var Tippy$1 = function () {
                 interactive = _ref$settings5.interactive,
                 followCursor = _ref$settings5.followCursor,
                 html = _ref$settings5.html,
-                trigger = _ref$settings5.trigger,
-                transitionFlip = _ref$settings5.transitionFlip;
+                trigger = _ref$settings5.trigger;
 
 
-            ref.hidden = true;
             ref.onShownFired = false;
 
             interactive && ref.el.classList.remove('active');
-            !transitionFlip && tooltip.classList.remove('tippy-notransition');
+            tooltip.classList.remove('tippy-notransition');
 
             popper.style.visibility = 'hidden';
             popper.setAttribute('aria-hidden', 'true');
