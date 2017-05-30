@@ -2269,9 +2269,6 @@ Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = DEFAULTS$1;
 
-
-//# sourceMappingURL=popper.js.map
-
 var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -2943,10 +2940,10 @@ function hideAllPoppers(currentRef) {
         var popper = ref.popper,
             tippyInstance = ref.tippyInstance,
             _ref$settings4 = ref.settings,
+            appendTo = _ref$settings4.appendTo,
             hideOnClick = _ref$settings4.hideOnClick,
             hideDuration = _ref$settings4.hideDuration,
-            trigger = _ref$settings4.trigger,
-            appendTo = _ref$settings4.appendTo;
+            trigger = _ref$settings4.trigger;
 
         // Don't hide already hidden ones
 
@@ -3216,6 +3213,10 @@ var Tippy$1 = function () {
 
             els.forEach(function (el) {
                 var settings = _this4._applyIndividualSettings(el);
+
+                // If the script is in the <head> then document.body will be null
+                settings.appendTo = settings.appendTo || document.body;
+
                 var html = settings.html,
                     trigger = settings.trigger;
 
@@ -3329,18 +3330,15 @@ var Tippy$1 = function () {
 
             var el = ref.el,
                 _ref$settings5 = ref.settings,
+                appendTo = _ref$settings5.appendTo,
                 sticky = _ref$settings5.sticky,
                 interactive = _ref$settings5.interactive,
                 followCursor = _ref$settings5.followCursor,
                 flipDuration = _ref$settings5.flipDuration;
-            var appendTo = ref.settings.appendTo;
 
             // Remove transition duration (prevent a transition when popper changes posiiton)
 
             applyTransitionDuration([popper, tooltip, circle], 0);
-
-            // If the script is in the <head> then document.body will be null
-            appendTo = appendTo || document.body;
 
             // Mount popper to DOM if its container does not have it
             !appendTo.contains(popper) && mountPopper(ref);
