@@ -1,7 +1,7 @@
 /**!
 * (c) 2017 atomiks (Tippy) & FezVrasta (Popper)
 * @file tippy.js (popper.js 1.9.9 included) | Pure JS Tooltip Library
-* @version 0.15.0
+* @version 0.16.0
 * @license MIT
 */
 
@@ -2318,25 +2318,14 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.15.0
+* @version 0.16.0
 * @license MIT
 */
 
 // Unsupported: IE<=9, Opera Mini
 var IS_UNSUPPORTED_BROWSER = typeof window !== 'undefined' && (!('addEventListener' in window) || /MSIE 9/i.test(navigator.userAgent) || typeof window.operamini !== 'undefined');
 
-// Touch user is assumed false until a `touchstart` event is fired
-// id counter for our aria-describedby labelling (tooltip IDs)
-var GLOBALS = {
-    touchUser: false,
-    idCounter: 1
-};
-
-// Storage object to hold all references from instance instantiation
-// Allows us to hide tooltips from other instances when clicking on the body
-var STORE = {
-    refs: []
-};
+var STORE = [];
 
 var DEFAULTS = !IS_UNSUPPORTED_BROWSER && Object.freeze({
     html: false,
@@ -2380,11 +2369,22 @@ var SELECTORS = {
     controller: '[data-tippy-controller]'
 };
 
-// Determine touch users
-function handleDocumentTouchstart() {
-    GLOBALS.touchUser = true;
+// Hook events only if rendered on a browser
+if (!(typeof window === 'undefined' || typeof document === 'undefined')) {
+    if (!IS_UNSUPPORTED_BROWSER) {
+        document.addEventListener('click', handleDocumentClick);
+        document.addEventListener('touchstart', handleDocumentTouchstart);
+    }
+}
 
-    // iOS needs a `cursor: pointer` on the body to register clicks
+var touchDevice = false;
+var idCounter = 1;
+
+function handleDocumentTouchstart(event) {
+    touchDevice = true;
+
+    // iOS needs cursor:pointer on elements which are non-clickable in order
+    // to register both clicks and mouseenter events
     if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent) && !window.MSStream) {
         document.body.classList.add('tippy-touch');
     }
@@ -2399,7 +2399,7 @@ function handleDocumentClick(event) {
     var popper = closest(event.target, SELECTORS.popper);
 
     if (popper) {
-        var ref = find(STORE.refs, function (ref) {
+        var ref = find(STORE, function (ref) {
             return ref.popper === popper;
         });
         var interactive = ref.settings.interactive;
@@ -2408,7 +2408,7 @@ function handleDocumentClick(event) {
     }
 
     if (el) {
-        var _ref = find(STORE.refs, function (ref) {
+        var _ref = find(STORE, function (ref) {
             return ref.el === el;
         });
         var _popper = _ref.popper,
@@ -2419,14 +2419,16 @@ function handleDocumentClick(event) {
 
         // If they clicked before the show() was to fire, clear it
 
-        if (hideOnClick === true && !GLOBALS.touchUser) {
+        if (hideOnClick === true && !touchDevice) {
             clearTimeout(_popper.getAttribute('data-delay'));
         }
 
         // Hide all poppers except the one belonging to the element that was clicked IF
         // `multiple` is false AND they are a touch user, OR
         // `multiple` is false AND it's triggered by a click
-        if (!multiple && GLOBALS.touchUser || !multiple && trigger.indexOf('click') !== -1) return hideAllPoppers(_ref);
+        if (!multiple && touchDevice || !multiple && trigger.indexOf('click') !== -1) {
+            return hideAllPoppers(_ref);
+        }
 
         // If hideOnClick is not strictly true or triggered by a click don't hide poppers
         if (hideOnClick !== true || trigger.indexOf('click') !== -1) return;
@@ -2436,14 +2438,6 @@ function handleDocumentClick(event) {
     if (closest(event.target, SELECTORS.controller) || !document.querySelector(SELECTORS.popper)) return;
 
     hideAllPoppers();
-}
-
-// Hook events only if rendered on a browser
-if (!(typeof window === 'undefined' || typeof document === 'undefined')) {
-    if (!IS_UNSUPPORTED_BROWSER) {
-        document.addEventListener('click', handleDocumentClick);
-        document.addEventListener('touchstart', handleDocumentTouchstart);
-    }
 }
 
 /**
@@ -2687,7 +2681,7 @@ function createTrigger(event, el, handlers) {
 * @param {Object} ref - current ref in the forEach loop to be pushed
 */
 function pushIntoStorage(ref) {
-    STORE.refs.push(ref);
+    STORE.push(ref);
 }
 
 /**
@@ -2715,10 +2709,10 @@ function elementIsInViewport(el) {
 * Mousemove event listener callback method for follow cursor setting
 * @param {Event} e
 */
-function followCursor(e) {
+function followCursorHandler(e) {
     var _this = this;
 
-    var ref = find(STORE.refs, function (ref) {
+    var ref = find(STORE, function (ref) {
         return ref.el === _this;
     });
     var popper = ref.popper;
@@ -2848,8 +2842,7 @@ function onTransitionEnd(ref, duration, callback) {
 * @return {Boolean}
 */
 function isExpectedState(popper, type) {
-    var visibility = popper.style.visibility;
-    return type === 'show' ? visibility === 'visible' : visibility === 'hidden';
+    return popper.style.visibility === type;
 }
 
 /**
@@ -2857,12 +2850,13 @@ function isExpectedState(popper, type) {
 * Also updates its position if need be and enables event listeners
 * @param {Object} ref -  the element/popper reference
 */
-function awakenPopper(ref) {
+function mountPopper(ref) {
     var el = ref.el,
         popper = ref.popper,
-        appendTo = ref.settings.appendTo;
+        _ref$settings3 = ref.settings,
+        appendTo = _ref$settings3.appendTo,
+        followCursor = _ref$settings3.followCursor;
 
-    var shouldFollowCursor = ref.settings.followCursor;
 
     appendTo.appendChild(ref.popper);
 
@@ -2871,15 +2865,37 @@ function awakenPopper(ref) {
         ref.popperInstance = createPopperInstance(ref);
 
         // Follow cursor setting
-        if (shouldFollowCursor && !GLOBALS.touchUser) {
-            el.addEventListener('mousemove', followCursor);
+        if (followCursor && !touchDevice) {
+            el.addEventListener('mousemove', followCursorHandler);
             ref.popperInstance.disableEventListeners();
         }
     } else {
         ref.popperInstance.update();
-        !shouldFollowCursor && ref.popperInstance.enableEventListeners();
+        !followCursor && ref.popperInstance.enableEventListeners();
     }
 }
+
+/**
+* Pushes execution of a function to end of execution queue, doing so
+* just before repaint if possible
+* @return {Function}
+*     @param {Function} fn
+*/
+var queueExecution = function () {
+    var currentTimeoutQueue = void 0;
+
+    return function (fn) {
+        clearTimeout(currentTimeoutQueue);
+
+        if (window.requestAnimationFrame) {
+            window.requestAnimationFrame(function () {
+                currentTimeoutQueue = setTimeout(fn, 0);
+            });
+        } else {
+            currentTimeoutQueue = setTimeout(fn, 0);
+        }
+    };
+}();
 
 /**
 * Updates a popper's position on each animation frame to make it stick to a moving element
@@ -2907,18 +2923,14 @@ function makeSticky(ref) {
         var isVisible = popper.style.visibility === 'visible';
 
         if (window.requestAnimationFrame) {
-            if (isVisible) {
-                window.requestAnimationFrame(updatePosition);
-            } else {
-                removeTransitionDuration();
-            }
+            isVisible ? window.requestAnimationFrame(updatePosition) : removeTransitionDuration();
         } else {
             isVisible ? setTimeout(updatePosition, 20) : removeTransitionDuration();
         }
     };
 
     // Wait until Popper's position has been updated initially
-    setTimeout(updatePosition, 0);
+    queueExecution(updatePosition);
 }
 
 /**
@@ -2927,14 +2939,14 @@ function makeSticky(ref) {
 */
 function hideAllPoppers(currentRef) {
 
-    STORE.refs.forEach(function (ref) {
+    STORE.forEach(function (ref) {
         var popper = ref.popper,
             tippyInstance = ref.tippyInstance,
-            _ref$settings3 = ref.settings,
-            hideOnClick = _ref$settings3.hideOnClick,
-            hideDuration = _ref$settings3.hideDuration,
-            trigger = _ref$settings3.trigger,
-            appendTo = _ref$settings3.appendTo;
+            _ref$settings4 = ref.settings,
+            hideOnClick = _ref$settings4.hideOnClick,
+            hideDuration = _ref$settings4.hideDuration,
+            trigger = _ref$settings4.trigger,
+            appendTo = _ref$settings4.appendTo;
 
         // Don't hide already hidden ones
 
@@ -2970,12 +2982,11 @@ function getSelectorElementsArray(selector) {
 * @param {Object} settings
 * @return {Boolean}
 */
-function exceedsInteractiveBorder(event, popper, settings) {
+function cursorIsOutsideInteractiveBorder(event, popper, settings) {
     if (!popper.getAttribute('x-placement')) return false;
 
-    var x = event.clientX;
-    var y = event.clientY;
-
+    var x = event.clientX,
+        y = event.clientY;
     var interactiveBorder = settings.interactiveBorder,
         distance = settings.distance;
 
@@ -3003,7 +3014,6 @@ function exceedsInteractiveBorder(event, popper, settings) {
 }
 
 /**
-* The class to be exported to be used on the `window`
 * Private methods are prefixed with an underscore _
 * @param {String|Element} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
@@ -3167,7 +3177,7 @@ var Tippy$1 = function () {
 
                         if (isOverPopper || isOverEl || isClickTriggered) return;
 
-                        if (exceedsInteractiveBorder(event, popper, settings)) {
+                        if (cursorIsOutsideInteractiveBorder(event, popper, settings)) {
                             triggerHide();
                         }
                     };
@@ -3181,7 +3191,7 @@ var Tippy$1 = function () {
             var handleBlur = function handleBlur(event) {
                 // Only hide if not a touch user and has a focus 'relatedtarget', of which is not
                 // a popper element
-                if (GLOBALS.touchUser || !event.relatedTarget) return;
+                if (touchDevice || !event.relatedTarget) return;
                 if (closest(event.relatedTarget, SELECTORS.popper)) return;
 
                 hide();
@@ -3213,7 +3223,7 @@ var Tippy$1 = function () {
                 var title = el.title;
                 if (!title && !html) return;
 
-                var id = GLOBALS.idCounter;
+                var id = idCounter;
                 el.setAttribute('data-tooltipped', '');
                 el.setAttribute('aria-describedby', 'tippy-tooltip-' + id);
 
@@ -3236,7 +3246,7 @@ var Tippy$1 = function () {
                     tippyInstance: _this4
                 });
 
-                GLOBALS.idCounter++;
+                idCounter++;
             });
 
             Tippy.store = STORE; // Allow others to access `STORE` if need be
@@ -3252,7 +3262,7 @@ var Tippy$1 = function () {
         key: 'getPopperElement',
         value: function getPopperElement(el) {
             try {
-                return find(STORE.refs, function (ref) {
+                return find(STORE, function (ref) {
                     return ref.el === el;
                 }).popper;
             } catch (e) {
@@ -3270,12 +3280,29 @@ var Tippy$1 = function () {
         key: 'getTooltippedElement',
         value: function getTooltippedElement(popper) {
             try {
-                return find(STORE.refs, function (ref) {
+                return find(STORE, function (ref) {
                     return ref.popper === popper;
                 }).el;
             } catch (e) {
                 throw new Error('[Tippy error]: Popper does not exist in any Tippy instances');
             }
+        }
+
+        /**
+        * Returns the reference object from either the tooltipped element or popper element
+        * @param {Element} x (tooltipped element or popper)
+        * @return {Object}
+        */
+
+    }, {
+        key: 'getReference',
+        value: function getReference(x) {
+            var ref = find(STORE, function (ref) {
+                return ref.el === x;
+            });
+            return ref ? ref : find(STORE, function (ref) {
+                return ref.popper === x;
+            });
         }
 
         /**
@@ -3294,31 +3321,35 @@ var Tippy$1 = function () {
 
             this.callbacks.beforeShown.call(popper);
 
-            var ref = find(STORE.refs, function (ref) {
+            var ref = find(STORE, function (ref) {
                 return ref.popper === popper;
             });
             var tooltip = popper.querySelector(SELECTORS.tooltip);
             var circle = popper.querySelector(SELECTORS.circle);
 
             var el = ref.el,
-                _ref$settings4 = ref.settings,
-                appendTo = _ref$settings4.appendTo,
-                sticky = _ref$settings4.sticky,
-                interactive = _ref$settings4.interactive,
-                followCursor = _ref$settings4.followCursor,
-                flipDuration = _ref$settings4.flipDuration;
+                _ref$settings5 = ref.settings,
+                sticky = _ref$settings5.sticky,
+                interactive = _ref$settings5.interactive,
+                followCursor = _ref$settings5.followCursor,
+                flipDuration = _ref$settings5.flipDuration;
+            var appendTo = ref.settings.appendTo;
 
             // Remove transition duration (prevent a transition when popper changes posiiton)
 
             applyTransitionDuration([popper, tooltip, circle], 0);
 
-            !appendTo.contains(popper) && awakenPopper(ref);
+            // If the script is in the <head> then document.body will be null
+            appendTo = appendTo || document.body;
+
+            // Mount popper to DOM if its container does not have it
+            !appendTo.contains(popper) && mountPopper(ref);
 
             popper.style.visibility = 'visible';
             popper.setAttribute('aria-hidden', 'false');
 
             var onceUpdated = function onceUpdated() {
-                if (!isExpectedState(popper, 'show')) return;
+                if (!isExpectedState(popper, 'visible')) return;
 
                 // Sometimes the arrow will not be in the correct position,
                 // force another update
@@ -3344,7 +3375,7 @@ var Tippy$1 = function () {
 
                 // Wait for transitions to complete
                 onTransitionEnd(ref, duration, function () {
-                    if (!isExpectedState(popper, 'show') || ref.onShownFired) return;
+                    if (!isExpectedState(popper, 'visible') || ref.onShownFired) return;
 
                     // Focus interactive tooltips only
                     interactive && popper.focus();
@@ -3360,13 +3391,7 @@ var Tippy$1 = function () {
             };
 
             // Wait for popper to update position and alter x-placement
-            if (window.requestAnimationFrame) {
-                window.requestAnimationFrame(function () {
-                    setTimeout(onceUpdated, 0);
-                });
-            } else {
-                setTimeout(onceUpdated, 0);
-            }
+            queueExecution(onceUpdated);
         }
 
         /**
@@ -3385,7 +3410,7 @@ var Tippy$1 = function () {
 
             this.callbacks.beforeHidden.call(popper);
 
-            var ref = find(STORE.refs, function (ref) {
+            var ref = find(STORE, function (ref) {
                 return ref.popper === popper;
             });
             var tooltip = popper.querySelector(SELECTORS.tooltip);
@@ -3393,13 +3418,13 @@ var Tippy$1 = function () {
             var content = popper.querySelector(SELECTORS.content);
 
             var el = ref.el,
-                _ref$settings5 = ref.settings,
-                appendTo = _ref$settings5.appendTo,
-                sticky = _ref$settings5.sticky,
-                interactive = _ref$settings5.interactive,
-                followCursor = _ref$settings5.followCursor,
-                html = _ref$settings5.html,
-                trigger = _ref$settings5.trigger;
+                _ref$settings6 = ref.settings,
+                appendTo = _ref$settings6.appendTo,
+                sticky = _ref$settings6.sticky,
+                interactive = _ref$settings6.interactive,
+                followCursor = _ref$settings6.followCursor,
+                html = _ref$settings6.html,
+                trigger = _ref$settings6.trigger;
 
 
             ref.onShownFired = false;
@@ -3431,7 +3456,7 @@ var Tippy$1 = function () {
 
             // Wait for transitions to complete
             onTransitionEnd(ref, duration, function () {
-                if (!isExpectedState(popper, 'hide') || !appendTo.contains(popper)) return;
+                if (!isExpectedState(popper, 'hidden') || !appendTo.contains(popper)) return;
 
                 ref.popperInstance.disableEventListeners();
 
@@ -3449,16 +3474,20 @@ var Tippy$1 = function () {
     }, {
         key: 'destroy',
         value: function destroy(popper) {
-            var ref = find(STORE.refs, function (ref) {
+            var ref = find(STORE, function (ref) {
                 return ref.popper === popper;
             });
-
             var el = ref.el,
                 popperInstance = ref.popperInstance,
                 listeners = ref.listeners;
 
-            // Remove Tippy-only event listeners from tooltipped element
+            // Ensure the popper is hidden
 
+            if (!isExpectedState(popper, 'hidden')) {
+                this.hide(popper, 0);
+            }
+
+            // Remove Tippy-only event listeners from tooltipped element
             listeners.forEach(function (listener) {
                 return el.removeEventListener(listener.event, listener.handler);
             });
@@ -3469,7 +3498,7 @@ var Tippy$1 = function () {
             popperInstance && popperInstance.destroy();
 
             // Remove from storage
-            STORE.refs.splice(STORE.refs.map(function (ref) {
+            STORE.splice(STORE.map(function (ref) {
                 return ref.popper;
             }).indexOf(popper), 1);
         }
@@ -3482,7 +3511,7 @@ var Tippy$1 = function () {
     }, {
         key: 'update',
         value: function update(popper) {
-            var ref = find(STORE.refs, function (ref) {
+            var ref = find(STORE, function (ref) {
                 return ref.popper === popper;
             });
             var content = popper.querySelector(SELECTORS.content);
@@ -3501,6 +3530,10 @@ var Tippy$1 = function () {
     return Tippy;
 }();
 
-return Tippy$1;
+function factory(selector, settings) {
+    return new Tippy$1(selector, settings);
+}
+
+return factory;
 
 })));

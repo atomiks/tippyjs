@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.15.0
+* @version 0.16.0
 * @license MIT
 */
 
@@ -13,18 +13,7 @@ const IS_UNSUPPORTED_BROWSER = (typeof window !== 'undefined') && (
     typeof window.operamini !== 'undefined'
 )
 
-// Touch user is assumed false until a `touchstart` event is fired
-// id counter for our aria-describedby labelling (tooltip IDs)
-const GLOBALS = {
-    touchUser: false,
-    idCounter: 1
-}
-
-// Storage object to hold all references from instance instantiation
-// Allows us to hide tooltips from other instances when clicking on the body
-const STORE = {
-    refs: []
-}
+const STORE = []
 
 const DEFAULTS = !IS_UNSUPPORTED_BROWSER && Object.freeze({
     html: false,
@@ -68,11 +57,22 @@ const SELECTORS = {
     controller: '[data-tippy-controller]'
 }
 
-// Determine touch users
-function handleDocumentTouchstart() {
-    GLOBALS.touchUser = true
+// Hook events only if rendered on a browser
+if (!( typeof window === 'undefined' || typeof document === 'undefined' )) {
+    if (!IS_UNSUPPORTED_BROWSER) {
+        document.addEventListener('click', handleDocumentClick)
+        document.addEventListener('touchstart', handleDocumentTouchstart)
+    }
+}
 
-    // iOS needs a `cursor: pointer` on the body to register clicks
+let touchDevice = false
+let idCounter = 1
+
+function handleDocumentTouchstart(event) {
+    touchDevice = true
+
+    // iOS needs cursor:pointer on elements which are non-clickable in order
+    // to register both clicks and mouseenter events
     if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent) && !window.MSStream) {
         document.body.classList.add('tippy-touch')
     }
@@ -87,25 +87,26 @@ function handleDocumentClick(event) {
     const popper = closest(event.target, SELECTORS.popper)
     
     if (popper) {
-        const ref = find(STORE.refs, ref => ref.popper === popper)
+        const ref = find(STORE, ref => ref.popper === popper)
         const { settings: { interactive } } = ref
         if (interactive) return
     }
 
     if (el) {
-        const ref = find(STORE.refs, ref => ref.el === el)
+        const ref = find(STORE, ref => ref.el === el)
         const { popper, settings: { hideOnClick, multiple, trigger } } = ref
 
         // If they clicked before the show() was to fire, clear it
-        if (hideOnClick === true && !GLOBALS.touchUser) {
+        if (hideOnClick === true && !touchDevice) {
             clearTimeout(popper.getAttribute('data-delay'))
         }
 
         // Hide all poppers except the one belonging to the element that was clicked IF
         // `multiple` is false AND they are a touch user, OR
         // `multiple` is false AND it's triggered by a click
-        if ((!multiple && GLOBALS.touchUser) || (!multiple && trigger.indexOf('click') !== -1))
+        if ((!multiple && touchDevice) || (!multiple && trigger.indexOf('click') !== -1)) {
             return hideAllPoppers(ref)
+        }
 
         // If hideOnClick is not strictly true or triggered by a click don't hide poppers
         if (hideOnClick !== true || trigger.indexOf('click') !== -1) return
@@ -117,14 +118,6 @@ function handleDocumentClick(event) {
     ) return
 
     hideAllPoppers()
-}
-
-// Hook events only if rendered on a browser
-if (!( typeof window === 'undefined' || typeof document === 'undefined' )) {
-    if (!IS_UNSUPPORTED_BROWSER) {
-        document.addEventListener('click', handleDocumentClick)
-        document.addEventListener('touchstart', handleDocumentTouchstart)
-    }
 }
 
 /**
@@ -382,7 +375,7 @@ function createTrigger(event, el, handlers) {
 * @param {Object} ref - current ref in the forEach loop to be pushed
 */
 function pushIntoStorage(ref) {
-    STORE.refs.push(ref)
+    STORE.push(ref)
 }
 
 /**
@@ -415,8 +408,8 @@ function elementIsInViewport(el) {
 * Mousemove event listener callback method for follow cursor setting
 * @param {Event} e
 */
-function followCursor(e) {
-    const ref = find(STORE.refs, ref => ref.el === this)
+function followCursorHandler(e) {
+    const ref = find(STORE, ref => ref.el === this)
     const { popper } = ref
     
     const position = getCorePlacement(popper.getAttribute('x-placement'))
@@ -513,7 +506,7 @@ function onTransitionEnd(ref, duration, callback) {
     const tooltip = ref.popper.querySelector(SELECTORS.tooltip)
     let transitionendFired = false
 
-    const listenerCallback = (e) => {
+    const listenerCallback = e => {
         if (e.target !== tooltip) return
 
         transitionendFired = true
@@ -541,8 +534,7 @@ function onTransitionEnd(ref, duration, callback) {
 * @return {Boolean}
 */
 function isExpectedState(popper, type) {
-    const visibility = popper.style.visibility
-    return type === 'show' ? visibility === 'visible' : visibility === 'hidden'
+    return popper.style.visibility === type
 }
 
 /**
@@ -550,11 +542,17 @@ function isExpectedState(popper, type) {
 * Also updates its position if need be and enables event listeners
 * @param {Object} ref -  the element/popper reference
 */
-function awakenPopper(ref) {
+function mountPopper(ref) {
         
-    const { el, popper, settings: { appendTo } } = ref
-    const shouldFollowCursor = ref.settings.followCursor
-
+    const { 
+        el, 
+        popper, 
+        settings: {
+            appendTo,
+            followCursor
+        } 
+    } = ref
+    
     appendTo.appendChild(ref.popper)
 
     if (!ref.popperInstance) {
@@ -562,23 +560,52 @@ function awakenPopper(ref) {
         ref.popperInstance = createPopperInstance(ref)
 
         // Follow cursor setting
-        if (shouldFollowCursor && !GLOBALS.touchUser) {
-            el.addEventListener('mousemove', followCursor)
+        if (followCursor && !touchDevice) {
+            el.addEventListener('mousemove', followCursorHandler)
             ref.popperInstance.disableEventListeners()
         }
         
     } else {
         ref.popperInstance.update()
-        !shouldFollowCursor && ref.popperInstance.enableEventListeners()            
+        !followCursor && ref.popperInstance.enableEventListeners()            
     }
 }
+
+/**
+* Pushes execution of a function to end of execution queue, doing so
+* just before repaint if possible
+* @return {Function}
+*     @param {Function} fn
+*/
+const queueExecution = (function() {
+    let currentTimeoutQueue
+
+    return function(fn) {
+        clearTimeout(currentTimeoutQueue)
+
+        if (window.requestAnimationFrame) {
+            window.requestAnimationFrame(() => {
+                currentTimeoutQueue = setTimeout(fn, 0)
+            })
+        } else {
+            currentTimeoutQueue = setTimeout(fn, 0)
+        }
+    }
+})()
 
 /**
 * Updates a popper's position on each animation frame to make it stick to a moving element
 * @param {Object} ref
 */
 function makeSticky(ref) {
-    const { popper, popperInstance, settings: { stickyDuration } } = ref
+
+    const { 
+        popper, 
+        popperInstance, 
+        settings: { 
+            stickyDuration 
+        } 
+    } = ref
 
     const applyTransitionDuration = () => 
         popper.style[prefix('transitionDuration')] = `${stickyDuration}ms`
@@ -594,18 +621,16 @@ function makeSticky(ref) {
         const isVisible = popper.style.visibility === 'visible'
 
         if (window.requestAnimationFrame) {
-            if (isVisible) {
-                window.requestAnimationFrame(updatePosition) 
-            } else {
-                removeTransitionDuration()
-            }
+            isVisible ? window.requestAnimationFrame(updatePosition)
+                      : removeTransitionDuration()
         } else {
-            isVisible ? setTimeout(updatePosition, 20) : removeTransitionDuration()
+            isVisible ? setTimeout(updatePosition, 20) 
+                      : removeTransitionDuration()
         }
     }
-    
+
     // Wait until Popper's position has been updated initially
-    setTimeout(updatePosition, 0)
+    queueExecution(updatePosition)
 }
 
 /**
@@ -614,16 +639,16 @@ function makeSticky(ref) {
 */
 function hideAllPoppers(currentRef) {
 
-    STORE.refs.forEach(ref => {
+    STORE.forEach(ref => {
 
         const { 
             popper, 
             tippyInstance, 
             settings: { 
+                appendTo,
                 hideOnClick, 
                 hideDuration, 
-                trigger, 
-                appendTo 
+                trigger
             } 
         } = ref
 
@@ -660,12 +685,10 @@ function getSelectorElementsArray(selector) {
 * @param {Object} settings
 * @return {Boolean}
 */
-function exceedsInteractiveBorder(event, popper, settings) {
+function cursorIsOutsideInteractiveBorder(event, popper, settings) {
     if (!popper.getAttribute('x-placement')) return false
-
-    const x = event.clientX
-    const y = event.clientY
     
+    const { clientX: x, clientY: y } = event
     const { interactiveBorder, distance } = settings
 
     const rect = popper.getBoundingClientRect()
@@ -691,12 +714,11 @@ function exceedsInteractiveBorder(event, popper, settings) {
 }
 
 /**
-* The class to be exported to be used on the `window`
 * Private methods are prefixed with an underscore _
 * @param {String|Element} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
 */
-export default class Tippy {
+class Tippy {
     constructor(selector, settings = {}) {
 
         // Use default browser tooltip on unsupported browsers.
@@ -838,7 +860,7 @@ export default class Tippy {
 
                     if (isOverPopper || isOverEl || isClickTriggered) return
 
-                    if (exceedsInteractiveBorder(event, popper, settings)) {
+                    if (cursorIsOutsideInteractiveBorder(event, popper, settings)) {
                         triggerHide()
                     }
                 }
@@ -852,7 +874,7 @@ export default class Tippy {
         const handleBlur = event => {
             // Only hide if not a touch user and has a focus 'relatedtarget', of which is not
             // a popper element
-            if (GLOBALS.touchUser || !event.relatedTarget) return
+            if (touchDevice || !event.relatedTarget) return
             if (closest(event.relatedTarget, SELECTORS.popper)) return
 
             hide()
@@ -870,15 +892,19 @@ export default class Tippy {
     * @param {Array} els - Elements
     */
     _createTooltips(els) {
-        
-        els.forEach(el => {            
+
+        els.forEach(el => {
             const settings = this._applyIndividualSettings(el)
+
+            // If the script is in the <head> then document.body will be null
+            settings.appendTo = settings.appendTo || document.body
+
             const { html, trigger } = settings
 
             const title = el.title
             if (!title && !html) return
 
-            const id = GLOBALS.idCounter
+            const id = idCounter
             el.setAttribute('data-tooltipped', '')
             el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
 
@@ -900,8 +926,8 @@ export default class Tippy {
                 listeners,
                 tippyInstance: this
             })
-            
-            GLOBALS.idCounter++
+
+            idCounter++
         })
 
         Tippy.store = STORE // Allow others to access `STORE` if need be
@@ -914,7 +940,7 @@ export default class Tippy {
     */
     getPopperElement(el) {
         try {
-            return find(STORE.refs, ref => ref.el === el).popper
+            return find(STORE, ref => ref.el === el).popper
         } catch (e) {
             throw new Error('[Tippy error]: Element does not exist in any Tippy instances')
         }
@@ -927,10 +953,20 @@ export default class Tippy {
     */
     getTooltippedElement(popper) {
         try {
-            return find(STORE.refs, ref => ref.popper === popper).el
+            return find(STORE, ref => ref.popper === popper).el
         } catch (e) {
             throw new Error('[Tippy error]: Popper does not exist in any Tippy instances')
         }
+    }
+    
+    /**
+    * Returns the reference object from either the tooltipped element or popper element
+    * @param {Element} x (tooltipped element or popper)
+    * @return {Object}
+    */
+    getReference(x) {
+        const ref = find(STORE, ref => ref.el === x)
+        return ref ? ref : find(STORE, ref => ref.popper === x)
     }
 
     /**
@@ -942,7 +978,7 @@ export default class Tippy {
 
         this.callbacks.beforeShown.call(popper)
 
-        const ref = find(STORE.refs, ref => ref.popper === popper)
+        const ref = find(STORE, ref => ref.popper === popper)
         const tooltip = popper.querySelector(SELECTORS.tooltip)
         const circle = popper.querySelector(SELECTORS.circle)
 
@@ -960,13 +996,14 @@ export default class Tippy {
         // Remove transition duration (prevent a transition when popper changes posiiton)
         applyTransitionDuration([popper, tooltip, circle], 0)
 
-        !appendTo.contains(popper) && awakenPopper(ref)
+        // Mount popper to DOM if its container does not have it
+        !appendTo.contains(popper) && mountPopper(ref)
 
         popper.style.visibility = 'visible'
         popper.setAttribute('aria-hidden', 'false')
-        
+
         const onceUpdated = () => {
-            if (!isExpectedState(popper, 'show')) return
+            if (!isExpectedState(popper, 'visible')) return
 
             // Sometimes the arrow will not be in the correct position,
             // force another update
@@ -992,7 +1029,7 @@ export default class Tippy {
 
             // Wait for transitions to complete
             onTransitionEnd(ref, duration, () => {
-                if (!isExpectedState(popper, 'show') || ref.onShownFired) return
+                if (!isExpectedState(popper, 'visible') || ref.onShownFired) return
                 
                 // Focus interactive tooltips only
                 interactive && popper.focus()
@@ -1008,13 +1045,7 @@ export default class Tippy {
         }
 
         // Wait for popper to update position and alter x-placement
-        if (window.requestAnimationFrame) {
-            window.requestAnimationFrame(() => {
-                setTimeout(onceUpdated, 0)
-            })
-        } else {
-            setTimeout(onceUpdated, 0)
-        }
+        queueExecution(onceUpdated)
     }
 
     /**
@@ -1026,7 +1057,7 @@ export default class Tippy {
         
         this.callbacks.beforeHidden.call(popper)
 
-        const ref = find(STORE.refs, ref => ref.popper === popper)
+        const ref = find(STORE, ref => ref.popper === popper)
         const tooltip = popper.querySelector(SELECTORS.tooltip)
         const circle = popper.querySelector(SELECTORS.circle)
         const content = popper.querySelector(SELECTORS.content)
@@ -1072,7 +1103,7 @@ export default class Tippy {
 
         // Wait for transitions to complete
         onTransitionEnd(ref, duration, () => {
-            if (!isExpectedState(popper, 'hide') || !appendTo.contains(popper)) return
+            if (!isExpectedState(popper, 'hidden') || !appendTo.contains(popper)) return
 
             ref.popperInstance.disableEventListeners()
 
@@ -1087,9 +1118,13 @@ export default class Tippy {
     * @param {Element} popper
     */
     destroy(popper) {
-        const ref = find(STORE.refs, ref => ref.popper === popper)
-        
+        const ref = find(STORE, ref => ref.popper === popper)
         const { el, popperInstance, listeners } = ref
+
+        // Ensure the popper is hidden
+        if (!isExpectedState(popper, 'hidden')) {
+            this.hide(popper, 0)
+        }
 
         // Remove Tippy-only event listeners from tooltipped element
         listeners.forEach(listener => el.removeEventListener(listener.event, listener.handler))
@@ -1100,7 +1135,7 @@ export default class Tippy {
         popperInstance && popperInstance.destroy()
 
         // Remove from storage
-        STORE.refs.splice(STORE.refs.map(ref => ref.popper).indexOf(popper), 1)
+        STORE.splice(STORE.map(ref => ref.popper).indexOf(popper), 1)
     }
 
     /**
@@ -1108,7 +1143,7 @@ export default class Tippy {
     * @param {Element} popper
     */
     update(popper) {
-        const ref = find(STORE.refs, ref => ref.popper === popper)
+        const ref = find(STORE, ref => ref.popper === popper)
         const content = popper.querySelector(SELECTORS.content)
         const { el, settings: { html } } = ref
 
@@ -1121,4 +1156,8 @@ export default class Tippy {
             removeTitle(el)
         }
     }
+}
+
+export default function factory(selector, settings) {
+    return new Tippy(selector, settings)
 }

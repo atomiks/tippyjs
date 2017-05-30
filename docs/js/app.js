@@ -10,7 +10,6 @@ function toggle(e) {
 
 function destroy(e) {
     var popper = instance.getPopperElement(document.getElementById('neighbor-tippy'))
-    if (popper.style.visibility === 'visible') instance.hide(popper, 0)
     instance.destroy(popper)
     var toggler = document.getElementById('toggle-tippy')
     toggler.setAttribute('disabled', '')
@@ -39,10 +38,10 @@ function update(e) {
     e.target.setAttribute('disabled', '')
 }
 
-var instance = new Tippy('.tippy')
+var instance = Tippy('.tippy')
 instance.show(instance.getPopperElement(document.querySelector('#animated-tippy')))
 
-new Tippy('.flippy', {
+Tippy('.flippy', {
     position: 'right',
     animation: 'fade',
     arrow: true,
@@ -55,13 +54,13 @@ new Tippy('.flippy', {
     }
 })
 
-new Tippy('.tippy-link', {
-    theme: 'light',
+Tippy('.tippy-link', {
+    theme: 'transparent',
     arrow: true,
     animation: 'fade'
 })
 
-new Tippy('#callback-tippy', {
+Tippy('#callback-tippy', {
     shown: function() {
         alert('Hello from the shown() callback!')
         document.getElementById('callback-tippy').blur()
@@ -114,7 +113,7 @@ var jsperf = (function() {
             counter += base
 
             var t1 = performance.now()
-            new Tippy('.test-element', {
+            Tippy('.test-element', {
                 animation: 'scale',
                 duration: 200,
                 arrow: true

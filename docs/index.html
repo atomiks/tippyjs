@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/prism.css">
   <link rel="icon" href="favicon.ico">
+  <script src="tippy/tippy.js"></script>
+
 </head>
 <body>
 
@@ -26,7 +28,7 @@
         <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>v0.15.0</span>
+            <i class="material-icons icon-left">code</i><span>12KB gzipped</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -161,9 +163,9 @@
 
             <h4>Touch devices</h4>
             <p>
-                Tippy works on touch devices almost the same as on desktop/mouse devices. However, in order for tooltips to close
-                when tapping anywhere on the body on iOS devices, it adds a <code class="language-css">.tippy-touch { cursor: pointer !important; }</code>
-                class to the body.
+                Tippy works on touch devices almost the same as on desktop/mouse devices. However on iOS devices, in order for tooltips to close
+                when tapping anywhere on the body and to trigger hover events on non-clickable elements, a <code class="language-css">.tippy-touch { cursor: pointer !important; }</code>
+                class is added to the body.
             </p>
 
             <h4>Accessibility</h4>
@@ -201,10 +203,10 @@
             <pre><code class="language-markup">&lt;script src="js/tippy.min.js"&gt;&lt;/script&gt;</code></pre>
 
             <p>If you installed the npm package, the JS and CSS files are available in the dist folder:</p>
-<pre><code class="language-javascript">node_modules/tippy.js/dist/tippy.js
-node_modules/tippy.js/dist/tippy.min.js
-node_modules/tippy.js/dist/tippy.standalone.js
-node_modules/tippy.js/dist/tippy.css</code></pre>
+<pre><code class="language-javascript">tippy.js
+tippy.min.js
+tippy.standalone.js
+tippy.css</code></pre>
 
             <p><code>tippy.js</code> comes bundled with <code>popper.js</code> (unminified), and <code>tippy.standalone.js</code> (minified) is Tippy by itself if you want use a different version of Popper.js.</p>
           </section>
@@ -213,10 +215,10 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
             <h2><a href="#creating-a-tooltip"><i class="material-icons icon-left">build</i><span>Creating a tooltip</span></a></h2>
             <p>First, give an element a <code>title</code> attribute containing what you want the tooltip to say.</p>
 
-            <pre><code class="language-markup">&lt;button class="btn tippy" title="I'm a tooltip!"&gt;Text&lt;/button&gt;</code></pre>
+            <pre><code class="language-markup">&lt;button class="btn" title="I'm a tooltip!"&gt;Text&lt;/button&gt;</code></pre>
 
-            <p>Then, to give it a Tippy tooltip, create a new Tippy instance by passing in a CSS selector.</p>
-            <pre><code class="language-javascript">new Tippy('.tippy')</code></pre>
+            <p>Then, to give it a Tippy tooltip, create a Tippy instance by passing in a CSS selector.</p>
+            <pre><code class="language-javascript">Tippy('.btn')</code></pre>
 
             <div class="result-box">
               <p class="text-muted">Result:</p>
@@ -224,13 +226,9 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
             </div>
 
             <p>You can also directly pass in a DOM element:</p>
-<pre><code class="language-javascript">new Tippy(document.querySelector('#myElement'))</code></pre>
+<pre><code class="language-javascript">Tippy(document.querySelector('#myElement'))</code></pre>
 
             <p>Elements without a <code>title</code> attribute or an HTML template will not receive a tooltip. You can pass in any CSS selector to initialize it. See <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
-
-            <p>Here's how to create a tooltip for an element with an <code>id</code> of <code>hello</code>:</p>
-
-            <pre><code class="language-javascript">new Tippy('#hello')</code></pre>
 
             <p>Minimal Working Example, with all files in the same directory:</p>
 <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
@@ -242,7 +240,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
     &lt;button id=&quot;myId&quot; title=&quot;Tooltip text&quot;&gt;Button text&lt;/button&gt;
     &lt;script src=&quot;tippy.js&quot;&gt;&lt;/script&gt;
     &lt;script&gt;
-    new Tippy('#myId')
+    Tippy('#myId')
     &lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>
@@ -254,7 +252,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
 
               <p>Tippy's constructor takes an object as a second argument for you to customize all tooltips being instantiated. Here's an example:</p>
 
-<pre><code class="language-javascript">new Tippy('.tippy', {
+<pre><code class="language-javascript">Tippy('.tippy', {
     position: 'right',
     animation: 'scale',
     duration: 1000,
@@ -300,7 +298,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                       <td><code>position</code></td>
                       <td><code>'top'</code></td>
                       <td>
-                          <code>'top'</code> <code>'bottom'</code> <code>'left'</code> <code>'right'</code>.
+                          <code>'top'</code> <code>'bottom'</code> <code>'left'</code> <code>'right'</code>
                       </td>
                       <td>Specifies which direction to position the tooltip on the element.
                           Add the suffix <code>-start</code>
@@ -485,7 +483,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                   to the bottom from the right if there's not enough room in the viewport.
               </p>
 
-<pre><code class="language-javascript">new Tippy('.mySelector', {
+<pre><code class="language-javascript">Tippy('.mySelector', {
     position: 'right',
     popperOptions: {
         modifiers: {
@@ -503,7 +501,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                   If you want to force no flip, then use:
               </p>
 
-<pre><code class="language-javascript">new Tippy('.mySelector', {
+<pre><code class="language-javascript">Tippy('.mySelector', {
   popperOptions: {
       modifiers: {
           flip: {
@@ -517,7 +515,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
 
               <p>If you want things to happen at certain times during a tooltip's show/hide events, you can add callback functions in the settings object. There are 5 to use:</p>
 
-<pre><code class="language-javascript">new Tippy('.tippy', {
+<pre><code class="language-javascript">Tippy('.tippy', {
   beforeShown: function() {
     // When the tooltip has been triggered and has started to transition in
   },
@@ -548,7 +546,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
                 Example usage (ES6 syntax):
             </p>
 
-<pre><code class="language-javascript">new Tippy('.tippy', {
+<pre><code class="language-javascript">Tippy('.tippy', {
     wait(show, event) {
         // Change your app model to be rendered by the UI library/framework
 
@@ -613,7 +611,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
 
               <p>Then, give your instance a <code>theme</code> setting with your theme's name:</p>
 
-<pre><code class="language-javascript">new Tippy('.tippy', {
+<pre><code class="language-javascript">Tippy('.tippy', {
   theme: 'honeybee'
 })</code></pre>
 
@@ -661,7 +659,7 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
 
           <p>In your instance, specify either the <code>id</code> in the <code>html</code> setting, or the element itself.</p>
 
-<pre><code class="language-javascript">new Tippy('#tooltip-with-my-template', {
+<pre><code class="language-javascript">Tippy('#myElement', {
   html: '#my-template-id', // or document.querySelector('#my-template-id')
   arrow: true,
   animation: 'fade'
@@ -692,11 +690,6 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
   /* Your hover styling here. */
 }</code></pre>
 
-          <div class="alert alert-info"><strong>You should disable <code>animateFill</code>
-              when using HTML content</strong>. If the tooltip is tall, the circle element
-              inside that creates the effect won't fill the entire tooltip. Non-textual content
-              also breaks the effect's illusion.</div>
-
         </section>
 
         <hr>
@@ -711,12 +704,14 @@ node_modules/tippy.js/dist/tippy.css</code></pre>
 
           <p>Save the Tippy instance:</p>
 
-          <pre><code class="language-javascript">const instance = new Tippy('.tippy')</code></pre>
+          <pre><code class="language-javascript">const instance = Tippy('.selector')</code></pre>
 
           <p>Find the tooltipped element's popper reference by calling the method
               <code>getPopperElement</code> and passing it in (the tooltipped element, not the popper) directly:</p>
 
-<pre><code class="language-javascript">const popper = instance.getPopperElement(document.querySelector('#myElement'))</code></pre>
+<pre><code class="language-markup">&lt;button id="myButton" title=&quot;Tooltip&quot;&gt;My element&lt;/button&gt;</code></pre>
+<pre><code class="language-javascript">const el = document.querySelector('#myButton')
+const popper = instance.getPopperElement(el)</code></pre>
 
           <div class="alert alert-warning">It must be a <strong>single</strong> tooltipped element.</div>
 
@@ -738,26 +733,6 @@ instance.destroy(popper)</code></pre>
               destroys its popper instance, and removes it from the global references array.
           </p>
 
-          <h4>Examples</h4>
-
-          <p>
-              In this example, we use another button to control the tooltip. Give controllers
-              a <code>data-tippy-controller</code> attribute (doesn't need a value).
-          </p>
-
-          <button class="btn" data-tippy-controller id="toggle-tippy">Toggle tooltip</button>
-          <button class="btn" data-tippy-controller id="destroy-tippy">Destroy tooltip</button>
-          <button class="btn btn-secondary tippy" id="neighbor-tippy" title="Hey!">I have the tooltip</button>
-
-          <p>
-              First, hover over the two buttons on the right to see their original content.
-              If you click the button on the left, it will update the tooltips with new content.
-          </p>
-
-          <button class="btn" data-tippy-controller id="update-tippy">Click to update my neighbors</button>
-          <button class="btn btn-secondary tippy" id="title-neighbor-tippy" title="Hello there">Title attribute</button>
-          <button class="btn btn-secondary tippy" id="html-neighbor-tippy" data-arrow="true" data-html="#manual-template">HTML template</button>
-
           <h4>Finding the reverse reference</h4>
 
           <p>
@@ -770,6 +745,36 @@ instance.destroy(popper)</code></pre>
               An example of this being useful is clicking inside a popper, and getting the popper by doing <code>event.target.closest('.tippy-popper')</code>.
               Then, you might want to do something with its element reference.
           </p>
+          
+           <h4>Getting the reference object</h4>
+           
+           <p>
+               References (objects which contain information about the tooltipped element and its tooltip popper)
+               can be accessed by passing in either the popper element or tooltipped element into this method:
+           </p>
+          
+<pre><code class="language-javascript">const ref = instance.getReference(el)
+const ref = instance.getReference(popper)</code></pre>
+
+            <h4>Examples</h4>
+
+            <p>
+                In this example, we use another button to control the tooltip. Give controllers
+                a <code>data-tippy-controller</code> attribute (doesn't need a value).
+            </p>
+
+            <button class="btn" data-tippy-controller id="toggle-tippy">Toggle tooltip</button>
+            <button class="btn" data-tippy-controller id="destroy-tippy">Destroy tooltip</button>
+            <button class="btn btn-secondary tippy" id="neighbor-tippy" title="Hey!">I have the tooltip</button>
+
+            <p>
+                First, hover over the two buttons on the right to see their original content.
+                If you click the button on the left, it will update the tooltips with new content.
+            </p>
+
+            <button class="btn" data-tippy-controller id="update-tippy">Click to update my neighbors</button>
+            <button class="btn btn-secondary tippy" id="title-neighbor-tippy" title="Hello there">Title attribute</button>
+            <button class="btn btn-secondary tippy" id="html-neighbor-tippy" data-arrow="true" data-html="#manual-template">HTML template</button>
 
           </section>
 
@@ -826,7 +831,6 @@ instance.destroy(popper)</code></pre>
       <img height="200" alt="cat" src="img/cat.jpg">
     </div>
 
-    <script src="tippy/tippy.js"></script>
     <script src="js/prism.js"></script>
     <script src="js/app.js"></script>
     <script>
