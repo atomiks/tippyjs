@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.16.0
+* @version 0.16.1
 * @license MIT
 */
 
@@ -965,8 +965,8 @@ class Tippy {
     * @return {Object}
     */
     getReference(x) {
-        const ref = find(STORE, ref => ref.el === x)
-        return ref ? ref : find(STORE, ref => ref.popper === x)
+        return find(STORE, ref => ref.el === x) ||
+               find(STORE, ref => ref.popper === x)
     }
 
     /**
@@ -1023,6 +1023,7 @@ class Tippy {
             triggerReflow(tooltip, circle)
 
             modifyClassList([tooltip, circle], list => {
+                list.contains('tippy-notransition') && list.remove('tippy-notransition')
                 list.remove('leave')
                 list.add('enter')
             })
@@ -1075,9 +1076,7 @@ class Tippy {
         } = ref
 
         ref.onShownFired = false
-
-        interactive && ref.el.classList.remove('active')
-        tooltip.classList.remove('tippy-notransition')
+        interactive && el.classList.remove('active')
 
         popper.style.visibility = 'hidden'
         popper.setAttribute('aria-hidden', 'true')
@@ -1090,6 +1089,7 @@ class Tippy {
         }
 
         modifyClassList([tooltip, circle], list => {
+            list.contains('tippy-tooltip') && list.remove('tippy-notransition')
             list.remove('enter')
             list.add('leave')
         })

@@ -1,7 +1,7 @@
 /**!
 * (c) 2017 atomiks (Tippy) & FezVrasta (Popper)
 * @file tippy.js (popper.js 1.9.9 included) | Pure JS Tooltip Library
-* @version 0.16.0
+* @version 0.16.1
 * @license MIT
 */
 
@@ -2269,6 +2269,9 @@ Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = DEFAULTS$1;
 
+
+//# sourceMappingURL=popper.js.map
+
 var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -2315,7 +2318,7 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.16.0
+* @version 0.16.1
 * @license MIT
 */
 
@@ -3298,10 +3301,9 @@ var Tippy$1 = function () {
     }, {
         key: 'getReference',
         value: function getReference(x) {
-            var ref = find(STORE, function (ref) {
+            return find(STORE, function (ref) {
                 return ref.el === x;
-            });
-            return ref ? ref : find(STORE, function (ref) {
+            }) || find(STORE, function (ref) {
                 return ref.popper === x;
             });
         }
@@ -3367,6 +3369,7 @@ var Tippy$1 = function () {
                 triggerReflow(tooltip, circle);
 
                 modifyClassList([tooltip, circle], function (list) {
+                    list.contains('tippy-notransition') && list.remove('tippy-notransition');
                     list.remove('leave');
                     list.add('enter');
                 });
@@ -3426,9 +3429,7 @@ var Tippy$1 = function () {
 
 
             ref.onShownFired = false;
-
-            interactive && ref.el.classList.remove('active');
-            tooltip.classList.remove('tippy-notransition');
+            interactive && el.classList.remove('active');
 
             popper.style.visibility = 'hidden';
             popper.setAttribute('aria-hidden', 'true');
@@ -3441,6 +3442,7 @@ var Tippy$1 = function () {
             }
 
             modifyClassList([tooltip, circle], function (list) {
+                list.contains('tippy-tooltip') && list.remove('tippy-notransition');
                 list.remove('enter');
                 list.add('leave');
             });
