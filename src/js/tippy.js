@@ -349,7 +349,7 @@ function createPopperElement(id, title, settings) {
         let templateId
 
         if (html instanceof Element) {
-            content.innerHTML = html.innerHTML
+            content.appendChild(html)
             templateId = html.id || 'tippy-html-template'
         } else {
             content.innerHTML = document.getElementById(html.replace('#', '')).innerHTML
