@@ -1,7 +1,7 @@
 /**!
 * (c) 2017 atomiks (Tippy) & FezVrasta (Popper)
 * @file tippy.js (popper.js 1.9.9 included) | Pure JS Tooltip Library
-* @version 0.16.1
+* @version 0.16.2
 * @license MIT
 */
 
@@ -2058,7 +2058,7 @@ var modifiers = {
  * @static
  * @memberof Popper
  */
-var DEFAULTS$1 = {
+var DEFAULTS = {
   /**
    * Popper's placement
    * @prop {Popper.placements} placement='bottom'
@@ -2267,7 +2267,7 @@ var Popper = function () {
 
 Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
-Popper.Defaults = DEFAULTS$1;
+Popper.Defaults = DEFAULTS;
 
 
 //# sourceMappingURL=popper.js.map
@@ -2318,46 +2318,21 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.16.1
+* @version 0.16.2
 * @license MIT
 */
 
-// Unsupported: IE<=9, Opera Mini
-var IS_UNSUPPORTED_BROWSER = typeof window !== 'undefined' && (!('addEventListener' in window) || /MSIE 9/i.test(navigator.userAgent) || typeof window.operamini !== 'undefined');
+var IS_BROWSER = typeof window !== 'undefined';
+
+var BROWSER = {};
+
+if (IS_BROWSER) {
+    BROWSER.supportsTouch = 'ontouchstart' in window;
+    BROWSER.iOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+    BROWSER.touch = false; // presumed false until `touchstart` is fired
+}
 
 var STORE = [];
-
-var DEFAULTS = !IS_UNSUPPORTED_BROWSER && Object.freeze({
-    html: false,
-    position: 'top',
-    animation: 'shift',
-    animateFill: true,
-    arrow: false,
-    arrowSize: 'regular',
-    delay: 0,
-    hideDelay: 0,
-    trigger: 'mouseenter focus',
-    duration: 375,
-    hideDuration: 375,
-    interactive: false,
-    interactiveBorder: 2,
-    theme: 'dark',
-    size: 'regular',
-    distance: 10,
-    offset: 0,
-    hideOnClick: true,
-    multiple: false,
-    followCursor: false,
-    inertia: false,
-    flipDuration: 300,
-    sticky: false,
-    stickyDuration: 200,
-    appendTo: typeof document !== 'undefined' ? document.body : null,
-    zIndex: 9999,
-    popperOptions: {}
-});
-
-var DEFAULTS_KEYS = !IS_UNSUPPORTED_BROWSER && Object.keys(DEFAULTS);
 
 var SELECTORS = {
     popper: '.tippy-popper',
@@ -2369,76 +2344,141 @@ var SELECTORS = {
     controller: '[data-tippy-controller]'
 };
 
-// Hook events only if rendered on a browser
-if (!(typeof window === 'undefined' || typeof document === 'undefined')) {
-    if (!IS_UNSUPPORTED_BROWSER) {
-        document.addEventListener('click', handleDocumentClick);
-        document.addEventListener('touchstart', handleDocumentTouchstart);
-    }
-}
-
-var touchDevice = false;
+var hasInit = void 0;
+var defaultSettings = void 0;
+var defaultSettingsKeys = void 0;
 var idCounter = 1;
 
-function handleDocumentTouchstart(event) {
-    touchDevice = true;
+/**
+* To run a single time, once DOM is presumed to be ready
+*/
+function init() {
 
-    // iOS needs cursor:pointer on elements which are non-clickable in order
-    // to register both clicks and mouseenter events
-    if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent) && !window.MSStream) {
-        document.body.classList.add('tippy-touch');
-    }
+    hasInit = true;
 
-    document.removeEventListener('touchstart', handleDocumentTouchstart);
-}
+    // prefix will return either `transform`, `webkitTransform` or null
+    BROWSER.supported = !!prefix('transform');
 
-// Handle clicks anywhere on the document
-function handleDocumentClick(event) {
+    if (!BROWSER.supported) return;
 
-    var el = closest(event.target, SELECTORS.el);
-    var popper = closest(event.target, SELECTORS.popper);
+    // Handle clicks anywhere on the document
+    document.addEventListener('click', function (event) {
 
-    if (popper) {
-        var ref = find(STORE, function (ref) {
-            return ref.popper === popper;
-        });
-        var interactive = ref.settings.interactive;
+        var el = closest(event.target, SELECTORS.el);
+        var popper = closest(event.target, SELECTORS.popper);
 
-        if (interactive) return;
-    }
+        if (popper) {
+            var ref = find(STORE, function (ref) {
+                return ref.popper === popper;
+            });
+            var interactive = ref.settings.interactive;
 
-    if (el) {
-        var _ref = find(STORE, function (ref) {
-            return ref.el === el;
-        });
-        var _popper = _ref.popper,
-            _ref$settings = _ref.settings,
-            hideOnClick = _ref$settings.hideOnClick,
-            multiple = _ref$settings.multiple,
-            trigger = _ref$settings.trigger;
-
-        // If they clicked before the show() was to fire, clear it
-
-        if (hideOnClick === true && !touchDevice) {
-            clearTimeout(_popper.getAttribute('data-delay'));
+            if (interactive) return;
         }
 
-        // Hide all poppers except the one belonging to the element that was clicked IF
-        // `multiple` is false AND they are a touch user, OR
-        // `multiple` is false AND it's triggered by a click
-        if (!multiple && touchDevice || !multiple && trigger.indexOf('click') !== -1) {
-            return hideAllPoppers(_ref);
+        if (el) {
+            var _ref = find(STORE, function (ref) {
+                return ref.el === el;
+            });
+            var _popper = _ref.popper,
+                _ref$settings = _ref.settings,
+                hideOnClick = _ref$settings.hideOnClick,
+                multiple = _ref$settings.multiple,
+                trigger = _ref$settings.trigger;
+
+            // If they clicked before the show() was to fire, clear it
+
+            if (hideOnClick === true && !BROWSER.touch) {
+                clearTimeout(_popper.getAttribute('data-delay'));
+            }
+
+            // Hide all poppers except the one belonging to the element that was clicked IF
+            // `multiple` is false AND they are a touch user, OR
+            // `multiple` is false AND it's triggered by a click
+            if (!multiple && BROWSER.touch || !multiple && trigger.indexOf('click') !== -1) {
+                return hideAllPoppers(_ref);
+            }
+
+            // If hideOnClick is not strictly true or triggered by a click don't hide poppers
+            if (hideOnClick !== true || trigger.indexOf('click') !== -1) return;
         }
 
-        // If hideOnClick is not strictly true or triggered by a click don't hide poppers
-        if (hideOnClick !== true || trigger.indexOf('click') !== -1) return;
+        // Don't trigger a hide for tippy controllers, and don't needlessly run loop
+        if (closest(event.target, SELECTORS.controller) || !document.querySelector(SELECTORS.popper)) return;
+
+        hideAllPoppers();
+    });
+
+    // Determine if touch user
+    if (BROWSER.supportsTouch) {
+        document.addEventListener('touchstart', function touchHandler() {
+            BROWSER.touch = true;
+            if (BROWSER.iOS) {
+                document.body.classList.add('tippy-touch');
+            }
+            document.removeEventListener('touchstart', touchHandler);
+        });
+    } else {
+        // For Microsoft Surface
+        if (navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0) {
+            BROWSER.touch = true;
+        }
     }
 
-    // Don't trigger a hide for tippy controllers, and don't needlessly run loop
-    if (closest(event.target, SELECTORS.controller) || !document.querySelector(SELECTORS.popper)) return;
+    defaultSettings = Object.freeze({
+        html: false,
+        position: 'top',
+        animation: 'shift',
+        animateFill: true,
+        arrow: false,
+        arrowSize: 'regular',
+        delay: 0,
+        hideDelay: 0,
+        trigger: 'mouseenter focus',
+        duration: 375,
+        hideDuration: 375,
+        interactive: false,
+        interactiveBorder: 2,
+        theme: 'dark',
+        size: 'regular',
+        distance: 10,
+        offset: 0,
+        hideOnClick: true,
+        multiple: false,
+        followCursor: false,
+        inertia: false,
+        flipDuration: 300,
+        sticky: false,
+        stickyDuration: 200,
+        appendTo: document.body,
+        zIndex: 9999,
+        popperOptions: {}
+    });
 
-    hideAllPoppers();
+    defaultSettingsKeys = Object.keys(defaultSettings);
 }
+
+/**
+* Pushes execution of a function to end of execution queue, doing so
+* just before repaint if possible
+* @return {Function}
+*     @param {Function} fn
+*/
+var queueExecution = function () {
+    var currentTimeoutQueue = void 0;
+
+    return function (fn) {
+        clearTimeout(currentTimeoutQueue);
+
+        if (window.requestAnimationFrame) {
+            window.requestAnimationFrame(function () {
+                currentTimeoutQueue = setTimeout(fn, 0);
+            });
+        } else {
+            currentTimeoutQueue = setTimeout(fn, 0);
+        }
+    };
+}();
 
 /**
 * Returns the supported prefixed property - only `webkit` is needed, `moz`, `ms` and `o` are obsolete
@@ -2544,7 +2584,7 @@ function createPopperInstance(ref) {
             tooltip.style.bottom = '';
             tooltip.style.left = '';
             tooltip.style.right = '';
-            tooltip.style[getCorePlacement(popper.getAttribute('x-placement'))] = -(distance - DEFAULTS.distance) + 'px';
+            tooltip.style[getCorePlacement(popper.getAttribute('x-placement'))] = -(distance - defaultSettings.distance) + 'px';
         }
     });
 
@@ -2614,7 +2654,7 @@ function createPopperElement(id, title, settings) {
         var templateId = void 0;
 
         if (html instanceof Element) {
-            content.innerHTML = html.innerHTML;
+            content.appendChild(html);
             templateId = html.id || 'tippy-html-template';
         } else {
             content.innerHTML = document.getElementById(html.replace('#', '')).innerHTML;
@@ -2629,7 +2669,7 @@ function createPopperElement(id, title, settings) {
     }
 
     // Init distance. Further updates are made in the popper instance's `onUpdate()` method
-    tooltip.style[getCorePlacement(position)] = -(distance - DEFAULTS.distance) + 'px';
+    tooltip.style[getCorePlacement(position)] = -(distance - defaultSettings.distance) + 'px';
 
     tooltip.appendChild(content);
     popper.appendChild(tooltip);
@@ -2865,7 +2905,7 @@ function mountPopper(ref) {
         ref.popperInstance = createPopperInstance(ref);
 
         // Follow cursor setting
-        if (followCursor && !touchDevice) {
+        if (followCursor && !BROWSER.touch) {
             el.addEventListener('mousemove', followCursorHandler);
             ref.popperInstance.disableEventListeners();
         }
@@ -2874,28 +2914,6 @@ function mountPopper(ref) {
         !followCursor && ref.popperInstance.enableEventListeners();
     }
 }
-
-/**
-* Pushes execution of a function to end of execution queue, doing so
-* just before repaint if possible
-* @return {Function}
-*     @param {Function} fn
-*/
-var queueExecution = function () {
-    var currentTimeoutQueue = void 0;
-
-    return function (fn) {
-        clearTimeout(currentTimeoutQueue);
-
-        if (window.requestAnimationFrame) {
-            window.requestAnimationFrame(function () {
-                currentTimeoutQueue = setTimeout(fn, 0);
-            });
-        } else {
-            currentTimeoutQueue = setTimeout(fn, 0);
-        }
-    };
-}();
 
 /**
 * Updates a popper's position on each animation frame to make it stick to a moving element
@@ -3025,11 +3043,14 @@ var Tippy$1 = function () {
         classCallCheck$1(this, Tippy);
 
 
-        // Use default browser tooltip on unsupported browsers.
-        if (IS_UNSUPPORTED_BROWSER) return;
+        // DOM is presumably mostly ready (for document.body) by instantiation time
+        if (!hasInit) init();
+
+        // Use default browser tooltip on unsupported browsers
+        if (!BROWSER.supported) return;
 
         this.selector = selector;
-        this.settings = Object.freeze(_extends$1({}, DEFAULTS, settings));
+        this.settings = Object.freeze(_extends$1({}, defaultSettings, settings));
         this.callbacks = {
             wait: settings.wait,
             beforeShown: settings.beforeShown || new Function(),
@@ -3056,19 +3077,15 @@ var Tippy$1 = function () {
 
             var settings = {};
 
-            DEFAULTS_KEYS.forEach(function (key) {
+            defaultSettingsKeys.forEach(function (key) {
                 var val = el.getAttribute('data-' + key.toLowerCase()) || _this2.settings[key];
 
                 // Convert strings to booleans
-                if (val === 'false') {
-                    val = false;
-                } else if (val === 'true') {
-                    val = true;
-                }
+                if (val === 'false') val = false;
+                if (val === 'true') val = true;
+
                 // Convert number strings to true numbers
-                if (!isNaN(parseFloat(val))) {
-                    val = parseFloat(val);
-                }
+                if (!isNaN(parseFloat(val))) val = parseFloat(val);
 
                 settings[key] = val;
             });
@@ -3191,7 +3208,7 @@ var Tippy$1 = function () {
             var handleBlur = function handleBlur(event) {
                 // Only hide if not a touch user and has a focus 'relatedtarget', of which is not
                 // a popper element
-                if (touchDevice || !event.relatedTarget) return;
+                if (BROWSER.touch || !event.relatedTarget) return;
                 if (closest(event.relatedTarget, SELECTORS.popper)) return;
 
                 hide();
@@ -3216,9 +3233,6 @@ var Tippy$1 = function () {
 
             els.forEach(function (el) {
                 var settings = _this4._applyIndividualSettings(el);
-
-                // If the script is in the <head> then document.body will be null
-                settings.appendTo = settings.appendTo || document.body;
 
                 var html = settings.html,
                     trigger = settings.trigger;
@@ -3252,8 +3266,6 @@ var Tippy$1 = function () {
 
                 idCounter++;
             });
-
-            Tippy.store = STORE; // Allow others to access `STORE` if need be
         }
 
         /**
@@ -3270,7 +3282,7 @@ var Tippy$1 = function () {
                     return ref.el === el;
                 }).popper;
             } catch (e) {
-                throw new Error('[Tippy error]: Element does not exist in any Tippy instances');
+                console.error('[Tippy error]: Element does not exist in any Tippy instances');
             }
         }
 
@@ -3288,7 +3300,7 @@ var Tippy$1 = function () {
                     return ref.popper === popper;
                 }).el;
             } catch (e) {
-                throw new Error('[Tippy error]: Popper does not exist in any Tippy instances');
+                console.error('[Tippy error]: Popper does not exist in any Tippy instances');
             }
         }
 
@@ -3435,7 +3447,7 @@ var Tippy$1 = function () {
             popper.setAttribute('aria-hidden', 'true');
 
             // Use same duration as show if it's the default
-            if (duration === DEFAULTS.hideDuration) {
+            if (duration === defaultSettings.hideDuration) {
                 duration = parseInt(tooltip.style[prefix('transitionDuration')]);
             } else {
                 applyTransitionDuration([tooltip, circle], duration);

@@ -13,8 +13,6 @@
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/prism.css">
   <link rel="icon" href="favicon.ico">
-  <script src="tippy/tippy.js"></script>
-
 </head>
 <body>
 
@@ -97,7 +95,7 @@
               <button class="btn tippy" title="I'm just a cute little tooltip" data-theme="transparent" data-size="small">Small</button>
 
               <button class="btn tippy" title="I'm a big scary tooltip" data-theme="transparent" data-size="big">Big</button>
-              
+
               <button class="btn tippy" id="animated-tippy" title="Sticky tooltip! Click my element to hide me." data-theme="transparent" data-sticky="true" data-hideonclick="false" data-trigger="click">Animated element</button>
             </div>
           </section>
@@ -108,58 +106,16 @@
             <h2><a href="#browser-support"><i class="material-icons icon-left">important_devices</i>
                 <span>Browser support</span>
             </a></h2>
-            <p>Most browsers from 2012 onwards (IE10+). As of early 2017, it should support
-                <span class="green-text">96%</span> of users (caniuse.com); depending on your
-                target audience it could be higher or lower. Tippy gracefully degrades on older
+            <p>Most browsers from 2012 onwards (IE10+). Tippy gracefully degrades on older
                 browsers (and with JavaScript disabled) by using the browser's default
                 <code>title</code> tooltip.</p>
-            <h4>Unsupported browsers</h4>
+            <h4>Supported browsers</h4>
             <p>
-                Old IE and Opera Mini should not throw errors but others might
+                Browsers which support either <code>transform</code> or <code>-webkit-transform</code>.
+                See <a target="_blank" href="https://caniuse.com/#search=transform">caniuse</a>. If
+                your audience has low Opera Mini usage (common in western countries), then support should be
+                >97%.
             </p>
-            <div class="table-wrapper">
-              <table class="table table-responsive">
-                <thead>
-                  <tr>
-                    <th>Browsers</th>
-                    <th>Year last version released</th>
-                    <th>User share</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>IE &lt;= 9</td>
-                    <td>2011</td>
-                    <td>0.6%</td>
-                  </tr>
-                  <tr>
-                    <td>Opera Mini</td>
-                    <td>2015</td>
-                    <td>2.7%</td>
-                  </tr>
-                  <tr>
-                    <td>Firefox &lt;= 15</td>
-                    <td>2012</td>
-                    <td>0.1%</td>
-                  </tr>
-                  <tr>
-                    <td>Safari &lt;= 5.1</td>
-                    <td>2011</td>
-                    <td>0.1%</td>
-                  </tr>
-                  <tr>
-                    <td>Opera &lt;= 12.1</td>
-                    <td>2011</td>
-                    <td>0.1%</td>
-                  </tr>
-                  <tr>
-                    <td>Potentially unsupported/untracked, very old mobile browsers</td>
-                    <td>N/A</td>
-                    <td>1-2%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
 
             <h4>Touch devices</h4>
             <p>
@@ -745,14 +701,14 @@ instance.destroy(popper)</code></pre>
               An example of this being useful is clicking inside a popper, and getting the popper by doing <code>event.target.closest('.tippy-popper')</code>.
               Then, you might want to do something with its element reference.
           </p>
-          
+
            <h4>Getting the reference object</h4>
-           
+
            <p>
                References (objects which contain information about the tooltipped element and its tooltip popper)
                can be accessed by passing in either the popper element or tooltipped element into this method:
            </p>
-          
+
 <pre><code class="language-javascript">const ref = instance.getReference(el)
 const ref = instance.getReference(popper)</code></pre>
 
@@ -831,8 +787,10 @@ const ref = instance.getReference(popper)</code></pre>
       <img height="200" alt="cat" src="img/cat.jpg">
     </div>
 
+    <script src="tippy/tippy.js"></script>
     <script src="js/prism.js"></script>
     <script src="js/app.js"></script>
+    <!--
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -842,5 +800,6 @@ const ref = instance.getReference(popper)</code></pre>
       ga('create', 'UA-61550002-7', 'auto');
       ga('send', 'pageview');
     </script>
+    -->
   </body>
 </html>
