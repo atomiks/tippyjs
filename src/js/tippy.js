@@ -2,7 +2,7 @@ import Popper from 'popper.js'
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.16.2
+* @version 0.16.3
 * @license MIT
 */
 
@@ -28,8 +28,7 @@ const SELECTORS = {
     controller: '[data-tippy-controller]'
 }
 
-let hasInit,
-    defaultSettings,
+let defaultSettings,
     defaultSettingsKeys,
     idCounter = 1
 
@@ -38,10 +37,11 @@ let hasInit,
 */
 function init() {
 
-    hasInit = true
+    if (init.done) return
+    init.done = true
 
     // prefix will return either `transform`, `webkitTransform` or null
-    BROWSER.supported = !!(prefix('transform'))
+    BROWSER.supported = !!prefix('transform')
 
     if (!BROWSER.supported) return
 
@@ -420,7 +420,7 @@ function pushIntoStorage(ref) {
 * @param {Element} el
 */
 function removeTitle(el) {
-    const title = el.title
+    const title = el.getAttribute('title')
     el.setAttribute('data-original-title', title || 'html')
     el.removeAttribute('title')
 }
@@ -737,7 +737,7 @@ class Tippy {
     constructor(selector, settings = {}) {
 
         // DOM is presumably mostly ready (for document.body) by instantiation time
-        if (!hasInit) init()
+        init()
 
         // Use default browser tooltip on unsupported browsers
         if (!BROWSER.supported) return
@@ -912,7 +912,7 @@ class Tippy {
 
             const { html, trigger } = settings
 
-            const title = el.title
+            const title = el.getAttribute('title')
             if (!title && !html) return
 
             const id = idCounter
@@ -1161,7 +1161,7 @@ class Tippy {
                                 ? html.innerHTML
                                 : document.getElementById(html.replace('#', '')).innerHTML
         } else {
-            content.innerHTML = el.title || el.getAttribute('data-original-title')
+            content.innerHTML = el.getAttribute('title') || el.getAttribute('data-original-title')
             removeTitle(el)
         }
     }

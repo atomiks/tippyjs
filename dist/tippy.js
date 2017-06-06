@@ -1,7 +1,7 @@
 /**!
 * (c) 2017 atomiks (Tippy) & FezVrasta (Popper)
 * @file tippy.js (popper.js 1.9.9 included) | Pure JS Tooltip Library
-* @version 0.16.2
+* @version 0.16.3
 * @license MIT
 */
 
@@ -2318,7 +2318,7 @@ var _extends$1 = Object.assign || function (target) {
 
 /**!
 * @file tippy.js | Pure JS Tooltip Library
-* @version 0.16.2
+* @version 0.16.3
 * @license MIT
 */
 
@@ -2344,7 +2344,6 @@ var SELECTORS = {
     controller: '[data-tippy-controller]'
 };
 
-var hasInit = void 0;
 var defaultSettings = void 0;
 var defaultSettingsKeys = void 0;
 var idCounter = 1;
@@ -2354,7 +2353,8 @@ var idCounter = 1;
 */
 function init() {
 
-    hasInit = true;
+    if (init.done) return;
+    init.done = true;
 
     // prefix will return either `transform`, `webkitTransform` or null
     BROWSER.supported = !!prefix('transform');
@@ -2729,7 +2729,7 @@ function pushIntoStorage(ref) {
 * @param {Element} el
 */
 function removeTitle(el) {
-    var title = el.title;
+    var title = el.getAttribute('title');
     el.setAttribute('data-original-title', title || 'html');
     el.removeAttribute('title');
 }
@@ -3044,7 +3044,7 @@ var Tippy$1 = function () {
 
 
         // DOM is presumably mostly ready (for document.body) by instantiation time
-        if (!hasInit) init();
+        init();
 
         // Use default browser tooltip on unsupported browsers
         if (!BROWSER.supported) return;
@@ -3238,7 +3238,7 @@ var Tippy$1 = function () {
                     trigger = settings.trigger;
 
 
-                var title = el.title;
+                var title = el.getAttribute('title');
                 if (!title && !html) return;
 
                 var id = idCounter;
@@ -3534,7 +3534,7 @@ var Tippy$1 = function () {
             if (html) {
                 content.innerHTML = html instanceof Element ? html.innerHTML : document.getElementById(html.replace('#', '')).innerHTML;
             } else {
-                content.innerHTML = el.title || el.getAttribute('data-original-title');
+                content.innerHTML = el.getAttribute('title') || el.getAttribute('data-original-title');
                 removeTitle(el);
             }
         }
