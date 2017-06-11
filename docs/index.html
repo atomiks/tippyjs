@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Tippy.js - Pure JS Tooltip Library</title>
+  <title>Tippy.js - Vanilla JS Tooltip Library</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -23,7 +23,7 @@
             <img alt="Tippy logo" draggable="false" class="logo" src="img/tippy.svg">
         </div>
         <h1 class="hero-heading">Tippy.js</h1>
-        <h2 class="hero-subheading">A lightweight, pure JavaScript tooltip library</h2>
+        <h2 class="hero-subheading">A lightweight, vanilla JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
             <i class="material-icons icon-left">code</i><span>12KB gzipped</span>
@@ -112,10 +112,10 @@
                 <code>title</code> tooltip.</p>
             <h4>Supported browsers</h4>
             <p>
-                Browsers which support either <code>transform</code> or <code>-webkit-transform</code>.
-                See <a target="_blank" href="https://caniuse.com/#search=transform">caniuse</a>. If
+                Browsers which support <code>requestAnimationFrame</code>.
+                See <a target="_blank" href="https://caniuse.com/#search=requestAnimationFrame">caniuse</a>. If
                 your audience has low Opera Mini usage (common in western countries), then support should be
-                >97%.
+                >96%.
             </p>
 
             <h4>Touch devices</h4>
@@ -418,6 +418,12 @@ tippy.css</code></pre>
                       <td>Any number</td>
                       <td>Specifies the z-index of the tooltip popper.</td>
                     </tr>
+                    <tr>
+                      <td><code>touchHold</code></td>
+                      <td><code>false</code></td>
+                      <td><code>true</code> <code>false</code></td>
+                      <td>Changes the trigger behavior on touch devices. It will change it from a tap to show and tap off to hide, to a tap and hold to show, and a release to hide.</td>
+                    </tr>
                       <tr>
                         <td><code>popperOptions</code></td>
                         <td><code>{}</code></td>
@@ -521,6 +527,10 @@ tippy.css</code></pre>
             <p>
                 See <a target="_blank" href="https://github.com/atomiks/tippyjs/issues/24">here</a> for reference.
             </p>
+
+            <h4>Modify the default settings</h4>
+
+            <p>You can change the default settings by accessing them via <code>Tippy.defaultSettings</code>.</p>
 
             </section>
 

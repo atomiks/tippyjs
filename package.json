@@ -1,7 +1,7 @@
 {
   "name": "tippy.js",
-  "version": "0.16.3",
-  "description": "Pure JS Tooltip Library",
+  "version": "0.17.0",
+  "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.js",
   "scripts": {
     "dev": "rollup -c scripts/rollup.dev.config.js --watch",

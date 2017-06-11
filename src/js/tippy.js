@@ -1,8 +1,8 @@
 import Popper from 'popper.js'
 
 /**!
-* @file tippy.js | Pure JS Tooltip Library
-* @version 0.16.3
+* @file tippy.js | Vanilla JS Tooltip Library
+* @version 0.17.0
 * @license MIT
 */
 
@@ -11,10 +11,13 @@ const IS_BROWSER = typeof window !== 'undefined'
 const BROWSER = {}
 
 if (IS_BROWSER) {
+    BROWSER.supported = !!window.requestAnimationFrame
     BROWSER.supportsTouch = 'ontouchstart' in window
     BROWSER.iOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream
     BROWSER.touch = false // presumed false until `touchstart` is fired
 }
+
+let idCounter = 1
 
 const STORE = []
 
@@ -28,9 +31,38 @@ const SELECTORS = {
     controller: '[data-tippy-controller]'
 }
 
-let defaultSettings,
-    defaultSettingsKeys,
-    idCounter = 1
+const DEFAULT_SETTINGS = {
+    html: false,
+    position: 'top',
+    animation: 'shift',
+    animateFill: true,
+    arrow: false,
+    arrowSize: 'regular',
+    delay: 0,
+    hideDelay: 0,
+    trigger: 'mouseenter focus',
+    duration: 375,
+    hideDuration: 375,
+    interactive: false,
+    interactiveBorder: 2,
+    theme: 'dark',
+    size: 'regular',
+    distance: 10,
+    offset: 0,
+    hideOnClick: true,
+    multiple: false,
+    followCursor: false,
+    inertia: false,
+    flipDuration: 300,
+    sticky: false,
+    stickyDuration: 200,
+    appendTo: null,
+    zIndex: 9999,
+    touchHold: false,
+    popperOptions: {}
+}
+
+const DEFAULT_SETTINGS_KEYS = BROWSER.supported && Object.keys(DEFAULT_SETTINGS)
 
 /**
 * To run a single time, once DOM is presumed to be ready
@@ -40,13 +72,13 @@ function init() {
     if (init.done) return
     init.done = true
 
-    // prefix will return either `transform`, `webkitTransform` or null
-    BROWSER.supported = !!prefix('transform')
-
-    if (!BROWSER.supported) return
-
     // Handle clicks anywhere on the document
     document.addEventListener('click', event => {
+
+        // Simulated events dispatched on the document
+        if (!(event.target instanceof Element)) {
+            return hideAllPoppers()
+        }
 
         const el = closest(event.target, SELECTORS.el)
         const popper = closest(event.target, SELECTORS.popper)
@@ -101,43 +133,15 @@ function init() {
         }
     }
 
-    defaultSettings = Object.freeze({
-        html: false,
-        position: 'top',
-        animation: 'shift',
-        animateFill: true,
-        arrow: false,
-        arrowSize: 'regular',
-        delay: 0,
-        hideDelay: 0,
-        trigger: 'mouseenter focus',
-        duration: 375,
-        hideDuration: 375,
-        interactive: false,
-        interactiveBorder: 2,
-        theme: 'dark',
-        size: 'regular',
-        distance: 10,
-        offset: 0,
-        hideOnClick: true,
-        multiple: false,
-        followCursor: false,
-        inertia: false,
-        flipDuration: 300,
-        sticky: false,
-        stickyDuration: 200,
-        appendTo: document.body,
-        zIndex: 9999,
-        popperOptions: {}
-    })
-
-    defaultSettingsKeys = Object.keys(defaultSettings)
+    // If the script is in <head>, document.body is null, so it's set in the
+    // init function
+    DEFAULT_SETTINGS.appendTo = document.body
 }
 
 
 /**
 * Pushes execution of a function to end of execution queue, doing so
-* just before repaint if possible
+* just before the next repaint
 * @return {Function}
 *     @param {Function} fn
 */
@@ -147,13 +151,9 @@ const queueExecution = (() => {
     return fn => {
         clearTimeout(currentTimeoutQueue)
 
-        if (window.requestAnimationFrame) {
-            window.requestAnimationFrame(() => {
-                currentTimeoutQueue = setTimeout(fn, 0)
-            })
-        } else {
+        window.requestAnimationFrame(() => {
             currentTimeoutQueue = setTimeout(fn, 0)
-        }
+        })
     }
 })()
 
@@ -234,6 +234,23 @@ function find(arr, checkFn) {
 }
 
 /**
+* Simulates a click event
+* @param {Element} el
+*/
+function simulateClick(el) {
+    const settings = {
+        'view': window,
+        'bubbles': true,
+        'cancelable': true
+    }
+
+    const event = window.MouseEvent ? new MouseEvent('click', settings)
+                                    : new Event('click', settings)
+
+    el.dispatchEvent(event)
+}
+
+/**
 * Creates a new popper instance
 * @param {Object} ref
 * @return {Object} - the popper instance
@@ -272,7 +289,7 @@ function createPopperInstance(ref) {
             tooltip.style.bottom = ''
             tooltip.style.left = ''
             tooltip.style.right = ''
-            tooltip.style[getCorePlacement(popper.getAttribute('x-placement'))] = -(distance - defaultSettings.distance) + 'px'
+            tooltip.style[getCorePlacement(popper.getAttribute('x-placement'))] = -(distance - DEFAULT_SETTINGS.distance) + 'px'
         }
     }
 
@@ -360,7 +377,7 @@ function createPopperElement(id, title, settings) {
     }
 
     // Init distance. Further updates are made in the popper instance's `onUpdate()` method
-    tooltip.style[getCorePlacement(position)] = -(distance - defaultSettings.distance) + 'px'
+    tooltip.style[getCorePlacement(position)] = -(distance - DEFAULT_SETTINGS.distance) + 'px'
 
     tooltip.appendChild(content)
     popper.appendChild(tooltip)
@@ -375,7 +392,7 @@ function createPopperElement(id, title, settings) {
 * @param {Object} handlers - the handlers for each listener
 * @return {Array} - array of listener objects
 */
-function createTrigger(event, el, handlers) {
+function createTrigger(event, el, handlers, touchHold) {
     const listeners = []
 
     if (event === 'manual') return listeners
@@ -389,12 +406,27 @@ function createTrigger(event, el, handlers) {
 
     // Leave
     if (event === 'mouseenter') {
+
+        if (BROWSER.supportsTouch && touchHold) {
+            el.addEventListener('touchstart', handlers.handleTrigger)
+            listeners.push({
+                event: 'touchstart',
+                handler: handlers.handleTrigger
+            })
+            el.addEventListener('touchend', handlers.handleMouseleave)
+            listeners.push({
+                event: 'touchend',
+                handler: handlers.handleMouseleave
+            })
+        }
+
         el.addEventListener('mouseleave', handlers.handleMouseleave)
         listeners.push({
             event: 'mouseleave',
             handler: handlers.handleMouseleave
         })
     }
+
     if (event === 'focus') {
         el.addEventListener('blur', handlers.handleBlur)
         listeners.push({
@@ -404,15 +436,6 @@ function createTrigger(event, el, handlers) {
     }
 
     return listeners
-}
-
-/**
-* Adds each reference (tooltipped element, popper and its settings/listeners etc)
-* into global storage
-* @param {Object} ref - current ref in the forEach loop to be pushed
-*/
-function pushIntoStorage(ref) {
-    STORE.push(ref)
 }
 
 /**
@@ -443,7 +466,7 @@ function elementIsInViewport(el) {
 
 /**
 * Mousemove event listener callback method for follow cursor setting
-* @param {Event} e
+* @param {MouseEvent} e
 */
 function followCursorHandler(e) {
     const ref = find(STORE, ref => ref.el === this)
@@ -459,27 +482,35 @@ function followCursorHandler(e) {
 
     let x, y
 
-    if (position === 'top') {
-        x = pageX - halfPopperWidth
-        y = pageY - 2.5 * halfPopperHeight
-    } else if (position === 'left') {
-        x = pageX - ( 2 * halfPopperWidth ) - 15
-        y = pageY - halfPopperHeight
-    } else if (position === 'right') {
-        x = pageX + halfPopperHeight
-        y = pageY - halfPopperHeight
-    } else if (position === 'bottom') {
-        x = pageX - halfPopperWidth
-        y = pageY + halfPopperHeight/1.5
+    switch (position) {
+        case 'top':
+            x = pageX - halfPopperWidth
+            y = pageY - 2.5 * halfPopperHeight
+            break
+        case 'left':
+            x = pageX - ( 2 * halfPopperWidth ) - 15
+            y = pageY - halfPopperHeight
+            break
+        case 'right':
+            x = pageX + halfPopperHeight
+            y = pageY - halfPopperHeight
+            break
+        case 'bottom':
+            x = pageX - halfPopperWidth
+            y = pageY + halfPopperHeight/1.5
+            break
     }
+
+    const isRightOverflowing = pageX + viewportPadding + halfPopperWidth > pageWidth
+    const isLeftOverflowing = pageX - viewportPadding - halfPopperWidth < 0
 
     // Prevent left/right overflow
     if (position === 'top' || position === 'bottom') {
-        if (pageX + viewportPadding + halfPopperWidth > pageWidth) {
-            // Right overflow
+        if (isRightOverflowing) {
             x = pageWidth - viewportPadding - ( 2 * halfPopperWidth)
-        } else if (pageX - viewportPadding - halfPopperWidth < 0) {
-            // Left overflow
+        }
+
+        if (isLeftOverflowing) {
             x = viewportPadding
         }
     }
@@ -566,12 +597,12 @@ function onTransitionEnd(ref, duration, callback) {
 }
 
 /**
+* Determines if a popper is currently visible
 * @param {Element} popper
-* @param {String} type 'show'/'hide'
 * @return {Boolean}
 */
-function isExpectedState(popper, type) {
-    return popper.style.visibility === type
+function isVisible(popper) {
+    return popper.style.visibility === 'visible'
 }
 
 /**
@@ -584,6 +615,7 @@ function mountPopper(ref) {
     const {
         el,
         popper,
+        listeners,
         settings: {
             appendTo,
             followCursor
@@ -633,15 +665,8 @@ function makeSticky(ref) {
 
         applyTransitionDuration()
 
-        const isVisible = popper.style.visibility === 'visible'
-
-        if (window.requestAnimationFrame) {
-            isVisible ? window.requestAnimationFrame(updatePosition)
-                      : removeTransitionDuration()
-        } else {
-            isVisible ? setTimeout(updatePosition, 20)
-                      : removeTransitionDuration()
-        }
+        isVisible(popper) ? window.requestAnimationFrame(updatePosition)
+                          : removeTransitionDuration()
     }
 
     // Wait until Popper's position has been updated initially
@@ -710,22 +735,235 @@ function cursorIsOutsideInteractiveBorder(event, popper, settings) {
     const corePosition = getCorePlacement(popper.getAttribute('x-placement'))
     const borderWithDistance = interactiveBorder + distance
 
-    let exceedsTop = rect.top - y > interactiveBorder
-    let exceedsBottom = y - rect.bottom > interactiveBorder
-    let exceedsLeft = rect.left - x > interactiveBorder
-    let exceedsRight = x - rect.right > interactiveBorder
-
-    if (corePosition === 'top') {
-        exceedsTop = rect.top - y > borderWithDistance
-    } else if (corePosition === 'bottom') {
-        exceedsBottom = y - rect.bottom > borderWithDistance
-    } else if (corePosition === 'left') {
-        exceedsLeft = rect.left - x > borderWithDistance
-    } else if (corePosition === 'right') {
-        exceedsRight = x - rect.right > borderWithDistance
+    const exceeds = {
+        top: rect.top - y > interactiveBorder,
+        bottom: y - rect.bottom > interactiveBorder,
+        left: rect.left - x > interactiveBorder,
+        right: x - rect.right > interactiveBorder
     }
 
-    return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight
+    switch (corePosition) {
+        case 'top':
+            exceeds.top = rect.top - y > borderWithDistance
+            break
+        case 'bottom':
+            exceeds.bottom = y - rect.bottom > borderWithDistance
+            break
+        case 'left':
+            exceeds.left = rect.left - x > borderWithDistance
+            break
+        case 'right':
+            exceeds.right = x - rect.right > borderWithDistance
+            break
+    }
+
+    return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right
+}
+
+/**
+* Returns an object of settings to override global settings
+* @param {Element} el - the tooltipped element
+* @return {Object} - individual settings
+*/
+function applyIndividualSettings(el, instanceSettings) {
+
+    const settings = DEFAULT_SETTINGS_KEYS.reduce((acc, key) => {
+        let val = el.getAttribute(`data-${ key.toLowerCase() }`) || instanceSettings[key]
+
+        // Convert strings to booleans
+        if (val === 'false') val = false
+        if (val === 'true') val = true
+
+        // Convert number strings to true numbers
+        if (!isNaN(parseFloat(val))) val = parseFloat(val)
+
+        acc[key] = val
+
+        return acc
+    }, {})
+
+    // animateFill is disabled if an arrow is true
+    if (settings.arrow) settings.animateFill = false
+
+    return Object.assign({}, instanceSettings, settings)
+}
+
+/**
+* Returns relevant listener callbacks for each ref
+* @param {Element} el
+* @param {Element} popper
+* @param {Object} settings
+* @return {Object} - relevant listener callback methods
+*/
+function getEventListenerHandlers(el, popper, settings) {
+
+    const {
+        position,
+        delay,
+        hideDelay,
+        hideDuration,
+        duration,
+        interactive,
+        interactiveBorder,
+        distance,
+        hideOnClick,
+        trigger,
+        touchHold
+    } = settings
+
+    const clearTimeouts = () => {
+        clearTimeout(popper.getAttribute('data-delay'))
+        clearTimeout(popper.getAttribute('data-hidedelay'))
+    }
+
+    const _show = () => {
+        clearTimeouts()
+
+        // Not hidden. For clicking when it also has a `focus` event listener
+        if (isVisible(popper)) return
+
+        if (delay) {
+            const timeout = setTimeout(() => this.show(popper, duration), delay)
+            popper.setAttribute('data-delay', timeout)
+        } else {
+            this.show(popper, duration)
+        }
+    }
+
+    const show = event =>
+        this.callbacks.wait ? this.callbacks.wait.call(popper, _show, event) : _show()
+
+    const hide = () => {
+        clearTimeouts()
+
+        if (hideDelay) {
+            const timeout = setTimeout(() => this.hide(popper, hideDuration), hideDelay)
+            popper.setAttribute('data-hidedelay', timeout)
+        } else {
+            this.hide(popper, hideDuration)
+        }
+    }
+
+    const handleTrigger = event => {
+
+        if (event.type === 'mouseenter' && BROWSER.supportsTouch && BROWSER.touch) {
+
+            // Don't fire 'mouseenter', use the 'touchstart'
+            if (touchHold) return
+
+            if (BROWSER.iOS) {
+                // Prevents the need to double click buttons/anchor links on iOS
+                const fireClick = () => simulateClick(el)
+
+                // For anchor links, use a 300ms delay
+                el.nodeName === 'A' ? setTimeout(fireClick, 300)
+                                    : fireClick()
+            }
+        }
+
+        // Toggle show/hide when clicking click-triggered tooltips
+        const isClick = event.type === 'click'
+        const isNotPersistent = hideOnClick !== 'persistent'
+
+        isClick && isVisible(popper) && isNotPersistent ? hide() : show(event)
+    }
+
+    const handleMouseleave = event => {
+
+        // Don't fire 'mouseleave', use the 'touchend'
+        if (event.type === 'mouseleave' && BROWSER.supportsTouch &&
+        BROWSER.touch && touchHold) {
+            return
+        }
+
+        if (interactive) {
+            // Temporarily handle mousemove to check if the mouse left somewhere
+            // other than its popper
+            const handleMousemove = event => {
+                const triggerHide = () => {
+                    document.removeEventListener('mousemove', handleMousemove)
+                    hide()
+                }
+
+                const closestTooltippedEl = closest(event.target, SELECTORS.el)
+
+                const isOverPopper = closest(event.target, SELECTORS.popper) === popper
+                const isOverEl = closestTooltippedEl === el
+                const isClickTriggered = trigger.indexOf('click') !== -1
+                const isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== el
+
+                if (isOverOtherTooltippedEl) {
+                    return triggerHide()
+                }
+
+                if (isOverPopper || isOverEl || isClickTriggered) return
+
+                if (cursorIsOutsideInteractiveBorder(event, popper, settings)) {
+                    triggerHide()
+                }
+            }
+            return document.addEventListener('mousemove', handleMousemove)
+        }
+
+        // If it's not interactive, just hide it
+        hide()
+    }
+
+    const handleBlur = event => {
+        // Only hide if not a touch user and has a focus 'relatedtarget', of which is not
+        // a popper element
+        if (BROWSER.touch || !event.relatedTarget) return
+        if (closest(event.relatedTarget, SELECTORS.popper)) return
+
+        hide()
+    }
+
+    return {
+        handleTrigger,
+        handleMouseleave,
+        handleBlur
+    }
+}
+
+/**
+* Creates tooltips for all elements that match the instance's selector
+* @param {Array} els - Elements
+*/
+function createTooltips(els) {
+
+    els.forEach(el => {
+        const settings = applyIndividualSettings(el, this.settings)
+
+        const { html, trigger, touchHold } = settings
+
+        const title = el.getAttribute('title')
+        if (!title && !html) return
+
+        const id = idCounter
+        el.setAttribute('data-tooltipped', '')
+        el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
+
+        removeTitle(el)
+
+        const popper = createPopperElement(id, title, settings)
+        const handlers = getEventListenerHandlers.call(this, el, popper, settings)
+        let listeners = []
+
+        trigger.trim().split(' ').forEach(event =>
+            listeners = listeners.concat(createTrigger(event, el, handlers, touchHold))
+        )
+
+        STORE.push({
+            id,
+            el,
+            popper,
+            settings,
+            listeners,
+            tippyInstance: this
+        })
+
+        idCounter++
+    })
 }
 
 /**
@@ -736,14 +974,14 @@ function cursorIsOutsideInteractiveBorder(event, popper, settings) {
 class Tippy {
     constructor(selector, settings = {}) {
 
-        // DOM is presumably mostly ready (for document.body) by instantiation time
-        init()
-
         // Use default browser tooltip on unsupported browsers
         if (!BROWSER.supported) return
 
+        // DOM is presumably mostly ready (for document.body) by instantiation time
+        init()
+
         this.selector = selector
-        this.settings = Object.freeze(Object.assign({}, defaultSettings, settings))
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, settings)
         this.callbacks = {
             wait: settings.wait,
             beforeShown: settings.beforeShown || new Function,
@@ -752,194 +990,7 @@ class Tippy {
             hidden: settings.hidden || new Function
         }
 
-        const els = getSelectorElementsArray(selector)
-        this._createTooltips(els)
-    }
-
-    /**
-    * Returns an object of settings to override global settings
-    * @param {Element} el - the tooltipped element
-    * @return {Object} - individual settings
-    */
-    _applyIndividualSettings(el) {
-
-        const settings = {}
-
-        defaultSettingsKeys.forEach(key => {
-            let val = el.getAttribute(`data-${ key.toLowerCase() }`) || this.settings[key]
-
-            // Convert strings to booleans
-            if (val === 'false') val = false
-            if (val === 'true') val = true
-
-            // Convert number strings to true numbers
-            if (!isNaN(parseFloat(val))) val = parseFloat(val)
-
-            settings[key] = val
-        })
-
-        // animateFill is disabled if an arrow is true
-        if (settings.arrow) {
-            settings.animateFill = false
-        }
-
-        return Object.assign({}, this.settings, settings)
-    }
-
-    /**
-    * Returns relevant listener callbacks for each ref
-    * @param {Element} el
-    * @param {Element} popper
-    * @param {Object} settings
-    * @return {Object} - relevant listener callback methods
-    */
-    _getEventListenerHandlers(el, popper, settings) {
-
-        const {
-            position,
-            delay,
-            hideDelay,
-            hideDuration,
-            duration,
-            interactive,
-            interactiveBorder,
-            distance,
-            hideOnClick,
-            trigger
-        } = settings
-
-        const clearTimeouts = () => {
-            clearTimeout(popper.getAttribute('data-delay'))
-            clearTimeout(popper.getAttribute('data-hidedelay'))
-        }
-
-        const _show = () => {
-            clearTimeouts()
-
-            // Already visible. For clicking when it also has a `focus` event listener
-            if (popper.style.visibility === 'visible') return
-
-            if (delay) {
-                const timeout = setTimeout(() => this.show(popper, duration), delay)
-                popper.setAttribute('data-delay', timeout)
-            } else {
-                this.show(popper, duration)
-            }
-        }
-
-        const show = event =>
-            this.callbacks.wait ? this.callbacks.wait.call(popper, _show, event) : _show()
-
-        const hide = () => {
-            clearTimeouts()
-
-            if (hideDelay) {
-                const timeout = setTimeout(() => this.hide(popper, hideDuration), hideDelay)
-                popper.setAttribute('data-hidedelay', timeout)
-            } else {
-                this.hide(popper, hideDuration)
-            }
-        }
-
-        const handleTrigger = event => {
-            // Toggle show/hide when clicking click-triggered tooltips
-            const isClick = event.type === 'click'
-            const isVisible = popper.style.visibility === 'visible'
-            const isNotPersistent = hideOnClick !== 'persistent'
-
-            isClick && isVisible && isNotPersistent ? hide() : show(event)
-        }
-
-        const handleMouseleave = event => {
-
-            if (interactive) {
-                // Temporarily handle mousemove to check if the mouse left somewhere
-                // other than its popper
-                const handleMousemove = event => {
-                    const triggerHide = () => {
-                        document.removeEventListener('mousemove', handleMousemove)
-                        hide()
-                    }
-
-                    const closestTooltippedEl = closest(event.target, SELECTORS.el)
-
-                    const isOverPopper = closest(event.target, SELECTORS.popper) === popper
-                    const isOverEl = closestTooltippedEl === el
-                    const isClickTriggered = trigger.indexOf('click') !== -1
-                    const isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== el
-
-                    if (isOverOtherTooltippedEl) {
-                        return triggerHide()
-                    }
-
-                    if (isOverPopper || isOverEl || isClickTriggered) return
-
-                    if (cursorIsOutsideInteractiveBorder(event, popper, settings)) {
-                        triggerHide()
-                    }
-                }
-                return document.addEventListener('mousemove', handleMousemove)
-            }
-
-            // If it's not interactive, just hide it
-            hide()
-        }
-
-        const handleBlur = event => {
-            // Only hide if not a touch user and has a focus 'relatedtarget', of which is not
-            // a popper element
-            if (BROWSER.touch || !event.relatedTarget) return
-            if (closest(event.relatedTarget, SELECTORS.popper)) return
-
-            hide()
-        }
-
-        return {
-            handleTrigger,
-            handleMouseleave,
-            handleBlur
-        }
-    }
-
-    /**
-    * Creates tooltips for all elements that match the instance's selector
-    * @param {Array} els - Elements
-    */
-    _createTooltips(els) {
-
-        els.forEach(el => {
-            const settings = this._applyIndividualSettings(el)
-
-            const { html, trigger } = settings
-
-            const title = el.getAttribute('title')
-            if (!title && !html) return
-
-            const id = idCounter
-            el.setAttribute('data-tooltipped', '')
-            el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
-
-            removeTitle(el)
-
-            const popper = createPopperElement(id, title, settings)
-            const handlers = this._getEventListenerHandlers(el, popper, settings)
-            let listeners = []
-
-            trigger.trim().split(' ').forEach(
-                event => listeners = listeners.concat(createTrigger(event, el, handlers))
-            )
-
-            pushIntoStorage({
-                id,
-                el,
-                popper,
-                settings,
-                listeners,
-                tippyInstance: this
-            })
-
-            idCounter++
-        })
+        createTooltips.call(this, getSelectorElementsArray(selector))
     }
 
     /**
@@ -1011,8 +1062,9 @@ class Tippy {
         popper.style.visibility = 'visible'
         popper.setAttribute('aria-hidden', 'false')
 
-        const onceUpdated = () => {
-            if (!isExpectedState(popper, 'visible')) return
+        // Wait for popper to update position and alter x-placement
+        queueExecution(() => {
+            if (!isVisible(popper)) return
 
             // Sometimes the arrow will not be in the correct position,
             // force another update
@@ -1039,7 +1091,7 @@ class Tippy {
 
             // Wait for transitions to complete
             onTransitionEnd(ref, duration, () => {
-                if (!isExpectedState(popper, 'visible') || ref.onShownFired) return
+                if (!isVisible(popper) || ref.onShownFired) return
 
                 // Focus interactive tooltips only
                 interactive && popper.focus()
@@ -1052,10 +1104,7 @@ class Tippy {
 
                 this.callbacks.shown.call(popper)
             })
-        }
-
-        // Wait for popper to update position and alter x-placement
-        queueExecution(onceUpdated)
+        })
     }
 
     /**
@@ -1091,7 +1140,7 @@ class Tippy {
         popper.setAttribute('aria-hidden', 'true')
 
         // Use same duration as show if it's the default
-        if (duration === defaultSettings.hideDuration) {
+        if (duration === DEFAULT_SETTINGS.hideDuration) {
             duration = parseInt(tooltip.style[prefix('transitionDuration')])
         } else {
             applyTransitionDuration([tooltip, circle], duration)
@@ -1112,7 +1161,7 @@ class Tippy {
 
         // Wait for transitions to complete
         onTransitionEnd(ref, duration, () => {
-            if (!isExpectedState(popper, 'hidden') || !appendTo.contains(popper)) return
+            if (isVisible(popper) || !appendTo.contains(popper)) return
 
             ref.popperInstance.disableEventListeners()
 
@@ -1131,13 +1180,17 @@ class Tippy {
         const { el, popperInstance, listeners } = ref
 
         // Ensure the popper is hidden
-        if (!isExpectedState(popper, 'hidden')) {
+        if (isVisible(popper)) {
             this.hide(popper, 0)
         }
 
         // Remove Tippy-only event listeners from tooltipped element
         listeners.forEach(listener => el.removeEventListener(listener.event, listener.handler))
 
+        // Restore original title
+        el.setAttribute('title', el.getAttribute('data-original-title'))
+
+        el.removeAttribute('data-original-title')
         el.removeAttribute('data-tooltipped')
         el.removeAttribute('aria-describedby')
 
@@ -1167,6 +1220,10 @@ class Tippy {
     }
 }
 
-export default function factory(selector, settings) {
+function tippy(selector, settings) {
     return new Tippy(selector, settings)
 }
+
+tippy.defaultSettings = DEFAULT_SETTINGS
+
+export default tippy
