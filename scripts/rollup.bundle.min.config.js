@@ -1,6 +1,7 @@
 import base from './rollup.base.config'
 import babel from 'rollup-plugin-babel'
 import sass from 'rollup-plugin-sass'
+import uglify from 'rollup-plugin-uglify'
 import postcss from 'postcss'
 import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
@@ -21,6 +22,7 @@ export default Object.assign(base, {
             presets: ['es2015-rollup'],
             plugins: ['transform-object-rest-spread', 'transform-object-assign']
         }),
+        uglify(),
         commonjs({
           namedExports: {
             'node_modules/popper.js/dist/popper.js': [ 'Popper' ]

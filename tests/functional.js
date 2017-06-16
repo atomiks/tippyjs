@@ -1,10 +1,3 @@
-document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.tippy = factory());
-}(this, (function () { 'use strict';
-
 var BROWSER = {};
 
 if (typeof window !== 'undefined') {
@@ -58,6 +51,10 @@ var DEFAULT_SETTINGS = {
 
 var DEFAULT_SETTINGS_KEYS = BROWSER.supported && Object.keys(DEFAULT_SETTINGS);
 
+/**
+* Hides all poppers
+* @param {Object} currentRef
+*/
 function hideAllPoppers(currentRef) {
 
     STORE.forEach(function (ref) {
@@ -125,6 +122,10 @@ function find(arr, checkFn) {
   return arr.filter(checkFn)[0];
 }
 
+/**
+* To run a single time, once DOM is presumed to be ready
+* @return {Boolean} whether the function has run or not
+*/
 function init() {
 
     if (init.done) return false;
@@ -202,15 +203,15 @@ function init() {
     return true;
 }
 
+function noop() {}
+
 /**
-* Pushes execution of a function to end of execution queue, doing so
-* just before the next repaint
-* @return {Function}
+* Returns the non-shifted placement (e.g., 'bottom-start' => 'bottom')
+* @param {String} placement
+* @return {String}
 */
-function queueExecution(fn) {
-    setTimeout(function () {
-        window.requestAnimationFrame(fn);
-    }, 0);
+function getCorePlacement(placement) {
+    return placement.replace(/-.+/, '');
 }
 
 /**
@@ -234,29 +235,22 @@ function prefix(property) {
 }
 
 /**
-* Removes the title from the tooltipped element
-* @param {Element} el
+* Determines if a popper is currently visible
+* @param {Element} popper
+* @return {Boolean}
 */
-function removeTitle(el) {
-    var title = el.getAttribute('title');
-    el.setAttribute('data-original-title', title || 'html');
-    el.removeAttribute('title');
+function isVisible(popper) {
+    return popper.style.visibility === 'visible';
 }
 
 /**
-* Determines if an element is visible in the viewport
-* @param {Element} el
-* @return {Boolean}
+* Returns the distance taking into account the default distance due to
+* the transform: translate setting in CSS
+* @param {Number} distance
+* @return {String}
 */
-function elementIsInViewport(el) {
-    var rect = el.getBoundingClientRect();
-
-    return rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
-}
-
-function triggerReflow(tooltip, circle) {
-    // Safari needs the specific 'transform' property to be accessed
-    circle ? window.getComputedStyle(circle)[prefix('transform')] : window.getComputedStyle(tooltip).opacity;
+function getOffsetDistanceInPx(distance) {
+    return -(distance - DEFAULT_SETTINGS.distance) + 'px';
 }
 
 /**
@@ -271,6 +265,11 @@ function modifyClassList(els, callback) {
     });
 }
 
+/**
+* Applies the transition duration to each element
+* @param {Array} els - HTML elements
+* @param {Number} duration
+*/
 function applyTransitionDuration(els, duration) {
     var mutableDuration = duration;
 
@@ -289,25 +288,145 @@ function applyTransitionDuration(els, duration) {
 }
 
 /**
-* Determines if a popper is currently visible
+* Determines if the mouse's cursor is outside the interactive border
+* @param {MouseEvent} event
 * @param {Element} popper
+* @param {Object} settings
 * @return {Boolean}
 */
-function isVisible(popper) {
-    return popper.style.visibility === 'visible';
-}
+function cursorIsOutsideInteractiveBorder(event, popper, settings) {
+    if (!popper.getAttribute('x-placement')) return false;
 
-function noop() {}
+    var x = event.clientX,
+        y = event.clientY;
+    var interactiveBorder = settings.interactiveBorder,
+        distance = settings.distance;
+
+
+    var rect = popper.getBoundingClientRect();
+    var corePosition = getCorePlacement(popper.getAttribute('x-placement'));
+    var borderWithDistance = interactiveBorder + distance;
+
+    var exceeds = {
+        top: rect.top - y > interactiveBorder,
+        bottom: y - rect.bottom > interactiveBorder,
+        left: rect.left - x > interactiveBorder,
+        right: x - rect.right > interactiveBorder
+    };
+
+    switch (corePosition) {
+        case 'top':
+            exceeds.top = rect.top - y > borderWithDistance;
+            break;
+        case 'bottom':
+            exceeds.bottom = y - rect.bottom > borderWithDistance;
+            break;
+        case 'left':
+            exceeds.left = rect.left - x > borderWithDistance;
+            break;
+        case 'right':
+            exceeds.right = x - rect.right > borderWithDistance;
+            break;
+    }
+
+    return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right;
+}
 
 /**
-* Returns the non-shifted placement (e.g., 'bottom-start' => 'bottom')
-* @param {String} placement
-* @return {String}
+* Creates a trigger
+* @param {Object} event - the custom event specified in the `trigger` setting
+* @param {Element} el - tooltipped element
+* @param {Object} handlers - the handlers for each listener
+* @return {Array} - array of listener objects
 */
-function getCorePlacement(placement) {
-    return placement.replace(/-.+/, '');
+function createTrigger(event, el, handlers, touchHold) {
+    var listeners = [];
+
+    if (event === 'manual') return listeners;
+
+    // Enter
+    el.addEventListener(event, handlers.handleTrigger);
+    listeners.push({
+        event: event,
+        handler: handlers.handleTrigger
+    });
+
+    // Leave
+    if (event === 'mouseenter') {
+
+        if (BROWSER.supportsTouch && touchHold) {
+            el.addEventListener('touchstart', handlers.handleTrigger);
+            listeners.push({
+                event: 'touchstart',
+                handler: handlers.handleTrigger
+            });
+            el.addEventListener('touchend', handlers.handleMouseleave);
+            listeners.push({
+                event: 'touchend',
+                handler: handlers.handleMouseleave
+            });
+        }
+
+        el.addEventListener('mouseleave', handlers.handleMouseleave);
+        listeners.push({
+            event: 'mouseleave',
+            handler: handlers.handleMouseleave
+        });
+    }
+
+    if (event === 'focus') {
+        el.addEventListener('blur', handlers.handleBlur);
+        listeners.push({
+            event: 'blur',
+            handler: handlers.handleBlur
+        });
+    }
+
+    return listeners;
 }
 
+/**
+* Prepares the callback functions for `show` and `hide` methods
+* @param {Object} ref -  the element/popper reference
+* @param {Number} duration
+* @param {Function} callback - callback function to fire once transitions complete
+*/
+function onTransitionEnd(ref, duration, callback) {
+
+    // Make callback synchronous if duration is 0
+    if (!duration) {
+        return callback();
+    }
+
+    var tooltip = ref.popper.querySelector(SELECTORS.tooltip);
+    var transitionendFired = false;
+
+    var listenerCallback = function listenerCallback(e) {
+        if (e.target !== tooltip) return;
+
+        transitionendFired = true;
+
+        tooltip.removeEventListener('webkitTransitionEnd', listenerCallback);
+        tooltip.removeEventListener('transitionend', listenerCallback);
+
+        callback();
+    };
+
+    // Wait for transitions to complete
+    tooltip.addEventListener('webkitTransitionEnd', listenerCallback);
+    tooltip.addEventListener('transitionend', listenerCallback);
+
+    // transitionend listener sometimes may not fire
+    clearTimeout(ref.transitionendTimeout);
+    ref.transitionendTimeout = setTimeout(function () {
+        !transitionendFired && callback();
+    }, duration);
+}
+
+/**
+* Mousemove event listener callback method for follow cursor setting
+* @param {MouseEvent} e
+*/
 function followCursorHandler(e) {
     var _this = this;
 
@@ -364,51 +483,6 @@ function followCursorHandler(e) {
     }
 
     popper.style[prefix('transform')] = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
-}
-
-/**
-* Returns an array of elements based on the selector input
-* @param {String|Element} selector
-* @return {Array} of HTML Elements
-*/
-function getArrayOfElementsFromSelector(selector) {
-    if (selector instanceof Element) {
-        return [selector];
-    }
-
-    return [].slice.call(document.querySelectorAll(selector));
-}
-
-function onTransitionEnd(ref, duration, callback) {
-
-    // Make callback synchronous if duration is 0
-    if (!duration) {
-        return callback();
-    }
-
-    var tooltip = ref.popper.querySelector(SELECTORS.tooltip);
-    var transitionendFired = false;
-
-    var listenerCallback = function listenerCallback(e) {
-        if (e.target !== tooltip) return;
-
-        transitionendFired = true;
-
-        tooltip.removeEventListener('webkitTransitionEnd', listenerCallback);
-        tooltip.removeEventListener('transitionend', listenerCallback);
-
-        callback();
-    };
-
-    // Wait for transitions to complete
-    tooltip.addEventListener('webkitTransitionEnd', listenerCallback);
-    tooltip.addEventListener('transitionend', listenerCallback);
-
-    // transitionend listener sometimes may not fire
-    clearTimeout(ref.transitionendTimeout);
-    ref.transitionendTimeout = setTimeout(function () {
-        !transitionendFired && callback();
-    }, duration);
 }
 
 var nativeHints = ['native code', '[object MutationObserverConstructor]'];
@@ -2669,12 +2743,21 @@ Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = DEFAULTS;
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
 
-//# sourceMappingURL=popper.js.map
 
-function getOffsetDistanceInPx(distance) {
-    return -(distance - DEFAULT_SETTINGS.distance) + 'px';
-}
+
+
+
+
+
+
+
+
 
 var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -2720,6 +2803,11 @@ var _extends$1 = Object.assign || function (target) {
   return target;
 };
 
+/**
+* Creates a new popper instance
+* @param {Object} ref
+* @return {Object} - the popper instance
+*/
 function createPopperInstance(ref) {
     var el = ref.el,
         popper = ref.popper,
@@ -2755,6 +2843,11 @@ function createPopperInstance(ref) {
     return new Popper(el, popper, config);
 }
 
+/**
+* Appends the popper and creates a popper instance if one does not exist
+* Also updates its position if need be and enables event listeners
+* @param {Object} ref -  the element/popper reference
+*/
 function mountPopper(ref) {
     var el = ref.el,
         popper = ref.popper,
@@ -2788,6 +2881,21 @@ function mountPopper(ref) {
     }
 }
 
+/**
+* Pushes execution of a function to end of execution queue, doing so
+* just before the next repaint
+* @return {Function}
+*/
+function queueExecution(fn) {
+    setTimeout(function () {
+        window.requestAnimationFrame(fn);
+    }, 0);
+}
+
+/**
+* Updates a popper's position on each animation frame to make it stick to a moving element
+* @param {Object} ref
+*/
 function makeSticky(ref) {
     var popper = ref.popper,
         popperInstance = ref.popperInstance,
@@ -2814,31 +2922,13 @@ function makeSticky(ref) {
     queueExecution(updatePosition);
 }
 
-function getIndividualSettings(el, instanceSettings) {
-
-    var settings = DEFAULT_SETTINGS_KEYS.reduce(function (acc, key) {
-        var val = el.getAttribute('data-' + key.toLowerCase()) || instanceSettings[key];
-
-        // Convert strings to booleans
-        if (val === 'false') val = false;
-        if (val === 'true') val = true;
-
-        // Convert number strings to true numbers
-        if (!isNaN(parseFloat(val))) val = parseFloat(val);
-
-        // Convert array strings to actual arrays
-        if (typeof val === 'string' && val.trim().charAt(0) === '[') {
-            val = JSON.parse(val);
-        }
-
-        acc[key] = val;
-
-        return acc;
-    }, {});
-
-    return _extends$1({}, instanceSettings, settings);
-}
-
+/**
+* Creates a popper element then returns it
+* @param {Number} id - the popper id
+* @param {String} title - the tooltip's `title` attribute
+* @param {Object} settings - individual settings
+* @return {Element} - the popper element
+*/
 function createPopperElement(id, title, settings) {
     var position = settings.position,
         distance = settings.distance,
@@ -2918,90 +3008,88 @@ function createPopperElement(id, title, settings) {
     return popper;
 }
 
-function createTrigger(event, el, handlers, touchHold) {
-    var listeners = [];
+/**
+* Returns an array of elements based on the selector input
+* @param {String|Element} selector
+* @return {Array} of HTML Elements
+*/
+function getArrayOfElementsFromSelector(selector) {
+    if (selector instanceof Element) {
+        return [selector];
+    }
 
-    if (event === 'manual') return listeners;
+    return [].slice.call(document.querySelectorAll(selector));
+}
 
-    // Enter
-    el.addEventListener(event, handlers.handleTrigger);
-    listeners.push({
-        event: event,
-        handler: handlers.handleTrigger
-    });
+/**
+* Removes the title from the tooltipped element
+* @param {Element} el
+*/
+function removeTitle(el) {
+    var title = el.getAttribute('title');
+    el.setAttribute('data-original-title', title || 'html');
+    el.removeAttribute('title');
+}
 
-    // Leave
-    if (event === 'mouseenter') {
+/**
+* Determines if an element is visible in the viewport
+* @param {Element} el
+* @return {Boolean}
+*/
+function elementIsInViewport(el) {
+    var rect = el.getBoundingClientRect();
 
-        if (BROWSER.supportsTouch && touchHold) {
-            el.addEventListener('touchstart', handlers.handleTrigger);
-            listeners.push({
-                event: 'touchstart',
-                handler: handlers.handleTrigger
-            });
-            el.addEventListener('touchend', handlers.handleMouseleave);
-            listeners.push({
-                event: 'touchend',
-                handler: handlers.handleMouseleave
-            });
+    return rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+}
+
+/**
+* Triggers a document repaint or reflow for CSS transition
+* @param {Element} tooltip
+* @param {Element} circle
+*/
+function triggerReflow(tooltip, circle) {
+    // Safari needs the specific 'transform' property to be accessed
+    circle ? window.getComputedStyle(circle)[prefix('transform')] : window.getComputedStyle(tooltip).opacity;
+}
+
+/**
+* Returns an object of settings to override global settings
+* @param {Element} el - the tooltipped element
+* @param {Object} instanceSettings
+* @return {Object} - individual settings
+*/
+function getIndividualSettings(el, instanceSettings) {
+
+    var settings = DEFAULT_SETTINGS_KEYS.reduce(function (acc, key) {
+        var val = el.getAttribute('data-' + key.toLowerCase()) || instanceSettings[key];
+
+        // Convert strings to booleans
+        if (val === 'false') val = false;
+        if (val === 'true') val = true;
+
+        // Convert number strings to true numbers
+        if (!isNaN(parseFloat(val))) val = parseFloat(val);
+
+        // Convert array strings to actual arrays
+        if (typeof val === 'string' && val.trim().charAt(0) === '[') {
+            val = JSON.parse(val);
         }
 
-        el.addEventListener('mouseleave', handlers.handleMouseleave);
-        listeners.push({
-            event: 'mouseleave',
-            handler: handlers.handleMouseleave
-        });
-    }
+        acc[key] = val;
 
-    if (event === 'focus') {
-        el.addEventListener('blur', handlers.handleBlur);
-        listeners.push({
-            event: 'blur',
-            handler: handlers.handleBlur
-        });
-    }
+        return acc;
+    }, {});
 
-    return listeners;
+    return _extends$1({}, instanceSettings, settings);
 }
 
-function cursorIsOutsideInteractiveBorder(event, popper, settings) {
-    if (!popper.getAttribute('x-placement')) return false;
-
-    var x = event.clientX,
-        y = event.clientY;
-    var interactiveBorder = settings.interactiveBorder,
-        distance = settings.distance;
-
-
-    var rect = popper.getBoundingClientRect();
-    var corePosition = getCorePlacement(popper.getAttribute('x-placement'));
-    var borderWithDistance = interactiveBorder + distance;
-
-    var exceeds = {
-        top: rect.top - y > interactiveBorder,
-        bottom: y - rect.bottom > interactiveBorder,
-        left: rect.left - x > interactiveBorder,
-        right: x - rect.right > interactiveBorder
-    };
-
-    switch (corePosition) {
-        case 'top':
-            exceeds.top = rect.top - y > borderWithDistance;
-            break;
-        case 'bottom':
-            exceeds.bottom = y - rect.bottom > borderWithDistance;
-            break;
-        case 'left':
-            exceeds.left = rect.left - x > borderWithDistance;
-            break;
-        case 'right':
-            exceeds.right = x - rect.right > borderWithDistance;
-            break;
-    }
-
-    return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right;
-}
-
+/**
+* Returns relevant listener callbacks for each ref
+* @param {Element} el
+* @param {Element} popper
+* @param {Object} settings
+* @return {Object} - relevant listener callback methods
+*/
 function getEventListenerHandlers(el, popper, settings) {
     var _this = this;
 
@@ -3195,6 +3283,19 @@ function createTooltips(els) {
         idCounter++;
     });
 }
+
+/**!
+* @file tippy.js | Vanilla JS Tooltip Library
+* @version 1.0.0
+* @license MIT
+*/
+
+/* Utility functions */
+/* Core library functions */
+/**
+* @param {String|Element} selector
+* @param {Object} settings (optional) - the object of settings to be applied to the instance
+*/
 
 var Tippy = function () {
     function Tippy(selector) {
@@ -3531,14 +3632,854 @@ var Tippy = function () {
     return Tippy;
 }();
 
-function tippy$2(selector, settings) {
+function tippy(selector, settings) {
     return new Tippy(selector, settings);
 }
 
-tippy$2.version = '1.0.0';
-tippy$2.browser = BROWSER;
-tippy$2.defaultSettings = DEFAULT_SETTINGS;
+tippy.version = '1.0.0';
+tippy.browser = BROWSER;
+tippy.defaultSettings = DEFAULT_SETTINGS;
 
-return tippy$2;
+var createVirtualElement = function createVirtualElement() {
+    var el = document.createElement('div');
+    el.className = 'test';
+    el.setAttribute('title', 'tooltip');
+    return el;
+};
 
-})));
+describe('core', function () {
+
+    describe('init', function () {
+        it('runs only once', function () {
+            init();
+            expect(init()).toBe(false);
+        });
+
+        var el = createVirtualElement();
+
+        var instance = tippy(el, { duration: 0 });
+        var popper = instance.getPopperElement(el);
+
+        instance.show(popper);
+
+        document.dispatchEvent(new MouseEvent('click'));
+        window.TouchEvent && document.dispatchEvent(new TouchEvent('touchstart'));
+
+        it('sets up the document click listener properly', function () {
+            expect(document.querySelector(SELECTORS.popper)).toBeNull();
+        });
+
+        it('sets BROWSER.touch to be true upon touchstart, keeps it false if does not support touch', function () {
+            window.TouchEvent ? expect(BROWSER.touch).toBe(true) : expect(BROWSER.touch).toBe(false);
+
+            BROWSER.touch = false;
+        });
+
+        it('adds .tippy-touch class to body if iOS, does not if not', function () {
+            BROWSER.iOS ? expect(document.body.classList).toContain('tippy-touch') : expect(document.body.classList).not.toContain('tippy-touch');
+        });
+
+        instance.destroyAll();
+    });
+
+    describe('tippy', function () {
+        it('does not mutate the default settings', function () {
+            var settingsClone = _extends$1({}, DEFAULT_SETTINGS);
+
+            var el = createVirtualElement();
+
+            var instance = tippy(el, {
+                delay: 1000,
+                duration: 0,
+                popperOptions: {
+                    modifiers: {}
+                }
+            });
+
+            expect(Object.keys(settingsClone).every(function (key) {
+                return settingsClone[key] === DEFAULT_SETTINGS[key];
+            })).toBe(true);
+
+            expect(DEFAULT_SETTINGS.popperOptions.modifiers).toBeUndefined();
+
+            instance.destroyAll();
+        });
+
+        it('works for a DOM element', function () {
+            var el = createVirtualElement();
+
+            var instance = tippy(el);
+            expect(el.hasAttribute('data-tooltipped')).toBe(true);
+
+            instance.destroyAll();
+        });
+
+        it('works for a CSS selector', function () {
+            var el = createVirtualElement();
+
+            document.body.appendChild(el);
+
+            var instance = tippy('.test');
+            expect(el.hasAttribute('data-tooltipped')).toBe(true);
+
+            document.body.removeChild(el);
+
+            instance.destroyAll();
+        });
+
+        it('will not affect elements with an empty title attribute and no html', function () {
+            var el = createVirtualElement();
+            el.setAttribute('title', '');
+
+            var instance = tippy(el);
+
+            expect(el.hasAttribute('data-tooltipped')).toBe(false);
+
+            instance.destroyAll();
+        });
+
+        it('removes the title from the element', function () {
+            var el = createVirtualElement();
+
+            var instance = tippy(el);
+
+            expect(!!el.getAttribute('title')).toBe(false);
+
+            instance.destroyAll();
+        });
+
+        it('composes custom settings with the default settings', function () {
+            var el = createVirtualElement();
+
+            var instance = tippy(el, {
+                position: 'bottom',
+                delay: [100, 200]
+            });
+
+            expect(instance.settings.position === 'bottom' && instance.settings.delay[0] === 100 && instance.settings.html === DEFAULT_SETTINGS.html).toBe(true);
+
+            instance.destroyAll();
+        });
+
+        describe('callbacks', function () {
+
+            var el = createVirtualElement();
+
+            var counter = 1;
+            var _show = void 0,
+                _shown = void 0,
+                _hide = void 0,
+                _hidden = void 0;
+            var showThis = void 0,
+                shownThis = void 0,
+                hideThis = void 0,
+                hiddenThis = void 0;
+
+            beforeEach(function (done) {
+
+                var popper = void 0;
+
+                var instance = tippy(el, {
+                    duration: 0,
+                    show: function show() {
+                        _show = counter;
+                        showThis = this === popper;
+                        counter++;
+                    },
+                    shown: function shown() {
+                        _shown = counter;
+                        shownThis = this === popper;
+                        counter++;
+                        instance.hide(popper);
+                    },
+                    hide: function hide() {
+                        _hide = counter;
+                        hideThis = this === popper;
+                        counter++;
+                        hideCalled = true;
+                    },
+                    hidden: function hidden() {
+                        _hidden = counter;
+                        hiddenThis = this === popper;
+                        counter++;
+                        hiddenCalled = true;
+                        instance.destroyAll();
+                        done();
+                    }
+                });
+
+                popper = instance.getPopperElement(el);
+                instance.show(popper);
+            });
+
+            it('all 4 callbacks should be called in the correct order', function () {
+                expect(_show).toBe(1);
+                expect(_shown).toBe(2);
+                expect(_hide).toBe(3);
+                expect(_hidden).toBe(4);
+            });
+
+            it('`this` refers to the popper', function () {
+                expect(showThis && shownThis && hideThis && hiddenThis).toBe(true);
+            });
+        });
+
+        describe('wait callback', function () {
+
+            var el = createVirtualElement();
+
+            var showIsAFunction = void 0,
+                eventIsAnEventObject = void 0,
+                popperStaysHidden = void 0;
+
+            beforeEach(function (done) {
+                var instance = tippy(el, {
+                    wait: function wait(show, event) {
+                        showIsAFunction = typeof show === 'function';
+                        eventIsAnEventObject = event.type !== undefined;
+                        done();
+                    }
+                });
+
+                var popper = instance.getPopperElement(el);
+
+                el.dispatchEvent(new MouseEvent('mouseenter'));
+                popperStaysHidden = popper.style.visibility !== 'visible';
+            });
+
+            it('should work', function () {
+                expect(showIsAFunction && eventIsAnEventObject && popperStaysHidden).toBe(true);
+            });
+        });
+
+        describe('getPopperElement', function () {
+            it('returns the popper from its element reference', function () {
+                var el = createVirtualElement();
+
+                var instance = tippy(el);
+
+                expect(instance.getPopperElement(el).classList).toContain('tippy-popper');
+
+                instance.destroyAll();
+            });
+        });
+
+        describe('getReferenceElement', function () {
+            it('returns the reference element from its popper reference', function () {
+                var el = createVirtualElement();
+
+                var instance = tippy(el);
+                var popper = instance.getPopperElement(el);
+
+                expect(instance.getReferenceElement(popper).className).toBe('test');
+
+                instance.destroyAll();
+            });
+        });
+
+        describe('getReferenceObject', function () {
+            it('returns the reference object with either the ref el or popper as the argument', function () {
+                var el = createVirtualElement();
+
+                var instance = tippy(el);
+                var ref = instance.getReferenceObject(el);
+                var ref2 = instance.getReferenceObject(instance.getPopperElement(el));[ref, ref2].forEach(function (ref) {
+                    expect(ref.toString()).toBe('[object Object]');
+                    expect(ref.popper).toBeDefined();
+                });
+
+                instance.destroyAll();
+            });
+        });
+
+        describe('destroyAll', function () {
+            it('should destroy all tooltips created by the instance', function () {
+                var el = createVirtualElement();
+
+                var instance = tippy(el);
+
+                instance.destroyAll();
+
+                expect(instance.state.destroyed).toBe(true);
+                expect(instance.store).toBeNull();
+            });
+        });
+
+        describe('destroy', function () {
+            it('restores the title on the element', function () {
+                var el = createVirtualElement();
+
+                var instance = tippy(el);
+                var popper = instance.getPopperElement(el);
+
+                instance.destroy(popper);
+
+                expect(el.getAttribute('title')).toBe('tooltip');
+            });
+
+            it('removes listeners from the element, without affecting other listeners', function () {
+                var el = createVirtualElement();
+
+                var test = false;
+                el.addEventListener('mouseenter', function () {
+                    test = true;
+                });
+
+                var instance = tippy(el);
+                var popper = instance.getPopperElement(el);
+
+                instance.destroy(popper);
+
+                el.dispatchEvent(new MouseEvent('mouseenter'));
+
+                expect(test).toBe(true);
+                expect(document.querySelector(SELECTORS.popper)).toBeNull();
+            });
+
+            it('removes the ref object from store', function () {
+                var el = createVirtualElement();
+
+                var instance = tippy(el);
+                var popper = instance.getPopperElement(el);
+
+                instance.destroy(popper);
+
+                expect(instance.getReferenceObject(el)).toBeUndefined();
+            });
+        });
+
+        describe('show', function () {
+            it('shows a tooltip when manually invoked', function () {
+                var el = createVirtualElement();
+
+                var instance = tippy(el);
+                var popper = instance.getPopperElement(el);
+
+                instance.show(popper);
+
+                expect(popper.style.visibility).toBe('visible');
+
+                instance.destroyAll();
+            });
+
+            it('shows a tooltip when triggered by one of the events in the trigger string', function () {
+                var el = createVirtualElement();
+                var instance = tippy(el, {
+                    trigger: 'mouseenter click'
+                });
+                var popper = instance.getPopperElement(el);
+
+                el.dispatchEvent(new MouseEvent('mouseenter'));
+                expect(popper.style.visibility).toBe('visible');
+
+                instance.hide(popper, 0);
+
+                el.dispatchEvent(new MouseEvent('click'));
+                expect(popper.style.visibility).toBe('visible');
+
+                instance.destroyAll();
+            });
+        });
+
+        describe('hide', function () {
+
+            var counter = 0;
+            var mouseleaveWorked = false;
+            var blurWorked = false;
+
+            beforeEach(function (done) {
+                if (!counter) return done();
+
+                var el = createVirtualElement();
+
+                var type = counter === 1 ? 'mouseleave' : 'blur';
+
+                var instance = tippy(el, {
+                    trigger: 'mouseenter focus',
+                    hide: function hide() {
+                        if (type === 'mouseleave') mouseleaveWorked = true;
+                        if (type === 'blur') blurWorked = true;
+
+                        done();
+                    }
+                });
+
+                var popper = instance.getPopperElement(el);
+                instance.show(popper, 0);
+
+                if (type === 'blur') {
+                    el.focus();
+                }
+
+                el.dispatchEvent(new MouseEvent(type));
+            });
+
+            it('hides a tooltip when manually invoked', function () {
+                var el = createVirtualElement();
+
+                var instance = tippy(el);
+                var popper = instance.getPopperElement(el);
+
+                instance.hide(popper);
+
+                expect(popper.style.visibility).toBe('hidden');
+
+                instance.destroyAll();
+
+                counter++;
+            });
+
+            it('hides a tooltip when mouseleave event is fired', function () {
+                expect(mouseleaveWorked).toBe(true);
+                counter++;
+            });
+
+            it('hides a tooltip when blur event is fired', function () {
+                expect(blurWorked).toBe(true);
+            });
+        });
+
+        describe('update', function () {
+            it('updates a tooltip with new content if the title attribute has changed', function () {
+                var el = createVirtualElement();
+
+                var instance = tippy(el);
+                var popper = instance.getPopperElement(el);
+
+                el.setAttribute('title', 'new');
+                instance.update(popper);
+
+                expect(popper.querySelector(SELECTORS.content).innerHTML).toBe('new');
+
+                instance.destroyAll();
+            });
+
+            it('injects new HTML if appropriate', function () {
+                var el = createVirtualElement();
+                var html = document.createElement('div');
+                html.id = 'test-template';
+                html.innerHTML = 'test';
+
+                document.body.appendChild(html);
+
+                var instance = tippy(el, {
+                    html: '#test-template'
+                });
+
+                html.innerHTML = 'new';
+
+                var popper = instance.getPopperElement(el);
+                instance.update(popper);
+
+                expect(popper.querySelector(SELECTORS.content).innerHTML).toBe('new');
+
+                instance.destroyAll();
+                document.body.removeChild(html);
+            });
+        });
+    });
+
+    describe('createPopperInstance', function () {
+
+        it('returns a new Popper instance', function () {
+            var el = createVirtualElement();
+
+            var instance = tippy(el);
+            var ref = instance.getReferenceObject(el);
+
+            var popperInstance = createPopperInstance(ref);
+
+            expect(_typeof(popperInstance.update)).toBe('function');
+
+            instance.destroyAll();
+        });
+    });
+
+    describe('getArrayOfElementsFromSelector', function () {
+        it('returns an array of HTMLElements', function () {
+            var el1 = createVirtualElement();
+            var el2 = createVirtualElement();
+
+            document.body.appendChild(el2);
+
+            var res1 = getArrayOfElementsFromSelector(el1);
+            var res2 = getArrayOfElementsFromSelector('.test');[res1, res2].forEach(function (res) {
+                return expect(res.every(function (item) {
+                    return item instanceof Element;
+                })).toBe(true);
+            });
+
+            document.body.removeChild(el2);
+        });
+    });
+
+    describe('createTrigger', function () {
+        var el = createVirtualElement();
+        var handlers = {
+            handleTrigger: function handleTrigger() {},
+            handleMouseleave: function handleMouseleave() {},
+            handleBlur: function handleBlur() {}
+        };
+
+        it('returns listeners array containing opposite event', function () {
+            var listeners1 = createTrigger('mouseenter', el, handlers, false);
+            var listeners2 = createTrigger('focus', el, handlers, false);
+
+            expect(find(listeners1, function (o) {
+                return o.event === 'mouseleave';
+            })).toBeDefined();
+
+            expect(find(listeners2, function (o) {
+                return o.event === 'blur';
+            })).toBeDefined();
+        });
+
+        it('creates `touchstart` and `touchend` events if `touchHold` setting is true', function () {
+
+            var listeners = createTrigger('mouseenter', el, handlers, true);
+
+            if (BROWSER.supportsTouch) {
+                ['touchstart', 'touchend'].forEach(function (e) {
+                    return expect(find(listeners, function (o) {
+                        return o.event === e;
+                    })).toBeDefined();
+                });
+            } else {
+                ['touchstart', 'touchend'].forEach(function (e) {
+                    return expect(find(listeners, function (o) {
+                        return o.event === e;
+                    })).toBeUndefined();
+                });
+            }
+        });
+    });
+
+    describe('cursorIsOutsideInteractiveBorder', function () {
+
+        var wrapper = document.createElement('div');
+        wrapper.style.position = 'absolute';
+        wrapper.style.left = '100px';
+        wrapper.style.top = '100px';
+
+        var popper = document.createElement('div');
+        popper.setAttribute('x-placement', 'top');
+        popper.innerHTML = 'text';
+
+        wrapper.appendChild(popper);
+
+        document.body.appendChild(wrapper);
+
+        var settings = {
+            interactiveBorder: 10,
+            distance: 10
+        };
+
+        it('should be false if cursor is within border', function () {
+            // Inside element
+            expect(cursorIsOutsideInteractiveBorder({
+                clientX: 105,
+                clientY: 105
+            }, popper, settings)).toBe(false);
+
+            // Outside element: TOP/LEFT
+            expect(cursorIsOutsideInteractiveBorder({
+                clientX: 92,
+                clientY: 94
+            }, popper, settings)).toBe(false);
+
+            // Outside element: TOP/RIGHT
+            expect(cursorIsOutsideInteractiveBorder({
+                clientX: 125,
+                clientY: 92
+            }, popper, settings)).toBe(false);
+
+            // Outside element: BOTTOM/LEFT
+            expect(cursorIsOutsideInteractiveBorder({
+                clientX: 92,
+                clientY: 110
+            }, popper, settings)).toBe(false);
+
+            // Outside element: BOTTOM/RIGHT
+            expect(cursorIsOutsideInteractiveBorder({
+                clientX: 125,
+                clientY: 115
+            }, popper, settings)).toBe(false);
+        });
+
+        it('should be true if cursor is outside border', function () {
+            expect(cursorIsOutsideInteractiveBorder({
+                clientX: 150,
+                clientY: 88
+            }, popper, settings)).toBe(true);
+
+            expect(cursorIsOutsideInteractiveBorder({
+                clientX: 105,
+                clientY: 140
+            }, popper, settings)).toBe(true);
+
+            document.body.removeChild(wrapper);
+        });
+    });
+
+    describe('getIndividualSettings', function () {
+        it('uses data-* attributes to override instance settings', function () {
+            var el = createVirtualElement();
+            el.setAttribute('data-duration', '1000');
+
+            var instance = tippy(el);
+            var ref = instance.getReferenceObject(el);
+
+            expect(ref.settings.duration).not.toBe(instance.settings.duration);
+        });
+
+        it('does not override instance settings if `performance` is true', function () {
+            var el = createVirtualElement();
+            el.setAttribute('data-duration', '1000');
+
+            var instance = tippy(el, { performance: true });
+            var ref = instance.getReferenceObject(el);
+
+            expect(ref.settings.duration).toBe(instance.settings.duration);
+        });
+    });
+
+    describe('onTransitionEnd', function () {
+
+        var a = false,
+            b = false,
+            c = false;
+
+        var DURATION = 20;
+
+        var el = createVirtualElement();
+        el.style[prefix('transitionDuration')] = DURATION;
+
+        var instance = tippy(el, {
+            duration: DURATION
+        });
+        var ref = instance.getReferenceObject(el);
+
+        var firstItDone = false;
+
+        beforeEach(function (done) {
+            if (!firstItDone) {
+                setTimeout(function () {
+                    b = true;
+                    firstItDone = true;
+                    done();
+                }, DURATION - 1);
+            } else {
+                setTimeout(done, DURATION + 1);
+            }
+
+            onTransitionEnd(ref, DURATION, function () {
+                a = true;
+                if (firstItDone) {
+                    c = true;
+                }
+            });
+        });
+
+        it('waits for transitions to complete', function () {
+            expect(a).not.toBe(b);
+        });
+
+        it('runs the callback once transitions are complete', function () {
+            expect(c).toBe(true);
+        });
+
+        it('is synchronous if duration is 0', function () {
+            var test = false;
+            onTransitionEnd(ref, 0, function () {
+                test = true;
+            });
+            expect(test).toBe(true);
+        });
+    });
+
+    describe('mountPopper', function () {
+        it('appends the popper to the DOM', function () {
+            var el = createVirtualElement();
+
+            var instance = tippy(el);
+            var ref = instance.getReferenceObject(el);
+
+            mountPopper(ref);
+
+            expect(document.querySelector(SELECTORS.popper)).not.toBeNull();
+
+            var popper = instance.getPopperElement(el);
+            popper.style.visibility = 'visible';
+            instance.destroyAll();
+        });
+
+        it('creates a single popper instance on first mount', function () {
+            var el = createVirtualElement();
+
+            var instance = tippy(el);
+            var ref = instance.getReferenceObject(el);
+
+            mountPopper(ref);
+
+            var cache = ref.popperInstance;
+
+            mountPopper(ref);
+
+            expect(ref.popperInstance).toBeDefined();
+            expect(ref.popperInstance).toBe(cache);
+
+            ref.popper.style.visibility = 'visible';
+            instance.destroyAll();
+        });
+
+        it('enables event listeners if `followCursor` is false or BROWSER.touch is true', function () {
+            var el = createVirtualElement();
+
+            var instance = tippy(el);
+            var ref = instance.getReferenceObject(el);
+
+            mountPopper(ref);
+
+            expect(ref.popperInstance.state.eventsEnabled).toBe(true);
+
+            ref.popper.style.visibility = 'visible';
+            instance.destroyAll();
+
+            BROWSER.touch = true;
+
+            instance = tippy(el, {
+                followCursor: true
+            });
+            ref = instance.getReferenceObject(el);
+
+            mountPopper(ref);
+
+            expect(ref.popperInstance.state.eventsEnabled).toBe(true);
+
+            ref.popper.style.visibility = 'visible';
+            instance.destroyAll();
+            BROWSER.touch = false;
+        });
+
+        it('disables event listeners if `followCursor` is true', function () {
+            var el = createVirtualElement();
+
+            var instance = tippy(el, {
+                followCursor: true
+            });
+            var ref = instance.getReferenceObject(el);
+
+            mountPopper(ref);
+
+            expect(ref.popperInstance.state.eventsEnabled).toBe(false);
+
+            ref.popper.style.visibility = 'visible';
+            instance.destroyAll();
+        });
+    });
+});
+
+describe('utils', function () {
+
+    describe('getCorePlacement', function () {
+        it('returns the non-shifted placement for all combinations', function () {
+            ['top', 'bottom', 'left', 'right'].forEach(function (placement) {
+
+                expect(getCorePlacement(placement)).toBe(placement);['start', 'end'].forEach(function (shift) {
+                    expect(getCorePlacement(placement + '-' + shift)).toBe(placement);
+                });
+            });
+        });
+    });
+
+    describe('find', function () {
+        it('behaves like Array.prototype.find', function () {
+            var arr = [{ name: 'Bob', city: 'Los Angeles' }, { name: 'Jim', city: 'Sydney' }, { name: 'Bob', city: 'London' }];
+
+            expect(find(arr, function (o) {
+                return o.name === 'Bob';
+            }).city).toBe('Los Angeles');
+
+            expect(find(arr, function (o) {
+                return o.city === 'London';
+            })).toBe(arr[2]);
+        });
+    });
+
+    describe('prefix', function () {
+        it('prefixes a given property', function () {
+            var prefixedProp = prefix('transition');
+            expect(prefixedProp === 'transition' || prefixedProp === 'webkitTransition').toBe(true);
+        });
+    });
+
+    describe('closest', function () {
+        it('finds and returns the closest parent element', function () {
+            var parent = document.createElement('div');
+            parent.className = 'parent';
+
+            var child = document.createElement('div');
+            var grandchild = document.createElement('p');
+
+            parent.appendChild(child);
+            child.appendChild(grandchild);
+
+            expect(closest(grandchild, '.parent') === parent).toBe(true);
+        });
+    });
+
+    describe('isVisible', function () {
+        it('determines if an element has a visible style', function () {
+            var popper = document.createElement('div');
+            popper.style.visibility = 'visible';
+
+            expect(isVisible(popper)).toBe(true);
+
+            popper.style.visibility = 'hidden';
+
+            expect(isVisible(popper)).toBe(false);
+        });
+    });
+
+    describe('modifyClassList', function () {
+        it('modifies an element\'s class list', function () {
+
+            var popper = document.createElement('div');
+            popper.className = 'class1 class2 class3';
+
+            modifyClassList([popper], function (list) {
+                list.add('class4');
+                list.remove('class1');
+            });
+
+            expect(popper.className).toBe('class2 class3 class4');
+        });
+    });
+
+    describe('applyTransitionDuration', function () {
+        it('applies a transition duration to a list of elements', function () {
+            var el1 = createVirtualElement();
+            var el2 = createVirtualElement();
+
+            applyTransitionDuration([el1, el2], 100);
+
+            expect(el1.style[prefix('transitionDuration')]).toBe('100ms');
+            expect(el2.style[prefix('transitionDuration')]).toBe('100ms');
+        });
+    });
+
+    describe('noop', function () {
+        it('is callable and does nothing', function () {
+            expect(noop()).toBeUndefined();
+        });
+    });
+
+    describe('getOffsetDistanceInPx', function () {
+        it('returns the correct offset distance in px', function () {
+            expect(getOffsetDistanceInPx(10)).toBe('0px');
+            expect(getOffsetDistanceInPx(15)).toBe('-5px');
+            expect(getOffsetDistanceInPx(5)).toBe('5px');
+            expect(getOffsetDistanceInPx(-1)).toBe('11px');
+        });
+    });
+});

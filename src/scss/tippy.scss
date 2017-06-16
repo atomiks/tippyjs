@@ -77,7 +77,7 @@
 }
 
 @mixin circle-transform-leave ($position) {
-    $scale: 0.45;
+    $scale: 0.5;
     @if ($position == 'top') {
         transform: scale($scale) translate(-50%, -100%);
     } @else if ($position == 'bottom') {
@@ -302,7 +302,7 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
     position: relative;
     color: white;
     border-radius: 4px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     padding: 0.4rem 0.8rem;
     text-align: center;
     will-change: transform;
