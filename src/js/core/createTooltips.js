@@ -10,7 +10,7 @@ import { STORE } from './constants'
 let idCounter = 1
 
 /**
-* Creates tooltips for all elements that match the instance's selector
+* Creates tooltips for all el elements that match the instance's selector
 * @param {Array} els - Elements
 */
 export default function createTooltips(els) {
@@ -43,17 +43,14 @@ export default function createTooltips(els) {
             listeners = listeners.concat(createTrigger(event, el, handlers, touchHold))
         )
 
-        const toStore = {
+        STORE.push({
             id,
             el,
             popper,
             settings,
             listeners,
             tippyInstance: this
-        }
-
-        this.store.push(toStore)
-        STORE.push(toStore)
+        })
 
         idCounter++
     })

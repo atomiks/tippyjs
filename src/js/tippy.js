@@ -44,8 +44,6 @@ class Tippy {
             destroyed: false
         }
 
-        this.store = []
-
         this.selector = selector
 
         this.settings = Object.assign({}, DEFAULT_SETTINGS, settings)
@@ -68,9 +66,9 @@ class Tippy {
     */
     getPopperElement(el) {
         try {
-            return find(this.store, ref => ref.el === el).popper
+            return find(STORE.filter(ref => ref.tippyInstance === this), ref => ref.el === el).popper
         } catch (e) {
-            console.error('[getPopper]: Element passed as the argument does not exist in the instance')
+            console.error('[getPopperElement]: Element passed as the argument does not exist in the instance')
         }
     }
 
@@ -81,9 +79,9 @@ class Tippy {
     */
     getReferenceElement(popper) {
         try {
-            return find(this.store, ref => ref.popper === popper).el
+            return find(STORE.filter(ref => ref.tippyInstance === this), ref => ref.popper === popper).el
         } catch (e) {
-            console.error('[getElement]: Popper passed as the argument does not exist in the instance')
+            console.error('[getReferenceElement]: Popper passed as the argument does not exist in the instance')
         }
     }
 
@@ -92,8 +90,8 @@ class Tippy {
     * @param {Element} x (tooltipped element or popper)
     * @return {Object}
     */
-    getReferenceObject(x) {
-        return find(this.store, ref => ref.el === x || ref.popper === x)
+    getReferenceData(x) {
+        return find(STORE, ref => ref.el === x || ref.popper === x)
     }
 
     /**
@@ -106,7 +104,7 @@ class Tippy {
 
         this.callbacks.show.call(popper)
 
-        const ref = find(this.store, ref => ref.popper === popper)
+        const ref = find(STORE, ref => ref.popper === popper)
         const tooltip = popper.querySelector(SELECTORS.tooltip)
         const circle = popper.querySelector(SELECTORS.circle)
 
@@ -122,7 +120,7 @@ class Tippy {
         } = ref
 
         // Remove transition duration (prevent a transition when popper changes posiiton)
-        applyTransitionDuration([popper, tooltip, circle], 0)
+        applyTransitionDuration([popper, tooltip, circle], 0, true)
 
         mountPopper(ref)
 
@@ -140,9 +138,9 @@ class Tippy {
             }
 
             // Re-apply transition durations
-            applyTransitionDuration([tooltip, circle], duration)
+            applyTransitionDuration([tooltip, circle], duration, true)
             if ( ! followCursor) {
-                applyTransitionDuration([popper], flipDuration)
+                applyTransitionDuration([popper], flipDuration, true)
             }
 
             // Interactive tooltips receive a class of 'active'
@@ -188,7 +186,7 @@ class Tippy {
 
         this.callbacks.hide.call(popper)
 
-        const ref = find(this.store, ref => ref.popper === popper)
+        const ref = find(STORE, ref => ref.popper === popper)
         const tooltip = popper.querySelector(SELECTORS.tooltip)
         const circle = popper.querySelector(SELECTORS.circle)
         const content = popper.querySelector(SELECTORS.content)
@@ -214,9 +212,9 @@ class Tippy {
         // Use same duration as show if an array is not specified
         if ( ! Array.isArray(duration)) {
             duration = parseInt(tooltip.style[prefix('transitionDuration')])
-        } else {
-            applyTransitionDuration([tooltip, circle], duration[1])
         }
+
+        applyTransitionDuration([tooltip, circle], duration)
 
         modifyClassList([tooltip, circle], list => {
             list.contains('tippy-tooltip') && list.remove('tippy-notransition')
@@ -251,7 +249,7 @@ class Tippy {
     destroy(popper) {
         if (this.state.destroyed) return
 
-        const ref = find(this.store, ref => ref.popper === popper)
+        const ref = find(STORE, ref => ref.popper === popper)
         const { el, popperInstance, listeners } = ref
 
         // Ensure the popper is hidden
@@ -272,7 +270,6 @@ class Tippy {
         popperInstance && popperInstance.destroy()
 
         // Remove from storage
-        this.store.splice(this.store.map(ref => ref.popper).indexOf(popper), 1)
         STORE.splice(STORE.map(ref => ref.popper).indexOf(popper), 1)
     }
 
@@ -283,7 +280,7 @@ class Tippy {
     update(popper) {
         if (this.state.destroyed) return
 
-        const ref = find(this.store, ref => ref.popper === popper)
+        const ref = find(STORE, ref => ref.popper === popper)
         const content = popper.querySelector(SELECTORS.content)
         const { el, settings: { html } } = ref
 
@@ -300,11 +297,10 @@ class Tippy {
     destroyAll() {
         if (this.state.destroyed) return
 
-        this.store.forEach(ref => {
+        STORE.filter(ref => ref.tippyInstance === this).forEach(ref => {
             this.destroy(ref.popper)
         })
 
-        this.store = null
         this.state.destroyed = true
     }
 }

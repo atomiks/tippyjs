@@ -21,7 +21,8 @@ export default function createPopperElement(id, title, settings) {
         size,
         theme,
         html,
-        zIndex
+        zIndex,
+        interactive
     } = settings
 
     const popper = document.createElement('div')
@@ -55,6 +56,10 @@ export default function createPopperElement(id, title, settings) {
     if (inertia) {
         // Change transition timing function cubic bezier
         tooltip.setAttribute('data-inertia', '')
+    }
+
+    if (interactive) {
+        tooltip.setAttribute('data-interactive', '')
     }
 
     // Tooltip content (text or HTML)

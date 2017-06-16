@@ -32,11 +32,11 @@
   .tippy-popper[x-placement^=top] [x-circle] {
     transform-origin: 0% 100%; }
     .tippy-popper[x-placement^=top] [x-circle].enter {
-      opacity: 1;
-      transform: scale(1) translate(-50%, -50%); }
+      transform: scale(1) translate(-50%, -50%);
+      opacity: 1; }
     .tippy-popper[x-placement^=top] [x-circle].leave {
-      opacity: 0;
-      transform: scale(0.5) translate(-50%, -100%); }
+      transform: scale(0.5) translate(-50%, -100%);
+      opacity: 0; }
   .tippy-popper[x-placement^=top] .tippy-tooltip.light-theme [x-circle] {
     background-color: white; }
   .tippy-popper[x-placement^=top] .tippy-tooltip.light-theme [x-arrow] {
@@ -89,7 +89,7 @@
     opacity: 1;
     transform: translateY(-10px) scale(1); }
   .tippy-popper[x-placement^=top] [data-animation=scale].leave {
-    opacity: 0;
+    opacity: 0.25;
     transform: translateY(0) scale(0); }
   .tippy-popper[x-placement^=bottom] [x-arrow] {
     position: absolute;
@@ -112,11 +112,11 @@
   .tippy-popper[x-placement^=bottom] [x-circle] {
     transform-origin: 0% -100%; }
     .tippy-popper[x-placement^=bottom] [x-circle].enter {
-      opacity: 1;
-      transform: scale(1) translate(-50%, -50%); }
+      transform: scale(1) translate(-50%, -50%);
+      opacity: 1; }
     .tippy-popper[x-placement^=bottom] [x-circle].leave {
-      opacity: 0;
-      transform: scale(0.5) translate(-50%, 5%); }
+      transform: scale(0.5) translate(-50%, 5%);
+      opacity: 0; }
   .tippy-popper[x-placement^=bottom] .tippy-tooltip.light-theme [x-circle] {
     background-color: white; }
   .tippy-popper[x-placement^=bottom] .tippy-tooltip.light-theme [x-arrow] {
@@ -169,7 +169,7 @@
     opacity: 1;
     transform: translateY(10px) scale(1); }
   .tippy-popper[x-placement^=bottom] [data-animation=scale].leave {
-    opacity: 0;
+    opacity: 0.25;
     transform: translateY(0) scale(0); }
   .tippy-popper[x-placement^=left] [x-arrow] {
     position: absolute;
@@ -178,28 +178,25 @@
     border-left: 7px solid #333;
     border-top: 7px solid transparent;
     border-bottom: 7px solid transparent;
-    right: -7px;
-    top: 50%; }
+    right: -7px; }
     .tippy-popper[x-placement^=left] [x-arrow].arrow-small {
       border-left: 5px solid #333;
       border-top: 5px solid transparent;
       border-bottom: 5px solid transparent;
-      right: -5px;
-      top: 50%; }
+      right: -5px; }
     .tippy-popper[x-placement^=left] [x-arrow].arrow-big {
       border-left: 9px solid #333;
       border-top: 9px solid transparent;
       border-bottom: 9px solid transparent;
-      right: -9px;
-      top: 50%; }
+      right: -9px; }
   .tippy-popper[x-placement^=left] [x-circle] {
     transform-origin: 50% 0%; }
     .tippy-popper[x-placement^=left] [x-circle].enter {
-      opacity: 1;
-      transform: scale(1) translate(-50%, -50%); }
+      transform: scale(1) translate(-50%, -50%);
+      opacity: 1; }
     .tippy-popper[x-placement^=left] [x-circle].leave {
-      opacity: 0;
-      transform: scale(0.5) translate(-50%, -50%); }
+      transform: scale(0.5) translate(-50%, -50%);
+      opacity: 0; }
   .tippy-popper[x-placement^=left] .tippy-tooltip.light-theme [x-circle] {
     background-color: white; }
   .tippy-popper[x-placement^=left] .tippy-tooltip.light-theme [x-arrow] {
@@ -252,7 +249,7 @@
     opacity: 1;
     transform: translateX(-10px) scale(1); }
   .tippy-popper[x-placement^=left] [data-animation=scale].leave {
-    opacity: 0;
+    opacity: 0.25;
     transform: translateX(0) scale(0); }
   .tippy-popper[x-placement^=right] [x-arrow] {
     position: absolute;
@@ -261,28 +258,25 @@
     border-right: 7px solid #333;
     border-top: 7px solid transparent;
     border-bottom: 7px solid transparent;
-    left: -7px;
-    top: 50%; }
+    left: -7px; }
     .tippy-popper[x-placement^=right] [x-arrow].arrow-small {
       border-right: 5px solid #333;
       border-top: 5px solid transparent;
       border-bottom: 5px solid transparent;
-      left: -5px;
-      top: 50%; }
+      left: -5px; }
     .tippy-popper[x-placement^=right] [x-arrow].arrow-big {
       border-right: 9px solid #333;
       border-top: 9px solid transparent;
       border-bottom: 9px solid transparent;
-      left: -9px;
-      top: 50%; }
+      left: -9px; }
   .tippy-popper[x-placement^=right] [x-circle] {
     transform-origin: -50% 0%; }
     .tippy-popper[x-placement^=right] [x-circle].enter {
-      opacity: 1;
-      transform: scale(1) translate(-50%, -50%); }
+      transform: scale(1) translate(-50%, -50%);
+      opacity: 1; }
     .tippy-popper[x-placement^=right] [x-circle].leave {
-      opacity: 0;
-      transform: scale(0.5) translate(-50%, -50%); }
+      transform: scale(0.5) translate(-50%, -50%);
+      opacity: 0; }
   .tippy-popper[x-placement^=right] .tippy-tooltip.light-theme [x-circle] {
     background-color: white; }
   .tippy-popper[x-placement^=right] .tippy-tooltip.light-theme [x-arrow] {
@@ -335,7 +329,7 @@
     opacity: 1;
     transform: translateX(10px) scale(1); }
   .tippy-popper[x-placement^=right] [data-animation=scale].leave {
-    opacity: 0;
+    opacity: 0.25;
     transform: translateX(0) scale(0); }
   .tippy-popper [x-circle] {
     background-color: white; }
@@ -360,13 +354,14 @@
   position: relative;
   color: white;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   padding: 0.4rem 0.8rem;
   text-align: center;
   will-change: transform;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #333; }
+  background-color: #333;
+  pointer-events: none; }
   .tippy-tooltip--small {
     padding: 0.25rem 0.5rem;
     font-size: 0.8rem; }
@@ -376,6 +371,8 @@
   .tippy-tooltip[data-animatefill] {
     overflow: hidden;
     background-color: transparent; }
+  .tippy-tooltip[data-interactive] {
+    pointer-events: auto; }
   .tippy-tooltip[data-inertia] {
     -webkit-transition-timing-function: cubic-bezier(0.53, 1, 0.36, 0.85);
     transition-timing-function: cubic-bezier(0.53, 2, 0.36, 0.85); }
@@ -390,7 +387,6 @@
     left: 50%;
     top: 50%;
     z-index: -1;
-    opacity: 0;
     overflow: hidden; }
     .tippy-tooltip [x-circle]::before {
       content: '';

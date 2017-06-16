@@ -66,20 +66,19 @@ export default function getEventListenerHandlers(el, popper, settings) {
 
     const handleTrigger = event => {
 
-        const touchMouseenter = event.type === 'mouseenter' && BROWSER.supportsTouch && BROWSER.touch
-        if (touchMouseenter && touchHold) return
+        if (event.type === 'mouseenter' && BROWSER.supportsTouch && BROWSER.touch) {
+            if (touchHold) return
+
+            if ( ! touchHold && BROWSER.iOS) {
+                el.click()
+            }
+        }
 
         // Toggle show/hide when clicking click-triggered tooltips
         const isClick = event.type === 'click'
         const isNotPersistent = hideOnClick !== 'persistent'
 
         isClick && isVisible(popper) && isNotPersistent ? hide() : show(event)
-
-        // Prevent the need to double-tap buttons on iOS
-        // iOS does not fire a click event like it should when mouseenter changes page content
-        if (touchMouseenter && BROWSER.iOS) {
-            el.click()
-        }
     }
 
     const handleMouseleave = event => {
@@ -133,7 +132,7 @@ export default function getEventListenerHandlers(el, popper, settings) {
         // Ignore blur on touch devices, if there is no `relatedTarget`, hide
         // If the related target is a popper, ignore
         if (BROWSER.touch) return
-        if (!event.relatedTarget) return hide()
+        if ( ! event.relatedTarget) return hide()
         if (closest(event.relatedTarget, SELECTORS.popper)) return
 
         hide()

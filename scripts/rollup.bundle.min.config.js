@@ -9,7 +9,7 @@ import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 
 export default Object.assign(base, {
-    dest: './dist/tippy.js',
+    dest: './dist/tippy.min.js',
     external: [ 'Popper' ],
     plugins: [
         sass({

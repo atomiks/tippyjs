@@ -1,4 +1,4 @@
-import { BROWSER, DEFAULT_SETTINGS, SELECTORS } from '../../src/js/core/constants'
+import { BROWSER, DEFAULT_SETTINGS, SELECTORS, STORE } from '../../src/js/core/constants'
 
 import init from '../../src/js/core/init'
 
@@ -265,13 +265,13 @@ describe('core', () => {
             })
         })
 
-        describe('getReferenceObject', () => {
+        describe('getReferenceData', () => {
             it('returns the reference object with either the ref el or popper as the argument', () => {
                 const el = createVirtualElement()
 
                 const instance = tippy(el)
-                const ref = instance.getReferenceObject(el)
-                const ref2 = instance.getReferenceObject(instance.getPopperElement(el))
+                const ref = instance.getReferenceData(el)
+                const ref2 = instance.getReferenceData(instance.getPopperElement(el))
 
                 ;[ref, ref2].forEach(ref => {
                     expect(ref.toString()).toBe('[object Object]')
@@ -283,15 +283,16 @@ describe('core', () => {
         })
 
         describe('destroyAll', () => {
-            it('should destroy all tooltips created by the instance', () => {
+            it('should destroy all tooltips created by the instance, does NOT affect other instances', () => {
                 const el = createVirtualElement()
 
+                const lengthBefore = STORE.length
                 const instance = tippy(el)
-
                 instance.destroyAll()
+                const lengthAfter = STORE.length
 
                 expect(instance.state.destroyed).toBe(true)
-                expect(instance.store).toBeNull()
+                expect(lengthBefore).toBe(lengthAfter)
             })
         })
 
@@ -334,7 +335,7 @@ describe('core', () => {
 
                 instance.destroy(popper)
 
-                expect(instance.getReferenceObject(el)).toBeUndefined()
+                expect(instance.getReferenceData(el)).toBeUndefined()
             })
         })
 
@@ -475,7 +476,7 @@ describe('core', () => {
             const el = createVirtualElement()
 
             const instance = tippy(el)
-            const ref = instance.getReferenceObject(el)
+            const ref = instance.getReferenceData(el)
 
             const popperInstance = createPopperInstance(ref)
 
@@ -655,7 +656,7 @@ describe('core', () => {
             el.setAttribute('data-duration', '1000')
 
             const instance = tippy(el)
-            const ref = instance.getReferenceObject(el)
+            const ref = instance.getReferenceData(el)
 
             expect(ref.settings.duration).not.toBe(instance.settings.duration)
         })
@@ -665,7 +666,7 @@ describe('core', () => {
             el.setAttribute('data-duration', '1000')
 
             const instance = tippy(el, { performance: true })
-            const ref = instance.getReferenceObject(el)
+            const ref = instance.getReferenceData(el)
 
             expect(ref.settings.duration).toBe(instance.settings.duration)
         })
@@ -685,7 +686,7 @@ describe('core', () => {
         const instance = tippy(el, {
             duration: DURATION
         })
-        const ref = instance.getReferenceObject(el)
+        const ref = instance.getReferenceData(el)
 
         let firstItDone = false
 
@@ -730,7 +731,7 @@ describe('core', () => {
             const el = createVirtualElement()
 
             const instance = tippy(el)
-            const ref = instance.getReferenceObject(el)
+            const ref = instance.getReferenceData(el)
 
             mountPopper(ref)
 
@@ -745,7 +746,7 @@ describe('core', () => {
             const el = createVirtualElement()
 
             const instance = tippy(el)
-            const ref = instance.getReferenceObject(el)
+            const ref = instance.getReferenceData(el)
 
             mountPopper(ref)
 
@@ -764,7 +765,7 @@ describe('core', () => {
             const el = createVirtualElement()
 
             let instance = tippy(el)
-            let ref = instance.getReferenceObject(el)
+            let ref = instance.getReferenceData(el)
 
             mountPopper(ref)
 
@@ -778,7 +779,7 @@ describe('core', () => {
             instance = tippy(el, {
                 followCursor: true
             })
-            ref = instance.getReferenceObject(el)
+            ref = instance.getReferenceData(el)
 
             mountPopper(ref)
 
@@ -795,7 +796,7 @@ describe('core', () => {
             const instance = tippy(el, {
                 followCursor: true
             })
-            const ref = instance.getReferenceObject(el)
+            const ref = instance.getReferenceData(el)
 
             mountPopper(ref)
 

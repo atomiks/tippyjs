@@ -116,10 +116,8 @@
         top: -$width;
     } @else if ($position == 'left') {
         right: -$width;
-        top: 50%;
     } @else if ($position == 'right') {
         left: -$width;
-        top: 50%;
     }
 }
 
@@ -170,13 +168,13 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
                 transform-origin: nth($circle-origins, index($positions, $position));
 
                 &.enter {
-                    opacity: 1;
                     transform: scale(1) translate(-50%, -50%);
+                    opacity: 1;
                 }
 
                 &.leave {
-                    opacity: 0;
                     @include circle-transform-leave($position);
+                    opacity: 0;
                 }
             }
 
@@ -256,7 +254,7 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
                     @include enter-transform($position, 'scale')
                 }
                 &.leave {
-                    opacity: 0;
+                    opacity: 0.25;
                     @include leave-transform($position, 'scale')
                 }
             }
@@ -302,13 +300,14 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
     position: relative;
     color: white;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     padding: 0.4rem 0.8rem;
     text-align: center;
     will-change: transform;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #333;
+    pointer-events: none;
 
     &--small {
         padding: 0.25rem 0.5rem;
@@ -323,6 +322,10 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
     &[data-animatefill] {
         overflow: hidden;
         background-color: transparent;
+    }
+
+    &[data-interactive] {
+        pointer-events: auto;
     }
 
     &[data-inertia] {
@@ -342,7 +345,6 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
         left: 50%;
         top: 50%;
         z-index: -1;
-        opacity: 0;
         overflow: hidden;
 
         &::before {

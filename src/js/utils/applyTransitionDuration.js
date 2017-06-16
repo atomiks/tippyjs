@@ -6,18 +6,16 @@ import prefix from './prefix'
 * @param {Number} duration
 */
 export default function applyTransitionDuration(els, duration) {
-    let mutableDuration = duration
-
+    let _duration
     els.forEach(el => {
         if (!el) return
 
-        mutableDuration = duration
+        _duration = duration
 
-        // Circle fill should be a bit quicker
         if (el.hasAttribute('x-circle')) {
-            mutableDuration = Math.round(mutableDuration/1.4)
+            _duration = Math.round(duration/1.2)
         }
 
-        el.style[prefix('transitionDuration')] = mutableDuration + 'ms'
+        el.style[prefix('transitionDuration')] = duration + 'ms'
     })
 }

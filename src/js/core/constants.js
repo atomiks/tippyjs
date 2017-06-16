@@ -28,7 +28,7 @@ export const DEFAULT_SETTINGS = {
     arrowSize: 'regular',
     delay: 0,
     trigger: 'mouseenter focus',
-    duration: 375,
+    duration: 350,
     interactive: false,
     interactiveBorder: 2,
     theme: 'dark',
