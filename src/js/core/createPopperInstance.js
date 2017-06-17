@@ -1,6 +1,6 @@
 import Popper from 'popper.js'
 
-import { SELECTORS } from './constants'
+import { Selectors } from './globals'
 
 import getCorePlacement from '../utils/getCorePlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
@@ -23,7 +23,7 @@ export default function createPopperInstance(ref) {
         }
     } = ref
 
-    const tooltip = popper.querySelector(SELECTORS.tooltip)
+    const tooltip = popper.querySelector(Selectors.TOOLTIP)
 
     const config = {
         placement: position,

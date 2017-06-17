@@ -26,7 +26,7 @@
         <h2 class="hero-subheading">A lightweight, vanilla JavaScript tooltip library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>12KB gzipped</span>
+            <i class="material-icons icon-left">code</i><span>12.7KB gzipped</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -121,6 +121,19 @@
                 class is added to the body.
             </p>
 
+            <h4>Dynamic input detection</h4>
+            <p>
+                For certain settings to work reliably depending on the type of user input (such as mouse or touch),
+                dynamic input detection is enabled. This can be disabled and enabled at any time via:
+
+<pre><code class="language-javascript">tippy.enableDynamicInputDetection()
+tippy.disableDynamicInputDetection()</code></pre>
+            </p>
+
+            <p>You may also access the <code>Browser</code> object settings set internally via:
+                <pre><code class="language-javascript">tippy.Browser</code></pre>
+            </p>
+
             <h4>Accessibility</h4>
             <p>
                 Tooltips have ARIA labelling to ensure accessibility.
@@ -203,7 +216,7 @@ tippy.css</code></pre>
 
               <h2><a href="#customizing-tooltips"><i class="material-icons icon-left">settings</i><span>Customizing tooltips</span></a></h2>
 
-              <p>Tippy takes an object as a second argument for you to customize the tooltips being instantiated. Here's an example:</p>
+              <p><code>tippy()</code> takes an object as a second argument for you to customize the tooltips being instantiated. Here's an example:</p>
 
 <pre><code class="language-javascript">tippy('.tippy', {
     position: 'right',
@@ -219,16 +232,16 @@ tippy.css</code></pre>
 
               <h4>Data attributes</h4>
 
-              <p>You can also specify settings on the element itself by adding <code>data-*</code> attributes. This overrides any global settings specified in the Tippy instance.</p>
+              <p>You can also specify settings on the element itself by adding <code>data-*</code> attributes. This overrides any global settings specified in the instance.</p>
 
-              <pre><code class="language-markup">&lt;button class="btn tippy" title="I'm a tooltip!" data-duration="[300, 100]" data-arrow="false" data-animation="shift" data-position="bottom"&gt;Overridden&lt;/button&gt;</code></pre>
+              <pre><code class="language-markup">&lt;button class="btn tippy" title="I'm a tooltip!" data-duration="[300, 150]" data-arrow="false" data-animation="shift" data-position="bottom"&gt;Overridden&lt;/button&gt;</code></pre>
 
               <div class="result-box">
                 <p class="text-muted">Result:</p>
-                <button class="btn tippy" title="I'm a tooltip!" data-duration="[400, 200]" data-arrow="false" data-animation="shift" data-position="bottom">Overridden</button>
+                <button class="btn tippy" title="I'm a tooltip!" data-duration="[300, 150]" data-arrow="false" data-animation="shift" data-position="bottom">Overridden</button>
               </div>
 
-              <p>This is helpful if you want to globally define settings, but make a few tooltips different without having to make a new Tippy instance.</p>
+              <p>This is helpful if you want to globally define settings, but make a few tooltips different without having to call <code>tippy()</code> again with different settings.</p>
             </section>
             <hr>
             <section id="all-settings">
@@ -305,7 +318,7 @@ tippy.css</code></pre>
                       <td><code>arrowSize</code></td>
                       <td><code>'regular'</code></td>
                       <td><code>'small'</code> <code>'regular'</code> <code>'big'</code></td>
-                      <td>Specifies how big the tooltip's arrow is. The sizes are 5px, 7px and 9px respectively.</td>
+                      <td>Specifies how big the tooltip's arrow is. The sizes are 5px, 7px and 10px respectively.</td>
                     </tr>
                     <tr>
                       <td><code>animateFill</code></td>
@@ -524,7 +537,7 @@ tippy.css</code></pre>
 
             <h4>Modify the default settings</h4>
 
-            <p>You can change the default settings by accessing them via <code>tippy.defaultSettings</code>.</p>
+            <p>You can change the default settings by accessing them via <code>tippy.Defaults</code>.</p>
 
             </section>
 
@@ -584,6 +597,16 @@ tippy.css</code></pre>
               <p class="text-muted">Example custom theme:</p>
               <button class="btn tippy" title="I'm a tooltip!" data-theme="honeybee" data-animatefill="false">Honeybee theme</button>
             </div>
+
+            <h4>Multiple themes</h4>
+
+            <p>Add multiple themes by separating each by a space.</p>
+
+<pre><code class="language-javascript">tippy('.tippy', {
+  theme: 'menu light'
+})</code></pre>
+
+          <p>This will add the classes <code>.menu-theme</code> and <code>.light-theme</code> to the tooltip's class list.<p>
 
           </section>
 
@@ -673,25 +696,28 @@ tippy.css</code></pre>
                 <li><code>hide</code> - hides a tooltip</li>
                 <li><code>update</code> - updates a tooltip with new content</li>
                 <li><code>destroy</code> - destroys an individual tooltip</li>
-                <li><code>destroyAll</code> - destroys all tooltips created by <code>tippy()</code></li>
+                <li><code>destroyAll</code> - destroys all tooltips created by the instance</li>
             </ul>
 
-            <p><strong>Note on terminology: the "popper" is the parent element while the "tooltip" is the child of the popper.</strong></p>
+            <h4>Terminology</h4>
+
+            <p>The <code>popper</code> is the parent element while the <code>tooltip</code> is the child of the popper.</strong></p>
+            <p>The element you give the tooltip to is called the <code>reference</code> element.</p>
 
             <h4>Showing and hiding tooltips programmatically</h4>
 
-            <p>First, save the Tippy instance:</p>
-            <pre><code class="language-javascript">const instance = tippy('.selector')</code></pre>
+            <pre><code class="language-markup">&lt;button id="myButton" title=&quot;Tooltip&quot;&gt;My element&lt;/button&gt;</code></pre>
 
-            <p>Next, find the tooltipped element's popper reference by calling the method
+            <p>First, save the instance:</p>
+            <pre><code class="language-javascript">const instance = tippy('#myButton')</code></pre>
+
+            <p>Next, find the reference element's popper reference by calling the method
                 <code>getPopperElement</code> and passing the element in directly:</p>
-
-          <pre><code class="language-markup">&lt;button id="myButton" title=&quot;Tooltip&quot;&gt;My element&lt;/button&gt;</code></pre>
 
           <pre><code class="language-javascript">const el = document.querySelector('#myButton')
 const popper = instance.getPopperElement(el)</code></pre>
 
-            <p>Then, call the <code>show()</code> or <code>hide()</code> method, passing in the popper element:
+            <p>Then, call the <code>show()</code> or <code>hide()</code> method by passing in the popper element:
 
             <pre><code class="language-javascript">instance.show(popper)
 instance.hide(popper)</code></pre>
@@ -699,6 +725,12 @@ instance.hide(popper)</code></pre>
             <p>Pass a number in the second argument to specify a transition duration:</p>
 
             <pre><code class="language-javascript">instance.show(popper, 500)</code></pre>
+
+            <h4>Finding the reference element from the popper element</h4>
+
+            <p>Pass the popper element to find its reference element into this method:</p>
+
+            <pre><code class="language-javascript">const el = instance.getReferenceElement(popper)</code></pre>
 
             <h4>Updating a tooltip with new content</h4>
 
@@ -733,7 +765,7 @@ instance.update(popper)</code></pre>
 
               <p>
                   You can have thousands of tooltipped elements without affecting page
-                  performance. Tooltips are only appended to the DOM when shown, and removed
+                  performance after the initial instantiation. Tooltips are only appended to the DOM when shown, and removed
                   when hidden. Popper.js only listens to scroll and resize events when a popper (tooltip) is showing,
                   and also updates the position on show.
               </p>

@@ -5,8 +5,9 @@
   "main": "dist/tippy.js",
   "scripts": {
     "dev": "rollup -c scripts/rollup.dev.config.js --watch",
-    "build": "rollup -c scripts/rollup.build.config.js",
+    "build": "npm run standalone && npm run bundle && npm run bundle-minify",
     "bundle": "rollup -c scripts/rollup.bundle.config.js",
+    "standalone": "rollup -c scripts/rollup.standalone.config.js",
     "bundle-minify": "rollup -c scripts/rollup.bundle.min.config.js",
     "tests": "rollup -c scripts/rollup.tests.config.js"
   },
@@ -23,12 +24,12 @@
     "cssnano": "^3.10.0",
     "postcss": "^5.2.16",
     "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-babili": "^3.1.0",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-livereload": "^0.4.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-sass": "^0.4.10",
     "rollup-plugin-serve": "^0.3.0",
-    "rollup-plugin-uglify": "^1.0.1",
     "rollup-watch": "^3.2.2"
   },
   "dependencies": {

@@ -13,9 +13,9 @@ export default function applyTransitionDuration(els, duration) {
         _duration = duration
 
         if (el.hasAttribute('x-circle')) {
-            _duration = Math.round(duration/1.2)
+            _duration = Math.round(duration/1.1)
         }
 
-        el.style[prefix('transitionDuration')] = duration + 'ms'
+        el.style[prefix('transitionDuration')] = _duration + 'ms'
     })
 }

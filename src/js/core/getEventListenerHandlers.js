@@ -1,4 +1,4 @@
-import { BROWSER, SELECTORS } from './constants'
+import { Browser, Selectors } from './globals'
 
 import isVisible                        from '../utils/isVisible'
 import closest                          from '../utils/closest'
@@ -22,7 +22,8 @@ export default function getEventListenerHandlers(el, popper, settings) {
         distance,
         hideOnClick,
         trigger,
-        touchHold
+        touchHold,
+        touchWait
     } = settings
 
     let showDelay, hideDelay
@@ -38,13 +39,12 @@ export default function getEventListenerHandlers(el, popper, settings) {
         // Not hidden. For clicking when it also has a `focus` event listener
         if (isVisible(popper)) return
 
-        const _duration = Array.isArray(duration) ? duration[0] : duration
         const _delay = Array.isArray(delay) ? delay[0] : delay
 
         if (delay) {
-            showDelay = setTimeout(() => this.show(popper, _duration), _delay)
+            showDelay = setTimeout(() => this.show(popper), _delay)
         } else {
-            this.show(popper, _duration)
+            this.show(popper)
         }
     }
 
@@ -54,24 +54,20 @@ export default function getEventListenerHandlers(el, popper, settings) {
     const hide = () => {
         clearTimeouts()
 
-        const _duration = Array.isArray(duration) ? duration[1] : duration
         const _delay = Array.isArray(delay) ? delay[1] : delay
 
         if (delay) {
-            hideDelay = setTimeout(() => this.hide(popper, _duration), _delay)
+            hideDelay = setTimeout(() => this.hide(popper), _delay)
         } else {
-            this.hide(popper, _duration)
+            this.hide(popper)
         }
     }
 
     const handleTrigger = event => {
 
-        if (event.type === 'mouseenter' && BROWSER.supportsTouch && BROWSER.touch) {
+        if (event.type === 'mouseenter' && Browser.SUPPORTS_TOUCH && Browser.touch) {
             if (touchHold) return
-
-            if ( ! touchHold && BROWSER.iOS) {
-                el.click()
-            }
+            if (Browser.iOS()) el.click()
         }
 
         // Toggle show/hide when clicking click-triggered tooltips
@@ -84,8 +80,8 @@ export default function getEventListenerHandlers(el, popper, settings) {
     const handleMouseleave = event => {
 
         // Don't fire 'mouseleave', use the 'touchend'
-        if (event.type === 'mouseleave' && BROWSER.supportsTouch &&
-        BROWSER.touch && touchHold) {
+        if (event.type === 'mouseleave' && Browser.SUPPORTS_TOUCH &&
+        Browser.touch && touchHold) {
             return
         }
 
@@ -95,14 +91,14 @@ export default function getEventListenerHandlers(el, popper, settings) {
             const handleMousemove = event => {
 
                 const triggerHide = () => {
-                    document.removeEventListener('mouseleave', hide)
+                    document.body.removeEventListener('mouseleave', hide)
                     document.removeEventListener('mousemove', handleMousemove)
                     hide()
                 }
 
-                const closestTooltippedEl = closest(event.target, SELECTORS.el)
+                const closestTooltippedEl = closest(event.target, Selectors.TOOLTIPPED_EL)
 
-                const isOverPopper = closest(event.target, SELECTORS.popper) === popper
+                const isOverPopper = closest(event.target, Selectors.POPPER) === popper
                 const isOverEl = closestTooltippedEl === el
                 const isClickTriggered = trigger.indexOf('click') !== -1
                 const isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== el
@@ -118,7 +114,7 @@ export default function getEventListenerHandlers(el, popper, settings) {
                 }
             }
 
-            document.addEventListener('mouseleave', hide)
+            document.body.addEventListener('mouseleave', hide)
             document.addEventListener('mousemove', handleMousemove)
 
             return
@@ -131,9 +127,8 @@ export default function getEventListenerHandlers(el, popper, settings) {
     const handleBlur = event => {
         // Ignore blur on touch devices, if there is no `relatedTarget`, hide
         // If the related target is a popper, ignore
-        if (BROWSER.touch) return
-        if ( ! event.relatedTarget) return hide()
-        if (closest(event.relatedTarget, SELECTORS.popper)) return
+        if (Browser.touch || ! event.relatedTarget) return
+        if (closest(event.relatedTarget, Selectors.POPPER)) return
 
         hide()
     }

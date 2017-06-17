@@ -1,9 +1,9 @@
 import {
-    BROWSER,
-    STORE,
-    SELECTORS,
-    DEFAULT_SETTINGS
-} from './core/constants'
+    Browser,
+    Store,
+    Selectors,
+    Defaults
+} from './core/globals'
 
 import init from './core/init'
 
@@ -35,7 +35,7 @@ class Tippy {
     constructor(selector, settings = {}) {
 
         // Use default browser tooltip on unsupported browsers
-        if ( ! BROWSER.supported) return
+        if ( ! Browser.SUPPORTED) return
 
         // DOM is presumably mostly ready (for document.body) by instantiation time
         init()
@@ -46,7 +46,7 @@ class Tippy {
 
         this.selector = selector
 
-        this.settings = Object.assign({}, DEFAULT_SETTINGS, settings)
+        this.settings = Object.assign({}, Defaults, settings)
 
         this.callbacks = {
             wait: settings.wait,
@@ -66,7 +66,7 @@ class Tippy {
     */
     getPopperElement(el) {
         try {
-            return find(STORE.filter(ref => ref.tippyInstance === this), ref => ref.el === el).popper
+            return find(Store.filter(ref => ref.tippyInstance === this), ref => ref.el === el).popper
         } catch (e) {
             console.error('[getPopperElement]: Element passed as the argument does not exist in the instance')
         }
@@ -79,7 +79,7 @@ class Tippy {
     */
     getReferenceElement(popper) {
         try {
-            return find(STORE.filter(ref => ref.tippyInstance === this), ref => ref.popper === popper).el
+            return find(Store.filter(ref => ref.tippyInstance === this), ref => ref.popper === popper).el
         } catch (e) {
             console.error('[getReferenceElement]: Popper passed as the argument does not exist in the instance')
         }
@@ -87,26 +87,27 @@ class Tippy {
 
     /**
     * Returns the reference data object from either the reference element or popper element
-    * @param {Element} x (tooltipped element or popper)
+    * @param {Element} x (reference element or popper)
     * @return {Object}
     */
     getReferenceData(x) {
-        return find(STORE, ref => ref.el === x || ref.popper === x)
+        return find(Store, ref => ref.el === x || ref.popper === x)
     }
 
     /**
     * Shows a popper
     * @param {Element} popper
-    * @param {Number} duration (optional)
+    * @param {Number} customDuration (optional)
+    * @param {Boolean} _makeSync internal param for testing, makes it synchronous
     */
-    show(popper, duration = this.settings.duration) {
+    show(popper, customDuration, _makeSync) {
         if (this.state.destroyed) return
 
         this.callbacks.show.call(popper)
 
-        const ref = find(STORE, ref => ref.popper === popper)
-        const tooltip = popper.querySelector(SELECTORS.tooltip)
-        const circle = popper.querySelector(SELECTORS.circle)
+        const ref = find(Store, ref => ref.popper === popper)
+        const tooltip = popper.querySelector(Selectors.TOOLTIP)
+        const circle = popper.querySelector(Selectors.CIRCLE)
 
         const {
             el,
@@ -115,12 +116,17 @@ class Tippy {
                 sticky,
                 interactive,
                 followCursor,
-                flipDuration
+                flipDuration,
+                duration
             }
         } = ref
 
+        const _duration = customDuration !== undefined
+                        ? customDuration
+                        : Array.isArray(duration) ? duration[0] : duration
+
         // Remove transition duration (prevent a transition when popper changes posiiton)
-        applyTransitionDuration([popper, tooltip, circle], 0, true)
+        applyTransitionDuration([popper, tooltip, circle], 0)
 
         mountPopper(ref)
 
@@ -133,13 +139,13 @@ class Tippy {
 
             // Sometimes the arrow will not be in the correct position,
             // force another update
-            if ( ! followCursor) {
+            if ( ! followCursor || Browser.touch) {
                 ref.popperInstance.update()
             }
 
             // Re-apply transition durations
-            applyTransitionDuration([tooltip, circle], duration, true)
-            if ( ! followCursor) {
+            applyTransitionDuration([tooltip, circle], _duration, true)
+            if ( ! followCursor || Browser.touch) {
                 applyTransitionDuration([popper], flipDuration, true)
             }
 
@@ -159,8 +165,8 @@ class Tippy {
             })
 
             // Wait for transitions to complete
-            onTransitionEnd(ref, duration, () => {
-                if ( ! isVisible(popper) || ref.onShownFired) return
+            onTransitionEnd(ref, _duration, () => {
+                if ( ! isVisible(popper) || ref._onShownFired) return
 
                 // Focus interactive tooltips only
                 interactive && popper.focus()
@@ -169,7 +175,7 @@ class Tippy {
                 tooltip.classList.add('tippy-notransition')
 
                 // Prevents shown() from firing more than once from early transition cancellations
-                ref.onShownFired = true
+                ref._onShownFired = true
 
                 this.callbacks.shown.call(popper)
             })
@@ -179,17 +185,17 @@ class Tippy {
     /**
     * Hides a popper
     * @param {Element} popper
-    * @param {Number} duration (optional)
+    * @param {Number} customDuration (optional)
     */
-    hide(popper, duration = this.settings.duration) {
+    hide(popper, customDuration) {
         if (this.state.destroyed) return
 
         this.callbacks.hide.call(popper)
 
-        const ref = find(STORE, ref => ref.popper === popper)
-        const tooltip = popper.querySelector(SELECTORS.tooltip)
-        const circle = popper.querySelector(SELECTORS.circle)
-        const content = popper.querySelector(SELECTORS.content)
+        const ref = find(Store, ref => ref.popper === popper)
+        const tooltip = popper.querySelector(Selectors.TOOLTIP)
+        const circle = popper.querySelector(Selectors.CIRCLE)
+        const content = popper.querySelector(Selectors.CONTENT)
 
         const {
             el,
@@ -199,22 +205,22 @@ class Tippy {
                 interactive,
                 followCursor,
                 html,
-                trigger
+                trigger,
+                duration
             }
         } = ref
 
-        ref.onShownFired = false
+        const _duration = customDuration !== undefined
+                        ? customDuration
+                        : Array.isArray(duration) ? duration[1] : duration
+
+        ref._onShownFired = false
         interactive && el.classList.remove('active')
 
         popper.style.visibility = 'hidden'
         popper.setAttribute('aria-hidden', 'true')
 
-        // Use same duration as show if an array is not specified
-        if ( ! Array.isArray(duration)) {
-            duration = parseInt(tooltip.style[prefix('transitionDuration')])
-        }
-
-        applyTransitionDuration([tooltip, circle], duration)
+        applyTransitionDuration([tooltip, circle], _duration)
 
         modifyClassList([tooltip, circle], list => {
             list.contains('tippy-tooltip') && list.remove('tippy-notransition')
@@ -230,7 +236,7 @@ class Tippy {
         }
 
         // Wait for transitions to complete
-        onTransitionEnd(ref, duration, () => {
+        onTransitionEnd(ref, _duration, () => {
             if (isVisible(popper) || ! appendTo.contains(popper)) return
 
             el.removeEventListener('mousemove', followCursorHandler)
@@ -249,7 +255,7 @@ class Tippy {
     destroy(popper) {
         if (this.state.destroyed) return
 
-        const ref = find(STORE, ref => ref.popper === popper)
+        const ref = find(Store, ref => ref.popper === popper)
         const { el, popperInstance, listeners } = ref
 
         // Ensure the popper is hidden
@@ -260,7 +266,7 @@ class Tippy {
         // Remove Tippy-only event listeners from tooltipped element
         listeners.forEach(listener => el.removeEventListener(listener.event, listener.handler))
 
-        // Restore original title
+        // ReStore original title
         el.setAttribute('title', el.getAttribute('data-original-title'))
 
         el.removeAttribute('data-original-title')
@@ -270,7 +276,7 @@ class Tippy {
         popperInstance && popperInstance.destroy()
 
         // Remove from storage
-        STORE.splice(STORE.map(ref => ref.popper).indexOf(popper), 1)
+        Store.splice(Store.map(ref => ref.popper).indexOf(popper), 1)
     }
 
     /**
@@ -280,8 +286,8 @@ class Tippy {
     update(popper) {
         if (this.state.destroyed) return
 
-        const ref = find(STORE, ref => ref.popper === popper)
-        const content = popper.querySelector(SELECTORS.content)
+        const ref = find(Store, ref => ref.popper === popper)
+        const content = popper.querySelector(Selectors.CONTENT)
         const { el, settings: { html } } = ref
 
         if (html) {
@@ -297,7 +303,7 @@ class Tippy {
     destroyAll() {
         if (this.state.destroyed) return
 
-        STORE.filter(ref => ref.tippyInstance === this).forEach(ref => {
+        Store.filter(ref => ref.tippyInstance === this).forEach(ref => {
             this.destroy(ref.popper)
         })
 
@@ -309,8 +315,9 @@ function tippy(selector, settings) {
     return new Tippy(selector, settings)
 }
 
-tippy.version = '1.0.0'
-tippy.browser = BROWSER
-tippy.defaultSettings = DEFAULT_SETTINGS
+tippy.Browser = Browser
+tippy.Defaults = Defaults
+tippy.disableDynamicInputDetection = () => Browser.dynamicInputDetection = false
+tippy.enableDynamicInputDetection = () => Browser.dynamicInputDetection = true
 
 export default tippy

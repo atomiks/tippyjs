@@ -1,4 +1,4 @@
-import { BROWSER, DEFAULT_SETTINGS, SELECTORS, STORE } from '../../src/js/core/constants'
+import { Browser, Defaults, Selectors, Store } from '../../src/js/core/globals'
 
 import init from '../../src/js/core/init'
 
@@ -47,30 +47,58 @@ describe('core', () => {
         instance.show(popper)
 
         document.dispatchEvent(new MouseEvent('click'))
-        window.TouchEvent && document.dispatchEvent(new TouchEvent('touchstart'))
+        window.TouchEvent && Browser.supportsTouch && document.dispatchEvent(new TouchEvent('touchstart'))
 
         it('sets up the document click listener properly', () => {
-            expect(document.querySelector(SELECTORS.popper)).toBeNull()
+            expect(document.querySelector(Selectors.POPPER)).toBeNull()
         })
 
-        it('sets BROWSER.touch to be true upon touchstart, keeps it false if does not support touch', () => {
-            window.TouchEvent ? expect(BROWSER.touch).toBe(true)
-                              : expect(BROWSER.touch).toBe(false)
+        it('sets Browser.touch to be true upon touchstart, keeps it false if does not support touch', () => {
+            window.TouchEvent && Browser.supportsTouch ? expect(Browser.touch).toBe(true)
+                                                       : expect(Browser.touch).toBe(false)
 
-            BROWSER.touch = false
+            Browser.touch = false
         })
 
         it('adds .tippy-touch class to body if iOS, does not if not', () => {
-            BROWSER.iOS ? expect(document.body.classList).toContain('tippy-touch')
-                        : expect(document.body.classList).not.toContain('tippy-touch')
+            Browser.iOS() ? expect(document.body.classList).toContain('tippy-touch')
+                          : expect(document.body.classList).not.toContain('tippy-touch')
         })
 
         instance.destroyAll()
     })
 
     describe('tippy', () => {
+
+        describe('tippy.Browser', () => {
+            it('is the browser object', () => {
+                expect(tippy.Browser.SUPPORTED).toBeDefined()
+            })
+        })
+
+        describe('tippy.Defaults', () => {
+            it('is the default settings object', () => {
+                expect(tippy.Defaults.html).toBeDefined()
+            })
+        })
+
+        describe('tippy.disableDynamicInputDetection', () => {
+            it('changes Browser.dynamicInputDetection to be false', () => {
+                tippy.disableDynamicInputDetection()
+                expect(tippy.Browser.dynamicInputDetection).toBe(false)
+            })
+        })
+
+        describe('tippy.enableDynamicInputDetection', () => {
+            it('changes Browser.dynamicInputDetection to be true', () => {
+                tippy.disableDynamicInputDetection()
+                tippy.enableDynamicInputDetection()
+                expect(tippy.Browser.dynamicInputDetection).toBe(true)
+            })
+        })
+
         it('does not mutate the default settings', () => {
-            const settingsClone = Object.assign({}, DEFAULT_SETTINGS)
+            const settingsClone = Object.assign({}, Defaults)
 
             const el = createVirtualElement()
 
@@ -83,10 +111,10 @@ describe('core', () => {
             })
 
             expect(
-                Object.keys(settingsClone).every(key => settingsClone[key] === DEFAULT_SETTINGS[key])
+                Object.keys(settingsClone).every(key => settingsClone[key] === Defaults[key])
             ).toBe(true)
 
-            expect(DEFAULT_SETTINGS.popperOptions.modifiers).toBeUndefined()
+            expect(Defaults.popperOptions.modifiers).toBeUndefined()
 
             instance.destroyAll()
         })
@@ -145,7 +173,7 @@ describe('core', () => {
             expect(
                 instance.settings.position === 'bottom' &&
                 instance.settings.delay[0] === 100 &&
-                instance.settings.html === DEFAULT_SETTINGS.html
+                instance.settings.html === Defaults.html
             ).toBe(true)
 
             instance.destroyAll()
@@ -286,10 +314,10 @@ describe('core', () => {
             it('should destroy all tooltips created by the instance, does NOT affect other instances', () => {
                 const el = createVirtualElement()
 
-                const lengthBefore = STORE.length
+                const lengthBefore = Store.length
                 const instance = tippy(el)
                 instance.destroyAll()
-                const lengthAfter = STORE.length
+                const lengthAfter = Store.length
 
                 expect(instance.state.destroyed).toBe(true)
                 expect(lengthBefore).toBe(lengthAfter)
@@ -324,10 +352,10 @@ describe('core', () => {
                 el.dispatchEvent(new MouseEvent('mouseenter'))
 
                 expect(test).toBe(true)
-                expect(document.querySelector(SELECTORS.popper)).toBeNull()
+                expect(document.querySelector(Selectors.POPPER)).toBeNull()
             })
 
-            it('removes the ref object from store', () => {
+            it('removes the ref object from Store', () => {
                 const el = createVirtualElement()
 
                 const instance = tippy(el)
@@ -376,21 +404,16 @@ describe('core', () => {
 
             let counter = 0
             let mouseleaveWorked = false
-            let blurWorked = false
 
             beforeEach(done => {
                 if (!counter) return done()
 
                 const el = createVirtualElement()
 
-                let type = counter === 1 ? 'mouseleave' : 'blur'
-
                 const instance = tippy(el, {
-                    trigger: 'mouseenter focus',
+                    trigger: 'mouseenter',
                     hide() {
-                        if (type === 'mouseleave') mouseleaveWorked = true
-                        if (type === 'blur') blurWorked = true
-
+                        mouseleaveWorked = true
                         done()
                     }
                 })
@@ -398,11 +421,7 @@ describe('core', () => {
                 const popper = instance.getPopperElement(el)
                 instance.show(popper, 0)
 
-                if (type === 'blur') {
-                    el.focus()
-                }
-
-                el.dispatchEvent(new MouseEvent(type))
+                el.dispatchEvent(new MouseEvent('mouseleave'))
             })
 
             it('hides a tooltip when manually invoked', () => {
@@ -425,8 +444,52 @@ describe('core', () => {
                 counter++
             })
 
-            it('hides a tooltip when blur event is fired', () => {
-                expect(blurWorked).toBe(true)
+            it('applies the correct transition duration when duration is a number', () => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    duration: 200
+                })
+                const popper = instance.getPopperElement(el)
+                const tooltip = popper.querySelector(Selectors.TOOLTIP)
+
+                instance.hide(popper)
+
+                expect(tooltip.style[prefix('transitionDuration')]).toBe('200ms')
+
+                instance.destroyAll()
+            })
+
+            it('applies the correct transition duration when duration is an array', () => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    duration: [500, 100]
+                })
+                const popper = instance.getPopperElement(el)
+                const tooltip = popper.querySelector(Selectors.TOOLTIP)
+
+                instance.hide(popper)
+
+                expect(tooltip.style[prefix('transitionDuration')]).toBe('100ms')
+
+                instance.destroyAll()
+            })
+
+            it('applies the correct duration when passed manually', () => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    duration: 200
+                })
+                const popper = instance.getPopperElement(el)
+                const tooltip = popper.querySelector(Selectors.TOOLTIP)
+
+                instance.hide(popper, 100)
+
+                expect(tooltip.style[prefix('transitionDuration')]).toBe('100ms')
+
+                instance.destroyAll()
             })
         })
 
@@ -440,7 +503,7 @@ describe('core', () => {
                 el.setAttribute('title', 'new')
                 instance.update(popper)
 
-                expect(popper.querySelector(SELECTORS.content).innerHTML).toBe('new')
+                expect(popper.querySelector(Selectors.CONTENT).innerHTML).toBe('new')
 
                 instance.destroyAll()
             })
@@ -462,10 +525,227 @@ describe('core', () => {
                 const popper = instance.getPopperElement(el)
                 instance.update(popper)
 
-                expect(popper.querySelector(SELECTORS.content).innerHTML).toBe('new')
+                expect(popper.querySelector(Selectors.CONTENT).innerHTML).toBe('new')
 
                 instance.destroyAll()
                 document.body.removeChild(html)
+            })
+        })
+    })
+
+    describe('settings', () => {
+        describe('appendTo', () => {
+            it('appends to document.body by default', () => {
+                const el = createVirtualElement()
+                const instance = tippy(el)
+                const popper = instance.getPopperElement(el)
+                instance.show(popper)
+                expect(document.body.contains(popper)).toBe(true)
+                instance.destroyAll()
+            })
+
+            it('appends to the specified element instead of document.body', () => {
+                const el = createVirtualElement()
+                const testContainer = document.createElement('div')
+                testContainer.id = 'test-container'
+
+                document.body.appendChild(testContainer)
+
+                const instance = tippy(el, {
+                    appendTo: document.querySelector('#test-container')
+                })
+
+                const popper = instance.getPopperElement(el)
+                instance.show(popper)
+
+                expect(testContainer.contains(popper)).toBe(true)
+
+                document.body.removeChild(testContainer)
+                instance.destroyAll()
+            })
+        })
+
+        describe('animation', () => {
+            it('sets the `data-animation` attribute on the tooltip', () => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    animation: 'fade'
+                })
+
+                const popper = instance.getPopperElement(el)
+                expect(popper.querySelector(Selectors.TOOLTIP).getAttribute('data-animation')).toBe('fade')
+                instance.destroyAll()
+            })
+        })
+
+        describe('arrow', () => {
+            it('creates an x-arrow element as a child of the tooltip', () => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    arrow: true
+                })
+
+                const popper = instance.getPopperElement(el)
+                expect(popper.querySelector(Selectors.TOOLTIP).querySelector('[x-arrow]')).not.toBeNull()
+                instance.destroyAll()
+            })
+        })
+
+        describe('animateFill', () => {
+            it('is disabled if `arrow` is true', () => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    arrow: true
+                })
+
+                const popper = instance.getPopperElement(el)
+                expect(popper.querySelector(Selectors.TOOLTIP).querySelector(Selectors.circle)).toBeNull()
+                instance.destroyAll()
+            })
+        })
+
+        describe('delay', () => {
+            it('delays a tooltip from showing', () => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    delay: 20
+                })
+                const popper = instance.getPopperElement(el)
+
+                el.dispatchEvent(new Event('mouseenter'))
+
+                expect(popper.style.visibility).toBe('')
+
+                instance.destroyAll()
+            })
+        })
+
+        describe('trigger', () => {
+            it('works for each 3 main: mouseenter, focus, click', () => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    duration: 0,
+                    trigger: 'mouseenter focus click'
+                })
+                const popper = instance.getPopperElement(el)
+
+                el.dispatchEvent(new Event('mouseenter'))
+                expect(popper.style.visibility).toBe('visible')
+                instance.hide(popper)
+
+                el.dispatchEvent(new Event('focus'))
+                expect(popper.style.visibility).toBe('visible')
+                instance.hide(popper)
+
+                el.dispatchEvent(new Event('click'))
+                expect(popper.style.visibility).toBe('visible')
+                instance.hide(popper)
+
+                instance.destroyAll()
+            })
+
+            it('hides on opposite trigger', () => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    duration: 0,
+                    trigger: 'mouseenter click'
+                })
+                const popper = instance.getPopperElement(el)
+                instance.show(popper)
+
+                el.dispatchEvent(new Event('mouseleave'))
+                expect(popper.style.visibility).toBe('hidden')
+                instance.show(popper)
+
+                el.dispatchEvent(new Event('click'))
+                expect(popper.style.visibility).toBe('hidden')
+
+                instance.destroyAll()
+            })
+        })
+
+        describe('interactive', () => {
+            let hideFired = false
+
+            beforeEach(done => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    duration: 0,
+                    trigger: 'click',
+                    interactive: true,
+                    show() {
+                        setTimeout(() => {
+                            done()
+                            instance.destroyAll()
+                        }, 20)
+                    },
+                    hide() {
+                        hideFired = true
+                    }
+                })
+                const popper = instance.getPopperElement(el)
+                instance.show(popper)
+                popper.dispatchEvent(new Event('click'))
+            })
+
+            it('prevents a tooltip from closing when clicked on', () => {
+                expect(hideFired).toBe(false)
+            })
+        })
+
+        describe('position', () => {
+            it('is sets the correct `placement` setting in Popper.js config', () => {
+                const el = createVirtualElement()
+
+                ;['top', 'bottom', 'left', 'right'].forEach(position => {
+
+                    const instance = tippy(el, {
+                        position
+                    })
+
+                    const popper = instance.getPopperElement(el)
+                    instance.show(popper, 0)
+
+                    expect(popper.getAttribute('x-placement')).toBe(position)
+
+                    ;['-start', '-end'].forEach(shift => {
+
+                        const el = createVirtualElement()
+
+                        const instance = tippy(el, {
+                            position: position + shift
+                        })
+
+                        const popper = instance.getPopperElement(el)
+                        instance.show(popper, 0)
+                        expect(popper.getAttribute('x-placement')).toBe(position + shift)
+                        instance.destroyAll()
+                    })
+
+                    instance.destroyAll()
+                })
+            })
+        })
+
+        describe('zIndex', () => {
+            it('is applied to the tooltip popper element', () => {
+                const el = createVirtualElement()
+
+                const instance = tippy(el, {
+                    zIndex: 10
+                })
+
+                const popper = instance.getPopperElement(el)
+                expect(popper.style.zIndex).toBe('10')
+
+                instance.destroyAll()
             })
         })
     })
@@ -529,7 +809,7 @@ describe('core', () => {
 
             const listeners = createTrigger('mouseenter', el, handlers, true)
 
-            if (BROWSER.supportsTouch) {
+            if (Browser.supportsTouch) {
                 ['touchstart', 'touchend'].forEach(e =>
                     expect(find(listeners, o => o.event === e)).toBeDefined()
                 )
@@ -735,7 +1015,7 @@ describe('core', () => {
 
             mountPopper(ref)
 
-            expect(document.querySelector(SELECTORS.popper)).not.toBeNull()
+            expect(document.querySelector(Selectors.POPPER)).not.toBeNull()
 
             const popper = instance.getPopperElement(el)
             popper.style.visibility = 'visible'
@@ -761,7 +1041,7 @@ describe('core', () => {
             instance.destroyAll()
         })
 
-        it('enables event listeners if `followCursor` is false or BROWSER.touch is true', () => {
+        it('enables event listeners if `followCursor` is false or Browser.touch is true', () => {
             const el = createVirtualElement()
 
             let instance = tippy(el)
@@ -774,7 +1054,7 @@ describe('core', () => {
             ref.popper.style.visibility = 'visible'
             instance.destroyAll()
 
-            BROWSER.touch = true
+            Browser.touch = true
 
             instance = tippy(el, {
                 followCursor: true
@@ -787,7 +1067,7 @@ describe('core', () => {
 
             ref.popper.style.visibility = 'visible'
             instance.destroyAll()
-            BROWSER.touch = false
+            Browser.touch = false
         })
 
         it('disables event listeners if `followCursor` is true', () => {
@@ -818,9 +1098,9 @@ describe('utils', () => {
                     getCorePlacement(placement)
                 ).toBe(placement)
 
-                ;['start', 'end'].forEach(shift => {
+                ;['-start', '-end'].forEach(shift => {
                     expect(
-                        getCorePlacement(placement + '-' + shift)
+                        getCorePlacement(placement + shift)
                     ).toBe(placement)
                 })
 

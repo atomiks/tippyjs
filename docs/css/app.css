@@ -32,7 +32,7 @@ p, ul {
 }
 
 h4 {
-    margin-top: 1rem;
+    margin: 2rem 0 1rem;
 }
 
 code, pre {
@@ -253,9 +253,9 @@ section .btn, section .btn:active {
     margin: 0;
 }
 
-.btn:hover, .btn.active, .btn:active {
-    opacity: 0.8;
-    box-shadow: 0 10px 15px -1px rgba(0, 0, 0, 0.1), 0 25px 50px -4px rgba(100, 100, 255, 0.3);
+.btn:not(.btn-danger):hover, .btn.active, .btn:active {
+    filter: brightness(1.15) hue-rotate(10deg) contrast(1.5);
+    box-shadow: 0 10px 15px -1px rgba(0, 0, 0, 0.1), 0 25px 50px -4px rgba(80, 140, 255, 0.3);
 }
 
 .heading-top {

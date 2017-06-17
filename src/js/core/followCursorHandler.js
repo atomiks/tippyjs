@@ -1,4 +1,4 @@
-import { STORE } from './constants'
+import { Store } from './globals'
 
 import getCorePlacement from '../utils/getCorePlacement'
 import find             from '../utils/find'
@@ -9,7 +9,7 @@ import prefix           from '../utils/prefix'
 * @param {MouseEvent} e
 */
 export default function followCursorHandler(e) {
-    const ref = find(STORE, ref => ref.el === this)
+    const ref = find(Store, ref => ref.el === this)
     const { popper } = ref
 
     const position = getCorePlacement(popper.getAttribute('x-placement'))

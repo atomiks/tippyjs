@@ -1,4 +1,4 @@
-import { BROWSER } from './constants'
+import { Browser } from './globals'
 
 import followCursorHandler  from './followCursorHandler'
 import createPopperInstance from './createPopperInstance'
@@ -13,7 +13,6 @@ export default function mountPopper(ref) {
     const {
         el,
         popper,
-        listeners,
         settings: {
             appendTo,
             followCursor
@@ -32,14 +31,14 @@ export default function mountPopper(ref) {
     } else {
         ref.popperInstance.update()
 
-        if ( ! followCursor || BROWSER.touch) {
+        if ( ! followCursor || Browser.touch) {
             ref.popperInstance.enableEventListeners()
         }
     }
 
     // Since touch is determined dynamically, followCursor setting
     // is set on mount
-   if (followCursor && ! BROWSER.touch) {
+   if (followCursor && ! Browser.touch) {
        el.addEventListener('mousemove', followCursorHandler)
        ref.popperInstance.disableEventListeners()
    }

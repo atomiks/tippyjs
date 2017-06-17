@@ -1,4 +1,4 @@
-import { STORE } from './constants'
+import { Store } from './globals'
 
 /**
 * Hides all poppers
@@ -6,7 +6,7 @@ import { STORE } from './constants'
 */
 export default function hideAllPoppers(currentRef) {
 
-    STORE.forEach(ref => {
+    Store.forEach(ref => {
 
         const {
             popper,
@@ -14,7 +14,6 @@ export default function hideAllPoppers(currentRef) {
             settings: {
                 appendTo,
                 hideOnClick,
-                hideDuration,
                 trigger
             }
         } = ref
@@ -27,7 +26,7 @@ export default function hideAllPoppers(currentRef) {
         const isNotCurrentRef = !currentRef || popper !== currentRef.popper
 
         if (isHideOnClick && isNotCurrentRef) {
-            tippyInstance.hide(popper, hideDuration)
+            tippyInstance.hide(popper)
         }
     })
 }

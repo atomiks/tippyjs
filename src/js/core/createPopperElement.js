@@ -33,8 +33,12 @@ export default function createPopperElement(id, title, settings) {
     popper.style.zIndex = zIndex
 
     const tooltip = document.createElement('div')
-    tooltip.setAttribute('class', `tippy-tooltip tippy-tooltip--${size} ${theme}-theme leave`)
+    tooltip.setAttribute('class', `tippy-tooltip tippy-tooltip--${size} leave`)
     tooltip.setAttribute('data-animation', animation)
+
+    theme.split(' ').forEach(t => {
+        tooltip.classList.add(t +'-theme')
+    })
 
     if (arrow) {
         // Add an arrow

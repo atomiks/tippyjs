@@ -7,7 +7,8 @@
 .tippy-popper {
   max-width: 400px;
   perspective: 800px;
-  z-index: 9999; }
+  z-index: 9999;
+  outline: 0; }
   .tippy-popper.html-template {
     max-width: 96%;
     max-width: calc(100% - 20px); }
@@ -25,17 +26,17 @@
       border-left: 5px solid transparent;
       bottom: -5px; }
     .tippy-popper[x-placement^=top] [x-arrow].arrow-big {
-      border-top: 9px solid #333;
-      border-right: 9px solid transparent;
-      border-left: 9px solid transparent;
-      bottom: -9px; }
+      border-top: 10px solid #333;
+      border-right: 10px solid transparent;
+      border-left: 10px solid transparent;
+      bottom: -10px; }
   .tippy-popper[x-placement^=top] [x-circle] {
     transform-origin: 0% 100%; }
     .tippy-popper[x-placement^=top] [x-circle].enter {
       transform: scale(1) translate(-50%, -50%);
       opacity: 1; }
     .tippy-popper[x-placement^=top] [x-circle].leave {
-      transform: scale(0.5) translate(-50%, -100%);
+      transform: scale(0.45) translate(-50%, -100%);
       opacity: 0; }
   .tippy-popper[x-placement^=top] .tippy-tooltip.light-theme [x-circle] {
     background-color: white; }
@@ -48,9 +49,9 @@
       border-right: 5px solid transparent;
       border-left: 5px solid transparent; }
     .tippy-popper[x-placement^=top] .tippy-tooltip.light-theme [x-arrow].arrow-big {
-      border-top: 9px solid white;
-      border-right: 9px solid transparent;
-      border-left: 9px solid transparent; }
+      border-top: 10px solid white;
+      border-right: 10px solid transparent;
+      border-left: 10px solid transparent; }
   .tippy-popper[x-placement^=top] .tippy-tooltip.transparent-theme [x-circle] {
     background-color: rgba(0, 0, 0, 0.7); }
   .tippy-popper[x-placement^=top] .tippy-tooltip.transparent-theme [x-arrow] {
@@ -62,9 +63,9 @@
       border-right: 5px solid transparent;
       border-left: 5px solid transparent; }
     .tippy-popper[x-placement^=top] .tippy-tooltip.transparent-theme [x-arrow].arrow-big {
-      border-top: 9px solid rgba(0, 0, 0, 0.7);
-      border-right: 9px solid transparent;
-      border-left: 9px solid transparent; }
+      border-top: 10px solid rgba(0, 0, 0, 0.7);
+      border-right: 10px solid transparent;
+      border-left: 10px solid transparent; }
   .tippy-popper[x-placement^=top] [data-animation=perspective] {
     transform-origin: bottom; }
     .tippy-popper[x-placement^=top] [data-animation=perspective].enter {
@@ -89,7 +90,7 @@
     opacity: 1;
     transform: translateY(-10px) scale(1); }
   .tippy-popper[x-placement^=top] [data-animation=scale].leave {
-    opacity: 0.25;
+    opacity: 0;
     transform: translateY(0) scale(0); }
   .tippy-popper[x-placement^=bottom] [x-arrow] {
     position: absolute;
@@ -105,17 +106,17 @@
       border-left: 5px solid transparent;
       top: -5px; }
     .tippy-popper[x-placement^=bottom] [x-arrow].arrow-big {
-      border-bottom: 9px solid #333;
-      border-right: 9px solid transparent;
-      border-left: 9px solid transparent;
-      top: -9px; }
+      border-bottom: 10px solid #333;
+      border-right: 10px solid transparent;
+      border-left: 10px solid transparent;
+      top: -10px; }
   .tippy-popper[x-placement^=bottom] [x-circle] {
     transform-origin: 0% -100%; }
     .tippy-popper[x-placement^=bottom] [x-circle].enter {
       transform: scale(1) translate(-50%, -50%);
       opacity: 1; }
     .tippy-popper[x-placement^=bottom] [x-circle].leave {
-      transform: scale(0.5) translate(-50%, 5%);
+      transform: scale(0.45) translate(-50%, 8%);
       opacity: 0; }
   .tippy-popper[x-placement^=bottom] .tippy-tooltip.light-theme [x-circle] {
     background-color: white; }
@@ -128,9 +129,9 @@
       border-right: 5px solid transparent;
       border-left: 5px solid transparent; }
     .tippy-popper[x-placement^=bottom] .tippy-tooltip.light-theme [x-arrow].arrow-big {
-      border-bottom: 9px solid white;
-      border-right: 9px solid transparent;
-      border-left: 9px solid transparent; }
+      border-bottom: 10px solid white;
+      border-right: 10px solid transparent;
+      border-left: 10px solid transparent; }
   .tippy-popper[x-placement^=bottom] .tippy-tooltip.transparent-theme [x-circle] {
     background-color: rgba(0, 0, 0, 0.7); }
   .tippy-popper[x-placement^=bottom] .tippy-tooltip.transparent-theme [x-arrow] {
@@ -142,9 +143,9 @@
       border-right: 5px solid transparent;
       border-left: 5px solid transparent; }
     .tippy-popper[x-placement^=bottom] .tippy-tooltip.transparent-theme [x-arrow].arrow-big {
-      border-bottom: 9px solid rgba(0, 0, 0, 0.7);
-      border-right: 9px solid transparent;
-      border-left: 9px solid transparent; }
+      border-bottom: 10px solid rgba(0, 0, 0, 0.7);
+      border-right: 10px solid transparent;
+      border-left: 10px solid transparent; }
   .tippy-popper[x-placement^=bottom] [data-animation=perspective] {
     transform-origin: top; }
     .tippy-popper[x-placement^=bottom] [data-animation=perspective].enter {
@@ -169,7 +170,7 @@
     opacity: 1;
     transform: translateY(10px) scale(1); }
   .tippy-popper[x-placement^=bottom] [data-animation=scale].leave {
-    opacity: 0.25;
+    opacity: 0;
     transform: translateY(0) scale(0); }
   .tippy-popper[x-placement^=left] [x-arrow] {
     position: absolute;
@@ -185,17 +186,17 @@
       border-bottom: 5px solid transparent;
       right: -5px; }
     .tippy-popper[x-placement^=left] [x-arrow].arrow-big {
-      border-left: 9px solid #333;
-      border-top: 9px solid transparent;
-      border-bottom: 9px solid transparent;
-      right: -9px; }
+      border-left: 10px solid #333;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      right: -10px; }
   .tippy-popper[x-placement^=left] [x-circle] {
     transform-origin: 50% 0%; }
     .tippy-popper[x-placement^=left] [x-circle].enter {
       transform: scale(1) translate(-50%, -50%);
       opacity: 1; }
     .tippy-popper[x-placement^=left] [x-circle].leave {
-      transform: scale(0.5) translate(-50%, -50%);
+      transform: scale(0.45) translate(-50%, -50%);
       opacity: 0; }
   .tippy-popper[x-placement^=left] .tippy-tooltip.light-theme [x-circle] {
     background-color: white; }
@@ -208,9 +209,9 @@
       border-top: 5px solid transparent;
       border-bottom: 5px solid transparent; }
     .tippy-popper[x-placement^=left] .tippy-tooltip.light-theme [x-arrow].arrow-big {
-      border-left: 9px solid white;
-      border-top: 9px solid transparent;
-      border-bottom: 9px solid transparent; }
+      border-left: 10px solid white;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent; }
   .tippy-popper[x-placement^=left] .tippy-tooltip.transparent-theme [x-circle] {
     background-color: rgba(0, 0, 0, 0.7); }
   .tippy-popper[x-placement^=left] .tippy-tooltip.transparent-theme [x-arrow] {
@@ -222,9 +223,9 @@
       border-top: 5px solid transparent;
       border-bottom: 5px solid transparent; }
     .tippy-popper[x-placement^=left] .tippy-tooltip.transparent-theme [x-arrow].arrow-big {
-      border-left: 9px solid rgba(0, 0, 0, 0.7);
-      border-top: 9px solid transparent;
-      border-bottom: 9px solid transparent; }
+      border-left: 10px solid rgba(0, 0, 0, 0.7);
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent; }
   .tippy-popper[x-placement^=left] [data-animation=perspective] {
     transform-origin: right; }
     .tippy-popper[x-placement^=left] [data-animation=perspective].enter {
@@ -249,7 +250,7 @@
     opacity: 1;
     transform: translateX(-10px) scale(1); }
   .tippy-popper[x-placement^=left] [data-animation=scale].leave {
-    opacity: 0.25;
+    opacity: 0;
     transform: translateX(0) scale(0); }
   .tippy-popper[x-placement^=right] [x-arrow] {
     position: absolute;
@@ -265,17 +266,17 @@
       border-bottom: 5px solid transparent;
       left: -5px; }
     .tippy-popper[x-placement^=right] [x-arrow].arrow-big {
-      border-right: 9px solid #333;
-      border-top: 9px solid transparent;
-      border-bottom: 9px solid transparent;
-      left: -9px; }
+      border-right: 10px solid #333;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      left: -10px; }
   .tippy-popper[x-placement^=right] [x-circle] {
     transform-origin: -50% 0%; }
     .tippy-popper[x-placement^=right] [x-circle].enter {
       transform: scale(1) translate(-50%, -50%);
       opacity: 1; }
     .tippy-popper[x-placement^=right] [x-circle].leave {
-      transform: scale(0.5) translate(-50%, -50%);
+      transform: scale(0.45) translate(-50%, -50%);
       opacity: 0; }
   .tippy-popper[x-placement^=right] .tippy-tooltip.light-theme [x-circle] {
     background-color: white; }
@@ -288,9 +289,9 @@
       border-top: 5px solid transparent;
       border-bottom: 5px solid transparent; }
     .tippy-popper[x-placement^=right] .tippy-tooltip.light-theme [x-arrow].arrow-big {
-      border-right: 9px solid white;
-      border-top: 9px solid transparent;
-      border-bottom: 9px solid transparent; }
+      border-right: 10px solid white;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent; }
   .tippy-popper[x-placement^=right] .tippy-tooltip.transparent-theme [x-circle] {
     background-color: rgba(0, 0, 0, 0.7); }
   .tippy-popper[x-placement^=right] .tippy-tooltip.transparent-theme [x-arrow] {
@@ -302,9 +303,9 @@
       border-top: 5px solid transparent;
       border-bottom: 5px solid transparent; }
     .tippy-popper[x-placement^=right] .tippy-tooltip.transparent-theme [x-arrow].arrow-big {
-      border-right: 9px solid rgba(0, 0, 0, 0.7);
-      border-top: 9px solid transparent;
-      border-bottom: 9px solid transparent; }
+      border-right: 10px solid rgba(0, 0, 0, 0.7);
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent; }
   .tippy-popper[x-placement^=right] [data-animation=perspective] {
     transform-origin: left; }
     .tippy-popper[x-placement^=right] [data-animation=perspective].enter {
@@ -329,22 +330,14 @@
     opacity: 1;
     transform: translateX(10px) scale(1); }
   .tippy-popper[x-placement^=right] [data-animation=scale].leave {
-    opacity: 0.25;
+    opacity: 0;
     transform: translateX(0) scale(0); }
-  .tippy-popper [x-circle] {
-    background-color: white; }
-  .tippy-popper[data-animatefill] {
-    background-color: transparent; }
-  .tippy-popper [x-arrow] {
-    position: absolute;
-    width: 0;
-    height: 0; }
   .tippy-popper .tippy-tooltip.transparent-theme {
     background-color: rgba(0, 0, 0, 0.7); }
     .tippy-popper .tippy-tooltip.transparent-theme[data-animatefill] {
       background-color: transparent; }
   .tippy-popper .tippy-tooltip.light-theme {
-    color: #203d5d;
+    color: #26323d;
     box-shadow: 0 4px 20px 4px rgba(0, 20, 60, 0.1), 0 4px 80px -8px rgba(0, 20, 60, 0.2);
     background-color: white; }
     .tippy-popper .tippy-tooltip.light-theme[data-animatefill] {

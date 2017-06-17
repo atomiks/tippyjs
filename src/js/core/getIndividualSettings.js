@@ -1,4 +1,4 @@
-import { DEFAULT_SETTINGS_KEYS } from './constants'
+import { DefaultsKeys } from './globals'
 
 /**
 * Returns an object of settings to override global settings
@@ -8,7 +8,7 @@ import { DEFAULT_SETTINGS_KEYS } from './constants'
 */
 export default function getIndividualSettings(el, instanceSettings) {
 
-    const settings = DEFAULT_SETTINGS_KEYS.reduce((acc, key) => {
+    const settings = DefaultsKeys.reduce((acc, key) => {
         let val = el.getAttribute(`data-${ key.toLowerCase() }`) || instanceSettings[key]
 
         // Convert strings to booleans
@@ -16,7 +16,9 @@ export default function getIndividualSettings(el, instanceSettings) {
         if (val === 'true') val = true
 
         // Convert number strings to true numbers
-        if (!isNaN(parseFloat(val))) val = parseFloat(val)
+        if (isFinite(val) && !isNaN(parseFloat(val))) {
+            val = parseFloat(val)
+        }
 
         // Convert array strings to actual arrays
         if (typeof val === 'string' && val.trim().charAt(0) === '[') {

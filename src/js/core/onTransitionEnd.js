@@ -1,4 +1,4 @@
-import { SELECTORS } from './constants'
+import { Selectors } from './globals'
 
 /**
 * Prepares the callback functions for `show` and `hide` methods
@@ -13,7 +13,7 @@ export default function onTransitionEnd(ref, duration, callback) {
         return callback()
     }
 
-    const tooltip = ref.popper.querySelector(SELECTORS.tooltip)
+    const tooltip = ref.popper.querySelector(Selectors.TOOLTIP)
     let transitionendFired = false
 
     const listenerCallback = e => {
@@ -32,8 +32,8 @@ export default function onTransitionEnd(ref, duration, callback) {
     tooltip.addEventListener('transitionend', listenerCallback)
 
     // transitionend listener sometimes may not fire
-    clearTimeout(ref.transitionendTimeout)
-    ref.transitionendTimeout = setTimeout(() => {
+    clearTimeout(ref._transitionendTimeout)
+    ref._transitionendTimeout = setTimeout(() => {
         !transitionendFired && callback()
     }, duration)
 }

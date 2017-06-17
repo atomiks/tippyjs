@@ -8,7 +8,7 @@ import getCorePlacement from '../utils/getCorePlacement'
 * @return {Boolean}
 */
 export default function cursorIsOutsideInteractiveBorder(event, popper, settings) {
-    if (!popper.getAttribute('x-placement')) return false
+    if (!popper.getAttribute('x-placement')) return true
 
     const { clientX: x, clientY: y } = event
     const { interactiveBorder, distance } = settings

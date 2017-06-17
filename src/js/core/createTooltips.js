@@ -5,7 +5,7 @@ import getEventListenerHandlers from './getEventListenerHandlers'
 
 import removeTitle from '../utils/removeTitle'
 
-import { STORE } from './constants'
+import { Store } from './globals'
 
 let idCounter = 1
 
@@ -43,7 +43,7 @@ export default function createTooltips(els) {
             listeners = listeners.concat(createTrigger(event, el, handlers, touchHold))
         )
 
-        STORE.push({
+        Store.push({
             id,
             el,
             popper,

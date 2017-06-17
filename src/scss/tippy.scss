@@ -77,11 +77,11 @@
 }
 
 @mixin circle-transform-leave ($position) {
-    $scale: 0.5;
+    $scale: 0.45;
     @if ($position == 'top') {
         transform: scale($scale) translate(-50%, -100%);
     } @else if ($position == 'bottom') {
-        transform: scale($scale) translate(-50%, 5%);
+        transform: scale($scale) translate(-50%, 8%);
     } @else if ($position == 'left') {
         transform: scale($scale) translate(-50%, -50%);
     } @else if ($position == 'right') {
@@ -137,6 +137,7 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
     max-width: 400px;
     perspective: 800px;
     z-index: 9999;
+    outline: 0;
 
     &.html-template {
         max-width: 96%;
@@ -159,8 +160,8 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
                 }
 
                 &.arrow-big {
-                    @include arrow($position, 9px, #333);
-                    @include arrow-position($position, 9px);
+                    @include arrow($position, 10px, #333);
+                    @include arrow-position($position, 10px);
                 }
             }
 
@@ -190,7 +191,7 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
                     }
 
                     &.arrow-big {
-                        @include arrow($position, 9px, white);
+                        @include arrow($position, 10px, white);
                     }
                 }
             }
@@ -207,7 +208,7 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
                     }
 
                     &.arrow-big {
-                        @include arrow($position, 9px, rgba(0,0,0,0.7));
+                        @include arrow($position, 10px, rgba(0,0,0,0.7));
                     }
                 }
             }
@@ -254,26 +255,12 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
                     @include enter-transform($position, 'scale')
                 }
                 &.leave {
-                    opacity: 0.25;
+                    opacity: 0;
                     @include leave-transform($position, 'scale')
                 }
             }
 
         }
-    }
-
-    [x-circle] {
-        background-color: white;
-    }
-
-    &[data-animatefill] {
-        background-color: transparent;
-    }
-
-    [x-arrow] {
-        position: absolute;
-        width: 0;
-        height: 0;
     }
 
     .tippy-tooltip.transparent-theme {
@@ -285,7 +272,7 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
     }
 
     .tippy-tooltip.light-theme {
-        color: #203d5d;
+        color: #26323d;
         box-shadow: 0 4px 20px 4px rgba(0, 20, 60, 0.1),
                     0 4px 80px -8px rgba(0, 20, 60, 0.2);
         background-color: white;
