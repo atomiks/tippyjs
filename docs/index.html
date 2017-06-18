@@ -337,7 +337,7 @@ tippy.css</code></pre>
                     <tr>
                       <td><code>html</code></td>
                       <td><code>false</code></td>
-                      <td><code>false</code> or a template <code>id</code></td>
+                      <td><code>false</code> | template <code>id</code> | <code>Element</code></td>
                       <td>Allows you to add HTML to a tooltip. See <a href="#creating-html-templates">Creating HTML templates</a>.</td>
                     </tr>
                     <tr>
@@ -641,10 +641,13 @@ tippy.css</code></pre>
   <img alt="cat" height="150" src="img/cat.jpg">
 </div>
 
-          <p>Specify either the <code>id</code> in the <code>html</code> setting, or the element itself.</p>
+          <p>If you want to <em>clone</em> the template's content into the tooltip, specify the template's <code>id</code> in the <code>html</code> setting.
+              Otherwise use the DOM element itself, which allows you to keep listeners attached.
+              If you use the DOM element choice, ensure it's not hidden with <code>display: none;</code>.
+          </p>
 
 <pre><code class="language-javascript">tippy('#myElement', {
-  html: '#my-template-id', // or document.querySelector('#my-template-id')
+  html: '#my-template-id', // OR document.querySelector('#my-template-id')
   arrow: true,
   animation: 'fade'
 })</code></pre>
