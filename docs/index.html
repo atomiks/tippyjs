@@ -219,10 +219,10 @@ tippy.css</code></pre>
               <p><code>tippy()</code> takes an object as a second argument for you to customize the tooltips being instantiated. Here's an example:</p>
 
 <pre><code class="language-javascript">tippy('.tippy', {
-    position: 'right',
-    animation: 'scale',
-    duration: 1000,
-    arrow: true
+  position: 'right',
+  animation: 'scale',
+  duration: 1000,
+  arrow: true
 })</code></pre>
 
               <div class="result-box">
@@ -454,14 +454,14 @@ tippy.css</code></pre>
               </p>
 
 <pre><code class="language-javascript">tippy('.mySelector', {
-    position: 'right',
-    popperOptions: {
-        modifiers: {
-            flip: {
-                behavior: ['right', 'bottom']
-            }
-        }
+  position: 'right',
+  popperOptions: {
+    modifiers: {
+      flip: {
+        behavior: ['right', 'bottom']
+      }
     }
+  }
 })</code></pre>
 
               <h4>Flipping</h4>
@@ -473,11 +473,30 @@ tippy.css</code></pre>
 
 <pre><code class="language-javascript">tippy('.mySelector', {
   popperOptions: {
-      modifiers: {
-          flip: {
-              enabled: false
-          }
+    modifiers: {
+      flip: {
+        enabled: false
       }
+    }
+  }
+})</code></pre>
+
+              <h4>Tooltips inside a scrollable container</h4>
+
+              <p>
+                  You may encounter issues with tooltip positioning when it's given to an element within a scrollable container.
+                  Firstly, when the element is no longer visible, the tooltip will stay stuck within the viewport. Secondly, it transitions between position updates.
+                  To solve this, simply specify a <code>flipDuration</code> of <code>0</code> and add the following <code>popperOptions</code>:
+              </p>
+
+<pre><code class="language-javascript">tippy('.mySelector', {
+  flipDuration: 0,
+  popperOptions: {
+    modifiers: {
+      preventOverflow: {
+        enabled: false
+      }
+    }
   }
 })</code></pre>
 
@@ -517,17 +536,17 @@ tippy.css</code></pre>
             </p>
 
 <pre><code class="language-javascript">tippy('.tippy', {
-    wait(show, event) {
-        // Change your app model to be rendered by the UI library/framework
+  wait(show, event) {
+    // Change your app model to be rendered by the UI library/framework
 
-        // Queue show to run once rendering is complete
-        setTimeout(() => {
-            // update(popper) content
-            // event.type to see what trigger fired the event
+    // Queue show to run once rendering is complete
+    setTimeout(() => {
+      // update(popper) content
+      // event.type to see what trigger fired the event
 
-            show()
-        }, 0)
-    }
+      show()
+    }, 0)
+  }
 })</code>
 </pre>
 
