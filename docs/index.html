@@ -773,6 +773,17 @@ instance.update(popper)</code></pre>
             <p>The <code>destroyAll()</code> method will destroy every tooltip created by the instance.</p>
 
             <pre><code class="language-javascript">instance.destroyAll()</code></pre>
+
+            <h4>Reference data</h4>
+
+            <p>The reference data object contains information about the reference element and its popper element.
+              A particularly important piece of data stored in the object is the <code>popperInstance</code> object,
+              which allows you to update the position of the tooltip manually (for example, with dynamic AJAX-powered content).</p>
+
+            <p>In order to optimize performance, the <code>popperInstance</code> is not created until the very first show of a tooltip,
+            so the data object will not contain it until you've shown a tooltip at least once. If you're dealing with asynchronous content this most likely won't be an issue.</p>
+
+            <p>See <a class="tippy-link" title="codepen.io" target="_blank" href="https://codepen.io/anon/pen/GEmOQy?editors=1010">this Codepen</a> example.
         </section>
 
           <hr>
