@@ -731,28 +731,28 @@ tippy.css</code></pre>
             <pre><code class="language-markup">&lt;button id="myButton" title=&quot;Tooltip&quot;&gt;My element&lt;/button&gt;</code></pre>
 
             <p>First, save the instance:</p>
-            <pre><code class="language-javascript">const instance = tippy('#myButton')</code></pre>
+            <pre><code class="language-javascript">const tip = tippy('#myButton')</code></pre>
 
             <p>Next, find the reference element's popper reference by calling the method
                 <code>getPopperElement</code> and passing the element in directly:</p>
 
           <pre><code class="language-javascript">const el = document.querySelector('#myButton')
-const popper = instance.getPopperElement(el)</code></pre>
+const popper = tip.getPopperElement(el)</code></pre>
 
             <p>Then, call the <code>show()</code> or <code>hide()</code> method by passing in the popper element:
 
-            <pre><code class="language-javascript">instance.show(popper)
-instance.hide(popper)</code></pre>
+            <pre><code class="language-javascript">tip.show(popper)
+tip.hide(popper)</code></pre>
 
             <p>Pass a number in the second argument to specify a transition duration:</p>
 
-            <pre><code class="language-javascript">instance.show(popper, 500)</code></pre>
+            <pre><code class="language-javascript">tip.show(popper, 500)</code></pre>
 
             <h4>Finding the reference element from the popper element</h4>
 
             <p>Pass the popper element to find its reference element into this method:</p>
 
-            <pre><code class="language-javascript">const el = instance.getReferenceElement(popper)</code></pre>
+            <pre><code class="language-javascript">const el = tip.getReferenceElement(popper)</code></pre>
 
             <h4>Updating a tooltip with new content</h4>
 
@@ -760,7 +760,7 @@ instance.hide(popper)</code></pre>
             that has the tooltip.</p>
 
             <pre><code class="language-javascript">el.setAttribute('title', 'New content!')
-instance.update(popper)</code></pre>
+tip.update(popper)</code></pre>
 
             <p>If it's a HTML template instead, it will inject the new HTML of the template.</code>
 
@@ -768,17 +768,17 @@ instance.update(popper)</code></pre>
 
             <p>The <code>destroy()</code> method will destroy an individual tooltip.</p>
 
-            <pre><code class="language-javascript">instance.destroy(popper)</code></pre>
+            <pre><code class="language-javascript">tip.destroy(popper)</code></pre>
 
             <p>The <code>destroyAll()</code> method will destroy every tooltip created by the instance.</p>
 
-            <pre><code class="language-javascript">instance.destroyAll()</code></pre>
+            <pre><code class="language-javascript">tip.destroyAll()</code></pre>
 
             <h4>Reference data</h4>
 
             <p>Retrieve the reference data object by passing in either the reference element or the popper element.</p>
 
-            <pre><code class="language-javascript">const refData = instance.getReferenceData(el || popper)</code></pre>
+            <pre><code class="language-javascript">const refData = tip.getReferenceData(el || popper)</code></pre>
 
             <p>The reference data object contains information about the reference element and its popper element.
               A particularly important piece of data stored in the object is the <code>popperInstance</code> object,
