@@ -776,6 +776,10 @@ instance.update(popper)</code></pre>
 
             <h4>Reference data</h4>
 
+            <p>Retrieve the reference data object by passing in either the reference element or the popper element.</p>
+
+            <pre><code class="language-javascript">const refData = instance.getReferenceData(el || popper)</code></pre>
+
             <p>The reference data object contains information about the reference element and its popper element.
               A particularly important piece of data stored in the object is the <code>popperInstance</code> object,
               which allows you to update the position of the tooltip manually (for example, with dynamic AJAX-powered content).</p>
