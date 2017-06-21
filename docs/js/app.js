@@ -32,6 +32,45 @@ tippy('#callback-tippy', {
     }
 })
 
+var ajaxBtn = document.getElementById('ajax-btn')
+var ajaxTemplate = document.getElementById('ajax-template')
+var ajaxInitialText = ajaxTemplate.innerHTML
+
+var tip = tippy(ajaxBtn, {
+    flipDuration: 0,
+    arrow: true,
+    html: ajaxTemplate,
+    show: function() {
+        if (tip.loading || ajaxTemplate.innerHTML !== ajaxInitialText) return
+
+        tip.loading = true
+
+        fetch('https://unsplash.it/200/?random').then(function(resp) {
+            return resp.blob()
+        }).then(function(blob) {
+          var refData = tip.getReferenceData(ajaxBtn)
+          var url = URL.createObjectURL(blob)
+          ajaxTemplate.innerHTML = '<img width="200" height="200" src="' + url + '">'
+          tip.loading = false
+
+          refData.popperInstance.update()
+        })
+    },
+    hidden: function() {
+      ajaxTemplate.innerHTML = ajaxInitialText
+    },
+    popperOptions: {
+      modifiers: {
+        preventOverflow: {
+          enabled: false
+        },
+        hide: {
+          enabled: false
+        }
+      }
+    }
+})
+
 var performanceTest = document.getElementById('performance-test')
 var performanceResult = document.getElementById('performance-result')
 var performanceBtn = document.getElementById('performance-btn')

@@ -787,7 +787,19 @@ tip.update(popper)</code></pre>
             <p>In order to optimize performance, the <code>popperInstance</code> is not created until the very first show of a tooltip,
             so the data object will not contain it until you've shown a tooltip at least once. If you're dealing with asynchronous content this most likely won't be an issue.</p>
 
-            <p>See <a class="tippy-link" title="codepen.io" target="_blank" href="https://codepen.io/anon/pen/GEmOQy?editors=1010">this Codepen</a> example.
+            <h4>AJAX tooltips</h4>
+
+            <p>Here's an example of dynamic content which on show, fetches a new random image from the Unsplash API.
+            Note: this requires a browser which supports the newer fetch API.</p>
+
+            <div class="result-box">
+                <button class="btn" id="ajax-btn">Hover for a new image</button>
+                <div id="ajax-template">
+                    Loading a new image...
+                </div>
+            </div>
+
+            <p><a target="_blank" href="https://codepen.io/anon/pen/GEmOQy">Codepen demo</a></p>
         </section>
 
           <hr>
