@@ -2,12 +2,10 @@ import { Store } from './globals'
 
 /**
 * Hides all poppers
-* @param {Object} currentRef
+* @param {Object} exclude - reference to exclude if needed
 */
-export default function hideAllPoppers(currentRef) {
-
+export default function hideAllPoppers(exclude) {
     Store.forEach(ref => {
-
         const {
             popper,
             tippyInstance,
@@ -23,7 +21,7 @@ export default function hideAllPoppers(currentRef) {
 
         // hideOnClick can have the truthy value of 'persistent', so strict check is needed
         const isHideOnClick = hideOnClick === true || trigger.indexOf('focus') !== -1
-        const isNotCurrentRef = !currentRef || popper !== currentRef.popper
+        const isNotCurrentRef = !exclude || popper !== exclude.popper
 
         if (isHideOnClick && isNotCurrentRef) {
             tippyInstance.hide(popper)

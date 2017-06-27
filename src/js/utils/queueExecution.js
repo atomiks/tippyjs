@@ -1,10 +1,9 @@
 /**
-* Pushes execution of a function to end of execution queue, doing so
-* on next repaint
+* Waits until next repaint to execute a fn
 * @return {Function}
 */
 export default function queueExecution(fn) {
     window.requestAnimationFrame(() => {
-        setTimeout(fn, 0)
+      setTimeout(fn, 0)
     })
 }

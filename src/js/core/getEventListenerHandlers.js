@@ -65,16 +65,19 @@ export default function getEventListenerHandlers(el, popper, settings) {
 
     const handleTrigger = event => {
 
-        if (event.type === 'mouseenter' && Browser.SUPPORTS_TOUCH && Browser.touch) {
-            if (touchHold) return
-            if (Browser.iOS()) el.click()
-        }
+      const mouseenterTouch = event.type === 'mouseenter' && Browser.SUPPORTS_TOUCH && Browser.touch
+
+        if (mouseenterTouch && touchHold) return
 
         // Toggle show/hide when clicking click-triggered tooltips
         const isClick = event.type === 'click'
         const isNotPersistent = hideOnClick !== 'persistent'
 
         isClick && isVisible(popper) && isNotPersistent ? hide() : show(event)
+
+        if (mouseenterTouch && Browser.iOS() && el.click) {
+            el.click()
+        }
     }
 
     const handleMouseleave = event => {

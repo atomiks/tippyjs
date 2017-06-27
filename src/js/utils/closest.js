@@ -1,3 +1,5 @@
+import { matches } from './matches'
+
 /**
 * Ponyfill to get the closest parent element
 * @param {Element} element - child of parent to be returned
@@ -5,18 +7,6 @@
 * @return {Element}
 */
 export default function closest(element, parentSelector) {
-    const matches = Element.prototype.matches               ||
-                    Element.prototype.matchesSelector       ||
-                    Element.prototype.webkitMatchesSelector ||
-                    Element.prototype.mozMatchesSelector    ||
-                    Element.prototype.msMatchesSelector     ||
-                    function(s) {
-                        var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-                            i = matches.length;
-                        while (--i >= 0 && matches.item(i) !== this) {}
-                        return i > -1;
-                    }
-
     const _closest = Element.prototype.closest || function(selector) {
         let el = this
         while (el) {

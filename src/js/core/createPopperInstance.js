@@ -7,10 +7,10 @@ import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 
 /**
 * Creates a new popper instance
-* @param {Object} ref
+* @param {Object} refData
 * @return {Object} - the popper instance
 */
-export default function createPopperInstance(ref) {
+export default function createPopperInstance(refData) {
 
     const {
         el,
@@ -21,7 +21,7 @@ export default function createPopperInstance(ref) {
             offset,
             distance
         }
-    } = ref
+    } = refData
 
     const tooltip = popper.querySelector(Selectors.TOOLTIP)
 

@@ -5,6 +5,7 @@ import init from '../../src/js/core/init'
 import noop                     from '../../src/js/utils/noop'
 import getCorePlacement         from '../../src/js/utils/getCorePlacement'
 import find                     from '../../src/js/utils/find'
+import findIndex                from '../../src/js/utils/findIndex'
 import prefix                   from '../../src/js/utils/prefix'
 import closest                  from '../../src/js/utils/closest'
 import isVisible                from '../../src/js/utils/isVisible'
@@ -20,7 +21,7 @@ import mountPopper                      from '../../src/js/core/mountPopper'
 import makeSticky                       from '../../src/js/core/makeSticky'
 import createPopperElement              from '../../src/js/core/createPopperElement'
 import createPopperInstance             from '../../src/js/core/createPopperInstance'
-import getArrayOfElementsFromSelector   from '../../src/js/core/getArrayOfElementsFromSelector'
+import getArrayOfElements   from '../../src/js/core/getArrayOfElements'
 
 import tippy from '../../src/js/tippy.js'
 
@@ -355,15 +356,19 @@ describe('core', () => {
                 expect(document.querySelector(Selectors.POPPER)).toBeNull()
             })
 
-            it('removes the ref object from Store', () => {
+            it('removes the ref data object from Store', () => {
                 const el = createVirtualElement()
 
                 const instance = tippy(el)
                 const popper = instance.getPopperElement(el)
 
+                expect(find(instance.store, ref => ref.popper === popper)).toBeDefined()
+                expect(find(Store, ref => ref.popper === popper)).toBeDefined()
+
                 instance.destroy(popper)
 
-                expect(instance.getReferenceData(el)).toBeUndefined()
+                expect(find(instance.store, ref => ref.popper === popper)).toBeUndefined()
+                expect(find(Store, ref => ref.popper === popper)).toBeUndefined()
             })
         })
 
@@ -766,15 +771,15 @@ describe('core', () => {
         })
     })
 
-    describe('getArrayOfElementsFromSelector', () => {
-        it('returns an array of HTMLElements', () => {
+    describe('getArrayOfElements', () => {
+        it('returns an array of Elements', () => {
             const el1 = createVirtualElement()
             const el2 = createVirtualElement()
 
             document.body.appendChild(el2)
 
-            const res1 = getArrayOfElementsFromSelector(el1)
-            const res2 = getArrayOfElementsFromSelector('.test')
+            const res1 = getArrayOfElements(el1)
+            const res2 = getArrayOfElements('.test')
 
             ;[res1, res2].forEach(res =>
                 expect(res.every(item => item instanceof Element)).toBe(true)
@@ -1124,6 +1129,24 @@ describe('utils', () => {
             expect(
                 find(arr, o => o.city === 'London')
             ).toBe(arr[2])
+        })
+    })
+
+    describe('findIndex', () => {
+        it('behaves like Array.prototype.findIndex', () => {
+            const arr = [
+                { name: 'Bob', city: 'Los Angeles' },
+                { name: 'Jim', city: 'Sydney' },
+                { name: 'Bob', city: 'London' }
+            ]
+
+            expect(
+                findIndex(arr, o => o.name === 'Bob')
+            ).toBe(0)
+
+            expect(
+                findIndex(arr, o => o.city === 'London')
+            ).toBe(2)
         })
     })
 

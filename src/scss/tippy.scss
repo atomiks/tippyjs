@@ -76,12 +76,25 @@
     }
 }
 
-@mixin circle-transform-leave ($position) {
-    $scale: 0.45;
+@mixin circle-transform-enter ($position) {
+    $scale: 1;
     @if ($position == 'top') {
-        transform: scale($scale) translate(-50%, -100%);
+        transform: scale($scale) translate(-50%, -60%);
     } @else if ($position == 'bottom') {
-        transform: scale($scale) translate(-50%, 8%);
+        transform: scale($scale) translate(-50%, -40%);
+    } @else if ($position == 'left') {
+        transform: scale($scale) translate(-50%, -50%);
+    } @else if ($position == 'right') {
+        transform: scale($scale) translate(-50%, -50%);
+    }
+}
+
+@mixin circle-transform-leave ($position) {
+    $scale: 0.2;
+    @if ($position == 'top') {
+        transform: scale($scale) translate(-50%, -50%);
+    } @else if ($position == 'bottom') {
+        transform: scale($scale) translate(-50%, 0%);
     } @else if ($position == 'left') {
         transform: scale($scale) translate(-50%, -50%);
     } @else if ($position == 'right') {
@@ -123,7 +136,7 @@
 
 $positions: 'top', 'bottom', 'left', 'right';
 $origins: bottom, top, right, left;
-$circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
+$circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
 
 .tippy-touch {
     cursor: pointer !important;
@@ -138,6 +151,7 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
     perspective: 800px;
     z-index: 9999;
     outline: 0;
+    transition-timing-function: cubic-bezier(.165, .84, .44, 1);
 
     &.html-template {
         max-width: 96%;
@@ -169,7 +183,7 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
                 transform-origin: nth($circle-origins, index($positions, $position));
 
                 &.enter {
-                    transform: scale(1) translate(-50%, -50%);
+                    @include circle-transform-enter($position);
                     opacity: 1;
                 }
 
@@ -326,17 +340,17 @@ $circle-origins: 0% 100%, 0% -100%, 50% 0%, -50% 0%;
         will-change: transform;
         background-color: #333;
         border-radius: 50%;
-        width: 120%;
-        width: calc(100% + 2rem);
-        transition: all ease-out;
+        width: 140%;
+        width: calc(125% + 2rem);
         left: 50%;
         top: 50%;
         z-index: -1;
         overflow: hidden;
+        transition-timing-function: ease-out;
 
         &::before {
             content: '';
-            padding-top: 75%;
+            padding-top: 90%;
             float: left;
         }
     }

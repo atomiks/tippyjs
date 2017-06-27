@@ -5,6 +5,7 @@ import { Browser } from './globals'
 * @param {Object} event - the custom event specified in the `trigger` setting
 * @param {Element} el - tooltipped element
 * @param {Object} handlers - the handlers for each listener
+* @param {Boolean} touchHold
 * @return {Array} - array of listener objects
 */
 export default function createTrigger(event, el, handlers, touchHold) {

@@ -11,15 +11,16 @@ let idCounter = 1
 
 /**
 * Creates tooltips for all el elements that match the instance's selector
-* @param {Array} els - Elements
+* @param {Element[]} els - Array of elements
+* @return {Object[]} Array of ref data objects
 */
 export default function createTooltips(els) {
 
-    els.forEach(el => {
+    return els.reduce((a, el) => {
 
         const settings = this.settings.performance
-                         ? this.settings
-                         : getIndividualSettings(el, this.settings)
+                       ? this.settings
+                       : getIndividualSettings(el, this.settings)
 
         // animateFill is disabled if an arrow is true
         if (settings.arrow) settings.animateFill = false
@@ -27,12 +28,11 @@ export default function createTooltips(els) {
         const { html, trigger, touchHold } = settings
 
         const title = el.getAttribute('title')
-        if (!title && !html) return
+        if (!title && !html) return a
 
         const id = idCounter
         el.setAttribute('data-tooltipped', '')
         el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
-
         removeTitle(el)
 
         const popper = createPopperElement(id, title, settings)
@@ -43,7 +43,7 @@ export default function createTooltips(els) {
             listeners = listeners.concat(createTrigger(event, el, handlers, touchHold))
         )
 
-        Store.push({
+        a.push({
             id,
             el,
             popper,
@@ -53,5 +53,7 @@ export default function createTooltips(els) {
         })
 
         idCounter++
-    })
+
+        return a
+    }, [])
 }

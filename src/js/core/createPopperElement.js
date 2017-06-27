@@ -76,14 +76,14 @@ export default function createPopperElement(id, title, settings) {
 
         if (html instanceof Element) {
             content.appendChild(html)
-            templateId = html.id || 'tippy-html-template'
+            templateId = '#' + html.id || 'tippy-html-template'
         } else {
             content.innerHTML = document.getElementById(html.replace('#', '')).innerHTML
             templateId = html
         }
 
         popper.classList.add('html-template')
-        popper.setAttribute('tabindex', '0')
+        interactive && popper.setAttribute('tabindex', '-1')
         tooltip.setAttribute('data-template-id', templateId)
 
     } else {

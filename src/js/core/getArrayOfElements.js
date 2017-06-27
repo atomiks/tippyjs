@@ -1,9 +1,9 @@
 /**
 * Returns an array of elements based on the selector input
 * @param {String|Element} selector
-* @return {Array} of HTML Elements
+* @return {Elements[]}
 */
-export default function getArrayOfElementsFromSelector(selector) {
+export default function getArrayOfElements(selector) {
     if (selector instanceof Element) {
         return [selector]
     }

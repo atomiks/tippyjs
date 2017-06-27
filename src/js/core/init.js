@@ -34,9 +34,9 @@ export default function init() {
         let time
 
         return () => {
-            const now = performance.now()
+            const now = performance && performance.now()
 
-            if (now - time < 10) {
+            if (now && now - time < 10) {
                 Browser.touch = false
                 document.removeEventListener('mousemove', mousemoveHandler)
                 if ( ! Browser.iOS() && document.body.classList.contains('tippy-touch')) {
@@ -97,7 +97,7 @@ export default function init() {
     document.addEventListener('click', clickHandler)
     document.addEventListener('touchstart', touchHandler)
 
-    if ( ! Browser.SUPPORTS_TOUCH && navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0) {
+    if ( ! Browser.SUPPORTS_TOUCH && (navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)) {
         document.addEventListener('pointerdown', touchHandler)
     }
 

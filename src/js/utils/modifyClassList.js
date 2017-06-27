@@ -1,6 +1,6 @@
 /**
 * Modifies elements' class lists
-* @param {Array} els - HTML elements
+* @param {Element[]} els - Array of elements
 * @param {Function} callback
 */
 export default function modifyClassList(els, callback) {

@@ -4,9 +4,9 @@ import isVisible from '../utils/isVisible'
 
 /**
 * Updates a popper's position on each animation frame to make it stick to a moving element
-* @param {Object} ref
+* @param {Object} refData
 */
-export default function makeSticky(ref) {
+export default function makeSticky(refData) {
 
     const {
         popper,
@@ -14,7 +14,7 @@ export default function makeSticky(ref) {
         settings: {
             stickyDuration
         }
-    } = ref
+    } = refData
 
     const applyTransitionDuration = () =>
         popper.style[prefix('transitionDuration')] = `${stickyDuration}ms`

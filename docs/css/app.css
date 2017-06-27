@@ -3,11 +3,11 @@ html {
 }
 
 body {
-    font-family: 'Nunito', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Nunito Sans', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background: #3751cc;
-    background:-webkit-linear-gradient(left,#5733ea, #4894ff 70%,#a5bcff);
-    background:linear-gradient(90deg,#5733ea, #4894ff 70%,#a5bcff);
-    color: #555;
+    background: -webkit-linear-gradient(left,#5733ea, #4894ff 70%,#a5bcff);
+    background: linear-gradient(90deg,#5733ea, #4894ff 70%,#a5bcff);
+    color: #34495e;
 }
 
 .text-muted {
@@ -26,18 +26,20 @@ a i {
     color: #00caf9;
 }
 
-p, ul {
-    font-size: 1.1rem;
-    line-height: 1.7;
+table, p, ul {
+  font-size: 1.1rem;
+  line-height: 1.7;
 }
 
 h4 {
     margin: 2rem 0 1rem;
+    font-weight: 600;
+    line-height: 1.5;
 }
 
 code, pre {
-    background-color: #f5f6f9;
-    color: #7a3cea;
+    background-color: #f1f5ff;
+    color: #2d61df;
     margin-bottom: 1rem;
     line-height: 1.7;
 }
@@ -50,8 +52,20 @@ h2 {
     margin-bottom: 1.25rem;
 }
 
+strong {
+  font-weight: 700;
+}
+
 h5 {
-    font-weight: 300;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.alert.alert-info {
+  color: #0085ff;
+  background-color: #f5fcff;
+  border-color: #d6eaff;
+  margin: 2rem 0;
 }
 
 a:hover {
@@ -138,6 +152,8 @@ a:hover {
 .tippy-popper.html-template .tippy-tooltip {
     padding: 2rem;
     box-shadow: 0 4px 80px -8px rgba(0, 20, 60, 0.25);
+    max-width: 500px;
+    font-size: 1.2rem;
 }
 
 .logo {
@@ -190,8 +206,9 @@ a:hover {
 .hero-heading {
     display: inline-block;
     font-weight: 300;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     font-size: 4rem;
+    padding: 0.5rem;
     color: #7dffc3;
     background: -webkit-linear-gradient(135deg, #fff9b0, #7dffc3);
     -webkit-background-clip: text;
@@ -200,12 +217,15 @@ a:hover {
 
 .tippy-tooltip[data-template-id="#template"] {
     padding: 2rem;
-    max-width: 500px;
-    width: 100%;
+    transition-timing-function: cubic-bezier(.165, .84, .44, 1);
 }
 
 .tippy-tooltip[data-template-id="#my-template-id"] {
     padding: 2rem;
+}
+
+.tippy-link {
+  white-space: nowrap;
 }
 
 .hero-subheading {
@@ -247,6 +267,7 @@ hr {
     background: linear-gradient(135deg,#73a5ff, #5477f5);
     letter-spacing: 0.5px;
     border: none;
+    font-size: 1.3rem;
 }
 
 section .btn, section .btn:active {
@@ -265,7 +286,7 @@ section .btn, section .btn:active {
 }
 
 main .container-fluid {
-    background-color: white;
+    background: white;
     max-width: 980px;
     padding: 2rem 1.25rem;
     box-shadow: 0 0 80px -4px rgba(0,20,40,0.1);
@@ -294,6 +315,10 @@ main .container-fluid {
     color: black;
 }
 
+.tippy-tooltip.natural-easing-theme {
+  transition-timing-function: cubic-bezier(.165, .84, .44, 1);
+}
+
 .test-element {
     width: 50px;
     background-color: #f3f6f9;
@@ -317,21 +342,8 @@ main .container-fluid {
     width: 70px;
 }
 
-@media (min-width: 576px) {
-    main .container-fluid {
-        padding: 2rem;
-    }
-    .hero-link span {
-        color: #68f6ff;
-        background: -webkit-linear-gradient(left,#bef9ff, #9aecff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    a span {
-        background: -webkit-linear-gradient(left,#00caf9, #4d8cff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+.button-showcase {
+  background: linear-gradient(90deg,rgba(255, 255, 255, 0.95),rgb(255, 255, 255));
 }
 
 .button-showcase .btn:last-child {
@@ -356,16 +368,32 @@ main .container-fluid {
     }
 }
 
-@media (min-width: 768px) {
-    .table-wrapper::after {
-        width: 0;
-        background: none;
+@media (min-width: 576px) {
+    html {
+      font-size: 15px;
     }
+    main .container-fluid {
+        padding: 2rem;
+    }
+    .hero-link span {
+        color: #68f6ff;
+        background: -webkit-linear-gradient(left,#bef9ff, #9aecff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    a span {
+        background: -webkit-linear-gradient(left,#00c0f9, #4d8cff, #9f72ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+@media (min-width: 768px) {
     html {
         font-size: 16px;
     }
     main .container-fluid {
-        padding: 2.5rem 5rem;
+        padding: 2.5rem 4rem;
         margin: 2rem auto;
         border-radius: 10px;
     }
@@ -375,4 +403,10 @@ main .container-fluid {
     .hero {
         padding: 8rem 0 2rem;
     }
+}
+
+@media (min-width: 976px) {
+  main .container-fluid {
+      padding: 2.5rem 5rem;
+  }
 }

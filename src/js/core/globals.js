@@ -4,13 +4,22 @@ if (typeof window !== 'undefined') {
     Browser.SUPPORTED = !!window.requestAnimationFrame
     Browser.SUPPORTS_TOUCH = 'ontouchstart' in window
     Browser.touch = false
-    // Chrome device/touch emulator can make this dynamic
-    Browser.iOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream
     Browser.dynamicInputDetection = true
+    // Chrome device/touch emulation can make this dynamic
+    Browser.iOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream
 }
 
+/**
+* The global storage array which holds all data reference objects
+* from every instance
+* This allows us to hide tooltips from all instances, finding the ref when
+* clicking on the body, and for followCursor
+*/
 export const Store = []
 
+/**
+* Selector constants used for grabbing elements
+*/
 export const Selectors = {
     POPPER: '.tippy-popper',
     TOOLTIP: '.tippy-tooltip',
@@ -21,6 +30,9 @@ export const Selectors = {
     CONTROLLER: '[data-tippy-controller]'
 }
 
+/**
+* The default settings applied to each instance
+*/
 export const Defaults = {
     html: false,
     position: 'top',
@@ -41,7 +53,7 @@ export const Defaults = {
     multiple: false,
     followCursor: false,
     inertia: false,
-    flipDuration: 300,
+    flipDuration: 350,
     sticky: false,
     stickyDuration: 200,
     appendTo: null,
@@ -51,4 +63,8 @@ export const Defaults = {
     popperOptions: {}
 }
 
+/**
+* The keys of the defaults object for reducing down into a new object
+* Used in `getIndividualSettings()`
+*/
 export const DefaultsKeys = Browser.SUPPORTED && Object.keys(Defaults)

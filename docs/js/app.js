@@ -1,10 +1,31 @@
-function hideHtml() {
-    var popper = instance.getPopperElement(document.querySelector('#html-tippy'))
-    instance.hide(popper)
+function $(s) {
+  return document.querySelector(s)
 }
 
+function hideHtml() {
+    var popper = htmlTip.getPopperElement($('#html-tippy'))
+    var nestedPopper = instance.getPopperElement($('.btn-danger[onclick]'))
+    instance.hide(nestedPopper, 100)
+    htmlTip.hide(popper)
+}
+
+var DOM = {
+  performance: {
+    btn: $('#performance-btn'),
+    result: $('#performance-result'),
+    test: $('#performance-test'),
+    model: $('#performance-model')
+  },
+  ajax: {
+    btn: $('#ajax-btn'),
+    template: $('#ajax-template')
+  }
+}
+
+// The main instance which most tooltips are created by
 var instance = tippy('.tippy')
-instance.show(instance.getPopperElement(document.querySelector('#animated-tippy')))
+// Show the animated tippy on load
+instance.show(instance.getPopperElement($('#animated-tippy')))
 
 tippy('.flippy', {
     position: 'right',
@@ -32,32 +53,57 @@ tippy('#callback-tippy', {
     }
 })
 
-var ajaxBtn = document.getElementById('ajax-btn')
-var ajaxTemplate = document.getElementById('ajax-template')
-var ajaxInitialText = ajaxTemplate.innerHTML
+// HTML & nested tooltip example
+var template = $('#template')
+var htmlTip = tippy('#html-tippy', {
+  html: template,
+  shown: function() {
+    if (window.innerWidth < 976) {
+      var nestedRefEl = template.querySelector('.btn')
+      instance.show(instance.getPopperElement(nestedRefEl))
+    }
+  }
+})
 
-var tip = tippy(ajaxBtn, {
+// Ajax tooltip
+var $ajax = DOM.ajax
+var ajaxInitialText = $ajax.template.innerHTML
+var tip = tippy($ajax.btn, {
     flipDuration: 0,
     arrow: true,
-    html: ajaxTemplate,
+    html: $ajax.template,
+    theme: 'light',
+    arrowSize: 'big',
+    animation: 'perspective',
     show: function() {
-        if (tip.loading || ajaxTemplate.innerHTML !== ajaxInitialText) return
+        if (tip.loading || $ajax.template.innerHTML !== ajaxInitialText) return
 
         tip.loading = true
 
         fetch('https://unsplash.it/200/?random').then(function(resp) {
             return resp.blob()
         }).then(function(blob) {
-          var refData = tip.getReferenceData(ajaxBtn)
+          var refData = tip.getReferenceData($ajax.btn)
           var url = URL.createObjectURL(blob)
-          ajaxTemplate.innerHTML = '<img width="200" height="200" src="' + url + '">'
+          $ajax.template.innerHTML = '<img width="200" height="200" src="' + url + '">'
           tip.loading = false
 
           refData.popperInstance.update()
+        }).catch(function(err) {
+          var refData = tip.getReferenceData($ajax.btn)
+
+          tip.loading = false
+          $ajax.template.innerHTML = 'There was an error loading the image'
+
+          refData.popperInstance.update()
+
+          setTimeout(function() {
+            $ajax.template.innerHTML = ajaxInitialText
+          }, 1000)
         })
     },
     hidden: function() {
-      ajaxTemplate.innerHTML = ajaxInitialText
+      $ajax.template.innerHTML = ajaxInitialText
     },
     popperOptions: {
       modifiers: {
@@ -71,11 +117,8 @@ var tip = tippy(ajaxBtn, {
     }
 })
 
-var performanceTest = document.getElementById('performance-test')
-var performanceResult = document.getElementById('performance-result')
-var performanceBtn = document.getElementById('performance-btn')
-var performanceModel = document.getElementById('performance-model')
-
+// Performance section
+var $perf = DOM.performance
 var jsperf = (function() {
     var i = 1
     var base = 200
@@ -85,8 +128,8 @@ var jsperf = (function() {
 
     return {
         updateModel: function() {
-            var value = parseInt(performanceModel.value) || 1
-            performanceBtn.innerHTML = 'Append ' + value + (value === 1 ? ' element!' : ' elements!')
+            var value = parseInt($perf.model.value) || 1
+            $perf.btn.innerHTML = 'Append ' + value + (value === 1 ? ' element!' : ' elements!')
 
             instance && instance.destroyAll()
 
@@ -96,7 +139,7 @@ var jsperf = (function() {
             i = 1
             tippyTime = 0
             counter = base = value
-            performanceTest.innerHTML = performanceResult.innerHTML = ''
+            $perf.test.innerHTML = $perf.result.innerHTML = ''
         },
         run: function() {
             for (i; i <= counter; i++) {
@@ -104,17 +147,21 @@ var jsperf = (function() {
                 el.title = 'Performance test'
                 el.className = 'test-element'
                 el.innerHTML = '#' + i
-                performanceTest.appendChild(el)
+                $perf.test.appendChild(el)
             }
 
             counter += base
 
             var t1 = performance.now()
             instance = tippy('.test-element', {
-                animation: 'scale',
+                animation: 'perspective',
+                hideOnClick: false,
                 duration: 200,
                 arrow: true,
-                performance: true
+                performance: true,
+                theme: 'transparent',
+                size: 'small',
+                arrowSize: 'small'
             })
             var t2 = performance.now()
 
@@ -124,10 +171,10 @@ var jsperf = (function() {
             '<p><strong>Current Tippy instantiation took</strong> ' + (t2 - t1).toFixed(1) + ' milliseconds</p>' +
             '<p><strong>Elements appended so far:</strong> ' + (counter - base) + '</p><hr>'
 
-            performanceResult.innerHTML = innerHTML
+            $perf.result.innerHTML = innerHTML
         }
     }
 })()
-performanceModel.addEventListener('input', jsperf.updateModel.bind(jsperf))
-performanceBtn.addEventListener('click', jsperf.run)
+$perf.model.addEventListener('input', jsperf.updateModel.bind(jsperf))
+$perf.btn.addEventListener('click', jsperf.run)
 jsperf.updateModel()
