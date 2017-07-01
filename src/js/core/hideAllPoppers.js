@@ -2,10 +2,10 @@ import { Store } from './globals'
 
 /**
 * Hides all poppers
-* @param {Object} exclude - reference to exclude if needed
+* @param {Object} exclude - refData to exclude if needed
 */
 export default function hideAllPoppers(exclude) {
-    Store.forEach(ref => {
+    Store.forEach(refData => {
         const {
             popper,
             tippyInstance,
@@ -14,7 +14,7 @@ export default function hideAllPoppers(exclude) {
                 hideOnClick,
                 trigger
             }
-        } = ref
+        } = refData
 
         // Don't hide already hidden ones
         if (!appendTo.contains(popper)) return

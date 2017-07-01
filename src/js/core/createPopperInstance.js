@@ -4,6 +4,7 @@ import { Selectors } from './globals'
 
 import getCorePlacement from '../utils/getCorePlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
+import prefix from '../utils/prefix'
 
 /**
 * Creates a new popper instance
@@ -19,11 +20,13 @@ export default function createPopperInstance(refData) {
             position,
             popperOptions,
             offset,
-            distance
+            distance,
+            flipDuration
         }
     } = refData
 
     const tooltip = popper.querySelector(Selectors.TOOLTIP)
+    let flipped
 
     const config = {
         placement: position,
@@ -39,7 +42,7 @@ export default function createPopperInstance(refData) {
                 ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
             }
         },
-        onUpdate() {
+        onUpdate(data) {
             tooltip.style.top = ''
             tooltip.style.bottom = ''
             tooltip.style.left = ''

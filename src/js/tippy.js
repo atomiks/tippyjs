@@ -49,12 +49,14 @@ class Tippy {
 
         this.settings = Object.assign({}, Defaults, settings)
 
+        // DEPRECATION: `on` prefixed callbacks are now preferred over non-
+        // as it better indicates it's a callback function
         this.callbacks = {
             wait: settings.wait,
-            show: settings.show || noop,
-            shown: settings.shown || noop,
-            hide: settings.hide || noop,
-            hidden: settings.hidden || noop
+            show: settings.onShow || settings.show || noop,
+            shown: settings.onShown || settings.shown || noop,
+            hide: settings.onHide || settings.hide || noop,
+            hidden: settings.onHidden || settings.hidden || noop
         }
 
         this.store = createTooltips.call(this, getArrayOfElements(selector))
@@ -68,7 +70,7 @@ class Tippy {
     */
     getPopperElement(el) {
         try {
-            return find(this.store, ref => ref.el === el).popper
+            return find(this.store, refData => refData.el === el).popper
         } catch (e) {
             console.error('[getPopperElement]: Element passed as the argument does not exist in the instance')
         }
@@ -81,7 +83,7 @@ class Tippy {
     */
     getReferenceElement(popper) {
         try {
-            return find(this.store, ref => ref.popper === popper).el
+            return find(this.store, refData => refData.popper === popper).el
         } catch (e) {
             console.error('[getReferenceElement]: Popper passed as the argument does not exist in the instance')
         }
@@ -89,11 +91,11 @@ class Tippy {
 
     /**
     * Returns the reference data object from either the reference element or popper element
-    * @param {Element} x (reference element or popper)
+    * @param {Element} x (refDataerence element or popper)
     * @return {Object}
     */
     getReferenceData(x) {
-        return find(this.store, ref => ref.el === x || ref.popper === x)
+        return find(this.store, refData => refData.el === x || refData.popper === x)
     }
 
     /**
@@ -106,7 +108,7 @@ class Tippy {
 
         this.callbacks.show.call(popper)
 
-        const ref = find(this.store, ref => ref.popper === popper)
+        const refData = find(this.store, refData => refData.popper === popper)
         const tooltip = popper.querySelector(Selectors.TOOLTIP)
         const circle = popper.querySelector(Selectors.CIRCLE)
         const content = popper.querySelector(Selectors.CONTENT)
@@ -121,7 +123,7 @@ class Tippy {
                 flipDuration,
                 duration
             }
-        } = ref
+        } = refData
 
         const _duration = customDuration !== undefined
                         ? customDuration
@@ -130,7 +132,7 @@ class Tippy {
         // Remove transition duration (prevent a transition when popper changes position)
         applyTransitionDuration([popper, tooltip, circle], 0)
 
-        mountPopper(ref)
+        mountPopper(refData)
 
         popper.style.visibility = 'visible'
         popper.setAttribute('aria-hidden', 'false')
@@ -142,7 +144,7 @@ class Tippy {
             // Sometimes the arrow will not be in the correct position,
             // force another update
             if ( ! followCursor || Browser.touch) {
-                ref.popperInstance.update()
+                refData.popperInstance.update()
             }
 
             // Re-apply transition durations
@@ -158,7 +160,7 @@ class Tippy {
             interactive && el.classList.add('active')
 
             // Update popper's position on every animation frame
-            sticky && makeSticky(ref)
+            sticky && makeSticky(refData)
 
             // Repaint/reflow is required for CSS transition when appending
             triggerReflow(tooltip, circle)
@@ -170,8 +172,8 @@ class Tippy {
             })
 
             // Wait for transitions to complete
-            onTransitionEnd(ref, _duration, () => {
-                if ( ! isVisible(popper) || ref._onShownFired) return
+            onTransitionEnd(refData, _duration, () => {
+                if ( ! isVisible(popper) || refData._onShownFired) return
 
                 // Focus interactive tooltips only
                 interactive && popper.focus()
@@ -180,7 +182,7 @@ class Tippy {
                 tooltip.classList.add('tippy-notransition')
 
                 // Prevents shown() from firing more than once from early transition cancellations
-                ref._onShownFired = true
+                refData._onShownFired = true
 
                 this.callbacks.shown.call(popper)
             })
@@ -197,7 +199,7 @@ class Tippy {
 
         this.callbacks.hide.call(popper)
 
-        const ref = find(this.store, ref => ref.popper === popper)
+        const refData = find(this.store, refData => refData.popper === popper)
         const tooltip = popper.querySelector(Selectors.TOOLTIP)
         const circle = popper.querySelector(Selectors.CIRCLE)
         const content = popper.querySelector(Selectors.CONTENT)
@@ -213,13 +215,13 @@ class Tippy {
                 trigger,
                 duration
             }
-        } = ref
+        } = refData
 
         const _duration = customDuration !== undefined
                         ? customDuration
                         : Array.isArray(duration) ? duration[1] : duration
 
-        ref._onShownFired = false
+        refData._onShownFired = false
         interactive && el.classList.remove('active')
 
         popper.style.visibility = 'hidden'
@@ -243,12 +245,12 @@ class Tippy {
         }
 
         // Wait for transitions to complete
-        onTransitionEnd(ref, _duration, () => {
+        onTransitionEnd(refData, _duration, () => {
             if (isVisible(popper) || ! appendTo.contains(popper)) return
 
             el.removeEventListener('mousemove', followCursorHandler)
 
-            ref.popperInstance.disableEventListeners()
+            refData.popperInstance.disableEventListeners()
 
             appendTo.removeChild(popper)
 
@@ -263,9 +265,9 @@ class Tippy {
     update(popper) {
         if (this.state.destroyed) return
 
-        const ref = find(this.store, ref => ref.popper === popper)
+        const refData = find(this.store, refData => refData.popper === popper)
         const content = popper.querySelector(Selectors.CONTENT)
-        const { el, settings: { html } } = ref
+        const { el, settings: { html } } = refData
 
         if (html instanceof Element) {
             console.warn('Aborted: update() should not be used if `html` is a DOM element')
@@ -286,8 +288,14 @@ class Tippy {
     destroy(popper, _isLast) {
         if (this.state.destroyed) return
 
-        const ref = find(this.store, ref => ref.popper === popper)
-        const { el, popperInstance, listeners } = ref
+        const refData = find(this.store, refData => refData.popper === popper)
+
+        const {
+            el,
+            popperInstance,
+            listeners,
+            _mutationObserver
+        } = refData
 
         // Ensure the popper is hidden
         if (isVisible(popper)) {
@@ -305,13 +313,14 @@ class Tippy {
         el.removeAttribute('aria-describedby')
 
         popperInstance && popperInstance.destroy()
+        _mutationObserver && _mutationObserver.disconnect()
 
         // Remove from store
-        Store.splice(findIndex(Store, ref => ref.popper === popper), 1)
+        Store.splice(findIndex(Store, refData => refData.popper === popper), 1)
 
         // Ensure filter is called only once
         if (_isLast === undefined || _isLast) {
-            this.store = Store.filter(ref => ref.tippyInstance === this)
+            this.store = Store.filter(refDataData => refData.tippyInstance === this)
         }
     }
 

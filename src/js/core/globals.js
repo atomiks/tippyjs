@@ -1,7 +1,7 @@
 export const Browser = {}
 
 if (typeof window !== 'undefined') {
-    Browser.SUPPORTED = !!window.requestAnimationFrame
+    Browser.SUPPORTED = 'requestAnimationFrame' in window
     Browser.SUPPORTS_TOUCH = 'ontouchstart' in window
     Browser.touch = false
     Browser.dynamicInputDetection = true
@@ -53,7 +53,7 @@ export const Defaults = {
     multiple: false,
     followCursor: false,
     inertia: false,
-    flipDuration: 350,
+    flipDuration: 0,
     sticky: false,
     stickyDuration: 200,
     appendTo: null,

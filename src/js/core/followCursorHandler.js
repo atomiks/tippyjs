@@ -9,8 +9,8 @@ import prefix           from '../utils/prefix'
 * @param {MouseEvent} e
 */
 export default function followCursorHandler(e) {
-    const ref = find(Store, ref => ref.el === this)
-    const { popper } = ref
+    const refData = find(Store, refData => refData.el === this)
+    const { popper } = refData
 
     const position = getCorePlacement(popper.getAttribute('x-placement'))
     const halfPopperWidth = Math.round( popper.offsetWidth / 2 )

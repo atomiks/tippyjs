@@ -3,12 +3,15 @@ import { Browser } from './globals'
 import followCursorHandler  from './followCursorHandler'
 import createPopperInstance from './createPopperInstance'
 
+import queueExecution from '../utils/queueExecution'
+import prefix from '../utils/prefix'
+
 /**
 * Appends the popper and creates a popper instance if one does not exist
 * Also updates its position if need be and enables event listeners
-* @param {Object} ref -  the element/popper reference
+* @param {Object} refData -  the element/popper reference data
 */
-export default function mountPopper(ref) {
+export default function mountPopper(refData) {
 
     const {
         el,
@@ -17,22 +20,34 @@ export default function mountPopper(ref) {
             appendTo,
             followCursor
         }
-    } = ref
+    } = refData
 
     // Already on the DOM
     if (appendTo.contains(popper)) return
 
     appendTo.appendChild(popper)
 
-    if ( ! ref.popperInstance) {
+    if ( ! refData.popperInstance) {
         // Create instance if it hasn't been created yet
-        ref.popperInstance = createPopperInstance(ref)
+        refData.popperInstance = createPopperInstance(refData)
+
+        // Update the popper's position whenever its content changes
+        // Not supported in IE10 unless polyfilled
+        if (window.MutationObserver) {
+            const observer = new MutationObserver(refData.popperInstance.update)
+            observer.observe(popper, {
+                childList: true,
+                subtree: true,
+                characterData: true
+            })
+            refData._mutationObserver = observer
+        }
 
     } else {
-        ref.popperInstance.update()
+        refData.popperInstance.update()
 
         if ( ! followCursor || Browser.touch) {
-            ref.popperInstance.enableEventListeners()
+            refData.popperInstance.enableEventListeners()
         }
     }
 
@@ -40,6 +55,6 @@ export default function mountPopper(ref) {
     // is set on mount
    if (followCursor && ! Browser.touch) {
        el.addEventListener('mousemove', followCursorHandler)
-       ref.popperInstance.disableEventListeners()
+       refData.popperInstance.disableEventListeners()
    }
 }
