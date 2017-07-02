@@ -64,7 +64,7 @@ class Tippy {
     }
 
     /**
-    * Returns the reference element's popper element reference
+    * Returns the reference element's popper element
     * @param {Element} el
     * @return {Element}
     */
@@ -91,7 +91,7 @@ class Tippy {
 
     /**
     * Returns the reference data object from either the reference element or popper element
-    * @param {Element} x (refDataerence element or popper)
+    * @param {Element} x (reference element or popper)
     * @return {Object}
     */
     getReferenceData(x) {
@@ -320,7 +320,7 @@ class Tippy {
 
         // Ensure filter is called only once
         if (_isLast === undefined || _isLast) {
-            this.store = Store.filter(refDataData => refData.tippyInstance === this)
+            this.store = Store.filter(refData => refData.tippyInstance === this)
         }
     }
 
