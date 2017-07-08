@@ -90,7 +90,7 @@
 }
 
 @mixin circle-transform-leave ($position) {
-    $scale: 0.2;
+    $scale: 0.23;
     @if ($position == 'top') {
         transform: scale($scale) translate(-50%, -50%);
     } @else if ($position == 'bottom') {
@@ -134,6 +134,14 @@
     }
 }
 
+@mixin arrow-margin ($position) {
+    @if ($position == 'top' or $position == 'bottom') {
+        margin: 0 5px;
+    } @else {
+        margin: 5px 0;
+    }
+}
+
 $positions: 'top', 'bottom', 'left', 'right';
 $origins: bottom, top, right, left;
 $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
@@ -162,11 +170,9 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
         &[x-placement^=#{$position}] {
 
             [x-arrow] {
-                position: absolute;
-                width: 0;
-                height: 0;
                 @include arrow($position, 7px, #333);
                 @include arrow-position($position, 7px);
+                @include arrow-margin($position);
 
                 &.arrow-small {
                     @include arrow($position, 5px, #333);
@@ -335,18 +341,31 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
         transition-timing-function: cubic-bezier(.53,2,.36,.85);
     }
 
+    [x-arrow] {
+        position: absolute;
+        width: 0;
+        height: 0;
+    }
+
     [x-circle] {
         position: absolute;
         will-change: transform;
         background-color: #333;
         border-radius: 50%;
-        width: 140%;
-        width: calc(125% + 2rem);
+        width: 150%;
+        width: calc(135% + 2rem);
         left: 50%;
         top: 50%;
         z-index: -1;
         overflow: hidden;
-        transition-timing-function: ease-out;
+
+        &.enter {
+            transition-timing-function: ease-out;
+        }
+
+        &.leave {
+            transition-timing-function: ease;
+        }
 
         &::before {
             content: '';

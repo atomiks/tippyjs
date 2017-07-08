@@ -148,9 +148,9 @@ class Tippy {
             }
 
             // Re-apply transition durations
-            applyTransitionDuration([tooltip, circle], _duration, true)
+            applyTransitionDuration([tooltip, circle], _duration)
             if ( ! followCursor || Browser.touch) {
-                applyTransitionDuration([popper], flipDuration, true)
+                applyTransitionDuration([popper], flipDuration)
             }
 
             // Make content fade out a bit faster than the tooltip if `animateFill`

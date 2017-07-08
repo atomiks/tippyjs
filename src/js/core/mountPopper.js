@@ -18,7 +18,8 @@ export default function mountPopper(refData) {
         popper,
         settings: {
             appendTo,
-            followCursor
+            followCursor,
+            flipDuration
         }
     } = refData
 
@@ -34,7 +35,14 @@ export default function mountPopper(refData) {
         // Update the popper's position whenever its content changes
         // Not supported in IE10 unless polyfilled
         if (window.MutationObserver) {
-            const observer = new MutationObserver(refData.popperInstance.update)
+            const styles = popper.style
+            const observer = new MutationObserver(() => {
+                styles[prefix('transitionDuration')] = '0ms'
+                refData.popperInstance.update()
+                queueExecution(() => {
+                    styles[prefix('transitionDuration')] = flipDuration + 'ms'
+                })
+            })
             observer.observe(popper, {
                 childList: true,
                 subtree: true,

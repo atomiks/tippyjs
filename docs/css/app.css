@@ -3,15 +3,16 @@ html {
 }
 
 body {
-    font-family: 'Nunito Sans', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Nunito', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background: #3751cc;
     background: -webkit-linear-gradient(left,#5733ea, #4894ff 70%,#a5bcff);
     background: linear-gradient(90deg,#5733ea, #4894ff 70%,#a5bcff);
     color: #34495e;
 }
 
-.text-muted {
-    color: #5d7997 !important;
+.feat-helper-text {
+    color: #6a8bad !important;
+    font-weight: 300;
 }
 
 a:focus {
@@ -294,6 +295,10 @@ main .container-fluid {
     transition: opacity 1s ease;
 }
 
+table {
+    font-size: 1rem;
+}
+
 .table-wrapper {
     position: relative;
 }
@@ -321,20 +326,23 @@ main .container-fluid {
 
 .test-element {
     width: 50px;
-    background-color: #f3f6f9;
-    color: #555;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    background: linear-gradient(#5172eb,#928aff);
+    box-shadow: 0 10px 20px -5px rgba(0,20,60,0.1), 0 0 10px rgba(0,20,60,0.05);
+    font-weight: 600;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0.25rem 0.5rem;
-    margin: 0.5rem;
-    border-radius: 4px;
-    font-size: 14px;
+    margin: 1%;
     cursor: default;
 }
 
 #performance-test {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
 }
 

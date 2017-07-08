@@ -47,8 +47,8 @@ tippy('.tippy-link', {
 })
 
 tippy('#callback-tippy', {
-    shown: function() {
-        alert('Hello from the shown() callback!')
+    onShown: function() {
+        alert('Hello from the onShown() callback!')
         document.getElementById('callback-tippy').blur()
     }
 })
@@ -57,7 +57,7 @@ tippy('#callback-tippy', {
 var template = $('#template')
 var htmlTip = tippy('#html-tippy', {
   html: template,
-  shown: function() {
+  onShown: function() {
     if (window.innerWidth < 976) {
       var nestedRefEl = template.querySelector('.btn')
       instance.show(instance.getPopperElement(nestedRefEl))
@@ -75,7 +75,7 @@ var tip = tippy($ajax.btn, {
     theme: 'light',
     arrowSize: 'big',
     animation: 'perspective',
-    show: function() {
+    onShow: function() {
         if (tip.loading || $ajax.template.innerHTML !== ajaxInitialText) return
 
         tip.loading = true
@@ -83,26 +83,19 @@ var tip = tippy($ajax.btn, {
         fetch('https://unsplash.it/200/?random').then(function(resp) {
             return resp.blob()
         }).then(function(blob) {
-          var refData = tip.getReferenceData($ajax.btn)
           var url = URL.createObjectURL(blob)
           $ajax.template.innerHTML = '<img width="200" height="200" src="' + url + '">'
           tip.loading = false
-
-          refData.popperInstance.update()
         }).catch(function(err) {
-          var refData = tip.getReferenceData($ajax.btn)
-
           tip.loading = false
           $ajax.template.innerHTML = 'There was an error loading the image'
 
-          refData.popperInstance.update()
-
           setTimeout(function() {
             $ajax.template.innerHTML = ajaxInitialText
-          }, 1000)
+          }, 2000)
         })
     },
-    hidden: function() {
+    onHidden: function() {
       $ajax.template.innerHTML = ajaxInitialText
     },
     popperOptions: {
@@ -146,7 +139,7 @@ var jsperf = (function() {
                 var el = document.createElement('div')
                 el.title = 'Performance test'
                 el.className = 'test-element'
-                el.innerHTML = '#' + i
+                el.innerHTML = i
                 $perf.test.appendChild(el)
             }
 
@@ -154,14 +147,10 @@ var jsperf = (function() {
 
             var t1 = performance.now()
             instance = tippy('.test-element', {
-                animation: 'perspective',
                 hideOnClick: false,
-                duration: 200,
+                duration: 0,
                 arrow: true,
-                performance: true,
-                theme: 'transparent',
-                size: 'small',
-                arrowSize: 'small'
+                performance: true
             })
             var t2 = performance.now()
 

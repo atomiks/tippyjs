@@ -53,7 +53,7 @@ export const Defaults = {
     multiple: false,
     followCursor: false,
     inertia: false,
-    flipDuration: 0,
+    flipDuration: 350,
     sticky: false,
     stickyDuration: 200,
     appendTo: null,

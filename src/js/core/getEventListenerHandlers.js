@@ -130,7 +130,7 @@ export default function getEventListenerHandlers(el, popper, settings) {
     const handleBlur = event => {
         // Ignore blur on touch devices, if there is no `relatedTarget`, hide
         // If the related target is a popper, ignore
-        if (Browser.touch || ! event.relatedTarget) return
+        if ( ! event.relatedTarget || Browser.touch) return
         if (closest(event.relatedTarget, Selectors.POPPER)) return
 
         hide()
