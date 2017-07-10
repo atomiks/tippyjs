@@ -94,7 +94,7 @@
     @if ($position == 'top') {
         transform: scale($scale) translate(-50%, -50%);
     } @else if ($position == 'bottom') {
-        transform: scale($scale) translate(-50%, 10px);
+        transform: scale($scale) translate(-50%, -5%);
     } @else if ($position == 'left') {
         transform: scale($scale) translate(-50%, -50%);
     } @else if ($position == 'right') {
