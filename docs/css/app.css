@@ -1,5 +1,5 @@
 html {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 body {
@@ -289,7 +289,7 @@ section .btn, section .btn:active {
 main .container-fluid {
     background: white;
     max-width: 980px;
-    padding: 2rem 1.25rem;
+    padding: 2rem 1rem;
     box-shadow: 0 0 80px -4px rgba(0,20,40,0.1);
     -webkit-transition: opacity 1s ease;
     transition: opacity 1s ease;
@@ -348,10 +348,6 @@ table {
 
 #performance-model {
     width: 70px;
-}
-
-.button-showcase {
-  background: linear-gradient(90deg,rgba(255, 255, 255, 0.95),rgb(255, 255, 255));
 }
 
 .button-showcase .btn:last-child {

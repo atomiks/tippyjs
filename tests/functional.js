@@ -498,7 +498,9 @@ function followCursorHandler(e) {
     var refData = find(Store, function (refData) {
         return refData.el === _this;
     });
-    var popper = refData.popper;
+
+    var popper = refData.popper,
+        offset = refData.settings.offset;
 
 
     var position = getCorePlacement(popper.getAttribute('x-placement'));
@@ -516,25 +518,25 @@ function followCursorHandler(e) {
 
     switch (position) {
         case 'top':
-            x = pageX - halfPopperWidth;
-            y = pageY - 2.5 * halfPopperHeight;
+            x = pageX - halfPopperWidth + offset;
+            y = pageY - 2.25 * halfPopperHeight;
             break;
         case 'left':
-            x = pageX - 2 * halfPopperWidth - 15;
-            y = pageY - halfPopperHeight;
+            x = pageX - 2 * halfPopperWidth - 10;
+            y = pageY - halfPopperHeight + offset;
             break;
         case 'right':
             x = pageX + halfPopperHeight;
-            y = pageY - halfPopperHeight;
+            y = pageY - halfPopperHeight + offset;
             break;
         case 'bottom':
-            x = pageX - halfPopperWidth;
+            x = pageX - halfPopperWidth + offset;
             y = pageY + halfPopperHeight / 1.5;
             break;
     }
 
-    var isRightOverflowing = pageX + viewportPadding + halfPopperWidth > pageWidth;
-    var isLeftOverflowing = pageX - viewportPadding - halfPopperWidth < 0;
+    var isRightOverflowing = pageX + viewportPadding + halfPopperWidth + offset > pageWidth;
+    var isLeftOverflowing = pageX - viewportPadding - halfPopperWidth + offset < 0;
 
     // Prevent left/right overflow
     if (position === 'top' || position === 'bottom') {
