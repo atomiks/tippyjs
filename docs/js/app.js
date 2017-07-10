@@ -80,7 +80,7 @@ var tip = tippy($ajax.btn, {
 
         tip.loading = true
 
-        fetch('https://unsplash.it/200/?random').then(function(resp) {
+        fetch('https://unsplash.it/200/?random', { mode: 'cors' }).then(function(resp) {
             return resp.blob()
         }).then(function(blob) {
           var url = URL.createObjectURL(blob)
