@@ -1,8 +1,9 @@
-import { Store } from './globals'
+import { Store, Selectors } from './globals'
 
 import getCorePlacement from '../utils/getCorePlacement'
 import find             from '../utils/find'
 import prefix           from '../utils/prefix'
+import closest          from '../utils/closest'
 
 /**
 * Mousemove event listener callback method for follow cursor setting
@@ -10,11 +11,17 @@ import prefix           from '../utils/prefix'
 */
 export default function followCursorHandler(e) {
     const refData = find(Store, refData => refData.el === this)
-    const { popper } = refData
+
+    const {
+        popper,
+        settings: {
+            offset
+        }
+    } = refData
 
     const position = getCorePlacement(popper.getAttribute('x-placement'))
-    const halfPopperWidth = Math.round( popper.offsetWidth / 2 )
-    const halfPopperHeight = Math.round( popper.offsetHeight / 2 )
+    const halfPopperWidth = Math.round(popper.offsetWidth / 2)
+    const halfPopperHeight = Math.round(popper.offsetHeight / 2)
     const viewportPadding = 5
     const pageWidth = document.documentElement.offsetWidth || document.body.offsetWidth
 
@@ -24,25 +31,25 @@ export default function followCursorHandler(e) {
 
     switch (position) {
         case 'top':
-            x = pageX - halfPopperWidth
-            y = pageY - 2.5 * halfPopperHeight
+            x = pageX - halfPopperWidth + offset
+            y = pageY - 2.25 * halfPopperHeight
             break
         case 'left':
-            x = pageX - ( 2 * halfPopperWidth ) - 15
-            y = pageY - halfPopperHeight
+            x = pageX - ( 2 * halfPopperWidth ) - 10
+            y = pageY - halfPopperHeight + offset
             break
         case 'right':
             x = pageX + halfPopperHeight
-            y = pageY - halfPopperHeight
+            y = pageY - halfPopperHeight + offset
             break
         case 'bottom':
-            x = pageX - halfPopperWidth
+            x = pageX - halfPopperWidth + offset
             y = pageY + halfPopperHeight/1.5
             break
     }
 
-    const isRightOverflowing = pageX + viewportPadding + halfPopperWidth > pageWidth
-    const isLeftOverflowing = pageX - viewportPadding - halfPopperWidth < 0
+    const isRightOverflowing = pageX + viewportPadding + halfPopperWidth + offset > pageWidth
+    const isLeftOverflowing = pageX - viewportPadding - halfPopperWidth + offset < 0
 
     // Prevent left/right overflow
     if (position === 'top' || position === 'bottom') {
