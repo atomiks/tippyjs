@@ -79,9 +79,9 @@
 @mixin circle-transform-enter ($position) {
     $scale: 1;
     @if ($position == 'top') {
-        transform: scale($scale) translate(-50%, -60%);
+        transform: scale($scale) translate(-50%, -55%);
     } @else if ($position == 'bottom') {
-        transform: scale($scale) translate(-50%, -40%);
+        transform: scale($scale) translate(-50%, -45%);
     } @else if ($position == 'left') {
         transform: scale($scale) translate(-50%, -50%);
     } @else if ($position == 'right') {
@@ -90,11 +90,11 @@
 }
 
 @mixin circle-transform-leave ($position) {
-    $scale: 0.23;
+    $scale: 0.15;
     @if ($position == 'top') {
         transform: scale($scale) translate(-50%, -50%);
     } @else if ($position == 'bottom') {
-        transform: scale($scale) translate(-50%, 0%);
+        transform: scale($scale) translate(-50%, 10px);
     } @else if ($position == 'left') {
         transform: scale($scale) translate(-50%, -50%);
     } @else if ($position == 'right') {
@@ -136,9 +136,9 @@
 
 @mixin arrow-margin ($position) {
     @if ($position == 'top' or $position == 'bottom') {
-        margin: 0 5px;
+        margin: 0 9px;
     } @else {
-        margin: 5px 0;
+        margin: 6px 0;
     }
 }
 
@@ -352,20 +352,13 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
         will-change: transform;
         background-color: #333;
         border-radius: 50%;
-        width: 150%;
-        width: calc(135% + 2rem);
+        width: 130%;
+        width: calc(110% + 2rem);
         left: 50%;
         top: 50%;
         z-index: -1;
         overflow: hidden;
-
-        &.enter {
-            transition-timing-function: ease-out;
-        }
-
-        &.leave {
-            transition-timing-function: ease;
-        }
+        transition: all ease;
 
         &::before {
             content: '';
