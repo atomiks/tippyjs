@@ -8,6 +8,7 @@ import cssnano from 'cssnano'
 
 export default Object.assign(base, {
     dest: './dist/tippy.standalone.js',
+    external: ['popper.js'],
     plugins: [
         sass({
             output: './dist/tippy.css',
