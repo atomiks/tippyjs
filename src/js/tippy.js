@@ -127,6 +127,7 @@ class Tippy {
 
     if (dynamicTitle) {
       content.innerHTML = el.getAttribute('title') || content.innerHTML
+      removeTitle(el)
     }
 
     const _duration = customDuration !== undefined
