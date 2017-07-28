@@ -60,6 +60,7 @@ export const Defaults = {
   zIndex: 9999,
   touchHold: false,
   performance: false,
+  dynamicTitle: false,
   popperOptions: {}
 }
 

@@ -120,9 +120,14 @@ class Tippy {
         interactive,
         followCursor,
         flipDuration,
-        duration
+        duration,
+        dynamicTitle
       }
     } = refData
+
+    if (dynamicTitle) {
+      content.innerHTML = el.getAttribute('title') || content.innerHTML
+    }
 
     const _duration = customDuration !== undefined
       ? customDuration
