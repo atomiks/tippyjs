@@ -46,7 +46,7 @@ class Tippy {
 
     this.selector = selector
 
-    this.settings = { ...Defaults, ...settings }
+    this.settings = Object.assign({}, Defaults, settings)
 
     // DEPRECATION: `on` prefixed callbacks are now preferred over non-
     // as it better indicates it's a callback function
@@ -126,8 +126,9 @@ class Tippy {
     } = refData
 
     if (dynamicTitle) {
-      content.innerHTML = el.getAttribute('title') || content.innerHTML
-      removeTitle(el)
+      const title = el.getAttribute('title')
+      content.innerHTML = title || content.innerHTML
+      title && removeTitle(el)
     }
 
     const _duration = customDuration !== undefined
