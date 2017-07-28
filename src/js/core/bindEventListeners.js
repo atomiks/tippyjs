@@ -17,7 +17,7 @@ export default function bindEventListeners() {
             document.body.classList.add('tippy-touch')
         }
 
-        if (Browser.dynamicInputDetection) {
+        if (Browser.dynamicInputDetection && window.performance) {
             document.addEventListener('mousemove', mousemoveHandler)
         }
     }
@@ -26,12 +26,13 @@ export default function bindEventListeners() {
         let time
 
         return () => {
-            const now = performance && performance.now()
+            const now = performance.now()
 
-            if (now && now - time < 10) {
+            // Chrome 60+ is 1 mousemove per rAF, use 20ms time difference
+            if (now - time < 20) {
                 Browser.touch = false
                 document.removeEventListener('mousemove', mousemoveHandler)
-                if ( ! Browser.iOS() && document.body.classList.contains('tippy-touch')) {
+                if ( ! Browser.iOS()) {
                     document.body.classList.remove('tippy-touch')
                 }
             }
@@ -41,7 +42,6 @@ export default function bindEventListeners() {
     })()
 
     const clickHandler = event => {
-
         // Simulated events dispatched on the document
         if (!(event.target instanceof Element)) {
             return hideAllPoppers()
