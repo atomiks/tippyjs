@@ -12,46 +12,45 @@ import prefix from '../utils/prefix'
 * @return {Object} - the popper instance
 */
 export default function createPopperInstance(refData) {
-
-    const {
-        el,
-        popper,
-        settings: {
-            position,
-            popperOptions,
-            offset,
-            distance,
-            flipDuration
-        }
-    } = refData
-
-    const tooltip = popper.querySelector(Selectors.TOOLTIP)
-    let flipped
-
-    const config = {
-        placement: position,
-        ...(popperOptions || {}),
-        modifiers: {
-            ...(popperOptions ? popperOptions.modifiers : {}),
-            flip: {
-                padding: distance + 5 /* 5px from viewport boundary */,
-                ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {})
-            },
-            offset: {
-                offset,
-                ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
-            }
-        },
-        onUpdate(data) {
-            tooltip.style.top = ''
-            tooltip.style.bottom = ''
-            tooltip.style.left = ''
-            tooltip.style.right = ''
-            tooltip.style[
-                getCorePlacement(popper.getAttribute('x-placement'))
-            ] = getOffsetDistanceInPx(distance)
-        }
+  const {
+    el,
+    popper,
+    settings: {
+      position,
+      popperOptions,
+      offset,
+      distance,
+      flipDuration
     }
+  } = refData
 
-    return new Popper(el, popper, config)
+  const tooltip = popper.querySelector(Selectors.TOOLTIP)
+
+  const config = {
+    placement: position,
+    ...(popperOptions || {}),
+    modifiers: {
+      ...(popperOptions ? popperOptions.modifiers : {}),
+      flip: {
+        padding: distance + 5 /* 5px from viewport boundary */,
+        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {})
+      },
+      offset: {
+        offset,
+        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
+      }
+    },
+    onUpdate() {
+      const styles = tooltip.style
+      styles.top = ''
+      styles.bottom = ''
+      styles.left = ''
+      styles.right = ''
+      styles[
+        getCorePlacement(popper.getAttribute('x-placement'))
+      ] = getOffsetDistanceInPx(distance)
+    }
+  }
+
+  return new Popper(el, popper, config)
 }

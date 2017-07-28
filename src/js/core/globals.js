@@ -1,12 +1,12 @@
 export const Browser = {}
 
 if (typeof window !== 'undefined') {
-    Browser.SUPPORTED = 'requestAnimationFrame' in window
-    Browser.SUPPORTS_TOUCH = 'ontouchstart' in window
-    Browser.touch = false
-    Browser.dynamicInputDetection = true
-    // Chrome device/touch emulation can make this dynamic
-    Browser.iOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream
+  Browser.SUPPORTED = 'requestAnimationFrame' in window
+  Browser.SUPPORTS_TOUCH = 'ontouchstart' in window
+  Browser.touch = false
+  Browser.dynamicInputDetection = true
+  // Chrome device/touch emulation can make this dynamic
+  Browser.iOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream
 }
 
 /**
@@ -21,46 +21,46 @@ export const Store = []
 * Selector constants used for grabbing elements
 */
 export const Selectors = {
-    POPPER: '.tippy-popper',
-    TOOLTIP: '.tippy-tooltip',
-    CONTENT: '.tippy-tooltip-content',
-    CIRCLE: '[x-circle]',
-    ARROW: '[x-arrow]',
-    TOOLTIPPED_EL: '[data-tooltipped]',
-    CONTROLLER: '[data-tippy-controller]'
+  POPPER: '.tippy-popper',
+  TOOLTIP: '.tippy-tooltip',
+  CONTENT: '.tippy-tooltip-content',
+  CIRCLE: '[x-circle]',
+  ARROW: '[x-arrow]',
+  TOOLTIPPED_EL: '[data-tooltipped]',
+  CONTROLLER: '[data-tippy-controller]'
 }
 
 /**
 * The default settings applied to each instance
 */
 export const Defaults = {
-    html: false,
-    position: 'top',
-    animation: 'shift',
-    animateFill: true,
-    arrow: false,
-    arrowSize: 'regular',
-    delay: 0,
-    trigger: 'mouseenter focus',
-    duration: 350,
-    interactive: false,
-    interactiveBorder: 2,
-    theme: 'dark',
-    size: 'regular',
-    distance: 10,
-    offset: 0,
-    hideOnClick: true,
-    multiple: false,
-    followCursor: false,
-    inertia: false,
-    flipDuration: 350,
-    sticky: false,
-    stickyDuration: 200,
-    appendTo: null,
-    zIndex: 9999,
-    touchHold: false,
-    performance: false,
-    popperOptions: {}
+  html: false,
+  position: 'top',
+  animation: 'shift',
+  animateFill: true,
+  arrow: false,
+  arrowSize: 'regular',
+  delay: 0,
+  trigger: 'mouseenter focus',
+  duration: 350,
+  interactive: false,
+  interactiveBorder: 2,
+  theme: 'dark',
+  size: 'regular',
+  distance: 10,
+  offset: 0,
+  hideOnClick: true,
+  multiple: false,
+  followCursor: false,
+  inertia: false,
+  flipDuration: 350,
+  sticky: false,
+  stickyDuration: 200,
+  appendTo: null,
+  zIndex: 9999,
+  touchHold: false,
+  performance: false,
+  popperOptions: {}
 }
 
 /**

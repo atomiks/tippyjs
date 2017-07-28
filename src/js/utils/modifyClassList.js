@@ -4,8 +4,8 @@
 * @param {Function} callback
 */
 export default function modifyClassList(els, callback) {
-    els.forEach(el => {
-        if (!el) return
-        callback(el.classList)
-    })
+  els.forEach(el => {
+    if (!el) return
+    callback(el.classList)
+  })
 }

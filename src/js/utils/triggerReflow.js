@@ -6,7 +6,8 @@ import prefix from '../utils/prefix'
 * @param {Element} circle
 */
 export default function triggerReflow(tooltip, circle) {
-    // Safari needs the specific 'transform' property to be accessed
-    circle ? window.getComputedStyle(circle)[prefix('transform')]
-           : window.getComputedStyle(tooltip).opacity
+  // Safari needs the specific 'transform' property to be accessed
+  circle
+    ? window.getComputedStyle(circle)[prefix('transform')]
+    : window.getComputedStyle(tooltip).opacity
 }

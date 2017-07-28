@@ -8,14 +8,14 @@ import bindEventListeners from './bindEventListeners'
 * @return {Boolean} whether the function has run or not
 */
 export default function init() {
-    if (init.done) return false
-    init.done = true
+  if (init.done) return false
+  init.done = true
 
-    // If the script is in <head>, document.body is null, so it's set in the
-    // init function
-    Defaults.appendTo = document.body
+  // If the script is in <head>, document.body is null, so it's set in the
+  // init function
+  Defaults.appendTo = document.body
 
-    bindEventListeners()
+  bindEventListeners()
 
-    return true
+  return true
 }

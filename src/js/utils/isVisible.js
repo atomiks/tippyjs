@@ -4,5 +4,5 @@
 * @return {Boolean}
 */
 export default function isVisible(popper) {
-    return popper.style.visibility === 'visible'
+  return popper.style.visibility === 'visible'
 }

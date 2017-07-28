@@ -4,5 +4,5 @@
 * @return {String}
 */
 export default function getCorePlacement(placement) {
-    return placement.replace(/-.+/, '')
+  return placement.replace(/-.+/, '')
 }

@@ -3,7 +3,7 @@
 * @return {Function}
 */
 export default function queueExecution(fn) {
-    window.requestAnimationFrame(() => {
-      setTimeout(fn, 0)
-    })
+  window.requestAnimationFrame(() => {
+    setTimeout(fn, 0)
+  })
 }

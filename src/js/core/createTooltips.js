@@ -11,49 +11,48 @@ let idCounter = 1
 
 /**
 * Creates tooltips for all el elements that match the instance's selector
-* @param {Element[]} els - Array of elements
+* @param {Element[]} els
 * @return {Object[]} Array of ref data objects
 */
 export default function createTooltips(els) {
+  return els.reduce((a, el) => {
+    const id = idCounter
 
-    return els.reduce((a, el) => {
+    const settings = this.settings.performance
+      ? this.settings
+      : getIndividualSettings(el, this.settings)
+    // animateFill is disabled if an arrow is true
+    if (settings.arrow) settings.animateFill = false
 
-        const settings = this.settings.performance
-                       ? this.settings
-                       : getIndividualSettings(el, this.settings)
+    const { html, trigger, touchHold } = settings
 
-        // animateFill is disabled if an arrow is true
-        if (settings.arrow) settings.animateFill = false
+    const title = el.getAttribute('title')
+    if (!title && !html) return a
 
-        const { html, trigger, touchHold } = settings
+    el.setAttribute('data-tooltipped', '')
+    el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
+    removeTitle(el)
 
-        const title = el.getAttribute('title')
-        if (!title && !html) return a
+    const popper = createPopperElement(id, title, settings)
+    const handlers = getEventListenerHandlers.call(this, el, popper, settings)
 
-        const id = idCounter
-        el.setAttribute('data-tooltipped', '')
-        el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
-        removeTitle(el)
+    let listeners = []
 
-        const popper = createPopperElement(id, title, settings)
-        const handlers = getEventListenerHandlers.call(this, el, popper, settings)
-        let listeners = []
+    trigger.trim().split(' ').forEach(event =>
+      listeners = listeners.concat(createTrigger(event, el, handlers, touchHold))
+    )
 
-        trigger.trim().split(' ').forEach(event =>
-            listeners = listeners.concat(createTrigger(event, el, handlers, touchHold))
-        )
+    a.push({
+      id,
+      el,
+      popper,
+      settings,
+      listeners,
+      tippyInstance: this
+    })
 
-        a.push({
-            id,
-            el,
-            popper,
-            settings,
-            listeners,
-            tippyInstance: this
-        })
+    idCounter++
 
-        idCounter++
-
-        return a
-    }, [])
+    return a
+  }, [])
 }

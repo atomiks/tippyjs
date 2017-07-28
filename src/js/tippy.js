@@ -47,7 +47,7 @@ class Tippy {
 
         this.selector = selector
 
-        this.settings = Object.assign({}, Defaults, settings)
+        this.settings = { ...Defaults, ...settings }
 
         // DEPRECATION: `on` prefixed callbacks are now preferred over non-
         // as it better indicates it's a callback function

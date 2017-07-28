@@ -7,30 +7,30 @@ import isVisible from '../utils/isVisible'
 * @param {Object} refData
 */
 export default function makeSticky(refData) {
-
-    const {
-        popper,
-        popperInstance,
-        settings: {
-            stickyDuration
-        }
-    } = refData
-
-    const applyTransitionDuration = () =>
-        popper.style[prefix('transitionDuration')] = `${stickyDuration}ms`
-
-    const removeTransitionDuration = () =>
-        popper.style[prefix('transitionDuration')] = ''
-
-    const updatePosition = () => {
-        popperInstance && popperInstance.scheduleUpdate()
-
-        applyTransitionDuration()
-
-        isVisible(popper) ? window.requestAnimationFrame(updatePosition)
-                          : removeTransitionDuration()
+  const {
+    popper,
+    popperInstance,
+    settings: {
+      stickyDuration
     }
+  } = refData
 
-    // Wait until Popper's position has been updated initially
-    queueExecution(updatePosition)
+  const applyTransitionDuration = () =>
+  popper.style[prefix('transitionDuration')] = `${stickyDuration}ms`
+
+  const removeTransitionDuration = () =>
+  popper.style[prefix('transitionDuration')] = ''
+
+  const updatePosition = () => {
+    popperInstance && popperInstance.scheduleUpdate()
+
+    applyTransitionDuration()
+
+    isVisible(popper) 
+      ? window.requestAnimationFrame(updatePosition)
+      : removeTransitionDuration()
+  }
+
+  // Wait until Popper's position has been updated initially
+  queueExecution(updatePosition)
 }

@@ -1,9 +1,10 @@
+const e = Element.prototype
 export const matches =
-  Element.prototype.matches               ||
-  Element.prototype.matchesSelector       ||
-  Element.prototype.webkitMatchesSelector ||
-  Element.prototype.mozMatchesSelector    ||
-  Element.prototype.msMatchesSelector     ||
+  e.matches               ||
+  e.matchesSelector       ||
+  e.webkitMatchesSelector ||
+  e.mozMatchesSelector    ||
+  e.msMatchesSelector     ||
   function(s) {
       var matches = (this.document || this.ownerDocument).querySelectorAll(s),
           i = matches.length;
