@@ -3273,12 +3273,15 @@ function createPopperElement(id, title, settings) {
 
 /**
 * Returns an array of elements based on the selector input
-* @param {String|Element} selector
+* @param {String|Array|Element} selector
 * @return {Elements[]}
 */
 function getArrayOfElements(selector) {
   if (selector instanceof Element) {
     return [selector];
+  }
+  if (Object.prototype.toString.call(selector) === '[object Array]') {
+    return selector;
   }
 
   return [].slice.call(document.querySelectorAll(selector));
@@ -4678,17 +4681,22 @@ describe('core', function () {
         it('returns an array of Elements', function () {
             var el1 = createVirtualElement();
             var el2 = createVirtualElement();
+            var el3 = createVirtualElement();
+            var el4 = createVirtualElement();
 
             document.body.appendChild(el2);
 
             var res1 = getArrayOfElements(el1);
-            var res2 = getArrayOfElements('.test');[res1, res2].forEach(function (res) {
+            var res2 = getArrayOfElements('.test');
+            var res3 = getArrayOfElements([el3, el4]);[res1, res2, res3].forEach(function (res) {
                 return expect(res.every(function (item) {
                     return item instanceof Element;
                 })).toBe(true);
             });
 
             document.body.removeChild(el2);
+            document.body.removeChild(el3);
+            document.body.removeChild(el4);
         });
     });
 

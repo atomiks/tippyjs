@@ -7,7 +7,7 @@ export default function getArrayOfElements(selector) {
   if (selector instanceof Element) {
     return [selector]
   }
-  if (Object.prototype.toString.call(selector) === '[object Array]') {
+  if (Array.isArray(selector)) {
     return selector;
   }
 
