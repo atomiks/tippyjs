@@ -29,7 +29,7 @@ import makeSticky          from './core/makeSticky'
 import createTooltips      from './core/createTooltips'
 
 /**
-* @param {String|Element} selector
+* @param {String|Element|Element[]} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
 */
 class Tippy {
@@ -127,8 +127,10 @@ class Tippy {
 
     if (dynamicTitle) {
       const title = el.getAttribute('title')
-      content.innerHTML = title || content.innerHTML
-      title && removeTitle(el)
+      if (title) {
+        content.innerHTML = title
+        removeTitle(el)
+      }
     }
 
     const _duration = customDuration !== undefined

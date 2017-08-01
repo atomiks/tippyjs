@@ -9,6 +9,11 @@ function hideHtml() {
     htmlTip.hide(popper)
 }
 
+// Leave out filter CSS for Safari since it's buggy
+if (window.safari) {
+  document.body.classList.add('is-safari')
+}
+
 var DOM = {
   performance: {
     btn: $('#performance-btn'),
@@ -75,27 +80,32 @@ var tip = tippy($ajax.btn, {
     theme: 'light',
     arrowSize: 'big',
     animation: 'perspective',
-    onShow: function() {
+    onShow: function () {
+        if (!window.fetch) {
+          $ajax.template.innerHTML = 'Your browser does not support window.fetch()'
+          return
+        }
+
         if (tip.loading || $ajax.template.innerHTML !== ajaxInitialText) return
 
         tip.loading = true
 
         fetch('https://unsplash.it/200/?random', { mode: 'cors' }).then(function(resp) {
             return resp.blob()
-        }).then(function(blob) {
+        }).then(function (blob) {
           var url = URL.createObjectURL(blob)
           $ajax.template.innerHTML = '<img width="200" height="200" src="' + url + '">'
           tip.loading = false
-        }).catch(function(err) {
+        }).catch(function (err) {
           tip.loading = false
           $ajax.template.innerHTML = 'There was an error loading the image'
 
-          setTimeout(function() {
+          setTimeout(function () {
             $ajax.template.innerHTML = ajaxInitialText
           }, 2000)
         })
     },
-    onHidden: function() {
+    onHidden: function () {
       $ajax.template.innerHTML = ajaxInitialText
     },
     popperOptions: {

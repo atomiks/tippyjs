@@ -197,7 +197,15 @@ tippy.css</code></pre>
             </div>
 
             <p>You can also directly pass in a DOM element:</p>
-<pre><code class="language-javascript">tippy(document.querySelector('#myElement'))</code></pre>
+<pre><code class="language-javascript">const el = document.querySelector('#myElement')
+tippy(el)
+</code></pre>
+
+            <p>Or an array of them: <strong class="badge badge-default">v1.2+</strong></p>
+
+<pre><code class="language-javascript">const els = Array.from(document.querySelectorAll('.myElements'))
+tippy(els)
+</code></pre>
 
             <p>Elements without a <code>title</code> attribute or an HTML template will not receive a tooltip. You can pass in any CSS selector to initialize it. See <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
 
@@ -242,7 +250,7 @@ tippy.css</code></pre>
 <pre><code class="language-markup">&lt;button
   class="btn tippy"
   title="I'm a tooltip!"
-  data-duration="[300, 150]"
+  data-duration="[400, 0]"
   data-arrow="false"
   data-animation="shift"
   data-position="bottom"
@@ -252,7 +260,7 @@ tippy.css</code></pre>
 
               <div class="result-box">
                 <p class="text-muted">Result:</p>
-                <button class="btn tippy" title="I'm a tooltip!" data-duration="[300, 150]" data-arrow="false" data-animation="shift" data-position="bottom">Overridden</button>
+                <button class="btn tippy" title="I'm a tooltip!" data-duration="[400, 0]" data-arrow="false" data-animation="shift" data-position="bottom">Overridden</button>
               </div>
 
               <p>This is helpful if you want to globally define settings, but make a few tooltips different without having to call <code>tippy()</code> again with different settings.</p>
@@ -445,6 +453,12 @@ tippy.css</code></pre>
                       <td><code>Boolean</code></td>
                       <td>Disables <code>data-*</code> attribute settings to make initial instantiation time faster.</td>
                     </tr>
+                    <tr>
+                      <td><code>dynamicTitle</code></td>
+                      <td><code>false</code></td>
+                      <td><code>Boolean</code></td>
+                      <td>Each time the tooltip is shown, the <code>title</code> attribute on the reference element is fetched and the tooltip's content is updated.</td>
+                    </tr>
                       <tr>
                         <td><code>popperOptions</code></td>
                         <td><code>{}</code></td>
@@ -518,25 +532,23 @@ tippy.css</code></pre>
 
               <p>If you want things to happen at certain times during a tooltip's show/hide events, you can add callback functions in the settings object. There are 5 to use:</p>
 
-              <p>Note: Callback functions prior to v1.1 should not have the <code>on</code> prefix; simply use <code>show</code>, <code>hide</code>, etc.
-              However, starting from v1.1 they are deprecated in favor of the more semantic <code>on*</code> names which better indicate a callback function.</p>
+              <p>Note: Callback functions prior to <strong class="badge badge-default">v1.1</strong> should not have the <code>on</code> prefix; simply use <code>show</code>, <code>hide</code>, etc.
+              However, starting from <strong class="badge badge-default">v1.1</strong> they are deprecated in favor of the more semantic <code>on*</code> names which better indicate a callback function.</p>
 
 <pre><code class="language-javascript">tippy('.tippy', {
-  onShow: function() {
+  onShow: function () {
     // When the tooltip has been triggered and has started to transition in
-    // Use `show: function() {}` prior to v1.1
-    // Same applies to the other callback functions
   },
-  onShown: function() {
+  onShown: function () {
     // When the tooltip has fully transitioned in and is showing
   },
-  onHide: function() {
+  onHide: function () {
     // When the tooltip has begun to transition out
   },
-  onHidden: function() {
+  onHidden: function () {
     // When the tooltip has fully transitioned out and is hidden
   },
-  wait: function(show, event) {
+  wait: function (show, event) {
     // See below for an explanation
   }
 })</code>
@@ -682,9 +694,9 @@ tip.update(popper)</code></pre>
 
             <p><a target="_blank" href="https://codepen.io/anon/pen/GEmOQy">Codepen demo</a></p>
 
-            <h4>Reactivity</h4>
+            <h4>Reactivity <strong class="badge badge-default">v1.1+</strong></h4>
 
-            <p>From v1.1, tooltips will now react to content changes. For example, if a paragraph element inside
+            <p>Tooltips react to content changes. For example, if a paragraph element inside
             the tooltip is removed or changed, the tooltip will automatically update its position.</p>
 
             <p>Note: This isn't supported in IE10 natively (unless polyfilled) because it uses <code>MutationObserver</code>.</p>
