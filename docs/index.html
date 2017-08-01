@@ -196,8 +196,9 @@ tippy.css</code></pre>
               <button class="btn tippy" title="I'm a tooltip!">Text</button>
             </div>
 
-            <p>You can also directly pass in a DOM element:</p>
+            <p>You can also directly pass in a DOM element or array of DOM elements:</p>
 <pre><code class="language-javascript">tippy(document.querySelector('#myElement'))</code></pre>
+<pre><code class="language-javascript">tippy(Array.prototype.slice.call(document.querySelector('.myElements')))</code></pre>
 
             <p>Elements without a <code>title</code> attribute or an HTML template will not receive a tooltip. You can pass in any CSS selector to initialize it. See <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
 

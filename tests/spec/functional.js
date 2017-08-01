@@ -775,17 +775,22 @@ describe('core', () => {
         it('returns an array of Elements', () => {
             const el1 = createVirtualElement()
             const el2 = createVirtualElement()
+            const el3 = createVirtualElement()
+            const el4 = createVirtualElement()
 
             document.body.appendChild(el2)
 
             const res1 = getArrayOfElements(el1)
             const res2 = getArrayOfElements('.test')
+            const res3 = getArrayOfElements([el3, el4])
 
-            ;[res1, res2].forEach(res =>
+            ;[res1, res2, res3].forEach(res =>
                 expect(res.every(item => item instanceof Element)).toBe(true)
             )
 
             document.body.removeChild(el2)
+            document.body.removeChild(el3)
+            document.body.removeChild(el4)
         })
     })
 
