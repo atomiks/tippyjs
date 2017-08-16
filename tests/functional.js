@@ -3653,11 +3653,17 @@ var Tippy = function () {
 
       if (this.state.destroyed) return;
 
-      this.callbacks.show.call(popper);
-
       var refData = find(this.store, function (refData) {
         return refData.popper === popper;
       });
+
+      if (!document.body.contains(refData.el)) {
+        this.destroy(popper);
+        return;
+      }
+
+      this.callbacks.show.call(popper);
+
       var tooltip = popper.querySelector(Selectors.TOOLTIP);
       var circle = popper.querySelector(Selectors.CIRCLE);
       var content = popper.querySelector(Selectors.CONTENT);
