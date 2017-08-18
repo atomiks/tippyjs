@@ -29,6 +29,7 @@ const createVirtualElement = () => {
   const el = document.createElement('div')
   el.className = 'test'
   el.setAttribute('title', 'tooltip')
+  document.body.appendChild(el)
   return el
 }
 
@@ -127,6 +128,19 @@ describe('core', () => {
       expect(el.hasAttribute('data-tooltipped')).toBe(true)
 
       instance.destroyAll()
+    })
+
+    it('should not render if element has not been attached to DOM', () => {
+      //Create DIV element which is not attached to DOM
+      const el = document.createElement('div')
+      el.className = 'test'
+      el.setAttribute('title', 'tooltip')
+
+      const instance = tippy(el)
+      const popper = instance.getPopperElement(el)
+      instance.show(popper)
+
+      expect(instance.state.destroyed).toBe(true)
     })
 
     it('works for a CSS selector', () => {
