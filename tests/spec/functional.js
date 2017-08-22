@@ -136,11 +136,13 @@ describe('core', () => {
       el.className = 'test'
       el.setAttribute('title', 'tooltip')
 
+      const storeLengthBefore = Store.length
       const instance = tippy(el)
       const popper = instance.getPopperElement(el)
       instance.show(popper)
 
-      expect(instance.state.destroyed).toBe(true)
+      const storeLengthAfter = Store.length
+      expect(storeLengthBefore).toBe(storeLengthAfter)
     })
 
     it('works for a CSS selector', () => {

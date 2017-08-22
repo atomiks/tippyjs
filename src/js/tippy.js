@@ -107,7 +107,7 @@ class Tippy {
 
     const refData = find(this.store, refData => refData.popper === popper)
     if (!document.body.contains(refData.el)) {
-      this.destroyAll()
+      this.destroy(popper)
       return
     }
 
