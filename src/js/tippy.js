@@ -105,9 +105,14 @@ class Tippy {
   show(popper, customDuration) {
     if (this.state.destroyed) return
 
+    const refData = find(this.store, refData => refData.popper === popper)
+    if (!document.body.contains(refData.el)) {
+      this.destroy(popper)
+      return
+    }
+
     this.callbacks.show.call(popper)
 
-    const refData = find(this.store, refData => refData.popper === popper)
     const tooltip = popper.querySelector(Selectors.TOOLTIP)
     const circle = popper.querySelector(Selectors.CIRCLE)
     const content = popper.querySelector(Selectors.CONTENT)

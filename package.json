@@ -9,7 +9,7 @@
     "bundle": "rollup -c scripts/rollup.bundle.config.js",
     "standalone": "rollup -c scripts/rollup.standalone.config.js",
     "bundle-minify": "rollup -c scripts/rollup.bundle.min.config.js",
-    "tests": "rollup -c scripts/rollup.tests.config.js"
+    "tests": "rollup -c scripts/rollup.tests.config.js --format es"
   },
   "author": "atomiks",
   "license": "MIT",
