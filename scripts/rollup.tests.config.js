@@ -4,7 +4,7 @@ import commonjs from 'rollup-plugin-commonjs'
 
 export default {
     entry: './tests/spec/functional.js',
-    dest: './tests/functional.js',
+    dest: './dist/tests/functional.js',
     external: ['Popper'],
     plugins: [
         babel({
