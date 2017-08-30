@@ -1,17 +1,16 @@
 import Popper from 'popper.js'
 
-import { Selectors } from './globals'
-
-import getCorePlacement from '../utils/getCorePlacement'
+import defer                 from '../utils/defer'
+import getCorePlacement      from '../utils/getCorePlacement'
+import getInnerElements      from '../utils/getInnerElements'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
-import prefix from '../utils/prefix'
 
 /**
 * Creates a new popper instance
-* @param {Object} refData
+* @param {Object} data
 * @return {Object} - the popper instance
 */
-export default function createPopperInstance(refData) {
+export default function createPopperInstance(data) {
   const {
     el,
     popper,
@@ -22,9 +21,9 @@ export default function createPopperInstance(refData) {
       distance,
       flipDuration
     }
-  } = refData
+  } = data
 
-  const tooltip = popper.querySelector(Selectors.TOOLTIP)
+  const { tooltip } = getInnerElements(popper)
 
   const config = {
     placement: position,
@@ -50,6 +49,25 @@ export default function createPopperInstance(refData) {
         getCorePlacement(popper.getAttribute('x-placement'))
       ] = getOffsetDistanceInPx(distance)
     }
+  }
+
+  // Update the popper's position whenever its content changes
+  // Not supported in IE10 unless polyfilled
+  if (window.MutationObserver) {
+    const styles = popper.style
+    const observer = new MutationObserver(() => {
+      styles[prefix('transitionDuration')] = '0ms'
+      data.popperInstance.update()
+      defer(() => {
+        styles[prefix('transitionDuration')] = flipDuration + 'ms'
+      })
+    })
+    observer.observe(popper, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    })
+    data._mutationObserver = observer
   }
 
   return new Popper(el, popper, config)

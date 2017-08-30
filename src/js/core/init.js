@@ -1,6 +1,5 @@
 import { Defaults } from './globals'
 
-import hideAllPoppers from './hideAllPoppers'
 import bindEventListeners from './bindEventListeners'
 
 /**
@@ -11,10 +10,7 @@ export default function init() {
   if (init.done) return false
   init.done = true
 
-  // If the script is in <head>, document.body is null, so it's set in the
-  // init function
   Defaults.appendTo = document.body
-
   bindEventListeners()
 
   return true
