@@ -1,7 +1,7 @@
 import Popper from 'popper.js'
 
 import defer                 from '../utils/defer'
-import prefix                 from '../utils/prefix'
+import prefix                from '../utils/prefix'
 import getCorePlacement      from '../utils/getCorePlacement'
 import getInnerElements      from '../utils/getInnerElements'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
@@ -56,6 +56,7 @@ export default function createPopperInstance(data) {
   // Not supported in IE10 unless polyfilled
   if (window.MutationObserver) {
     const styles = popper.style
+
     const observer = new MutationObserver(() => {
       styles[prefix('transitionDuration')] = '0ms'
       data.popperInstance.update()
@@ -63,11 +64,13 @@ export default function createPopperInstance(data) {
         styles[prefix('transitionDuration')] = flipDuration + 'ms'
       })
     })
+
     observer.observe(popper, {
       childList: true,
       subtree: true,
       characterData: true
     })
+
     data._mutationObserver = observer
   }
 
