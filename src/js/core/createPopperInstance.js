@@ -1,6 +1,7 @@
 import Popper from 'popper.js'
 
 import defer                 from '../utils/defer'
+import prefix                 from '../utils/prefix'
 import getCorePlacement      from '../utils/getCorePlacement'
 import getInnerElements      from '../utils/getInnerElements'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
