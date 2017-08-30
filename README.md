@@ -1,5 +1,5 @@
 # Tippy.js
-[![Build Status](https://travis-ci.org/artyomtrityak/tippyjs.svg?branch=master)](https://travis-ci.org/artyomtrityak/tippyjs)
+[![Build Status](https://travis-ci.org/atomiks/tippyjs.svg?branch=master)](https://travis-ci.org/atomiks/tippyjs)
 
 Tippy.js is a lightweight, vanilla JS tooltip library powered by Popper.js.
 
