@@ -210,24 +210,24 @@ describe('core', () => {
 
         const instance = tippy(el, {
           duration: 0,
-          show() {
+          onShow() {
             show = counter
             showThis = this === popper
             counter++
           },
-          shown() {
+          onShown() {
             shown = counter
             shownThis = this === popper
             counter++
             instance.hide(popper)
           },
-          hide() {
+          onHide() {
             hide = counter
             hideThis = this === popper
             counter++
             hideCalled = true
           },
-          hidden() {
+          onHidden() {
             hidden = counter
             hiddenThis = this === popper
             counter++
@@ -433,7 +433,7 @@ describe('core', () => {
 
         const instance = tippy(el, {
           trigger: 'mouseenter',
-          hide() {
+          onHide() {
             mouseleaveWorked = true
             done()
           }
@@ -701,13 +701,13 @@ describe('core', () => {
           duration: 0,
           trigger: 'click',
           interactive: true,
-          show() {
+          onShow() {
             setTimeout(() => {
               done()
               instance.destroyAll()
             }, 20)
           },
-          hide() {
+          onHide() {
             hideFired = true
           }
         })
