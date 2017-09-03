@@ -10,7 +10,8 @@ export default function init() {
   if (init.done) return false
   init.done = true
 
-  Defaults.appendTo = document.body
+  Defaults.appendTo = () => document.body
+
   bindEventListeners()
 
   return true
