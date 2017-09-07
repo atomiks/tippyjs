@@ -1,5 +1,3 @@
-import { Defaults } from './globals'
-
 import bindEventListeners from './bindEventListeners'
 
 /**
@@ -9,8 +7,6 @@ import bindEventListeners from './bindEventListeners'
 export default function init() {
   if (init.done) return false
   init.done = true
-
-  Defaults.appendTo = () => document.body
 
   bindEventListeners()
 

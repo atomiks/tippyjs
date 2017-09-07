@@ -2,6 +2,7 @@ import getIndividualSettings    from './getIndividualSettings'
 import createPopperElement      from './createPopperElement'
 import createTrigger            from './createTrigger'
 import getEventListenerHandlers from './getEventListenerHandlers'
+import evaluateSettings         from './evaluateSettings'
 
 import removeTitle from '../utils/removeTitle'
 
@@ -18,17 +19,11 @@ export default function createTooltips(els) {
   return els.reduce((a, el) => {
     const id = idCounter
 
-    const settings = this.settings.performance
-      ? this.settings
-      : getIndividualSettings(el, this.settings)
-    // animateFill is disabled if an arrow is true
-    if (settings.arrow) settings.animateFill = false
-
-    // reassign appendTo into the result of evaluating appendTo
-    // if it's set as a function instead of Element
-    if (settings.appendTo && typeof settings.appendTo === 'function') {
-      settings.appendTo = settings.appendTo();
-    }
+    const settings = evaluateSettings(
+      this.settings.performance
+        ? this.settings
+        : getIndividualSettings(el, this.settings)
+    )
 
     const { html, trigger, touchHold } = settings
 
