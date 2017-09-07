@@ -1,3 +1,8 @@
+/**
+* Evaluates/modifies the settings object for appropriate behavior
+* @param {Object} settings
+* @return {Object} modified/evaluated settings
+*/
 export default function evaluateSettings(settings) {
   // animateFill is disabled if an arrow is true
   if (settings.arrow) {
