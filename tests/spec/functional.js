@@ -584,6 +584,70 @@ describe('core', () => {
         document.body.removeChild(testContainer)
         instance.destroyAll()
       })
+
+      it('appends to the element evaluated from the tippy instance, instead of document.body', () => {
+        const el = createVirtualElement()
+        const testContainer = document.createElement('div')
+        testContainer.id = 'test-container'
+
+        document.body.appendChild(testContainer)
+
+        const instance = tippy(el, {
+          appendTo: () => document.querySelector('#test-container')
+        })
+
+        const popper = instance.getPopperElement(el)
+        instance.show(popper)
+
+        expect(testContainer.contains(popper)).toBe(true)
+
+        document.body.removeChild(testContainer)
+        instance.destroyAll()
+      })
+
+      it('appends to the element evaluated from changed tippy.Defaults, instead of document.body', () => {
+        const el = createVirtualElement()
+        let testContainer = document.createElement('div')
+        testContainer.id = 'test-container'
+        document.body.appendChild(testContainer)
+
+        tippy.Defaults.appendTo = () => document.querySelector('#test-container')
+
+        let instance = tippy(el)
+
+        let popper = instance.getPopperElement(el)
+        instance.show(popper)
+
+        expect(testContainer.contains(popper)).toBe(true)
+
+        // Simulate a DOM mutation that removes the previous appendTo element,
+        // destroys poppers and reinitializes tippy with set Defaults
+        document.body.removeChild(testContainer)
+        instance.destroyAll()
+
+        testContainer = document.createElement('div')
+        testContainer.id = 'test-container'
+        document.body.appendChild(testContainer)
+
+        // NOTE: Ideally, we should be able to move the
+        // tippy initialization **before** creating a new #test-container,
+        // to test that parent DOM is always evaluated when adding poppers.
+        // But being able to evaluate to the new #test-container
+        // during reinitialization is good enough.
+        instance = tippy(el)
+
+        // Should still append the popper to the newly created element
+        // of the same selector (instead of the previously deleted one)
+        popper = instance.getPopperElement(el)
+        instance.show(popper)
+
+        expect(testContainer.contains(popper)).toBe(true)
+
+        // // Cleanup
+        // document.body.removeChild(testContainer)
+        // instance.destroyAll()
+        // tippy.Defaults.appendTo = null
+      })
     })
 
     describe('animation', () => {
