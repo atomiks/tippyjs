@@ -188,10 +188,8 @@ class Tippy {
 
         // Focus interactive tooltips only
         interactive && popper.focus()
-
         // Remove transitions from tooltip
         tooltip.classList.add('tippy-notransition')
-
         // Prevents shown() from firing more than once from early transition cancellations
         data._onShownFired = true
 
@@ -255,12 +253,18 @@ class Tippy {
 
     // Wait for transitions to complete
     onTransitionEnd(data, _duration, () => {
-      if (isVisible(popper) || !appendTo.contains(popper)) return
+      // `isVisible` is not completely reliable to determine if we shouldn't
+      // run the hidden callback, we need to check the computed opacity style.
+      // This prevents glitchy behavior of the transition when quickly showing
+      // and hiding a tooltip.
+      if (
+        isVisible(popper) ||
+        !appendTo.contains(popper) ||
+        getComputedStyle(tooltip).opacity === '1'
+      ) return
 
       el.removeEventListener('mousemove', followCursorHandler)
-
       data.popperInstance.disableEventListeners()
-
       appendTo.removeChild(popper)
 
       this.callbacks.hidden.call(popper)

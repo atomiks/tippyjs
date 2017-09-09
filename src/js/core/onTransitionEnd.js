@@ -19,12 +19,8 @@ export default function onTransitionEnd(data, duration, callback) {
   let transitionendFired = false
 
   const listenerCallback = e => {
-    transitionendFired = true
-
-    tooltip.removeEventListener('webkitTransitionEnd', listenerCallback)
-    tooltip.removeEventListener('transitionend', listenerCallback)
-
-    if (e.target === tooltip) {
+    if (e.target === tooltip && !transitionendFired) {
+      transitionendFired = true
       callback()
     }
   }
