@@ -47,7 +47,7 @@ export default function bindEventListeners() {
       return hideAllPoppers()
     }
 
-    const el = closest(event.target, Selectors.TOOLTIPPED_EL)
+    const reference = closest(event.target, Selectors.TOOLTIPPED_EL)
     const popper = closest(event.target, Selectors.POPPER)
 
     if (popper) {
@@ -56,21 +56,21 @@ export default function bindEventListeners() {
       if (interactive) return
     }
 
-    if (el) {
-      const ref = find(Store, ref => ref.el === el)
+    if (reference) {
+      const data = find(Store, data => data.reference === reference)
       const {
         options: {
           hideOnClick,
           multiple,
           trigger
         }
-      } = ref
+      } = data
 
       // Hide all poppers except the one belonging to the element that was clicked IF
       // `multiple` is false AND they are a touch user, OR
       // `multiple` is false AND it's triggered by a click
       if ((!multiple && Browser.touch) || (!multiple && trigger.indexOf('click') !== -1)) {
-        return hideAllPoppers(ref)
+        return hideAllPoppers(data)
       }
 
       // If hideOnClick is not strictly true or triggered by a click don't hide poppers

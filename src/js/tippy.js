@@ -241,7 +241,7 @@ class Tippy {
     // Re-focus click-triggered html elements
     // and the tooltipped element IS in the viewport (otherwise it causes unsightly scrolling
     // if the tooltip is closed and the element isn't in the viewport anymore)
-    if (html && trigger.indexOf('click') !== -1 && elementIsInViewport(el)) {
+    if (html && trigger.indexOf('click') !== -1 && elementIsInViewport(reference)) {
       reference.focus()
     }
 
