@@ -6,9 +6,9 @@ import { DefaultsKeys } from './globals'
 * @param {Object} instanceSettings
 * @return {Object} - individual settings
 */
-export default function getIndividualSettings(el, instanceSettings) {
-  const settings = DefaultsKeys.reduce((acc, key) => {
-    let val = el.getAttribute(`data-${ key.toLowerCase() }`) || instanceSettings[key]
+export default function getIndividualOptions(el, instanceOptions) {
+  const options = DefaultsKeys.reduce((acc, key) => {
+    let val = el.getAttribute(`data-${ key.toLowerCase() }`) || instanceOptions[key]
 
     // Convert strings to booleans
     if (val === 'false') val = false
@@ -29,5 +29,5 @@ export default function getIndividualSettings(el, instanceSettings) {
     return acc
   }, {})
 
-  return Object.assign({}, instanceSettings, settings)
+  return { ...instanceOptions, ...options }
 }

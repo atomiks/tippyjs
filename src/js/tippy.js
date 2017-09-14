@@ -31,10 +31,10 @@ import createTooltips      from './core/createTooltips'
 
 /**
 * @param {String|Element|Element[]} selector
-* @param {Object} settings (optional) - the object of settings to be applied to the instance
+* @param {Object} options (optional) - the object of options to be applied to the instance
 */
 class Tippy {
-  constructor(selector, settings = {}) {
+  constructor(selector, options = {}) {
     // Use default browser tooltip on unsupported browsers
     if (!Browser.SUPPORTED) return
 
@@ -46,14 +46,14 @@ class Tippy {
 
     this.selector = selector
 
-    this.settings = { ...Defaults, ...settings }
+    this.options = { ...Defaults, ...options }
 
     this.callbacks = {
-      wait: settings.wait,
-      show: settings.onShow || noop,
-      shown: settings.onShown || noop,
-      hide: settings.onHide || noop,
-      hidden: settings.onHidden || noop
+      wait: options.wait,
+      show: options.onShow || noop,
+      shown: options.onShown || noop,
+      hide: options.onHide || noop,
+      hidden: options.onHidden || noop
     }
 
     this.store = createTooltips.call(this, getArrayOfElements(selector))
@@ -115,7 +115,7 @@ class Tippy {
 
     const {
       el,
-      settings: {
+      options: {
         appendTo,
         sticky,
         interactive,
@@ -206,7 +206,7 @@ class Tippy {
 
     const {
       el,
-      settings: {
+      options: {
         appendTo,
         sticky,
         interactive,
@@ -273,7 +273,7 @@ class Tippy {
 
     const data = find(this.store, data => data.popper === popper)
     const { content } = getInnerElements(popper)
-    const { el, settings: { html } } = data
+    const { el, options: { html } } = data
 
     if (html instanceof Element) {
       console.warn('Aborted: update() should not be used if `html` is a DOM element')
@@ -348,8 +348,8 @@ class Tippy {
   }
 }
 
-function tippy(selector, settings) {
-  return new Tippy(selector, settings)
+function tippy(selector, options) {
+  return new Tippy(selector, options)
 }
 
 tippy.Browser = Browser

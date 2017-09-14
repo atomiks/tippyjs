@@ -52,14 +52,14 @@ export default function bindEventListeners() {
 
     if (popper) {
       const ref = find(Store, ref => ref.popper === popper)
-      const { settings: { interactive } } = ref
+      const { options: { interactive } } = ref
       if (interactive) return
     }
 
     if (el) {
       const ref = find(Store, ref => ref.el === el)
       const {
-        settings: {
+        options: {
           hideOnClick,
           multiple,
           trigger

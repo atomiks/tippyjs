@@ -14,7 +14,7 @@ export default function mountPopper(data) {
   const {
     el,
     popper,
-    settings: {
+    options: {
       appendTo,
       followCursor
     }

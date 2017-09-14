@@ -1,8 +1,8 @@
-import getIndividualSettings    from './getIndividualSettings'
+import getIndividualOptions    from './getIndividualOptions'
 import createPopperElement      from './createPopperElement'
 import createTrigger            from './createTrigger'
 import getEventListenerHandlers from './getEventListenerHandlers'
-import evaluateSettings         from './evaluateSettings'
+import evaluateOptions         from './evaluateOptions'
 
 import removeTitle from '../utils/removeTitle'
 
@@ -19,13 +19,13 @@ export default function createTooltips(els) {
   return els.reduce((a, el) => {
     const id = idCounter
 
-    const settings = evaluateSettings(
-      this.settings.performance
-        ? this.settings
-        : getIndividualSettings(el, this.settings)
+    const options = evaluateOptions(
+      this.options.performance
+        ? this.options
+        : getIndividualOptions(el, this.options)
     )
 
-    const { html, trigger, touchHold } = settings
+    const { html, trigger, touchHold } = options
 
     const title = el.getAttribute('title')
     if (!title && !html) return a
@@ -34,8 +34,8 @@ export default function createTooltips(els) {
     el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
     removeTitle(el)
 
-    const popper = createPopperElement(id, title, settings)
-    const handlers = getEventListenerHandlers.call(this, el, popper, settings)
+    const popper = createPopperElement(id, title, options)
+    const handlers = getEventListenerHandlers.call(this, el, popper, options)
 
     let listeners = []
 
@@ -47,7 +47,7 @@ export default function createTooltips(els) {
       id,
       el,
       popper,
-      settings,
+      options,
       listeners,
       tippyInstance: this
     })

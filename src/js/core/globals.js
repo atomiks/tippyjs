@@ -31,7 +31,7 @@ export const Selectors = {
 }
 
 /**
-* The default settings applied to each instance
+* The default options applied to each instance
 */
 export const Defaults = {
   html: false,
@@ -66,6 +66,6 @@ export const Defaults = {
 
 /**
 * The keys of the defaults object for reducing down into a new object
-* Used in `getIndividualSettings()`
+* Used in `getIndividualOptions()`
 */
 export const DefaultsKeys = Browser.SUPPORTED && Object.keys(Defaults)

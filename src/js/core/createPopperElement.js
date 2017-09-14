@@ -5,10 +5,10 @@ import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 * Creates a popper element then returns it
 * @param {Number} id - the popper id
 * @param {String} title - the tooltip's `title` attribute
-* @param {Object} settings - individual settings
+* @param {Object} options - individual options
 * @return {Element} - the popper element
 */
-export default function createPopperElement(id, title, settings) {
+export default function createPopperElement(id, title, options) {
   const {
     position,
     distance,
@@ -22,7 +22,7 @@ export default function createPopperElement(id, title, settings) {
     html,
     zIndex,
     interactive
-  } = settings
+  } = options
 
   const popper = document.createElement('div')
   popper.setAttribute('class', 'tippy-popper')

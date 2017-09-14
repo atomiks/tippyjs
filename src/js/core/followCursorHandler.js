@@ -10,14 +10,14 @@ import closest          from '../utils/closest'
 * @param {MouseEvent} e
 */
 export default function followCursorHandler(e) {
-  const refData = find(Store, refData => refData.el === this)
+  const data = find(Store, data => data.el === this)
 
   const {
     popper,
-    settings: {
+    options: {
       offset
     }
-  } = refData
+  } = data
 
   const position = getCorePlacement(popper.getAttribute('x-placement'))
   const halfPopperWidth = Math.round(popper.offsetWidth / 2)

@@ -8,10 +8,10 @@ import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiv
 * Returns relevant listener callbacks for each ref
 * @param {Element} el
 * @param {Element} popper
-* @param {Object} settings
+* @param {Object} options
 * @return {Object} - relevant listener handlers
 */
-export default function getEventListenerHandlers(el, popper, settings) {
+export default function getEventListenerHandlers(el, popper, options) {
   const {
     position,
     delay,
@@ -23,7 +23,7 @@ export default function getEventListenerHandlers(el, popper, settings) {
     trigger,
     touchHold,
     touchWait
-  } = settings
+  } = options
 
   let showDelay, hideDelay
 
@@ -110,7 +110,7 @@ export default function getEventListenerHandlers(el, popper, settings) {
 
         if (isOverPopper || isOverEl || isClickTriggered) return
 
-        if (cursorIsOutsideInteractiveBorder(event, popper, settings)) {
+        if (cursorIsOutsideInteractiveBorder(event, popper, options)) {
           triggerHide()
         }
       }

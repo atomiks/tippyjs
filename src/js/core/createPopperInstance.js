@@ -15,7 +15,7 @@ export default function createPopperInstance(data) {
   const {
     el,
     popper,
-    settings: {
+    options: {
       position,
       popperOptions,
       offset,
