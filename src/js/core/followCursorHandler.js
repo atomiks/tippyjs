@@ -10,7 +10,7 @@ import closest          from '../utils/closest'
 * @param {MouseEvent} e
 */
 export default function followCursorHandler(e) {
-  const data = find(Store, data => data.el === this)
+  const data = find(Store, data => data.reference === this)
 
   const {
     popper,

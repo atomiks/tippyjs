@@ -66,7 +66,7 @@ describe('core', () => {
     })
 
     describe('tippy.Defaults', () => {
-      it('is the default settings object', () => {
+      it('is the default options object', () => {
         expect(tippy.Defaults.html).toBeDefined()
       })
     })
@@ -86,8 +86,8 @@ describe('core', () => {
       })
     })
 
-    it('does not mutate the default settings', () => {
-      const settingsClone = Object.assign({}, Defaults)
+    it('does not mutate the default options', () => {
+      const optionsClone = { ...Defaults }
 
       const el = createVirtualElement()
 
@@ -100,7 +100,7 @@ describe('core', () => {
       })
 
       expect(
-        Object.keys(settingsClone).every(key => settingsClone[key] === Defaults[key])
+        Object.keys(optionsClone).every(key => optionsClone[key] === Defaults[key])
       ).toBe(true)
 
       expect(Defaults.popperOptions.modifiers).toBeUndefined()
@@ -166,7 +166,7 @@ describe('core', () => {
       instance.destroyAll()
     })
 
-    it('composes custom settings with the default settings', () => {
+    it('composes custom options with the default options', () => {
       const el = createVirtualElement()
 
       const instance = tippy(el, {
@@ -175,9 +175,9 @@ describe('core', () => {
       })
 
       expect(
-        instance.settings.position === 'bottom' &&
-        instance.settings.delay[0] === 100 &&
-        instance.settings.html === Defaults.html
+        instance.options.position === 'bottom' &&
+        instance.options.delay[0] === 100 &&
+        instance.options.html === Defaults.html
       ).toBe(true)
 
       instance.destroyAll()
@@ -542,7 +542,7 @@ describe('core', () => {
     })
   })
 
-  describe('settings', () => {
+  describe('options', () => {
     describe('appendTo', () => {
       it('appends to document.body by default', () => {
         const el = createVirtualElement()
@@ -934,7 +934,7 @@ describe('core', () => {
 
     document.body.appendChild(wrapper)
 
-    const settings = {
+    const options = {
       interactiveBorder: 10,
       distance: 10
     }
@@ -948,7 +948,7 @@ describe('core', () => {
             clientY: 105
           },
           popper,
-          settings
+          options
         )
       ).toBe(false)
 
@@ -960,7 +960,7 @@ describe('core', () => {
             clientY: 94
           },
           popper,
-          settings
+          options
         )
       ).toBe(false)
 
@@ -972,7 +972,7 @@ describe('core', () => {
             clientY: 92
           },
           popper,
-          settings
+          options
         )
       ).toBe(false)
 
@@ -984,7 +984,7 @@ describe('core', () => {
             clientY: 110
           },
           popper,
-          settings
+          options
         )
       ).toBe(false)
 
@@ -996,7 +996,7 @@ describe('core', () => {
             clientY: 115
           },
           popper,
-          settings
+          options
         )
       ).toBe(false)
     })
@@ -1009,7 +1009,7 @@ describe('core', () => {
             clientY: 88
           },
           popper,
-          settings
+          options
         )
       ).toBe(true)
 
@@ -1020,7 +1020,7 @@ describe('core', () => {
             clientY: 140
           },
           popper,
-          settings
+          options
         )
       ).toBe(true)
 
@@ -1028,25 +1028,25 @@ describe('core', () => {
     })
   })
 
-  describe('getIndividualSettings', () => {
-    it('uses data-* attributes to override instance settings', () => {
+  describe('getIndividualOptions', () => {
+    it('uses data-* attributes to override instance options', () => {
       const el = createVirtualElement()
       el.setAttribute('data-duration', '1000')
 
       const instance = tippy(el)
       const ref = instance.getReferenceData(el)
 
-      expect(ref.settings.duration).not.toBe(instance.settings.duration)
+      expect(ref.options.duration).not.toBe(instance.options.duration)
     })
 
-    it('does not override instance settings if `performance` is true', () => {
+    it('does not override instance options if `performance` is true', () => {
       const el = createVirtualElement()
       el.setAttribute('data-duration', '1000')
 
       const instance = tippy(el, { performance: true })
       const ref = instance.getReferenceData(el)
 
-      expect(ref.settings.duration).toBe(instance.settings.duration)
+      expect(ref.options.duration).toBe(instance.options.duration)
     })
   })
 

@@ -13,7 +13,7 @@ import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 */
 export default function createPopperInstance(data) {
   const {
-    el,
+    reference,
     popper,
     options: {
       position,
@@ -74,5 +74,5 @@ export default function createPopperInstance(data) {
     data._mutationObserver = observer
   }
 
-  return new Popper(el, popper, config)
+  return new Popper(reference, popper, config)
 }

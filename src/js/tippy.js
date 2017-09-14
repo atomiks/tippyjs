@@ -65,9 +65,9 @@ class Tippy {
   * @param {Element} el
   * @return {Element}
   */
-  getPopperElement(el) {
+  getPopperElement(reference) {
     try {
-      return find(this.store, data => data.el === el).popper
+      return find(this.store, data => data.reference === reference).popper
     } catch (e) {
       console.error('[getPopperElement]: Element passed as the argument does not exist in the instance')
     }
@@ -80,7 +80,7 @@ class Tippy {
   */
   getReferenceElement(popper) {
     try {
-      return find(this.store, data => data.popper === popper).el
+      return find(this.store, data => data.popper === popper).reference
     } catch (e) {
       console.error('[getReferenceElement]: Popper passed as the argument does not exist in the instance')
     }
@@ -92,7 +92,7 @@ class Tippy {
   * @return {Object}
   */
   getReferenceData(x) {
-    return find(this.store, data => data.el === x || data.popper === x)
+    return find(this.store, data => data.reference === x || data.popper === x)
   }
 
   /**
@@ -106,7 +106,8 @@ class Tippy {
     const data = find(this.store, data => data.popper === popper)
     const { tooltip, circle, content } = getInnerElements(popper)
 
-    if (!document.body.contains(data.el)) {
+    // Destroy tooltip if the reference element is no longer on the DOM
+    if (!document.body.contains(data.reference)) {
       this.destroy(popper)
       return
     }
@@ -114,7 +115,7 @@ class Tippy {
     this.callbacks.show.call(popper)
 
     const {
-      el,
+      reference,
       options: {
         appendTo,
         sticky,
@@ -127,10 +128,10 @@ class Tippy {
     } = data
 
     if (dynamicTitle) {
-      const title = el.getAttribute('title')
+      const title = reference.getAttribute('title')
       if (title) {
         content.innerHTML = title
-        removeTitle(el)
+        removeTitle(reference)
       }
     }
 
@@ -161,7 +162,7 @@ class Tippy {
       if (circle) content.style.opacity = 1
 
       // Interactive tooltips receive a class of 'active'
-      interactive && el.classList.add('active')
+      interactive && reference.classList.add('active')
 
       // Update popper's position on every animation frame
       sticky && makeSticky(data)
@@ -205,7 +206,7 @@ class Tippy {
     const { tooltip, circle, content } = getInnerElements(popper)
 
     const {
-      el,
+      reference,
       options: {
         appendTo,
         sticky,
@@ -222,7 +223,7 @@ class Tippy {
       : Array.isArray(duration) ? duration[1] : duration
 
     data._onShownFired = false
-    interactive && el.classList.remove('active')
+    interactive && reference.classList.remove('active')
 
     popper.style.visibility = 'hidden'
     popper.setAttribute('aria-hidden', 'true')
@@ -241,7 +242,7 @@ class Tippy {
     // and the tooltipped element IS in the viewport (otherwise it causes unsightly scrolling
     // if the tooltip is closed and the element isn't in the viewport anymore)
     if (html && trigger.indexOf('click') !== -1 && elementIsInViewport(el)) {
-      el.focus()
+      reference.focus()
     }
 
     // Wait for transitions to complete
@@ -256,7 +257,7 @@ class Tippy {
         getComputedStyle(tooltip).opacity === '1'
       ) return
 
-      el.removeEventListener('mousemove', followCursorHandler)
+      reference.removeEventListener('mousemove', followCursorHandler)
       data.popperInstance.disableEventListeners()
       appendTo.removeChild(popper)
 
@@ -272,8 +273,15 @@ class Tippy {
     if (this.state.destroyed) return
 
     const data = find(this.store, data => data.popper === popper)
+
     const { content } = getInnerElements(popper)
-    const { el, options: { html } } = data
+
+    const {
+      reference,
+      options: {
+        html
+      }
+    } = data
 
     if (html instanceof Element) {
       console.warn('Aborted: update() should not be used if `html` is a DOM element')
@@ -282,9 +290,9 @@ class Tippy {
 
     content.innerHTML = html
       ? document.getElementById(html.replace('#', '')).innerHTML
-      : el.getAttribute('title') || el.getAttribute('data-original-title')
+      : reference.getAttribute('title') || reference.getAttribute('data-original-title')
 
-    if (!html) removeTitle(el)
+    if (!html) removeTitle(reference)
   }
 
   /**
@@ -298,7 +306,7 @@ class Tippy {
     const data = find(this.store, data => data.popper === popper)
 
     const {
-      el,
+      reference,
       popperInstance,
       listeners,
       _mutationObserver
@@ -310,14 +318,14 @@ class Tippy {
     }
 
     // Remove Tippy-only event listeners from tooltipped element
-    listeners.forEach(listener => el.removeEventListener(listener.event, listener.handler))
+    listeners.forEach(listener => reference.removeEventListener(listener.event, listener.handler))
 
     // Restore original title
-    el.setAttribute('title', el.getAttribute('data-original-title'))
+    reference.setAttribute('title', reference.getAttribute('data-original-title'))
 
-    el.removeAttribute('data-original-title')
-    el.removeAttribute('data-tooltipped')
-    el.removeAttribute('aria-describedby')
+    reference.removeAttribute('data-original-title')
+    reference.removeAttribute('data-tooltipped')
+    reference.removeAttribute('aria-describedby')
 
     popperInstance && popperInstance.destroy()
     _mutationObserver && _mutationObserver.disconnect()

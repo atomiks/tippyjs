@@ -12,7 +12,7 @@ import prefix from '../utils/prefix'
 */
 export default function mountPopper(data) {
   const {
-    el,
+    reference,
     popper,
     options: {
       appendTo,
@@ -36,7 +36,7 @@ export default function mountPopper(data) {
 
   // Since touch is determined dynamically, followCursor is set on mount
   if (followCursor && !Browser.touch) {
-    el.addEventListener('mousemove', followCursorHandler)
+    reference.addEventListener('mousemove', followCursorHandler)
     data.popperInstance.disableEventListeners()
   }
 }

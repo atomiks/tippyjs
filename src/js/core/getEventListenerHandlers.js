@@ -6,12 +6,12 @@ import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiv
 
 /**
 * Returns relevant listener callbacks for each ref
-* @param {Element} el
+* @param {Element} reference
 * @param {Element} popper
 * @param {Object} options
 * @return {Object} - relevant listener handlers
 */
-export default function getEventListenerHandlers(el, popper, options) {
+export default function getEventListenerHandlers(reference, popper, options) {
   const {
     position,
     delay,
@@ -48,7 +48,9 @@ export default function getEventListenerHandlers(el, popper, options) {
   }
 
   const show = event =>
-  this.callbacks.wait ? this.callbacks.wait.call(popper, _show, event) : _show()
+    this.callbacks.wait
+      ? this.callbacks.wait.call(popper, _show, event)
+      : _show()
 
   const hide = () => {
     clearTimeouts()
@@ -73,8 +75,8 @@ export default function getEventListenerHandlers(el, popper, options) {
 
     isClick && isVisible(popper) && isNotPersistent ? hide() : show(event)
 
-    if (mouseenterTouch && Browser.iOS() && el.click) {
-      el.click()
+    if (mouseenterTouch && Browser.iOS() && reference.click) {
+      reference.click()
     }
   }
 
@@ -100,9 +102,9 @@ export default function getEventListenerHandlers(el, popper, options) {
         const closestTooltippedEl = closest(event.target, Selectors.TOOLTIPPED_EL)
 
         const isOverPopper = closest(event.target, Selectors.POPPER) === popper
-        const isOverEl = closestTooltippedEl === el
+        const isOverEl = closestTooltippedEl === reference
         const isClickTriggered = trigger.indexOf('click') !== -1
-        const isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== el
+        const isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== reference
 
         if (isOverOtherTooltippedEl) {
           return triggerHide()

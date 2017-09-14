@@ -16,36 +16,36 @@ let idCounter = 1
 * @return {Object[]} Array of ref data objects
 */
 export default function createTooltips(els) {
-  return els.reduce((a, el) => {
+  return els.reduce((a, reference) => {
     const id = idCounter
 
     const options = evaluateOptions(
       this.options.performance
         ? this.options
-        : getIndividualOptions(el, this.options)
+        : getIndividualOptions(reference, this.options)
     )
 
     const { html, trigger, touchHold } = options
 
-    const title = el.getAttribute('title')
+    const title = reference.getAttribute('title')
     if (!title && !html) return a
 
-    el.setAttribute('data-tooltipped', '')
-    el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
-    removeTitle(el)
+    reference.setAttribute('data-tooltipped', '')
+    reference.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
+    removeTitle(reference)
 
     const popper = createPopperElement(id, title, options)
-    const handlers = getEventListenerHandlers.call(this, el, popper, options)
+    const handlers = getEventListenerHandlers.call(this, reference, popper, options)
 
     let listeners = []
 
     trigger.trim().split(' ').forEach(event =>
-      listeners = listeners.concat(createTrigger(event, el, handlers, touchHold))
+      listeners = listeners.concat(createTrigger(event, reference, handlers, touchHold))
     )
 
     a.push({
       id,
-      el,
+      reference,
       popper,
       options,
       listeners,
