@@ -95,7 +95,7 @@ class Tippy {
   * @param {Element} popper
   * @param {Number} customDuration (optional)
   */
-  show(popper, customDuration) {
+  show(popper = this.store[0].popper, customDuration) {
     if (this.state.destroyed) return
 
     const data = find(this.store, data => data.popper === popper)

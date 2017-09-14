@@ -1,7 +1,7 @@
 import getIndividualOptions     from './getIndividualOptions'
 import createPopperElement      from './createPopperElement'
 import createTrigger            from './createTrigger'
-import getEventListenerHandlers from './getEventListenerHandlers'
+import getEventListeners        from './getEventListeners'
 import evaluateOptions          from './evaluateOptions'
 
 import removeTitle from '../utils/removeTitle'
@@ -34,8 +34,7 @@ export default function createTooltips(els) {
     removeTitle(reference)
 
     const popper = createPopperElement(id, title, options)
-    const handlers = getEventListenerHandlers.call(this, reference, popper, options)
-
+    const handlers = getEventListeners.call(this, reference, popper, options)
     let listeners = []
 
     trigger.trim().split(' ').forEach(event =>
@@ -53,7 +52,12 @@ export default function createTooltips(els) {
       tippyInstance: this
     })
 
+    // Add _tippy instance to reference element. Allows easy access to
+    // methods when the instance only has one tooltip
     reference._tippy = this
+
+    // Allow easy access to the popper's reference element
+    popper.tippyReferenceElement = reference
 
     idCounter++
 

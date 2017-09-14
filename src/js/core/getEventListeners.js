@@ -11,7 +11,7 @@ import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiv
 * @param {Object} options
 * @return {Object} - relevant listener handlers
 */
-export default function getEventListenerHandlers(reference, popper, options) {
+export default function getEventListeners(reference, popper, options) {
   const {
     position,
     delay,

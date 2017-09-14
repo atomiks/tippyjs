@@ -36,7 +36,7 @@ export default function createPopperElement(id, title, options) {
   tooltip.setAttribute('data-animation', animation)
 
   theme.split(' ').forEach(t => {
-    tooltip.classList.add(t +'-theme')
+    tooltip.classList.add(t + '-theme')
   })
 
   if (arrow) {
@@ -83,7 +83,6 @@ export default function createPopperElement(id, title, options) {
     popper.classList.add('html-template')
     interactive && popper.setAttribute('tabindex', '-1')
     tooltip.setAttribute('data-template-id', templateId)
-
   } else {
     content.innerHTML = title
   }
