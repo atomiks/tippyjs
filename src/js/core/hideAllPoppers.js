@@ -1,11 +1,11 @@
-import { Store } from './globals'
+import { store } from './globals'
 
 /**
 * Hides all poppers
 * @param {Object} exclude - data ref to exclude if needed
 */
 export default function hideAllPoppers(exclude) {
-  Store.forEach(data => {
+  store.forEach(data => {
     const {
       popper,
       tippyInstance,

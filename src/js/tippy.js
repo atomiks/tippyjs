@@ -1,9 +1,4 @@
-import {
-  Browser,
-  Store,
-  Selectors,
-  Defaults
-} from './core/globals'
+import { browser, store, defaults } from './core/globals'
 
 import init from './core/init'
 
@@ -36,7 +31,7 @@ import createTooltips      from './core/createTooltips'
 class Tippy {
   constructor(selector, options = {}) {
     // Use default browser tooltip on unsupported browsers
-    if (!Browser.SUPPORTED) return
+    if (!browser.supported) return
 
     init()
 
@@ -46,7 +41,7 @@ class Tippy {
 
     this.selector = selector
 
-    this.options = { ...Defaults, ...options }
+    this.options = { ...defaults, ...options }
 
     this.callbacks = {
       wait: options.wait,
@@ -57,7 +52,7 @@ class Tippy {
     }
 
     this.store = createTooltips.call(this, getArrayOfElements(selector))
-    Store.push.apply(Store, this.store)
+    store.push.apply(store, this.store)
   }
 
   /**
@@ -150,7 +145,7 @@ class Tippy {
     // Wait for popper's position to update
     defer(() => {
       // Sometimes the arrow will not be in the correct position, force another update
-      if (!followCursor || Browser.touch) {
+      if (!followCursor || browser.usingTouch) {
         data.popperInstance.update()
         applyTransitionDuration([popper], flipDuration)
       }
@@ -197,7 +192,7 @@ class Tippy {
   * @param {Element} popper
   * @param {Number} customDuration (optional)
   */
-  hide(popper, customDuration) {
+  hide(popper = this.store[0].popper, customDuration) {
     if (this.state.destroyed) return
 
     this.callbacks.hide.call(popper)
@@ -269,7 +264,7 @@ class Tippy {
   * Updates a popper with new content
   * @param {Element} popper
   */
-  update(popper) {
+  update(popper = this.store[0].popper) {
     if (this.state.destroyed) return
 
     const data = find(this.store, data => data.popper === popper)
@@ -300,7 +295,7 @@ class Tippy {
   * @param {Element} popper
   * @param {Boolean} _isLast - private param used by destroyAll to optimize
   */
-  destroy(popper, _isLast) {
+  destroy(popper = this.store[0].popper, _isLast) {
     if (this.state.destroyed) return
 
     const data = find(this.store, data => data.popper === popper)
@@ -331,11 +326,11 @@ class Tippy {
     _mutationObserver && _mutationObserver.disconnect()
 
     // Remove from store
-    Store.splice(findIndex(Store, data => data.popper === popper), 1)
+    store.splice(findIndex(store, data => data.popper === popper), 1)
 
     // Ensure filter is called only once
     if (_isLast === undefined || _isLast) {
-      this.store = Store.filter(data => data.tippyInstance === this)
+      this.store = store.filter(data => data.tippyInstance === this)
     }
   }
 
@@ -360,9 +355,9 @@ function tippy(selector, options) {
   return new Tippy(selector, options)
 }
 
-tippy.Browser = Browser
-tippy.Defaults = Defaults
-tippy.disableDynamicInputDetection = () => Browser.dynamicInputDetection = false
-tippy.enableDynamicInputDetection = () => Browser.dynamicInputDetection = true
+tippy.browser = browser
+tippy.defaults = defaults
+tippy.disableDynamicInputDetection = () => browser.dynamicInputDetection = false
+tippy.enableDynamicInputDetection = () => browser.dynamicInputDetection = true
 
 export default tippy

@@ -1,4 +1,4 @@
-import { Defaults } from '../core/globals'
+import { defaults } from '../core/globals'
 
 /**
 * Returns the distance taking into account the default distance due to
@@ -7,5 +7,5 @@ import { Defaults } from '../core/globals'
 * @return {String}
 */
 export default function getOffsetDistanceInPx(distance) {
-  return -(distance - Defaults.distance) + 'px'
+  return -(distance - defaults.distance) + 'px'
 }

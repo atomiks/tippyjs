@@ -1,4 +1,4 @@
-import { Browser, Selectors } from './globals'
+import { browser, selectors } from './globals'
 
 import isVisible                        from '../utils/isVisible'
 import closest                          from '../utils/closest'
@@ -65,7 +65,11 @@ export default function getEventListenerHandlers(reference, popper, options) {
   }
 
   const handleTrigger = event => {
-    const mouseenterTouch = event.type === 'mouseenter' && Browser.SUPPORTS_TOUCH && Browser.touch
+    const mouseenterTouch = (
+      event.type === 'mouseenter' &&
+      browser.supportsTouch &&
+      browser.usingTouch
+    )
 
     if (mouseenterTouch && touchHold) return
 
@@ -73,9 +77,11 @@ export default function getEventListenerHandlers(reference, popper, options) {
     const isClick = event.type === 'click'
     const isNotPersistent = hideOnClick !== 'persistent'
 
-    isClick && isVisible(popper) && isNotPersistent ? hide() : show(event)
+    isClick && isVisible(popper) && isNotPersistent
+      ? hide()
+      : show(event)
 
-    if (mouseenterTouch && Browser.iOS() && reference.click) {
+    if (mouseenterTouch && browser.iOS && reference.click) {
       reference.click()
     }
   }
@@ -83,25 +89,26 @@ export default function getEventListenerHandlers(reference, popper, options) {
   const handleMouseleave = event => {
 
     // Don't fire 'mouseleave', use the 'touchend'
-    if (event.type === 'mouseleave' && Browser.SUPPORTS_TOUCH &&
-    Browser.touch && touchHold) {
-      return
-    }
+    if (
+      event.type === 'mouseleave' &&
+      browser.supportsTouch &&
+      browser.usingTouch &&
+      touchHold
+    ) return
 
     if (interactive) {
       // Temporarily handle mousemove to check if the mouse left somewhere
       // other than its popper
       const handleMousemove = event => {
-
         const triggerHide = () => {
           document.body.removeEventListener('mouseleave', hide)
           document.removeEventListener('mousemove', handleMousemove)
           hide()
         }
 
-        const closestTooltippedEl = closest(event.target, Selectors.TOOLTIPPED_EL)
+        const closestTooltippedEl = closest(event.target, selectors.TOOLTIPPED_EL)
 
-        const isOverPopper = closest(event.target, Selectors.POPPER) === popper
+        const isOverPopper = closest(event.target, selectors.POPPER) === popper
         const isOverEl = closestTooltippedEl === reference
         const isClickTriggered = trigger.indexOf('click') !== -1
         const isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== reference
@@ -130,8 +137,8 @@ export default function getEventListenerHandlers(reference, popper, options) {
   const handleBlur = event => {
     // Ignore blur on touch devices, if there is no `relatedTarget`, hide
     // If the related target is a popper, ignore
-    if (!event.relatedTarget || Browser.touch) return
-    if (closest(event.relatedTarget, Selectors.POPPER)) return
+    if (!event.relatedTarget || browser.usingTouch) return
+    if (closest(event.relatedTarget, selectors.POPPER)) return
 
     hide()
   }

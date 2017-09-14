@@ -1,4 +1,4 @@
-import { Browser, Selectors, Store } from './globals'
+import { browser, selectors, store } from './globals'
 
 import hideAllPoppers from './hideAllPoppers'
 
@@ -11,13 +11,13 @@ import { matches } from '../utils/matches'
 */
 export default function bindEventListeners() {
   const touchHandler = () => {
-    Browser.touch = true
+    browser.usingTouch = true
 
-    if (Browser.iOS()) {
+    if (browser.iOS) {
       document.body.classList.add('tippy-touch')
     }
 
-    if (Browser.dynamicInputDetection && window.performance) {
+    if (browser.dynamicInputDetection && window.performance) {
       document.addEventListener('mousemove', mousemoveHandler)
     }
   }
@@ -30,9 +30,9 @@ export default function bindEventListeners() {
 
       // Chrome 60+ is 1 mousemove per rAF, use 20ms time difference
       if (now - time < 20) {
-        Browser.touch = false
+        browser.usingTouch = false
         document.removeEventListener('mousemove', mousemoveHandler)
-        if (!Browser.iOS()) {
+        if (!browser.iOS) {
           document.body.classList.remove('tippy-touch')
         }
       }
@@ -47,17 +47,16 @@ export default function bindEventListeners() {
       return hideAllPoppers()
     }
 
-    const reference = closest(event.target, Selectors.TOOLTIPPED_EL)
-    const popper = closest(event.target, Selectors.POPPER)
+    const reference = closest(event.target, selectors.TOOLTIPPED_EL)
+    const popper = closest(event.target, selectors.POPPER)
 
     if (popper) {
-      const ref = find(Store, ref => ref.popper === popper)
-      const { options: { interactive } } = ref
-      if (interactive) return
+      const data = find(store, ref => ref.popper === popper)
+      if (data.options.interactive) return
     }
 
     if (reference) {
-      const data = find(Store, data => data.reference === reference)
+      const data = find(store, data => data.reference === reference)
       const {
         options: {
           hideOnClick,
@@ -69,7 +68,7 @@ export default function bindEventListeners() {
       // Hide all poppers except the one belonging to the element that was clicked IF
       // `multiple` is false AND they are a touch user, OR
       // `multiple` is false AND it's triggered by a click
-      if ((!multiple && Browser.touch) || (!multiple && trigger.indexOf('click') !== -1)) {
+      if ((!multiple && browser.usingTouch) || (!multiple && trigger.indexOf('click') !== -1)) {
         return hideAllPoppers(data)
       }
 
@@ -78,14 +77,14 @@ export default function bindEventListeners() {
     }
 
     // Don't trigger a hide for tippy controllers, and don't needlessly run loop
-    if (closest(event.target, Selectors.CONTROLLER) || !document.querySelector(Selectors.POPPER)) return
+    if (closest(event.target, selectors.CONTROLLER) || !document.querySelector(selectors.POPPER)) return
 
     hideAllPoppers()
   }
 
   const blurHandler = event => {
     const { activeElement: el } = document
-    if (el && el.blur && matches.call(el, Selectors.TOOLTIPPED_EL)) {
+    if (el && el.blur && matches.call(el, selectors.TOOLTIPPED_EL)) {
       el.blur()
     }
   }
@@ -95,7 +94,7 @@ export default function bindEventListeners() {
   document.addEventListener('touchstart', touchHandler)
   window.addEventListener('blur', blurHandler)
 
-  if (!Browser.SUPPORTS_TOUCH && (navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)) {
+  if (!browser.supportsTouch && (navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)) {
     document.addEventListener('pointerdown', touchHandler)
   }
 }

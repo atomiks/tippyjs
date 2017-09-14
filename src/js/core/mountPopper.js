@@ -1,4 +1,4 @@
-import { Selectors, Browser } from './globals'
+import { selectors, browser } from './globals'
 
 import followCursorHandler  from './followCursorHandler'
 import createPopperInstance from './createPopperInstance'
@@ -29,13 +29,13 @@ export default function mountPopper(data) {
     data.popperInstance = createPopperInstance(data)
   } else {
     data.popperInstance.update()
-    if (!followCursor || Browser.touch) {
+    if (!followCursor || browser.usingTouch) {
       data.popperInstance.enableEventListeners()
     }
   }
 
   // Since touch is determined dynamically, followCursor is set on mount
-  if (followCursor && !Browser.touch) {
+  if (followCursor && !browser.usingTouch) {
     reference.addEventListener('mousemove', followCursorHandler)
     data.popperInstance.disableEventListeners()
   }

@@ -1,5 +1,3 @@
-import { Selectors } from './globals'
-
 import getInnerElements from '../utils/getInnerElements'
 
 /**

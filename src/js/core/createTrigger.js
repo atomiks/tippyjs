@@ -1,4 +1,4 @@
-import { Browser } from './globals'
+import { browser } from './globals'
 
 /**
 * Creates a trigger
@@ -22,7 +22,7 @@ export default function createTrigger(event, el, handlers, touchHold) {
 
   // Leave
   if (event === 'mouseenter') {
-    if (Browser.SUPPORTS_TOUCH && touchHold) {
+    if (browser.supportsTouch && touchHold) {
       el.addEventListener('touchstart', handlers.handleTrigger)
       listeners.push({
         event: 'touchstart',

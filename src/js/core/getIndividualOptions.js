@@ -1,4 +1,4 @@
-import { DefaultsKeys } from './globals'
+import { defaultsKeys } from './globals'
 
 /**
 * Returns an object of settings to override global settings
@@ -7,7 +7,7 @@ import { DefaultsKeys } from './globals'
 * @return {Object} - individual settings
 */
 export default function getIndividualOptions(reference, instanceOptions) {
-  const options = DefaultsKeys.reduce((acc, key) => {
+  const options = defaultsKeys.reduce((acc, key) => {
     let val = reference.getAttribute(`data-tippy-${ key.toLowerCase() }`) || instanceOptions[key]
 
     // Convert strings to booleans

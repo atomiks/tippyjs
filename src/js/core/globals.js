@@ -1,12 +1,11 @@
-export const Browser = {}
+export const browser = {}
 
 if (typeof window !== 'undefined') {
-  Browser.SUPPORTED = 'requestAnimationFrame' in window
-  Browser.SUPPORTS_TOUCH = 'ontouchstart' in window
-  Browser.touch = false
-  Browser.dynamicInputDetection = true
-  // Chrome device/touch emulation can make this dynamic
-  Browser.iOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream
+  browser.supported = 'requestAnimationFrame' in window
+  browser.supportsTouch = 'ontouchstart' in window
+  browser.usingTouch = false
+  browser.dynamicInputDetection = true
+  browser.iOS = /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream
 }
 
 /**
@@ -15,12 +14,12 @@ if (typeof window !== 'undefined') {
 * This allows us to hide tooltips from all instances, finding the ref when
 * clicking on the body, and for followCursor
 */
-export const Store = []
+export const store = []
 
 /**
 * Selector constants used for grabbing elements
 */
-export const Selectors = {
+export const selectors = {
   POPPER: '.tippy-popper',
   TOOLTIP: '.tippy-tooltip',
   CONTENT: '.tippy-tooltip-content',
@@ -33,7 +32,7 @@ export const Selectors = {
 /**
 * The default options applied to each instance
 */
-export const Defaults = {
+export const defaults = {
   html: false,
   position: 'top',
   animation: 'shift',
@@ -68,4 +67,4 @@ export const Defaults = {
 * The keys of the defaults object for reducing down into a new object
 * Used in `getIndividualOptions()`
 */
-export const DefaultsKeys = Browser.SUPPORTED && Object.keys(Defaults)
+export const defaultsKeys = browser.supported && Object.keys(defaults)

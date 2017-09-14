@@ -1,4 +1,4 @@
-import { Store, Selectors } from './globals'
+import { store } from './globals'
 
 import getCorePlacement from '../utils/getCorePlacement'
 import find             from '../utils/find'
@@ -10,7 +10,7 @@ import closest          from '../utils/closest'
 * @param {MouseEvent} e
 */
 export default function followCursorHandler(e) {
-  const data = find(Store, data => data.reference === this)
+  const data = find(store, data => data.reference === this)
 
   const {
     popper,
