@@ -48,19 +48,12 @@ class Tippy {
 
     this.settings = { ...Defaults, ...settings }
 
-    if (settings.show || settings.shown || settings.hide || settings.hidden) {
-      console.warn(
-        'Callbacks without the `on` prefix are deprecated (with the exception of `wait`).' +
-        ' Use onShow, onShown, onHide, and onHidden instead.'
-      )
-    }
-
     this.callbacks = {
       wait: settings.wait,
-      show: settings.onShow || settings.show || noop,
-      shown: settings.onShown || settings.shown || noop,
-      hide: settings.onHide || settings.hide || noop,
-      hidden: settings.onHidden || settings.hidden || noop
+      show: settings.onShow || noop,
+      shown: settings.onShown || noop,
+      hide: settings.onHide || noop,
+      hidden: settings.onHidden || noop
     }
 
     this.store = createTooltips.call(this, getArrayOfElements(selector))
