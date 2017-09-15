@@ -10,7 +10,7 @@ import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 */
 export default function createPopperElement(id, title, options) {
   const {
-    position,
+    placement,
     distance,
     arrow,
     animateFill,
@@ -88,7 +88,7 @@ export default function createPopperElement(id, title, options) {
   }
 
   // Init distance. Further updates are made in the popper instance's `onUpdate()` method
-  tooltip.style[getCorePlacement(position)] = getOffsetDistanceInPx(distance)
+  tooltip.style[getCorePlacement(placement)] = getOffsetDistanceInPx(distance)
 
   tooltip.appendChild(content)
   popper.appendChild(tooltip)

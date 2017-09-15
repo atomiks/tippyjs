@@ -34,7 +34,7 @@ export const selectors = {
 */
 export const defaults = {
   html: false,
-  position: 'top',
+  placement: 'top',
   animation: 'shift',
   animateFill: true,
   arrow: false,

@@ -60,7 +60,7 @@ class Tippy {
   * @param {Element} el
   * @return {Element}
   */
-  getPopperElement(reference) {
+  getPopperElement(reference = this.store[0].reference) {
     try {
       return find(this.store, data => data.reference === reference).popper
     } catch (e) {
@@ -73,7 +73,7 @@ class Tippy {
   * @param {Element} popper
   * @return {Element}
   */
-  getReferenceElement(popper) {
+  getReferenceElement(popper = this.store[0].popper) {
     try {
       return find(this.store, data => data.popper === popper).reference
     } catch (e) {
@@ -86,7 +86,7 @@ class Tippy {
   * @param {Element} x (reference element or popper)
   * @return {Object}
   */
-  getReferenceData(x) {
+  getData(x = this.store[0].popper) {
     return find(this.store, data => data.reference === x || data.popper === x)
   }
 

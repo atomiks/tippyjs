@@ -16,7 +16,7 @@ export default function createPopperInstance(data) {
     reference,
     popper,
     options: {
-      position,
+      placement,
       popperOptions,
       offset,
       distance,
@@ -27,7 +27,7 @@ export default function createPopperInstance(data) {
   const { tooltip } = getInnerElements(popper)
 
   const config = {
-    placement: position,
+    placement,
     ...(popperOptions || {}),
     modifiers: {
       ...(popperOptions ? popperOptions.modifiers : {}),
