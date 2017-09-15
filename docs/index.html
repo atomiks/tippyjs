@@ -708,55 +708,63 @@ tip.update(popper)</code></pre>
 
           <h2><a href="#creating-html-templates"><i class="material-icons icon-left">code</i><span>Creating HTML templates</span></a></h2>
 
-          <p>It's worth noting that basic HTML can be injected straight into the element's
-              <code>title</code> attribute. Example:
-              <code class="language-markup">title="&lt;strong&gt;text&lt;/strong&gt;"</code>, so there's no need to
-              create a template if you want something simple like that (though for backwards
-              browser compatibility/fallback it won't look pretty).
-              For more complex scenarios, use a template.</p>
-          <p>Regarding fallback: HTML template tooltips can't be shown to older browsers
-              (IE &lt;= 9), so you'll need to consider that when using them on your site.</p>
+          <p>There are two options you have when creating a template. You can either clone it or use it directly.</p>
 
-          <p>Create an HTML template on the document. Set its <code>style</code> to
-              <code>display: none;</code> so it won't be seen. You don't need to specify a
-              <code>title</code> attribute with a HTML templated tooltip; it will be ignored.
-              You may want to add a title attribute however to notify incompatible users of
-              something.</p>
+          <h4>Cloning</h4>
+          <p>Use the template's <code>id</code> selector string.</p>
+          <p>Option: <code>html: '#myTemplate'</code></p>
+          <ul>
+            <li>Can be re-used multiple times</li>
+            <li>Not removed from the page</li>
+            <li>Will not save event listeners attached to it</li>
+            <li>Not directly modifiable</li>
+          </ul>
 
-<pre><code class="language-markup">&lt;div id="my-template-id" style="display: none;"&gt;
+          <h4>Direct</h4>
+          <p>Use <code>Element</code> directly.</p>
+          <p>Option: <code>html: document.querySelector('#myTemplate')</code></p>
+          <ul>
+            <li>Can only be used once</li>
+            <li>Removed from the page and appended directly to the tooltip</li>
+            <li>Saves event listeners attached to it</li>
+            <li>Directly modifiable</li>
+          </ul>
+
+          <h4>Example HTML template</h4>
+
+          <div class="alert alert-info" role="alert">
+            When cloning, use <code>style="display: none;"</code> to hide the template.
+          </div>
+
+<pre><code class="language-markup">&lt;div id="myTemplate"&gt;
   &lt;p&gt;Fun &lt;strong&gt;non-interactive HTML&lt;/strong&gt; here&lt;/p&gt;
   &lt;img alt="cat" height="150" src="img/cat.jpg"&gt;
 &lt;/div&gt;</code></pre>
 
-<div id="my-template-id" style="display: none;">
-<p>Fun <strong>non-interactive HTML</strong> here</p>
-<img alt="cat" height="150" src="img/cat.jpg">
+<div id="myTemplate" style="display: none;">
+  <p>Fun <strong>non-interactive HTML</strong> here</p>
+  <img alt="cat" height="150" src="img/cat.jpg">
 </div>
 
-        <p>If you want to <em>clone</em> the template's content into the tooltip, specify the template's <code>id</code> in the <code>html</code> setting.
-            Otherwise use the DOM element itself, which allows you to keep listeners attached.
-            If you use the DOM element choice, ensure it's not hidden with <code>display: none;</code>.
-        </p>
-
 <pre><code class="language-javascript">tippy('#myElement', {
-  html: '#my-template-id', // OR document.querySelector('#my-template-id')
+  html: document.querySelector('#myTemplate'), // DIRECT ELEMENT option
   arrow: true,
   animation: 'fade'
 })</code></pre>
 
         <div class="result-box">
           <p class="text-muted">Result:</p>
-          <button class="btn tippy" data-html="#my-template-id" data-animation="fade" data-arrow="true">A cat</button>
+          <button class="btn tippy" data-html="#myTemplate" data-animation="fade" data-arrow="true">A cat</button>
         </div>
 
         <h4>Styling tooltips with HTML content</h4>
 
-        <p>Use this selector to target your tooltip template. Replace "#my-template-id" with
+        <p>Use this selector to target your tooltip template. Replace "#myTemplate" with
             your own template's <code>id</code>, including the leading hash. If you're using a DOM element
             in the <code>html</code> setting and no <code>id</code> is found,
         it defaults to <code>tippy-html-template</code>.</p>
 
-<pre><code class="language-css">.tippy-tooltip[data-template-id="#my-template-id"] {
+<pre><code class="language-css">.tippy-tooltip[data-template-id="#myTemplate"] {
   /* Your styling here. Example: */
   padding: 2rem;
 }</code></pre>
