@@ -3,8 +3,8 @@ import { defaultsKeys } from './globals'
 /**
 * Returns an object of settings to override global settings
 * @param {Element} reference
-* @param {Object} instanceSettings
-* @return {Object} - individual settings
+* @param {Object} instanceOptions
+* @return {Object} - individual options
 */
 export default function getIndividualOptions(reference, instanceOptions) {
   const options = defaultsKeys.reduce((acc, key) => {

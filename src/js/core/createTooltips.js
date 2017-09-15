@@ -28,7 +28,7 @@ export default function createTooltips(els) {
     const title = reference.getAttribute('title')
     if (!title && !html) return acc
 
-    reference.setAttribute('data-tooltipped', '')
+    reference.setAttribute('x-tooltipped', '')
     reference.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
 
     removeTitle(reference)

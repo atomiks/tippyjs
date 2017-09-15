@@ -25,8 +25,8 @@ export const selectors = {
   CONTENT: '.tippy-tooltip-content',
   CIRCLE: '[x-circle]',
   ARROW: '[x-arrow]',
-  TOOLTIPPED_EL: '[data-tooltipped]',
-  CONTROLLER: '[data-tippy-controller]'
+  TOOLTIPPED_EL: '[x-tooltipped]',
+  CONTROLLER: '[x-tippy-controller]'
 }
 
 /**

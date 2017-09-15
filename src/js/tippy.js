@@ -23,11 +23,12 @@ import mountPopper         from './core/mountPopper'
 import makeSticky          from './core/makeSticky'
 import createTooltips      from './core/createTooltips'
 
-/**
-* @param {String|Element|Element[]} selector
-* @param {Object} options (optional) - the object of options to be applied to the instance
-*/
 class Tippy {
+  /**
+  * Creates tooltips
+  * @param {String|Element|Element[]} selector
+  * @param {Object} options (optional) - the object of options to be applied to the instance
+  */
   constructor(selector, options = {}) {
     // Use default browser tooltip on unsupported browsers
     if (!browser.supported) return
@@ -311,7 +312,7 @@ class Tippy {
     reference.setAttribute('title', reference.getAttribute('data-original-title'))
 
     reference.removeAttribute('data-original-title')
-    reference.removeAttribute('data-tooltipped')
+    reference.removeAttribute('x-tooltipped')
     reference.removeAttribute('aria-describedby')
 
     popperInstance && popperInstance.destroy()
