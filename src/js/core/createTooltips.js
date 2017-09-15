@@ -57,7 +57,7 @@ export default function createTooltips(els) {
     reference._tippy = this
 
     // Allow easy access to the popper's reference element
-    popper.tippyReferenceElement = reference
+    popper._reference = reference
 
     idCounter++
 
