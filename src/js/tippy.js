@@ -10,7 +10,6 @@ import findIndex               from './utils/findIndex'
 import removeTitle             from './utils/removeTitle'
 import elementIsInViewport     from './utils/elementIsInViewport'
 import triggerReflow           from './utils/triggerReflow'
-import modifyClassList         from './utils/modifyClassList'
 import getInnerElements        from './utils/getInnerElements'
 import applyTransitionDuration from './utils/applyTransitionDuration'
 import isVisible               from './utils/isVisible'
@@ -165,11 +164,8 @@ class Tippy {
       // Repaint/reflow is required for CSS transition when appending
       triggerReflow(tooltip, circle)
 
-      modifyClassList([tooltip, circle], list => {
-        list.contains('tippy-notransition') && list.remove('tippy-notransition')
-        list.remove('leave')
-        list.add('enter')
-      })
+      tooltip.setAttribute('x-state', 'visible')
+      circle && circle.setAttribute('x-state', 'visible')
 
       // Wait for transitions to complete
       onTransitionEnd(data, _duration, () => {
@@ -177,8 +173,7 @@ class Tippy {
 
         // Focus interactive tooltips only
         interactive && popper.focus()
-        // Remove transitions from tooltip
-        tooltip.classList.add('tippy-notransition')
+
         // Prevents shown() from firing more than once from early transition cancellations
         data._onShownFired = true
 
@@ -227,11 +222,8 @@ class Tippy {
 
     if (circle) content.style.opacity = 0
 
-    modifyClassList([tooltip, circle], list => {
-      list.contains('tippy-tooltip') && list.remove('tippy-notransition')
-      list.remove('enter')
-      list.add('leave')
-    })
+    tooltip.setAttribute('x-state', 'hidden')
+    circle && circle.setAttribute('x-state', 'hidden')
 
     // Re-focus click-triggered html elements
     // and the tooltipped element IS in the viewport (otherwise it causes unsightly scrolling

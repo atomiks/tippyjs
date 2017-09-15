@@ -32,8 +32,10 @@ export default function createPopperElement(id, title, options) {
   popper.style.zIndex = zIndex
 
   const tooltip = document.createElement('div')
-  tooltip.setAttribute('class', `tippy-tooltip tippy-tooltip--${size} leave`)
-  tooltip.setAttribute('data-animation', animation)
+  tooltip.setAttribute('class', 'tippy-tooltip')
+  tooltip.setAttribute('x-size', size)
+  tooltip.setAttribute('x-animation', animation)
+  tooltip.setAttribute('x-state', 'hidden')
 
   theme.split(' ').forEach(t => {
     tooltip.classList.add(t + '-theme')
@@ -42,27 +44,27 @@ export default function createPopperElement(id, title, options) {
   if (arrow) {
     // Add an arrow
     const arrow = document.createElement('div')
-    arrow.setAttribute('class', `arrow-${arrowSize}`)
+    arrow.setAttribute('x-size', arrowSize)
     arrow.setAttribute('x-arrow', '')
     tooltip.appendChild(arrow)
   }
 
   if (animateFill) {
     // Create animateFill circle element for animation
-    tooltip.setAttribute('data-animatefill', '')
+    tooltip.setAttribute('x-animatefill', '')
     const circle = document.createElement('div')
-    circle.setAttribute('class', 'leave')
+    circle.setAttribute('x-state', 'hidden')
     circle.setAttribute('x-circle', '')
     tooltip.appendChild(circle)
   }
 
   if (inertia) {
     // Change transition timing function cubic bezier
-    tooltip.setAttribute('data-inertia', '')
+    tooltip.setAttribute('x-inertia', '')
   }
 
   if (interactive) {
-    tooltip.setAttribute('data-interactive', '')
+    tooltip.setAttribute('x-interactive', '')
   }
 
   // Tooltip content (text or HTML)

@@ -11,7 +11,6 @@ import prefix                   from '../../src/js/utils/prefix'
 import closest                  from '../../src/js/utils/closest'
 import isVisible                from '../../src/js/utils/isVisible'
 import getOffsetDistanceInPx    from '../../src/js/utils/getOffsetDistanceInPx'
-import modifyClassList          from '../../src/js/utils/modifyClassList'
 import applyTransitionDuration  from '../../src/js/utils/applyTransitionDuration'
 import cursorIsOutsideInteractiveBorder from '../../src/js/utils/cursorIsOutsideInteractiveBorder'
 
@@ -639,7 +638,7 @@ describe('core', () => {
     })
 
     describe('animation', () => {
-      it('sets the `data-animation` attribute on the tooltip', () => {
+      it('sets the `x-animation` attribute on the tooltip', () => {
         const el = createVirtualElement()
 
         const instance = tippy(el, {
@@ -647,7 +646,7 @@ describe('core', () => {
         })
 
         const popper = instance.getPopperElement(el)
-        expect(popper.querySelector(selectors.TOOLTIP).getAttribute('data-animation')).toBe('fade')
+        expect(popper.querySelector(selectors.TOOLTIP).getAttribute('x-animation')).toBe('fade')
         instance.destroyAll()
       })
     })
@@ -1275,21 +1274,6 @@ describe('utils', () => {
       popper.style.visibility = 'hidden'
 
       expect(isVisible(popper)).toBe(false)
-    })
-  })
-
-  describe('modifyClassList', () => {
-    it('modifies an element\'s class list', () => {
-
-      const popper = document.createElement('div')
-      popper.className = 'class1 class2 class3'
-
-      modifyClassList([popper], list => {
-        list.add('class4')
-        list.remove('class1')
-      })
-
-      expect(popper.className).toBe('class2 class3 class4')
     })
   })
 

@@ -150,10 +150,6 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
   cursor: pointer !important;
 }
 
-.tippy-notransition {
-  transition: none !important;
-}
-
 .tippy-popper {
   max-width: 400px;
   perspective: 800px;
@@ -175,12 +171,12 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
         @include arrow-position($position, 7px);
         @include arrow-margin($position);
 
-        &.arrow-small {
+        &[x-size=small] {
           @include arrow($position, 5px, #333);
           @include arrow-position($position, 5px);
         }
 
-        &.arrow-big {
+        &[x-size=big] {
           @include arrow($position, 10px, #333);
           @include arrow-position($position, 10px);
         }
@@ -189,12 +185,12 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
       [x-circle] {
         transform-origin: nth($circle-origins, index($positions, $position));
 
-        &.enter {
+        &[x-state=visible] {
           @include circle-transform-enter($position);
           opacity: 1;
         }
 
-        &.leave {
+        &[x-state=hidden] {
           @include circle-transform-leave($position);
           opacity: 0;
         }
@@ -207,11 +203,11 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
         [x-arrow] {
           @include arrow($position, 7px, white);
 
-          &.arrow-small {
+          &[x-size=small] {
             @include arrow($position, 5px, white);
           }
 
-          &.arrow-big {
+          &[x-size=big] {
             @include arrow($position, 10px, white);
           }
         }
@@ -224,58 +220,57 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
         [x-arrow] {
           @include arrow($position, 7px, rgba(0,0,0,0.7));
 
-          &.arrow-small {
+          &[x-size=small] {
             @include arrow($position, 5px, rgba(0,0,0,0.7));
           }
 
-          &.arrow-big {
+          &[x-size=big] {
             @include arrow($position, 10px, rgba(0,0,0,0.7));
           }
         }
       }
 
-      [data-animation=perspective] {
+      [x-animation=perspective] {
         transform-origin: nth($origins, index($positions, $position));
 
-        &.enter {
+        &[x-state=visible] {
           opacity: 1;
           @include enter-transform($position, 'perspective');
         }
-
-        &.leave {
+        &[x-state=hidden] {
           opacity: 0;
           @include leave-transform($position, 'perspective');
         }
       }
 
-      [data-animation=fade] {
-        &.enter {
+      [x-animation=fade] {
+        &[x-state=visible] {
           opacity: 1;
           @include enter-transform($position, 'fade')
         }
-        &.leave {
+        &[x-state=hidden] {
           opacity: 0;
           @include enter-transform($position, 'fade')
         }
       }
 
-      [data-animation=shift] {
-        &.enter {
+      [x-animation=shift] {
+        &[x-state=visible] {
           opacity: 1;
           @include enter-transform($position, 'fade')
         }
-        &.leave {
+        &[x-state=hidden] {
           opacity: 0;
           @include leave-transform($position, 'shift')
         }
       }
 
-      [data-animation=scale] {
-        &.enter {
+      [x-animation=scale] {
+        &[x-state=visible] {
           opacity: 1;
           @include enter-transform($position, 'scale')
         }
-        &.leave {
+        &[x-state=hidden] {
           opacity: 0;
           @include leave-transform($position, 'scale')
         }
@@ -287,7 +282,7 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
   .tippy-tooltip.transparent-theme {
     background-color: rgba(0,0,0,0.7);
 
-    &[data-animatefill] {
+    &[x-animatefill] {
       background-color: transparent;
     }
   }
@@ -298,7 +293,7 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
     0 4px 80px -8px rgba(0, 20, 60, 0.2);
     background-color: white;
 
-    &[data-animatefill] {
+    &[x-animatefill] {
       background-color: transparent;
     }
   }
@@ -316,26 +311,26 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
   -moz-osx-font-smoothing: grayscale;
   background-color: #333;
 
-  &--small {
+  &[x-size=small] {
     padding: 0.25rem 0.5rem;
     font-size: 0.8rem;
   }
 
-  &--big {
+  &[x-size=big] {
     padding: 0.6rem 1.2rem;
     font-size: 1.2rem;
   }
 
-  &[data-animatefill] {
+  &[x-animatefill] {
     overflow: hidden;
     background-color: transparent;
   }
 
-  &[data-interactive] {
+  &[x-interactive] {
     pointer-events: auto;
   }
 
-  &[data-inertia] {
+  &[x-inertia] {
     // Safari/Webkit can't go out of range
     -webkit-transition-timing-function: cubic-bezier(.53,1,.36,.85);
     transition-timing-function: cubic-bezier(.53,2,.36,.85);
