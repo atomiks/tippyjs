@@ -176,7 +176,7 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
           @include arrow-position($position, 5px);
         }
 
-        &[x-size=big] {
+        &[x-size=large] {
           @include arrow($position, 10px, #333);
           @include arrow-position($position, 10px);
         }
@@ -207,7 +207,7 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
             @include arrow($position, 5px, white);
           }
 
-          &[x-size=big] {
+          &[x-size=large] {
             @include arrow($position, 10px, white);
           }
         }
@@ -224,7 +224,7 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
             @include arrow($position, 5px, rgba(0,0,0,0.7));
           }
 
-          &[x-size=big] {
+          &[x-size=large] {
             @include arrow($position, 10px, rgba(0,0,0,0.7));
           }
         }
@@ -316,7 +316,7 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
     font-size: 0.8rem;
   }
 
-  &[x-size=big] {
+  &[x-size=large] {
     padding: 0.6rem 1.2rem;
     font-size: 1.2rem;
   }
