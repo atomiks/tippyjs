@@ -3589,6 +3589,7 @@ function createTooltips(els) {
 /**
 * @param {String|Element|Element[]} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
+* @param {Object} refObject (optional) - overide for reference object
 */
 
 var Tippy = function () {
@@ -3609,6 +3610,9 @@ var Tippy = function () {
     this.selector = selector;
 
     this.refObject = refObject;
+
+    console.log(refObject);
+    console.log("rev4");
 
     this.settings = _extends$1({}, Defaults, settings);
 
@@ -3972,8 +3976,8 @@ var Tippy = function () {
   return Tippy;
 }();
 
-function tippy$2(selector, settings) {
-  return new Tippy(selector, settings);
+function tippy$2(selector, settings, refObject) {
+  return new Tippy(selector, settings, refObject);
 }
 
 tippy$2.Browser = Browser;
