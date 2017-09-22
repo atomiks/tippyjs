@@ -525,7 +525,7 @@ function onTransitionEnd(data, duration, callback) {
 
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.12.4
+ * @version 1.12.5
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -865,20 +865,18 @@ var isIE10$1 = function isIE10$1() {
   return isIE10;
 };
 
-function getSize(axis, body, html, computedStyle, includeScroll) {
-  return Math.max(body['offset' + axis], includeScroll ? body['scroll' + axis] : 0, html['client' + axis], html['offset' + axis], includeScroll ? html['scroll' + axis] : 0, isIE10$1() ? html['offset' + axis] + computedStyle['margin' + (axis === 'Height' ? 'Top' : 'Left')] + computedStyle['margin' + (axis === 'Height' ? 'Bottom' : 'Right')] : 0);
+function getSize(axis, body, html, computedStyle) {
+  return Math.max(body['offset' + axis], body['scroll' + axis], html['client' + axis], html['offset' + axis], html['scroll' + axis], isIE10$1() ? html['offset' + axis] + computedStyle['margin' + (axis === 'Height' ? 'Top' : 'Left')] + computedStyle['margin' + (axis === 'Height' ? 'Bottom' : 'Right')] : 0);
 }
 
 function getWindowSizes() {
-  var includeScroll = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-
   var body = window.document.body;
   var html = window.document.documentElement;
   var computedStyle = isIE10$1() && window.getComputedStyle(html);
 
   return {
-    height: getSize('Height', body, html, computedStyle, includeScroll),
-    width: getSize('Width', body, html, computedStyle, includeScroll)
+    height: getSize('Height', body, html, computedStyle),
+    width: getSize('Width', body, html, computedStyle)
   };
 }
 
@@ -1124,7 +1122,7 @@ function getBoundaries(popper, reference, padding, boundariesElement) {
 
     // In case of HTML, we need a different computation
     if (boundariesNode.nodeName === 'HTML' && !isFixed(offsetParent)) {
-      var _getWindowSizes = getWindowSizes(false),
+      var _getWindowSizes = getWindowSizes(),
           height = _getWindowSizes.height,
           width = _getWindowSizes.width;
 
@@ -3024,7 +3022,8 @@ function createPopperInstance(data) {
       popperOptions = _data$settings.popperOptions,
       offset = _data$settings.offset,
       distance = _data$settings.distance,
-      flipDuration = _data$settings.flipDuration;
+      flipDuration = _data$settings.flipDuration,
+      refObject = data.refObject;
 
   var _getInnerElements = getInnerElements(popper),
       tooltip = _getInnerElements.tooltip;
@@ -3072,7 +3071,12 @@ function createPopperInstance(data) {
     data._mutationObserver = observer;
   }
 
-  return new Popper(el, popper, config);
+  //Update Popper's reference object if one is provided
+  if (refObject === null) {
+    return new Popper(el, popper, config);
+  } else {
+    return new Popper(refObject, popper, config);
+  }
 }
 
 /**
@@ -3541,6 +3545,8 @@ function createTooltips(els) {
 
     var settings = evaluateSettings(_this.settings.performance ? _this.settings : getIndividualSettings(el, _this.settings));
 
+    var refObject = _this.refObject;
+
     var html = settings.html,
         trigger = settings.trigger,
         touchHold = settings.touchHold;
@@ -3568,7 +3574,8 @@ function createTooltips(els) {
       popper: popper,
       settings: settings,
       listeners: listeners,
-      tippyInstance: _this
+      tippyInstance: _this,
+      refObject: refObject
     });
 
     idCounter++;
@@ -3582,11 +3589,13 @@ function createTooltips(els) {
 /**
 * @param {String|Element|Element[]} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
+* @param {Object} refObject (optional) - override for popper reference object
 */
 
 var Tippy = function () {
   function Tippy(selector) {
     var settings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var refObject = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
     classCallCheck$1(this, Tippy);
 
     // Use default browser tooltip on unsupported browsers
@@ -3599,6 +3608,8 @@ var Tippy = function () {
     };
 
     this.selector = selector;
+
+    this.refObject = refObject;
 
     this.settings = _extends$1({}, Defaults, settings);
 
@@ -3706,7 +3717,8 @@ var Tippy = function () {
           followCursor = _data$settings.followCursor,
           flipDuration = _data$settings.flipDuration,
           duration = _data$settings.duration,
-          dynamicTitle = _data$settings.dynamicTitle;
+          dynamicTitle = _data$settings.dynamicTitle,
+          refObject = data.refObject;
 
 
       if (dynamicTitle) {
@@ -3961,8 +3973,8 @@ var Tippy = function () {
   return Tippy;
 }();
 
-function tippy$2(selector, settings) {
-  return new Tippy(selector, settings);
+function tippy$2(selector, settings, refObject) {
+  return new Tippy(selector, settings, refObject);
 }
 
 tippy$2.Browser = Browser;

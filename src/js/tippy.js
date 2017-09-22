@@ -32,9 +32,10 @@ import createTooltips      from './core/createTooltips'
 /**
 * @param {String|Element|Element[]} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
+* @param {Object} refObject (optional) - override for popper reference object
 */
 class Tippy {
-  constructor(selector, settings = {}) {
+  constructor(selector, settings = {}, refObject = null) {
     // Use default browser tooltip on unsupported browsers
     if (!Browser.SUPPORTED) return
 
@@ -45,6 +46,8 @@ class Tippy {
     }
 
     this.selector = selector
+
+    this.refObject = refObject
 
     this.settings = { ...Defaults, ...settings }
 
@@ -130,7 +133,8 @@ class Tippy {
         flipDuration,
         duration,
         dynamicTitle
-      }
+      },
+      refObject
     } = data
 
     if (dynamicTitle) {
@@ -355,8 +359,8 @@ class Tippy {
   }
 }
 
-function tippy(selector, settings) {
-  return new Tippy(selector, settings)
+function tippy(selector, settings, refObject) {
+  return new Tippy(selector, settings, refObject)
 }
 
 tippy.Browser = Browser

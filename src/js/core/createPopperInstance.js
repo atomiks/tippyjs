@@ -21,7 +21,8 @@ export default function createPopperInstance(data) {
       offset,
       distance,
       flipDuration
-    }
+    },
+    refObject
   } = data
 
   const { tooltip } = getInnerElements(popper)
@@ -74,5 +75,12 @@ export default function createPopperInstance(data) {
     data._mutationObserver = observer
   }
 
-  return new Popper(el, popper, config)
+  //Update Popper's reference object if one is provided
+  if (refObject === null){
+    return new Popper(el, popper, config)
+  }
+  else {
+    return new Popper(refObject, popper, config)
+  }
+
 }
