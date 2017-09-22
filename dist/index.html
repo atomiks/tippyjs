@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Simple SIF Graph Generator</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="tippy.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <script type="text/javascript" src="j.js"></script>
+  <script type="text/javascript" src="tippy.js"></script>
+</head>
+
+<body>
+  <button id="cool" title="bye">Hi</button>
+  <button id="five" onClick="func()">Show</button>
+</body>
+<script>
+  var refObject = {
+    getBoundingClientRect: function () {
+      return {
+        top: 100 + window.pageYOffset,
+        left: 250 + window.pageXOffset,
+        right: 660 + window.pageXOffset,
+        bottom: 220 + window.pageYOffset,
+        width: 30,
+        height: 30,
+    };
+    },
+    get clientWidth() {
+      return 30;
+    },
+    get clientHeight() {
+      return 30;
+    },
+  };
+
+  var tip = tippy('#cool', {}, refObject);
+  function func() {
+    var el = document.querySelector('#cool')
+    var popper = tip.getPopperElement(el)
+    tip.show(popper, 800);
+  }
+
+</script>
+
+</html>

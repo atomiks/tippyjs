@@ -25,6 +25,8 @@ export default function createTooltips(els) {
         : getIndividualSettings(el, this.settings)
     )
 
+    const refObject = this.refObject
+
     const { html, trigger, touchHold } = settings
 
     const title = el.getAttribute('title')
@@ -49,7 +51,8 @@ export default function createTooltips(els) {
       popper,
       settings,
       listeners,
-      tippyInstance: this
+      tippyInstance: this,
+      refObject
     })
 
     idCounter++
