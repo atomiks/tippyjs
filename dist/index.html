@@ -15,10 +15,13 @@
 </head>
 
 <body>
-  <button id="cool" title="bye">Hi</button>
+  <div id="cool" title="bye"></div>
   <button id="five" onClick="func()">Show</button>
+  <button id="five" onClick="func2()">Delete</button>
 </body>
 <script>
+
+  //Reference object allows for custom positioning
   var refObject = {
     getBoundingClientRect: function (data) {
       return {
@@ -44,6 +47,12 @@
     var el = document.querySelector('#cool')
     var popper = tip.getPopperElement(el)
     tip.show(popper, 800);
+  }
+
+  function func2(){
+    var el = document.querySelector('#cool')
+    var popper = tip.getPopperElement(el)
+    tip.destroy(popper);
   }
 
 </script>

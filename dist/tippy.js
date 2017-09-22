@@ -3589,7 +3589,7 @@ function createTooltips(els) {
 /**
 * @param {String|Element|Element[]} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
-* @param {Object} refObject (optional) - overide for reference object
+* @param {Object} refObject (optional) - override for popper reference object
 */
 
 var Tippy = function () {
@@ -3610,9 +3610,6 @@ var Tippy = function () {
     this.selector = selector;
 
     this.refObject = refObject;
-
-    console.log(refObject);
-    console.log("rev4");
 
     this.settings = _extends$1({}, Defaults, settings);
 
