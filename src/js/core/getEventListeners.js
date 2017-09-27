@@ -13,16 +13,13 @@ import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiv
 */
 export default function getEventListeners(reference, popper, options) {
   const {
-    position,
     delay,
     duration,
     interactive,
     interactiveBorder,
-    distance,
     hideOnClick,
     trigger,
-    touchHold,
-    touchWait
+    touchHold
   } = options
 
   let showDelay, hideDelay
@@ -47,10 +44,11 @@ export default function getEventListeners(reference, popper, options) {
     }
   }
 
-  const show = event =>
+  const show = event => {
     this.callbacks.wait
       ? this.callbacks.wait.call(popper, _show, event)
       : _show()
+  }
 
   const hide = () => {
     clearTimeouts()
@@ -81,13 +79,13 @@ export default function getEventListeners(reference, popper, options) {
       ? hide()
       : show(event)
 
+    // iOS prevents click events from firing
     if (mouseenterTouch && browser.iOS && reference.click) {
       reference.click()
     }
   }
 
   const handleMouseleave = event => {
-
     // Don't fire 'mouseleave', use the 'touchend'
     if (
       event.type === 'mouseleave' &&
@@ -110,7 +108,7 @@ export default function getEventListeners(reference, popper, options) {
 
         const isOverPopper = closest(event.target, selectors.POPPER) === popper
         const isOverEl = closestTooltippedEl === reference
-        const isClickTriggered = trigger.indexOf('click') !== -1
+        const isClickTriggered = trigger.indexOf('click') > -1
         const isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== reference
 
         if (isOverOtherTooltippedEl) {

@@ -229,7 +229,7 @@ class Tippy {
     // Re-focus click-triggered html elements
     // and the tooltipped element IS in the viewport (otherwise it causes unsightly scrolling
     // if the tooltip is closed and the element isn't in the viewport anymore)
-    if (html && trigger.indexOf('click') !== -1 && elementIsInViewport(reference)) {
+    if (html && trigger.indexOf('click') > -1 && elementIsInViewport(reference)) {
       reference.focus()
     }
 
@@ -311,9 +311,12 @@ class Tippy {
     // Restore original title
     reference.setAttribute('title', reference.getAttribute('data-original-title'))
 
-    reference.removeAttribute('data-original-title')
-    reference.removeAttribute('x-tooltipped')
-    reference.removeAttribute('aria-describedby')
+    // Remove attributes
+    ;[
+      'data-original-title',
+      'x-tooltipped',
+      'aria-describedby'
+    ].forEach(attr => reference.removeAttribute(attr))
 
     popperInstance && popperInstance.destroy()
     _mutationObserver && _mutationObserver.disconnect()
