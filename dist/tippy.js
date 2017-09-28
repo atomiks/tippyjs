@@ -3729,6 +3729,8 @@ var Tippy = function () {
 
       // Wait for popper's position to update
       defer(function () {
+        if (!isVisible(popper)) return;
+
         // Sometimes the arrow will not be in the correct position, force another update
         if (!followCursor || Browser.touch) {
           data.popperInstance.update();
