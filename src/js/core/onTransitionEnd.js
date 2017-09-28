@@ -20,7 +20,6 @@ export default function onTransitionEnd(data, duration, callback) {
     if (e.target === tooltip && !transitionendFired) {
       transitionendFired = true
       callback()
-      console.log('ll')
     }
   }
 
@@ -35,5 +34,5 @@ export default function onTransitionEnd(data, duration, callback) {
       transitionendFired = true
       callback()
     }
-  }, duration + 1)
+  }, duration)
 }
