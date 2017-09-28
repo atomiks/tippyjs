@@ -9,7 +9,7 @@ import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiv
 * @param {Element} reference
 * @param {Element} popper
 * @param {Object} options
-* @return {Object} - relevant listener handlers
+* @return {Object} - relevant listeners
 */
 export default function getEventListeners(reference, popper, options) {
   const {

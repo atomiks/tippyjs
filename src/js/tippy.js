@@ -144,6 +144,8 @@ class Tippy {
 
     // Wait for popper's position to update
     defer(() => {
+      if (!isVisible(popper)) return
+
       // Sometimes the arrow will not be in the correct position, force another update
       if (!followCursor || browser.usingTouch) {
         data.popperInstance.update()

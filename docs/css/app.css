@@ -50,7 +50,9 @@ pre {
 }
 
 h2 {
-  margin-bottom: 1.25rem;
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 strong {

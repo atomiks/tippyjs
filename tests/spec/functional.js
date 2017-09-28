@@ -111,7 +111,7 @@ describe('core', () => {
       const el = createVirtualElement()
 
       const instance = tippy(el)
-      expect(el.hasAttribute('data-tooltipped')).toBe(true)
+      expect(el.hasAttribute('x-tooltipped')).toBe(true)
 
       instance.destroyAll()
     })
@@ -137,7 +137,7 @@ describe('core', () => {
       document.body.appendChild(el)
 
       const instance = tippy('.test')
-      expect(el.hasAttribute('data-tooltipped')).toBe(true)
+      expect(el.hasAttribute('x-tooltipped')).toBe(true)
 
       document.body.removeChild(el)
 
@@ -150,7 +150,7 @@ describe('core', () => {
 
       const instance = tippy(el)
 
-      expect(el.hasAttribute('data-tooltipped')).toBe(false)
+      expect(el.hasAttribute('x-tooltipped')).toBe(false)
 
       instance.destroyAll()
     })

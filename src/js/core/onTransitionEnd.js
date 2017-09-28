@@ -20,6 +20,7 @@ export default function onTransitionEnd(data, duration, callback) {
     if (e.target === tooltip && !transitionendFired) {
       transitionendFired = true
       callback()
+      console.log('ll')
     }
   }
 
@@ -31,7 +32,8 @@ export default function onTransitionEnd(data, duration, callback) {
   clearTimeout(data._transitionendTimeout)
   data._transitionendTimeout = setTimeout(() => {
     if (!transitionendFired) {
+      transitionendFired = true
       callback()
     }
-  }, duration)
+  }, duration + 1)
 }

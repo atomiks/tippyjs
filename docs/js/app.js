@@ -33,7 +33,7 @@ var instance = tippy('.tippy')
 instance.show(instance.getPopperElement($('#animated-tippy')))
 
 tippy('.flippy', {
-  position: 'right',
+  placement: 'right',
   animation: 'fade',
   arrow: true,
   popperOptions: {
