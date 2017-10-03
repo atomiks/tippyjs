@@ -471,15 +471,11 @@ function followCursorHandler(e) {
 
 /**
 * Returns an array of elements based on the selector input
-* @param {String|Element|Element[]|Object} selector
+* @param {String|Element|Element[]} selector
 * @return {Element[]}
 */
 function getArrayOfElements(selector) {
   if (selector instanceof Element) {
-    return [selector];
-  }
-
-  if (selector instanceof Object) {
     return [selector];
   }
 
@@ -529,7 +525,7 @@ function onTransitionEnd(data, duration, callback) {
 
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.12.5
+ * @version 1.12.4
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -869,18 +865,20 @@ var isIE10$1 = function isIE10$1() {
   return isIE10;
 };
 
-function getSize(axis, body, html, computedStyle) {
-  return Math.max(body['offset' + axis], body['scroll' + axis], html['client' + axis], html['offset' + axis], html['scroll' + axis], isIE10$1() ? html['offset' + axis] + computedStyle['margin' + (axis === 'Height' ? 'Top' : 'Left')] + computedStyle['margin' + (axis === 'Height' ? 'Bottom' : 'Right')] : 0);
+function getSize(axis, body, html, computedStyle, includeScroll) {
+  return Math.max(body['offset' + axis], includeScroll ? body['scroll' + axis] : 0, html['client' + axis], html['offset' + axis], includeScroll ? html['scroll' + axis] : 0, isIE10$1() ? html['offset' + axis] + computedStyle['margin' + (axis === 'Height' ? 'Top' : 'Left')] + computedStyle['margin' + (axis === 'Height' ? 'Bottom' : 'Right')] : 0);
 }
 
 function getWindowSizes() {
+  var includeScroll = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
   var body = window.document.body;
   var html = window.document.documentElement;
   var computedStyle = isIE10$1() && window.getComputedStyle(html);
 
   return {
-    height: getSize('Height', body, html, computedStyle),
-    width: getSize('Width', body, html, computedStyle)
+    height: getSize('Height', body, html, computedStyle, includeScroll),
+    width: getSize('Width', body, html, computedStyle, includeScroll)
   };
 }
 
@@ -1126,7 +1124,7 @@ function getBoundaries(popper, reference, padding, boundariesElement) {
 
     // In case of HTML, we need a different computation
     if (boundariesNode.nodeName === 'HTML' && !isFixed(offsetParent)) {
-      var _getWindowSizes = getWindowSizes(),
+      var _getWindowSizes = getWindowSizes(false),
           height = _getWindowSizes.height,
           width = _getWindowSizes.width;
 
@@ -2969,22 +2967,6 @@ function getOffsetDistanceInPx(distance) {
   return -(distance - Defaults.distance) + 'px';
 }
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
-
-
-
-
-
-
-
-
-
-
-
 var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -3042,8 +3024,7 @@ function createPopperInstance(data) {
       popperOptions = _data$settings.popperOptions,
       offset = _data$settings.offset,
       distance = _data$settings.distance,
-      flipDuration = _data$settings.flipDuration,
-      refObject = data.refObject;
+      flipDuration = _data$settings.flipDuration;
 
   var _getInnerElements = getInnerElements(popper),
       tooltip = _getInnerElements.tooltip;
@@ -3091,7 +3072,6 @@ function createPopperInstance(data) {
     data._mutationObserver = observer;
   }
 
-  //Update Popper's reference object if one is provided
   return new Popper(el, popper, config);
 }
 
@@ -3559,8 +3539,6 @@ function createTooltips(els) {
   return els.reduce(function (a, el) {
     var id = idCounter;
 
-    console.log(el);
-
     var settings = evaluateSettings(_this.settings.performance ? _this.settings : getIndividualSettings(el, _this.settings));
 
     var html = settings.html,
@@ -3576,7 +3554,6 @@ function createTooltips(els) {
     removeTitle(el);
 
     var popper = createPopperElement(id, title, settings);
-
     var handlers = getEventListenerHandlers.call(_this, el, popper, settings);
 
     var listeners = [];
@@ -3591,11 +3568,11 @@ function createTooltips(els) {
       popper: popper,
       settings: settings,
       listeners: listeners,
-      tippyInstance: _this,
-      refObject: refObject
+      tippyInstance: _this
     });
 
     idCounter++;
+
     return a;
   }, []);
 }
@@ -3605,7 +3582,6 @@ function createTooltips(els) {
 /**
 * @param {String|Element|Element[]} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
-* @param {Object} refObject (optional) - override for popper reference object
 */
 
 var Tippy = function () {
@@ -3620,31 +3596,7 @@ var Tippy = function () {
 
     this.state = {
       destroyed: false
-
-      //Determine if reference object was passed
-    };this.refObject = (typeof selector === 'undefined' ? 'undefined' : _typeof(selector)) === 'object';
-
-    if (this.refObject) {
-      var replacementObject = {
-        record: {},
-        getBoundingClientRect: selector.getBoundingClientRect,
-        clientWidth: selector.clientWidth,
-        clientHeight: selector.clientHeight,
-        setAttribute: function setAttribute(key, val) {
-          this.record[key] = val;
-        },
-        getAttribute: function getAttribute(key) {
-          return this.record[key];
-        },
-        removeAttribute: function removeAttribute(key) {
-          return this.record[key] = null;
-        },
-        addEventListener: function addEventListener(key, val) {},
-        removeEventListener: function removeEventListener(key) {}
-      };
-
-      selector = replacementObject;
-    }
+    };
 
     this.selector = selector;
 
@@ -3663,7 +3615,6 @@ var Tippy = function () {
     };
 
     this.store = createTooltips.call(this, getArrayOfElements(selector));
-
     Store.push.apply(Store, this.store);
   }
 
@@ -3740,18 +3691,11 @@ var Tippy = function () {
           circle = _getInnerElements.circle,
           content = _getInnerElements.content;
 
-      console.log(data);
-      console.log(popper);
-
-      if (!this.refObject && !document.body.contains(data.el)) {
+      if (!document.body.contains(data.el)) {
         this.destroy(popper);
-        this.mimicObject = true;
         return;
-      } else {
-        this.mimicObject = false;
       }
 
-      console.log(this.mimicObject);
       this.callbacks.show.call(popper);
 
       var el = data.el,
@@ -3785,6 +3729,8 @@ var Tippy = function () {
 
       // Wait for popper's position to update
       defer(function () {
+        if (!isVisible(popper)) return;
+
         // Sometimes the arrow will not be in the correct position, force another update
         if (!followCursor || Browser.touch) {
           data.popperInstance.update();
@@ -4017,8 +3963,8 @@ var Tippy = function () {
   return Tippy;
 }();
 
-function tippy$2(selector, settings, refObject) {
-  return new Tippy(selector, settings, refObject);
+function tippy$2(selector, settings) {
+  return new Tippy(selector, settings);
 }
 
 tippy$2.Browser = Browser;

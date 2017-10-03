@@ -120,9 +120,6 @@ class Tippy {
     const data = find(this.store, data => data.popper === popper)
     const { tooltip, circle, content } = getInnerElements(popper)
 
-    console.log(data);
-    console.log(popper);
-
     if (!this.refObject && !document.body.contains(data.el)) {
       this.destroy(popper)
       this.mimicObject = true;
@@ -132,7 +129,6 @@ class Tippy {
       this.mimicObject = false;
     }
 
-    console.log(this.mimicObject);
     this.callbacks.show.call(popper)
 
     const {
@@ -159,6 +155,7 @@ class Tippy {
     const _duration = customDuration !== undefined
       ? customDuration
       : Array.isArray(duration) ? duration[0] : duration
+
 
     // Prevent a transition when popper changes position
     applyTransitionDuration([popper, tooltip, circle], 0)
@@ -387,7 +384,13 @@ function tippy(selector, settings) {
       getAttribute: function (key) { return this.record[key] },
       removeAttribute: function (key) { return this.record[key] = null },
       addEventListener: function (key, val) { },
-      removeEventListener: function (key) { }
+      removeEventListener: function (key) { },
+      classList : {
+        recordC: {},
+        add : function (key) {this.recordC[key] = true},
+        remove : function (key) {this.recordC[key] = false; return true},
+        contains : function(key) {return this.recordC[key]}
+      }
     }
   }
 
@@ -400,3 +403,10 @@ tippy.disableDynamicInputDetection = () => Browser.dynamicInputDetection = false
 tippy.enableDynamicInputDetection = () => Browser.dynamicInputDetection = true
 
 export default tippy
+
+
+
+
+
+
+
