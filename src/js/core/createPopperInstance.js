@@ -76,11 +76,7 @@ export default function createPopperInstance(data) {
   }
 
   //Update Popper's reference object if one is provided
-  if (refObject === null){
-    return new Popper(el, popper, config)
-  }
-  else {
-    return new Popper(refObject, popper, config)
-  }
+  return new Popper(el, popper, config)
+
 
 }

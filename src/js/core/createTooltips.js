@@ -16,8 +16,11 @@ let idCounter = 1
 * @return {Object[]} Array of ref data objects
 */
 export default function createTooltips(els) {
+
   return els.reduce((a, el) => {
     const id = idCounter
+
+    console.log(el);
 
     const settings = evaluateSettings(
       this.settings.performance
@@ -25,18 +28,18 @@ export default function createTooltips(els) {
         : getIndividualSettings(el, this.settings)
     )
 
-    const refObject = this.refObject
-
     const { html, trigger, touchHold } = settings
-
+  
     const title = el.getAttribute('title')
     if (!title && !html) return a
 
     el.setAttribute('data-tooltipped', '')
     el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
     removeTitle(el)
+  
 
     const popper = createPopperElement(id, title, settings)
+
     const handlers = getEventListenerHandlers.call(this, el, popper, settings)
 
     let listeners = []
@@ -56,7 +59,6 @@ export default function createTooltips(els) {
     })
 
     idCounter++
-
     return a
   }, [])
 }
