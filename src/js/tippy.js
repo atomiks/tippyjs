@@ -8,31 +8,30 @@ import {
 import init from './core/init'
 
 /* Utility functions */
-import defer from './utils/defer'
-import prefix from './utils/prefix'
-import find from './utils/find'
-import findIndex from './utils/findIndex'
-import removeTitle from './utils/removeTitle'
-import elementIsInViewport from './utils/elementIsInViewport'
-import triggerReflow from './utils/triggerReflow'
-import modifyClassList from './utils/modifyClassList'
-import getInnerElements from './utils/getInnerElements'
+import defer                   from './utils/defer'
+import prefix                  from './utils/prefix'
+import find                    from './utils/find'
+import findIndex               from './utils/findIndex'
+import removeTitle             from './utils/removeTitle'
+import elementIsInViewport     from './utils/elementIsInViewport'
+import triggerReflow           from './utils/triggerReflow'
+import modifyClassList         from './utils/modifyClassList'
+import getInnerElements        from './utils/getInnerElements'
 import applyTransitionDuration from './utils/applyTransitionDuration'
-import isVisible from './utils/isVisible'
-import noop from './utils/noop'
+import isVisible               from './utils/isVisible'
+import noop                    from './utils/noop'
 
 /* Core library functions */
 import followCursorHandler from './core/followCursorHandler'
-import getArrayOfElements from './core/getArrayOfElements'
-import onTransitionEnd from './core/onTransitionEnd'
-import mountPopper from './core/mountPopper'
-import makeSticky from './core/makeSticky'
-import createTooltips from './core/createTooltips'
+import getArrayOfElements  from './core/getArrayOfElements'
+import onTransitionEnd     from './core/onTransitionEnd'
+import mountPopper         from './core/mountPopper'
+import makeSticky          from './core/makeSticky'
+import createTooltips      from './core/createTooltips'
 
 /**
 * @param {String|Element|Element[]} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
-* @param {Object} refObject (optional) - override for popper reference object
 */
 class Tippy {
   constructor(selector, settings = {}) {
@@ -44,9 +43,6 @@ class Tippy {
     this.state = {
       destroyed: false
     }
-
-    //Determine if reference object was passed
-    this.refObject = typeof selector === 'object' && !isElement(selector);
 
     this.selector = selector
 
@@ -67,10 +63,7 @@ class Tippy {
       hidden: settings.onHidden || settings.hidden || noop
     }
 
-
-
     this.store = createTooltips.call(this, getArrayOfElements(selector))
-
     Store.push.apply(Store, this.store)
   }
 
@@ -120,13 +113,9 @@ class Tippy {
     const data = find(this.store, data => data.popper === popper)
     const { tooltip, circle, content } = getInnerElements(popper)
 
-    if (!this.refObject && !document.body.contains(data.el)) {
+    if (!this.selector.refObj && !document.body.contains(data.el)) {
       this.destroy(popper)
-      this.mimicObject = true;
       return
-    }
-    else {
-      this.mimicObject = false;
     }
 
     this.callbacks.show.call(popper)
@@ -141,7 +130,7 @@ class Tippy {
         flipDuration,
         duration,
         dynamicTitle
-      },
+      }
     } = data
 
     if (dynamicTitle) {
@@ -156,7 +145,6 @@ class Tippy {
       ? customDuration
       : Array.isArray(duration) ? duration[0] : duration
 
-
     // Prevent a transition when popper changes position
     applyTransitionDuration([popper, tooltip, circle], 0)
 
@@ -167,6 +155,8 @@ class Tippy {
 
     // Wait for popper's position to update
     defer(() => {
+      if (!isVisible(popper)) return
+      
       // Sometimes the arrow will not be in the correct position, force another update
       if (!followCursor || Browser.touch) {
         data.popperInstance.update()
@@ -358,7 +348,7 @@ class Tippy {
 
     const storeLength = this.store.length
 
-    this.store.forEach(({ popper }, index) => {
+    this.store.forEach(({popper}, index) => {
       this.destroy(popper, index === storeLength - 1)
     })
 
@@ -371,11 +361,14 @@ function isElement(element) {
   return element instanceof Element;
 }
 
+
+
 function tippy(selector, settings) {
 
   //Create a virtual object for tippy
   if (typeof selector === 'object' && !isElement(selector)) {
     selector = {
+      refObj: true,
       record: {},
       getBoundingClientRect: selector.getBoundingClientRect,
       clientWidth: selector.clientWidth,
@@ -403,10 +396,3 @@ tippy.disableDynamicInputDetection = () => Browser.dynamicInputDetection = false
 tippy.enableDynamicInputDetection = () => Browser.dynamicInputDetection = true
 
 export default tippy
-
-
-
-
-
-
-
