@@ -1,0 +1,49 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/harshmistry/.nvm/versions/node/v6.11.3/bin/node',
+1 verbose cli   '/Users/harshmistry/.nvm/versions/node/v6.11.3/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'test' ]
+2 info using npm@3.10.10
+3 info using node@v6.11.3
+4 verbose run-script [ 'pretest', 'test', 'posttest' ]
+5 info lifecycle tippy.js@1.2.2~pretest: tippy.js@1.2.2
+6 silly lifecycle tippy.js@1.2.2~pretest: no script for pretest, continuing
+7 info lifecycle tippy.js@1.2.2~test: tippy.js@1.2.2
+8 verbose lifecycle tippy.js@1.2.2~test: unsafe-perm in lifecycle true
+9 verbose lifecycle tippy.js@1.2.2~test: PATH: /Users/harshmistry/.nvm/versions/node/v6.11.3/lib/node_modules/npm/bin/node-gyp-bin:/Users/harshmistry/Desktop/tippyjs/node_modules/.bin:/Users/harshmistry/.nvm/versions/node/v6.11.3/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+10 verbose lifecycle tippy.js@1.2.2~test: CWD: /Users/harshmistry/Desktop/tippyjs
+11 silly lifecycle tippy.js@1.2.2~test: Args: [ '-c',
+11 silly lifecycle   'rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js' ]
+12 silly lifecycle tippy.js@1.2.2~test: Returned: code: 1  signal: null
+13 info lifecycle tippy.js@1.2.2~test: Failed to exec test script
+14 verbose stack Error: tippy.js@1.2.2 test: `rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js`
+14 verbose stack Exit status 1
+14 verbose stack     at EventEmitter.<anonymous> (/Users/harshmistry/.nvm/versions/node/v6.11.3/lib/node_modules/npm/lib/utils/lifecycle.js:255:16)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at EventEmitter.emit (events.js:191:7)
+14 verbose stack     at ChildProcess.<anonymous> (/Users/harshmistry/.nvm/versions/node/v6.11.3/lib/node_modules/npm/lib/utils/spawn.js:40:14)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at ChildProcess.emit (events.js:191:7)
+14 verbose stack     at maybeClose (internal/child_process.js:920:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:230:5)
+15 verbose pkgid tippy.js@1.2.2
+16 verbose cwd /Users/harshmistry/Desktop/tippyjs
+17 error Darwin 16.7.0
+18 error argv "/Users/harshmistry/.nvm/versions/node/v6.11.3/bin/node" "/Users/harshmistry/.nvm/versions/node/v6.11.3/bin/npm" "run" "test"
+19 error node v6.11.3
+20 error npm  v3.10.10
+21 error code ELIFECYCLE
+22 error tippy.js@1.2.2 test: `rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js`
+22 error Exit status 1
+23 error Failed at the tippy.js@1.2.2 test script 'rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the tippy.js package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js
+23 error You can get information on how to open an issue for this project with:
+23 error     npm bugs tippy.js
+23 error Or if that isn't available, you can get their info via:
+23 error     npm owner ls tippy.js
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]

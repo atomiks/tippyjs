@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="222px" height="184px" viewBox="0 0 222 184" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Artboard</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="90.7780977" y="135.681765" width="40" height="40" rx="5"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="40" height="40" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <linearGradient x1="6.21993923%" y1="1.53665412%" x2="96.5620339%" y2="30.4905087%" id="linearGradient-3">
+            <stop stop-color="#A458FF" offset="0%"></stop>
+            <stop stop-color="#FFA887" offset="18.4490593%"></stop>
+            <stop stop-color="#FFDA90" offset="18.6084981%"></stop>
+            <stop stop-color="#FFFFFF" offset="53.7527902%"></stop>
+            <stop stop-color="#73FFD5" offset="53.7941586%"></stop>
+            <stop stop-color="#78FFD6" offset="55.7374589%"></stop>
+            <stop stop-color="#EDFFF6" offset="100%"></stop>
+            <stop stop-color="#96FFEF" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-4" x="0.0116328814" y="0.147055547" width="221.53293" height="157.580832" rx="20"></rect>
+        <mask id="mask-5" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="221.53293" height="157.580832" fill="white">
+            <use xlink:href="#path-4"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard">
+            <use id="Rectangle-3" stroke="#253B59" mask="url(#mask-2)" stroke-width="20" fill="#A1FFEE" transform="translate(110.778098, 155.681765) rotate(-315.000000) translate(-110.778098, -155.681765) " xlink:href="#path-1"></use>
+            <use id="Rectangle" stroke="#253B59" mask="url(#mask-5)" stroke-width="20" fill="url(#linearGradient-3)" xlink:href="#path-4"></use>
+            <ellipse id="Oval" fill="#243A59" cx="76.3220539" cy="78.8703424" rx="9.00019972" ry="8.90879267"></ellipse>
+            <ellipse id="Oval" fill="#243A59" cx="145.234142" cy="78.8703424" rx="9.00019972" ry="8.90879267"></ellipse>
+            <path d="M9.30051464,21.4264399 C9.30051464,18.5526104 11.0565568,14.6911723 13.2181501,12.8169312 C13.2181501,12.8169312 13.4934787,12.5583429 13.8003903,12.325077 C14.1073018,12.0918111 15.565069,11.1156541 15.565069,11.1156541 C17.8501321,9.56995953 19.7025418,10.551332 19.7025418,13.3266137 L19.7025418,144.650037 C19.7025418,147.416811 17.7825275,148.508293 15.4115838,147.086439 L13.7571778,146.094292 C11.2958307,144.618223 9.30051464,141.091533 9.30051464,138.218104 L9.30051464,21.4264399 Z" id="Rectangle" fill="#FFFFFF"></path>
+            <path d="M87.1387933,103.247251 C87.1387933,103.247251 107.917826,122.782037 134.417402,103.247251" id="Path-2" stroke="#253B59" stroke-width="10" stroke-linecap="round"></path>
+        </g>
+    </g>
+</svg>

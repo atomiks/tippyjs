@@ -1,0 +1,376 @@
+@mixin enter-transform ($position, $animation) {
+  @if ($animation == 'perspective') {
+    @if ($position == 'top') {
+      transform: translateY(-10px) rotateX(0);
+    } @else if ($position == 'bottom') {
+      transform: translateY(10px) rotateX(0);
+    } @else if ($position == 'left') {
+      transform: translateX(-10px) rotateY(0);
+    } @else if ($position == 'right') {
+      transform: translateX(10px) rotateY(0);
+    }
+  } @else if ($animation == 'fade') {
+    @if ($position == 'top') {
+      transform: translateY(-10px);
+    } @else if ($position == 'bottom') {
+      transform: translateY(10px);
+    } @else if ($position == 'left') {
+      transform: translateX(-10px);
+    } @else if ($position == 'right') {
+      transform: translateX(10px);
+    }
+  } @else if ($animation == 'scale') {
+    @if ($position == 'top') {
+      transform: translateY(-10px) scale(1);
+    } @else if ($position == 'bottom') {
+      transform: translateY(10px) scale(1);
+    } @else if ($position == 'left') {
+      transform: translateX(-10px) scale(1);
+    } @else if ($position == 'right') {
+      transform: translateX(10px) scale(1);
+    }
+  }
+}
+
+@mixin leave-transform ($position, $animation) {
+  @if ($animation == 'perspective') {
+    @if ($position == 'top') {
+      transform: translateY(0) rotateX(90deg);
+    } @else if ($position == 'bottom') {
+      transform: translateY(0) rotateX(-90deg);
+    } @else if ($position == 'left') {
+      transform: translateX(0) rotateY(-90deg);
+    } @else if ($position == 'right') {
+      transform: translateX(0) rotateY(90deg);
+    }
+  } @else if ($animation == 'shift') {
+    @if ($position == 'top') {
+      transform: translateY(0);
+    } @else if ($position == 'bottom') {
+      transform: translateY(0);
+    } @else if ($position == 'left') {
+      transform: translateX(0);
+    } @else if ($position == 'right') {
+      transform: translateX(0);
+    }
+  } @else if ($animation == 'scale') {
+    @if ($position == 'top') {
+      transform: translateY(0) scale(0);
+    } @else if ($position == 'bottom') {
+      transform: translateY(0) scale(0);
+    } @else if ($position == 'left') {
+      transform: translateX(0) scale(0);
+    } @else if ($position == 'right') {
+      transform: translateX(0) scale(0);
+    }
+  } @else if ($animation == 'none') {
+    @if ($position == 'top') {
+      transform: translateY(-10px);
+    } @else if ($position == 'bottom') {
+      transform: translateY(10px);
+    } @else if ($position == 'left') {
+      transform: translateX(-10px);
+    } @else if ($position == 'right') {
+      transform: translateX(10px);
+    }
+  }
+}
+
+@mixin circle-transform-enter ($position) {
+  $scale: 1;
+  @if ($position == 'top') {
+    transform: scale($scale) translate(-50%, -55%);
+  } @else if ($position == 'bottom') {
+    transform: scale($scale) translate(-50%, -45%);
+  } @else if ($position == 'left') {
+    transform: scale($scale) translate(-50%, -50%);
+  } @else if ($position == 'right') {
+    transform: scale($scale) translate(-50%, -50%);
+  }
+}
+
+@mixin circle-transform-leave ($position) {
+  $scale: 0.15;
+  @if ($position == 'top') {
+    transform: scale($scale) translate(-50%, -50%);
+  } @else if ($position == 'bottom') {
+    transform: scale($scale) translate(-50%, -5%);
+  } @else if ($position == 'left') {
+    transform: scale($scale) translate(-50%, -50%);
+  } @else if ($position == 'right') {
+    transform: scale($scale) translate(-50%, -50%);
+  }
+}
+
+@mixin arrow ($position, $width, $color) {
+  @if ($position == 'top') {
+    border-top: $width solid $color;
+    border-right: $width solid transparent;
+    border-left: $width solid transparent;
+  } @else if ($position == 'bottom') {
+    border-bottom: $width solid $color;
+    border-right: $width solid transparent;
+    border-left: $width solid transparent;
+  } @else if ($position == 'left') {
+    border-left: $width solid $color;
+    border-top: $width solid transparent;
+    border-bottom: $width solid transparent;
+  } @else if ($position == 'right') {
+    border-right: $width solid $color;
+    border-top: $width solid transparent;
+    border-bottom: $width solid transparent;
+  }
+}
+
+@mixin arrow-position ($position, $width) {
+  @if ($position == 'top') {
+    bottom: -$width;
+  } @else if ($position == 'bottom') {
+    top: -$width;
+  } @else if ($position == 'left') {
+    right: -$width;
+  } @else if ($position == 'right') {
+    left: -$width;
+  }
+}
+
+@mixin arrow-margin ($position) {
+  @if ($position == 'top' or $position == 'bottom') {
+    margin: 0 9px;
+  } @else {
+    margin: 6px 0;
+  }
+}
+
+$positions: 'top', 'bottom', 'left', 'right';
+$origins: bottom, top, right, left;
+$circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
+
+.tippy-touch {
+  cursor: pointer !important;
+}
+
+.tippy-notransition {
+  transition: none !important;
+}
+
+.tippy-popper {
+  max-width: 400px;
+  perspective: 800px;
+  z-index: 9999;
+  outline: 0;
+  transition-timing-function: cubic-bezier(.165, .84, .44, 1);
+  pointer-events: none;
+
+  &.html-template {
+    max-width: 96%;
+    max-width: calc(100% - 20px);
+  }
+
+  @each $position in $positions {
+    &[x-placement^=#{$position}] {
+
+      [x-arrow] {
+        @include arrow($position, 7px, #333);
+        @include arrow-position($position, 7px);
+        @include arrow-margin($position);
+
+        &.arrow-small {
+          @include arrow($position, 5px, #333);
+          @include arrow-position($position, 5px);
+        }
+
+        &.arrow-big {
+          @include arrow($position, 10px, #333);
+          @include arrow-position($position, 10px);
+        }
+      }
+
+      [x-circle] {
+        transform-origin: nth($circle-origins, index($positions, $position));
+
+        &.enter {
+          @include circle-transform-enter($position);
+          opacity: 1;
+        }
+
+        &.leave {
+          @include circle-transform-leave($position);
+          opacity: 0;
+        }
+      }
+
+      .tippy-tooltip.light-theme {
+        [x-circle] {
+          background-color: white;
+        }
+        [x-arrow] {
+          @include arrow($position, 7px, white);
+
+          &.arrow-small {
+            @include arrow($position, 5px, white);
+          }
+
+          &.arrow-big {
+            @include arrow($position, 10px, white);
+          }
+        }
+      }
+
+      .tippy-tooltip.transparent-theme {
+        [x-circle] {
+          background-color: rgba(0,0,0,0.7);
+        }
+        [x-arrow] {
+          @include arrow($position, 7px, rgba(0,0,0,0.7));
+
+          &.arrow-small {
+            @include arrow($position, 5px, rgba(0,0,0,0.7));
+          }
+
+          &.arrow-big {
+            @include arrow($position, 10px, rgba(0,0,0,0.7));
+          }
+        }
+      }
+
+      [data-animation=perspective] {
+        transform-origin: nth($origins, index($positions, $position));
+
+        &.enter {
+          opacity: 1;
+          @include enter-transform($position, 'perspective');
+        }
+
+        &.leave {
+          opacity: 0;
+          @include leave-transform($position, 'perspective');
+        }
+      }
+
+      [data-animation=fade] {
+        &.enter {
+          opacity: 1;
+          @include enter-transform($position, 'fade')
+        }
+        &.leave {
+          opacity: 0;
+          @include enter-transform($position, 'fade')
+        }
+      }
+
+      [data-animation=shift] {
+        &.enter {
+          opacity: 1;
+          @include enter-transform($position, 'fade')
+        }
+        &.leave {
+          opacity: 0;
+          @include leave-transform($position, 'shift')
+        }
+      }
+
+      [data-animation=scale] {
+        &.enter {
+          opacity: 1;
+          @include enter-transform($position, 'scale')
+        }
+        &.leave {
+          opacity: 0;
+          @include leave-transform($position, 'scale')
+        }
+      }
+
+    }
+  }
+
+  .tippy-tooltip.transparent-theme {
+    background-color: rgba(0,0,0,0.7);
+
+    &[data-animatefill] {
+      background-color: transparent;
+    }
+  }
+
+  .tippy-tooltip.light-theme {
+    color: #26323d;
+    box-shadow: 0 4px 20px 4px rgba(0, 20, 60, 0.1),
+    0 4px 80px -8px rgba(0, 20, 60, 0.2);
+    background-color: white;
+
+    &[data-animatefill] {
+      background-color: transparent;
+    }
+  }
+}
+
+.tippy-tooltip {
+  position: relative;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.8rem;
+  text-align: center;
+  will-change: transform;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #333;
+
+  &--small {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  &--big {
+    padding: 0.6rem 1.2rem;
+    font-size: 1.2rem;
+  }
+
+  &[data-animatefill] {
+    overflow: hidden;
+    background-color: transparent;
+  }
+
+  &[data-interactive] {
+    pointer-events: auto;
+  }
+
+  &[data-inertia] {
+    // Safari/Webkit can't go out of range
+    -webkit-transition-timing-function: cubic-bezier(.53,1,.36,.85);
+    transition-timing-function: cubic-bezier(.53,2,.36,.85);
+  }
+
+  [x-arrow] {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  [x-circle] {
+    position: absolute;
+    will-change: transform;
+    background-color: #333;
+    border-radius: 50%;
+    width: 130%;
+    width: calc(110% + 2rem);
+    left: 50%;
+    top: 50%;
+    z-index: -1;
+    overflow: hidden;
+    transition: all ease;
+
+    &::before {
+      content: '';
+      padding-top: 90%;
+      float: left;
+    }
+  }
+}
+
+@media (max-width: 450px) {
+  .tippy-popper {
+    max-width: 96%;
+    max-width: calc(100% - 20px);
+  }
+}
