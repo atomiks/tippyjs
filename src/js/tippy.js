@@ -10,6 +10,7 @@ import findIndex               from './utils/findIndex'
 import removeTitle             from './utils/removeTitle'
 import elementIsInViewport     from './utils/elementIsInViewport'
 import triggerReflow           from './utils/triggerReflow'
+import setVisibilityState      from './utils/setVisibilityState'
 import getInnerElements        from './utils/getInnerElements'
 import applyTransitionDuration from './utils/applyTransitionDuration'
 import isVisible               from './utils/isVisible'
@@ -117,18 +118,9 @@ class Tippy {
         interactive,
         followCursor,
         flipDuration,
-        duration,
-        dynamicTitle
+        duration
       }
     } = data
-
-    if (dynamicTitle) {
-      const title = reference.getAttribute('title')
-      if (title) {
-        content.innerHTML = title
-        removeTitle(reference)
-      }
-    }
 
     const _duration = customDuration !== undefined
       ? customDuration
@@ -142,8 +134,12 @@ class Tippy {
     popper.style.visibility = 'visible'
     popper.setAttribute('aria-hidden', 'false')
 
-    // Wait for popper's position to update
+    // Wait for popper's position to update by deferring the callback, so
+    // that the position update doesn't transition, only the normal animation
     defer(() => {
+      // ~20ms can elapse before this defer callback is run, so the hide() method
+      // may have been invoked -- check if the popper is still visible and cancel
+      // this callback if not
       if (!isVisible(popper)) return
 
       // Sometimes the arrow will not be in the correct position, force another update
@@ -167,8 +163,7 @@ class Tippy {
       // Repaint/reflow is required for CSS transition when appending
       triggerReflow(tooltip, circle)
 
-      tooltip.setAttribute('x-state', 'visible')
-      circle && circle.setAttribute('x-state', 'visible')
+      setVisibilityState([tooltip, circle], 'visible')
 
       // Wait for transitions to complete
       onTransitionEnd(data, _duration, () => {
@@ -225,8 +220,7 @@ class Tippy {
 
     if (circle) content.style.opacity = 0
 
-    tooltip.setAttribute('x-state', 'hidden')
-    circle && circle.setAttribute('x-state', 'hidden')
+    setVisibilityState([tooltip, circle], 'hidden')
 
     // Re-focus click-triggered html elements
     // and the tooltipped element IS in the viewport (otherwise it causes unsightly scrolling
@@ -263,7 +257,6 @@ class Tippy {
     if (this.state.destroyed) return
 
     const data = find(this.store, data => data.popper === popper)
-
     const { content } = getInnerElements(popper)
 
     const {
@@ -299,7 +292,7 @@ class Tippy {
       reference,
       popperInstance,
       listeners,
-      _mutationObserver
+      _mutationObservers
     } = data
 
     // Ensure the popper is hidden
@@ -307,23 +300,28 @@ class Tippy {
       this.hide(popper, 0)
     }
 
-    // Remove Tippy-only event listeners from tooltipped element
-    listeners.forEach(listener => reference.removeEventListener(listener.event, listener.handler))
+    listeners.forEach(listener => {
+      reference.removeEventListener(listener.event, listener.handler)
+    })
 
-    // Restore original title
     reference.setAttribute('title', reference.getAttribute('data-original-title'))
 
-    // Remove attributes
+    delete reference._tippy
+
     ;[
       'data-original-title',
       'x-tooltipped',
       'aria-describedby'
-    ].forEach(attr => reference.removeAttribute(attr))
+    ].forEach(attr => {
+      reference.removeAttribute(attr)
+    })
 
     popperInstance && popperInstance.destroy()
-    _mutationObserver && _mutationObserver.disconnect()
 
-    // Remove from store
+    _mutationObservers.forEach(observer => {
+      observer && observer.disconnect()
+    })
+
     store.splice(findIndex(store, data => data.popper === popper), 1)
 
     // Ensure filter is called only once

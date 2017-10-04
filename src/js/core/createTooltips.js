@@ -1,10 +1,11 @@
-import getIndividualOptions     from './getIndividualOptions'
-import createPopperElement      from './createPopperElement'
-import createTrigger            from './createTrigger'
-import getEventListeners        from './getEventListeners'
-import evaluateOptions          from './evaluateOptions'
+import getIndividualOptions from './getIndividualOptions'
+import createPopperElement  from './createPopperElement'
+import createTrigger        from './createTrigger'
+import getEventListeners    from './getEventListeners'
+import evaluateOptions      from './evaluateOptions'
 
-import removeTitle from '../utils/removeTitle'
+import removeTitle      from '../utils/removeTitle'
+import getInnerElements from '../utils/getInnerElements'
 
 let idCounter = 1
 
@@ -23,7 +24,12 @@ export default function createTooltips(els) {
         : getIndividualOptions(reference, this.options)
     )
 
-    const { html, trigger, touchHold } = options
+    const {
+      html,
+      trigger,
+      touchHold,
+      dynamicTitle
+    } = options
 
     const title = reference.getAttribute('title')
     if (!title && !html) return acc
@@ -43,21 +49,39 @@ export default function createTooltips(els) {
         )
     )
 
-    acc.push({
-      id,
-      reference,
-      popper,
-      options,
-      listeners,
-      tippyInstance: this
-    })
-
     // Add _tippy instance to reference element. Allows easy access to
     // methods when the instance only has one tooltip
     reference._tippy = this
 
     // Allow easy access to the popper's reference element
     popper._reference = reference
+
+    let titleMutationObserver
+
+    // Update tooltip content whenever the title attribute changes
+    if (dynamicTitle && window.MutationObserver) {
+      const { content } = getInnerElements(popper)
+
+      titleMutationObserver = new MutationObserver(() => {
+        const title = reference.getAttribute('title')
+        if (title) {
+          content.innerHTML = title
+          removeTitle(reference)
+        }
+      })
+
+      titleMutationObserver.observe(reference, { attributes: true })
+    }
+
+    acc.push({
+      id,
+      reference,
+      popper,
+      options,
+      listeners,
+      tippyInstance: this,
+      _mutationObservers: [titleMutationObserver]
+    })
 
     idCounter++
 
