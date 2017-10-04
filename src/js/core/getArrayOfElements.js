@@ -12,5 +12,10 @@ export default function getArrayOfElements(selector) {
     return selector
   }
 
+  if (typeof selector == 'object' && ! (selector instanceof Element)){
+    return [selector]
+  }
+
+
   return [].slice.call(document.querySelectorAll(selector))
 }
