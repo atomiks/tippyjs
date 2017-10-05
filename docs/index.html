@@ -128,10 +128,9 @@
             <h4>Dynamic input detection</h4>
             <p>
                 For certain options to work reliably depending on the type of user input (such as mouse or touch),
-                dynamic input detection is enabled by default. This is only available in v1.0.0+. This can be disabled and enabled at any time via:
+                dynamic input detection is enabled by default. To disable this behavior, set <code>dynamicInputDetection</code> to <code>false</code>:
 
-<pre><code class="language-javascript">tippy.enableDynamicInputDetection()
-tippy.disableDynamicInputDetection()</code></pre>
+<pre><code class="language-javascript">tippy.browser.dynamicInputDetection = false</code></pre>
             </p>
 
             <p>To see Tippy's <code>browser</code> settings:

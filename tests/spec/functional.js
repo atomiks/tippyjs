@@ -70,21 +70,6 @@ describe('core', () => {
       })
     })
 
-    describe('tippy.disableDynamicInputDetection', () => {
-      it('changes browser.dynamicInputDetection to be false', () => {
-        tippy.disableDynamicInputDetection()
-        expect(tippy.browser.dynamicInputDetection).toBe(false)
-      })
-    })
-
-    describe('tippy.enableDynamicInputDetection', () => {
-      it('changes browser.dynamicInputDetection to be true', () => {
-        tippy.disableDynamicInputDetection()
-        tippy.enableDynamicInputDetection()
-        expect(tippy.browser.dynamicInputDetection).toBe(true)
-      })
-    })
-
     it('does not mutate the default options', () => {
       const optionsClone = { ...defaults }
 

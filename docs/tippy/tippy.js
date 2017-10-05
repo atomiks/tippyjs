@@ -310,6 +310,18 @@ function triggerReflow(tooltip, circle) {
   circle ? window.getComputedStyle(circle)[prefix('transform')] : window.getComputedStyle(tooltip).opacity;
 }
 
+/**
+* Sets the visibility state of an element for transition to begin
+* @param {Element[]} els - array of elements
+* @param {String} type - 'visible' or 'hidden'
+*/
+function setVisibilityState(els, type) {
+  els.forEach(function (el) {
+    if (!el) return;
+    el.setAttribute('x-state', type);
+  });
+}
+
 function getInnerElements(popper) {
   return {
     tooltip: popper.querySelector(selectors.TOOLTIP),
@@ -442,7 +454,6 @@ function onTransitionEnd(data, duration, callback) {
     if (e.target === tooltip && !transitionendFired) {
       transitionendFired = true;
       callback();
-      console.log('ll');
     }
   };
 
@@ -457,7 +468,7 @@ function onTransitionEnd(data, duration, callback) {
       transitionendFired = true;
       callback();
     }
-  }, duration + 1);
+  }, duration);
 }
 
 /**!
@@ -3004,7 +3015,7 @@ function createPopperInstance(data) {
       characterData: true
     });
 
-    data._mutationObserver = observer;
+    data._mutationObservers.push(observer);
   }
 
   return new Popper(reference, popper, config);
@@ -3430,7 +3441,8 @@ function createTooltips(els) {
 
     var html = options.html,
         trigger = options.trigger,
-        touchHold = options.touchHold;
+        touchHold = options.touchHold,
+        dynamicTitle = options.dynamicTitle;
 
 
     var title = reference.getAttribute('title');
@@ -3449,21 +3461,40 @@ function createTooltips(els) {
       return listeners = listeners.concat(createTrigger(event, reference, handlers, touchHold));
     });
 
-    acc.push({
-      id: id,
-      reference: reference,
-      popper: popper,
-      options: options,
-      listeners: listeners,
-      tippyInstance: _this
-    });
-
     // Add _tippy instance to reference element. Allows easy access to
     // methods when the instance only has one tooltip
     reference._tippy = _this;
 
     // Allow easy access to the popper's reference element
     popper._reference = reference;
+
+    var titleMutationObserver = void 0;
+
+    // Update tooltip content whenever the title attribute changes
+    if (dynamicTitle && window.MutationObserver) {
+      var _getInnerElements = getInnerElements(popper),
+          content = _getInnerElements.content;
+
+      titleMutationObserver = new MutationObserver(function () {
+        var title = reference.getAttribute('title');
+        if (title) {
+          content.innerHTML = title;
+          removeTitle(reference);
+        }
+      });
+
+      titleMutationObserver.observe(reference, { attributes: true });
+    }
+
+    acc.push({
+      id: id,
+      reference: reference,
+      popper: popper,
+      options: options,
+      listeners: listeners,
+      tippyInstance: _this,
+      _mutationObservers: [titleMutationObserver]
+    });
 
     idCounter++;
 
@@ -3607,17 +3638,8 @@ var Tippy = function () {
           interactive = _data$options.interactive,
           followCursor = _data$options.followCursor,
           flipDuration = _data$options.flipDuration,
-          duration = _data$options.duration,
-          dynamicTitle = _data$options.dynamicTitle;
+          duration = _data$options.duration;
 
-
-      if (dynamicTitle) {
-        var title = reference.getAttribute('title');
-        if (title) {
-          content.innerHTML = title;
-          removeTitle(reference);
-        }
-      }
 
       var _duration = customDuration !== undefined ? customDuration : Array.isArray(duration) ? duration[0] : duration;
 
@@ -3629,8 +3651,12 @@ var Tippy = function () {
       popper.style.visibility = 'visible';
       popper.setAttribute('aria-hidden', 'false');
 
-      // Wait for popper's position to update
+      // Wait for popper's position to update by deferring the callback, so
+      // that the position update doesn't transition, only the normal animation
       defer(function () {
+        // ~20ms can elapse before this defer callback is run, so the hide() method
+        // may have been invoked -- check if the popper is still visible and cancel
+        // this callback if not
         if (!isVisible(popper)) return;
 
         // Sometimes the arrow will not be in the correct position, force another update
@@ -3654,8 +3680,7 @@ var Tippy = function () {
         // Repaint/reflow is required for CSS transition when appending
         triggerReflow(tooltip, circle);
 
-        tooltip.setAttribute('x-state', 'visible');
-        circle && circle.setAttribute('x-state', 'visible');
+        setVisibilityState([tooltip, circle], 'visible');
 
         // Wait for transitions to complete
         onTransitionEnd(data, _duration, function () {
@@ -3722,8 +3747,7 @@ var Tippy = function () {
 
       if (circle) content.style.opacity = 0;
 
-      tooltip.setAttribute('x-state', 'hidden');
-      circle && circle.setAttribute('x-state', 'hidden');
+      setVisibilityState([tooltip, circle], 'hidden');
 
       // Re-focus click-triggered html elements
       // and the tooltipped element IS in the viewport (otherwise it causes unsightly scrolling
@@ -3804,7 +3828,7 @@ var Tippy = function () {
       var reference = data.reference,
           popperInstance = data.popperInstance,
           listeners = data.listeners,
-          _mutationObserver = data._mutationObserver;
+          _mutationObservers = data._mutationObservers;
 
       // Ensure the popper is hidden
 
@@ -3812,23 +3836,22 @@ var Tippy = function () {
         this.hide(popper, 0);
       }
 
-      // Remove Tippy-only event listeners from tooltipped element
       listeners.forEach(function (listener) {
-        return reference.removeEventListener(listener.event, listener.handler);
+        reference.removeEventListener(listener.event, listener.handler);
       });
 
-      // Restore original title
-      reference.setAttribute('title', reference.getAttribute('data-original-title'))
+      reference.setAttribute('title', reference.getAttribute('data-original-title'));
 
-      // Remove attributes
-      ;['data-original-title', 'x-tooltipped', 'aria-describedby'].forEach(function (attr) {
-        return reference.removeAttribute(attr);
+      delete reference._tippy;['data-original-title', 'x-tooltipped', 'aria-describedby'].forEach(function (attr) {
+        reference.removeAttribute(attr);
       });
 
       popperInstance && popperInstance.destroy();
-      _mutationObserver && _mutationObserver.disconnect();
 
-      // Remove from store
+      _mutationObservers.forEach(function (observer) {
+        observer && observer.disconnect();
+      });
+
       store.splice(findIndex(store, function (data) {
         return data.popper === popper;
       }), 1);
@@ -3873,12 +3896,6 @@ function tippy$2(selector, options) {
 
 tippy$2.browser = browser;
 tippy$2.defaults = defaults;
-tippy$2.disableDynamicInputDetection = function () {
-  return browser.dynamicInputDetection = false;
-};
-tippy$2.enableDynamicInputDetection = function () {
-  return browser.dynamicInputDetection = true;
-};
 
 return tippy$2;
 
