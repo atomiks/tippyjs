@@ -19,11 +19,13 @@ export default function createTooltips(els) {
   return els.reduce((a, el) => {
     const id = idCounter
 
-    const settings = evaluateSettings(
+    const settings = Object.assign({}, evaluateSettings(
       this.settings.performance
         ? this.settings
         : getIndividualSettings(el, this.settings)
-    )
+    ))
+    
+    if (typeof settings.html === 'function') settings.html = settings.html(el)
 
     const { html, trigger, touchHold } = settings
 
