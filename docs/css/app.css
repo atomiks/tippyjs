@@ -64,6 +64,16 @@ h5 {
   margin: 0;
 }
 
+.underline {
+  text-decoration: underline;
+  font-size: 1.2rem;
+  margin: 2rem 0 0;
+}
+
+.underline a {
+  color: #bef9ff;
+}
+
 .alert.alert-info {
   color: #0085ff;
   background-color: #f5fcff;

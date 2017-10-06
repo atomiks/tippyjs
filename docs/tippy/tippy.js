@@ -3561,26 +3561,6 @@ var Tippy = function () {
     }
 
     /**
-    * Returns a popper's reference element
-    * @param {Element} popper
-    * @return {Element}
-    */
-
-  }, {
-    key: 'getReferenceElement',
-    value: function getReferenceElement() {
-      var popper = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.store[0].popper;
-
-      try {
-        return find(this.store, function (data) {
-          return data.popper === popper;
-        }).reference;
-      } catch (e) {
-        console.error('[getReferenceElement]: Popper passed as the argument does not exist in the instance');
-      }
-    }
-
-    /**
     * Returns the reference data object from either the reference element or popper element
     * @param {Element} x (reference element or popper)
     * @return {Object}
@@ -3770,39 +3750,6 @@ var Tippy = function () {
 
         _this2.callbacks.hidden.call(popper);
       });
-    }
-
-    /**
-    * Updates a popper with new content
-    * @param {Element} popper
-    */
-
-  }, {
-    key: 'update',
-    value: function update() {
-      var popper = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.store[0].popper;
-
-      if (this.state.destroyed) return;
-
-      var data = find(this.store, function (data) {
-        return data.popper === popper;
-      });
-
-      var _getInnerElements3 = getInnerElements(popper),
-          content = _getInnerElements3.content;
-
-      var reference = data.reference,
-          html = data.options.html;
-
-
-      if (html instanceof Element) {
-        console.warn('Aborted: update() should not be used if `html` is a DOM element');
-        return;
-      }
-
-      content.innerHTML = html ? document.getElementById(html.replace('#', '')).innerHTML : reference.getAttribute('title') || reference.getAttribute('data-original-title');
-
-      if (!html) removeTitle(reference);
     }
 
     /**

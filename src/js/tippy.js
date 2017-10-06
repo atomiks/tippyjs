@@ -70,19 +70,6 @@ class Tippy {
   }
 
   /**
-  * Returns a popper's reference element
-  * @param {Element} popper
-  * @return {Element}
-  */
-  getReferenceElement(popper = this.store[0].popper) {
-    try {
-      return find(this.store, data => data.popper === popper).reference
-    } catch (e) {
-      console.error('[getReferenceElement]: Popper passed as the argument does not exist in the instance')
-    }
-  }
-
-  /**
   * Returns the reference data object from either the reference element or popper element
   * @param {Element} x (reference element or popper)
   * @return {Object}
@@ -247,35 +234,6 @@ class Tippy {
 
       this.callbacks.hidden.call(popper)
     })
-  }
-
-  /**
-  * Updates a popper with new content
-  * @param {Element} popper
-  */
-  update(popper = this.store[0].popper) {
-    if (this.state.destroyed) return
-
-    const data = find(this.store, data => data.popper === popper)
-    const { content } = getInnerElements(popper)
-
-    const {
-      reference,
-      options: {
-        html
-      }
-    } = data
-
-    if (html instanceof Element) {
-      console.warn('Aborted: update() should not be used if `html` is a DOM element')
-      return
-    }
-
-    content.innerHTML = html
-      ? document.getElementById(html.replace('#', '')).innerHTML
-      : reference.getAttribute('title') || reference.getAttribute('data-original-title')
-
-    if (!html) removeTitle(reference)
   }
 
   /**

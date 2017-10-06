@@ -43,6 +43,7 @@
                aria-label="Star atomiks/tippyjs on GitHub">Star</a>
           </small>
         </div>
+        <p class="underline"><a href="#">Switch to V1 docs</a></p>
       </div>
     </header>
     <main>
@@ -53,54 +54,28 @@
             <h5 class="text-center text-muted feat-helper-text"><span class="hidden-md-down">Hover your cursor over the buttons to see Tippy in action!</span><span class="hidden-lg-up">Tap the buttons to see Tippy in action!</span></h5>
             <div class="button-showcase d-flex justify-content-center flex-wrap">
               <button class="btn tippy" title="I'm the default tooltip!"><i class="material-icons icon-left">remove</i>Default</button>
-
               <button class="btn tippy" title="Look at me on the bottom! 🙃" data-tippy-animatefill="false" data-tippy-placement="bottom"><i class="material-icons icon-left">compare_arrows</i>Placement</button>
-
               <button class="btn tippy" title="I have a nice pointy arrow. 👆" data-tippy-arrow="true" data-tippy-animation="fade"><i class="material-icons icon-left">play_arrow</i>Arrows</button>
-
               <button class="btn tippy" title="You can interact with me as much as you like!" data-tippy-interactive="true" data-tippy-interactiveborder="10"><i class="material-icons icon-left">pan_tool</i> Interactivity</button>
-
               <button class="btn tippy" title="Thanks for clicking!" data-tippy-trigger="click"><i class="material-icons icon-left">touch_app</i>Triggers <small class="opacity-low">(click)</small></button>
-
               <button class="btn tippy" title="I'm a light 💡 theme!" data-tippy-theme="light" data-tippy-arrow="true" data-tippy-animatefill="false"><i class="material-icons icon-left">brush</i>Themes</button>
-
               <button class="btn tippy" title="I scaled from nothingness..." data-tippy-animation="scale" data-tippy-animatefill="false"><i class="material-icons icon-left">loupe</i>Scale animation</button>
-
               <button class="btn tippy" title="Just a fade!" data-tippy-animation="fade" data-tippy-animatefill="false"><i class="material-icons icon-left">blur_on</i>Fade animation</button>
-
               <button class="btn tippy" title="Rise or fall" data-tippy-animatefill="false"><i class="material-icons icon-left">keyboard_arrow_up</i>Shift animation</button>
-
               <button class="btn tippy" title="Am I fancy enough for you?" data-tippy-animation="perspective" data-tippy-animatefill="false"><i class="material-icons icon-left">panorama_horizontal</i>Perspective animation</button>
-
               <button class="btn tippy" title="Sorry for making you wait" data-tippy-delay="[600, 200]"><i class="material-icons icon-left">timer</i>Delay</button>
-
               <button class="btn tippy" title="BAM! 😱" data-tippy-duration="0"><i class="material-icons icon-left">flash_on</i>Instant</button>
-
               <button class="btn tippy" title="Physics, bitch" data-tippy-inertia="true" data-tippy-duration="[600,400]" data-tippy-animation="scale" data-tippy-animatefill="false"><i class="material-icons icon-left">blur_linear</i>Inertia</button>
-
               <button class="btn tippy" title="By default, hide duration is the same as show" data-tippy-duration="1000" data-tippy-animatefill="false" data-tippy-animation="fade"><i class="material-icons icon-left">timer_3</i>Duration</button>
-
               <button class="btn" id="callback-tippy" title="Call ya back!"><i class="material-icons icon-left">call</i>Callbacks</button>
-
               <button class="btn tippy" id="html-tippy" data-tippy-distance="15" data-tippy-theme="light" data-tippy-animation="scale" data-tippy-arrowsize="large" data-tippy-trigger="click" data-tippy-interactive="true" data-tippy-animatefill="false" data-tippy-arrow="true"><i class="material-icons icon-left">code</i>Popover HTML <small class="opacity-low">(click)</small></button>
-
               <button class="btn tippy" title="I'll follow your mouse cursor!" data-tippy-followcursor="true" data-tippy-animation="scale" data-tippy-arrow="true"><i class="material-icons icon-left">mouse</i>Follow cursor</button>
-
               <button class="btn flippy" title="I'll flip to the bottom if there's not enough room on the right."><i class="material-icons icon-left">flip</i>Custom flips</button>
-
               <button class="btn tippy" title="I'm just a cute little tooltip" data-tippy-theme="transparent" data-tippy-size="small">Small</button>
-
               <button class="btn tippy" title="I'm a big scary tooltip" data-tippy-theme="transparent" data-tippy-size="large">Large</button>
-
               <button class="btn tippy" id="animated-tippy" title="Sticky tooltip! Click my element to hide me." data-tippy-theme="transparent" data-tippy-sticky="true" data-tippy-hideonclick="false" data-tippy-trigger="click">Animated element</button>
             </div>
           </section>
-
-          <hr>
-
-          <div class="alert alert-info" role="alert">
-            <h5><strong>NOTE:</strong> These docs refer to v1. New features from minor version increases are highlighted. Make sure you're up to date!</h5>
-          </div>
 
           <hr>
 
@@ -196,8 +171,8 @@ tippy.css</code></pre>
             </div>
 
             <p>You can also directly pass in a DOM element:</p>
-<pre><code class="language-javascript">const el = document.querySelector('#myElement')
-tippy(el)
+<pre><code class="language-javascript">const reference = document.querySelector('#myElement')
+tippy(reference)
 </code></pre>
 
             <p>Or an array of them: <strong class="badge badge-default">v1.2+</strong></p>
@@ -239,7 +214,7 @@ tippy(els)
 
               <div class="result-box">
                 <p class="text-muted">Result:</p>
-                <button class="btn tippy" data-tippy-animation="scale" data-tippy-arrow="true" data-tippy-duration="1000" data-tippy-animatefill="false" data-tippy-placement="right" title="I'm a tooltip!">I have options</button>
+                <button class="btn tippy" data-tippy-animation="scale" data-tippy-arrow="true" data-tippy-duration="1000" data-tippy-animatefill="false" data-tippy-placement="right" title="I'm a tooltip!">I'm customized</button>
               </div>
 
               <h4>Data attributes</h4>
@@ -274,9 +249,9 @@ tippy(els)
                 <table class="table table-responsive">
                   <thead>
                     <tr>
-                      <th>Setting<i class="material-icons icon-right">settings</i></th>
+                      <th>Option<i class="material-icons icon-right">settings</i></th>
                       <th>Default<i class="material-icons icon-right">remove</i></th>
-                      <th>Options<i class="material-icons icon-right">settings_input_component</i></th>
+                      <th>Inputs<i class="material-icons icon-right">settings_input_component</i></th>
                       <th>Role<i class="material-icons icon-right">build</i></th>
                     </tr>
                   </thead>
@@ -456,7 +431,7 @@ tippy(els)
                       <td><code>dynamicTitle</code></td>
                       <td><code>false</code></td>
                       <td><code>Boolean</code></td>
-                      <td>Each time the tooltip is shown, the <code>title</code> attribute on the reference element is fetched and the tooltip's content is updated.</td>
+                      <td>Whenever the <code>title</code> attribute on the reference element changes, the tooltip is automatically updated.</td>
                     </tr>
                       <tr>
                         <td><code>popperOptions</code></td>
@@ -531,9 +506,6 @@ tippy(els)
 
               <p>If you want things to happen at certain times during a tooltip's show/hide events, you can add callback functions in the options object. There are 5 to use:</p>
 
-              <p>Note: Callback functions prior to <strong class="badge badge-default">v1.1</strong> should not have the <code>on</code> prefix; simply use <code>show</code>, <code>hide</code>, etc.
-              However, starting from <strong class="badge badge-default">v1.1</strong> they are deprecated in favor of the more semantic <code>on*</code> names which better indicate a callback function.</p>
-
 <pre><code class="language-javascript">tippy('.tippy', {
   onShow: function () {
     // When the tooltip has been triggered and has started to transition in
@@ -558,35 +530,13 @@ tippy(els)
             <p>
                 <code>wait</code> is a special callback that allows you to control the <code>show</code> method
                 for easier integration into UI libraries like React when using HTML tooltips with components.
-                The function itself takes a callback as a parameter, which is just the <code>show</code> method for the tooltip.
+                To show the tooltip once you have done the necessary steps inside the function, simply invoke <code>show()</code>.
             </p>
-
-            <p>
-                Example usage (ES6 syntax):
-            </p>
-
-<pre><code class="language-javascript">tippy('.tippy', {
-  wait(show, event) {
-    // Change your app model to be rendered by the UI library/framework
-
-    // Queue show to run once rendering is complete
-    setTimeout(() => {
-      // update(popper) content
-      // event.type to see what trigger fired the event
-
-      show()
-    }, 0)
-  }
-})</code>
 </pre>
-
-            <p>
-                See <a target="_blank" href="https://github.com/atomiks/tippyjs/issues/24">here</a> for reference.
-            </p>
 
             <h4>Modify the default options</h4>
 
-            <p>You can change the default options by accessing them via <code>tippy.defaults</code>.</p>
+            <p>You can change the default options by accessing them via <code>tippy.defaults</code>, which will apply to every tippy instance.</p>
 
             </section>
 
@@ -600,15 +550,13 @@ tippy(els)
                 </a>
             </h2>
 
-            <p><code>tippy()</code> returns a new Tippy object with the following methods available:</code>
+            <p>When you invoke <code>tippy()</code>, it returns a new Tippy object with the following methods available:</code>
 
             <ul>
                 <li><code>getPopperElement</code> - returns the tooltip popper element</li>
-                <li><code>getReferenceElement</code> - returns the element that has the tooltip</li>
                 <li><code>getData</code> - returns the object containing information about a tooltip</li>
                 <li><code>show</code> - shows a tooltip</li>
                 <li><code>hide</code> - hides a tooltip</li>
-                <li><code>update</code> - updates a tooltip with new content</li>
                 <li><code>destroy</code> - destroys an individual tooltip</li>
                 <li><code>destroyAll</code> - destroys all tooltips created by the instance</li>
             </ul>
@@ -618,43 +566,27 @@ tippy(els)
             <p>The <code>popper</code> is the parent element while the <code>tooltip</code> is the child of the popper.</strong></p>
             <p>The element you give the tooltip to is called the <code>reference</code> element.</p>
 
-            <h4>Showing and hiding tooltips programmatically</h4>
+            <h4>Show or hide tooltips manually</h4>
 
             <pre><code class="language-markup">&lt;button id="myButton" title=&quot;Tooltip&quot;&gt;My element&lt;/button&gt;</code></pre>
 
             <p>First, save the instance:</p>
             <pre><code class="language-javascript">const tip = tippy('#myButton')</code></pre>
 
-            <p>Next, find the reference element's popper reference by calling the method
+            <p>Next, find the reference element's popper by calling the method
                 <code>getPopperElement</code> and passing the element in directly:</p>
 
-          <pre><code class="language-javascript">const el = document.querySelector('#myButton')
-const popper = tip.getPopperElement(el)</code></pre>
+          <pre><code class="language-javascript">const ref = document.querySelector('#myButton')
+const popper = tip.getPopperElement(ref)</code></pre>
 
             <p>Then, call the <code>show()</code> or <code>hide()</code> method by passing in the popper element:
 
             <pre><code class="language-javascript">tip.show(popper)
 tip.hide(popper)</code></pre>
 
-            <p>Pass a number in the second argument to specify a transition duration:</p>
+            <p>Pass a number in the second argument to specify a custom transition duration:</p>
 
             <pre><code class="language-javascript">tip.show(popper, 500)</code></pre>
-
-            <h4>Finding the reference element from the popper element</h4>
-
-            <p>Pass the popper element to find its reference element into this method:</p>
-
-            <pre><code class="language-javascript">const el = tip.getReferenceElement(popper)</code></pre>
-
-            <h4>Updating a tooltip with new content</h4>
-
-            <p>The <code>update()</code> method will check for a new <code>title</code> attribute on the element
-            that has the tooltip.</p>
-
-            <pre><code class="language-javascript">el.setAttribute('title', 'New content!')
-tip.update(popper)</code></pre>
-
-            <p>If it's a HTML template instead, it will inject the new HTML of the template.</code>
 
             <h4>Destroying tooltips</h4>
 
@@ -666,32 +598,58 @@ tip.update(popper)</code></pre>
 
             <pre><code class="language-javascript">tip.destroyAll()</code></pre>
 
+            <h4>Shortcuts</h4>
+
+            <p>If your instance only has a tooltip given to 1 reference element, you can use these
+              shortcuts to cut down on the amount of code necessary.</p>
+
+            <pre><code class="language-javascript">const ref = document.querySelector('#reference')
+tippy(ref)
+
+// Now we can access the instance on the element itself:
+ref._tippy.show() // shows the tooltip
+ref._tippy.hide() // hides the tooltip</code></pre>
+
+            <p>Invoking the show and hide methods without arguments will only affect the first tooltip in the instance,
+            which is why these should be used with single-reference element instances.</p>
+
+            <h4>Finding the reference element from the popper element</h4>
+
+            <p>The reference element is attached to the popper element via the <code>_reference</code> property:</p>
+
+            <pre><code class="language-javascript">const ref = popper._reference</code></pre>
+
+            <h4>Updating tooltips</h4>
+
+            <p>The <code>update()</code> method that could be used to update
+            a tooltip with new content is now removed.</p>
+
+            <p>
+            In the options object, simply set <code>dynamicTitle</code> to true.
+            This will automatically update the
+            tooltip's content whenever the <code>title</code> attribute on the reference element is changed.
+            </p>
+
+            <p>To update HTML tooltips, it is recommended to use the Direct Element option when setting up
+            the tooltip. This allows you to save the element to a variable reference to modify it later.</p>
+
+            <pre><code class="language-javascript">const template = document.querySelector('#template')
+
+tippy('#myReference', {
+  html: template
+})
+
+template.innerHTML = 'New content!' // Updates directly</code></pre>
+
             <h4>Tooltip data</h4>
 
             <p>Retrieve the data object for a particular tooltip reference by passing in either the reference element or the popper element.</p>
 
-            <pre><code class="language-javascript">const data = tip.getData(el || popper)</code></pre>
+            <pre><code class="language-javascript">const data = tip.getData(reference || popper)</code></pre>
 
             <p>The data object contains information about the reference element and its popper element.
-              A particularly important piece of data stored in the object is the <code>popperInstance</code> object,
-              which allows you to update the position of the tooltip manually (for example, with dynamic AJAX-powered content).</p>
-
-            <p>In order to optimize performance, the <code>popperInstance</code> is not created until the very first show of a tooltip,
-            so the data object will not contain it until you've shown a tooltip at least once. If you're dealing with asynchronous content this most likely won't be an issue.</p>
-
-            <h4>Quick access</h4>
-
-            <p>There are quick-access properties on reference and popper elements which are useful when
-              your instance only has 1 tooltip.</p>
-
-<pre><code class="language-javascript">const el = document.querySelector('#reference')
-tippy(el)
-el._tippy.show() // shows the tooltip
-el._tippy.hide() // hides the tooltip</code></pre>
-
-            <p>The popper element also allows for quick access to its reference element.</p>
-
-            <pre><code class="language-javascript">popper._reference === el</code></pre>
+            <p>In order to optimize performance, the <code>popperInstance</code> property is not created until the tooltip is shown for the very first time,
+            so the data object will not contain it until you've shown a tooltip at least once.</p>
 
             <h4>AJAX tooltips</h4>
 
@@ -707,7 +665,7 @@ el._tippy.hide() // hides the tooltip</code></pre>
 
             <p><a target="_blank" href="https://codepen.io/anon/pen/GEmOQy">Codepen demo</a></p>
 
-            <h4>Reactivity <strong class="badge badge-default">v1.1+</strong></h4>
+            <h4>Reactivity</h4>
 
             <p>Tooltips react to content changes. For example, if a paragraph element inside
             the tooltip is removed or changed, the tooltip will automatically update its position.</p>
