@@ -756,6 +756,15 @@ tip.update(popper)</code></pre>
           <p class="text-muted">Result:</p>
           <button class="btn tippy" data-html="#myTemplate" data-animation="fade" data-arrow="true">A cat</button>
         </div>
+        
+        <h4>Dynamically pulling html content</h4>
+        <p>You can use a function instead of an element reference as the <code>html</code> setting - if you do, the function will be executed with one parameter, the element tippy is being added to. This is useful for cases in which you have multiple elements, each one having its own unique tooltip.</p>
+        
+<pre><code class="language-javascript">tippy('.my-elements', {
+  html: el => el.querySelector('.popup'),
+  arrow: true,
+  animation: 'fade'
+})</code></pre>
 
         <h4>Styling tooltips with HTML content</h4>
 
