@@ -106,13 +106,19 @@ function hideAllPoppers(exclude) {
   });
 }
 
-var e = Element.prototype;
-var matches = e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || function (s) {
+var matches = {};
+
+if (typeof Element !== 'undefined') {
+  var e = Element.prototype;
+  matches = e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || function (s) {
     var matches = (this.document || this.ownerDocument).querySelectorAll(s),
         i = matches.length;
     while (--i >= 0 && matches.item(i) !== this) {}
     return i > -1;
-};
+  };
+}
+
+var matches$1 = matches;
 
 /**
 * Ponyfill to get the closest parent element
@@ -124,7 +130,7 @@ function closest(element, parentSelector) {
   var _closest = Element.prototype.closest || function (selector) {
     var el = this;
     while (el) {
-      if (matches.call(el, selector)) {
+      if (matches$1.call(el, selector)) {
         return el;
       }
       el = el.parentElement;
@@ -233,7 +239,7 @@ function bindEventListeners() {
     var _document = document,
         el = _document.activeElement;
 
-    if (el && el.blur && matches.call(el, Selectors.TOOLTIPPED_EL)) {
+    if (el && el.blur && matches$1.call(el, Selectors.TOOLTIPPED_EL)) {
       el.blur();
     }
   };
@@ -377,7 +383,7 @@ function applyTransitionDuration(els, duration) {
   els.forEach(function (el) {
     if (!el) return;
 
-    var isContent = matches.call(el, Selectors.CONTENT);
+    var isContent = matches$1.call(el, Selectors.CONTENT);
 
     var _duration = isContent ? Math.round(duration / 1.3) : duration;
 
@@ -481,6 +487,10 @@ function getArrayOfElements(selector) {
 
   if (Array.isArray(selector)) {
     return selector;
+  }
+
+  if (selector.constructor.name === 'NodeList') {
+    return [].slice.call(selector);
   }
 
   return [].slice.call(document.querySelectorAll(selector));
@@ -3069,7 +3079,7 @@ function createPopperInstance(data) {
       characterData: true
     });
 
-    data._mutationObserver = observer;
+    data._mutationObservers.push(observer);
   }
 
   return new Popper(el, popper, config);
@@ -3536,18 +3546,21 @@ var idCounter = 1;
 function createTooltips(els) {
   var _this = this;
 
-  return els.reduce(function (a, el) {
+  return els.reduce(function (acc, el) {
     var id = idCounter;
 
-    var settings = evaluateSettings(_this.settings.performance ? _this.settings : getIndividualSettings(el, _this.settings));
+    var settings = _extends$1({}, evaluateSettings(_this.settings.performance ? _this.settings : getIndividualSettings(el, _this.settings)));
+
+    if (typeof settings.html === 'function') settings.html = settings.html(el);
 
     var html = settings.html,
         trigger = settings.trigger,
-        touchHold = settings.touchHold;
+        touchHold = settings.touchHold,
+        dynamicTitle = settings.dynamicTitle;
 
 
     var title = el.getAttribute('title');
-    if (!title && !html) return a;
+    if (!title && !html) return acc;
 
     el.setAttribute('data-tooltipped', '');
     el.setAttribute('aria-describedby', 'tippy-tooltip-' + id);
@@ -3562,18 +3575,38 @@ function createTooltips(els) {
       return listeners = listeners.concat(createTrigger(event, el, handlers, touchHold));
     });
 
-    a.push({
+    // Add a mutation observer to observe the reference element for `title`
+    // attribute changes, then automatically update tooltip content
+    var observer = void 0;
+
+    if (dynamicTitle && window.MutationObserver) {
+      var _getInnerElements = getInnerElements(popper),
+          content = _getInnerElements.content;
+
+      observer = new MutationObserver(function () {
+        var title = el.getAttribute('title');
+        if (title) {
+          content.innerHTML = title;
+          removeTitle(el);
+        }
+      });
+
+      observer.observe(el, { attributes: true });
+    }
+
+    acc.push({
       id: id,
       el: el,
       popper: popper,
       settings: settings,
       listeners: listeners,
-      tippyInstance: _this
+      tippyInstance: _this,
+      _mutationObservers: [observer]
     });
 
     idCounter++;
 
-    return a;
+    return acc;
   }, []);
 }
 
@@ -3705,17 +3738,8 @@ var Tippy = function () {
           interactive = _data$settings.interactive,
           followCursor = _data$settings.followCursor,
           flipDuration = _data$settings.flipDuration,
-          duration = _data$settings.duration,
-          dynamicTitle = _data$settings.dynamicTitle;
+          duration = _data$settings.duration;
 
-
-      if (dynamicTitle) {
-        var title = el.getAttribute('title');
-        if (title) {
-          content.innerHTML = title;
-          removeTitle(el);
-        }
-      }
 
       var _duration = customDuration !== undefined ? customDuration : Array.isArray(duration) ? duration[0] : duration;
 
@@ -3901,7 +3925,7 @@ var Tippy = function () {
       var el = data.el,
           popperInstance = data.popperInstance,
           listeners = data.listeners,
-          _mutationObserver = data._mutationObserver;
+          _mutationObservers = data._mutationObservers;
 
       // Ensure the popper is hidden
 
@@ -3922,7 +3946,10 @@ var Tippy = function () {
       el.removeAttribute('aria-describedby');
 
       popperInstance && popperInstance.destroy();
-      _mutationObserver && _mutationObserver.disconnect();
+
+      _mutationObservers.forEach(function (observer) {
+        observer && observer.disconnect();
+      });
 
       // Remove from store
       Store.splice(findIndex(Store, function (data) {

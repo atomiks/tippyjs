@@ -457,7 +457,7 @@ tippy(els)
                       <td><code>dynamicTitle</code></td>
                       <td><code>false</code></td>
                       <td><code>Boolean</code></td>
-                      <td>Each time the tooltip is shown, the <code>title</code> attribute on the reference element is fetched and the tooltip's content is updated.</td>
+                      <td>Whenever the <code>title</code> attribute on the reference element changes, the tooltip will automatically be updated.</td>
                     </tr>
                       <tr>
                         <td><code>popperOptions</code></td>
@@ -673,12 +673,10 @@ tip.update(popper)</code></pre>
 
             <pre><code class="language-javascript">const data = tip.getReferenceData(el || popper)</code></pre>
 
-            <p>The reference data object contains information about the reference element and its popper element.
-              A particularly important piece of data stored in the object is the <code>popperInstance</code> object,
-              which allows you to update the position of the tooltip manually (for example, with dynamic AJAX-powered content).</p>
+            <p>This object contains information about a reference element and its popper element.</p>
 
-            <p>In order to optimize performance, the <code>popperInstance</code> is not created until the very first show of a tooltip,
-            so the data object will not contain it until you've shown a tooltip at least once. If you're dealing with asynchronous content this most likely won't be an issue.</p>
+            <p>In order to optimize performance, the <code>popperInstance</code> property is not created until the tooltip is shown for the first time,
+            so the data object will not contain it until you've shown a tooltip at least once.</p>
 
             <h4>AJAX tooltips</h4>
 
@@ -756,10 +754,10 @@ tip.update(popper)</code></pre>
           <p class="text-muted">Result:</p>
           <button class="btn tippy" data-html="#myTemplate" data-animation="fade" data-arrow="true">A cat</button>
         </div>
-        
+
         <h4>Dynamically pulling html content</h4>
         <p>You can use a function instead of an element reference as the <code>html</code> setting - if you do, the function will be executed with one parameter, the element tippy is being added to. This is useful for cases in which you have multiple elements, each one having its own unique tooltip.</p>
-        
+
 <pre><code class="language-javascript">tippy('.my-elements', {
   html: el => el.querySelector('.popup'),
   arrow: true,
