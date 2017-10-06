@@ -18,11 +18,15 @@ export default function createTooltips(els) {
   return els.reduce((acc, reference) => {
     const id = idCounter
 
-    const options = evaluateOptions(
+    const options = Object.assign({}, evaluateOptions(
       this.options.performance
         ? this.options
         : getIndividualOptions(reference, this.options)
-    )
+    ))
+
+    if (typeof options.html === 'function') {
+      options.html = options.html(reference)
+    }
 
     const {
       html,
@@ -56,13 +60,13 @@ export default function createTooltips(els) {
     // Allow easy access to the popper's reference element
     popper._reference = reference
 
-    let titleMutationObserver
-
     // Update tooltip content whenever the title attribute changes
+    let observer
+
     if (dynamicTitle && window.MutationObserver) {
       const { content } = getInnerElements(popper)
 
-      titleMutationObserver = new MutationObserver(() => {
+      observer = new MutationObserver(() => {
         const title = reference.getAttribute('title')
         if (title) {
           content.innerHTML = title
@@ -70,7 +74,7 @@ export default function createTooltips(els) {
         }
       })
 
-      titleMutationObserver.observe(reference, { attributes: true })
+      observer.observe(reference, { attributes: true })
     }
 
     acc.push({
@@ -80,7 +84,7 @@ export default function createTooltips(els) {
       options,
       listeners,
       tippyInstance: this,
-      _mutationObservers: [titleMutationObserver]
+      _mutationObservers: [observer]
     })
 
     idCounter++

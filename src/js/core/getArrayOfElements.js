@@ -12,5 +12,9 @@ export default function getArrayOfElements(selector) {
     return selector
   }
 
+  if (selector.constructor.name === 'NodeList') {
+    return [].slice.call(selector)
+  }
+
   return [].slice.call(document.querySelectorAll(selector))
 }

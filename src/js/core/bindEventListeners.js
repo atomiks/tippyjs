@@ -4,7 +4,7 @@ import hideAllPoppers from './hideAllPoppers'
 
 import closest from '../utils/closest'
 import find    from '../utils/find'
-import { matches } from '../utils/matches'
+import matches from '../utils/matches'
 
 /**
 * Adds the needed event listeners
