@@ -4,7 +4,8 @@ import createTrigger            from './createTrigger'
 import getEventListenerHandlers from './getEventListenerHandlers'
 import evaluateSettings         from './evaluateSettings'
 
-import removeTitle from '../utils/removeTitle'
+import removeTitle      from '../utils/removeTitle'
+import getInnerElements from '../utils/getInnerElements'
 
 import { Store } from './globals'
 
@@ -16,7 +17,7 @@ let idCounter = 1
 * @return {Object[]} Array of ref data objects
 */
 export default function createTooltips(els) {
-  return els.reduce((a, el) => {
+  return els.reduce((acc, el) => {
     const id = idCounter
 
     const settings = Object.assign({}, evaluateSettings(
@@ -24,13 +25,18 @@ export default function createTooltips(els) {
         ? this.settings
         : getIndividualSettings(el, this.settings)
     ))
-    
+
     if (typeof settings.html === 'function') settings.html = settings.html(el)
 
-    const { html, trigger, touchHold } = settings
+    const {
+      html,
+      trigger,
+      touchHold,
+      dynamicTitle
+    } = settings
 
     const title = el.getAttribute('title')
-    if (!title && !html) return a
+    if (!title && !html) return acc
 
     el.setAttribute('data-tooltipped', '')
     el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
@@ -42,20 +48,41 @@ export default function createTooltips(els) {
     let listeners = []
 
     trigger.trim().split(' ').forEach(event =>
-      listeners = listeners.concat(createTrigger(event, el, handlers, touchHold))
+      listeners = listeners.concat(
+        createTrigger(event, el, handlers, touchHold)
+      )
     )
 
-    a.push({
+    // Add a mutation observer to observe the reference element for `title`
+    // attribute changes, then automatically update tooltip content
+    let observer
+
+    if (dynamicTitle && window.MutationObserver) {
+      const { content } = getInnerElements(popper)
+
+      observer = new MutationObserver(() => {
+        const title = el.getAttribute('title')
+        if (title) {
+          content.innerHTML = title
+          removeTitle(el)
+        }
+      })
+
+      observer.observe(el, { attributes: true })
+    }
+
+    acc.push({
       id,
       el,
       popper,
       settings,
       listeners,
-      tippyInstance: this
+      tippyInstance: this,
+      _mutationObservers: [observer]
     })
 
     idCounter++
 
-    return a
+    return acc
   }, [])
 }

@@ -823,20 +823,24 @@ describe('core', () => {
     })
 
     describe('dynamicTitle', () => {
-      it('updates the title on show if the attribute changed', () => {
+      let instance, popper, currentContent
+
+      beforeEach(done => {
         const el = createVirtualElement()
 
-        const instance = tippy(el, {
+        instance = tippy(el, {
           dynamicTitle: true
         })
 
-        const popper = instance.getPopperElement(el)
-        const currentContent = popper.querySelector(Selectors.CONTENT).innerHTML
+        popper = instance.getPopperElement(el)
+        currentContent = popper.querySelector(Selectors.CONTENT).innerHTML
 
         el.setAttribute('title', 'new')
 
-        instance.show(popper)
+        defer(done)
+      })
 
+      it('updates the tooltip content if the title attribute changed', () => {
         const newContent = popper.querySelector(Selectors.CONTENT).innerHTML
         expect(currentContent).not.toBe(newContent)
 

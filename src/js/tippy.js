@@ -128,18 +128,9 @@ class Tippy {
         interactive,
         followCursor,
         flipDuration,
-        duration,
-        dynamicTitle
+        duration
       }
     } = data
-
-    if (dynamicTitle) {
-      const title = el.getAttribute('title')
-      if (title) {
-        content.innerHTML = title
-        removeTitle(el)
-      }
-    }
 
     const _duration = customDuration !== undefined
       ? customDuration
@@ -156,7 +147,7 @@ class Tippy {
     // Wait for popper's position to update
     defer(() => {
       if (!isVisible(popper)) return
-      
+
       // Sometimes the arrow will not be in the correct position, force another update
       if (!followCursor || Browser.touch) {
         data.popperInstance.update()
@@ -310,7 +301,7 @@ class Tippy {
       el,
       popperInstance,
       listeners,
-      _mutationObserver
+      _mutationObservers
     } = data
 
     // Ensure the popper is hidden
@@ -329,7 +320,10 @@ class Tippy {
     el.removeAttribute('aria-describedby')
 
     popperInstance && popperInstance.destroy()
-    _mutationObserver && _mutationObserver.disconnect()
+
+    _mutationObservers.forEach(observer => {
+      observer && observer.disconnect()
+    })
 
     // Remove from store
     Store.splice(findIndex(Store, data => data.popper === popper), 1)

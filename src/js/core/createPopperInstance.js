@@ -71,7 +71,7 @@ export default function createPopperInstance(data) {
       characterData: true
     })
 
-    data._mutationObserver = observer
+    data._mutationObservers.push(observer)
   }
 
   return new Popper(el, popper, config)
