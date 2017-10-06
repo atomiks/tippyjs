@@ -267,21 +267,6 @@ describe('core', () => {
       })
     })
 
-    describe('getReferenceElement', () => {
-      it('returns the reference element from its popper reference', () => {
-        const el = createVirtualElement()
-
-        const instance = tippy(el)
-        const popper = instance.getPopperElement(el)
-
-        expect(
-          instance.getReferenceElement(popper).className
-        ).toBe('test')
-
-        instance.destroyAll()
-      })
-    })
-
     describe('getData', () => {
       it('returns the reference object with either the ref el or popper as the argument', () => {
         const el = createVirtualElement()
@@ -483,45 +468,6 @@ describe('core', () => {
         expect(tooltip.style[prefix('transitionDuration')]).toBe('100ms')
 
         instance.destroyAll()
-      })
-    })
-
-    describe('update', () => {
-      it('updates a tooltip with new content if the title attribute has changed', () => {
-        const el = createVirtualElement()
-
-        const instance = tippy(el)
-        const popper = instance.getPopperElement(el)
-
-        el.setAttribute('title', 'new')
-        instance.update(popper)
-
-        expect(popper.querySelector(selectors.CONTENT).innerHTML).toBe('new')
-
-        instance.destroyAll()
-      })
-
-      it('injects new HTML if appropriate', () => {
-        const el = createVirtualElement()
-        const html = document.createElement('div')
-        html.id = 'test-template'
-        html.innerHTML = 'test'
-
-        document.body.appendChild(html)
-
-        const instance = tippy(el, {
-          html: '#test-template'
-        })
-
-        html.innerHTML = 'new'
-
-        const popper = instance.getPopperElement(el)
-        instance.update(popper)
-
-        expect(popper.querySelector(selectors.CONTENT).innerHTML).toBe('new')
-
-        instance.destroyAll()
-        document.body.removeChild(html)
       })
     })
   })
