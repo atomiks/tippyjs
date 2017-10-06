@@ -1,4 +1,4 @@
-import { matches } from './matches'
+import matches from './matches'
 
 /**
 * Ponyfill to get the closest parent element
