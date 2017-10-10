@@ -113,7 +113,7 @@ class Tippy {
     const data = find(this.store, data => data.popper === popper)
     const { tooltip, circle, content } = getInnerElements(popper)
 
-    if (!document.body.contains(data.el)) {
+    if (!this.selector.refObj && !document.body.contains(data.el)) {
       this.destroy(popper)
       return
     }
@@ -351,7 +351,36 @@ class Tippy {
   }
 }
 
+function isElement(element) {
+  return element instanceof Element;
+}
+
+
 function tippy(selector, settings) {
+
+    //Create a virtual object for tippy
+    if (typeof selector === 'object' && !isElement(selector)) {
+      selector = {
+        refObj: true,
+        record: {},
+        getBoundingClientRect: selector.getBoundingClientRect,
+        clientWidth: selector.clientWidth,
+        clientHeight: selector.clientHeight,
+        setAttribute: function (key, val) { this.record[key] = val },
+        getAttribute: function (key) { return this.record[key] },
+        removeAttribute: function (key) { return this.record[key] = null },
+        addEventListener: function (key, val) { },
+        removeEventListener: function (key) { },
+        classList : {
+          recordC: {},
+          add : function (key) {this.recordC[key] = true},
+          remove : function (key) {this.recordC[key] = false; return true},
+          contains : function(key) {return this.recordC[key]}
+        }
+      }
+    }
+
+
   return new Tippy(selector, settings)
 }
 
