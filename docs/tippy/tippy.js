@@ -99,19 +99,25 @@ function hideAllPoppers(exclude) {
   });
 }
 
-var e = Element.prototype;
-var matches = e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || function (s) {
+var matches = {};
+
+if (typeof Element !== 'undefined') {
+  var e = Element.prototype;
+  matches = e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || function (s) {
     var matches = (this.document || this.ownerDocument).querySelectorAll(s),
         i = matches.length;
     while (--i >= 0 && matches.item(i) !== this) {}
     return i > -1;
-};
+  };
+}
+
+var matches$1 = matches;
 
 function closest(element, parentSelector) {
   var _closest = Element.prototype.closest || function (selector) {
     var el = this;
     while (el) {
-      if (matches.call(el, selector)) {
+      if (matches$1.call(el, selector)) {
         return el;
       }
       el = el.parentElement;
@@ -215,7 +221,7 @@ function bindEventListeners() {
     var _document = document,
         el = _document.activeElement;
 
-    if (el && el.blur && matches.call(el, selectors.TOOLTIPPED_EL)) {
+    if (el && el.blur && matches$1.call(el, selectors.TOOLTIPPED_EL)) {
       el.blur();
     }
   };
@@ -334,7 +340,7 @@ function applyTransitionDuration(els, duration) {
   els.forEach(function (el) {
     if (!el) return;
 
-    var isContent = matches.call(el, selectors.CONTENT);
+    var isContent = matches$1.call(el, selectors.CONTENT);
 
     var _duration = isContent ? Math.round(duration / 1.3) : duration;
 
@@ -434,6 +440,10 @@ function getArrayOfElements(selector) {
 
   if (Array.isArray(selector)) {
     return selector;
+  }
+
+  if (selector.constructor.name === 'NodeList') {
+    return [].slice.call(selector);
   }
 
   return [].slice.call(document.querySelectorAll(selector));
@@ -3437,7 +3447,11 @@ function createTooltips(els) {
   return els.reduce(function (acc, reference) {
     var id = idCounter;
 
-    var options = evaluateOptions(_this.options.performance ? _this.options : getIndividualOptions(reference, _this.options));
+    var options = _extends$1({}, evaluateOptions(_this.options.performance ? _this.options : getIndividualOptions(reference, _this.options)));
+
+    if (typeof options.html === 'function') {
+      options.html = options.html(reference);
+    }
 
     var html = options.html,
         trigger = options.trigger,
@@ -3461,21 +3475,19 @@ function createTooltips(els) {
       return listeners = listeners.concat(createTrigger(event, reference, handlers, touchHold));
     });
 
-    // Add _tippy instance to reference element. Allows easy access to
-    // methods when the instance only has one tooltip
+    // Shortcuts
     reference._tippy = _this;
-
-    // Allow easy access to the popper's reference element
+    reference._popper = popper;
     popper._reference = reference;
 
-    var titleMutationObserver = void 0;
+    // Update tooltip content whenever the title attribute on the reference changes
+    var observer = void 0;
 
-    // Update tooltip content whenever the title attribute changes
     if (dynamicTitle && window.MutationObserver) {
       var _getInnerElements = getInnerElements(popper),
           content = _getInnerElements.content;
 
-      titleMutationObserver = new MutationObserver(function () {
+      observer = new MutationObserver(function () {
         var title = reference.getAttribute('title');
         if (title) {
           content.innerHTML = title;
@@ -3483,7 +3495,7 @@ function createTooltips(els) {
         }
       });
 
-      titleMutationObserver.observe(reference, { attributes: true });
+      observer.observe(reference, { attributes: true });
     }
 
     acc.push({
@@ -3493,7 +3505,7 @@ function createTooltips(els) {
       options: options,
       listeners: listeners,
       tippyInstance: _this,
-      _mutationObservers: [titleMutationObserver]
+      _mutationObservers: [observer]
     });
 
     idCounter++;
@@ -3540,33 +3552,13 @@ var Tippy = function () {
   }
 
   /**
-  * Returns the reference element's popper element
-  * @param {Element} el
-  * @return {Element}
+  * Returns the reference data object from either the reference element or popper element
+  * @param {Element} x (reference element or popper)
+  * @return {Object}
   */
 
 
   createClass$1(Tippy, [{
-    key: 'getPopperElement',
-    value: function getPopperElement() {
-      var reference = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.store[0].reference;
-
-      try {
-        return find(this.store, function (data) {
-          return data.reference === reference;
-        }).popper;
-      } catch (e) {
-        console.error('[getPopperElement]: Element passed as the argument does not exist in the instance');
-      }
-    }
-
-    /**
-    * Returns the reference data object from either the reference element or popper element
-    * @param {Element} x (reference element or popper)
-    * @return {Object}
-    */
-
-  }, {
     key: 'getData',
     value: function getData() {
       var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.store[0].popper;

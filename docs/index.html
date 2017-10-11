@@ -158,30 +158,29 @@ tippy.css</code></pre>
           <hr>
           <section id="creating-a-tooltip">
             <h2><a href="#creating-a-tooltip"><i class="material-icons icon-left">build</i><span>Creating a tooltip</span></a></h2>
-            <p>First, give an element a <code>title</code> attribute containing what you want the tooltip to say.</p>
+            <p>First, give your element(s) a <code>title</code> attribute containing what you want the tooltip(s) to say.</p>
 
-            <pre><code class="language-markup">&lt;button class="btn" title="I'm a tooltip!"&gt;Text&lt;/button&gt;</code></pre>
+            <pre><code class="language-markup">&lt;button class="btn" title="I'm a tooltip!"&gt;Button A&lt;/button&gt;
+&lt;button class="btn" title="I'm another one!"&gt;Button B&lt;/button&gt;</code></pre>
 
-            <p>Then, to give it a Tippy tooltip, call the <code>tippy()</code> function by passing in a CSS selector.</p>
+            <p>Then, to give them a default Tippy tooltip, invoke the <code>tippy()</code> function by passing in a CSS selector.</p>
             <pre><code class="language-javascript">tippy('.btn')</code></pre>
 
             <div class="result-box">
               <p class="text-muted">Result:</p>
-              <button class="btn tippy" title="I'm a tooltip!">Text</button>
+              <button class="btn tippy" title="I'm a tooltip!">Button A</button>
+              <button class="btn tippy" title="I'm another one!">Button B</button>
             </div>
+
+            <p>In the above case, every element with a class of <code>btn</code> (and a non-empty <code>title</code> attribute) will receive a Tippy tooltip.
+              See <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
 
             <p>You can also directly pass in a DOM element:</p>
 <pre><code class="language-javascript">const reference = document.querySelector('#myElement')
 tippy(reference)
 </code></pre>
 
-            <p>Or an array of them: <strong class="badge badge-default">v1.2+</strong></p>
-
-<pre><code class="language-javascript">const els = Array.from(document.querySelectorAll('.myElements'))
-tippy(els)
-</code></pre>
-
-            <p>Elements without a <code>title</code> attribute or an HTML template will not receive a tooltip. You can pass in any CSS selector to initialize it. See <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
+            <p>Along with a <code>NodeList</code> or an array of <code>Element</code>s.</p>
 
             <p>Minimal Working Example, with all files in the same directory:</p>
 <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
@@ -205,7 +204,7 @@ tippy(els)
 
               <p><code>tippy()</code> takes an object as a second argument for you to customize the tooltips being instantiated. Here's an example:</p>
 
-<pre><code class="language-javascript">tippy('.tippy', {
+<pre><code class="language-javascript">tippy('.btn', {
   placement: 'right',
   animation: 'scale',
   duration: 1000,
@@ -506,7 +505,7 @@ tippy(els)
 
               <p>If you want things to happen at certain times during a tooltip's show/hide events, you can add callback functions in the options object. There are 5 to use:</p>
 
-<pre><code class="language-javascript">tippy('.tippy', {
+<pre><code class="language-javascript">tippy('.btn', {
   onShow: function () {
     // When the tooltip has been triggered and has started to transition in
   },
@@ -553,7 +552,6 @@ tippy(els)
             <p>When you invoke <code>tippy()</code>, it returns a new Tippy object with the following methods available:</code>
 
             <ul>
-                <li><code>getPopperElement</code> - returns the tooltip popper element</li>
                 <li><code>getData</code> - returns the object containing information about a tooltip</li>
                 <li><code>show</code> - shows a tooltip</li>
                 <li><code>hide</code> - hides a tooltip</li>
@@ -568,18 +566,18 @@ tippy(els)
 
             <h4>Show or hide tooltips manually</h4>
 
+            <p>Suppose you have the following element which has been given a Tippy tooltip:</p>
+
             <pre><code class="language-markup">&lt;button id="myButton" title=&quot;Tooltip&quot;&gt;My element&lt;/button&gt;</code></pre>
+            <pre><code class="language-javascript">const btn = document.querySelector('#myButton')
+const tip = tippy(btn)</code></pre>
 
-            <p>First, save the instance:</p>
-            <pre><code class="language-javascript">const tip = tippy('#myButton')</code></pre>
+            <p>You can manually show or hide the tooltip with the following steps:</p>
 
-            <p>Next, find the reference element's popper by calling the method
-                <code>getPopperElement</code> and passing the element in directly:</p>
+            <p>1. Grab the newly-created popper element attached to the reference element via the <code>_popper</code> property:</p>
+            <pre><code class="language-javascript">const popper = btn._popper</code></pre>
 
-          <pre><code class="language-javascript">const ref = document.querySelector('#myButton')
-const popper = tip.getPopperElement(ref)</code></pre>
-
-            <p>Then, call the <code>show()</code> or <code>hide()</code> method by passing in the popper element:
+            <p>2. Call the <code>show()</code> or <code>hide()</code> method and pass in the popper:
 
             <pre><code class="language-javascript">tip.show(popper)
 tip.hide(popper)</code></pre>
@@ -618,28 +616,6 @@ ref._tippy.hide() // hides the tooltip</code></pre>
             <p>The reference element is attached to the popper element via the <code>_reference</code> property:</p>
 
             <pre><code class="language-javascript">const ref = popper._reference</code></pre>
-
-            <h4>Updating tooltips</h4>
-
-            <p>The <code>update()</code> method that could be used to update
-            a tooltip with new content is now removed.</p>
-
-            <p>
-            In the options object, simply set <code>dynamicTitle</code> to true.
-            This will automatically update the
-            tooltip's content whenever the <code>title</code> attribute on the reference element is changed.
-            </p>
-
-            <p>To update HTML tooltips, it is recommended to use the Direct Element option when setting up
-            the tooltip. This allows you to save the element to a variable reference to modify it later.</p>
-
-            <pre><code class="language-javascript">const template = document.querySelector('#template')
-
-tippy('#myReference', {
-  html: template
-})
-
-template.innerHTML = 'New content!' // Updates directly</code></pre>
 
             <h4>Tooltip data</h4>
 
@@ -794,7 +770,7 @@ template.innerHTML = 'New content!' // Updates directly</code></pre>
 
           <p>Then, specify a <code>theme</code> setting with your theme's name:</p>
 
-<pre><code class="language-javascript">tippy('.tippy', {
+<pre><code class="language-javascript">tippy('.btn', {
   theme: 'honeybee'
 })</code></pre>
 
@@ -811,7 +787,7 @@ template.innerHTML = 'New content!' // Updates directly</code></pre>
 
         <p>Add multiple themes by separating each by a space.</p>
 
-<pre><code class="language-javascript">tippy('.tippy', {
+<pre><code class="language-javascript">tippy('.btn', {
   theme: 'menu light'
 })</code></pre>
 

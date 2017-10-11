@@ -39,6 +39,7 @@ h4 {
 }
 
 code, pre {
+  position: relative;
   background-color: #f1f5ff;
   color: #2d61df;
   margin-bottom: 1rem;

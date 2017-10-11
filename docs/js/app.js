@@ -3,10 +3,8 @@ function $(s) {
 }
 
 function hideHtml() {
-  var popper = htmlTip.getPopperElement($('#html-tippy'))
-  var nestedPopper = instance.getPopperElement($('.btn-danger[onclick]'))
-  instance.hide(nestedPopper, 100)
-  htmlTip.hide(popper)
+  instance.hide($('.btn-danger[onclick]')._popper, 100)
+  htmlTip.hide($('#html-tippy')._popper)
 }
 
 // Leave out filter CSS for Safari since it's buggy
@@ -29,8 +27,9 @@ var DOM = {
 
 // The main instance which most tooltips are created by
 var instance = tippy('.tippy')
+var $animatedTippy = $('#animated-tippy')
 // Show the animated tippy on load
-instance.show(instance.getPopperElement($('#animated-tippy')))
+instance.show($animatedTippy._popper)
 
 tippy('.flippy', {
   placement: 'right',
@@ -65,7 +64,7 @@ var htmlTip = tippy('#html-tippy', {
   onShown: function () {
     if (window.innerWidth < 976) {
       var nestedRefEl = template.querySelector('.btn')
-      instance.show(instance.getPopperElement(nestedRefEl))
+      instance.show(nestedRefEl._popper)
     }
   }
 })

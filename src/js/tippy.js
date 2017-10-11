@@ -57,19 +57,6 @@ class Tippy {
   }
 
   /**
-  * Returns the reference element's popper element
-  * @param {Element} el
-  * @return {Element}
-  */
-  getPopperElement(reference = this.store[0].reference) {
-    try {
-      return find(this.store, data => data.reference === reference).popper
-    } catch (e) {
-      console.error('[getPopperElement]: Element passed as the argument does not exist in the instance')
-    }
-  }
-
-  /**
   * Returns the reference data object from either the reference element or popper element
   * @param {Element} x (reference element or popper)
   * @return {Object}

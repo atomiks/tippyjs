@@ -53,14 +53,12 @@ export default function createTooltips(els) {
         )
     )
 
-    // Add _tippy instance to reference element. Allows easy access to
-    // methods when the instance only has one tooltip
+    // Shortcuts
     reference._tippy = this
-
-    // Allow easy access to the popper's reference element
+    reference._popper = popper
     popper._reference = reference
 
-    // Update tooltip content whenever the title attribute changes
+    // Update tooltip content whenever the title attribute on the reference changes
     let observer
 
     if (dynamicTitle && window.MutationObserver) {
