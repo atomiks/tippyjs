@@ -351,34 +351,29 @@ class Tippy {
   }
 }
 
-function isElement(element) {
-  return element instanceof Element;
-}
-
-
 function tippy(selector, settings) {
 
     //Create a virtual object for tippy
-    if (typeof selector === 'object' && !isElement(selector)) {
+    if (typeof selector === 'object' && !(selector instanceof Element)) {
       selector = {
         refObj: true,
         record: {},
         getBoundingClientRect: selector.getBoundingClientRect,
         clientWidth: selector.clientWidth,
         clientHeight: selector.clientHeight,
-        setAttribute: function (key, val) { this.record[key] = val },
-        getAttribute: function (key) { return this.record[key] },
-        removeAttribute: function (key) { return this.record[key] = null },
-        addEventListener: function (key, val) { },
-        removeEventListener: function (key) { },
+        setAttribute:  (key, val) => { selector.record[key] = val },
+        getAttribute:  key => selector.record[key] ,
+        removeAttribute: key => selector.record[key] = null ,
+        addEventListener: (key, val) => { },
+        removeEventListener: key => { },
         classList : {
           recordC: {},
-          add : function (key) {this.recordC[key] = true},
-          remove : function (key) {this.recordC[key] = false; return true},
-          contains : function(key) {return this.recordC[key]}
+          add : key => selector.recordC[key] = true,
+          remove : key => {selector.recordC[key] = false; return true},
+          contains : key => selector.recordC[key]}
         }
       }
-    }
+    
 
 
   return new Tippy(selector, settings)
