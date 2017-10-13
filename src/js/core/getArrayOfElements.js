@@ -12,11 +12,7 @@ export default function getArrayOfElements(selector) {
     return selector
   }
 
-  if (typeof selector == 'object' && ! (selector instanceof Element)){
-    return [selector]
-  }
-
-  if (selector.constructor.name === 'NodeList') {
+  if (selector instanceof NodeList) {
     return [].slice.call(selector)
   }
 
