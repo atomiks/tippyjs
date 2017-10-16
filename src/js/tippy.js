@@ -115,7 +115,7 @@ class Tippy {
     const { tooltip, circle, content } = getInnerElements(popper)
 
     // Destroy popper if its reference is no longer on the DOM (excluding refObjs)
-    if (!document.body.contains(data.el) && !this.selector.refObj) {
+    if (!this.selector.refObj && !document.body.contains(data.el)) {
       this.destroy(popper)
       return
     }
