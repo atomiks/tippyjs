@@ -20,6 +20,7 @@ import getInnerElements        from './utils/getInnerElements'
 import applyTransitionDuration from './utils/applyTransitionDuration'
 import isVisible               from './utils/isVisible'
 import noop                    from './utils/noop'
+import isObjectLiteral         from './utils/isObjectLiteral'
 
 /* Core library functions */
 import followCursorHandler from './core/followCursorHandler'
@@ -113,7 +114,8 @@ class Tippy {
     const data = find(this.store, data => data.popper === popper)
     const { tooltip, circle, content } = getInnerElements(popper)
 
-    if (!document.body.contains(data.el)) {
+    // Destroy popper if its reference is no longer on the DOM (excluding refObjs)
+    if (!document.body.contains(data.el) && !this.selector.refObj) {
       this.destroy(popper)
       return
     }
@@ -352,6 +354,31 @@ class Tippy {
 }
 
 function tippy(selector, settings) {
+  // Create a virtual object for custom positioning
+  if (isObjectLiteral(selector)) {
+    selector = {
+      refObj: true,
+      record: {},
+      getBoundingClientRect: selector.getBoundingClientRect,
+      clientWidth: selector.clientWidth,
+      clientHeight: selector.clientHeight,
+      setAttribute: (key, val) => { selector.record[key] = val },
+      getAttribute: key => selector.record[key],
+      removeAttribute: key => selector.record[key] = null,
+      addEventListener: _ => {},
+      removeEventListener: _ => {},
+      classList: {
+        recordC: {},
+        add: key => selector.recordC[key] = true,
+        remove: key => {
+          selector.recordC[key] = false
+          return true
+        },
+        contains: key => selector.recordC[key]
+      }
+    }
+  }
+
   return new Tippy(selector, settings)
 }
 
