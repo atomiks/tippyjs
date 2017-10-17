@@ -128,7 +128,7 @@
             <h4>Dynamic input detection</h4>
             <p>
                 For certain settings to work reliably depending on the type of user input (such as mouse or touch),
-                dynamic input detection is enabled by default. This is only available in v1.0.0+. This can be disabled and enabled at any time via:
+                dynamic input detection is enabled by default. To disable or enable, use:
 
 <pre><code class="language-javascript">tippy.enableDynamicInputDetection()
 tippy.disableDynamicInputDetection()</code></pre>
@@ -196,33 +196,52 @@ tippy.css</code></pre>
               <button class="btn tippy" title="I'm a tooltip!">Text</button>
             </div>
 
-            <p>You can also directly pass in a DOM element:</p>
-<pre><code class="language-javascript">const el = document.querySelector('#myElement')
-tippy(el)
+            <p>For details on the type of CSS selector string you can use, see <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
+
+            <h4>Additional selector options</h4>
+
+            <p>You aren't limited to just a CSS selector string as input. You can also directly use a DOM element (or an array of elements):</p>
+<pre><code class="language-javascript">tippy(document.querySelector('#myElement'))
 </code></pre>
 
-            <p>Or an array of them: <strong class="badge badge-default">v1.2+</strong></p>
+            <p>Or a NodeList: <strong class="badge badge-default">v1.3</strong></p>
 
-<pre><code class="language-javascript">const els = Array.from(document.querySelectorAll('.myElements'))
-tippy(els)
+<pre><code class="language-javascript">tippy(document.querySelectorAll('.myElements'))</code></pre>
+
+            <h4>Advanced</h4>
+
+            <p>
+              For more specialized cases, you can also pass in a custom virtual object
+              instead of a DOM node to act as the positioning reference.
+              <strong class="badge badge-default">v1.4</strong>
+            </p>
+
+<pre><code class="language-javascript">const refObject = {
+  attributes: {
+    title: 'Tooltip text'
+  },
+  getBoundingClientRect() {
+    return {
+      top:  5 + window.pageYOffset,
+      left: 5 + window.pageXOffset,
+      right: 5 + window.pageXOffset,
+      bottom: 220 + window.pageYOffset,
+      width: 1,
+      height: 1
+    }
+  },
+  get clientWidth() {
+    return 30
+  },
+  get clientHeight() {
+    return 30
+  },
+}
+
+tippy(refObject)
 </code></pre>
 
-            <p>Elements without a <code>title</code> attribute or an HTML template will not receive a tooltip. You can pass in any CSS selector to initialize it. See <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
-
-            <p>Minimal Working Example, with all files in the same directory:</p>
-<pre><code class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;link rel=&quot;stylesheet&quot; href=&quot;tippy.css&quot;&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;button id=&quot;myId&quot; title=&quot;Tooltip text&quot;&gt;Button text&lt;/button&gt;
-    &lt;script src=&quot;tippy.js&quot;&gt;&lt;/script&gt;
-    &lt;script&gt;
-    tippy('#myId')
-    &lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</code></pre>
+            <p>Elements without a <code>title</code> attribute (or an empty title) and without an HTML template will not receive a tooltip.</p>
             </section>
             <hr>
             <section id="customizing-tooltips">
@@ -692,7 +711,7 @@ tip.update(popper)</code></pre>
 
             <p><a target="_blank" href="https://codepen.io/anon/pen/GEmOQy">Codepen demo</a></p>
 
-            <h4>Reactivity <strong class="badge badge-default">v1.1+</strong></h4>
+            <h4>Reactivity <strong class="badge badge-default">v1.1</strong></h4>
 
             <p>Tooltips react to content changes. For example, if a paragraph element inside
             the tooltip is removed or changed, the tooltip will automatically update its position.</p>
@@ -755,13 +774,15 @@ tip.update(popper)</code></pre>
           <button class="btn tippy" data-html="#myTemplate" data-animation="fade" data-arrow="true">A cat</button>
         </div>
 
-        <h4>Dynamically pulling html content</h4>
-        <p>You can use a function instead of an element reference as the <code>html</code> setting - if you do, the function will be executed with one parameter, the element tippy is being added to. This is useful for cases in which you have multiple elements, each one having its own unique tooltip.</p>
+        <h4>Dynamically pulling HTML content</h4>
+        <p>
+          You can use a function instead of an element reference as the <code>html</code> setting.
+          The function will be executed with one argument: the element the tooltip is being added to.
+          This is useful for cases in which you have multiple elements, each one having its own unique tooltip.
+        </p>
 
 <pre><code class="language-javascript">tippy('.my-elements', {
-  html: el => el.querySelector('.popup'),
-  arrow: true,
-  animation: 'fade'
+  html: el => el.querySelector('.popup')
 })</code></pre>
 
         <h4>Styling tooltips with HTML content</h4>
