@@ -402,6 +402,10 @@ function isVisible(popper) {
 
 function noop() {}
 
+function isObjectLiteral(input) {
+  return !!input && input.toString() === '[object Object]';
+}
+
 /**
 * Returns the non-shifted placement (e.g., 'bottom-start' => 'bottom')
 * @param {String} placement
@@ -481,19 +485,23 @@ function followCursorHandler(e) {
 * @return {Element[]}
 */
 function getArrayOfElements(selector) {
-  if (selector instanceof Element) {
+  if (selector instanceof Element || isObjectLiteral(selector)) {
     return [selector];
+  }
+
+  if (selector instanceof NodeList) {
+    return [].slice.call(selector);
   }
 
   if (Array.isArray(selector)) {
     return selector;
   }
 
-  if (selector.constructor.name === 'NodeList') {
-    return [].slice.call(selector);
+  try {
+    return [].slice.call(document.querySelectorAll(selector));
+  } catch (_) {
+    return [];
   }
-
-  return [].slice.call(document.querySelectorAll(selector));
 }
 
 /**
@@ -3724,7 +3732,10 @@ var Tippy = function () {
           circle = _getInnerElements.circle,
           content = _getInnerElements.content;
 
-      if (!document.body.contains(data.el)) {
+      // Destroy popper if its reference is no longer on the DOM (excluding refObjs)
+
+
+      if (!this.selector.refObj && !document.body.contains(data.el)) {
         this.destroy(popper);
         return;
       }
@@ -3991,6 +4002,41 @@ var Tippy = function () {
 }();
 
 function tippy$2(selector, settings) {
+  // Create a virtual object for custom positioning
+  if (isObjectLiteral(selector)) {
+    selector = {
+      refObj: true,
+      attributes: selector.attributes || {},
+      getBoundingClientRect: selector.getBoundingClientRect,
+      clientWidth: selector.clientWidth,
+      clientHeight: selector.clientHeight,
+      setAttribute: function setAttribute(key, val) {
+        selector.attributes[key] = val;
+      },
+      getAttribute: function getAttribute(key) {
+        return selector.attributes[key];
+      },
+      removeAttribute: function removeAttribute(key) {
+        delete selector.attributes[key];
+      },
+      addEventListener: function addEventListener() {},
+      removeEventListener: function removeEventListener() {},
+      classList: {
+        classNames: {},
+        add: function add(key) {
+          selector.classList.classNames[key] = true;
+        },
+        remove: function remove(key) {
+          selector.classList.classNames[key] = false;
+          return true;
+        },
+        contains: function contains(key) {
+          return !!selector.classList.classNames[key];
+        }
+      }
+    };
+  }
+
   return new Tippy(selector, settings);
 }
 
