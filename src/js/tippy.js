@@ -358,23 +358,23 @@ function tippy(selector, settings) {
   if (isObjectLiteral(selector)) {
     selector = {
       refObj: true,
-      record: {},
+      attributes: selector.attributes || {},
       getBoundingClientRect: selector.getBoundingClientRect,
       clientWidth: selector.clientWidth,
       clientHeight: selector.clientHeight,
-      setAttribute: (key, val) => { selector.record[key] = val },
-      getAttribute: key => selector.record[key],
-      removeAttribute: key => selector.record[key] = null,
-      addEventListener: _ => {},
-      removeEventListener: _ => {},
+      setAttribute: (key, val) => { selector.attributes[key] = val },
+      getAttribute: key => selector.attributes[key],
+      removeAttribute: key => { delete selector.attributes[key] },
+      addEventListener: () => {},
+      removeEventListener: () => {},
       classList: {
-        recordC: {},
-        add: key => selector.recordC[key] = true,
+        classNames: {},
+        add: key => { selector.classList.classNames[key] = true },
         remove: key => {
-          selector.recordC[key] = false
+          selector.classList.classNames[key] = false
           return true
         },
-        contains: key => selector.recordC[key]
+        contains: key => !!selector.classList.classNames[key]
       }
     }
   }
