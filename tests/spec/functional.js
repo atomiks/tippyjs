@@ -12,6 +12,7 @@ import closest                  from '../../src/js/utils/closest'
 import isVisible                from '../../src/js/utils/isVisible'
 import getOffsetDistanceInPx    from '../../src/js/utils/getOffsetDistanceInPx'
 import applyTransitionDuration  from '../../src/js/utils/applyTransitionDuration'
+import isObjectLiteral          from '../../src/js/utils/isObjectLiteral'
 import cursorIsOutsideInteractiveBorder from '../../src/js/utils/cursorIsOutsideInteractiveBorder'
 
 import followCursorHandler              from '../../src/js/core/createTrigger'
@@ -1141,6 +1142,16 @@ describe('utils', () => {
       expect(
         find(arr, o => o.city === 'London')
       ).toBe(arr[2])
+    })
+  })
+
+  describe('isObjectLiteral', () => {
+    it('correctly determines if the input is a true object literal', () => {
+      expect(isObjectLiteral({})).toBe(true)
+      expect(isObjectLiteral([])).toBe(false)
+      expect(isObjectLiteral('')).toBe(false)
+      expect(isObjectLiteral(window)).toBe(false)
+      expect(isObjectLiteral(document.createElement('div'))).toBe(false)
     })
   })
 

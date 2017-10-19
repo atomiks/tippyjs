@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.js",
   "scripts": {

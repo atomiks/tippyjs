@@ -157,45 +157,64 @@ tippy.css</code></pre>
           </section>
           <hr>
           <section id="creating-a-tooltip">
-            <h2><a href="#creating-a-tooltip"><i class="material-icons icon-left">build</i><span>Creating a tooltip</span></a></h2>
-            <p>First, give your element(s) a <code>title</code> attribute containing what you want the tooltip(s) to say.</p>
+                      <h2><a href="#creating-a-tooltip"><i class="material-icons icon-left">build</i><span>Creating a tooltip</span></a></h2>
+                      <p>First, give an element a <code>title</code> attribute containing what you want the tooltip to say.</p>
 
-            <pre><code class="language-markup">&lt;button class="btn" title="I'm a tooltip!"&gt;Button A&lt;/button&gt;
-&lt;button class="btn" title="I'm another one!"&gt;Button B&lt;/button&gt;</code></pre>
+                      <pre><code class="language-markup">&lt;button class="btn" title="I'm a tooltip!"&gt;Text&lt;/button&gt;</code></pre>
 
-            <p>Then, to give them a default Tippy tooltip, invoke the <code>tippy()</code> function by passing in a CSS selector.</p>
-            <pre><code class="language-javascript">tippy('.btn')</code></pre>
+                      <p>Then, to give it a Tippy tooltip, call the <code>tippy()</code> function by passing in a CSS selector.</p>
+                      <pre><code class="language-javascript">tippy('.btn')</code></pre>
 
-            <div class="result-box">
-              <p class="text-muted">Result:</p>
-              <button class="btn tippy" title="I'm a tooltip!">Button A</button>
-              <button class="btn tippy" title="I'm another one!">Button B</button>
-            </div>
+                      <div class="result-box">
+                        <p class="text-muted">Result:</p>
+                        <button class="btn tippy" title="I'm a tooltip!">Text</button>
+                      </div>
 
-            <p>In the above case, every element with a class of <code>btn</code> (and a non-empty <code>title</code> attribute) will receive a Tippy tooltip.
-              See <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
+                      <p>For details on the type of CSS selector string you can use, see <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
 
-            <p>You can also directly pass in a DOM element:</p>
-<pre><code class="language-javascript">const reference = document.querySelector('#myElement')
-tippy(reference)
+                      <h4>Additional selector options</h4>
+
+                      <p>You aren't limited to just a CSS selector string as input. You can also directly use a DOM element (or an array of elements):</p>
+<pre><code class="language-javascript">tippy(document.querySelector('#myElement'))</code></pre>
+
+                      <p>Or a NodeList: <strong class="badge badge-default">v1.3</strong></p>
+
+<pre><code class="language-javascript">tippy(document.querySelectorAll('.myElements'))</code></pre>
+
+                      <h4>Advanced</h4>
+
+                      <p>
+                        For more specialized cases, you can also pass in a custom virtual object
+                        instead of a DOM node to act as the positioning reference.
+                        <strong class="badge badge-default">v1.4</strong>
+                      </p>
+
+<pre><code class="language-javascript">const refObject = {
+  attributes: {
+    title: 'Tooltip text'
+  },
+  getBoundingClientRect() {
+    return {
+      top:  5 + window.pageYOffset,
+      left: 5 + window.pageXOffset,
+      right: 5 + window.pageXOffset,
+      bottom: 220 + window.pageYOffset,
+      width: 1,
+      height: 1
+    }
+  },
+  get clientWidth() {
+    return 30
+  },
+  get clientHeight() {
+    return 30
+  },
+}
+
+tippy(refObject)
 </code></pre>
 
-            <p>Along with a <code>NodeList</code> or an array of <code>Element</code>s.</p>
-
-            <p>Minimal Working Example, with all files in the same directory:</p>
-<pre><code class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;link rel=&quot;stylesheet&quot; href=&quot;tippy.css&quot;&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;button id=&quot;myId&quot; title=&quot;Tooltip text&quot;&gt;Button text&lt;/button&gt;
-    &lt;script src=&quot;tippy.js&quot;&gt;&lt;/script&gt;
-    &lt;script&gt;
-    tippy('#myId')
-    &lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</code></pre>
+                      <p>Elements without a <code>title</code> attribute (or an empty title) and without an HTML template will not receive a tooltip.</p>
             </section>
             <hr>
             <section id="customizing-tooltips">
@@ -703,6 +722,17 @@ ref._tippy.hide() // hides the tooltip</code></pre>
           <p class="text-muted">Result:</p>
           <button class="btn tippy" data-tippy-html="#myTemplate" data-tippy-animation="fade" data-tippy-arrow="true">A cat</button>
         </div>
+
+        <h4>Dynamically pulling HTML content</h4>
+        <p>
+          You can use a function instead of an element reference as the <code>html</code> setting.
+          The function will be executed with one argument: the element the tooltip is being added to.
+          This is useful for cases in which you have multiple elements, each one having its own unique tooltip.
+        </p>
+
+<pre class="language-javascript"><code>tippy('.my-elements', {
+  html: el => el.querySelector('.popup')
+})</code></pre>
 
         <h4>Styling tooltips with HTML content</h4>
 
