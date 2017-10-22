@@ -10,14 +10,14 @@ import closest          from '../utils/closest'
 * @param {MouseEvent} e
 */
 export default function followCursorHandler(e) {
-  const refData = find(Store, refData => refData.el === this)
+  const data = find(Store, data => data.el === this)
 
   const {
     popper,
     settings: {
       offset
     }
-  } = refData
+  } = data
 
   const position = getCorePlacement(popper.getAttribute('x-placement'))
   const halfPopperWidth = Math.round(popper.offsetWidth / 2)
@@ -32,19 +32,19 @@ export default function followCursorHandler(e) {
   switch (position) {
     case 'top':
       x = pageX - halfPopperWidth + offset
-      y = pageY - 2.25 * halfPopperHeight
-      break
-    case 'left':
-      x = pageX - ( 2 * halfPopperWidth ) - 10
-      y = pageY - halfPopperHeight + offset
-      break
-    case 'right':
-      x = pageX + halfPopperHeight
-      y = pageY - halfPopperHeight + offset
+      y = pageY - 2 * halfPopperHeight
       break
     case 'bottom':
       x = pageX - halfPopperWidth + offset
-      y = pageY + halfPopperHeight/1.5
+      y = pageY + 10
+      break
+    case 'left':
+      x = pageX - 2 * halfPopperWidth
+      y = pageY - halfPopperHeight + offset
+      break
+    case 'right':
+      x = pageX + 5
+      y = pageY - halfPopperHeight + offset
       break
   }
 
@@ -54,7 +54,7 @@ export default function followCursorHandler(e) {
   // Prevent left/right overflow
   if (position === 'top' || position === 'bottom') {
     if (isRightOverflowing) {
-      x = pageWidth - viewportPadding - ( 2 * halfPopperWidth)
+      x = pageWidth - viewportPadding - 2 * halfPopperWidth
     }
 
     if (isLeftOverflowing) {
