@@ -422,12 +422,12 @@ function getCorePlacement(placement) {
 function followCursorHandler(e) {
   var _this = this;
 
-  var refData = find(Store, function (refData) {
-    return refData.el === _this;
+  var data = find(Store, function (data) {
+    return data.el === _this;
   });
 
-  var popper = refData.popper,
-      offset = refData.settings.offset;
+  var popper = data.popper,
+      offset = data.settings.offset;
 
 
   var position = getCorePlacement(popper.getAttribute('x-placement'));
@@ -446,19 +446,19 @@ function followCursorHandler(e) {
   switch (position) {
     case 'top':
       x = pageX - halfPopperWidth + offset;
-      y = pageY - 2.25 * halfPopperHeight;
-      break;
-    case 'left':
-      x = pageX - 2 * halfPopperWidth - 10;
-      y = pageY - halfPopperHeight + offset;
-      break;
-    case 'right':
-      x = pageX + halfPopperHeight;
-      y = pageY - halfPopperHeight + offset;
+      y = pageY - 2 * halfPopperHeight;
       break;
     case 'bottom':
       x = pageX - halfPopperWidth + offset;
-      y = pageY + halfPopperHeight / 1.5;
+      y = pageY + 10;
+      break;
+    case 'left':
+      x = pageX - 2 * halfPopperWidth;
+      y = pageY - halfPopperHeight + offset;
+      break;
+    case 'right':
+      x = pageX + 5;
+      y = pageY - halfPopperHeight + offset;
       break;
   }
 
