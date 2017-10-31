@@ -1,5 +1,5 @@
 html {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 body {
@@ -383,9 +383,6 @@ table {
 }
 
 @media (min-width: 576px) {
-  html {
-    font-size: 15px;
-  }
   main .container-fluid {
     padding: 2rem;
   }
