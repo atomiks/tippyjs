@@ -36,7 +36,7 @@ export default function mountPopper(data) {
 
   // Since touch is determined dynamically, followCursor is set on mount
   if (followCursor && !browser.usingTouch) {
-    reference.addEventListener('mousemove', followCursorHandler)
+    document.addEventListener('mousemove', followCursorHandler(data.reference))
     data.popperInstance.disableEventListeners()
   }
 }

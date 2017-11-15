@@ -92,7 +92,7 @@ class Tippy {
         sticky,
         interactive,
         followCursor,
-        flipDuration,
+        updateDuration,
         duration
       }
     } = data
@@ -120,7 +120,7 @@ class Tippy {
       // Sometimes the arrow will not be in the correct position, force another update
       if (!followCursor || browser.usingTouch) {
         data.popperInstance.update()
-        applyTransitionDuration([popper], flipDuration)
+        applyTransitionDuration([popper], updateDuration)
       }
 
       // Re-apply transition durations
@@ -216,7 +216,7 @@ class Tippy {
         getComputedStyle(tooltip).opacity === '1'
       ) return
 
-      reference.removeEventListener('mousemove', followCursorHandler)
+      document.removeEventListener('mousemove', data._followCursorHandler)
       data.popperInstance.disableEventListeners()
       appendTo.removeChild(popper)
 
