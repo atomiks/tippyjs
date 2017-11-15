@@ -38,7 +38,6 @@ export const defaults = {
   animation: 'shift',
   animateFill: true,
   arrow: false,
-  arrowSize: 'regular',
   delay: 0,
   trigger: 'mouseenter focus',
   duration: 350,
@@ -52,7 +51,7 @@ export const defaults = {
   multiple: false,
   followCursor: false,
   inertia: false,
-  flipDuration: 350,
+  updateDuration: 350,
   sticky: false,
   stickyDuration: 200,
   appendTo: () => document.body,
@@ -60,6 +59,10 @@ export const defaults = {
   touchHold: false,
   performance: false,
   dynamicTitle: false,
+  flip: true,
+  flipBehavior: 'flip',
+  arrowStyle: 'sharp',
+  arrowTransform: '',
   popperOptions: {}
 }
 

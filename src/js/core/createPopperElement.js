@@ -1,5 +1,6 @@
 import getCorePlacement from '../utils/getCorePlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
+import prefix from '../utils/prefix'
 
 /**
 * Creates a popper element then returns it
@@ -13,10 +14,11 @@ export default function createPopperElement(id, title, options) {
     placement,
     distance,
     arrow,
+    arrowStyle,
+    arrowTransform,
     animateFill,
     inertia,
     animation,
-    arrowSize,
     size,
     theme,
     html,
@@ -42,10 +44,21 @@ export default function createPopperElement(id, title, options) {
   })
 
   if (arrow) {
-    // Add an arrow
     const arrow = document.createElement('div')
-    arrow.setAttribute('x-size', arrowSize)
-    arrow.setAttribute('x-arrow', '')
+    arrow.style[prefix('transform')] = arrowTransform
+
+    if (arrowStyle === 'round') {
+      arrow.setAttribute('x-roundedarrow', '')
+      arrow.innerHTML = `
+      <svg width="100%" height="100%" viewBox="0 0 64 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+          <g transform="matrix(1.20755,0,0,1.42589,-6.03774,-64.3912)">
+              <path d="M5,59.185C5,59.185 14.88,57.927 21.5,51.55C30.308,43.066 33.909,43.016 42.5,51.55C48.775,57.783 58,59.185 58,59.185L5,59.185Z"/>
+          </g>
+      </svg>`
+    } else {
+      arrow.setAttribute('x-arrow', '')
+    }
+    
     tooltip.appendChild(arrow)
   }
 

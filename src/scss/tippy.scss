@@ -1,148 +1,166 @@
-@mixin enter-transform ($position, $animation) {
+@mixin enter-transform ($placement, $animation) {
   @if ($animation == 'perspective') {
-    @if ($position == 'top') {
+    @if ($placement == 'top') {
       transform: translateY(-10px) rotateX(0);
-    } @else if ($position == 'bottom') {
+    } @else if ($placement == 'bottom') {
       transform: translateY(10px) rotateX(0);
-    } @else if ($position == 'left') {
+    } @else if ($placement == 'left') {
       transform: translateX(-10px) rotateY(0);
-    } @else if ($position == 'right') {
+    } @else if ($placement == 'right') {
       transform: translateX(10px) rotateY(0);
     }
   } @else if ($animation == 'fade') {
-    @if ($position == 'top') {
+    @if ($placement == 'top') {
       transform: translateY(-10px);
-    } @else if ($position == 'bottom') {
+    } @else if ($placement == 'bottom') {
       transform: translateY(10px);
-    } @else if ($position == 'left') {
+    } @else if ($placement == 'left') {
       transform: translateX(-10px);
-    } @else if ($position == 'right') {
+    } @else if ($placement == 'right') {
       transform: translateX(10px);
     }
   } @else if ($animation == 'scale') {
-    @if ($position == 'top') {
+    @if ($placement == 'top') {
       transform: translateY(-10px) scale(1);
-    } @else if ($position == 'bottom') {
+    } @else if ($placement == 'bottom') {
       transform: translateY(10px) scale(1);
-    } @else if ($position == 'left') {
+    } @else if ($placement == 'left') {
       transform: translateX(-10px) scale(1);
-    } @else if ($position == 'right') {
+    } @else if ($placement == 'right') {
       transform: translateX(10px) scale(1);
     }
   }
 }
 
-@mixin leave-transform ($position, $animation) {
+@mixin leave-transform ($placement, $animation) {
   @if ($animation == 'perspective') {
-    @if ($position == 'top') {
+    @if ($placement == 'top') {
       transform: translateY(0) rotateX(90deg);
-    } @else if ($position == 'bottom') {
+    } @else if ($placement == 'bottom') {
       transform: translateY(0) rotateX(-90deg);
-    } @else if ($position == 'left') {
+    } @else if ($placement == 'left') {
       transform: translateX(0) rotateY(-90deg);
-    } @else if ($position == 'right') {
+    } @else if ($placement == 'right') {
       transform: translateX(0) rotateY(90deg);
     }
   } @else if ($animation == 'shift') {
-    @if ($position == 'top') {
+    @if ($placement == 'top') {
       transform: translateY(0);
-    } @else if ($position == 'bottom') {
+    } @else if ($placement == 'bottom') {
       transform: translateY(0);
-    } @else if ($position == 'left') {
+    } @else if ($placement == 'left') {
       transform: translateX(0);
-    } @else if ($position == 'right') {
+    } @else if ($placement == 'right') {
       transform: translateX(0);
     }
   } @else if ($animation == 'scale') {
-    @if ($position == 'top') {
+    @if ($placement == 'top') {
       transform: translateY(0) scale(0);
-    } @else if ($position == 'bottom') {
+    } @else if ($placement == 'bottom') {
       transform: translateY(0) scale(0);
-    } @else if ($position == 'left') {
+    } @else if ($placement == 'left') {
       transform: translateX(0) scale(0);
-    } @else if ($position == 'right') {
+    } @else if ($placement == 'right') {
       transform: translateX(0) scale(0);
     }
   } @else if ($animation == 'none') {
-    @if ($position == 'top') {
+    @if ($placement == 'top') {
       transform: translateY(-10px);
-    } @else if ($position == 'bottom') {
+    } @else if ($placement == 'bottom') {
       transform: translateY(10px);
-    } @else if ($position == 'left') {
+    } @else if ($placement == 'left') {
       transform: translateX(-10px);
-    } @else if ($position == 'right') {
+    } @else if ($placement == 'right') {
       transform: translateX(10px);
     }
   }
 }
 
-@mixin circle-transform-enter ($position) {
+@mixin circle-transform-enter ($placement) {
   $scale: 1;
-  @if ($position == 'top') {
+  @if ($placement == 'top') {
     transform: scale($scale) translate(-50%, -55%);
-  } @else if ($position == 'bottom') {
+  } @else if ($placement == 'bottom') {
     transform: scale($scale) translate(-50%, -45%);
-  } @else if ($position == 'left') {
+  } @else if ($placement == 'left') {
     transform: scale($scale) translate(-50%, -50%);
-  } @else if ($position == 'right') {
+  } @else if ($placement == 'right') {
     transform: scale($scale) translate(-50%, -50%);
   }
 }
 
-@mixin circle-transform-leave ($position) {
+@mixin circle-transform-leave ($placement) {
   $scale: 0.15;
-  @if ($position == 'top') {
+  @if ($placement == 'top') {
     transform: scale($scale) translate(-50%, -50%);
-  } @else if ($position == 'bottom') {
+  } @else if ($placement == 'bottom') {
     transform: scale($scale) translate(-50%, -5%);
-  } @else if ($position == 'left') {
+  } @else if ($placement == 'left') {
     transform: scale($scale) translate(-50%, -50%);
-  } @else if ($position == 'right') {
+  } @else if ($placement == 'right') {
     transform: scale($scale) translate(-50%, -50%);
   }
 }
 
-@mixin arrow ($position, $width, $color) {
-  @if ($position == 'top') {
+@mixin arrow ($placement, $width, $color) {
+  @if ($placement == 'top') {
     border-top: $width solid $color;
     border-right: $width solid transparent;
     border-left: $width solid transparent;
-  } @else if ($position == 'bottom') {
+  } @else if ($placement == 'bottom') {
     border-bottom: $width solid $color;
     border-right: $width solid transparent;
     border-left: $width solid transparent;
-  } @else if ($position == 'left') {
+  } @else if ($placement == 'left') {
     border-left: $width solid $color;
     border-top: $width solid transparent;
     border-bottom: $width solid transparent;
-  } @else if ($position == 'right') {
+  } @else if ($placement == 'right') {
     border-right: $width solid $color;
     border-top: $width solid transparent;
     border-bottom: $width solid transparent;
   }
 }
 
-@mixin arrow-position ($position, $width) {
-  @if ($position == 'top') {
+@mixin arrow-position ($placement, $width) {
+  @if ($placement == 'top') {
     bottom: -$width;
-  } @else if ($position == 'bottom') {
+  } @else if ($placement == 'bottom') {
     top: -$width;
-  } @else if ($position == 'left') {
+  } @else if ($placement == 'left') {
     right: -$width;
-  } @else if ($position == 'right') {
+  } @else if ($placement == 'right') {
     left: -$width;
   }
 }
 
-@mixin arrow-margin ($position) {
-  @if ($position == 'top' or $position == 'bottom') {
+@mixin arrow-margin ($placement) {
+  @if ($placement == 'top' or $placement == 'bottom') {
     margin: 0 9px;
   } @else {
     margin: 6px 0;
   }
 }
 
-$positions: 'top', 'bottom', 'left', 'right';
+@mixin roundedarrow ($placement, $width, $color) {
+  width: $width;
+  height: $width;
+  fill: $color;
+}
+
+@mixin roundedarrow-transform ($placement) {
+  @if ($placement == 'top') {
+    transform: rotate(180deg);
+  } @else if ($placement == 'bottom') {
+    transform: rotate(0);
+  } @else if ($placement == 'left') {
+    transform: rotate(90deg);
+  } @else if ($placement == 'right') {
+    transform: rotate(-90deg);
+  }
+}
+
+$placements: 'top', 'bottom', 'left', 'right';
 $origins: bottom, top, right, left;
 $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
 
@@ -163,35 +181,34 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
     max-width: calc(100% - 20px);
   }
 
-  @each $position in $positions {
-    &[x-placement^=#{$position}] {
-
-      [x-arrow] {
-        @include arrow($position, 7px, #333);
-        @include arrow-position($position, 7px);
-        @include arrow-margin($position);
-
-        &[x-size=small] {
-          @include arrow($position, 5px, #333);
-          @include arrow-position($position, 5px);
-        }
-
-        &[x-size=large] {
-          @include arrow($position, 10px, #333);
-          @include arrow-position($position, 10px);
+  @each $placement in $placements {
+    &[x-placement^=#{$placement}] {
+      
+      [x-roundedarrow] {
+        @include roundedarrow($placement, 24px, #333);
+        @include arrow-position($placement, 15px);
+        
+        svg {
+          @include roundedarrow-transform($placement);
         }
       }
 
+      [x-arrow] {
+        @include arrow($placement, 7px, #333);
+        @include arrow-position($placement, 7px);
+        @include arrow-margin($placement);
+      }
+
       [x-circle] {
-        transform-origin: nth($circle-origins, index($positions, $position));
+        transform-origin: nth($circle-origins, index($placements, $placement));
 
         &[x-state=visible] {
-          @include circle-transform-enter($position);
+          @include circle-transform-enter($placement);
           opacity: 1;
         }
 
         &[x-state=hidden] {
-          @include circle-transform-leave($position);
+          @include circle-transform-leave($placement);
           opacity: 0;
         }
       }
@@ -201,14 +218,14 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
           background-color: white;
         }
         [x-arrow] {
-          @include arrow($position, 7px, white);
+          @include arrow($placement, 7px, white);
 
           &[x-size=small] {
-            @include arrow($position, 5px, white);
+            @include arrow($placement, 5px, white);
           }
 
           &[x-size=large] {
-            @include arrow($position, 10px, white);
+            @include arrow($placement, 10px, white);
           }
         }
       }
@@ -218,61 +235,61 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
           background-color: rgba(0,0,0,0.7);
         }
         [x-arrow] {
-          @include arrow($position, 7px, rgba(0,0,0,0.7));
+          @include arrow($placement, 7px, rgba(0,0,0,0.7));
 
           &[x-size=small] {
-            @include arrow($position, 5px, rgba(0,0,0,0.7));
+            @include arrow($placement, 5px, rgba(0,0,0,0.7));
           }
 
           &[x-size=large] {
-            @include arrow($position, 10px, rgba(0,0,0,0.7));
+            @include arrow($placement, 10px, rgba(0,0,0,0.7));
           }
         }
       }
 
       [x-animation=perspective] {
-        transform-origin: nth($origins, index($positions, $position));
+        transform-origin: nth($origins, index($placements, $placement));
 
         &[x-state=visible] {
           opacity: 1;
-          @include enter-transform($position, 'perspective');
+          @include enter-transform($placement, 'perspective');
         }
         &[x-state=hidden] {
           opacity: 0;
-          @include leave-transform($position, 'perspective');
+          @include leave-transform($placement, 'perspective');
         }
       }
 
       [x-animation=fade] {
         &[x-state=visible] {
           opacity: 1;
-          @include enter-transform($position, 'fade')
+          @include enter-transform($placement, 'fade')
         }
         &[x-state=hidden] {
           opacity: 0;
-          @include enter-transform($position, 'fade')
+          @include enter-transform($placement, 'fade')
         }
       }
 
       [x-animation=shift] {
         &[x-state=visible] {
           opacity: 1;
-          @include enter-transform($position, 'fade')
+          @include enter-transform($placement, 'fade')
         }
         &[x-state=hidden] {
           opacity: 0;
-          @include leave-transform($position, 'shift')
+          @include leave-transform($placement, 'shift')
         }
       }
 
       [x-animation=scale] {
         &[x-state=visible] {
           opacity: 1;
-          @include enter-transform($position, 'scale')
+          @include enter-transform($placement, 'scale')
         }
         &[x-state=hidden] {
           opacity: 0;
-          @include leave-transform($position, 'scale')
+          @include leave-transform($placement, 'scale')
         }
       }
 
@@ -336,7 +353,7 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
     transition-timing-function: cubic-bezier(.53,2,.36,.85);
   }
 
-  [x-arrow] {
+  [x-arrow], [x-roundedarrow] {
     position: absolute;
     width: 0;
     height: 0;

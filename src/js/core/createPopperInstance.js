@@ -20,7 +20,10 @@ export default function createPopperInstance(data) {
       popperOptions,
       offset,
       distance,
-      flipDuration
+      updateDuration,
+      flip,
+      flipBehavior,
+      arrowStyle
     }
   } = data
 
@@ -31,8 +34,14 @@ export default function createPopperInstance(data) {
     ...(popperOptions || {}),
     modifiers: {
       ...(popperOptions ? popperOptions.modifiers : {}),
+      arrow: {
+        element: arrowStyle === 'round' ? '[x-roundedarrow]' : '[x-arrow]',
+        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {})
+      },
       flip: {
+        enabled: flip,
         padding: distance + 5 /* 5px from viewport boundary */,
+        behavior: flipBehavior,
         ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {})
       },
       offset: {
@@ -61,7 +70,7 @@ export default function createPopperInstance(data) {
       styles[prefix('transitionDuration')] = '0ms'
       data.popperInstance.update()
       defer(() => {
-        styles[prefix('transitionDuration')] = flipDuration + 'ms'
+        styles[prefix('transitionDuration')] = updateDuration + 'ms'
       })
     })
 
