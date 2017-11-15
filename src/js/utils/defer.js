@@ -3,7 +3,7 @@
 * @param {Function} fn
 */
 export default function defer(fn) {
-  window.requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
     setTimeout(fn, 0)
   })
 }

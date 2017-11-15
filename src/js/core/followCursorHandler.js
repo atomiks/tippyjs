@@ -8,6 +8,7 @@ import closest          from '../utils/closest'
 /**
 * Mousemove event listener handler for `followCursor` option
 * @param {Element} reference
+* @return {Function} the event handler
 */
 export default function followCursorHandler(reference) {
   const data = find(store, data => data.reference === reference)

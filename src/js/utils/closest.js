@@ -7,7 +7,7 @@ import matches from './matches'
 * @return {Element}
 */
 export default function closest(element, parentSelector) {
-  const _closest = Element.prototype.closest || function(selector) {
+  const _closest = Element.prototype.closest || function (selector) {
     let el = this
     while (el) {
       if (matches.call(el, selector)) {

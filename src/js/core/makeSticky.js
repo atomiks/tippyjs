@@ -27,7 +27,7 @@ export default function makeSticky(data) {
     applyTransitionDuration()
 
     isVisible(popper)
-      ? window.requestAnimationFrame(updatePosition)
+      ? requestAnimationFrame(updatePosition)
       : removeTransitionDuration()
   }
 

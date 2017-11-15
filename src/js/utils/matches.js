@@ -8,7 +8,7 @@ if (typeof Element !== 'undefined') {
     e.webkitMatchesSelector ||
     e.mozMatchesSelector    ||
     e.msMatchesSelector     ||
-    function(s) {
+    function (s) {
       var matches = (this.document || this.ownerDocument).querySelectorAll(s),
           i = matches.length;
       while (--i >= 0 && matches.item(i) !== this) {}

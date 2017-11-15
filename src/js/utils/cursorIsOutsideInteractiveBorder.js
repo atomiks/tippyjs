@@ -4,14 +4,14 @@ import getCorePlacement from '../utils/getCorePlacement'
 * Determines if the mouse's cursor is outside the interactive border
 * @param {MouseEvent} event
 * @param {Element} popper
-* @param {Object} settings
+* @param {Object} options
 * @return {Boolean}
 */
-export default function cursorIsOutsideInteractiveBorder(event, popper, settings) {
+export default function cursorIsOutsideInteractiveBorder(event, popper, options) {
   if (!popper.getAttribute('x-placement')) return true
 
   const { clientX: x, clientY: y } = event
-  const { interactiveBorder, distance } = settings
+  const { interactiveBorder, distance } = options
 
   const rect = popper.getBoundingClientRect()
   const corePosition = getCorePlacement(popper.getAttribute('x-placement'))
