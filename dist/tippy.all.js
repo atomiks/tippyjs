@@ -1,4 +1,3 @@
-document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -82,6 +81,10 @@ var selectors = {
   */
 };var defaultsKeys = browser.supported && Object.keys(defaults);
 
+/**
+* Hides all poppers
+* @param {Object} exclude - data ref to exclude if needed
+*/
 function hideAllPoppers(exclude) {
   store.forEach(function (data) {
     var popper = data.popper,
@@ -119,6 +122,12 @@ if (typeof Element !== 'undefined') {
 
 var matches$1 = matches;
 
+/**
+* Ponyfill to get the closest parent element
+* @param {Element} element - child of parent to be returned
+* @param {String} parentSelector - selector to match the parent if found
+* @return {Element}
+*/
 function closest(element, parentSelector) {
   var _closest = Element.prototype.closest || function (selector) {
     var el = this;
@@ -143,6 +152,9 @@ function find(arr, checkFn) {
   return Array.prototype.find ? arr.find(checkFn) : arr.filter(checkFn)[0];
 }
 
+/**
+* Adds the needed event listeners
+*/
 function bindEventListeners() {
   var touchHandler = function touchHandler() {
     browser.usingTouch = true;
@@ -237,6 +249,10 @@ function bindEventListeners() {
   }
 }
 
+/**
+* To run a single time, once DOM is presumed to be ready
+* @return {Boolean} whether the function has run or not
+*/
 function init() {
   if (init.done) return false;
   init.done = true;
@@ -276,6 +292,12 @@ function prefix(property) {
   return null;
 }
 
+/**
+* Ponyfill for Array.prototype.findIndex
+* @param {Array} arr
+* @param {Function} checkFn
+* @return index of the item in the array
+*/
 function findIndex(arr, checkFn) {
   return Array.prototype.findIndex ? arr.findIndex(checkFn) : arr.indexOf(find(arr, checkFn));
 }
@@ -307,6 +329,11 @@ function elementIsInViewport(el) {
   return rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
 }
 
+/**
+* Triggers a document repaint or reflow for CSS transition
+* @param {Element} tooltip
+* @param {Element} circle
+*/
 function triggerReflow(tooltip, circle) {
   // Safari needs the specific 'transform' property to be accessed
   circle ? getComputedStyle(circle)[prefix('transform')] : getComputedStyle(tooltip).opacity;
@@ -324,6 +351,11 @@ function setVisibilityState(els, type) {
   });
 }
 
+/**
+* Returns inner elements of the popper element
+* @param {Element} popper
+* @return {Object}
+*/
 function getInnerElements(popper) {
   return {
     tooltip: popper.querySelector(selectors.TOOLTIP),
@@ -332,6 +364,11 @@ function getInnerElements(popper) {
   };
 }
 
+/**
+* Applies the transition duration to each element
+* @param {Element[]} els - Array of elements
+* @param {Number} duration
+*/
 function applyTransitionDuration(els, duration) {
   els.forEach(function (el) {
     if (!el) return;
@@ -368,6 +405,11 @@ function getCorePlacement(placement) {
   return placement.replace(/-.+/, '');
 }
 
+/**
+* Mousemove event listener handler for `followCursor` option
+* @param {Element} reference
+* @return {Function} the event handler
+*/
 function followCursorHandler(reference) {
   var data = find(store, function (data) {
     return data.reference === reference;
@@ -432,6 +474,11 @@ function followCursorHandler(reference) {
   return handler;
 }
 
+/**
+* Returns an array of elements based on the selector input
+* @param {String|Element|Element[]} selector
+* @return {Element[]}
+*/
 function getArrayOfElements(selector) {
   if (selector instanceof Element || isObjectLiteral(selector)) {
     return [selector];
@@ -452,6 +499,12 @@ function getArrayOfElements(selector) {
   }
 }
 
+/**
+* Prepares the callback functions for `show` and `hide` methods
+* @param {Object} data
+* @param {Number} duration
+* @param {Function} callback - callback function to fire once transitions complete
+*/
 function onTransitionEnd(data, duration, callback) {
   // Make callback synchronous if duration is 0
   if (!duration) {
@@ -802,7 +855,7 @@ function getBordersSize(styles, axis) {
  */
 var isIE10 = undefined;
 
-var isIE10$1 = function () {
+var isIE10$1 = function isIE10$1() {
   if (isIE10 === undefined) {
     isIE10 = navigator.appVersion.indexOf('MSIE 10') !== -1;
   }
@@ -824,7 +877,7 @@ function getWindowSizes() {
   };
 }
 
-var classCallCheck = function (instance, Constructor) {
+var classCallCheck = function classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
@@ -848,11 +901,7 @@ var createClass = function () {
   };
 }();
 
-
-
-
-
-var defineProperty = function (obj, key, value) {
+var defineProperty = function defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -2872,7 +2921,6 @@ var Popper = function () {
      * @memberof Popper
      */
 
-
     /**
      * Collection of utilities useful when writing custom modifiers.
      * Starting from version 1.7, this method is available only if you
@@ -2914,14 +2962,16 @@ var Popper = function () {
  * An ES6 getter that will return the height of the virtual reference element.
  */
 
-
 Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = Defaults;
 
-
-//# sourceMappingURL=popper.js.map
-
+/**
+* Returns the distance taking into account the default distance due to
+* the transform: translate setting in CSS
+* @param {Number} distance
+* @return {String}
+*/
 function getOffsetDistanceInPx(distance) {
   return -(distance - defaults.distance) + 'px';
 }
@@ -2970,6 +3020,11 @@ var _extends$1 = Object.assign || function (target) {
   return target;
 };
 
+/**
+* Creates a new popper instance
+* @param {Object} data
+* @return {Object} - the popper instance
+*/
 function createPopperInstance(data) {
   var reference = data.reference,
       popper = data.popper,
@@ -3037,6 +3092,11 @@ function createPopperInstance(data) {
   return new Popper(reference, popper, config);
 }
 
+/**
+* Appends the popper and creates a popper instance if one does not exist
+* Also updates its position if need be and enables event listeners
+* @param {Object} data -  the element/popper reference data
+*/
 function mountPopper(data) {
   var reference = data.reference,
       popper = data.popper,
@@ -3066,6 +3126,10 @@ function mountPopper(data) {
   }
 }
 
+/**
+* Updates a popper's position on each animation frame to make it stick to a moving element
+* @param {Object} data
+*/
 function makeSticky(data) {
   var popper = data.popper,
       popperInstance = data.popperInstance,
@@ -3092,6 +3156,12 @@ function makeSticky(data) {
   defer(updatePosition);
 }
 
+/**
+* Returns an object of settings to override global settings
+* @param {Element} reference
+* @param {Object} instanceOptions
+* @return {Object} - individual options
+*/
 function getIndividualOptions(reference, instanceOptions) {
   var options = defaultsKeys.reduce(function (acc, key) {
     var val = reference.getAttribute('data-tippy-' + key.toLowerCase()) || instanceOptions[key];
@@ -3118,6 +3188,13 @@ function getIndividualOptions(reference, instanceOptions) {
   return _extends$1({}, instanceOptions, options);
 }
 
+/**
+* Creates a popper element then returns it
+* @param {Number} id - the popper id
+* @param {String} title - the tooltip's `title` attribute
+* @param {Object} options - individual options
+* @return {Element} - the popper element
+*/
 function createPopperElement(id, title, options) {
   var placement = options.placement,
       distance = options.distance,
@@ -3216,6 +3293,14 @@ function createPopperElement(id, title, options) {
   return popper;
 }
 
+/**
+* Creates a trigger
+* @param {Object} event - the custom event specified in the `trigger` setting
+* @param {Element} el - tooltipped element
+* @param {Object} handlers - the handlers for each listener
+* @param {Boolean} touchHold
+* @return {Array} - array of listener objects
+*/
 function createTrigger(event, el, handlers, touchHold) {
   var listeners = [];
 
@@ -3261,6 +3346,13 @@ function createTrigger(event, el, handlers, touchHold) {
   return listeners;
 }
 
+/**
+* Determines if the mouse's cursor is outside the interactive border
+* @param {MouseEvent} event
+* @param {Element} popper
+* @param {Object} options
+* @return {Boolean}
+*/
 function cursorIsOutsideInteractiveBorder(event, popper, options) {
   if (!popper.getAttribute('x-placement')) return true;
 
@@ -3299,6 +3391,13 @@ function cursorIsOutsideInteractiveBorder(event, popper, options) {
   return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right;
 }
 
+/**
+* Returns relevant listener callbacks for each ref
+* @param {Element} reference
+* @param {Element} popper
+* @param {Object} options
+* @return {Object} - relevant listeners
+*/
 function getEventListeners(reference, popper, options) {
   var _this = this;
 
@@ -3529,6 +3628,8 @@ function createTooltips(els) {
   }, []);
 }
 
+/* Utility functions */
+/* Core library functions */
 var Tippy = function () {
   /**
   * Creates tooltips
@@ -3893,10 +3994,9 @@ function injectCSS() {
 
   if (typeof window !== 'undefined') {
     var head = document.head || document.querySelector('head');
-    var firstStylesheet = head.querySelector('link[rel="stylesheet"]');
     var style = document.createElement('style');
     style.type = 'text/css';
-    head.insertBefore(style, firstStylesheet);
+    head.appendChild(style);
 
     if (style.styleSheet) {
       style.styleSheet.cssText = css;

@@ -2,13 +2,15 @@
   "name": "tippy.js",
   "version": "2.0.0",
   "description": "Vanilla JS Tooltip Library",
-  "main": "dist/tippy.js",
+  "main": "dist/tippy.all.js",
   "scripts": {
     "dev": "rollup -c scripts/rollup.dev.config.js --watch",
-    "build": "npm run standalone && npm run bundle && npm run bundle-minify",
+    "build": "npm run standalone && npm run bundle && npm run bundle-minify && npm run withoutcss && npm run withoutcss-minify",
     "bundle": "rollup -c scripts/rollup.bundle.config.js",
     "standalone": "rollup -c scripts/rollup.standalone.config.js",
     "bundle-minify": "rollup -c scripts/rollup.bundle.min.config.js",
+    "withoutcss": "rollup -c scripts/rollup.withoutcss.config.js",
+    "withoutcss-minify": "rollup -c scripts/rollup.withoutcss.min.config.js",
     "test": "rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js"
   },
   "author": "atomiks",

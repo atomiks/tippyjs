@@ -224,19 +224,23 @@
             </p>
 
             <pre><code>https://unpkg.com/tippy.js/dist/</code></pre>
-
-            <p>1. Place the <code>tippy.css</code> stylesheet in your document's <code>head</code>.</p>
-            <pre><code class="language-markup">&lt;link rel="stylesheet" href="css/tippy.css"&gt;</code></pre>
-            <p>2. Include the <code>tippy.min.js</code> file in your document before your own scripts:</p>
+            
+            <p>Simply include the <code>tippy.all.min.js</code> file in your document before your own scripts:</p>
             <pre><code class="language-markup">&lt;script src="js/tippy.min.js"&gt;&lt;/script&gt;</code></pre>
+            
+            <p>This is the bundled version which includes Popper.js and automatically injects Tippy's CSS stylesheet
+            into the document head.</p>
 
             <p>If you installed the npm package, the JS and CSS files are available in the dist folder:</p>
-<pre><code class="language-javascript">tippy.js
+<pre><code class="language-javascript">tippy.all.js
+tippy.all.min.js
+tippy.js
 tippy.min.js
 tippy.standalone.js
 tippy.css</code></pre>
 
-            <p><code>tippy.js</code> comes bundled with <code>popper.js</code> (unminified), and <code>tippy.standalone.js</code> (minified) is Tippy by itself if you want use a different version of Popper.js.</p>
+            <p>Use <code>tippy.standalone.js</code> if you want use a different version of Popper.js.
+            Use <code>tippy.nocss.js</code> if you do not want the CSS automatically injected into the document head.</p>
           </section>
           <hr>
           <section id="creating-a-tooltip">
