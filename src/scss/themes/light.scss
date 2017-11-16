@@ -1,0 +1,31 @@
+@import '../mixins.scss';
+@import '../vars.scss';
+
+.tippy-popper {
+  @each $placement in $placements {
+    &[x-placement^=#{$placement}] {
+      .tippy-tooltip.light-theme {
+        [x-circle] {
+          background-color: white;
+        }
+        [x-arrow] {
+          @include arrow($placement, 7px, white);
+        }
+        [x-roundarrow] {
+          @include roundarrow($placement, 24px, white);
+        }
+      }
+    }
+  }
+
+  .tippy-tooltip.light-theme {
+    color: #26323d;
+    box-shadow: 0 4px 20px 4px rgba(0, 20, 60, 0.1),
+    0 4px 80px -8px rgba(0, 20, 60, 0.2);
+    background-color: white;
+
+    &[x-animatefill] {
+      background-color: transparent;
+    }
+  }
+}

@@ -5,12 +5,14 @@
   "main": "dist/tippy.all.js",
   "scripts": {
     "dev": "rollup -c scripts/rollup.dev.config.js --watch",
-    "build": "npm run standalone && npm run bundle && npm run bundle-minify && npm run withoutcss && npm run withoutcss-minify",
+    "css": "rollup -c scripts/rollup.css.config.js --watch",
+    "build": "npm run standalone && npm run bundle && npm run bundle-minify && npm run all && npm run all-minify",
+    "all": "rollup -c scripts/rollup.all.config.js",
+    "all-minify": "rollup -c scripts/rollup.all.min.config.js",
     "bundle": "rollup -c scripts/rollup.bundle.config.js",
     "standalone": "rollup -c scripts/rollup.standalone.config.js",
     "bundle-minify": "rollup -c scripts/rollup.bundle.min.config.js",
-    "withoutcss": "rollup -c scripts/rollup.withoutcss.config.js",
-    "withoutcss-minify": "rollup -c scripts/rollup.withoutcss.min.config.js",
+    "themes": "rollup -c scripts/rollup.themes.config.js",
     "test": "rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js"
   },
   "author": "atomiks",

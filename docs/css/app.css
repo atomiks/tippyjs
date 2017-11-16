@@ -369,7 +369,7 @@ table {
 
 .tippy-tooltip.bordered-theme {
   border: 1px solid #a3b3cd;
-  box-shadow: none;
+  box-shadow: none !important;
 }
 .tippy-popper[x-placement^=top] .tippy-tooltip.bordered-theme [x-arrow] {
   border-top: 7px solid #8c9bb4;

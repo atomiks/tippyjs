@@ -9,12 +9,12 @@
   <script defer src="js/focus-ring.js"></script>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="tippy/themes.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/prism.css">
   <link rel="icon" href="favicon.ico">
 </head>
 <body>
-
   <div id="app">
     <header class="hero">
       <div class="container">
@@ -76,7 +76,7 @@
               <button class="btn tippy" title="I have a nice round arrow." data-tippy-arrow="true" data-tippy-arrowstyle="round" data-tippy-animation="fade">Round</button>
               <button class="btn tippy" title="My arrow is wide." data-tippy-arrow="true" data-tippy-arrowtransform="scaleX(1.4)" data-tippy-animation="fade">Wide</button>
               <button class="btn tippy" title="My arrow is skinny." data-tippy-arrow="true" data-tippy-arrowtransform="scaleX(0.7)" data-tippy-animation="fade">Skinny</button>
-              <button class="btn tippy" title="My arrow is a small." data-tippy-arrow="true" data-tippy-arrowtransform="translateY(-1px) scale(0.8)" data-tippy-animation="fade">Small</button>
+              <button class="btn tippy" title="My arrow is a small." data-tippy-arrow="true" data-tippy-arrowtransform="scale(0.75) translateY(-1.5px)" data-tippy-flip="false" data-tippy-animation="fade">Small</button>
               <button class="btn tippy" title="My arrow is a large." data-tippy-arrow="true" data-tippy-arrowtransform="scale(1.75)" data-tippy-animation="fade">Large</button>
             </div>
             
@@ -127,7 +127,7 @@
             <h4>Themes <i class="material-icons icon-left">brush</i></h4>
             <p>You can create all kinds of custom funky themes for your tooltips with ease.</p>
             <div class="button-showcase d-flex justify-content-center flex-wrap">
-              <button class="btn tippy" title="Cool huh?" data-tippy-animation="fade" data-tippy-theme="light" data-tippy-arrow="true" data-tippy-arrowStyle="round" data-tippy-flip="false">Light</button>
+              <button class="btn tippy" title="Cool huh?" data-tippy-animation="fade" data-tippy-theme="light" data-tippy-arrow="true" data-tippy-arrowStyle="round" data-tippy-flip="false">Light shadow</button>
               <button class="btn tippy" title="Cool huh?" data-tippy-animation="fade" data-tippy-theme="light bordered" data-tippy-arrow="true" data-tippy-flip="false">Light bordered</button>
               <button class="btn tippy" title="Bzzzz" data-tippy-animation="fade" data-tippy-theme="honeybee" data-tippy-arrow="true" data-tippy-arrowTransform="scale(1.3) translateY(1px)" data-tippy-flip="false">Honeybee</button>
               <button class="btn tippy" title="Awesome colors!" data-tippy-animation="fade" data-tippy-animateFill="false" data-tippy-theme="gradient" data-tippy-flip="false">Gradient</button>
@@ -502,7 +502,7 @@ tippy(refObject)
                       <td><code>theme</code></td>
                       <td><code>'dark'</code></td>
                       <td><code>'dark'</code> <code>'light'</code> <code>'transparent'</code></td>
-                      <td>The CSS styling theme. You can add your own easily. See <a href="#creating-themes">Creating themes</a>.
+                      <td>These themes require the <code>themes.css</code> file. You can also create your own easily. See <a href="#creating-themes">Creating themes</a>.
                     </tr>
                     <tr>
                       <td><code>offset</code></td>

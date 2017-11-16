@@ -1,7 +1,7 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
-	(global.tippy = factory());
+	(factory());
 }(this, (function () { 'use strict';
 
 var browser = {};
@@ -3940,49 +3940,5 @@ var Tippy = function () {
   }]);
   return Tippy;
 }();
-
-function tippy(selector, options) {
-  // Create a virtual object for custom positioning
-  if (isObjectLiteral(selector)) {
-    selector = {
-      refObj: true,
-      attributes: selector.attributes || {},
-      getBoundingClientRect: selector.getBoundingClientRect,
-      clientWidth: selector.clientWidth,
-      clientHeight: selector.clientHeight,
-      setAttribute: function setAttribute(key, val) {
-        selector.attributes[key] = val;
-      },
-      getAttribute: function getAttribute(key) {
-        return selector.attributes[key];
-      },
-      removeAttribute: function removeAttribute(key) {
-        delete selector.attributes[key];
-      },
-      addEventListener: function addEventListener() {},
-      removeEventListener: function removeEventListener() {},
-      classList: {
-        classNames: {},
-        add: function add(key) {
-          selector.classList.classNames[key] = true;
-        },
-        remove: function remove(key) {
-          selector.classList.classNames[key] = false;
-          return true;
-        },
-        contains: function contains(key) {
-          return !!selector.classList.classNames[key];
-        }
-      }
-    };
-  }
-
-  return new Tippy(selector, options);
-}
-
-tippy.browser = browser;
-tippy.defaults = defaults;
-
-return tippy;
 
 })));
