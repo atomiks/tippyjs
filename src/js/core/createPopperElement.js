@@ -23,7 +23,8 @@ export default function createPopperElement(id, title, options) {
     theme,
     html,
     zIndex,
-    interactive
+    interactive,
+    maxWidth
   } = options
 
   const popper = document.createElement('div')
@@ -32,6 +33,7 @@ export default function createPopperElement(id, title, options) {
   popper.setAttribute('aria-hidden', 'true')
   popper.setAttribute('id', `tippy-tooltip-${id}`)
   popper.style.zIndex = zIndex
+  popper.style.maxWidth = maxWidth
 
   const tooltip = document.createElement('div')
   tooltip.setAttribute('class', 'tippy-tooltip')
@@ -48,7 +50,7 @@ export default function createPopperElement(id, title, options) {
     arrow.style[prefix('transform')] = arrowTransform
 
     if (arrowStyle === 'round') {
-      arrow.setAttribute('x-roundedarrow', '')
+      arrow.setAttribute('x-roundarrow', '')
       arrow.innerHTML = `
       <svg width="100%" height="100%" viewBox="0 0 64 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
           <g transform="matrix(1.20755,0,0,1.42589,-6.03774,-64.3912)">

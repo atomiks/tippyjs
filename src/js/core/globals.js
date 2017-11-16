@@ -63,6 +63,7 @@ export const defaults = {
   flipBehavior: 'flip',
   arrowStyle: 'sharp',
   arrowTransform: '',
+  maxWidth: '350px',
   popperOptions: {}
 }
 
