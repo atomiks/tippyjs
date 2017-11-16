@@ -1,12 +1,12 @@
 html {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 body {
-  font-family: 'Nunito', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Nunito Sans', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: #3751cc;
-  background: -webkit-linear-gradient(left,#5733ea, #4894ff 70%,#a5bcff);
-  background: linear-gradient(90deg,#5733ea, #4894ff 70%,#a5bcff);
+  background: -webkit-linear-gradient(left,#7756fb, #4894ff 70%,#a5bcff);
+  background: linear-gradient(90deg,#7756fb, #4894ff 70%,#a5bcff);
   color: #34495e;
 }
 
@@ -63,16 +63,6 @@ strong {
 h5 {
   line-height: 1.5;
   margin: 0;
-}
-
-.underline {
-  text-decoration: underline;
-  font-size: 1.2rem;
-  margin: 2rem 0 0;
-}
-
-.underline a {
-  color: #bef9ff;
 }
 
 .alert.alert-info {
@@ -276,6 +266,24 @@ hr {
   border-top: 1px solid rgba(0, 31, 255, 0.1);
 }
 
+#features {
+  text-align: center;
+}
+
+#features h4 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+#features p {
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.button-showcase {
+  margin-bottom: 4rem;
+}
+
 .button-showcase .btn, .button-showcase .btn:active, .button-showcase:focus {
   margin: 1.25rem 1rem;
 }
@@ -315,7 +323,7 @@ body:not(.is-safari) .btn:active {
 
 main .container-fluid {
   background: white;
-  max-width: 980px;
+  max-width: 1050px;
   padding: 2rem 1rem;
   box-shadow: 0 0 80px -4px rgba(0,20,40,0.1);
   -webkit-transition: opacity 1s ease;
@@ -346,6 +354,44 @@ table {
   border: 2px solid orange;
   color: black;
 }
+.tippy-popper[x-placement^=top] .tippy-tooltip.honeybee-theme [x-arrow] {
+  border-top: 7px solid orange;
+}
+.tippy-popper[x-placement^=top] .tippy-tooltip.honeybee-theme [x-arrow]::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -6px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid yellow;
+}
+
+.tippy-tooltip.bordered-theme {
+  border: 1px solid #a3b3cd;
+  box-shadow: none !important;
+}
+.tippy-popper[x-placement^=top] .tippy-tooltip.bordered-theme [x-arrow] {
+  border-top: 7px solid #8c9bb4;
+}
+.tippy-popper[x-placement^=top] .tippy-tooltip.bordered-theme [x-arrow]::after {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: -6px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid white;
+}
+
+.tippy-tooltip.gradient-theme {
+  background: linear-gradient(45deg,#8c61f5, #ff9cad);
+  font-weight: bold;
+}
+
+.tippy-tooltip.colorshift-theme {
+  background: linear-gradient(45deg,green,pink);
+}
 
 .test-element {
   width: 50px;
@@ -373,7 +419,7 @@ table {
   width: 70px;
 }
 
-.button-showcase .btn:last-child {
+#animated-tippy {
   animation: hover 2s ease-in-out infinite;
 }
 
@@ -396,9 +442,6 @@ table {
 }
 
 @media (min-width: 576px) {
-  html {
-    font-size: 15px;
-  }
   main .container-fluid {
     padding: 2rem;
   }

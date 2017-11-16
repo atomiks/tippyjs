@@ -35,7 +35,7 @@ export default function createPopperInstance(data) {
     modifiers: {
       ...(popperOptions ? popperOptions.modifiers : {}),
       arrow: {
-        element: arrowStyle === 'round' ? '[x-roundedarrow]' : '[x-arrow]',
+        element: arrowStyle === 'round' ? '[x-roundarrow]' : '[x-arrow]',
         ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {})
       },
       flip: {

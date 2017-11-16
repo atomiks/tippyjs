@@ -3,32 +3,32 @@ import { browser, store, defaults } from './core/globals'
 import init from './core/init'
 
 /* Utility functions */
-import defer                   from './utils/defer'
-import prefix                  from './utils/prefix'
-import find                    from './utils/find'
-import findIndex               from './utils/findIndex'
-import removeTitle             from './utils/removeTitle'
-import elementIsInViewport     from './utils/elementIsInViewport'
-import triggerReflow           from './utils/triggerReflow'
-import setVisibilityState      from './utils/setVisibilityState'
-import getInnerElements        from './utils/getInnerElements'
+import defer from './utils/defer'
+import prefix from './utils/prefix'
+import find from './utils/find'
+import findIndex from './utils/findIndex'
+import removeTitle from './utils/removeTitle'
+import elementIsInViewport from './utils/elementIsInViewport'
+import triggerReflow from './utils/triggerReflow'
+import setVisibilityState from './utils/setVisibilityState'
+import getInnerElements from './utils/getInnerElements'
 import applyTransitionDuration from './utils/applyTransitionDuration'
-import isVisible               from './utils/isVisible'
-import noop                    from './utils/noop'
-import isObjectLiteral         from './utils/isObjectLiteral'
+import isVisible from './utils/isVisible'
+import noop from './utils/noop'
+import isObjectLiteral from './utils/isObjectLiteral'
 
 /* Core library functions */
 import followCursorHandler from './core/followCursorHandler'
-import getArrayOfElements  from './core/getArrayOfElements'
-import onTransitionEnd     from './core/onTransitionEnd'
-import mountPopper         from './core/mountPopper'
-import makeSticky          from './core/makeSticky'
-import createTooltips      from './core/createTooltips'
+import getArrayOfElements from './core/getArrayOfElements'
+import onTransitionEnd from './core/onTransitionEnd'
+import mountPopper from './core/mountPopper'
+import makeSticky from './core/makeSticky'
+import createTooltips from './core/createTooltips'
 
 class Tippy {
   /**
   * Creates tooltips
-  * @param {String|Element|Element[]} selector
+  * @param {String|Element|Element[]|NodeList|Object} selector
   * @param {Object} options (optional) - the object of options to be applied to the instance
   */
   constructor(selector, options = {}) {

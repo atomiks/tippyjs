@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700" rel="stylesheet">
   <script defer src="js/focus-ring.js"></script>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  <link rel="stylesheet" href="tippy/tippy.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/prism.css">
   <link rel="icon" href="favicon.ico">
@@ -43,37 +42,120 @@
                aria-label="Star atomiks/tippyjs on GitHub">Star</a>
           </small>
         </div>
-        <p class="underline"><a href="#">Switch to V1 docs</a></p>
       </div>
     </header>
     <main>
       <div class="content-wrapper">
         <div class="container-fluid">
           <section id="features">
-            <h2 class="heading-top text-center light">Features</h2>
-            <h5 class="text-center text-muted feat-helper-text"><span class="hidden-md-down">Hover your cursor over the buttons to see Tippy in action!</span><span class="hidden-lg-up">Tap the buttons to see Tippy in action!</span></h5>
+            <h2 class="heading-top">Tooltip features</h2>
+            
+            <h4>Default</h4>
+            <p>The default tooltip looks like this when Tippy is given no options. It has a nifty backdrop filling animation!</p>
             <div class="button-showcase d-flex justify-content-center flex-wrap">
-              <button class="btn tippy" title="I'm the default tooltip!"><i class="material-icons icon-left">remove</i>Default</button>
-              <button class="btn tippy" title="Look at me on the bottom! 🙃" data-tippy-animatefill="false" data-tippy-placement="bottom"><i class="material-icons icon-left">compare_arrows</i>Placement</button>
-              <button class="btn tippy" title="I have a nice pointy arrow. 👆" data-tippy-arrow="true" data-tippy-animation="fade"><i class="material-icons icon-left">play_arrow</i>Arrows</button>
-              <button class="btn tippy" title="You can interact with me as much as you like!" data-tippy-interactive="true" data-tippy-interactiveborder="10"><i class="material-icons icon-left">pan_tool</i> Interactivity</button>
-              <button class="btn tippy" title="Thanks for clicking!" data-tippy-trigger="click"><i class="material-icons icon-left">touch_app</i>Triggers <small class="opacity-low">(click)</small></button>
-              <button class="btn tippy" title="I'm a light 💡 theme!" data-tippy-theme="light" data-tippy-arrow="true" data-tippy-animatefill="false"><i class="material-icons icon-left">brush</i>Themes</button>
-              <button class="btn tippy" title="I scaled from nothingness..." data-tippy-animation="scale" data-tippy-animatefill="false"><i class="material-icons icon-left">loupe</i>Scale animation</button>
-              <button class="btn tippy" title="Just a fade!" data-tippy-animation="fade" data-tippy-animatefill="false"><i class="material-icons icon-left">blur_on</i>Fade animation</button>
-              <button class="btn tippy" title="Rise or fall" data-tippy-animatefill="false"><i class="material-icons icon-left">keyboard_arrow_up</i>Shift animation</button>
-              <button class="btn tippy" title="Am I fancy enough for you?" data-tippy-animation="perspective" data-tippy-animatefill="false"><i class="material-icons icon-left">panorama_horizontal</i>Perspective animation</button>
-              <button class="btn tippy" title="Sorry for making you wait" data-tippy-delay="[600, 200]"><i class="material-icons icon-left">timer</i>Delay</button>
-              <button class="btn tippy" title="BAM! 😱" data-tippy-duration="0"><i class="material-icons icon-left">flash_on</i>Instant</button>
-              <button class="btn tippy" title="Physics, bitch" data-tippy-inertia="true" data-tippy-duration="[600,400]" data-tippy-animation="scale" data-tippy-animatefill="false"><i class="material-icons icon-left">blur_linear</i>Inertia</button>
-              <button class="btn tippy" title="By default, hide duration is the same as show" data-tippy-duration="1000" data-tippy-animatefill="false" data-tippy-animation="fade"><i class="material-icons icon-left">timer_3</i>Duration</button>
-              <button class="btn" id="callback-tippy" title="Call ya back!"><i class="material-icons icon-left">call</i>Callbacks</button>
-              <button class="btn tippy" id="html-tippy" data-tippy-distance="15" data-tippy-theme="light" data-tippy-animation="scale" data-tippy-arrowsize="large" data-tippy-trigger="click" data-tippy-interactive="true" data-tippy-animatefill="false" data-tippy-arrow="true"><i class="material-icons icon-left">code</i>Popover HTML <small class="opacity-low">(click)</small></button>
-              <button class="btn tippy" title="I'll follow your mouse cursor!" data-tippy-followcursor="true" data-tippy-animation="scale" data-tippy-arrow="true"><i class="material-icons icon-left">mouse</i>Follow cursor</button>
-              <button class="btn flippy" title="I'll flip to the bottom if there's not enough room on the right."><i class="material-icons icon-left">flip</i>Custom flips</button>
-              <button class="btn tippy" title="I'm just a cute little tooltip" data-tippy-theme="transparent" data-tippy-size="small">Small</button>
-              <button class="btn tippy" title="I'm a big scary tooltip" data-tippy-theme="transparent" data-tippy-size="large">Large</button>
-              <button class="btn tippy" id="animated-tippy" title="Sticky tooltip! Click my element to hide me." data-tippy-theme="transparent" data-tippy-sticky="true" data-tippy-hideonclick="false" data-tippy-trigger="click">Animated element</button>
+              <button class="btn tippy" title="I'm the default tooltip!">Try me!</button>
+            </div>
+            <h4>Placement <i class="material-icons icon-left">compare_arrows</i></h4>
+            <p>Tooltips can be placed in four different ways in relation to their reference element. Additionally, the tooltip can
+            be shifted.</p>
+            <div class="button-showcase d-flex justify-content-center flex-wrap">
+              <button class="btn tippy" title="Look at me on the top!" data-tippy-animatefill="false" data-tippy-placement="top" data-tippy-animation="fade">Top</button>
+              <button class="btn tippy" title="Look at me on the bottom!" data-tippy-animatefill="false" data-tippy-placement="bottom" data-tippy-animation="fade">Bottom</button>
+              <button class="btn tippy" title="Look at me on the left!" data-tippy-animatefill="false" data-tippy-placement="left" data-tippy-animation="fade">Left</button>
+              <button class="btn tippy" title="Look at me on the right!" data-tippy-animatefill="false" data-tippy-placement="right" data-tippy-animation="fade">Right</button>
+              <button class="btn tippy" title="I start at the left edge!" data-tippy-animatefill="false" data-tippy-placement="top-start" data-tippy-animation="fade">Top-Start</button>
+              <button class="btn tippy" title="I end at the right edge!" data-tippy-animatefill="false" data-tippy-placement="top-end" data-tippy-animation="fade">Top-End</button>
+            </div>
+
+            <h4>Arrows <i class="material-icons icon-left">play_arrow</i></h4>
+            <p>
+              Arrows point toward the reference element. There are two different types of arrows: Sharp and Round. You can transform the proportion and scale of the arrows any way you like.
+            </p>
+            <div class="button-showcase d-flex justify-content-center flex-wrap">
+              <button class="btn tippy" title="I have a nice sharp arrow." data-tippy-arrow="true" data-tippy-animation="fade">Sharp</button>
+              <button class="btn tippy" title="I have a nice round arrow." data-tippy-arrow="true" data-tippy-arrowstyle="round" data-tippy-animation="fade">Round</button>
+              <button class="btn tippy" title="My arrow is wide." data-tippy-arrow="true" data-tippy-arrowtransform="scaleX(1.4)" data-tippy-animation="fade">Wide</button>
+              <button class="btn tippy" title="My arrow is skinny." data-tippy-arrow="true" data-tippy-arrowtransform="scaleX(0.7)" data-tippy-animation="fade">Skinny</button>
+              <button class="btn tippy" title="My arrow is a small." data-tippy-arrow="true" data-tippy-arrowtransform="translateY(-1px) scale(0.8)" data-tippy-animation="fade">Small</button>
+              <button class="btn tippy" title="My arrow is a large." data-tippy-arrow="true" data-tippy-arrowtransform="scale(1.75)" data-tippy-animation="fade">Large</button>
+            </div>
+            
+            <h4>Triggers <i class="material-icons icon-left">touch_app</i></h4>
+            <p>
+              Triggers define the types of events that cause a tooltip to show. A fourth trigger,
+              Manual, is used when you want to programmatically show or hide a tooltip.
+            </p>
+            <div class="button-showcase d-flex justify-content-center flex-wrap">
+              <button class="btn tippy" title="Thanks for hovering (or tapping on mobile!)" data-tippy-trigger="mouseenter">Hover or Touch</button>
+              <button class="btn tippy" title="Thanks for focusing!" data-tippy-trigger="focus">Focus (use tab key)</button>
+              <button class="btn tippy" title="Thanks for clicking!" data-tippy-trigger="click">Click</button>
+            </div>
+            
+            <h4>Interactivity <i class="material-icons icon-left">pan_tool</i></h4>
+            <p>
+              Tooltips can be interactive, meaning you can hover over or click on them and they won't hide.
+            </p>
+            <div class="button-showcase d-flex justify-content-center flex-wrap">
+              <button class="btn tippy" title="I don't close when the cursor moves onto me!" data-tippy-interactive="true">Interactive with hover</button>
+              <button class="btn tippy" title="Feel free to interact with me." data-tippy-interactive="true" data-tippy-trigger="click">Interactive with click</button>
+            </div>
+            
+            <h4>Animations <i class="material-icons icon-left">blur_on</i></h4>
+            <p>
+              Tooltips can have different types of transition animations.
+            </p>
+            <div class="button-showcase d-flex justify-content-center flex-wrap">
+              <button class="btn tippy" title="I shifted away from my reference element!" data-tippy-animation="shift" data-tippy-arrow="true">Shift</button>
+              <button class="btn tippy" title="I just faded into existence!" data-tippy-animation="fade" data-tippy-arrow="true">Fade</button>
+              <button class="btn tippy" title="I rotated with perspective!" data-tippy-animation="perspective" data-tippy-arrow="true">Perspective</button>
+              <button class="btn tippy" title="I scaled up from nothingness!" data-tippy-animation="scale" data-tippy-arrow="true">Scale</button>
+            </div>
+            
+            <h4>Transitions &amp; Delays <i class="material-icons icon-left">timer</i></h4>
+            <p>
+              Tooltips can have different transition durations or delays.
+            </p>
+            <div class="button-showcase d-flex justify-content-center flex-wrap">
+              <button class="btn tippy" title="BAM!" data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-duration="0">Instant</button>
+              <button class="btn tippy" title="Fast" data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-duration="200">Short duration</button>
+              <button class="btn tippy" title="Slooooow" data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-duration="600">Long duration</button>
+              <button class="btn tippy" title="Waited to show" data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-delay="[600, 0]">Show delay</button>
+              <button class="btn tippy" title="Waited to hide" data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-delay="[0, 600]">Hide delay</button>
+              <button class="btn tippy" title="Waited for both" data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-delay="600">Combined delay</button>
+            </div>
+            
+            <h4>Themes <i class="material-icons icon-left">brush</i></h4>
+            <p>You can create all kinds of custom funky themes for your tooltips with ease.</p>
+            <div class="button-showcase d-flex justify-content-center flex-wrap">
+              <button class="btn tippy" title="Cool huh?" data-tippy-animation="fade" data-tippy-theme="light" data-tippy-arrow="true" data-tippy-arrowStyle="round" data-tippy-flip="false">Light</button>
+              <button class="btn tippy" title="Cool huh?" data-tippy-animation="fade" data-tippy-theme="light bordered" data-tippy-arrow="true" data-tippy-flip="false">Light bordered</button>
+              <button class="btn tippy" title="Bzzzz" data-tippy-animation="fade" data-tippy-theme="honeybee" data-tippy-arrow="true" data-tippy-arrowTransform="scale(1.3) translateY(1px)" data-tippy-flip="false">Honeybee</button>
+              <button class="btn tippy" title="Awesome colors!" data-tippy-animation="fade" data-tippy-animateFill="false" data-tippy-theme="gradient" data-tippy-flip="false">Gradient</button>
+            </div>
+            
+            <h4>Callbacks <i class="material-icons icon-left">call</i></h4>
+            <p>Callbacks allow you to react to a tooltip's show and hide events. Open your browser console to see when the logs occur.</p>
+            <div class="button-showcase d-flex justify-content-center flex-wrap">
+              <button class="btn" id="onShow" title="I'm called when a tooltip begins to show." data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-duration="600">onShow()</button>
+              <button class="btn" id="onHide" title="I'm called when a tooltip begins to hide." data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-duration="600">onHide()</button>
+              <button class="btn" id="onShown" title="I'm called when a tooltip has fully transitioned in." data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-duration="600" data-tippy-maxWidth="400px">onShown()</button>
+              <button class="btn" id="onHidden" title="I'm called when a tooltip has fully transitioned out." data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-duration="600" data-tippy-maxWidth="400px">onHidden()</button>
+            </div>
+            
+            <h4 class="text-center">Misc <i class="material-icons icon-left">tag_faces</i></h4>
+            <p>Tippy has many more features! These are just some of them.</p>
+            <div class="button-showcase d-flex justify-content-center flex-wrap">
+              <button class="btn tippy" title="I'm hugging the tooltip!" data-tippy-distance="0" data-tippy-animation="fade" data-tippy-animateFill="false">Distance</button>
+              <button class="btn tippy" title="I'm offset 50px on the x-axis, and 10px on the y-axis!" data-tippy-offset="50, 10" data-tippy-arrow="true" data-tippy-animation="fade" data-tippy-animateFill="false">Offset</button>
+              <button class="btn tippy" title="I'll follow your mouse cursor!" data-tippy-followcursor="true" data-tippy-animation="scale" data-tippy-arrow="true">Follow cursor</button>
+              <button class="btn flippy" title="I'll flip to the bottom if there's not enough room on the right.">Custom flips</button>
+              <button class="btn tippy" id="animated-tippy" title="Sticky tooltip! Click my element to hide me." data-tippy-theme="transparent" data-tippy-sticky="true" data-tippy-hideonclick="false" data-tippy-trigger="click">Sticky <small class="opacity-low">(click)</small></button>
+              <button class="btn tippy" id="html-tippy" data-tippy-arrowTransform="scale(1.5)" data-tippy-distance="15" data-tippy-theme="light" data-tippy-animation="scale" data-tippy-arrowsize="large" data-tippy-trigger="click" data-tippy-interactive="true" data-tippy-animatefill="false" data-tippy-arrow="true">HTML templates <small class="opacity-low">(click)</small></button>
+              <button class="btn tippy" title="I'm pretty cute" data-tippy-size="small">Small tooltip</button>
+              <button class="btn tippy" title="I'm big and scary!" data-tippy-size="large">Large tooltip</button>
+              <button class="btn tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-duration="500">Inertial physics (Shift)</button>
+              <button class="btn tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-animation="scale" data-tippy-duration="500">Inertial physics (Scale)</button>
+              <button class="btn tippy" title="Use a touch device to see" data-tippy-touchHold="true">Touch and hold only</button>
             </div>
           </section>
 
@@ -96,7 +178,8 @@
             <h4>Touch devices</h4>
             <p>
                 Tippy works on touch devices almost the same as on desktop/mouse devices. However on iOS devices, in order for tooltips to close
-                when tapping anywhere on the body and to trigger hover events on non-clickable elements, a <code class="language-css">.tippy-touch { cursor: pointer !important; }</code>
+                when tapping anywhere on the body, and to trigger hover events on non-clickable elements, a
+                <code class="language-css">.tippy-touch { cursor: pointer !important; }</code>
                 class is added to the body.
             </p>
 
@@ -158,17 +241,20 @@ tippy.css</code></pre>
           <hr>
           <section id="creating-a-tooltip">
                       <h2><a href="#creating-a-tooltip"><i class="material-icons icon-left">build</i><span>Creating a tooltip</span></a></h2>
-                      <p>First, give an element a <code>title</code> attribute containing what you want the tooltip to say.</p>
+                      <p>First, give your element(s) a <code>title</code> attribute containing what you want the tooltip to say.</p>
 
                       <pre><code class="language-markup">&lt;button class="btn" title="I'm a tooltip!"&gt;Text&lt;/button&gt;</code></pre>
 
-                      <p>Then, to give it a Tippy tooltip, call the <code>tippy()</code> function by passing in a CSS selector.</p>
+                      <p>Then, to give them a Tippy tooltip, call the <code>tippy()</code> function by passing in a CSS selector.</p>
                       <pre><code class="language-javascript">tippy('.btn')</code></pre>
 
                       <div class="result-box">
                         <p class="text-muted">Result:</p>
                         <button class="btn tippy" title="I'm a tooltip!">Text</button>
                       </div>
+                      
+                      <p>To give all elements with a <code>title</code> attribute a tooltip, you can use:</p>
+                      <pre><code class="language-javascript">tippy('[title]')</code></pre>
 
                       <p>For details on the type of CSS selector string you can use, see <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="mozilla.org">document.querySelectorAll()</a> for reference.</p>
 
@@ -177,7 +263,7 @@ tippy.css</code></pre>
                       <p>You aren't limited to just a CSS selector string as input. You can also directly use a DOM element (or an array of elements):</p>
 <pre><code class="language-javascript">tippy(document.querySelector('#myElement'))</code></pre>
 
-                      <p>Or a NodeList: <strong class="badge badge-default">v1.3</strong></p>
+                      <p>Or a NodeList:</p>
 
 <pre><code class="language-javascript">tippy(document.querySelectorAll('.myElements'))</code></pre>
 
@@ -186,7 +272,6 @@ tippy.css</code></pre>
                       <p>
                         For more specialized cases, you can also pass in a custom virtual object
                         instead of a DOM node to act as the positioning reference.
-                        <strong class="badge badge-default">v1.4</strong>
                       </p>
 
 <pre><code class="language-javascript">const refObject = {
@@ -280,7 +365,7 @@ tippy(refObject)
                       <td>
                           <code>'top'</code> <code>'bottom'</code> <code>'left'</code> <code>'right'</code>
                       </td>
-                      <td>Specifies which direction to place the tooltip on the element.
+                      <td>Specifies which direction to place the tooltip in relation to the reference element.
                           Add the suffix <code>-start</code>
                           or <code>-end</code> to shift the placement. <code>'top-end'</code> is an example.
                       </td>
@@ -317,6 +402,32 @@ tippy(refObject)
                       </td>
                     </tr>
                     <tr>
+                      <td><code>flip</code></td>
+                      <td><code>true</code></td>
+                      <td>
+                          <code>Boolean</code>
+                      </td>
+                      <td>
+                        Specifies whether the tooltip should flip (the reversing of placement based on the amount
+                        of room in the viewport to display a tooltip).
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><code>flipBehavior</code></td>
+                      <td><code>'flip'</code></td>
+                      <td>
+                          <code>'flip'</code>
+                          <code>'clockwise'</code>
+                          <code>'counterclockwise'</code> |
+                          <code>Array</code> of placement strings
+                      </td>
+                      <td>
+                        Specifies the flipping behavior of a tooltip. Based on the amount of room in the viewport,
+                        the tooltip will choose which placement to use. For example, <code>'clockwise'</code> with a
+                        placement of <code>'right'</code> will flip to the bottom when there is not enough room.
+                      </td>
+                    </tr>
+                    <tr>
                       <td><code>animation</code></td>
                       <td><code>'shift'</code></td>
                       <td><code>'shift'</code> <code>'perspective'</code> <code>'fade'</code>  <code>'scale'</code></td>
@@ -326,13 +437,22 @@ tippy(refObject)
                       <td><code>arrow</code></td>
                       <td><code>false</code></td>
                       <td><code>Boolean</code></td>
-                      <td>Adds an arrow pointing to the tooltipped element. Setting this to <code>true</code> disables <code>animateFill</code>.</td>
+                      <td>Adds an arrow pointing to the reference element. Setting this to <code>true</code> disables <code>animateFill</code>.</td>
                     </tr>
                     <tr>
-                      <td><code>arrowSize</code></td>
-                      <td><code>'regular'</code></td>
-                      <td><code>'small'</code> <code>'regular'</code> <code>'large'</code></td>
-                      <td>Specifies how large the tooltip's arrow is. The sizes are 5px, 7px and 10px respectively.</td>
+                      <td><code>arrowStyle</code></td>
+                      <td><code>'sharp'</code></td>
+                      <td><code>'sharp'</code> <code>'round'</code></td>
+                      <td>Specifies the type of arrow to use. Sharp is a CSS triangle, whereas Round is a custom SVG shape.</td>
+                    </tr>
+                    <tr>
+                      <td><code>arrowTransform</code></td>
+                      <td><code>''</code></td>
+                      <td>Transform CSS</td>
+                      <td>Allows you to transform the arrow, such as the proportion or scale. Use the same syntax as you would for transform in CSS.
+                      <code>'scaleX(1.5)'</code> makes it wider, while <code>'scaleX(0.5)'</code> makes it narrower. <code>'scale(1.5)'</code>
+                        makes it larger</code>.
+                      </td>
                     </tr>
                     <tr>
                       <td><code>animateFill</code></td>
@@ -341,10 +461,16 @@ tippy(refObject)
                       <td>Adds a material design-esque filling animation. This is disabled if you have <code>arrow</code> set to <code>true</code>.</td>
                     </tr>
                     <tr>
+                      <td><code>maxWidth</code></td>
+                      <td><code>'350px'</code></td>
+                      <td><code>String</code> with unit</td>
+                      <td>Specifies the maximum width of a tooltip. Ensure you add units, such as px, rem, etc.</td>
+                    </tr>
+                    <tr>
                       <td><code>duration</code></td>
                       <td><code>350</code></td>
                       <td><code>Number</code> | <code>Array</code> (milliseconds)</td>
-                      <td>Specifies how long the transition animation takes to complete when showing a tooltip.
+                      <td>Specifies how long the transition animation takes.
                           Use an array to specify a different show and hide duration, such as <code>[300, 100]</code>.
                       </td>
                     </tr>
@@ -364,7 +490,9 @@ tippy(refObject)
                       <td><code>distance</code></td>
                       <td><code>10</code></td>
                       <td><code>Number</code> (pixels)</td>
-                      <td>Specifies how far away the tooltip is from its element.</td>
+                      <td>Specifies how far away the tooltip is from its reference element. This contrasts
+                      the <code>offset</code> option in that it only applies to a single axis and allows
+                      tooltips to still be interactive when their trigger is <code>mouseenter</code>.</td>
                     </tr>
                     <tr>
                       <td><code>theme</code></td>
@@ -382,7 +510,7 @@ tippy(refObject)
                       <td><code>hideOnClick</code></td>
                       <td><code>true</code></td>
                       <td><code>true</code> <code>false</code> <code>'persistent'</code></td>
-                      <td>Specifies whether to hide a tooltip upon clicking its element after hovering over and when clicking elsewhere on the document. For click-triggered tooltips when using <code>false</code>, toggle functionality remains unless you use <code>'persistent'</code>.</td>
+                      <td>Specifies whether to hide a tooltip upon clicking its reference element after hovering over and when clicking elsewhere on the document. For click-triggered tooltips when using <code>false</code>, toggle functionality remains unless you use <code>'persistent'</code>.</td>
                     </tr>
                     <tr>
                     <tr>
@@ -404,28 +532,22 @@ tippy(refObject)
                       <td>Modifies the <code>transition-timing-function</code> with a cubic bezier to create a "slingshot" intertial effect.</td>
                     </tr>
                     <tr>
-                      <td><code>flipDuration</code></td>
+                      <td><code>updateDuration</code></td>
                       <td><code>300</code></td>
                       <td><code>Number</code> (milliseconds)</td>
-                      <td>Specifies the transition duration between flips and when updating a tooltip's position on window resize.</td>
+                      <td>Specifies the transition duration between flips and when updating a tooltip's position on the document.</td>
                     </tr>
                     <tr>
                       <td><code>sticky</code></td>
                       <td><code>false</code></td>
                       <td><code>Boolean</code></td>
-                      <td>Specifies whether the tooltip should stick to its element reference when it's showing (for example, if the element is animated/moves).</td>
-                    </tr>
-                    <tr>
-                      <td><code>stickyDuration</code></td>
-                      <td><code>200</code></td>
-                      <td><code>Number</code> (milliseconds)</td>
-                      <td>Specifies the 'smoothing' transition when the popper's position updates as its element moves.</td>
+                      <td>Specifies whether the tooltip should stick to its reference element when it's showing (for example, if the element is animated/moves).</td>
                     </tr>
                     <tr>
                       <td><code>appendTo</code></td>
                       <td><code>document.body</code></td>
-                      <td><code>Element</code></td>
-                      <td>Specifies which element the tooltip popper is appended to.</td>
+                      <td><code>Element</code> | <code>Function</code></td>
+                      <td>Specifies which element the tooltip popper is appended to. Use a function which returns an Element for more advanced use cases.</td>
                     </tr>
                     <tr>
                       <td><code>zIndex</code></td>
@@ -463,54 +585,21 @@ tippy(refObject)
 
               <h4>Finer control over tooltips</h4>
 
-              <p>You can define a <code>popperOptions</code> setting with Popper.js options.
+              <p>You can define a <code>popperOptions</code> option with Popper.js options.
                   View the <a class="tippy-link" title="popper.js.org" target="_blank" href="https://popper.js.org/popper-documentation.html">Popper.js documentation</a>
                   to see the options you can specify.
               </p>
-
-              <p>
-                  Here's an example of how to integrate Popper.js options into Tippy, so that a tooltip will flip
-                  to the bottom from the right if there's not enough room in the viewport.
-              </p>
-
-<pre><code class="language-javascript">tippy('.mySelector', {
-  placement: 'right',
-  popperOptions: {
-    modifiers: {
-      flip: {
-        behavior: ['right', 'bottom']
-      }
-    }
-  }
-})</code></pre>
-
-              <h4>Flipping</h4>
-
-              <p>
-                  By default, tooltips will flip on their opposite axis if there is not enough room in the viewport.
-                  If you want to force no flip, then use:
-              </p>
-
-<pre><code class="language-javascript">tippy('.mySelector', {
-  popperOptions: {
-    modifiers: {
-      flip: {
-        enabled: false
-      }
-    }
-  }
-})</code></pre>
 
               <h4>Tooltips inside a scrollable container</h4>
 
               <p>
                   You may encounter issues with tooltip positioning when it's given to an element within a scrollable container.
                   Firstly, when the element is no longer visible, the tooltip will stay stuck within the viewport. Secondly, it transitions between position updates.
-                  To solve this, simply specify a <code>flipDuration</code> of <code>0</code> and add the following <code>popperOptions</code>:
+                  To solve this, simply specify a <code>updateDuration</code> of <code>0</code> and add the following <code>popperOptions</code>:
               </p>
 
 <pre><code class="language-javascript">tippy('.mySelector', {
-  flipDuration: 0,
+  updateDuration: 0,
   popperOptions: {
     modifiers: {
       preventOverflow: {
@@ -591,25 +680,24 @@ tippy(refObject)
             <pre><code class="language-javascript">const btn = document.querySelector('#myButton')
 const tip = tippy(btn)</code></pre>
 
-            <p>You can manually show or hide the tooltip with the following steps:</p>
+            <p>Simply call show or hide by passing in the popper element which is attached to the
+              reference element via <code>_popper</code>:</p>
 
-            <p>1. Grab the newly-created popper element attached to the reference element via the <code>_popper</code> property:</p>
-            <pre><code class="language-javascript">const popper = btn._popper</code></pre>
+            <pre><code class="language-javascript">tip.show(btn._popper)
+tip.hide(btn._popper)</code></pre>
 
-            <p>2. Call the <code>show()</code> or <code>hide()</code> method and pass in the popper:
+            <p>Pass a number as the second argument to specify a custom transition duration:</p>
 
-            <pre><code class="language-javascript">tip.show(popper)
-tip.hide(popper)</code></pre>
-
-            <p>Pass a number in the second argument to specify a custom transition duration:</p>
-
-            <pre><code class="language-javascript">tip.show(popper, 500)</code></pre>
+            <pre><code class="language-javascript">tip.show(btn._popper, 500)</code></pre>
+            
+            <p>Similarly, the reference element is also attached to the popper element via <code>_reference</code>:</p>
+            <pre><code class="language-javascript">const ref = popper._reference</code></pre>
 
             <h4>Destroying tooltips</h4>
 
             <p>The <code>destroy()</code> method will destroy an individual tooltip.</p>
 
-            <pre><code class="language-javascript">tip.destroy(popper)</code></pre>
+            <pre><code class="language-javascript">tip.destroy(btn._popper)</code></pre>
 
             <p>The <code>destroyAll()</code> method will destroy every tooltip created by the instance.</p>
 
@@ -629,12 +717,6 @@ ref._tippy.hide() // hides the tooltip</code></pre>
 
             <p>Invoking the show and hide methods without arguments will only affect the first tooltip in the instance,
             which is why these should be used with single-reference element instances.</p>
-
-            <h4>Finding the reference element from the popper element</h4>
-
-            <p>The reference element is attached to the popper element via the <code>_reference</code> property:</p>
-
-            <pre><code class="language-javascript">const ref = popper._reference</code></pre>
 
             <h4>Tooltip data</h4>
 
@@ -771,20 +853,20 @@ ref._tippy.hide() // hides the tooltip</code></pre>
 }</code></pre>
 
           <p>Themes need the <code>-theme</code> suffix.</p>
-          <p>To style the arrow, target the element with an <code>x-arrow</code> attribute:</p>
+          <p>To style the arrow, target the element with an <code>x-arrow</code> or
+            <code>x-roundarrow</code> attribute:</p>
 
-<pre><code class="language-css">.tippy-tooltip.honeybee-theme [x-arrow] {
+<pre><code class="language-css">.tippy-popper[x-placement^=top] .tippy-tooltip.honeybee-theme [x-arrow] {
   /* Your arrow styling here. */
 }</code></pre>
 
           <p>
-              Arrows are CSS triangles, read
-              <a target="_blank"
-                 href="https://github.com/atomiks/tippyjs/issues/35#issuecomment-297398972"
-              >this comment</a> to see how to style arrows properly.
+              You'll need to target a specific popper placement because the arrow will change
+              based on that. Sharp arrows are CSS triangles which use the border trick, while round arrows are an SVG
+              shape which can have their color changed with <code>fill</code>.
           </p>
 
-          <p>In case you want to target the content directly:</p>
+          <p>To target the tooltip content directly:</p>
 
 <pre><code class="language-css">.tippy-tooltip.honeybee-theme .tippy-tooltip-content {
   /* Your styling here. Example: */
@@ -877,7 +959,7 @@ ref._tippy.hide() // hides the tooltip</code></pre>
       data-tippy-placement="bottom"
       data-tippy-theme="transparent"
       data-tippy-duration="[300,200]"
-      data-tippy-flipduration="0"
+      data-tippy-updateduration="0"
       data-tippy-arrow="true">Close</button>
     </div>
 

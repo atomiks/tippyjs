@@ -2,6 +2,7 @@ import base from './rollup.base.config'
 import babel from 'rollup-plugin-babel'
 import sass from 'rollup-plugin-sass'
 import serve from 'rollup-plugin-serve'
+import css from 'rollup-plugin-css-only'
 import livereload from 'rollup-plugin-livereload'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
@@ -13,6 +14,7 @@ export default Object.assign(base, {
     sass({
       output: './docs/tippy/tippy.css'
     }),
+    css({ output: false }),
     babel({
       presets: ['es2015-rollup'],
       plugins: ['transform-object-rest-spread', 'transform-object-assign'],

@@ -29,10 +29,14 @@
     "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^1.1.0",
     "postcss": "^5.2.16",
+    "postcss-cssnext": "^3.0.2",
+    "postcss-nested": "^2.1.2",
+    "postcss-simple-vars": "^4.1.0",
     "rollup": "^0.47.6",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-babili": "^3.1.0",
     "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-css-only": "^0.2.0",
     "rollup-plugin-livereload": "^0.4.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-sass": "^0.4.10",
@@ -40,6 +44,6 @@
     "rollup-watch": "^3.2.2"
   },
   "dependencies": {
-    "popper.js": "^1.12.4"
+    "popper.js": "^1.12.9"
   }
 }

@@ -142,13 +142,13 @@
   }
 }
 
-@mixin roundedarrow ($placement, $width, $color) {
+@mixin roundarrow ($placement, $width, $color) {
   width: $width;
   height: $width;
   fill: $color;
 }
 
-@mixin roundedarrow-transform ($placement) {
+@mixin roundarrow-transform ($placement) {
   @if ($placement == 'top') {
     transform: rotate(180deg);
   } @else if ($placement == 'bottom') {
@@ -169,8 +169,8 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
 }
 
 .tippy-popper {
-  max-width: 400px;
-  perspective: 800px;
+  max-width: 350px;
+  perspective: 700px;
   z-index: 9999;
   outline: 0;
   transition-timing-function: cubic-bezier(.165, .84, .44, 1);
@@ -184,12 +184,12 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
   @each $placement in $placements {
     &[x-placement^=#{$placement}] {
       
-      [x-roundedarrow] {
-        @include roundedarrow($placement, 24px, #333);
+      [x-roundarrow] {
+        @include roundarrow($placement, 24px, #333);
         @include arrow-position($placement, 15px);
         
         svg {
-          @include roundedarrow-transform($placement);
+          @include roundarrow-transform($placement);
         }
       }
 
@@ -219,14 +219,9 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
         }
         [x-arrow] {
           @include arrow($placement, 7px, white);
-
-          &[x-size=small] {
-            @include arrow($placement, 5px, white);
-          }
-
-          &[x-size=large] {
-            @include arrow($placement, 10px, white);
-          }
+        }
+        [x-roundarrow] {
+          @include roundarrow($placement, 24px, white);
         }
       }
 
@@ -236,14 +231,9 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
         }
         [x-arrow] {
           @include arrow($placement, 7px, rgba(0,0,0,0.7));
-
-          &[x-size=small] {
-            @include arrow($placement, 5px, rgba(0,0,0,0.7));
-          }
-
-          &[x-size=large] {
-            @include arrow($placement, 10px, rgba(0,0,0,0.7));
-          }
+        }
+        [x-roundarrow] {
+          @include roundarrow($placement, 24px, rgba(0,0,0,0.7));
         }
       }
 
@@ -348,12 +338,10 @@ $circle-origins: 0% 33%, 0% -50%, 50% 0%, -50% 0%;
   }
 
   &[x-inertia] {
-    // Safari/Webkit can't go out of range
-    -webkit-transition-timing-function: cubic-bezier(.53,1,.36,.85);
     transition-timing-function: cubic-bezier(.53,2,.36,.85);
   }
 
-  [x-arrow], [x-roundedarrow] {
+  [x-arrow], [x-roundarrow] {
     position: absolute;
     width: 0;
     height: 0;

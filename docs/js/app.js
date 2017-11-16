@@ -27,21 +27,12 @@ var DOM = {
 
 // The main instance which most tooltips are created by
 var instance = tippy('.tippy')
-var $animatedTippy = $('#animated-tippy')
-// Show the animated tippy on load
-instance.show($animatedTippy._popper)
 
 tippy('.flippy', {
   placement: 'right',
   animation: 'fade',
   arrow: true,
-  popperOptions: {
-    modifiers: {
-      flip: {
-        behavior: ['right', 'bottom']
-      }
-    }
-  }
+  flipBehavior: ['right', 'bottom']
 })
 
 tippy('.tippy-link', {
@@ -50,10 +41,25 @@ tippy('.tippy-link', {
   animation: 'fade'
 })
 
-tippy('#callback-tippy', {
+// Callbacks
+tippy('#onShow', {
+  onShow: function () {
+    console.log('onShow called!')
+  }
+})
+tippy('#onHide', {
+  onHide: function () {
+    console.log('onHide called!')
+  }
+})
+tippy('#onShown', {
   onShown: function () {
-    alert('Hello from the onShown() callback!')
-    document.getElementById('callback-tippy').blur()
+    console.log('onShown called!')
+  }
+})
+tippy('#onHidden', {
+  onHidden: function () {
+    console.log('onHidden called!')
   }
 })
 
@@ -61,6 +67,7 @@ tippy('#callback-tippy', {
 var template = $('#template')
 var htmlTip = tippy('#html-tippy', {
   html: template,
+  maxWidth: '400px',
   onShown: function () {
     if (window.innerWidth < 976) {
       var nestedRefEl = template.querySelector('.btn')
