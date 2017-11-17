@@ -15,24 +15,30 @@ export default function onTransitionEnd(data, duration, callback) {
   }
 
   const { tooltip } = getInnerElements(data.popper)
-
+  
   let transitionendFired = false
+  
+  const listeners = action => {
+    tooltip[action + 'EventListener']('webkitTransitionEnd', listenerCallback)
+    tooltip[action + 'EventListener']('transitionend', listenerCallback)
+  }
 
   const listenerCallback = e => {
     if (e.target === tooltip && !transitionendFired) {
       transitionendFired = true
+      listeners('remove')
       callback()
     }
   }
 
   // Fire callback upon transition completion
-  tooltip.addEventListener('webkitTransitionEnd', listenerCallback)
-  tooltip.addEventListener('transitionend', listenerCallback)
-
+  listeners('add')
+  
   // Fallback: transitionend listener sometimes may not fire
   clearTimeout(data._transitionendTimeout)
   data._transitionendTimeout = setTimeout(() => {
     if (!transitionendFired) {
+      listeners('remove')
       callback()
     }
   }, duration)
