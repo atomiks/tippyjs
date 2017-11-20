@@ -1,4 +1,4 @@
-import getCorePlacement from '../utils/getCorePlacement'
+import getPopperPlacement from '../utils/getPopperPlacement'
 
 /**
 * Determines if the mouse's cursor is outside the interactive border
@@ -14,7 +14,7 @@ export default function cursorIsOutsideInteractiveBorder(event, popper, options)
   const { interactiveBorder, distance } = options
 
   const rect = popper.getBoundingClientRect()
-  const corePosition = getCorePlacement(popper.getAttribute('x-placement'))
+  const placement = getPopperPlacement(popper)
   const borderWithDistance = interactiveBorder + distance
 
   const exceeds = {
@@ -24,7 +24,7 @@ export default function cursorIsOutsideInteractiveBorder(event, popper, options)
     right: x - rect.right > interactiveBorder
   }
 
-  switch (corePosition) {
+  switch (placement) {
     case 'top':
       exceeds.top = rect.top - y > borderWithDistance
       break

@@ -1,17 +1,14 @@
-@import '../mixins.scss';
-@import '../vars.scss';
+@import '../_mixins.scss';
+@import '../_vars.scss';
 
 .tippy-popper {
   @each $placement in $placements {
     &[x-placement^=#{$placement}] {
       .tippy-tooltip.light-theme {
-        [x-circle] {
-          background-color: white;
-        }
-        [x-arrow] {
+        .tippy-arrow {
           @include arrow($placement, 7px, white);
         }
-        [x-roundarrow] {
+        .tippy-roundarrow {
           @include roundarrow($placement, 24px, white);
         }
       }
@@ -20,11 +17,16 @@
 
   .tippy-tooltip.light-theme {
     color: #26323d;
-    box-shadow: 0 4px 20px 4px rgba(0, 20, 60, 0.1),
-    0 4px 80px -8px rgba(0, 20, 60, 0.2);
+    box-shadow: 0 0 20px 4px rgba(154, 161, 177, 0.15),
+    0 4px 80px -8px rgba(36, 40, 47, 0.25),
+    0 4px 4px -2px rgba(91, 94, 105, 0.15);
     background-color: white;
+    
+    .tippy-backdrop {
+      background-color: white;
+    }
 
-    &[x-animatefill] {
+    &[data-animatefill] {
       background-color: transparent;
     }
   }

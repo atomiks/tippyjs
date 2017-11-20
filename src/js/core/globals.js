@@ -9,10 +9,9 @@ if (typeof window !== 'undefined') {
 }
 
 /**
-* The global storage array which holds all data reference objects
-* from every instance
-* This allows us to hide tooltips from all instances, finding the ref when
-* clicking on the body, and for followCursor
+* The global storage array which holds all Tippy instances.
+* This allows us to hide tooltips from all instances, finding the Tippy instance when
+* clicking on the body, and for followCursor listeners
 */
 export const store = []
 
@@ -22,11 +21,11 @@ export const store = []
 export const selectors = {
   POPPER: '.tippy-popper',
   TOOLTIP: '.tippy-tooltip',
-  CONTENT: '.tippy-tooltip-content',
-  CIRCLE: '[x-circle]',
-  ARROW: '[x-arrow]',
-  TOOLTIPPED_EL: '[x-tooltipped]',
-  CONTROLLER: '[x-tippy-controller]'
+  CONTENT: '.tippy-content',
+  BACKDROP: '.tippy-backdrop',
+  ARROW: '.tippy-arrow',
+  ROUND_ARROW: '.tippy-roundarrow',
+  REFERENCE: '[data-tippy]'
 }
 
 /**
@@ -35,7 +34,7 @@ export const selectors = {
 export const defaults = {
   html: false,
   placement: 'top',
-  animation: 'shift',
+  animation: 'shift-away',
   animateFill: true,
   arrow: false,
   delay: 0,
@@ -61,10 +60,14 @@ export const defaults = {
   dynamicTitle: false,
   flip: true,
   flipBehavior: 'flip',
-  arrowStyle: 'sharp',
+  arrowType: 'sharp',
   arrowTransform: '',
-  maxWidth: '350px',
-  popperOptions: {}
+  maxWidth: '',
+  popperOptions: {},
+  onShow() {},
+  onShown() {},
+  onHide() {},
+  onHidden() {}
 }
 
 /**

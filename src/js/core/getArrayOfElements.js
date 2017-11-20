@@ -2,7 +2,7 @@ import isObjectLiteral from '../utils/isObjectLiteral'
 
 /**
 * Returns an array of elements based on the selector input
-* @param {String|Element|Element[]} selector
+* @param {String|Element|Element[]|NodeList|Object} selector
 * @return {Element[]}
 */
 export default function getArrayOfElements(selector) {

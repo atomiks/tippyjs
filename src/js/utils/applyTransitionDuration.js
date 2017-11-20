@@ -13,10 +13,7 @@ export default function applyTransitionDuration(els, duration) {
     if (!el) return
 
     const isContent = matches.call(el, selectors.CONTENT)
-
-    const _duration = isContent
-      ? Math.round(duration/1.3)
-      : duration
+    const _duration = isContent ? Math.round(duration/1.3) : duration
 
     el.style[prefix('transitionDuration')] = _duration + 'ms'
   })

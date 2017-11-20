@@ -43,7 +43,7 @@
     } @else if ($placement == 'right') {
       transform: translateX(0) rotateY(90deg);
     }
-  } @else if ($animation == 'shift') {
+  } @else if ($animation == 'shift-away') {
     @if ($placement == 'top') {
       transform: translateY(0);
     } @else if ($placement == 'bottom') {
@@ -63,20 +63,20 @@
     } @else if ($placement == 'right') {
       transform: translateX(0) scale(0);
     }
-  } @else if ($animation == 'none') {
+  } @else if ($animation == 'shift-toward') {
     @if ($placement == 'top') {
-      transform: translateY(-10px);
+      transform: translateY(-20px);
     } @else if ($placement == 'bottom') {
-      transform: translateY(10px);
+      transform: translateY(20px);
     } @else if ($placement == 'left') {
-      transform: translateX(-10px);
+      transform: translateX(-20px);
     } @else if ($placement == 'right') {
-      transform: translateX(10px);
+      transform: translateX(20px);
     }
   }
 }
 
-@mixin circle-transform-enter ($placement) {
+@mixin backdrop-transform-enter ($placement) {
   $scale: 1;
   @if ($placement == 'top') {
     transform: scale($scale) translate(-50%, -55%);
@@ -89,12 +89,12 @@
   }
 }
 
-@mixin circle-transform-leave ($placement) {
-  $scale: 0.15;
+@mixin backdrop-transform-leave ($placement) {
+  $scale: 0.2;
   @if ($placement == 'top') {
     transform: scale($scale) translate(-50%, -50%);
   } @else if ($placement == 'bottom') {
-    transform: scale($scale) translate(-50%, -5%);
+    transform: scale($scale) translate(-50%, 0%);
   } @else if ($placement == 'left') {
     transform: scale($scale) translate(-50%, -50%);
   } @else if ($placement == 'right') {

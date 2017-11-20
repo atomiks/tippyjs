@@ -6,6 +6,6 @@
 export default function setVisibilityState(els, type) {
   els.forEach(el => {
     if (!el) return
-    el.setAttribute('x-state', type)
+    el.setAttribute('data-state', type)
   })
 }

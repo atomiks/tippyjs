@@ -1,5 +1,5 @@
 /**
-* Injects CSS styles to document
+* Injects CSS styles to document head
 * @param {String} css
 */
 export default function injectCSS(css = '') {

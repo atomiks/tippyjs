@@ -8,7 +8,7 @@ import { selectors } from '../core/globals'
 export default function getInnerElements(popper) {
   return {
     tooltip: popper.querySelector(selectors.TOOLTIP),
-    circle: popper.querySelector(selectors.CIRCLE),
+    backdrop: popper.querySelector(selectors.BACKDROP),
     content: popper.querySelector(selectors.CONTENT)
   }
 }

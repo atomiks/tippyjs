@@ -1,27 +1,29 @@
 import { store, selectors } from './globals'
 
-import getCorePlacement from '../utils/getCorePlacement'
-import find             from '../utils/find'
-import prefix           from '../utils/prefix'
-import closest          from '../utils/closest'
+import getPopperPlacement from '../utils/getPopperPlacement'
+import find from '../utils/find'
+import prefix from '../utils/prefix'
+import closest from '../utils/closest'
 
 /**
-* Mousemove event listener handler for `followCursor` option
+* Creates a mousemove event listener function for `followCursor` option
 * @param {Element} reference
-* @return {Function} the event handler
+* @return {Function} the event listener
 */
-export default function followCursorHandler(reference) {
-  const data = find(store, data => data.reference === reference)
+export default function createFollowCursorListener(reference) {
+  const tippy = find(store, tippy => tippy.reference === reference)
   
-  const handler = e => {
+  const listener = e => {
+    if (tippy._lastTriggerEvent === 'focus') return
+    
     const {
       popper,
       options: {
         offset
       }
-    } = data
+    } = tippy
 
-    const placement = getCorePlacement(popper.getAttribute('x-placement'))
+    const placement = getPopperPlacement(popper)
     const halfPopperWidth = Math.round(popper.offsetWidth / 2)
     const halfPopperHeight = Math.round(popper.offsetHeight / 2)
     const viewportPadding = 5
@@ -67,7 +69,7 @@ export default function followCursorHandler(reference) {
     popper.style[prefix('transform')] = `translate3d(${x}px, ${y}px, 0)`
   }
   
-  data._followCursorHandler = handler
+  tippy._followCursorListener = listener
   
-  return handler
+  return listener
 }

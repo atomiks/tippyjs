@@ -4,29 +4,23 @@ import isVisible from '../utils/isVisible'
 
 /**
 * Updates a popper's position on each animation frame to make it stick to a moving element
-* @param {Object} data
+* @param {Tippy} tippy
 */
-export default function makeSticky(data) {
-  const {
-    popper,
-    popperInstance,
-    options: {
-      stickyDuration
-    }
-  } = data
+export default function makeSticky(tippy) {
+  const applyTransitionDuration = () => {
+    tippy.popper.style[prefix('transitionDuration')] = `${ tippy.options.updateDuration }ms`
+  }
 
-  const applyTransitionDuration = () =>
-    popper.style[prefix('transitionDuration')] = `${stickyDuration}ms`
-
-  const removeTransitionDuration = () =>
-    popper.style[prefix('transitionDuration')] = ''
+  const removeTransitionDuration = () => {
+    tippy.popper.style[prefix('transitionDuration')] = ''
+  }
 
   const updatePosition = () => {
-    popperInstance && popperInstance.scheduleUpdate()
+    tippy.popperInstance && tippy.popperInstance.scheduleUpdate()
 
     applyTransitionDuration()
 
-    isVisible(popper)
+    isVisible(tippy.popper)
       ? requestAnimationFrame(updatePosition)
       : removeTransitionDuration()
   }

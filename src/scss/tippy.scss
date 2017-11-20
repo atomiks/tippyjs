@@ -1,5 +1,5 @@
-@import './mixins.scss';
-@import './vars.scss';
+@import './_mixins.scss';
+@import './_vars.scss';
 
 .tippy-touch {
   cursor: pointer !important;
@@ -12,8 +12,8 @@
   outline: 0;
   transition-timing-function: cubic-bezier(.165, .84, .44, 1);
   pointer-events: none;
-
-  &.html-template {
+  
+  &[data-html] {
     max-width: 96%;
     max-width: calc(100% - 20px);
   }
@@ -21,7 +21,7 @@
   @each $placement in $placements {
     &[x-placement^=#{$placement}] {
       
-      [x-roundarrow] {
+      .tippy-roundarrow {
         @include roundarrow($placement, 24px, #333);
         @include arrow-position($placement, 15px);
         
@@ -30,72 +30,82 @@
         }
       }
 
-      [x-arrow] {
+      .tippy-arrow {
         @include arrow($placement, 7px, #333);
         @include arrow-position($placement, 7px);
         @include arrow-margin($placement);
       }
 
-      [x-circle] {
-        transform-origin: nth($circle-origins, index($placements, $placement));
+      .tippy-backdrop {
+        transform-origin: nth($backdrop-origins, index($placements, $placement));
 
-        &[x-state=visible] {
-          @include circle-transform-enter($placement);
+        &[data-state=visible] {
+          @include backdrop-transform-enter($placement);
           opacity: 1;
         }
 
-        &[x-state=hidden] {
-          @include circle-transform-leave($placement);
+        &[data-state=hidden] {
+          @include backdrop-transform-leave($placement);
           opacity: 0;
         }
       }
+      
+      [data-animation=shift-toward] {
+        &[data-state=visible] {
+          opacity: 1;
+          @include enter-transform($placement, 'fade');
+        }
+        &[data-state=hidden] {
+          opacity: 0;
+          @include leave-transform($placement, 'shift-toward');
+        }
+      }
 
-      [x-animation=perspective] {
+      [data-animation=perspective] {
         transform-origin: nth($origins, index($placements, $placement));
 
-        &[x-state=visible] {
+        &[data-state=visible] {
           opacity: 1;
           @include enter-transform($placement, 'perspective');
         }
-        &[x-state=hidden] {
+        &[data-state=hidden] {
           opacity: 0;
           @include leave-transform($placement, 'perspective');
         }
       }
 
-      [x-animation=fade] {
-        &[x-state=visible] {
+      [data-animation=fade] {
+        &[data-state=visible] {
           opacity: 1;
           @include enter-transform($placement, 'fade')
         }
-        &[x-state=hidden] {
+        &[data-state=hidden] {
           opacity: 0;
           @include enter-transform($placement, 'fade')
         }
       }
 
-      [x-animation=shift] {
-        &[x-state=visible] {
+      [data-animation=shift-away] {
+        &[data-state=visible] {
           opacity: 1;
           @include enter-transform($placement, 'fade')
         }
-        &[x-state=hidden] {
+        &[data-state=hidden] {
           opacity: 0;
-          @include leave-transform($placement, 'shift')
+          @include leave-transform($placement, 'shift-away')
         }
       }
 
-      [x-animation=scale] {
-        &[x-state=visible] {
+      [data-animation=scale] {
+        &[data-state=visible] {
           opacity: 1;
           @include enter-transform($placement, 'scale')
         }
-        &[x-state=hidden] {
+        &[data-state=hidden] {
           opacity: 0;
           @include leave-transform($placement, 'scale')
         }
       }
-
     }
   }
 }
@@ -104,44 +114,44 @@
   position: relative;
   color: white;
   border-radius: 4px;
-  font-size: 0.95rem;
-  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.6rem;
   text-align: center;
   will-change: transform;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #333;
 
-  &[x-size=small] {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8rem;
+  &[data-size=small] {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
   }
 
-  &[x-size=large] {
-    padding: 0.6rem 1.2rem;
-    font-size: 1.2rem;
+  &[data-size=large] {
+    padding: 0.4rem 0.8rem;
+    font-size: 1rem;
   }
 
-  &[x-animatefill] {
+  &[data-animatefill] {
     overflow: hidden;
     background-color: transparent;
   }
 
-  &[x-interactive] {
+  &[data-interactive] {
     pointer-events: auto;
   }
 
-  &[x-inertia] {
+  &[data-inertia] {
     transition-timing-function: cubic-bezier(.53,2,.36,.85);
   }
 
-  [x-arrow], [x-roundarrow] {
+  .tippy-arrow, .tippy-roundarrow {
     position: absolute;
     width: 0;
     height: 0;
   }
 
-  [x-circle] {
+  .tippy-backdrop {
     position: absolute;
     will-change: transform;
     background-color: #333;
@@ -152,7 +162,14 @@
     top: 50%;
     z-index: -1;
     overflow: hidden;
-    transition: all ease;
+    
+    &[data-state=visible] {
+      transition: all cubic-bezier(.31,.42,.41,.96);
+    }
+    
+    &[data-state=hidden] {
+      transition: all cubic-bezier(.48,.36,.29,1);
+    }
 
     &::before {
       content: '';
@@ -162,7 +179,7 @@
   }
 }
 
-@media (max-width: 450px) {
+@media (max-width: 400px) {
   .tippy-popper {
     max-width: 96%;
     max-width: calc(100% - 20px);

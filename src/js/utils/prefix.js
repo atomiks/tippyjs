@@ -10,7 +10,7 @@ export default function prefix(property) {
   for (var i = 0; i < prefixes.length; i++) {
     const prefix = prefixes[i]
     const prefixedProp = prefix ? '' + prefix + upperProp : property
-    if (typeof window.document.body.style[prefixedProp] !== 'undefined') {
+    if (typeof document.body.style[prefixedProp] !== 'undefined') {
       return prefixedProp
     }
   }

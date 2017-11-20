@@ -1,7 +1,6 @@
 import { browser, selectors, store } from './globals'
 
 import hideAllPoppers from './hideAllPoppers'
-
 import closest from '../utils/closest'
 import find    from '../utils/find'
 import matches from '../utils/matches'
@@ -47,54 +46,49 @@ export default function bindEventListeners() {
       return hideAllPoppers()
     }
 
-    const reference = closest(event.target, selectors.TOOLTIPPED_EL)
+    const reference = closest(event.target, selectors.REFERENCE)
     const popper = closest(event.target, selectors.POPPER)
 
     if (popper) {
-      const data = find(store, ref => ref.popper === popper)
-      if (data.options.interactive) return
+      const tippy = find(store, tippy => tippy.popper === popper)
+      if (tippy.options.interactive) return
     }
 
     if (reference) {
-      const data = find(store, data => data.reference === reference)
-      const {
-        options: {
-          hideOnClick,
-          multiple,
-          trigger
-        }
-      } = data
+      const tippy = find(store, tippy => tippy.reference === reference)
 
       // Hide all poppers except the one belonging to the element that was clicked IF
       // `multiple` is false AND they are a touch user, OR
       // `multiple` is false AND it's triggered by a click
-      if ((!multiple && browser.usingTouch) || (!multiple && trigger.indexOf('click') !== -1)) {
-        return hideAllPoppers(data)
+      if (
+        (!tippy.options.multiple && browser.usingTouch) ||
+        (!tippy.options.multiple && tippy.options.trigger.indexOf('click') > -1)
+      ) {
+        return hideAllPoppers(tippy)
       }
 
       // If hideOnClick is not strictly true or triggered by a click don't hide poppers
-      if (hideOnClick !== true || trigger.indexOf('click') !== -1) return
+      if (tippy.options.hideOnClick !== true || tippy.options.trigger.indexOf('click') > -1) return
     }
 
-    // Don't trigger a hide for tippy controllers, and don't needlessly run loop
-    if (closest(event.target, selectors.CONTROLLER) || !document.querySelector(selectors.POPPER)) return
+    // Don't needlessly run loop if no poppers are on the document
+    if (!document.querySelector(selectors.POPPER)) return
 
     hideAllPoppers()
   }
 
   const blurHandler = event => {
     const { activeElement: el } = document
-    if (el && el.blur && matches.call(el, selectors.TOOLTIPPED_EL)) {
+    if (el && el.blur && matches.call(el, selectors.REFERENCE)) {
       el.blur()
     }
   }
 
-  // Hook events
   document.addEventListener('click', clickHandler)
   document.addEventListener('touchstart', touchHandler)
   window.addEventListener('blur', blurHandler)
 
-  if (!browser.supportsTouch && (navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)) {
+  if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
     document.addEventListener('pointerdown', touchHandler)
   }
 }

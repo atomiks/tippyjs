@@ -1,17 +1,23 @@
 import Popper from 'popper.js'
 
-import defer                 from '../utils/defer'
-import prefix                from '../utils/prefix'
-import getCorePlacement      from '../utils/getCorePlacement'
-import getInnerElements      from '../utils/getInnerElements'
+import computeArrowTransform from './computeArrowTransform'
+
+import defer from '../utils/defer'
+import prefix from '../utils/prefix'
+import isVisible from '../utils/isVisible'
+import getPopperPlacement from '../utils/getPopperPlacement'
+import getInnerElements from '../utils/getInnerElements'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
+import addMutationObserver from '../utils/addMutationObserver'
+
+import { selectors } from './globals'
 
 /**
 * Creates a new popper instance
-* @param {Object} data
-* @return {Object} - the popper instance
+* @param {Tippy} tippy
+* @return {Popper}
 */
-export default function createPopperInstance(data) {
+export default function createPopperInstance(tippy) {
   const {
     reference,
     popper,
@@ -23,19 +29,25 @@ export default function createPopperInstance(data) {
       updateDuration,
       flip,
       flipBehavior,
-      arrowStyle
+      arrowType,
+      arrowTransform
     }
-  } = data
+  } = tippy
 
   const { tooltip } = getInnerElements(popper)
-
+  
+  const arrowSelector = arrowType === 'round'
+    ? selectors.ROUND_ARROW
+    : selectors.ARROW
+  const arrow = tooltip.querySelector(arrowSelector)
+    
   const config = {
     placement,
     ...(popperOptions || {}),
     modifiers: {
       ...(popperOptions ? popperOptions.modifiers : {}),
       arrow: {
-        element: arrowStyle === 'round' ? '[x-roundarrow]' : '[x-arrow]',
+        element: arrowSelector,
         ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {})
       },
       flip: {
@@ -49,39 +61,44 @@ export default function createPopperInstance(data) {
         ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
       }
     },
+    onCreate() {
+      tooltip.style[getPopperPlacement(popper)] = getOffsetDistanceInPx(distance)
+      
+      if (arrow && arrowTransform) {
+        computeArrowTransform(popper, arrow, arrowTransform)
+      }
+    },
     onUpdate() {
       const styles = tooltip.style
       styles.top = ''
       styles.bottom = ''
       styles.left = ''
       styles.right = ''
-      styles[
-        getCorePlacement(popper.getAttribute('x-placement'))
-      ] = getOffsetDistanceInPx(distance)
+      styles[getPopperPlacement(popper)] = getOffsetDistanceInPx(distance)
+      
+      if (arrow && arrowTransform) {
+        computeArrowTransform(popper, arrow, arrowTransform)
+      }
     }
   }
-
-  // Update the popper's position whenever its content changes
-  // Not supported in IE10 unless polyfilled
-  if (window.MutationObserver) {
-    const styles = popper.style
-
-    const observer = new MutationObserver(() => {
+  
+  addMutationObserver({
+    tippy,
+    target: popper,
+    callback() {
+      const styles = popper.style
       styles[prefix('transitionDuration')] = '0ms'
-      data.popperInstance.update()
+      tippy.popperInstance.update()
       defer(() => {
         styles[prefix('transitionDuration')] = updateDuration + 'ms'
       })
-    })
-
-    observer.observe(popper, {
+    },
+    options: {
       childList: true,
       subtree: true,
       characterData: true
-    })
-
-    data._mutationObservers.push(observer)
-  }
+    }
+  })
 
   return new Popper(reference, popper, config)
 }

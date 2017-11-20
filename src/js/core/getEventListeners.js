@@ -1,17 +1,17 @@
 import { browser, selectors } from './globals'
 
-import isVisible                        from '../utils/isVisible'
-import closest                          from '../utils/closest'
+import isVisible from '../utils/isVisible'
+import closest from '../utils/closest'
 import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiveBorder'
 
 /**
-* Returns relevant listener callbacks for each ref
-* @param {Element} reference
-* @param {Element} popper
+* Returns relevant listeners for each Tippy instance
+* @param {Tippy} tippy
 * @param {Object} options
-* @return {Object} - relevant listeners
+* @return {Object} of listeners
 */
-export default function getEventListeners(reference, popper, options) {
+export default function getEventListeners(tippy, options) {
+  const { popper, reference } = tippy
   const {
     delay,
     duration,
@@ -32,45 +32,54 @@ export default function getEventListeners(reference, popper, options) {
   const _show = () => {
     clearTimeouts()
 
-    // Not hidden. For clicking when it also has a `focus` event listener
     if (isVisible(popper)) return
 
     const _delay = Array.isArray(delay) ? delay[0] : delay
 
     if (delay) {
-      showDelay = setTimeout(() => this.show(popper), _delay)
+      showDelay = setTimeout(() => tippy.show(), _delay)
     } else {
-      this.show(popper)
+      tippy.show()
     }
   }
 
   const show = event => {
-    this.callbacks.wait
-      ? this.callbacks.wait.call(popper, _show, event)
+    tippy.options.wait
+      ? tippy.options.wait.call(popper, _show, event)
       : _show()
   }
 
   const hide = () => {
     clearTimeouts()
+    
+    if (!isVisible(popper)) return
 
     const _delay = Array.isArray(delay) ? delay[1] : delay
 
     if (delay) {
-      hideDelay = setTimeout(() => this.hide(popper), _delay)
+      hideDelay = setTimeout(() => {
+        if (!isVisible(popper)) return
+        tippy.hide()
+      }, _delay)
     } else {
-      this.hide(popper)
+      tippy.hide()
     }
   }
 
   const handleTrigger = event => {
-    const mouseenterTouch = (
-      event.type === 'mouseenter' &&
+    const shouldStopEvent = (
       browser.supportsTouch &&
-      browser.usingTouch
+      browser.usingTouch &&
+      (
+        event.type === 'mouseenter' ||
+        event.type === 'focus'
+      )
     )
 
-    if (mouseenterTouch && touchHold) return
-
+    if (shouldStopEvent && touchHold) return
+    
+    tippy._lastTriggerEvent = event.type
+    
     // Toggle show/hide when clicking click-triggered tooltips
     const isClick = event.type === 'click'
     const isNotPersistent = hideOnClick !== 'persistent'
@@ -80,13 +89,12 @@ export default function getEventListeners(reference, popper, options) {
       : show(event)
 
     // iOS prevents click events from firing
-    if (mouseenterTouch && browser.iOS && reference.click) {
+    if (shouldStopEvent && browser.iOS && reference.click) {
       reference.click()
     }
   }
 
   const handleMouseleave = event => {
-    // Don't fire 'mouseleave', use the 'touchend'
     if (
       event.type === 'mouseleave' &&
       browser.supportsTouch &&
@@ -95,49 +103,31 @@ export default function getEventListeners(reference, popper, options) {
     ) return
 
     if (interactive) {
-      // Temporarily handle mousemove to check if the mouse left somewhere
-      // other than its popper
+      // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
       const handleMousemove = event => {
-        const triggerHide = () => {
+        const referenceCursorIsOver = closest(event.target, selectors.REFERENCE)
+        const cursorIsOverPopper = closest(event.target, selectors.POPPER) === popper
+        const cursorIsOverReference = referenceCursorIsOver === reference
+
+        if (cursorIsOverPopper || cursorIsOverReference) return
+
+        if (cursorIsOutsideInteractiveBorder(event, popper, options)) {
           document.body.removeEventListener('mouseleave', hide)
           document.removeEventListener('mousemove', handleMousemove)
           hide()
         }
-
-        const closestTooltippedEl = closest(event.target, selectors.TOOLTIPPED_EL)
-
-        const isOverPopper = closest(event.target, selectors.POPPER) === popper
-        const isOverEl = closestTooltippedEl === reference
-        const isClickTriggered = trigger.indexOf('click') > -1
-        const isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== reference
-
-        if (isOverOtherTooltippedEl) {
-          return triggerHide()
-        }
-
-        if (isOverPopper || isOverEl || isClickTriggered) return
-
-        if (cursorIsOutsideInteractiveBorder(event, popper, options)) {
-          triggerHide()
-        }
       }
-
       document.body.addEventListener('mouseleave', hide)
       document.addEventListener('mousemove', handleMousemove)
-
       return
     }
 
-    // If it's not interactive, just hide it
     hide()
   }
 
   const handleBlur = event => {
-    // Ignore blur on touch devices, if there is no `relatedTarget`, hide
-    // If the related target is a popper, ignore
     if (!event.relatedTarget || browser.usingTouch) return
     if (closest(event.relatedTarget, selectors.POPPER)) return
-
     hide()
   }
 

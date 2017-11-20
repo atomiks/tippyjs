@@ -2,11 +2,6 @@ function $(s) {
   return document.querySelector(s)
 }
 
-function hideHtml() {
-  instance.hide($('.btn-danger[onclick]')._popper, 100)
-  htmlTip.hide($('#html-tippy')._popper)
-}
-
 // Leave out filter CSS for Safari since it's buggy
 if (window.safari) {
   document.body.classList.add('is-safari')
@@ -25,19 +20,21 @@ var DOM = {
   }
 }
 
-// The main instance which most tooltips are created by
-var instance = tippy('.tippy')
+tippy('.tippy')
 
 tippy('.flippy', {
   placement: 'right',
   animation: 'fade',
+  arrowType: 'round',
   arrow: true,
   flipBehavior: ['right', 'bottom']
 })
 
 tippy('.tippy-link', {
-  theme: 'transparent',
+  theme: 'translucent',
   arrow: true,
+  arrowType: 'round',
+  arrowTransform: 'scaleX(0.8) translateY(0.7px)',
   animation: 'fade'
 })
 
@@ -64,15 +61,19 @@ tippy('#onHidden', {
 })
 
 // HTML & nested tooltip example
+function closeHtml() {
+  $('#html-tippy')._tippy.hide()
+}
 var template = $('#template')
 var htmlTip = tippy('#html-tippy', {
   html: template,
-  maxWidth: '400px',
   onShown: function () {
     if (window.innerWidth < 976) {
-      var nestedRefEl = template.querySelector('.btn')
-      instance.show(nestedRefEl._popper)
+      template.querySelector('.btn')._tippy.show()
     }
+  },
+  onHide: function () {
+    this.querySelector('.btn')._tippy.hide(75)
   }
 })
 
@@ -130,17 +131,19 @@ var tip = tippy($ajax.btn, {
 var $perf = DOM.performance
 var jsperf = (function () {
   var i = 1
-  var base = 200
+  var base = 100
   var counter = base
   var tippyTime = 0
-  var instance
+  var tooltips = []
 
   return {
     updateModel: function () {
       var value = parseInt($perf.model.value) || 1
       $perf.btn.innerHTML = 'Append ' + value + (value === 1 ? ' element!' : ' elements!')
 
-      instance && instance.destroyAll()
+      if (tooltips.length) {
+        tooltips.destroyAll()
+      }
 
       this.reset(value)
     },
@@ -162,11 +165,12 @@ var jsperf = (function () {
       counter += base
 
       var t1 = performance.now()
-      instance = tippy('.test-element', {
+      tip = tippy('.test-element', {
         hideOnClick: false,
         duration: 0,
         arrow: true,
-        performance: true
+        performance: true,
+        animation: 'fade'
       })
       var t2 = performance.now()
 
