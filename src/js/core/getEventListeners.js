@@ -11,16 +11,19 @@ import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiv
 * @return {Object} of listeners
 */
 export default function getEventListeners(tippy, options) {
-  const { popper, reference } = tippy
   const {
-    delay,
-    duration,
-    interactive,
-    interactiveBorder,
-    hideOnClick,
-    trigger,
-    touchHold
-  } = options
+    popper,
+    reference,
+    options: {
+      delay,
+      duration,
+      interactive,
+      interactiveBorder,
+      hideOnClick,
+      trigger,
+      touchHold
+    }
+  } = tippy
 
   let showDelay, hideDelay
 

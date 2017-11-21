@@ -1,7 +1,6 @@
-import { browser, defaults, selectors, store } from '../../src/js/core/globals'
+import { browser, defaults, selectors } from '../../src/js/core/globals'
 
-import init from '../../src/js/core/init'
-
+import bindEventListeners from '../../src/js/core/bindEventListeners'
 import defer from '../../src/js/utils/defer'
 import getPopperPlacement from '../../src/js/utils/getPopperPlacement'
 import find from '../../src/js/utils/find'
@@ -38,12 +37,7 @@ const createVirtualElement = (append = true) => {
 }
 
 describe('core', () => {
-  describe('init', () => {
-    it('runs only once', () => {
-      init()
-      expect(init()).toBe(false)
-    })
-
+  describe('binsdEventListeners', () => {
     window.TouchEvent && document.dispatchEvent(new TouchEvent('touchstart'))
 
     it('sets browser.usingTouch to be true upon touchstart, keeps it false if does not support touch', () => {
@@ -195,16 +189,25 @@ describe('core', () => {
 
     describe('destroyAll', () => {
       it('should destroy all tooltips created by the instance, does NOT affect other instances', () => {
-        const el = createVirtualElement()
+        const els = {
+          a: createVirtualElement(),
+          b: createVirtualElement()
+        }
+        
+        const instances = {
+          a: tippy(els.a),
+          b: tippy(els.b)
+        }
+        
+        const tippys = {
+          a: els.a._tippy,
+          b: els.b._tippy
+        }
+        
+        instances.a.destroyAll()
 
-        const lengthBefore = store.length
-        const tip = tippy(el)
-        const instance = el._tippy
-        tip.destroyAll()
-        const lengthAfter = store.length
-
-        expect(instance.state.destroyed).toBe(true)
-        expect(lengthBefore).toBe(lengthAfter)
+        expect(tippys.a.state.destroyed).toBe(true)
+        expect(tippys.b.state.destroyed).toBe(false)
       })
     })
 
@@ -235,17 +238,6 @@ describe('core', () => {
         expect(document.querySelector(selectors.POPPER)).toBeNull()
         
         tip.destroyAll()
-      })
-
-      it('removes the tippy instance from store', () => {
-        const el = createVirtualElement()
-
-        const tip = tippy(el)
-        const popper = el._tippy.popper
-
-        expect(find(store, tippy => tippy.popper === popper)).toBeDefined()
-        el._tippy.destroy()
-        expect(find(store, tippy => tippy.popper === popper)).toBeUndefined()
       })
     })
 

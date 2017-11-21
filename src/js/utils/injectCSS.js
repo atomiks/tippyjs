@@ -1,9 +1,11 @@
+import { isBrowser } from '../core/globals'
+
 /**
 * Injects CSS styles to document head
 * @param {String} css
 */
 export default function injectCSS(css = '') {
-  if (typeof window !== 'undefined') {
+  if (isBrowser) {
     const head = document.head || document.querySelector('head')
     const style = document.createElement('style')
     style.type = 'text/css'

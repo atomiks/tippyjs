@@ -1,6 +1,8 @@
+import { isBrowser } from '../core/globals'
+
 let matches = {}
 
-if (typeof Element !== 'undefined') {
+if (isBrowser) {
   const e = Element.prototype
   matches =
     e.matches               ||

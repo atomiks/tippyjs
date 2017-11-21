@@ -48,6 +48,7 @@ export default function createTooltips(els, config) {
     removeTitle(reference)
     
     const popper = createPopperElement(id, title, options)
+    
     const tippy = new Tippy({
       id,
       reference,
@@ -55,18 +56,15 @@ export default function createTooltips(els, config) {
       options,
       _mutationObservers: []
     })
-    tippy.popperInstance = createPopperInstanceOnInit ? createPopperInstance(tippy) : null
+    
+    tippy.popperInstance = createPopperInstanceOnInit
+      ? createPopperInstance(tippy)
+      : null
 
-    const handlers = getEventListeners(tippy, options)
-    let listeners = []
-
-    trigger.trim().split(' ').forEach(event =>
-        listeners = listeners.concat(
-          createTrigger(event, reference, handlers, touchHold)
-        )
-    )
-  
-    tippy.listeners = listeners
+    const listeners = getEventListeners(tippy, options)
+    tippy.listeners = trigger.trim().split(' ').reduce((acc, eventType) => {
+      return acc.concat(createTrigger(eventType, reference, listeners, touchHold))
+    }, [])
 
     // Update tooltip content whenever the title attribute on the reference changes
     if (dynamicTitle) {

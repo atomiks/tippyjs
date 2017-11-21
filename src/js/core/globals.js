@@ -1,19 +1,15 @@
+export const isBrowser = typeof window !== 'undefined'
+
 export const browser = {}
 
-if (typeof window !== 'undefined') {
+if (isBrowser) {
   browser.supported = 'requestAnimationFrame' in window
   browser.supportsTouch = 'ontouchstart' in window
   browser.usingTouch = false
+  browser.eventsBound = false
   browser.dynamicInputDetection = true
   browser.iOS = /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream
 }
-
-/**
-* The global storage array which holds all Tippy instances.
-* This allows us to hide tooltips from all instances, finding the Tippy instance when
-* clicking on the body, and for followCursor listeners
-*/
-export const store = []
 
 /**
 * Selector constants used for grabbing elements

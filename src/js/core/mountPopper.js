@@ -37,7 +37,7 @@ export default function mountPopper(tippy) {
 
   // Since touch is determined dynamically, followCursor is set on mount
   if (followCursor && !browser.usingTouch) {
-    document.addEventListener('mousemove', createFollowCursorListener(reference))
+    document.addEventListener('mousemove', createFollowCursorListener(tippy))
     tippy.popperInstance.disableEventListeners()
   }
 }

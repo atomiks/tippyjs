@@ -1,4 +1,4 @@
-import { browser, store } from './globals'
+import { browser } from './globals'
 
 import mountPopper from './mountPopper'
 import makeSticky from './makeSticky'
@@ -70,18 +70,25 @@ export default class Tippy {
       applyTransitionDuration([tooltip, backdrop], duration)
 
       // Make content fade out a bit faster than the tooltip if `animateFill` is true
-      if (backdrop) content.style.opacity = 1
+      if (backdrop) {
+        content.style.opacity = 1
+      }
 
-      options.interactive && reference.classList.add('tippy-active')
+      if (options.interactive) {
+        reference.classList.add('tippy-active')
+      }
       
-      options.sticky && makeSticky(this)
+      if (options.sticky) {
+        makeSticky(this)
+      }
 
       setVisibilityState([tooltip, backdrop], 'visible')
 
       onTransitionEnd(this, duration, () => {
-        if (!isVisible(popper)) return
-        options.interactive && popper.focus()
-        options.onShown.call(popper)
+        if (isVisible(popper)) {
+          options.interactive && popper.focus()
+          options.onShown.call(popper)
+        }
       })
     })
   }
@@ -100,14 +107,18 @@ export default class Tippy {
 
     duration = getDuration(duration !== undefined ? duration : options.duration, 1)
     
-    options.interactive && reference.classList.remove('tippy-active')
+    if (options.interactive) {
+      reference.classList.remove('tippy-active')
+    }
 
     popper.style.visibility = 'hidden'
     popper.setAttribute('aria-hidden', 'true')
 
     applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration)
 
-    if (backdrop) content.style.opacity = 0
+    if (backdrop) {
+      content.style.opacity = 0
+    }
 
     setVisibilityState([tooltip, backdrop], 'hidden')
     
@@ -125,15 +136,16 @@ export default class Tippy {
       // This prevents glitchy behavior of the transition when quickly showing
       // and hiding a tooltip.
       if (
-        isVisible(popper) ||
-        !options.appendTo.contains(popper) ||
-        getComputedStyle(tooltip).opacity === '1'
-      ) return
-
-      document.removeEventListener('mousemove', this._followCursorListener)
-      this.popperInstance.disableEventListeners()
-      options.appendTo.removeChild(popper)
-      options.onHidden.call(popper)
+        !isVisible(popper) &&
+        options.appendTo.contains(popper) &&
+        getComputedStyle(tooltip).opacity !== '1'
+      ) {
+        document.removeEventListener('mousemove', this._followCursorListener)
+        this.popperInstance.disableEventListeners()
+        options.appendTo.removeChild(popper)
+        
+        options.onHidden.call(popper)
+      }
     })
   }
   
@@ -152,6 +164,7 @@ export default class Tippy {
       this.reference.removeEventListener(listener.event, listener.handler)
     })
 
+    // Restore title
     this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'))
 
     delete this.reference._tippy
@@ -164,16 +177,13 @@ export default class Tippy {
       this.reference.removeAttribute(attr)
     })
 
-    this.popperInstance && this.popperInstance.destroy()
+    if (this.popperInstance) {
+      this.popperInstance.destroy()
+    }
 
     this._mutationObservers.forEach(observer => {
       observer.disconnect()
     })
-    
-    const index = findIndex(store, tippy => tippy === this)
-    if (index > -1) {
-      store.splice(index, 1)
-    }
     
     this.state.destroyed = true
   }

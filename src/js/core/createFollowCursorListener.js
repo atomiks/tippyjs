@@ -1,4 +1,4 @@
-import { store, selectors } from './globals'
+import { selectors } from './globals'
 
 import getPopperPlacement from '../utils/getPopperPlacement'
 import find from '../utils/find'
@@ -7,12 +7,10 @@ import closest from '../utils/closest'
 
 /**
 * Creates a mousemove event listener function for `followCursor` option
-* @param {Element} reference
+* @param {Tippy} tippy
 * @return {Function} the event listener
 */
-export default function createFollowCursorListener(reference) {
-  const tippy = find(store, tippy => tippy.reference === reference)
-  
+export default function createFollowCursorListener(tippy) {
   const listener = e => {
     if (tippy._lastTriggerEvent === 'focus') return
     

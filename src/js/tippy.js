@@ -1,10 +1,10 @@
-import { browser, store, defaults } from './core/globals'
+import { browser, defaults } from './core/globals'
 
 import isObjectLiteral from './utils/isObjectLiteral'
 
-import init from './core/init'
 import getArrayOfElements from './core/getArrayOfElements'
 import createTooltips from './core/createTooltips'
+import bindEventListeners from './core/bindEventListeners'
 
 /**
 * Instantiates tooltips
@@ -13,9 +13,11 @@ import createTooltips from './core/createTooltips'
 * @return {Object}
 */
 function tippy(selector, options) {
-  browser.supported && init()
+  if (browser.supported && !browser.eventsBound) {
+    bindEventListeners()
+    browser.eventsBound = true
+  }
   
-  // Virtual object for custom positioning
   if (isObjectLiteral(selector)) {
     selector.refObj = true
     selector.attributes = selector.attributes || {}
@@ -36,8 +38,8 @@ function tippy(selector, options) {
   }
   
   options = { ...defaults, ...options }
-  
-  const tip = {
+
+  return {
     selector,
     options,
     tooltips: browser.supported
@@ -47,10 +49,6 @@ function tippy(selector, options) {
       this.tooltips.forEach(tooltip => tooltip.destroy())
     }
   }
-  
-  store.push.apply(store, tip.tooltips)
-
-  return tip
 }
 
 tippy.browser = browser

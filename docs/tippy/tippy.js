@@ -7,22 +7,18 @@ document.write('<script src="http://' + (location.host || 'localhost').split(':'
 
 var styles = ".tippy-touch{cursor:pointer!important}.tippy-popper{max-width:350px;-webkit-perspective:700px;perspective:700px;z-index:9999;outline:0;-webkit-transition-timing-function:cubic-bezier(.165,.84,.44,1);transition-timing-function:cubic-bezier(.165,.84,.44,1);pointer-events:none}.tippy-popper[data-html]{max-width:96%;max-width:calc(100% - 20px)}.tippy-popper[x-placement^=top] .tippy-backdrop{border-radius:50% 50% 0 0}.tippy-popper[x-placement^=top] .tippy-roundarrow{width:24px;height:24px;fill:#333;bottom:-15px}.tippy-popper[x-placement^=top] .tippy-roundarrow svg{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.tippy-popper[x-placement^=top] .tippy-arrow{border-top:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;bottom:-7px;margin:0 9px}.tippy-popper[x-placement^=top] .tippy-backdrop{-webkit-transform-origin:0 33%;transform-origin:0 33%}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-60%);transform:scale(1) translate(-50%,-60%);opacity:1}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.25) translate(-50%,-50%);transform:scale(.25) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(-20px);transform:translateY(-20px)}.tippy-popper[x-placement^=top] [data-animation=perspective]{-webkit-transform-origin:bottom;transform-origin:bottom}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) rotateX(0);transform:translateY(-10px) rotateX(0)}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(90deg);transform:translateY(0) rotateX(90deg)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) scale(1);transform:translateY(-10px) scale(1)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=bottom] .tippy-backdrop{border-radius:0 0 50% 50%}.tippy-popper[x-placement^=bottom] .tippy-roundarrow{width:24px;height:24px;fill:#333;top:-15px}.tippy-popper[x-placement^=bottom] .tippy-roundarrow svg{-webkit-transform:rotate(0);transform:rotate(0)}.tippy-popper[x-placement^=bottom] .tippy-arrow{border-bottom:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;top:-7px;margin:0 9px}.tippy-popper[x-placement^=bottom] .tippy-backdrop{-webkit-transform-origin:0 -50%;transform-origin:0 -50%}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-40%);transform:scale(1) translate(-50%,-40%);opacity:1}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.25) translate(-50%);transform:scale(.25) translate(-50%);opacity:0}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(20px);transform:translateY(20px)}.tippy-popper[x-placement^=bottom] [data-animation=perspective]{-webkit-transform-origin:top;transform-origin:top}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) rotateX(0);transform:translateY(10px) rotateX(0)}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(-90deg);transform:translateY(0) rotateX(-90deg)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) scale(1);transform:translateY(10px) scale(1)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=left] .tippy-backdrop{border-radius:50% 0 0 50%}.tippy-popper[x-placement^=left] .tippy-roundarrow{width:24px;height:24px;fill:#333;right:-15px}.tippy-popper[x-placement^=left] .tippy-roundarrow svg{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.tippy-popper[x-placement^=left] .tippy-arrow{border-left:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;right:-7px;margin:6px 0}.tippy-popper[x-placement^=left] .tippy-backdrop{-webkit-transform-origin:50% 0;transform-origin:50% 0}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-50%);transform:scale(1) translate(-50%,-50%);opacity:1}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.25) translate(-50%,-50%);transform:scale(.25) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(-20px);transform:translateX(-20px)}.tippy-popper[x-placement^=left] [data-animation=perspective]{-webkit-transform-origin:right;transform-origin:right}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) rotateY(0);transform:translateX(-10px) rotateY(0)}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(-90deg);transform:translateX(0) rotateY(-90deg)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) scale(1);transform:translateX(-10px) scale(1)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-popper[x-placement^=right] .tippy-backdrop{border-radius:0 50% 50% 0}.tippy-popper[x-placement^=right] .tippy-roundarrow{width:24px;height:24px;fill:#333;left:-15px}.tippy-popper[x-placement^=right] .tippy-roundarrow svg{-webkit-transform:rotate(-90deg);transform:rotate(-90deg)}.tippy-popper[x-placement^=right] .tippy-arrow{border-right:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;left:-7px;margin:6px 0}.tippy-popper[x-placement^=right] .tippy-backdrop{-webkit-transform-origin:-50% 0;transform-origin:-50% 0}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-50%);transform:scale(1) translate(-50%,-50%);opacity:1}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.25) translate(-50%,-50%);transform:scale(.25) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(20px);transform:translateX(20px)}.tippy-popper[x-placement^=right] [data-animation=perspective]{-webkit-transform-origin:left;transform-origin:left}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) rotateY(0);transform:translateX(10px) rotateY(0)}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(90deg);transform:translateX(0) rotateY(90deg)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) scale(1);transform:translateX(10px) scale(1)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-tooltip{position:relative;color:#fff;border-radius:4px;font-size:.9rem;padding:.3rem .6rem;text-align:center;will-change:transform;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:#333}.tippy-tooltip[data-size=small]{padding:.2rem .4rem;font-size:.75rem}.tippy-tooltip[data-size=large]{padding:.4rem .8rem;font-size:1rem}.tippy-tooltip[data-animatefill]{overflow:hidden;background-color:transparent}.tippy-tooltip[data-interactive]{pointer-events:auto}.tippy-tooltip[data-inertia]{-webkit-transition-timing-function:cubic-bezier(.53,2,.36,.85);transition-timing-function:cubic-bezier(.53,2,.36,.85)}.tippy-tooltip .tippy-arrow,.tippy-tooltip .tippy-roundarrow{position:absolute;width:0;height:0}.tippy-tooltip .tippy-backdrop{position:absolute;will-change:transform;background-color:#333;border-radius:50%;width:135%;left:50%;top:50%;z-index:-1;overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden}.tippy-tooltip .tippy-backdrop[data-state=visible]{-webkit-transition:all cubic-bezier(.37,.21,.32,.82);transition:all cubic-bezier(.37,.21,.32,.82)}.tippy-tooltip .tippy-backdrop[data-state=hidden]{-webkit-transition:all cubic-bezier(.4,.5,.5,.99);transition:all cubic-bezier(.4,.5,.5,.99)}.tippy-tooltip .tippy-backdrop:after{content:\"\";float:left;padding-top:90%}@media (max-width:400px){.tippy-popper{max-width:96%;max-width:calc(100% - 20px)}}";
 
+var isBrowser = typeof window !== 'undefined';
+
 var browser = {};
 
-if (typeof window !== 'undefined') {
+if (isBrowser) {
   browser.supported = 'requestAnimationFrame' in window;
   browser.supportsTouch = 'ontouchstart' in window;
   browser.usingTouch = false;
+  browser.eventsBound = false;
   browser.dynamicInputDetection = true;
   browser.iOS = /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream;
 }
-
-/**
-* The global storage array which holds all Tippy instances.
-* This allows us to hide tooltips from all instances, finding the Tippy instance when
-* clicking on the body, and for followCursor listeners
-*/
-var store = [];
 
 /**
 * Selector constants used for grabbing elements
@@ -94,169 +90,6 @@ var defaultsKeys = browser.supported && Object.keys(defaults);
 */
 function isObjectLiteral(value) {
   return Object.prototype.toString.call(value) === '[object Object]';
-}
-
-/**
-* Determines if an element is currently visible
-* @param {Element} el
-* @return {Boolean}
-*/
-function isVisible(el) {
-  return el.style.visibility === 'visible';
-}
-
-function hideAllPoppers(excludeTippy) {
-  store.forEach(function (tippy) {
-    var popper = tippy.popper,
-        options = tippy.options;
-
-    // Don't hide already hidden ones
-
-    if (!isVisible(popper)) return;
-
-    // hideOnClick can have the truthy value of 'persistent', so strict check is needed
-    var isHideOnClick = options.hideOnClick === true || options.trigger.indexOf('focus') > -1;
-    var isNotExcludedTippy = !excludeTippy || popper !== excludeTippy.popper;
-
-    if (isHideOnClick && isNotExcludedTippy) {
-      tippy.hide();
-    }
-  });
-}
-
-var matches = {};
-
-if (typeof Element !== 'undefined') {
-  var e = Element.prototype;
-  matches = e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || function (s) {
-    var matches = (this.document || this.ownerDocument).querySelectorAll(s);
-    var i = matches.length;
-    while (--i >= 0 && matches.item(i) !== this) {}
-    return i > -1;
-  };
-}
-
-var matches$1 = matches;
-
-function closest(element, parentSelector) {
-  var fn = Element.prototype.closest || function (selector) {
-    var el = this;
-    while (el) {
-      if (matches$1.call(el, selector)) {
-        return el;
-      }
-      el = el.parentElement;
-    }
-  };
-
-  return fn.call(element, parentSelector);
-}
-
-/**
-* Ponyfill for Array.prototype.find
-* @param {Array} arr
-* @param {Function} fn
-* @return item in the array
-*/
-function find(arr, fn) {
-  return Array.prototype.find ? arr.find(fn) : arr.filter(fn)[0];
-}
-
-function bindEventListeners() {
-  var touchHandler = function touchHandler() {
-    browser.usingTouch = true;
-
-    if (browser.iOS) {
-      document.body.classList.add('tippy-touch');
-    }
-
-    if (browser.dynamicInputDetection && window.performance) {
-      document.addEventListener('mousemove', mousemoveHandler);
-    }
-  };
-
-  var mousemoveHandler = function () {
-    var time = void 0;
-
-    return function () {
-      var now = performance.now();
-
-      // Chrome 60+ is 1 mousemove per rAF, use 20ms time difference
-      if (now - time < 20) {
-        browser.usingTouch = false;
-        document.removeEventListener('mousemove', mousemoveHandler);
-        if (!browser.iOS) {
-          document.body.classList.remove('tippy-touch');
-        }
-      }
-
-      time = now;
-    };
-  }();
-
-  var clickHandler = function clickHandler(event) {
-    // Simulated events dispatched on the document
-    if (!(event.target instanceof Element)) {
-      return hideAllPoppers();
-    }
-
-    var reference = closest(event.target, selectors.REFERENCE);
-    var popper = closest(event.target, selectors.POPPER);
-
-    if (popper) {
-      var tippy = find(store, function (tippy) {
-        return tippy.popper === popper;
-      });
-      if (tippy.options.interactive) return;
-    }
-
-    if (reference) {
-      var _tippy = find(store, function (tippy) {
-        return tippy.reference === reference;
-      });
-
-      // Hide all poppers except the one belonging to the element that was clicked IF
-      // `multiple` is false AND they are a touch user, OR
-      // `multiple` is false AND it's triggered by a click
-      if (!_tippy.options.multiple && browser.usingTouch || !_tippy.options.multiple && _tippy.options.trigger.indexOf('click') > -1) {
-        return hideAllPoppers(_tippy);
-      }
-
-      // If hideOnClick is not strictly true or triggered by a click don't hide poppers
-      if (_tippy.options.hideOnClick !== true || _tippy.options.trigger.indexOf('click') > -1) return;
-    }
-
-    // Don't needlessly run loop if no poppers are on the document
-    if (!document.querySelector(selectors.POPPER)) return;
-
-    hideAllPoppers();
-  };
-
-  var blurHandler = function blurHandler(event) {
-    var _document = document,
-        el = _document.activeElement;
-
-    if (el && el.blur && matches$1.call(el, selectors.REFERENCE)) {
-      el.blur();
-    }
-  };
-
-  document.addEventListener('click', clickHandler);
-  document.addEventListener('touchstart', touchHandler);
-  window.addEventListener('blur', blurHandler);
-
-  if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
-    document.addEventListener('pointerdown', touchHandler);
-  }
-}
-
-function init() {
-  if (init.done) return false;
-  init.done = true;
-
-  bindEventListeners();
-
-  return true;
 }
 
 function getArrayOfElements(selector) {
@@ -487,11 +320,11 @@ function createPopperElement(id, title, options) {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+var isBrowser$1 = typeof window !== 'undefined' && typeof document !== 'undefined';
 var longerTimeoutBrowsers = ['Edge', 'Trident', 'Firefox'];
 var timeoutDuration = 0;
 for (var i = 0; i < longerTimeoutBrowsers.length; i += 1) {
-  if (isBrowser && navigator.userAgent.indexOf(longerTimeoutBrowsers[i]) >= 0) {
+  if (isBrowser$1 && navigator.userAgent.indexOf(longerTimeoutBrowsers[i]) >= 0) {
     timeoutDuration = 1;
     break;
   }
@@ -524,7 +357,7 @@ function taskDebounce(fn) {
   };
 }
 
-var supportsMicroTasks = isBrowser && window.Promise;
+var supportsMicroTasks = isBrowser$1 && window.Promise;
 
 /**
 * Create a debounced version of a method, that's asynchronously deferred
@@ -1229,7 +1062,7 @@ function getPopperOffsets(popper, referenceOffsets, placement) {
  * @argument value
  * @returns index or -1
  */
-function find$1(arr, check) {
+function find(arr, check) {
   // use native find if supported
   if (Array.prototype.find) {
     return arr.find(check);
@@ -1257,7 +1090,7 @@ function findIndex(arr, prop, value) {
   }
 
   // use `find` + `indexOf` if `findIndex` isn't supported
-  var match = find$1(arr, function (obj) {
+  var match = find(arr, function (obj) {
     return obj[prop] === value;
   });
   return arr.indexOf(match);
@@ -1617,7 +1450,7 @@ function computeStyle(data, options) {
 
   // Remove this legacy support in Popper.js v2
 
-  var legacyGpuAccelerationOption = find$1(data.instance.modifiers, function (modifier) {
+  var legacyGpuAccelerationOption = find(data.instance.modifiers, function (modifier) {
     return modifier.name === 'applyStyle';
   }).gpuAcceleration;
   if (legacyGpuAccelerationOption !== undefined) {
@@ -1708,7 +1541,7 @@ function computeStyle(data, options) {
  * @returns {Boolean}
  */
 function isModifierRequired(modifiers, requestingName, requestedName) {
-  var requesting = find$1(modifiers, function (_ref) {
+  var requesting = find(modifiers, function (_ref) {
     var name = _ref.name;
     return name === requestingName;
   });
@@ -2082,7 +1915,7 @@ function parseOffset(offset, popperOffsets, referenceOffsets, basePlacement) {
 
   // Detect if the offset string contains a pair of values or a single one
   // they could be separated by comma or space
-  var divider = fragments.indexOf(find$1(fragments, function (frag) {
+  var divider = fragments.indexOf(find(fragments, function (frag) {
     return frag.search(/,|\s/) !== -1;
   }));
 
@@ -2273,7 +2106,7 @@ function hide(data) {
   }
 
   var refRect = data.offsets.reference;
-  var bound = find$1(data.instance.modifiers, function (modifier) {
+  var bound = find(data.instance.modifiers, function (modifier) {
     return modifier.name === 'preventOverflow';
   }).boundaries;
 
@@ -3000,6 +2833,15 @@ function defer(fn) {
   });
 }
 
+/**
+* Determines if an element is currently visible
+* @param {Element} el
+* @return {Boolean}
+*/
+function isVisible(el) {
+  return el.style.visibility === 'visible';
+}
+
 function getInnerElements(popper) {
   return {
     tooltip: popper.querySelector(selectors.TOOLTIP),
@@ -3153,6 +2995,34 @@ function createTrigger(eventType, reference, handlers, touchHold) {
   return listeners;
 }
 
+var matches = {};
+
+if (isBrowser) {
+  var e = Element.prototype;
+  matches = e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || function (s) {
+    var matches = (this.document || this.ownerDocument).querySelectorAll(s);
+    var i = matches.length;
+    while (--i >= 0 && matches.item(i) !== this) {}
+    return i > -1;
+  };
+}
+
+var matches$1 = matches;
+
+function closest(element, parentSelector) {
+  var fn = Element.prototype.closest || function (selector) {
+    var el = this;
+    while (el) {
+      if (matches$1.call(el, selector)) {
+        return el;
+      }
+      el = el.parentElement;
+    }
+  };
+
+  return fn.call(element, parentSelector);
+}
+
 function cursorIsOutsideInteractiveBorder(event, popper, options) {
   if (!popper.getAttribute('x-placement')) return true;
 
@@ -3193,14 +3063,15 @@ function cursorIsOutsideInteractiveBorder(event, popper, options) {
 
 function getEventListeners(tippy, options) {
   var popper = tippy.popper,
-      reference = tippy.reference;
-  var delay = options.delay,
-      duration = options.duration,
-      interactive = options.interactive,
-      interactiveBorder = options.interactiveBorder,
-      hideOnClick = options.hideOnClick,
-      trigger = options.trigger,
-      touchHold = options.touchHold;
+      reference = tippy.reference,
+      _tippy$options = tippy.options,
+      delay = _tippy$options.delay,
+      duration = _tippy$options.duration,
+      interactive = _tippy$options.interactive,
+      interactiveBorder = _tippy$options.interactiveBorder,
+      hideOnClick = _tippy$options.hideOnClick,
+      trigger = _tippy$options.trigger,
+      touchHold = _tippy$options.touchHold;
 
 
   var showDelay = void 0,
@@ -3318,8 +3189,6 @@ function evaluateOptions(reference, options) {
     options.animateFill = false;
   }
 
-  // reassign appendTo into the result of evaluating appendTo
-  // if it's set as a function instead of Element
   if (options.appendTo && typeof options.appendTo === 'function') {
     options.appendTo = options.appendTo();
   }
@@ -3345,11 +3214,14 @@ function removeTitle(el) {
   el.removeAttribute('title');
 }
 
-function createFollowCursorListener(reference) {
-  var tippy = find(store, function (tippy) {
-    return tippy.reference === reference;
-  });
+/**
+* Ponyfill for Array.prototype.find
+* @param {Array} arr
+* @param {Function} fn
+* @return item in the array
+*/
 
+function createFollowCursorListener(tippy) {
   var listener = function listener(e) {
     if (tippy._lastTriggerEvent === 'focus') return;
 
@@ -3436,7 +3308,7 @@ function mountPopper(tippy) {
 
   // Since touch is determined dynamically, followCursor is set on mount
   if (followCursor && !browser.usingTouch) {
-    document.addEventListener('mousemove', createFollowCursorListener(reference));
+    document.addEventListener('mousemove', createFollowCursorListener(tippy));
     tippy.popperInstance.disableEventListeners();
   }
 }
@@ -3523,10 +3395,6 @@ function setVisibilityState(els, type) {
   });
 }
 
-function findIndex$1(arr, fn) {
-  return Array.prototype.findIndex ? arr.findIndex(fn) : arr.indexOf(find(arr, fn));
-}
-
 function applyTransitionDuration(els, duration) {
   els.forEach(function (el) {
     if (!el) return;
@@ -3611,18 +3479,25 @@ var Tippy = function () {
         applyTransitionDuration([tooltip, backdrop], duration);
 
         // Make content fade out a bit faster than the tooltip if `animateFill` is true
-        if (backdrop) content.style.opacity = 1;
+        if (backdrop) {
+          content.style.opacity = 1;
+        }
 
-        options.interactive && reference.classList.add('tippy-active');
+        if (options.interactive) {
+          reference.classList.add('tippy-active');
+        }
 
-        options.sticky && makeSticky(_this);
+        if (options.sticky) {
+          makeSticky(_this);
+        }
 
         setVisibilityState([tooltip, backdrop], 'visible');
 
         onTransitionEnd(_this, duration, function () {
-          if (!isVisible(popper)) return;
-          options.interactive && popper.focus();
-          options.onShown.call(popper);
+          if (isVisible(popper)) {
+            options.interactive && popper.focus();
+            options.onShown.call(popper);
+          }
         });
       });
     }
@@ -3652,14 +3527,18 @@ var Tippy = function () {
 
       duration = getDuration(duration !== undefined ? duration : options.duration, 1);
 
-      options.interactive && reference.classList.remove('tippy-active');
+      if (options.interactive) {
+        reference.classList.remove('tippy-active');
+      }
 
       popper.style.visibility = 'hidden';
       popper.setAttribute('aria-hidden', 'true');
 
       applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration);
 
-      if (backdrop) content.style.opacity = 0;
+      if (backdrop) {
+        content.style.opacity = 0;
+      }
 
       setVisibilityState([tooltip, backdrop], 'hidden');
 
@@ -3672,12 +3551,13 @@ var Tippy = function () {
         // run the hidden callback, we need to check the computed opacity style.
         // This prevents glitchy behavior of the transition when quickly showing
         // and hiding a tooltip.
-        if (isVisible(popper) || !options.appendTo.contains(popper) || getComputedStyle(tooltip).opacity === '1') return;
+        if (!isVisible(popper) && options.appendTo.contains(popper) && getComputedStyle(tooltip).opacity !== '1') {
+          document.removeEventListener('mousemove', _this2._followCursorListener);
+          _this2.popperInstance.disableEventListeners();
+          options.appendTo.removeChild(popper);
 
-        document.removeEventListener('mousemove', _this2._followCursorListener);
-        _this2.popperInstance.disableEventListeners();
-        options.appendTo.removeChild(popper);
-        options.onHidden.call(popper);
+          options.onHidden.call(popper);
+        }
       });
     }
 
@@ -3701,24 +3581,20 @@ var Tippy = function () {
         _this3.reference.removeEventListener(listener.event, listener.handler);
       });
 
+      // Restore title
       this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'));
 
       delete this.reference._tippy;['data-original-title', 'data-tippy', 'aria-describedby'].forEach(function (attr) {
         _this3.reference.removeAttribute(attr);
       });
 
-      this.popperInstance && this.popperInstance.destroy();
+      if (this.popperInstance) {
+        this.popperInstance.destroy();
+      }
 
       this._mutationObservers.forEach(function (observer) {
         observer.disconnect();
       });
-
-      var index = findIndex$1(store, function (tippy) {
-        return tippy === _this3;
-      });
-      if (index > -1) {
-        store.splice(index, 1);
-      }
 
       this.state.destroyed = true;
     }
@@ -3756,6 +3632,7 @@ function createTooltips(els, config) {
     removeTitle(reference);
 
     var popper = createPopperElement(id, title, options);
+
     var tippy = new Tippy({
       id: id,
       reference: reference,
@@ -3763,16 +3640,13 @@ function createTooltips(els, config) {
       options: options,
       _mutationObservers: []
     });
+
     tippy.popperInstance = createPopperInstanceOnInit ? createPopperInstance(tippy) : null;
 
-    var handlers = getEventListeners(tippy, options);
-    var listeners = [];
-
-    trigger.trim().split(' ').forEach(function (event) {
-      return listeners = listeners.concat(createTrigger(event, reference, handlers, touchHold));
-    });
-
-    tippy.listeners = listeners;
+    var listeners = getEventListeners(tippy, options);
+    tippy.listeners = trigger.trim().split(' ').reduce(function (acc, eventType) {
+      return acc.concat(createTrigger(eventType, reference, listeners, touchHold));
+    }, []);
 
     // Update tooltip content whenever the title attribute on the reference changes
     if (dynamicTitle) {
@@ -3808,10 +3682,107 @@ function createTooltips(els, config) {
   }, []);
 }
 
-function tippy$1(selector, options) {
-  browser.supported && init();
+function hideAllPoppers(excludeTippy) {
+  var poppers = [].slice.call(document.querySelectorAll(selectors.POPPER));
 
-  // Virtual object for custom positioning
+  poppers.forEach(function (popper) {
+    var tippy = popper._reference._tippy;
+    var options = tippy.options;
+
+
+    if ((options.hideOnClick === true || options.trigger.indexOf('focus') > -1) && (!excludeTippy || popper !== excludeTippy.popper)) {
+      tippy.hide();
+    }
+  });
+}
+
+function bindEventListeners() {
+  var touchHandler = function touchHandler() {
+    browser.usingTouch = true;
+
+    if (browser.iOS) {
+      document.body.classList.add('tippy-touch');
+    }
+
+    if (browser.dynamicInputDetection && window.performance) {
+      document.addEventListener('mousemove', mousemoveHandler);
+    }
+  };
+
+  var mousemoveHandler = function () {
+    var time = void 0;
+
+    return function () {
+      var now = performance.now();
+
+      // Chrome 60+ is 1 mousemove per animation frame, use 20ms time difference
+      if (now - time < 20) {
+        browser.usingTouch = false;
+        document.removeEventListener('mousemove', mousemoveHandler);
+        if (!browser.iOS) {
+          document.body.classList.remove('tippy-touch');
+        }
+      }
+
+      time = now;
+    };
+  }();
+
+  var clickHandler = function clickHandler(event) {
+    // Simulated events dispatched on the document
+    if (!(event.target instanceof Element)) {
+      return hideAllPoppers();
+    }
+
+    var reference = closest(event.target, selectors.REFERENCE);
+    var popper = closest(event.target, selectors.POPPER);
+
+    if (popper && popper._reference._tippy.options.interactive) return;
+
+    if (reference) {
+      var options = reference._tippy.options;
+
+      // Hide all poppers except the one belonging to the element that was clicked IF
+      // `multiple` is false AND they are a touch user, OR
+      // `multiple` is false AND it's triggered by a click
+
+      if (!options.multiple && browser.usingTouch || !options.multiple && options.trigger.indexOf('click') > -1) {
+        return hideAllPoppers(reference._tippy);
+      }
+
+      if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1) return;
+    }
+
+    // Don't needlessly run loop if no poppers are on the document
+    if (!document.querySelector(selectors.POPPER)) return;
+
+    hideAllPoppers();
+  };
+
+  var blurHandler = function blurHandler(event) {
+    var _document = document,
+        el = _document.activeElement;
+
+    if (el && el.blur && matches$1.call(el, selectors.REFERENCE)) {
+      el.blur();
+    }
+  };
+
+  document.addEventListener('click', clickHandler);
+  document.addEventListener('touchstart', touchHandler);
+  window.addEventListener('blur', blurHandler);
+
+  if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
+    document.addEventListener('pointerdown', touchHandler);
+  }
+}
+
+function tippy$1(selector, options) {
+  if (browser.supported && !browser.eventsBound) {
+    bindEventListeners();
+    browser.eventsBound = true;
+  }
+
   if (isObjectLiteral(selector)) {
     selector.refObj = true;
     selector.attributes = selector.attributes || {};
@@ -3843,7 +3814,7 @@ function tippy$1(selector, options) {
 
   options = _extends({}, defaults, options);
 
-  var tip = {
+  return {
     selector: selector,
     options: options,
     tooltips: browser.supported ? createTooltips(getArrayOfElements(selector), options) : [],
@@ -3853,10 +3824,6 @@ function tippy$1(selector, options) {
       });
     }
   };
-
-  store.push.apply(store, tip.tooltips);
-
-  return tip;
 }
 
 tippy$1.browser = browser;
@@ -3869,7 +3836,7 @@ tippy$1.defaults = defaults;
 function injectCSS() {
   var css = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
-  if (typeof window !== 'undefined') {
+  if (isBrowser) {
     var head = document.head || document.querySelector('head');
     var style = document.createElement('style');
     style.type = 'text/css';

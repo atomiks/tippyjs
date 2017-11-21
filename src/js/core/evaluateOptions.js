@@ -10,8 +10,6 @@ export default function evaluateOptions(reference, options) {
     options.animateFill = false
   }
 
-  // reassign appendTo into the result of evaluating appendTo
-  // if it's set as a function instead of Element
   if (options.appendTo && typeof options.appendTo === 'function') {
     options.appendTo = options.appendTo()
   }
