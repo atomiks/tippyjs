@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "rollup -c scripts/rollup.dev.config.js --watch",
     "css": "rollup -c scripts/rollup.css.config.js --watch",
-    "build": "npm run standalone && npm run bundle && && npm run all",
+    "build": "npm run standalone && npm run bundle && npm run all",
     "all": "rollup -c scripts/rollup.all.config.js && rollup -c scripts/rollup.all.min.config.js",
     "bundle": "rollup -c scripts/rollup.bundle.config.js",
     "standalone": "rollup -c scripts/rollup.standalone.config.js && rollup -c scripts/rollup.standalone.min.config.js",

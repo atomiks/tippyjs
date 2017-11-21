@@ -32,14 +32,14 @@ export const selectors = {
 * The default options applied to each instance
 */
 export const defaults = {
-  html: false,
   placement: 'top',
+  trigger: 'mouseenter focus',
   animation: 'shift-away',
+  html: false,
   animateFill: true,
   arrow: false,
   delay: 0,
-  trigger: 'mouseenter focus',
-  duration: 350,
+  duration: [350, 300],
   interactive: false,
   interactiveBorder: 2,
   theme: 'dark',
@@ -64,6 +64,7 @@ export const defaults = {
   arrowTransform: '',
   maxWidth: '',
   popperOptions: {},
+  createPopperInstanceOnInit: false,
   onShow() {},
   onShown() {},
   onHide() {},

@@ -29,7 +29,7 @@ export default function createPopperElement(id, title, options) {
   popper.setAttribute('class', 'tippy-popper')
   popper.setAttribute('role', 'tooltip')
   popper.setAttribute('aria-hidden', 'true')
-  popper.setAttribute('id', `tippy-tooltip-${id}`)
+  popper.setAttribute('id', `tippy-${id}`)
   popper.style.zIndex = zIndex
   popper.style.maxWidth = maxWidth
 

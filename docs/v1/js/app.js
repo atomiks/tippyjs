@@ -2,6 +2,13 @@ function $(s) {
   return document.querySelector(s)
 }
 
+function hideHtml() {
+  var popper = htmlTip.getPopperElement($('#html-tippy'))
+  var nestedPopper = instance.getPopperElement($('.btn-danger[onclick]'))
+  instance.hide(nestedPopper, 100)
+  htmlTip.hide(popper)
+}
+
 // Leave out filter CSS for Safari since it's buggy
 if (window.safari) {
   document.body.classList.add('is-safari')
@@ -20,60 +27,46 @@ var DOM = {
   }
 }
 
-tippy('.tippy')
+// The main instance which most tooltips are created by
+var instance = tippy('.tippy')
+// Show the animated tippy on load
+instance.show(instance.getPopperElement($('#animated-tippy')))
 
 tippy('.flippy', {
-  placement: 'right',
+  position: 'right',
   animation: 'fade',
-  arrowType: 'round',
   arrow: true,
-  flipBehavior: ['right', 'bottom']
+  popperOptions: {
+    modifiers: {
+      flip: {
+        behavior: ['right', 'bottom']
+      }
+    }
+  }
 })
 
 tippy('.tippy-link', {
-  theme: 'translucent',
+  theme: 'transparent',
   arrow: true,
-  arrowType: 'round',
-  arrowTransform: 'translateY(0.7px)',
   animation: 'fade'
 })
 
-// Callbacks
-tippy('#onShow', {
-  onShow: function () {
-    console.log('onShow called!')
-  }
-})
-tippy('#onHide', {
-  onHide: function () {
-    console.log('onHide called!')
-  }
-})
-tippy('#onShown', {
+tippy('#callback-tippy', {
   onShown: function () {
-    console.log('onShown called!')
-  }
-})
-tippy('#onHidden', {
-  onHidden: function () {
-    console.log('onHidden called!')
+    alert('Hello from the onShown() callback!')
+    document.getElementById('callback-tippy').blur()
   }
 })
 
 // HTML & nested tooltip example
-function closeHtml() {
-  $('#html-tippy')._tippy.hide()
-}
 var template = $('#template')
 var htmlTip = tippy('#html-tippy', {
   html: template,
   onShown: function () {
     if (window.innerWidth < 976) {
-      template.querySelector('.btn')._tippy.show()
+      var nestedRefEl = template.querySelector('.btn')
+      instance.show(instance.getPopperElement(nestedRefEl))
     }
-  },
-  onHide: function () {
-    this.querySelector('.btn')._tippy.hide(75)
   }
 })
 
@@ -131,19 +124,17 @@ var tip = tippy($ajax.btn, {
 var $perf = DOM.performance
 var jsperf = (function () {
   var i = 1
-  var base = 100
+  var base = 200
   var counter = base
   var tippyTime = 0
-  var tooltips = []
+  var instance
 
   return {
     updateModel: function () {
       var value = parseInt($perf.model.value) || 1
       $perf.btn.innerHTML = 'Append ' + value + (value === 1 ? ' element!' : ' elements!')
 
-      if (tooltips.length) {
-        tooltips.destroyAll()
-      }
+      instance && instance.destroyAll()
 
       this.reset(value)
     },
@@ -165,12 +156,11 @@ var jsperf = (function () {
       counter += base
 
       var t1 = performance.now()
-      tip = tippy('.test-element', {
+      instance = tippy('.test-element', {
         hideOnClick: false,
         duration: 0,
         arrow: true,
-        performance: true,
-        animation: 'fade'
+        performance: true
       })
       var t2 = performance.now()
 

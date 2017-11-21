@@ -76,9 +76,6 @@ export default class Tippy {
       
       options.sticky && makeSticky(this)
 
-      // Trigger document reflow for the CSS transition
-      tooltip.offsetHeight
-
       setVisibilityState([tooltip, backdrop], 'visible')
 
       onTransitionEnd(this, duration, () => {

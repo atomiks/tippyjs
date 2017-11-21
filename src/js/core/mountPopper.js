@@ -11,8 +11,14 @@ import prefix from '../utils/prefix'
 * @param {Tippy} tippy
 */
 export default function mountPopper(tippy) {
-  const { popper, reference } = tippy
-  const { appendTo, followCursor } = tippy.options
+  const {
+    popper,
+    reference,
+    options: {
+      appendTo,
+      followCursor
+    }
+   } = tippy
 
   // Already on the DOM
   if (appendTo.contains(popper)) return

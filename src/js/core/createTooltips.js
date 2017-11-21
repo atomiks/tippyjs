@@ -1,5 +1,6 @@
 import getIndividualOptions from './getIndividualOptions'
 import createPopperElement  from './createPopperElement'
+import createPopperInstance  from './createPopperInstance'
 import createTrigger from './createTrigger'
 import getEventListeners from './getEventListeners'
 import evaluateOptions from './evaluateOptions'
@@ -34,19 +35,19 @@ export default function createTooltips(els, config) {
       html,
       trigger,
       touchHold,
-      dynamicTitle
+      dynamicTitle,
+      createPopperInstanceOnInit
     } = options
 
     const title = reference.getAttribute('title')
     if (!title && !html) return acc
 
     reference.setAttribute('data-tippy', '')
-    reference.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
+    reference.setAttribute('aria-describedby', `tippy-${id}`)
 
     removeTitle(reference)
     
     const popper = createPopperElement(id, title, options)
-    
     const tippy = new Tippy({
       id,
       reference,
@@ -54,6 +55,7 @@ export default function createTooltips(els, config) {
       options,
       _mutationObservers: []
     })
+    tippy.popperInstance = createPopperInstanceOnInit ? createPopperInstance(tippy) : null
 
     const handlers = getEventListeners(tippy, options)
     let listeners = []

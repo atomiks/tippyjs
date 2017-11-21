@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700" rel="stylesheet">
   <script defer src="js/focus-ring.js"></script>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
   <link rel="stylesheet" href="tippy/themes.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/prism.css">
@@ -41,6 +41,10 @@
                data-count-aria-label="# stargazers on GitHub"
                aria-label="Star atomiks/tippyjs on GitHub">Star</a>
           </small>
+        </div>
+        <div class="docs d-flex justify-content-center align-items-center">
+          <a class="btn btn-docs-version btn-docs-version-current" href="/">v2 (beta)</a>
+          <a class="btn btn-docs-version" href="/v1/index.html">v1</a>
         </div>
       </div>
     </header>
@@ -111,8 +115,8 @@
               <button class="btn btn-gradient tippy" title="I scaled up from nothingness!" data-tippy-animation="scale" data-tippy-arrow="true">Scale</button>
               <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-duration="600">Inertia (shift away)</button>
               <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-animation="shift-toward" data-tippy-duration="600">Inertia (shift toward)</button>
-              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-animation="scale" data-tippy-duration="600">Inertia (scale)</button>
-              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-animation="perspective" data-tippy-duration="600">Inertia (perspective)</button>
+              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-animation="scale" data-tippy-duration="550">Inertia (scale)</button>
+              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-animation="perspective" data-tippy-duration="550">Inertia (perspective)</button>
             </div>
             
             <h4>Transitions &amp; Delays <i class="material-icons icon-left">timer</i></h4>
@@ -131,10 +135,9 @@
             <h4>Themes <i class="material-icons icon-left">brush</i></h4>
             <p>You can create all kinds of custom funky themes for your tooltips with ease.</p>
             <div class="button-showcase d-flex justify-content-center flex-wrap">
-              <button class="btn btn-gradient tippy" title="Cool huh?" data-tippy-size="large" data-tippy-animation="fade" data-tippy-theme="light" data-tippy-arrow="true" data-tippy-arrowType="round" data-tippy-flip="false">Light shadow</button>
-              <button class="btn btn-gradient tippy" title="Cool huh?" data-tippy-size="large" data-tippy-animation="fade" data-tippy-theme="light bordered" data-tippy-arrow="true" data-tippy-flip="false">Light bordered</button>
-              <button class="btn btn-gradient tippy" title="See through!" data-tippy-size="large" data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-animateFill="false" data-tippy-theme="translucent" data-tippy-flip="false">Translucent</button>
-              <button class="btn btn-gradient tippy" title="Awesome colors!" data-tippy-size="large" data-tippy-animation="fade" data-tippy-animateFill="false" data-tippy-theme="gradient" data-tippy-flip="false">Gradient</button>
+              <button class="btn btn-gradient tippy" title="See through!" data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-animateFill="false" data-tippy-theme="translucent" data-tippy-flip="false">Translucent</button>
+              <button class="btn btn-gradient tippy" title="Awesome colors!" data-tippy-animation="fade" data-tippy-animateFill="false" data-tippy-theme="gradient" data-tippy-flip="false">Gradient</button>
+              <button class="btn btn-gradient tippy" title="Cool huh?" data-tippy-animation="fade" data-tippy-theme="light bordered" data-tippy-arrow="true" data-tippy-flip="false">Light</button>
             </div>
             
             <h4>Callbacks <i class="material-icons icon-left">call</i></h4>
@@ -160,8 +163,8 @@
               <button class="btn btn-gradient tippy" title="I'll follow your mouse cursor!" data-tippy-followcursor="true" data-tippy-animation="scale" data-tippy-arrow="true">Follow cursor</button>
               <button class="btn btn-gradient flippy" title="I'll flip to the bottom if there's not enough room on the right.">Custom flips</button>
               <button class="btn btn-gradient tippy" id="animated-tippy" title="Sticky tooltip! Click my element to hide me." data-tippy-theme="transparent" data-tippy-sticky="true" data-tippy-hideonclick="false" data-tippy-trigger="click">Sticky <small class="opacity-low">(click)</small></button>
-              <button class="btn btn-gradient tippy" title="I'm pretty cute" data-tippy-size="small">Small tooltip</button>
-              <button class="btn btn-gradient tippy" title="I'm big and scary!" data-tippy-size="large">Large tooltip</button>
+              <button class="btn btn-gradient tippy" title="I'm a tooltip!" data-tippy-size="small">Small tooltip</button>
+              <button class="btn btn-gradient tippy" title="I'm a tooltip!" data-tippy-size="large">Large tooltip</button>
               <button class="btn btn-gradient tippy" title="Use a touch device to see" data-tippy-touchHold="true">Touch and hold only</button>
             </div>
           </section>
@@ -223,13 +226,13 @@
             <p>
                 Alternatively, you can install through npm:
             </p>
-            <pre><code>npm install --save tippy.js</code></pre>
+            <pre><code>npm install --save tippy.js@beta</code></pre>
 
             <p>
-                or use the <a target="_blank" href="https://unpkg.com/tippy.js/dist/">unpkg.com CDN</a>:
+                or use the <a target="_blank" href="https://unpkg.com/tippy.js@2.0.0-beta/dist/">unpkg.com CDN</a>:
             </p>
 
-            <pre><code>https://unpkg.com/tippy.js/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js@2.0.0-beta/dist/</code></pre>
             
             <p>Simply include the <code>tippy.all.min.js</code> file in your document before your own scripts:</p>
             <pre><code class="language-markup">&lt;script src="https://unpkg.com/tippy.js/dist/tippy.all.min.js"&gt;&lt;/script&gt;</code></pre>
@@ -328,7 +331,7 @@ tippy(refObject)
 <pre><code class="language-markup">&lt;button
   class="btn tippy"
   title="I'm a tooltip!"
-  data-tippy-duration="[400, 0]"
+  data-tippy-duration="[400, 100]"
   data-tippy-arrow="false"
   data-tippy-animation="shift-away"
   data-tippy-placement="bottom"
@@ -338,7 +341,7 @@ tippy(refObject)
 
               <div class="result-box">
                 <p class="text-muted">Result:</p>
-                <button class="btn btn-gradient tippy" title="I'm a tooltip!" data-tippy-duration="[400, 0]" data-tippy-arrow="false" data-tippy-animation="shift-away" data-tippy-placement="bottom">Overridden</button>
+                <button class="btn btn-gradient tippy" title="I'm a tooltip!" data-tippy-duration="[400, 100]" data-tippy-arrow="false" data-tippy-animation="shift-away" data-tippy-placement="bottom">Overridden</button>
               </div>
 
               <p>This is helpful if you want to globally define options, but make a few tooltips different without having to call <code>tippy()</code> again with different options.</p>
@@ -484,9 +487,10 @@ tippy(refObject)
                     </tr>
                     <tr>
                       <td><code>duration</code></td>
-                      <td><code>350</code></td>
+                      <td><code>[350, 300]</code></td>
                       <td><code>Number</code> | <code>Array</code> (milliseconds)</td>
-                      <td>Specifies how long the transition animation takes.
+                      <td>Specifies how long the transition animation takes to complete.
+                        A single number will use the same duration for the show and hide events.
                           Use an array to specify a different show and hide duration, such as <code>[300, 100]</code>.
                       </td>
                     </tr>
@@ -513,8 +517,8 @@ tippy(refObject)
                     <tr>
                       <td><code>theme</code></td>
                       <td><code>'dark'</code></td>
-                      <td><code>'dark'</code> <code>'light'</code> <code>'transparent'</code></td>
-                      <td>These themes require the <code>themes.css</code> file. You can also create your own easily. See <a href="#creating-themes">Creating themes</a>.
+                      <td><code>'dark'</code></td>
+                      <td>You can create your own easily. See <a href="#creating-themes">Creating themes</a>.
                     </tr>
                     <tr>
                       <td><code>offset</code></td>
@@ -582,6 +586,14 @@ tippy(refObject)
                       <td><code>false</code></td>
                       <td><code>Boolean</code></td>
                       <td>Disables <code>data-tippy-*</code> attribute options to make initial instantiation time faster.</td>
+                    </tr>
+                    <tr>
+                      <td><code>createPopperInstanceOnInit</code></td>
+                      <td><code>false</code></td>
+                      <td><code>Boolean</code></td>
+                      <td>By default, the popper instance for a tooltip is not created until it is shown for the first time
+                        in order to optimize performance.
+                      In some cases this may cause issues, so you can specify it to be created when you init with <code>tippy()</code>.</td>
                     </tr>
                     <tr>
                       <td><code>popperOptions</code></td>

@@ -4,7 +4,7 @@
 	(global.tippy = factory());
 }(this, (function () { 'use strict';
 
-var styles = ".tippy-touch{cursor:pointer!important}.tippy-popper{max-width:350px;-webkit-perspective:700px;perspective:700px;z-index:9999;outline:0;-webkit-transition-timing-function:cubic-bezier(.165,.84,.44,1);transition-timing-function:cubic-bezier(.165,.84,.44,1);pointer-events:none}.tippy-popper[data-html]{max-width:96%;max-width:calc(100% - 20px)}.tippy-popper[x-placement^=top] .tippy-roundarrow{width:24px;height:24px;fill:#333;bottom:-15px}.tippy-popper[x-placement^=top] .tippy-roundarrow svg{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.tippy-popper[x-placement^=top] .tippy-arrow{border-top:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;bottom:-7px;margin:0 9px}.tippy-popper[x-placement^=top] .tippy-backdrop{-webkit-transform-origin:0 33%;transform-origin:0 33%}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-55%);transform:scale(1) translate(-50%,-55%);opacity:1}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.2) translate(-50%,-50%);transform:scale(.2) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(-20px);transform:translateY(-20px)}.tippy-popper[x-placement^=top] [data-animation=perspective]{-webkit-transform-origin:bottom;transform-origin:bottom}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) rotateX(0);transform:translateY(-10px) rotateX(0)}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(90deg);transform:translateY(0) rotateX(90deg)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) scale(1);transform:translateY(-10px) scale(1)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=bottom] .tippy-roundarrow{width:24px;height:24px;fill:#333;top:-15px}.tippy-popper[x-placement^=bottom] .tippy-roundarrow svg{-webkit-transform:rotate(0);transform:rotate(0)}.tippy-popper[x-placement^=bottom] .tippy-arrow{border-bottom:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;top:-7px;margin:0 9px}.tippy-popper[x-placement^=bottom] .tippy-backdrop{-webkit-transform-origin:0 -50%;transform-origin:0 -50%}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-45%);transform:scale(1) translate(-50%,-45%);opacity:1}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.2) translate(-50%);transform:scale(.2) translate(-50%);opacity:0}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(20px);transform:translateY(20px)}.tippy-popper[x-placement^=bottom] [data-animation=perspective]{-webkit-transform-origin:top;transform-origin:top}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) rotateX(0);transform:translateY(10px) rotateX(0)}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(-90deg);transform:translateY(0) rotateX(-90deg)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) scale(1);transform:translateY(10px) scale(1)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=left] .tippy-roundarrow{width:24px;height:24px;fill:#333;right:-15px}.tippy-popper[x-placement^=left] .tippy-roundarrow svg{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.tippy-popper[x-placement^=left] .tippy-arrow{border-left:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;right:-7px;margin:6px 0}.tippy-popper[x-placement^=left] .tippy-backdrop{-webkit-transform-origin:50% 0;transform-origin:50% 0}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-50%);transform:scale(1) translate(-50%,-50%);opacity:1}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.2) translate(-50%,-50%);transform:scale(.2) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(-20px);transform:translateX(-20px)}.tippy-popper[x-placement^=left] [data-animation=perspective]{-webkit-transform-origin:right;transform-origin:right}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) rotateY(0);transform:translateX(-10px) rotateY(0)}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(-90deg);transform:translateX(0) rotateY(-90deg)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) scale(1);transform:translateX(-10px) scale(1)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-popper[x-placement^=right] .tippy-roundarrow{width:24px;height:24px;fill:#333;left:-15px}.tippy-popper[x-placement^=right] .tippy-roundarrow svg{-webkit-transform:rotate(-90deg);transform:rotate(-90deg)}.tippy-popper[x-placement^=right] .tippy-arrow{border-right:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;left:-7px;margin:6px 0}.tippy-popper[x-placement^=right] .tippy-backdrop{-webkit-transform-origin:-50% 0;transform-origin:-50% 0}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-50%);transform:scale(1) translate(-50%,-50%);opacity:1}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.2) translate(-50%,-50%);transform:scale(.2) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(20px);transform:translateX(20px)}.tippy-popper[x-placement^=right] [data-animation=perspective]{-webkit-transform-origin:left;transform-origin:left}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) rotateY(0);transform:translateX(10px) rotateY(0)}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(90deg);transform:translateX(0) rotateY(90deg)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) scale(1);transform:translateX(10px) scale(1)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-tooltip{position:relative;color:#fff;border-radius:4px;font-size:.9rem;padding:.3rem .6rem;text-align:center;will-change:transform;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:#333}.tippy-tooltip[data-size=small]{padding:.2rem .4rem;font-size:.75rem}.tippy-tooltip[data-size=large]{padding:.4rem .8rem;font-size:1rem}.tippy-tooltip[data-animatefill]{overflow:hidden;background-color:transparent}.tippy-tooltip[data-interactive]{pointer-events:auto}.tippy-tooltip[data-inertia]{-webkit-transition-timing-function:cubic-bezier(.53,2,.36,.85);transition-timing-function:cubic-bezier(.53,2,.36,.85)}.tippy-tooltip .tippy-arrow,.tippy-tooltip .tippy-roundarrow{position:absolute;width:0;height:0}.tippy-tooltip .tippy-backdrop{position:absolute;will-change:transform;background-color:#333;border-radius:50%;width:130%;width:calc(110% + 2rem);left:50%;top:50%;z-index:-1;overflow:hidden}.tippy-tooltip .tippy-backdrop[data-state=visible]{-webkit-transition:all cubic-bezier(.31,.42,.41,.96);transition:all cubic-bezier(.31,.42,.41,.96)}.tippy-tooltip .tippy-backdrop[data-state=hidden]{-webkit-transition:all cubic-bezier(.48,.36,.29,1);transition:all cubic-bezier(.48,.36,.29,1)}.tippy-tooltip .tippy-backdrop:before{content:\"\";padding-top:90%;float:left}@media (max-width:400px){.tippy-popper{max-width:96%;max-width:calc(100% - 20px)}}";
+var styles = ".tippy-touch{cursor:pointer!important}.tippy-popper{max-width:350px;-webkit-perspective:700px;perspective:700px;z-index:9999;outline:0;-webkit-transition-timing-function:cubic-bezier(.165,.84,.44,1);transition-timing-function:cubic-bezier(.165,.84,.44,1);pointer-events:none}.tippy-popper[data-html]{max-width:96%;max-width:calc(100% - 20px)}.tippy-popper[x-placement^=top] .tippy-backdrop{border-radius:50% 50% 0 0}.tippy-popper[x-placement^=top] .tippy-roundarrow{width:24px;height:24px;fill:#333;bottom:-15px}.tippy-popper[x-placement^=top] .tippy-roundarrow svg{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.tippy-popper[x-placement^=top] .tippy-arrow{border-top:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;bottom:-7px;margin:0 9px}.tippy-popper[x-placement^=top] .tippy-backdrop{-webkit-transform-origin:0 33%;transform-origin:0 33%}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-60%);transform:scale(1) translate(-50%,-60%);opacity:1}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.25) translate(-50%,-50%);transform:scale(.25) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(-20px);transform:translateY(-20px)}.tippy-popper[x-placement^=top] [data-animation=perspective]{-webkit-transform-origin:bottom;transform-origin:bottom}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) rotateX(0);transform:translateY(-10px) rotateX(0)}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(90deg);transform:translateY(0) rotateX(90deg)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) scale(1);transform:translateY(-10px) scale(1)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=bottom] .tippy-backdrop{border-radius:0 0 50% 50%}.tippy-popper[x-placement^=bottom] .tippy-roundarrow{width:24px;height:24px;fill:#333;top:-15px}.tippy-popper[x-placement^=bottom] .tippy-roundarrow svg{-webkit-transform:rotate(0);transform:rotate(0)}.tippy-popper[x-placement^=bottom] .tippy-arrow{border-bottom:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;top:-7px;margin:0 9px}.tippy-popper[x-placement^=bottom] .tippy-backdrop{-webkit-transform-origin:0 -50%;transform-origin:0 -50%}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-40%);transform:scale(1) translate(-50%,-40%);opacity:1}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.25) translate(-50%);transform:scale(.25) translate(-50%);opacity:0}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(20px);transform:translateY(20px)}.tippy-popper[x-placement^=bottom] [data-animation=perspective]{-webkit-transform-origin:top;transform-origin:top}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) rotateX(0);transform:translateY(10px) rotateX(0)}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(-90deg);transform:translateY(0) rotateX(-90deg)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) scale(1);transform:translateY(10px) scale(1)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=left] .tippy-backdrop{border-radius:50% 0 0 50%}.tippy-popper[x-placement^=left] .tippy-roundarrow{width:24px;height:24px;fill:#333;right:-15px}.tippy-popper[x-placement^=left] .tippy-roundarrow svg{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.tippy-popper[x-placement^=left] .tippy-arrow{border-left:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;right:-7px;margin:6px 0}.tippy-popper[x-placement^=left] .tippy-backdrop{-webkit-transform-origin:50% 0;transform-origin:50% 0}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-50%);transform:scale(1) translate(-50%,-50%);opacity:1}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.25) translate(-50%,-50%);transform:scale(.25) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(-20px);transform:translateX(-20px)}.tippy-popper[x-placement^=left] [data-animation=perspective]{-webkit-transform-origin:right;transform-origin:right}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) rotateY(0);transform:translateX(-10px) rotateY(0)}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(-90deg);transform:translateX(0) rotateY(-90deg)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) scale(1);transform:translateX(-10px) scale(1)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-popper[x-placement^=right] .tippy-backdrop{border-radius:0 50% 50% 0}.tippy-popper[x-placement^=right] .tippy-roundarrow{width:24px;height:24px;fill:#333;left:-15px}.tippy-popper[x-placement^=right] .tippy-roundarrow svg{-webkit-transform:rotate(-90deg);transform:rotate(-90deg)}.tippy-popper[x-placement^=right] .tippy-arrow{border-right:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;left:-7px;margin:6px 0}.tippy-popper[x-placement^=right] .tippy-backdrop{-webkit-transform-origin:-50% 0;transform-origin:-50% 0}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-50%);transform:scale(1) translate(-50%,-50%);opacity:1}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.25) translate(-50%,-50%);transform:scale(.25) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(20px);transform:translateX(20px)}.tippy-popper[x-placement^=right] [data-animation=perspective]{-webkit-transform-origin:left;transform-origin:left}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) rotateY(0);transform:translateX(10px) rotateY(0)}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(90deg);transform:translateX(0) rotateY(90deg)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) scale(1);transform:translateX(10px) scale(1)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-tooltip{position:relative;color:#fff;border-radius:4px;font-size:.9rem;padding:.3rem .6rem;text-align:center;will-change:transform;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:#333}.tippy-tooltip[data-size=small]{padding:.2rem .4rem;font-size:.75rem}.tippy-tooltip[data-size=large]{padding:.4rem .8rem;font-size:1rem}.tippy-tooltip[data-animatefill]{overflow:hidden;background-color:transparent}.tippy-tooltip[data-interactive]{pointer-events:auto}.tippy-tooltip[data-inertia]{-webkit-transition-timing-function:cubic-bezier(.53,2,.36,.85);transition-timing-function:cubic-bezier(.53,2,.36,.85)}.tippy-tooltip .tippy-arrow,.tippy-tooltip .tippy-roundarrow{position:absolute;width:0;height:0}.tippy-tooltip .tippy-backdrop{position:absolute;will-change:transform;background-color:#333;border-radius:50%;width:135%;left:50%;top:50%;z-index:-1;overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden}.tippy-tooltip .tippy-backdrop[data-state=visible]{-webkit-transition:all cubic-bezier(.37,.21,.32,.82);transition:all cubic-bezier(.37,.21,.32,.82)}.tippy-tooltip .tippy-backdrop[data-state=hidden]{-webkit-transition:all cubic-bezier(.4,.5,.5,.99);transition:all cubic-bezier(.4,.5,.5,.99)}.tippy-tooltip .tippy-backdrop:after{content:\"\";float:left;padding-top:90%}@media (max-width:400px){.tippy-popper{max-width:96%;max-width:calc(100% - 20px)}}";
 
 var browser = {};
 
@@ -39,14 +39,14 @@ var selectors = {
   * The default options applied to each instance
   */
 };var defaults = {
-  html: false,
   placement: 'top',
+  trigger: 'mouseenter focus',
   animation: 'shift-away',
+  html: false,
   animateFill: true,
   arrow: false,
   delay: 0,
-  trigger: 'mouseenter focus',
-  duration: 350,
+  duration: [350, 300],
   interactive: false,
   interactiveBorder: 2,
   theme: 'dark',
@@ -73,6 +73,7 @@ var selectors = {
   arrowTransform: '',
   maxWidth: '',
   popperOptions: {},
+  createPopperInstanceOnInit: false,
   onShow: function onShow() {},
   onShown: function onShown() {},
   onHide: function onHide() {},
@@ -237,8 +238,8 @@ function bindEventListeners() {
       if (_tippy.options.hideOnClick !== true || _tippy.options.trigger.indexOf('click') > -1) return;
     }
 
-    // Don't trigger a hide for tippy controllers, and don't needlessly run loop
-    if (closest(event.target, selectors.CONTROLLER) || !document.querySelector(selectors.POPPER)) return;
+    // Don't needlessly run loop if no poppers are on the document
+    if (!document.querySelector(selectors.POPPER)) return;
 
     hideAllPoppers();
   };
@@ -252,12 +253,11 @@ function bindEventListeners() {
     }
   };
 
-  // Hook events
   document.addEventListener('click', clickHandler);
   document.addEventListener('touchstart', touchHandler);
   window.addEventListener('blur', blurHandler);
 
-  if (!browser.supportsTouch && (navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)) {
+  if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
     document.addEventListener('pointerdown', touchHandler);
   }
 }
@@ -424,7 +424,7 @@ function createPopperElement(id, title, options) {
   popper.setAttribute('class', 'tippy-popper');
   popper.setAttribute('role', 'tooltip');
   popper.setAttribute('aria-hidden', 'true');
-  popper.setAttribute('id', 'tippy-tooltip-' + id);
+  popper.setAttribute('id', 'tippy-' + id);
   popper.style.zIndex = zIndex;
   popper.style.maxWidth = maxWidth;
 
@@ -495,374 +495,6 @@ function createPopperElement(id, title, options) {
   popper.appendChild(tooltip);
 
   return popper;
-}
-
-/**
-* Creates a trigger
-* @param {Object} event - the custom event specified in the `trigger` setting
-* @param {Element} reference
-* @param {Object} handlers - the handlers for each listener
-* @param {Boolean} touchHold
-* @return {Array} - array of listener objects
-*/
-function createTrigger(event, reference, handlers, touchHold) {
-  var listeners = [];
-
-  if (event === 'manual') return listeners;
-
-  // Show
-  reference.addEventListener(event, handlers.handleTrigger);
-  listeners.push({
-    event: event,
-    handler: handlers.handleTrigger
-  });
-
-  // Hide
-  if (event === 'mouseenter') {
-    if (browser.supportsTouch && touchHold) {
-      reference.addEventListener('touchstart', handlers.handleTrigger);
-      listeners.push({
-        event: 'touchstart',
-        handler: handlers.handleTrigger
-      });
-      reference.addEventListener('touchend', handlers.handleMouseleave);
-      listeners.push({
-        event: 'touchend',
-        handler: handlers.handleMouseleave
-      });
-    }
-
-    reference.addEventListener('mouseleave', handlers.handleMouseleave);
-    listeners.push({
-      event: 'mouseleave',
-      handler: handlers.handleMouseleave
-    });
-  }
-
-  if (event === 'focus') {
-    reference.addEventListener('blur', handlers.handleBlur);
-    listeners.push({
-      event: 'blur',
-      handler: handlers.handleBlur
-    });
-  }
-
-  return listeners;
-}
-
-/**
-* Returns the core placement ('top', 'bottom', 'left', 'right') of a popper
-* @param {Element} popper
-* @return {String}
-*/
-function getPopperPlacement(popper) {
-  return popper.getAttribute('x-placement').replace(/-.+/, '');
-}
-
-/**
-* Determines if the mouse's cursor is outside the interactive border
-* @param {MouseEvent} event
-* @param {Element} popper
-* @param {Object} options
-* @return {Boolean}
-*/
-function cursorIsOutsideInteractiveBorder(event, popper, options) {
-  if (!popper.getAttribute('x-placement')) return true;
-
-  var x = event.clientX,
-      y = event.clientY;
-  var interactiveBorder = options.interactiveBorder,
-      distance = options.distance;
-
-
-  var rect = popper.getBoundingClientRect();
-  var placement = getPopperPlacement(popper);
-  var borderWithDistance = interactiveBorder + distance;
-
-  var exceeds = {
-    top: rect.top - y > interactiveBorder,
-    bottom: y - rect.bottom > interactiveBorder,
-    left: rect.left - x > interactiveBorder,
-    right: x - rect.right > interactiveBorder
-  };
-
-  switch (placement) {
-    case 'top':
-      exceeds.top = rect.top - y > borderWithDistance;
-      break;
-    case 'bottom':
-      exceeds.bottom = y - rect.bottom > borderWithDistance;
-      break;
-    case 'left':
-      exceeds.left = rect.left - x > borderWithDistance;
-      break;
-    case 'right':
-      exceeds.right = x - rect.right > borderWithDistance;
-      break;
-  }
-
-  return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right;
-}
-
-/**
-* Returns relevant listeners for each Tippy instance
-* @param {Tippy} tippy
-* @param {Object} options
-* @return {Object} of listeners
-*/
-function getEventListeners(tippy, options) {
-  var popper = tippy.popper,
-      reference = tippy.reference;
-  var delay = options.delay,
-      duration = options.duration,
-      interactive = options.interactive,
-      interactiveBorder = options.interactiveBorder,
-      hideOnClick = options.hideOnClick,
-      trigger = options.trigger,
-      touchHold = options.touchHold;
-
-
-  var showDelay = void 0,
-      hideDelay = void 0;
-
-  var clearTimeouts = function clearTimeouts() {
-    clearTimeout(showDelay);
-    clearTimeout(hideDelay);
-  };
-
-  var _show = function _show() {
-    clearTimeouts();
-
-    if (isVisible(popper)) return;
-
-    var _delay = Array.isArray(delay) ? delay[0] : delay;
-
-    if (delay) {
-      showDelay = setTimeout(function () {
-        return tippy.show();
-      }, _delay);
-    } else {
-      tippy.show();
-    }
-  };
-
-  var show = function show(event) {
-    tippy.options.wait ? tippy.options.wait.call(popper, _show, event) : _show();
-  };
-
-  var hide = function hide() {
-    clearTimeouts();
-
-    if (!isVisible(popper)) return;
-
-    var _delay = Array.isArray(delay) ? delay[1] : delay;
-
-    if (delay) {
-      hideDelay = setTimeout(function () {
-        if (!isVisible(popper)) return;
-        tippy.hide();
-      }, _delay);
-    } else {
-      tippy.hide();
-    }
-  };
-
-  var handleTrigger = function handleTrigger(event) {
-    var shouldStopEvent = browser.supportsTouch && browser.usingTouch && (event.type === 'mouseenter' || event.type === 'focus');
-
-    if (shouldStopEvent && touchHold) return;
-
-    tippy._lastTriggerEvent = event.type;
-
-    // Toggle show/hide when clicking click-triggered tooltips
-    var isClick = event.type === 'click';
-    var isNotPersistent = hideOnClick !== 'persistent';
-
-    isClick && isVisible(popper) && isNotPersistent ? hide() : show(event);
-
-    // iOS prevents click events from firing
-    if (shouldStopEvent && browser.iOS && reference.click) {
-      reference.click();
-    }
-  };
-
-  var handleMouseleave = function handleMouseleave(event) {
-    if (event.type === 'mouseleave' && browser.supportsTouch && browser.usingTouch && touchHold) return;
-
-    if (interactive) {
-      // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
-      var handleMousemove = function handleMousemove(event) {
-        var referenceCursorIsOver = closest(event.target, selectors.REFERENCE);
-        var cursorIsOverPopper = closest(event.target, selectors.POPPER) === popper;
-        var cursorIsOverReference = referenceCursorIsOver === reference;
-
-        if (cursorIsOverPopper || cursorIsOverReference) return;
-
-        if (cursorIsOutsideInteractiveBorder(event, popper, options)) {
-          document.body.removeEventListener('mouseleave', hide);
-          document.removeEventListener('mousemove', handleMousemove);
-          hide();
-        }
-      };
-      document.body.addEventListener('mouseleave', hide);
-      document.addEventListener('mousemove', handleMousemove);
-      return;
-    }
-
-    hide();
-  };
-
-  var handleBlur = function handleBlur(event) {
-    if (!event.relatedTarget || browser.usingTouch) return;
-    if (closest(event.relatedTarget, selectors.POPPER)) return;
-    hide();
-  };
-
-  return {
-    handleTrigger: handleTrigger,
-    handleMouseleave: handleMouseleave,
-    handleBlur: handleBlur
-  };
-}
-
-/**
-* Evaluates/modifies the options object for appropriate behavior
-* @param {Element|Object} reference
-* @param {Object} options
-* @return {Object} modified/evaluated options
-*/
-function evaluateOptions(reference, options) {
-  // animateFill is disabled if an arrow is true
-  if (options.arrow) {
-    options.animateFill = false;
-  }
-
-  // reassign appendTo into the result of evaluating appendTo
-  // if it's set as a function instead of Element
-  if (options.appendTo && typeof options.appendTo === 'function') {
-    options.appendTo = options.appendTo();
-  }
-
-  if (typeof options.html === 'function') {
-    options.html = options.html(reference);
-  }
-
-  return options;
-}
-
-/**
-* Returns inner elements of the popper element
-* @param {Element} popper
-* @return {Object}
-*/
-function getInnerElements(popper) {
-  return {
-    tooltip: popper.querySelector(selectors.TOOLTIP),
-    backdrop: popper.querySelector(selectors.BACKDROP),
-    content: popper.querySelector(selectors.CONTENT)
-  };
-}
-
-/**
-* Removes the title from an element, setting `data-original-title`
-* appropriately
-* @param {Element} el
-*/
-function removeTitle(el) {
-  var title = el.getAttribute('title');
-  // Only set `data-original-title` attr if there is a title
-  if (title) {
-    el.setAttribute('data-original-title', title);
-  }
-  el.removeAttribute('title');
-}
-
-/**
-* Adds a mutation observer to an element and stores it in the instance
-* @param {Object}
-*/
-function addMutationObserver(_ref) {
-  var tippy = _ref.tippy,
-      target = _ref.target,
-      callback = _ref.callback,
-      options = _ref.options;
-
-  if (!window.MutationObserver) return;
-
-  var observer = new MutationObserver(callback);
-  observer.observe(target, options);
-  tippy._mutationObservers.push(observer);
-}
-
-/**
-* Mousemove event listener handler for `followCursor` option
-* @param {Element} reference
-* @return {Function} the event handler
-*/
-function createFollowCursorListener(reference) {
-  var tippy = find(store, function (tippy) {
-    return tippy.reference === reference;
-  });
-
-  var listener = function listener(e) {
-    if (tippy._lastTriggerEvent === 'focus') return;
-
-    var popper = tippy.popper,
-        offset = tippy.options.offset;
-
-
-    var placement = getPopperPlacement(popper);
-    var halfPopperWidth = Math.round(popper.offsetWidth / 2);
-    var halfPopperHeight = Math.round(popper.offsetHeight / 2);
-    var viewportPadding = 5;
-    var pageWidth = document.documentElement.offsetWidth || document.body.offsetWidth;
-
-    var pageX = e.pageX,
-        pageY = e.pageY;
-
-
-    var x = void 0,
-        y = void 0;
-
-    switch (placement) {
-      case 'top':
-        x = pageX - halfPopperWidth + offset;
-        y = pageY - 2 * halfPopperHeight;
-        break;
-      case 'bottom':
-        x = pageX - halfPopperWidth + offset;
-        y = pageY + 10;
-        break;
-      case 'left':
-        x = pageX - 2 * halfPopperWidth;
-        y = pageY - halfPopperHeight + offset;
-        break;
-      case 'right':
-        x = pageX + 5;
-        y = pageY - halfPopperHeight + offset;
-        break;
-    }
-
-    var isRightOverflowing = pageX + viewportPadding + halfPopperWidth + offset > pageWidth;
-    var isLeftOverflowing = pageX - viewportPadding - halfPopperWidth + offset < 0;
-
-    // Prevent left/right overflow
-    if (placement === 'top' || placement === 'bottom') {
-      if (isRightOverflowing) {
-        x = pageWidth - viewportPadding - 2 * halfPopperWidth;
-      }
-
-      if (isLeftOverflowing) {
-        x = viewportPadding;
-      }
-    }
-
-    popper.style[prefix('transform')] = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
-  };
-
-  tippy._followCursorListener = listener;
-
-  return listener;
 }
 
 /**!
@@ -3345,6 +2977,15 @@ function transformAxis(axis, isVertical) {
 }
 
 /**
+* Returns the core placement ('top', 'bottom', 'left', 'right') of a popper
+* @param {Element} popper
+* @return {String}
+*/
+function getPopperPlacement(popper) {
+  return popper.getAttribute('x-placement').replace(/-.+/, '');
+}
+
+/**
 * Computes and applies the necessary arrow transform
 * @param {Element} popper
 * @param {Element} arrow
@@ -3397,6 +3038,19 @@ function defer(fn) {
 }
 
 /**
+* Returns inner elements of the popper element
+* @param {Element} popper
+* @return {Object}
+*/
+function getInnerElements(popper) {
+  return {
+    tooltip: popper.querySelector(selectors.TOOLTIP),
+    backdrop: popper.querySelector(selectors.BACKDROP),
+    content: popper.querySelector(selectors.CONTENT)
+  };
+}
+
+/**
 * Returns the distance taking into account the default distance due to
 * the transform: translate setting in CSS
 * @param {Number} distance
@@ -3407,9 +3061,26 @@ function getOffsetDistanceInPx(distance) {
 }
 
 /**
+* Adds a mutation observer to an element and stores it in the instance
+* @param {Object}
+*/
+function addMutationObserver(_ref) {
+  var tippy = _ref.tippy,
+      target = _ref.target,
+      callback = _ref.callback,
+      options = _ref.options;
+
+  if (!window.MutationObserver) return;
+
+  var observer = new MutationObserver(callback);
+  observer.observe(target, options);
+  tippy._mutationObservers.push(observer);
+}
+
+/**
 * Creates a new popper instance
-* @param {Object} tippy - the tippy instance
-* @return {Object} - the popper instance
+* @param {Tippy} tippy
+* @return {Popper}
 */
 function createPopperInstance(tippy) {
   var reference = tippy.reference,
@@ -3491,14 +3162,343 @@ function createPopperInstance(tippy) {
 }
 
 /**
+* Creates a trigger by adding the necessary event listeners to the reference element
+* @param {String} eventType - the custom event specified in the `trigger` setting
+* @param {Element} reference
+* @param {Object} handlers - the handlers for each event
+* @param {Boolean} touchHold
+* @return {Array} - array of listener objects
+*/
+function createTrigger(eventType, reference, handlers, touchHold) {
+  var listeners = [];
+
+  if (eventType === 'manual') return listeners;
+
+  // Show
+  reference.addEventListener(eventType, handlers.handleTrigger);
+  listeners.push({
+    event: eventType,
+    handler: handlers.handleTrigger
+  });
+
+  // Hide
+  if (eventType === 'mouseenter') {
+    if (browser.supportsTouch && touchHold) {
+      reference.addEventListener('touchstart', handlers.handleTrigger);
+      listeners.push({
+        event: 'touchstart',
+        handler: handlers.handleTrigger
+      });
+      reference.addEventListener('touchend', handlers.handleMouseleave);
+      listeners.push({
+        event: 'touchend',
+        handler: handlers.handleMouseleave
+      });
+    }
+
+    reference.addEventListener('mouseleave', handlers.handleMouseleave);
+    listeners.push({
+      event: 'mouseleave',
+      handler: handlers.handleMouseleave
+    });
+  }
+
+  if (eventType === 'focus') {
+    reference.addEventListener('blur', handlers.handleBlur);
+    listeners.push({
+      event: 'blur',
+      handler: handlers.handleBlur
+    });
+  }
+
+  return listeners;
+}
+
+/**
+* Determines if the mouse's cursor is outside the interactive border
+* @param {MouseEvent} event
+* @param {Element} popper
+* @param {Object} options
+* @return {Boolean}
+*/
+function cursorIsOutsideInteractiveBorder(event, popper, options) {
+  if (!popper.getAttribute('x-placement')) return true;
+
+  var x = event.clientX,
+      y = event.clientY;
+  var interactiveBorder = options.interactiveBorder,
+      distance = options.distance;
+
+
+  var rect = popper.getBoundingClientRect();
+  var placement = getPopperPlacement(popper);
+  var borderWithDistance = interactiveBorder + distance;
+
+  var exceeds = {
+    top: rect.top - y > interactiveBorder,
+    bottom: y - rect.bottom > interactiveBorder,
+    left: rect.left - x > interactiveBorder,
+    right: x - rect.right > interactiveBorder
+  };
+
+  switch (placement) {
+    case 'top':
+      exceeds.top = rect.top - y > borderWithDistance;
+      break;
+    case 'bottom':
+      exceeds.bottom = y - rect.bottom > borderWithDistance;
+      break;
+    case 'left':
+      exceeds.left = rect.left - x > borderWithDistance;
+      break;
+    case 'right':
+      exceeds.right = x - rect.right > borderWithDistance;
+      break;
+  }
+
+  return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right;
+}
+
+/**
+* Returns relevant listeners for each Tippy instance
+* @param {Tippy} tippy
+* @param {Object} options
+* @return {Object} of listeners
+*/
+function getEventListeners(tippy, options) {
+  var popper = tippy.popper,
+      reference = tippy.reference;
+  var delay = options.delay,
+      duration = options.duration,
+      interactive = options.interactive,
+      interactiveBorder = options.interactiveBorder,
+      hideOnClick = options.hideOnClick,
+      trigger = options.trigger,
+      touchHold = options.touchHold;
+
+
+  var showDelay = void 0,
+      hideDelay = void 0;
+
+  var clearTimeouts = function clearTimeouts() {
+    clearTimeout(showDelay);
+    clearTimeout(hideDelay);
+  };
+
+  var _show = function _show() {
+    clearTimeouts();
+
+    if (isVisible(popper)) return;
+
+    var _delay = Array.isArray(delay) ? delay[0] : delay;
+
+    if (delay) {
+      showDelay = setTimeout(function () {
+        return tippy.show();
+      }, _delay);
+    } else {
+      tippy.show();
+    }
+  };
+
+  var show = function show(event) {
+    tippy.options.wait ? tippy.options.wait.call(popper, _show, event) : _show();
+  };
+
+  var hide = function hide() {
+    clearTimeouts();
+
+    if (!isVisible(popper)) return;
+
+    var _delay = Array.isArray(delay) ? delay[1] : delay;
+
+    if (delay) {
+      hideDelay = setTimeout(function () {
+        if (!isVisible(popper)) return;
+        tippy.hide();
+      }, _delay);
+    } else {
+      tippy.hide();
+    }
+  };
+
+  var handleTrigger = function handleTrigger(event) {
+    var shouldStopEvent = browser.supportsTouch && browser.usingTouch && (event.type === 'mouseenter' || event.type === 'focus');
+
+    if (shouldStopEvent && touchHold) return;
+
+    tippy._lastTriggerEvent = event.type;
+
+    // Toggle show/hide when clicking click-triggered tooltips
+    var isClick = event.type === 'click';
+    var isNotPersistent = hideOnClick !== 'persistent';
+
+    isClick && isVisible(popper) && isNotPersistent ? hide() : show(event);
+
+    // iOS prevents click events from firing
+    if (shouldStopEvent && browser.iOS && reference.click) {
+      reference.click();
+    }
+  };
+
+  var handleMouseleave = function handleMouseleave(event) {
+    if (event.type === 'mouseleave' && browser.supportsTouch && browser.usingTouch && touchHold) return;
+
+    if (interactive) {
+      // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
+      var handleMousemove = function handleMousemove(event) {
+        var referenceCursorIsOver = closest(event.target, selectors.REFERENCE);
+        var cursorIsOverPopper = closest(event.target, selectors.POPPER) === popper;
+        var cursorIsOverReference = referenceCursorIsOver === reference;
+
+        if (cursorIsOverPopper || cursorIsOverReference) return;
+
+        if (cursorIsOutsideInteractiveBorder(event, popper, options)) {
+          document.body.removeEventListener('mouseleave', hide);
+          document.removeEventListener('mousemove', handleMousemove);
+          hide();
+        }
+      };
+      document.body.addEventListener('mouseleave', hide);
+      document.addEventListener('mousemove', handleMousemove);
+      return;
+    }
+
+    hide();
+  };
+
+  var handleBlur = function handleBlur(event) {
+    if (!event.relatedTarget || browser.usingTouch) return;
+    if (closest(event.relatedTarget, selectors.POPPER)) return;
+    hide();
+  };
+
+  return {
+    handleTrigger: handleTrigger,
+    handleMouseleave: handleMouseleave,
+    handleBlur: handleBlur
+  };
+}
+
+/**
+* Evaluates/modifies the options object for appropriate behavior
+* @param {Element|Object} reference
+* @param {Object} options
+* @return {Object} modified/evaluated options
+*/
+function evaluateOptions(reference, options) {
+  // animateFill is disabled if an arrow is true
+  if (options.arrow) {
+    options.animateFill = false;
+  }
+
+  // reassign appendTo into the result of evaluating appendTo
+  // if it's set as a function instead of Element
+  if (options.appendTo && typeof options.appendTo === 'function') {
+    options.appendTo = options.appendTo();
+  }
+
+  if (typeof options.html === 'function') {
+    options.html = options.html(reference);
+  }
+
+  return options;
+}
+
+/**
+* Removes the title from an element, setting `data-original-title`
+* appropriately
+* @param {Element} el
+*/
+function removeTitle(el) {
+  var title = el.getAttribute('title');
+  // Only set `data-original-title` attr if there is a title
+  if (title) {
+    el.setAttribute('data-original-title', title);
+  }
+  el.removeAttribute('title');
+}
+
+/**
+* Creates a mousemove event listener function for `followCursor` option
+* @param {Element} reference
+* @return {Function} the event listener
+*/
+function createFollowCursorListener(reference) {
+  var tippy = find(store, function (tippy) {
+    return tippy.reference === reference;
+  });
+
+  var listener = function listener(e) {
+    if (tippy._lastTriggerEvent === 'focus') return;
+
+    var popper = tippy.popper,
+        offset = tippy.options.offset;
+
+
+    var placement = getPopperPlacement(popper);
+    var halfPopperWidth = Math.round(popper.offsetWidth / 2);
+    var halfPopperHeight = Math.round(popper.offsetHeight / 2);
+    var viewportPadding = 5;
+    var pageWidth = document.documentElement.offsetWidth || document.body.offsetWidth;
+
+    var pageX = e.pageX,
+        pageY = e.pageY;
+
+
+    var x = void 0,
+        y = void 0;
+
+    switch (placement) {
+      case 'top':
+        x = pageX - halfPopperWidth + offset;
+        y = pageY - 2 * halfPopperHeight;
+        break;
+      case 'bottom':
+        x = pageX - halfPopperWidth + offset;
+        y = pageY + 10;
+        break;
+      case 'left':
+        x = pageX - 2 * halfPopperWidth;
+        y = pageY - halfPopperHeight + offset;
+        break;
+      case 'right':
+        x = pageX + 5;
+        y = pageY - halfPopperHeight + offset;
+        break;
+    }
+
+    var isRightOverflowing = pageX + viewportPadding + halfPopperWidth + offset > pageWidth;
+    var isLeftOverflowing = pageX - viewportPadding - halfPopperWidth + offset < 0;
+
+    // Prevent left/right overflow
+    if (placement === 'top' || placement === 'bottom') {
+      if (isRightOverflowing) {
+        x = pageWidth - viewportPadding - 2 * halfPopperWidth;
+      }
+
+      if (isLeftOverflowing) {
+        x = viewportPadding;
+      }
+    }
+
+    popper.style[prefix('transform')] = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+  };
+
+  tippy._followCursorListener = listener;
+
+  return listener;
+}
+
+/**
 * Appends the popper and creates a popper instance if one does not exist
 * Also updates its position if need be and enables event listeners
-* @param {Object} tippy
+* @param {Tippy} tippy
 */
 function mountPopper(tippy) {
   var popper = tippy.popper,
-      reference = tippy.reference;
-  var _tippy$options = tippy.options,
+      reference = tippy.reference,
+      _tippy$options = tippy.options,
       appendTo = _tippy$options.appendTo,
       followCursor = _tippy$options.followCursor;
 
@@ -3552,9 +3552,9 @@ function makeSticky(tippy) {
 
 /**
 * Prepares the callback functions for `show` and `hide` methods
-* @param {Object} data
+* @param {Tippy} tippy
 * @param {Number} duration
-* @param {Function} callback - callback function to fire once transitions complete
+* @param {Function} callback - callback function to fire once transition completes
 */
 function onTransitionEnd(tippy, duration, callback) {
   // Make callback synchronous if duration is 0
@@ -3565,15 +3565,15 @@ function onTransitionEnd(tippy, duration, callback) {
   var _getInnerElements = getInnerElements(tippy.popper),
       tooltip = _getInnerElements.tooltip;
 
-  var toggleListeners = function toggleListeners(action, handler) {
-    if (!handler) return;
-    tooltip[action + 'EventListener']('webkitTransitionEnd', handler);
-    tooltip[action + 'EventListener']('transitionend', handler);
+  var toggleListeners = function toggleListeners(action, listener) {
+    if (!listener) return;
+    tooltip[action + 'EventListener']('webkitTransitionEnd', listener);
+    tooltip[action + 'EventListener']('transitionend', listener);
   };
 
   var listener = function listener(e) {
     if (e.target === tooltip) {
-      toggleListeners('remove');
+      toggleListeners('remove', listener);
       callback();
     }
   };
@@ -3596,7 +3596,7 @@ function elementIsInViewport(el) {
 }
 
 /**
-* Returns duration taking into account it being either a number or array
+* Returns duration taking into account the option being either a number or array
 * @param {Number} duration
 * @param {Number} index
 * @return {Number}
@@ -3722,9 +3722,6 @@ var Tippy = function () {
 
         options.sticky && makeSticky(_this);
 
-        // Trigger document reflow for the CSS transition
-        tooltip.offsetHeight;
-
         setVisibilityState([tooltip, backdrop], 'visible');
 
         onTransitionEnd(_this, duration, function () {
@@ -3837,10 +3834,10 @@ var Tippy = function () {
 var idCounter = 1;
 
 /**
-* Creates tooltips for all el elements that match the instance's selector
+* Creates tooltips for each reference element
 * @param {Element[]} els
 * @param {Object} config
-* @return {Object[]} Array of ref data objects
+* @return {Tippy[]} Array of Tippy instances
 */
 function createTooltips(els, config) {
   return els.reduce(function (acc, reference) {
@@ -3851,19 +3848,19 @@ function createTooltips(els, config) {
     var html = options.html,
         trigger = options.trigger,
         touchHold = options.touchHold,
-        dynamicTitle = options.dynamicTitle;
+        dynamicTitle = options.dynamicTitle,
+        createPopperInstanceOnInit = options.createPopperInstanceOnInit;
 
 
     var title = reference.getAttribute('title');
     if (!title && !html) return acc;
 
     reference.setAttribute('data-tippy', '');
-    reference.setAttribute('aria-describedby', 'tippy-tooltip-' + id);
+    reference.setAttribute('aria-describedby', 'tippy-' + id);
 
     removeTitle(reference);
 
     var popper = createPopperElement(id, title, options);
-
     var tippy = new Tippy({
       id: id,
       reference: reference,
@@ -3871,6 +3868,7 @@ function createTooltips(els, config) {
       options: options,
       _mutationObservers: []
     });
+    tippy.popperInstance = createPopperInstanceOnInit ? createPopperInstance(tippy) : null;
 
     var handlers = getEventListeners(tippy, options);
     var listeners = [];

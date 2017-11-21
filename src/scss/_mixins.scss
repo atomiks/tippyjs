@@ -79,9 +79,9 @@
 @mixin backdrop-transform-enter ($placement) {
   $scale: 1;
   @if ($placement == 'top') {
-    transform: scale($scale) translate(-50%, -55%);
+    transform: scale($scale) translate(-50%, -60%);
   } @else if ($placement == 'bottom') {
-    transform: scale($scale) translate(-50%, -45%);
+    transform: scale($scale) translate(-50%, -40%);
   } @else if ($placement == 'left') {
     transform: scale($scale) translate(-50%, -50%);
   } @else if ($placement == 'right') {
@@ -90,7 +90,7 @@
 }
 
 @mixin backdrop-transform-leave ($placement) {
-  $scale: 0.2;
+  $scale: 0.25;
   @if ($placement == 'top') {
     transform: scale($scale) translate(-50%, -50%);
   } @else if ($placement == 'bottom') {

@@ -8,6 +8,7 @@ import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
 
 export default Object.assign(base, {
+  entry: './bundle.js',
   dest: './dist/tippy.standalone.min.js',
   external: ['popper.js'],
   plugins: [

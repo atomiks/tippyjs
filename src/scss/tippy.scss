@@ -21,6 +21,10 @@
   @each $placement in $placements {
     &[x-placement^=#{$placement}] {
       
+      .tippy-backdrop {
+        border-radius: nth($backdrop-border-radii, index($placements, $placement));
+      }
+      
       .tippy-roundarrow {
         @include roundarrow($placement, 24px, #333);
         @include arrow-position($placement, 15px);
@@ -156,25 +160,25 @@
     will-change: transform;
     background-color: #333;
     border-radius: 50%;
-    width: 130%;
-    width: calc(110% + 2rem);
+    width: 135%;
     left: 50%;
     top: 50%;
     z-index: -1;
     overflow: hidden;
+    backface-visibility: hidden;
     
     &[data-state=visible] {
-      transition: all cubic-bezier(.31,.42,.41,.96);
+      transition: all cubic-bezier(0.37, 0.21, 0.32, 0.82);
     }
     
     &[data-state=hidden] {
-      transition: all cubic-bezier(.48,.36,.29,1);
+      transition: all cubic-bezier(.4,.5,.5,.99);
     }
-
-    &::before {
+    
+    &::after {
       content: '';
-      padding-top: 90%;
       float: left;
+      padding-top: 90%;
     }
   }
 }

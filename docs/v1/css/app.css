@@ -3,11 +3,16 @@ html {
 }
 
 body {
-  font-family: 'Nunito Sans', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Nunito', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: #3751cc;
   background: -webkit-linear-gradient(left,#5733ea, #4894ff 70%,#a5bcff);
   background: linear-gradient(90deg,#5733ea, #4894ff 70%,#a5bcff);
   color: #34495e;
+}
+
+.feat-helper-text {
+  color: #6a8bad !important;
+  font-weight: 300;
 }
 
 a:focus {
@@ -34,7 +39,6 @@ h4 {
 }
 
 code, pre {
-  position: relative;
   background-color: #f1f5ff;
   color: #2d61df;
   margin-bottom: 1rem;
@@ -46,9 +50,7 @@ pre {
 }
 
 h2 {
-  font-size: 2.25rem;
-  margin: 1rem 0 3rem;
-  text-align: center;
+  margin-bottom: 1.25rem;
 }
 
 strong {
@@ -172,19 +174,18 @@ a:hover {
   font-size: 80%;
 }
 
-.tippy-popper[data-html] .tippy-tooltip {
+.tippy-popper.html-template .tippy-tooltip {
   padding: 2rem;
   box-shadow: 0 4px 80px -8px rgba(0, 20, 60, 0.25);
-  max-width: 400px;
+  max-width: 500px;
   font-size: 1.2rem;
-  border-radius: 10px;
 }
 
 .logo {
   width: 80px;
   margin-left: -40px;
   position: absolute;
-  top: 60px;
+  top: -75px;
   left: 50%;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -202,7 +203,7 @@ a:hover {
 }
 
 .btn {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-family: inherit;
 }
 
@@ -230,6 +231,7 @@ a:hover {
 .hero-heading {
   display: inline-block;
   font-weight: 300;
+  margin-bottom: 1.5rem;
   font-size: 4rem;
   padding: 0.5rem;
   color: #7dffc3;
@@ -241,10 +243,6 @@ a:hover {
 .tippy-tooltip[data-template-id="#template"] {
   padding: 2rem;
   transition-timing-function: cubic-bezier(.165, .84, .44, 1);
-}
-
-.tippy-popper[data-html] .btn, .tippy-popper[data-html] .btn:focus {
-  margin-bottom: 0;
 }
 
 .tippy-tooltip[data-template-id="#my-template-id"] {
@@ -283,51 +281,33 @@ hr {
   border-top: 1px solid rgba(0, 31, 255, 0.1);
 }
 
-#features {
-  text-align: center;
-}
-
-#features h4 {
-  font-size: 1.75rem;
-  margin-bottom: 0.5rem;
-}
-
-#features p {
-  max-width: 92%;
-  margin: 0 auto;
-}
-
-.button-showcase {
-  margin-bottom: 4rem;
-}
-
 .button-showcase .btn, .button-showcase .btn:active, .button-showcase:focus {
   margin: 1.25rem 1rem;
 }
 
-.btn.btn-gradient,
-.btn.btn-gradient:active,
-.btn.btn-gradient:focus {
+.button-showcase .btn, section .btn, section .btn:active, section .btn:focus:not(.btn-secondary) {
   color: white;
   box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
-  background: -webkit-linear-gradient(315deg,#73a5ff, #5477f5) !important;
-  background: linear-gradient(135deg,#73a5ff, #5477f5) !important;
+  background: -webkit-linear-gradient(315deg,#73a5ff, #5477f5);
+  background: linear-gradient(135deg,#73a5ff, #5477f5);
   letter-spacing: 0.5px;
   border: none;
-  font-size: 1.2rem;
-  padding: 0.35rem 1rem;
-  transition: all 0.2s ease;
+  font-size: 1.3rem;
 }
 
 section .btn, section .btn:active {
   margin: 0;
 }
+
+.btn:hover {
+  box-shadow: 0 10px 15px -1px rgba(0, 0, 0, 0.1), 0 25px 50px -4px rgba(80, 140, 255, 0.3);
+}
 .is-safari .btn:hover, .is-safari .btn.active, .is-safari .btn:active {
   opacity: 0.8;
 }
-body:not(.is-safari) .btn.btn-gradient:hover,
-body:not(.is-safari) .btn.btn-gradient.tippy-active,
-body:not(.is-safari) .btn.btn-gradient:active {
+body:not(.is-safari) .btn:not(.btn-danger):hover,
+body:not(.is-safari) .btn.active,
+body:not(.is-safari) .btn:active {
   -webkit-filter: brightness(1.15) hue-rotate(10deg) contrast(1.5);
   filter: brightness(1.15) hue-rotate(10deg) contrast(1.5);
 }
@@ -335,12 +315,12 @@ body:not(.is-safari) .btn.btn-gradient:active {
 .heading-top {
   font-size: 2.5rem;
   color: #9079ff;
-  font-weight: 600;
+  font-weight: 300;
 }
 
 main .container-fluid {
   background: white;
-  max-width: 1100px;
+  max-width: 980px;
   padding: 2rem 1rem;
   box-shadow: 0 0 80px -4px rgba(0,20,40,0.1);
   -webkit-transition: opacity 1s ease;
@@ -371,58 +351,6 @@ table {
   border: 2px solid orange;
   color: black;
 }
-.tippy-popper[x-placement^=top] .tippy-tooltip.honeybee-theme .tippy-arrow {
-  border-top: 7px solid orange;
-}
-.tippy-popper[x-placement^=top] .tippy-tooltip.honeybee-theme .tippy-arrow::after {
-  content: '';
-  position: absolute;
-  top: -8px;
-  left: -6px;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid yellow;
-}
-
-.tippy-tooltip.bordered-theme {
-  border: 1px solid #bfc9dc;
-  box-shadow: none !important;
-}
-.tippy-popper[x-placement^=top] .tippy-tooltip.bordered-theme .tippy-arrow {
-  border-top: 7px solid #b4c0d5;
-}
-.tippy-popper[x-placement^=top] .tippy-tooltip.bordered-theme .tippy-arrow::after {
-  content: '';
-  position: absolute;
-  top: -7px;
-  left: -6px;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid white;
-}
-
-.tippy-tooltip.gradient-theme {
-  background: linear-gradient(45deg,#8c61f5, #ff9cad);
-  font-weight: bold;
-}
-.tippy-tooltip.gradient-theme::after {
-  position: absolute;
-  left: 0;
-  top: 5px;
-  content: '';
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg,#8c61f5, #ff9cad);
-  -webkit-filter: blur(12px) brightness(1.2);
-  filter: blur(12px) brightness(1.2);
-  opacity: 0.8;
-  font-weight: bold;
-  z-index: -1;
-}
-
-.tippy-tooltip.colorshift-theme {
-  background: linear-gradient(45deg,green,pink);
-}
 
 .test-element {
   width: 50px;
@@ -450,7 +378,7 @@ table {
   width: 70px;
 }
 
-#animated-tippy {
+.button-showcase .btn:last-child {
   animation: hover 2s ease-in-out infinite;
 }
 

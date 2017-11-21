@@ -14,15 +14,15 @@ export default function onTransitionEnd(tippy, duration, callback) {
 
   const { tooltip } = getInnerElements(tippy.popper)
   
-  const toggleListeners = (action, handler) => {
-    if (!handler) return
-    tooltip[action + 'EventListener']('webkitTransitionEnd', handler)
-    tooltip[action + 'EventListener']('transitionend', handler)
+  const toggleListeners = (action, listener) => {
+    if (!listener) return
+    tooltip[action + 'EventListener']('webkitTransitionEnd', listener)
+    tooltip[action + 'EventListener']('transitionend', listener)
   }
   
   const listener = e => {
     if (e.target === tooltip) {
-      toggleListeners('remove')
+      toggleListeners('remove', listener)
       callback()
     }
   }

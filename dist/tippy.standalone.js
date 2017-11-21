@@ -6,8 +6,6 @@
 
 Popper = Popper && Popper.hasOwnProperty('default') ? Popper['default'] : Popper;
 
-var styles = ".tippy-touch{cursor:pointer!important}.tippy-popper{max-width:350px;-webkit-perspective:700px;perspective:700px;z-index:9999;outline:0;-webkit-transition-timing-function:cubic-bezier(.165,.84,.44,1);transition-timing-function:cubic-bezier(.165,.84,.44,1);pointer-events:none}.tippy-popper[data-html]{max-width:96%;max-width:calc(100% - 20px)}.tippy-popper[x-placement^=top] .tippy-roundarrow{width:24px;height:24px;fill:#333;bottom:-15px}.tippy-popper[x-placement^=top] .tippy-roundarrow svg{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.tippy-popper[x-placement^=top] .tippy-arrow{border-top:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;bottom:-7px;margin:0 9px}.tippy-popper[x-placement^=top] .tippy-backdrop{-webkit-transform-origin:0 33%;transform-origin:0 33%}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-55%);transform:scale(1) translate(-50%,-55%);opacity:1}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.2) translate(-50%,-50%);transform:scale(.2) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(-20px);transform:translateY(-20px)}.tippy-popper[x-placement^=top] [data-animation=perspective]{-webkit-transform-origin:bottom;transform-origin:bottom}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) rotateX(0);transform:translateY(-10px) rotateX(0)}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(90deg);transform:translateY(0) rotateX(90deg)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) scale(1);transform:translateY(-10px) scale(1)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=bottom] .tippy-roundarrow{width:24px;height:24px;fill:#333;top:-15px}.tippy-popper[x-placement^=bottom] .tippy-roundarrow svg{-webkit-transform:rotate(0);transform:rotate(0)}.tippy-popper[x-placement^=bottom] .tippy-arrow{border-bottom:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;top:-7px;margin:0 9px}.tippy-popper[x-placement^=bottom] .tippy-backdrop{-webkit-transform-origin:0 -50%;transform-origin:0 -50%}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-45%);transform:scale(1) translate(-50%,-45%);opacity:1}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.2) translate(-50%);transform:scale(.2) translate(-50%);opacity:0}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(20px);transform:translateY(20px)}.tippy-popper[x-placement^=bottom] [data-animation=perspective]{-webkit-transform-origin:top;transform-origin:top}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) rotateX(0);transform:translateY(10px) rotateX(0)}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(-90deg);transform:translateY(0) rotateX(-90deg)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) scale(1);transform:translateY(10px) scale(1)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=left] .tippy-roundarrow{width:24px;height:24px;fill:#333;right:-15px}.tippy-popper[x-placement^=left] .tippy-roundarrow svg{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.tippy-popper[x-placement^=left] .tippy-arrow{border-left:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;right:-7px;margin:6px 0}.tippy-popper[x-placement^=left] .tippy-backdrop{-webkit-transform-origin:50% 0;transform-origin:50% 0}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-50%);transform:scale(1) translate(-50%,-50%);opacity:1}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.2) translate(-50%,-50%);transform:scale(.2) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(-20px);transform:translateX(-20px)}.tippy-popper[x-placement^=left] [data-animation=perspective]{-webkit-transform-origin:right;transform-origin:right}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) rotateY(0);transform:translateX(-10px) rotateY(0)}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(-90deg);transform:translateX(0) rotateY(-90deg)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) scale(1);transform:translateX(-10px) scale(1)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-popper[x-placement^=right] .tippy-roundarrow{width:24px;height:24px;fill:#333;left:-15px}.tippy-popper[x-placement^=right] .tippy-roundarrow svg{-webkit-transform:rotate(-90deg);transform:rotate(-90deg)}.tippy-popper[x-placement^=right] .tippy-arrow{border-right:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;left:-7px;margin:6px 0}.tippy-popper[x-placement^=right] .tippy-backdrop{-webkit-transform-origin:-50% 0;transform-origin:-50% 0}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(1) translate(-50%,-50%);transform:scale(1) translate(-50%,-50%);opacity:1}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(.2) translate(-50%,-50%);transform:scale(.2) translate(-50%,-50%);opacity:0}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(20px);transform:translateX(20px)}.tippy-popper[x-placement^=right] [data-animation=perspective]{-webkit-transform-origin:left;transform-origin:left}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) rotateY(0);transform:translateX(10px) rotateY(0)}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(90deg);transform:translateX(0) rotateY(90deg)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) scale(1);transform:translateX(10px) scale(1)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-tooltip{position:relative;color:#fff;border-radius:4px;font-size:.9rem;padding:.3rem .6rem;text-align:center;will-change:transform;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:#333}.tippy-tooltip[data-size=small]{padding:.2rem .4rem;font-size:.75rem}.tippy-tooltip[data-size=large]{padding:.4rem .8rem;font-size:1rem}.tippy-tooltip[data-animatefill]{overflow:hidden;background-color:transparent}.tippy-tooltip[data-interactive]{pointer-events:auto}.tippy-tooltip[data-inertia]{-webkit-transition-timing-function:cubic-bezier(.53,2,.36,.85);transition-timing-function:cubic-bezier(.53,2,.36,.85)}.tippy-tooltip .tippy-arrow,.tippy-tooltip .tippy-roundarrow{position:absolute;width:0;height:0}.tippy-tooltip .tippy-backdrop{position:absolute;will-change:transform;background-color:#333;border-radius:50%;width:130%;width:calc(110% + 2rem);left:50%;top:50%;z-index:-1;overflow:hidden}.tippy-tooltip .tippy-backdrop[data-state=visible]{-webkit-transition:all cubic-bezier(.31,.42,.41,.96);transition:all cubic-bezier(.31,.42,.41,.96)}.tippy-tooltip .tippy-backdrop[data-state=hidden]{-webkit-transition:all cubic-bezier(.48,.36,.29,1);transition:all cubic-bezier(.48,.36,.29,1)}.tippy-tooltip .tippy-backdrop:before{content:\"\";padding-top:90%;float:left}@media (max-width:400px){.tippy-popper{max-width:96%;max-width:calc(100% - 20px)}}";
-
 var browser = {};
 
 if (typeof window !== 'undefined') {
@@ -41,14 +39,14 @@ var selectors = {
   * The default options applied to each instance
   */
 };var defaults = {
-  html: false,
   placement: 'top',
+  trigger: 'mouseenter focus',
   animation: 'shift-away',
+  html: false,
   animateFill: true,
   arrow: false,
   delay: 0,
-  trigger: 'mouseenter focus',
-  duration: 350,
+  duration: [350, 300],
   interactive: false,
   interactiveBorder: 2,
   theme: 'dark',
@@ -75,6 +73,7 @@ var selectors = {
   arrowTransform: '',
   maxWidth: '',
   popperOptions: {},
+  createPopperInstanceOnInit: false,
   onShow: function onShow() {},
   onShown: function onShown() {},
   onHide: function onHide() {},
@@ -425,7 +424,7 @@ function createPopperElement(id, title, options) {
   popper.setAttribute('class', 'tippy-popper');
   popper.setAttribute('role', 'tooltip');
   popper.setAttribute('aria-hidden', 'true');
-  popper.setAttribute('id', 'tippy-tooltip-' + id);
+  popper.setAttribute('id', 'tippy-' + id);
   popper.style.zIndex = zIndex;
   popper.style.maxWidth = maxWidth;
 
@@ -499,6 +498,241 @@ function createPopperElement(id, title, options) {
 }
 
 /**
+* Transforms the `arrowTransform` numbers based on the placement axis
+* @param {String} type 'scale' or 'translate'
+* @param {Number[]} numbers
+* @param {Boolean} isVertical
+* @param {Boolean} isReverse
+* @return {String}
+*/
+function transformNumbersBasedOnPlacementAxis(type, numbers, isVertical, isReverse) {
+  if (!numbers.length) return '';
+
+  var transforms = {
+    scale: function () {
+      if (numbers.length === 1) {
+        return '' + numbers[0];
+      } else {
+        return isVertical ? numbers[0] + ', ' + numbers[1] : numbers[1] + ', ' + numbers[0];
+      }
+    }(),
+    translate: function () {
+      if (numbers.length === 1) {
+        return isReverse ? -numbers[0] + 'px' : numbers[0] + 'px';
+      } else {
+        if (isVertical) {
+          return isReverse ? numbers[0] + 'px, ' + -numbers[1] + 'px' : numbers[0] + 'px, ' + numbers[1] + 'px';
+        } else {
+          return isReverse ? -numbers[1] + 'px, ' + numbers[0] + 'px' : numbers[1] + 'px, ' + numbers[0] + 'px';
+        }
+      }
+    }()
+  };
+
+  return transforms[type];
+}
+
+/**
+* Transforms the `arrowTransform` x or y axis based on the placement axis
+* @param {String} axis 'X', 'Y', ''
+* @param {Boolean} isVertical
+* @return {String}
+*/
+function transformAxis(axis, isVertical) {
+  if (!axis) return '';
+  var map = {
+    'X': 'Y',
+    'Y': 'X'
+  };
+  return isVertical ? axis : map[axis];
+}
+
+/**
+* Returns the core placement ('top', 'bottom', 'left', 'right') of a popper
+* @param {Element} popper
+* @return {String}
+*/
+function getPopperPlacement(popper) {
+  return popper.getAttribute('x-placement').replace(/-.+/, '');
+}
+
+/**
+* Computes and applies the necessary arrow transform
+* @param {Element} popper
+* @param {Element} arrow
+* @param {String} arrowTransform
+*/
+function computeArrowTransform(popper, arrow, arrowTransform) {
+  var placement = getPopperPlacement(popper);
+  var isVertical = placement === 'top' || placement === 'bottom';
+  var isReverse = placement === 'right' || placement === 'bottom';
+
+  var getAxis = function getAxis(re) {
+    var match = arrowTransform.match(re);
+    return match ? match[1] : '';
+  };
+
+  var getNumbers = function getNumbers(re) {
+    var match = arrowTransform.match(re);
+    return match ? match[1].split(',').map(parseFloat) : [];
+  };
+
+  var re = {
+    translate: /translateX?Y?\(([^)]+)\)/,
+    scale: /scaleX?Y?\(([^)]+)\)/
+  };
+
+  var matches = {
+    translate: {
+      axis: getAxis(/translate([XY])/),
+      numbers: getNumbers(re.translate)
+    },
+    scale: {
+      axis: getAxis(/scale([XY])/),
+      numbers: getNumbers(re.scale)
+    }
+  };
+
+  var computedTransform = arrowTransform.replace(re.translate, 'translate' + transformAxis(matches.translate.axis, isVertical) + '(' + transformNumbersBasedOnPlacementAxis('translate', matches.translate.numbers, isVertical, isReverse) + ')').replace(re.scale, 'scale' + transformAxis(matches.scale.axis, isVertical) + '(' + transformNumbersBasedOnPlacementAxis('scale', matches.scale.numbers, isVertical, isReverse) + ')');
+
+  arrow.style[prefix('transform')] = computedTransform;
+}
+
+/**
+* Waits until next repaint to execute a fn
+* @param {Function} fn
+*/
+function defer(fn) {
+  requestAnimationFrame(function () {
+    setTimeout(fn, 0);
+  });
+}
+
+/**
+* Returns inner elements of the popper element
+* @param {Element} popper
+* @return {Object}
+*/
+function getInnerElements(popper) {
+  return {
+    tooltip: popper.querySelector(selectors.TOOLTIP),
+    backdrop: popper.querySelector(selectors.BACKDROP),
+    content: popper.querySelector(selectors.CONTENT)
+  };
+}
+
+/**
+* Returns the distance taking into account the default distance due to
+* the transform: translate setting in CSS
+* @param {Number} distance
+* @return {String}
+*/
+function getOffsetDistanceInPx(distance) {
+  return -(distance - defaults.distance) + 'px';
+}
+
+/**
+* Adds a mutation observer to an element and stores it in the instance
+* @param {Object}
+*/
+function addMutationObserver(_ref) {
+  var tippy = _ref.tippy,
+      target = _ref.target,
+      callback = _ref.callback,
+      options = _ref.options;
+
+  if (!window.MutationObserver) return;
+
+  var observer = new MutationObserver(callback);
+  observer.observe(target, options);
+  tippy._mutationObservers.push(observer);
+}
+
+/**
+* Creates a new popper instance
+* @param {Tippy} tippy
+* @return {Popper}
+*/
+function createPopperInstance(tippy) {
+  var reference = tippy.reference,
+      popper = tippy.popper,
+      _tippy$options = tippy.options,
+      placement = _tippy$options.placement,
+      popperOptions = _tippy$options.popperOptions,
+      offset = _tippy$options.offset,
+      distance = _tippy$options.distance,
+      updateDuration = _tippy$options.updateDuration,
+      flip = _tippy$options.flip,
+      flipBehavior = _tippy$options.flipBehavior,
+      arrowType = _tippy$options.arrowType,
+      arrowTransform = _tippy$options.arrowTransform;
+
+  var _getInnerElements = getInnerElements(popper),
+      tooltip = _getInnerElements.tooltip;
+
+  var arrowSelector = arrowType === 'round' ? selectors.ROUND_ARROW : selectors.ARROW;
+  var arrow = tooltip.querySelector(arrowSelector);
+
+  var config = _extends({
+    placement: placement
+  }, popperOptions || {}, {
+    modifiers: _extends({}, popperOptions ? popperOptions.modifiers : {}, {
+      arrow: _extends({
+        element: arrowSelector
+      }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {}),
+      flip: _extends({
+        enabled: flip,
+        padding: distance + 5 /* 5px from viewport boundary */
+        , behavior: flipBehavior
+      }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {}),
+      offset: _extends({
+        offset: offset
+      }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
+    }),
+    onCreate: function onCreate() {
+      tooltip.style[getPopperPlacement(popper)] = getOffsetDistanceInPx(distance);
+
+      if (arrow && arrowTransform) {
+        computeArrowTransform(popper, arrow, arrowTransform);
+      }
+    },
+    onUpdate: function onUpdate() {
+      var styles = tooltip.style;
+      styles.top = '';
+      styles.bottom = '';
+      styles.left = '';
+      styles.right = '';
+      styles[getPopperPlacement(popper)] = getOffsetDistanceInPx(distance);
+
+      if (arrow && arrowTransform) {
+        computeArrowTransform(popper, arrow, arrowTransform);
+      }
+    }
+  });
+
+  addMutationObserver({
+    tippy: tippy,
+    target: popper,
+    callback: function callback() {
+      var styles = popper.style;
+      styles[prefix('transitionDuration')] = '0ms';
+      tippy.popperInstance.update();
+      defer(function () {
+        styles[prefix('transitionDuration')] = updateDuration + 'ms';
+      });
+    },
+
+    options: {
+      childList: true,
+      subtree: true,
+      characterData: true
+    }
+  });
+
+  return new Popper(reference, popper, config);
+}
+
+/**
 * Creates a trigger by adding the necessary event listeners to the reference element
 * @param {String} eventType - the custom event specified in the `trigger` setting
 * @param {Element} reference
@@ -549,15 +783,6 @@ function createTrigger(eventType, reference, handlers, touchHold) {
   }
 
   return listeners;
-}
-
-/**
-* Returns the core placement ('top', 'bottom', 'left', 'right') of a popper
-* @param {Element} popper
-* @return {String}
-*/
-function getPopperPlacement(popper) {
-  return popper.getAttribute('x-placement').replace(/-.+/, '');
 }
 
 /**
@@ -752,19 +977,6 @@ function evaluateOptions(reference, options) {
 }
 
 /**
-* Returns inner elements of the popper element
-* @param {Element} popper
-* @return {Object}
-*/
-function getInnerElements(popper) {
-  return {
-    tooltip: popper.querySelector(selectors.TOOLTIP),
-    backdrop: popper.querySelector(selectors.BACKDROP),
-    content: popper.querySelector(selectors.CONTENT)
-  };
-}
-
-/**
 * Removes the title from an element, setting `data-original-title`
 * appropriately
 * @param {Element} el
@@ -776,23 +988,6 @@ function removeTitle(el) {
     el.setAttribute('data-original-title', title);
   }
   el.removeAttribute('title');
-}
-
-/**
-* Adds a mutation observer to an element and stores it in the instance
-* @param {Object}
-*/
-function addMutationObserver(_ref) {
-  var tippy = _ref.tippy,
-      target = _ref.target,
-      callback = _ref.callback,
-      options = _ref.options;
-
-  if (!window.MutationObserver) return;
-
-  var observer = new MutationObserver(callback);
-  observer.observe(target, options);
-  tippy._mutationObservers.push(observer);
 }
 
 /**
@@ -867,210 +1062,14 @@ function createFollowCursorListener(reference) {
 }
 
 /**
-* Transforms the `arrowTransform` numbers based on the placement axis
-* @param {String} type 'scale' or 'translate'
-* @param {Number[]} numbers
-* @param {Boolean} isVertical
-* @param {Boolean} isReverse
-* @return {String}
-*/
-function transformNumbersBasedOnPlacementAxis(type, numbers, isVertical, isReverse) {
-  if (!numbers.length) return '';
-
-  var transforms = {
-    scale: function () {
-      if (numbers.length === 1) {
-        return '' + numbers[0];
-      } else {
-        return isVertical ? numbers[0] + ', ' + numbers[1] : numbers[1] + ', ' + numbers[0];
-      }
-    }(),
-    translate: function () {
-      if (numbers.length === 1) {
-        return isReverse ? -numbers[0] + 'px' : numbers[0] + 'px';
-      } else {
-        if (isVertical) {
-          return isReverse ? numbers[0] + 'px, ' + -numbers[1] + 'px' : numbers[0] + 'px, ' + numbers[1] + 'px';
-        } else {
-          return isReverse ? -numbers[1] + 'px, ' + numbers[0] + 'px' : numbers[1] + 'px, ' + numbers[0] + 'px';
-        }
-      }
-    }()
-  };
-
-  return transforms[type];
-}
-
-/**
-* Transforms the `arrowTransform` x or y axis based on the placement axis
-* @param {String} axis 'X', 'Y', ''
-* @param {Boolean} isVertical
-* @return {String}
-*/
-function transformAxis(axis, isVertical) {
-  if (!axis) return '';
-  var map = {
-    'X': 'Y',
-    'Y': 'X'
-  };
-  return isVertical ? axis : map[axis];
-}
-
-/**
-* Computes and applies the necessary arrow transform
-* @param {Element} popper
-* @param {Element} arrow
-* @param {String} arrowTransform
-*/
-function computeArrowTransform(popper, arrow, arrowTransform) {
-  var placement = getPopperPlacement(popper);
-  var isVertical = placement === 'top' || placement === 'bottom';
-  var isReverse = placement === 'right' || placement === 'bottom';
-
-  var getAxis = function getAxis(re) {
-    var match = arrowTransform.match(re);
-    return match ? match[1] : '';
-  };
-
-  var getNumbers = function getNumbers(re) {
-    var match = arrowTransform.match(re);
-    return match ? match[1].split(',').map(parseFloat) : [];
-  };
-
-  var re = {
-    translate: /translateX?Y?\(([^)]+)\)/,
-    scale: /scaleX?Y?\(([^)]+)\)/
-  };
-
-  var matches = {
-    translate: {
-      axis: getAxis(/translate([XY])/),
-      numbers: getNumbers(re.translate)
-    },
-    scale: {
-      axis: getAxis(/scale([XY])/),
-      numbers: getNumbers(re.scale)
-    }
-  };
-
-  var computedTransform = arrowTransform.replace(re.translate, 'translate' + transformAxis(matches.translate.axis, isVertical) + '(' + transformNumbersBasedOnPlacementAxis('translate', matches.translate.numbers, isVertical, isReverse) + ')').replace(re.scale, 'scale' + transformAxis(matches.scale.axis, isVertical) + '(' + transformNumbersBasedOnPlacementAxis('scale', matches.scale.numbers, isVertical, isReverse) + ')');
-
-  arrow.style[prefix('transform')] = computedTransform;
-}
-
-/**
-* Waits until next repaint to execute a fn
-* @param {Function} fn
-*/
-function defer(fn) {
-  requestAnimationFrame(function () {
-    setTimeout(fn, 0);
-  });
-}
-
-/**
-* Returns the distance taking into account the default distance due to
-* the transform: translate setting in CSS
-* @param {Number} distance
-* @return {String}
-*/
-function getOffsetDistanceInPx(distance) {
-  return -(distance - defaults.distance) + 'px';
-}
-
-/**
-* Creates a new popper instance
-* @param {Tippy} tippy
-* @return {Popper}
-*/
-function createPopperInstance(tippy) {
-  var reference = tippy.reference,
-      popper = tippy.popper,
-      _tippy$options = tippy.options,
-      placement = _tippy$options.placement,
-      popperOptions = _tippy$options.popperOptions,
-      offset = _tippy$options.offset,
-      distance = _tippy$options.distance,
-      updateDuration = _tippy$options.updateDuration,
-      flip = _tippy$options.flip,
-      flipBehavior = _tippy$options.flipBehavior,
-      arrowType = _tippy$options.arrowType,
-      arrowTransform = _tippy$options.arrowTransform;
-
-  var _getInnerElements = getInnerElements(popper),
-      tooltip = _getInnerElements.tooltip;
-
-  var arrowSelector = arrowType === 'round' ? selectors.ROUND_ARROW : selectors.ARROW;
-  var arrow = tooltip.querySelector(arrowSelector);
-
-  var config = _extends({
-    placement: placement
-  }, popperOptions || {}, {
-    modifiers: _extends({}, popperOptions ? popperOptions.modifiers : {}, {
-      arrow: _extends({
-        element: arrowSelector
-      }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {}),
-      flip: _extends({
-        enabled: flip,
-        padding: distance + 5 /* 5px from viewport boundary */
-        , behavior: flipBehavior
-      }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {}),
-      offset: _extends({
-        offset: offset
-      }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
-    }),
-    onCreate: function onCreate() {
-      tooltip.style[getPopperPlacement(popper)] = getOffsetDistanceInPx(distance);
-
-      if (arrow && arrowTransform) {
-        computeArrowTransform(popper, arrow, arrowTransform);
-      }
-    },
-    onUpdate: function onUpdate() {
-      var styles = tooltip.style;
-      styles.top = '';
-      styles.bottom = '';
-      styles.left = '';
-      styles.right = '';
-      styles[getPopperPlacement(popper)] = getOffsetDistanceInPx(distance);
-
-      if (arrow && arrowTransform) {
-        computeArrowTransform(popper, arrow, arrowTransform);
-      }
-    }
-  });
-
-  addMutationObserver({
-    tippy: tippy,
-    target: popper,
-    callback: function callback() {
-      var styles = popper.style;
-      styles[prefix('transitionDuration')] = '0ms';
-      tippy.popperInstance.update();
-      defer(function () {
-        styles[prefix('transitionDuration')] = updateDuration + 'ms';
-      });
-    },
-
-    options: {
-      childList: true,
-      subtree: true,
-      characterData: true
-    }
-  });
-
-  return new Popper(reference, popper, config);
-}
-
-/**
 * Appends the popper and creates a popper instance if one does not exist
 * Also updates its position if need be and enables event listeners
 * @param {Tippy} tippy
 */
 function mountPopper(tippy) {
   var popper = tippy.popper,
-      reference = tippy.reference;
-  var _tippy$options = tippy.options,
+      reference = tippy.reference,
+      _tippy$options = tippy.options,
       appendTo = _tippy$options.appendTo,
       followCursor = _tippy$options.followCursor;
 
@@ -1137,15 +1136,15 @@ function onTransitionEnd(tippy, duration, callback) {
   var _getInnerElements = getInnerElements(tippy.popper),
       tooltip = _getInnerElements.tooltip;
 
-  var toggleListeners = function toggleListeners(action, handler) {
-    if (!handler) return;
-    tooltip[action + 'EventListener']('webkitTransitionEnd', handler);
-    tooltip[action + 'EventListener']('transitionend', handler);
+  var toggleListeners = function toggleListeners(action, listener) {
+    if (!listener) return;
+    tooltip[action + 'EventListener']('webkitTransitionEnd', listener);
+    tooltip[action + 'EventListener']('transitionend', listener);
   };
 
   var listener = function listener(e) {
     if (e.target === tooltip) {
-      toggleListeners('remove');
+      toggleListeners('remove', listener);
       callback();
     }
   };
@@ -1294,9 +1293,6 @@ var Tippy = function () {
 
         options.sticky && makeSticky(_this);
 
-        // Trigger document reflow for the CSS transition
-        tooltip.offsetHeight;
-
         setVisibilityState([tooltip, backdrop], 'visible');
 
         onTransitionEnd(_this, duration, function () {
@@ -1423,19 +1419,19 @@ function createTooltips(els, config) {
     var html = options.html,
         trigger = options.trigger,
         touchHold = options.touchHold,
-        dynamicTitle = options.dynamicTitle;
+        dynamicTitle = options.dynamicTitle,
+        createPopperInstanceOnInit = options.createPopperInstanceOnInit;
 
 
     var title = reference.getAttribute('title');
     if (!title && !html) return acc;
 
     reference.setAttribute('data-tippy', '');
-    reference.setAttribute('aria-describedby', 'tippy-tooltip-' + id);
+    reference.setAttribute('aria-describedby', 'tippy-' + id);
 
     removeTitle(reference);
 
     var popper = createPopperElement(id, title, options);
-
     var tippy = new Tippy({
       id: id,
       reference: reference,
@@ -1443,6 +1439,7 @@ function createTooltips(els, config) {
       options: options,
       _mutationObservers: []
     });
+    tippy.popperInstance = createPopperInstanceOnInit ? createPopperInstance(tippy) : null;
 
     var handlers = getEventListeners(tippy, options);
     var listeners = [];
@@ -1493,7 +1490,7 @@ function createTooltips(els, config) {
 * @param {Object} options
 * @return {Object}
 */
-function tippy$1(selector, options) {
+function tippy$2(selector, options) {
   browser.supported && init();
 
   // Virtual object for custom positioning
@@ -1544,32 +1541,9 @@ function tippy$1(selector, options) {
   return tip;
 }
 
-tippy$1.browser = browser;
-tippy$1.defaults = defaults;
+tippy$2.browser = browser;
+tippy$2.defaults = defaults;
 
-/**
-* Injects CSS styles to document head
-* @param {String} css
-*/
-function injectCSS() {
-  var css = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-
-  if (typeof window !== 'undefined') {
-    var head = document.head || document.querySelector('head');
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    head.insertBefore(style, head.firstChild);
-
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
-  }
-}
-
-injectCSS(styles);
-
-return tippy$1;
+return tippy$2;
 
 })));
