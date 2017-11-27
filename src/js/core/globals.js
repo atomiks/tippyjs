@@ -48,7 +48,6 @@ export const defaults = {
   inertia: false,
   updateDuration: 350,
   sticky: false,
-  stickyDuration: 200,
   appendTo: () => document.body,
   zIndex: 9999,
   touchHold: false,
