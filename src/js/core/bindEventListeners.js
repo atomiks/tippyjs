@@ -5,13 +5,17 @@ import closest from '../utils/closest'
 import find from '../utils/find'
 import matches from '../utils/matches'
 
+import tippy from '../tippy'
+
 /**
 * Adds the needed event listeners
 */
 export default function bindEventListeners() {
   const touchHandler = () => {
+    if (browser.usingTouch) return
+    
     browser.usingTouch = true
-
+    
     if (browser.iOS) {
       document.body.classList.add('tippy-touch')
     }
@@ -19,6 +23,8 @@ export default function bindEventListeners() {
     if (browser.dynamicInputDetection && window.performance) {
       document.addEventListener('mousemove', mousemoveHandler)
     }
+    
+    tippy.onUserInputChange('touch')
   }
 
   const mousemoveHandler = (() => {
@@ -34,6 +40,7 @@ export default function bindEventListeners() {
         if (!browser.iOS) {
           document.body.classList.remove('tippy-touch')
         }
+        tippy.onUserInputChange('mouse')
       }
 
       time = now
@@ -66,9 +73,6 @@ export default function bindEventListeners() {
 
       if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1) return
     }
-
-    // Don't needlessly run loop if no poppers are on the document
-    if (!document.querySelector(selectors.POPPER)) return
 
     hideAllPoppers()
   }

@@ -53,5 +53,6 @@ function tippy(selector, options) {
 
 tippy.browser = browser
 tippy.defaults = defaults
+tippy.onUserInputChange = () => {}
 
 export default tippy
