@@ -1,6 +1,5 @@
 import defer from '../utils/defer'
 import prefix from '../utils/prefix'
-import isVisible from '../utils/isVisible'
 
 /**
 * Updates a popper's position on each animation frame to make it stick to a moving element
@@ -20,7 +19,7 @@ export default function makeSticky(tippy) {
 
     applyTransitionDuration()
 
-    isVisible(tippy.popper)
+    tippy.state.visible
       ? requestAnimationFrame(updatePosition)
       : removeTransitionDuration()
   }

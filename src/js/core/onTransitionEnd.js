@@ -16,8 +16,10 @@ export default function onTransitionEnd(tippy, duration, callback) {
   
   const toggleListeners = (action, listener) => {
     if (!listener) return
-    tooltip[action + 'EventListener']('webkitTransitionEnd', listener)
-    tooltip[action + 'EventListener']('transitionend', listener)
+    tooltip[action + 'EventListener'](
+      'ontransitionend' in window ? 'transitionend' : 'webkitTransitionEnd',
+      listener
+    )
   }
   
   const listener = e => {

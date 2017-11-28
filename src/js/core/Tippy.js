@@ -10,7 +10,6 @@ import defer from '../utils/defer'
 import getDuration from '../utils/getDuration'
 import setVisibilityState from '../utils/setVisibilityState'
 import findIndex from '../utils/findIndex'
-import isVisible from '../utils/isVisible'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
 
 export default class Tippy {
@@ -19,7 +18,8 @@ export default class Tippy {
       this[prop] = config[prop]
     }
     this.state = {
-      destroyed: false
+      destroyed: false,
+      visible: false
     }
   }
   
@@ -49,7 +49,7 @@ export default class Tippy {
     mountPopper(this)
 
     popper.style.visibility = 'visible'
-    popper.setAttribute('aria-hidden', 'false')
+    this.state.visible = true
 
     // Wait for popper's position to update by deferring the callback, so
     // that the position update doesn't transition, only the normal animation
@@ -57,11 +57,9 @@ export default class Tippy {
       // ~20ms can elapse before this defer callback is run, so the hide() method
       // may have been invoked -- check if the popper is still visible and cancel
       // this callback if not
-      if (!isVisible(popper)) return
+      if (!this.state.visible) return
 
-      if (!options.followCursor) {
-        // The arrow is sometimes not in the correct position, so another update after mount is required
-        // May be a bug with Popper.js
+      if (!options.followCursor || browser.usingTouch) {
         this.popperInstance.update()
         applyTransitionDuration([popper], options.updateDuration)
       }
@@ -72,6 +70,7 @@ export default class Tippy {
       // Make content fade out a bit faster than the tooltip if `animateFill` is true
       if (backdrop) {
         content.style.opacity = 1
+        backdrop.offsetHeight
       }
 
       if (options.interactive) {
@@ -83,9 +82,9 @@ export default class Tippy {
       }
 
       setVisibilityState([tooltip, backdrop], 'visible')
-
+      
       onTransitionEnd(this, duration, () => {
-        if (isVisible(popper)) {
+        if (this.state.visible) {
           options.interactive && popper.focus()
           options.onShown.call(popper)
         }
@@ -102,7 +101,7 @@ export default class Tippy {
 
     const { popper, reference, options } = this
     const { tooltip, backdrop, content } = getInnerElements(popper)
-    
+
     options.onHide.call(popper)
 
     duration = getDuration(duration !== undefined ? duration : options.duration, 1)
@@ -112,7 +111,7 @@ export default class Tippy {
     }
 
     popper.style.visibility = 'hidden'
-    popper.setAttribute('aria-hidden', 'true')
+    this.state.visible = false
 
     applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration)
 
@@ -129,21 +128,15 @@ export default class Tippy {
     ) {
       reference.focus()
     }
-
+    
     onTransitionEnd(this, duration, () => {
-      // `isVisible` is not completely reliable to determine if we shouldn't
-      // run the hidden callback, we need to check the computed opacity style.
-      // This prevents glitchy behavior of the transition when quickly showing
-      // and hiding a tooltip.
       if (
-        !isVisible(popper) &&
-        options.appendTo.contains(popper) &&
+        !this.state.visible &&
         getComputedStyle(tooltip).opacity !== '1'
       ) {
-        document.removeEventListener('mousemove', this._followCursorListener)
         this.popperInstance.disableEventListeners()
+        document.removeEventListener('mousemove', this._followCursorListener)
         options.appendTo.removeChild(popper)
-        
         options.onHidden.call(popper)
       }
     })
@@ -156,7 +149,7 @@ export default class Tippy {
     if (this.state.destroyed) return
 
     // Ensure the popper is hidden
-    if (isVisible(this.popper)) {
+    if (this.state.visible) {
       this.hide(0)
     }
 

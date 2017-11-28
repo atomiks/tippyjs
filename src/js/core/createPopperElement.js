@@ -28,7 +28,6 @@ export default function createPopperElement(id, title, options) {
   const popper = document.createElement('div')
   popper.setAttribute('class', 'tippy-popper')
   popper.setAttribute('role', 'tooltip')
-  popper.setAttribute('aria-hidden', 'true')
   popper.setAttribute('id', `tippy-${id}`)
   popper.style.zIndex = zIndex
   popper.style.maxWidth = maxWidth

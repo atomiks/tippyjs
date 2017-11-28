@@ -4,6 +4,9 @@ import createFollowCursorListener from './createFollowCursorListener'
 import createPopperInstance from './createPopperInstance'
 
 import prefix from '../utils/prefix'
+import find from '../utils/find'
+import getPopperPlacement from '../utils/getPopperPlacement'
+import defer from '../utils/defer'
 
 /**
 * Appends the popper and creates a popper instance if one does not exist
@@ -15,29 +18,31 @@ export default function mountPopper(tippy) {
     popper,
     reference,
     options: {
+      placement,
       appendTo,
       followCursor
     }
    } = tippy
+   
+   let { popperInstance } = tippy
 
   // Already on the DOM
   if (appendTo.contains(popper)) return
-
   appendTo.appendChild(popper)
   
-  if (!tippy.popperInstance) {
-    tippy.popperInstance = createPopperInstance(tippy)
+  if (!popperInstance) {
+    popperInstance = tippy.popperInstance = createPopperInstance(tippy)
   } else {
-    tippy.popperInstance.update()
+    popperInstance.update()
     
     if (!followCursor || browser.usingTouch) {
-      tippy.popperInstance.enableEventListeners()
+      popperInstance.enableEventListeners()
     }
   }
-
+  
   // Since touch is determined dynamically, followCursor is set on mount
   if (followCursor && !browser.usingTouch) {
     document.addEventListener('mousemove', createFollowCursorListener(tippy))
-    tippy.popperInstance.disableEventListeners()
+    popperInstance.disableEventListeners()
   }
 }

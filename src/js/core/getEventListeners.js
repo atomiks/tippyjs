@@ -1,6 +1,5 @@
 import { browser, selectors } from './globals'
 
-import isVisible from '../utils/isVisible'
 import closest from '../utils/closest'
 import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiveBorder'
 
@@ -35,7 +34,7 @@ export default function getEventListeners(tippy, options) {
   const _show = () => {
     clearTimeouts()
 
-    if (isVisible(popper)) return
+    if (tippy.state.visible) return
 
     const _delay = Array.isArray(delay) ? delay[0] : delay
 
@@ -55,13 +54,13 @@ export default function getEventListeners(tippy, options) {
   const hide = () => {
     clearTimeouts()
     
-    if (!isVisible(popper)) return
+    if (!tippy.state.visible) return
 
     const _delay = Array.isArray(delay) ? delay[1] : delay
 
     if (delay) {
       hideDelay = setTimeout(() => {
-        if (!isVisible(popper)) return
+        if (!tippy.state.visible) return
         tippy.hide()
       }, _delay)
     } else {
@@ -87,7 +86,7 @@ export default function getEventListeners(tippy, options) {
     const isClick = event.type === 'click'
     const isNotPersistent = hideOnClick !== 'persistent'
 
-    isClick && isVisible(popper) && isNotPersistent
+    isClick && tippy.state.visible && isNotPersistent
       ? hide()
       : show(event)
 
