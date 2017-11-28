@@ -4,7 +4,6 @@ import computeArrowTransform from './computeArrowTransform'
 
 import defer from '../utils/defer'
 import prefix from '../utils/prefix'
-import isVisible from '../utils/isVisible'
 import getPopperPlacement from '../utils/getPopperPlacement'
 import getInnerElements from '../utils/getInnerElements'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
@@ -30,7 +29,8 @@ export default function createPopperInstance(tippy) {
       flip,
       flipBehavior,
       arrowType,
-      arrowTransform
+      arrowTransform,
+      sticky
     }
   } = tippy
 
@@ -69,6 +69,10 @@ export default function createPopperInstance(tippy) {
       }
     },
     onUpdate() {
+      if (!tippy.state.visible && !sticky && getComputedStyle(tooltip).opacity === '0') {
+        return tippy.hide(0)
+      }
+      
       const styles = tooltip.style
       styles.top = ''
       styles.bottom = ''
