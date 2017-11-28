@@ -26,8 +26,9 @@
       }
       
       .tippy-roundarrow {
-        @include roundarrow($placement, 24px, #333);
+        @include roundarrow($placement, 23px, #333);
         @include arrow-position($placement, 15px);
+        @include roundarrow-margin($placement);
         
         svg {
           @include roundarrow-transform($placement);
@@ -146,7 +147,12 @@
   }
 
   &[data-inertia] {
-    transition-timing-function: cubic-bezier(.53,2,.36,.85);
+    &[data-state=visible] {
+      transition-timing-function: cubic-bezier(.53,2,.36,.85);
+    }
+    &[data-state=hidden] {
+      transition-timing-function: ease;
+    }
   }
 
   .tippy-arrow, .tippy-roundarrow {
@@ -160,25 +166,16 @@
     will-change: transform;
     background-color: #333;
     border-radius: 50%;
-    width: 135%;
+    width: 26%;
     left: 50%;
     top: 50%;
     z-index: -1;
-    overflow: hidden;
-    backface-visibility: hidden;
-    
-    &[data-state=visible] {
-      transition: all cubic-bezier(0.37, 0.21, 0.32, 0.82);
-    }
-    
-    &[data-state=hidden] {
-      transition: all cubic-bezier(.4,.5,.5,.99);
-    }
+    transition: all cubic-bezier(0.46, 0.1, 0.52, 0.98);
     
     &::after {
       content: '';
       float: left;
-      padding-top: 90%;
+      padding-top: 100%;
     }
   }
 }

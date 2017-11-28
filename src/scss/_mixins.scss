@@ -77,28 +77,27 @@
 }
 
 @mixin backdrop-transform-enter ($placement) {
-  $scale: 1;
+  $scale: 5.5;
   @if ($placement == 'top') {
-    transform: scale($scale) translate(-50%, -60%);
+    transform: scale($scale) translate(-50%, 25%);
   } @else if ($placement == 'bottom') {
-    transform: scale($scale) translate(-50%, -40%);
+    transform: scale($scale) translate(-50%, -125%);
   } @else if ($placement == 'left') {
-    transform: scale($scale) translate(-50%, -50%);
+    transform: scale($scale) translate(33%, -50%);
   } @else if ($placement == 'right') {
-    transform: scale($scale) translate(-50%, -50%);
+    transform: scale($scale) translate(-133%, -50%);
   }
 }
 
 @mixin backdrop-transform-leave ($placement) {
-  $scale: 0.25;
   @if ($placement == 'top') {
-    transform: scale($scale) translate(-50%, -50%);
+    transform: scale(1) translate(-50%, 25%);
   } @else if ($placement == 'bottom') {
-    transform: scale($scale) translate(-50%, 0%);
+    transform: scale(1) translate(-50%, -125%);
   } @else if ($placement == 'left') {
-    transform: scale($scale) translate(-50%, -50%);
+    transform: scale(1.5) translate(33%, -50%);
   } @else if ($placement == 'right') {
-    transform: scale($scale) translate(-50%, -50%);
+    transform: scale(1.5) translate(-133%, -50%);
   }
 }
 
@@ -146,6 +145,14 @@
   width: $width;
   height: $width;
   fill: $color;
+}
+
+@mixin roundarrow-margin ($placement) {
+  @if ($placement == 'top' or $placement == 'bottom') {
+    margin: 0 6px;
+  } @else {
+    margin: 4px 0;
+  }
 }
 
 @mixin roundarrow-transform ($placement) {
