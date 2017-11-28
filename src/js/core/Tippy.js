@@ -85,6 +85,9 @@ export default class Tippy {
       
       onTransitionEnd(this, duration, () => {
         if (this.state.visible) {
+          if (!options.updateDuration) {
+            tooltip.classList.add('tippy-notransition')
+          }
           options.interactive && popper.focus()
           options.onShown.call(popper)
         }
@@ -105,6 +108,10 @@ export default class Tippy {
     options.onHide.call(popper)
 
     duration = getDuration(duration !== undefined ? duration : options.duration, 1)
+    
+    if (!options.updateDuration) {
+      tooltip.classList.remove('tippy-notransition')
+    }
     
     if (options.interactive) {
       reference.classList.remove('tippy-active')

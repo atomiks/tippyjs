@@ -5,6 +5,10 @@
   cursor: pointer !important;
 }
 
+.tippy-notransition {
+  transition: none !important;
+}
+
 .tippy-popper {
   max-width: 350px;
   perspective: 700px;
