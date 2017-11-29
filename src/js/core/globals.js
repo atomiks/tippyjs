@@ -9,6 +9,7 @@ if (isBrowser) {
   browser.eventsBound = false
   browser.dynamicInputDetection = true
   browser.iOS = /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream
+  browser.onUserInputChange = () => {}
 }
 
 /**

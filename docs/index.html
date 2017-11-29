@@ -113,10 +113,10 @@
               <button class="btn btn-gradient tippy" title="I just faded into existence!" data-tippy-animation="fade" data-tippy-arrow="true">Fade</button>
               <button class="btn btn-gradient tippy" title="I rotated with perspective!" data-tippy-animation="perspective" data-tippy-arrow="true">Perspective</button>
               <button class="btn btn-gradient tippy" title="I scaled up from nothingness!" data-tippy-animation="scale" data-tippy-arrow="true">Scale</button>
-              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-duration="600">Inertia (shift away)</button>
-              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-animation="shift-toward" data-tippy-duration="600">Inertia (shift toward)</button>
-              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-animation="scale" data-tippy-duration="550">Inertia (scale)</button>
-              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-animation="perspective" data-tippy-duration="550">Inertia (perspective)</button>
+              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-duration="[600,300]">Inertia (shift away)</button>
+              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-animation="shift-toward" data-tippy-duration="[600,300]">Inertia (shift toward)</button>
+              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-animation="scale" data-tippy-duration="[600,300]">Inertia (scale)</button>
+              <button class="btn btn-gradient tippy" title="Slingshot" data-tippy-inertia="true" data-tippy-arrow="true" data-tippy-animation="perspective" data-tippy-duration="[600,300]">Inertia (perspective)</button>
             </div>
             
             <h4>Transitions &amp; Delays <i class="material-icons icon-left">timer</i></h4>
@@ -136,7 +136,7 @@
             <p>You can create all kinds of custom funky themes for your tooltips with ease.</p>
             <div class="button-showcase d-flex justify-content-center flex-wrap">
               <button class="btn btn-gradient tippy" title="See through!" data-tippy-animation="fade" data-tippy-arrow="true" data-tippy-animateFill="false" data-tippy-theme="translucent" data-tippy-flip="false">Translucent</button>
-              <button class="btn btn-gradient tippy" title="Awesome colors!" data-tippy-animation="fade" data-tippy-animateFill="false" data-tippy-theme="gradient" data-tippy-flip="false">Gradient</button>
+              <button class="btn btn-gradient tippy" title="Awesome colors!" data-tippy-animation="fade" data-tippy-animateFill="false" data-tippy-createPopperInstanceOnInit="true" data-tippy-theme="gradient" data-tippy-flip="false">Gradient</button>
               <button class="btn btn-gradient tippy" title="Cool huh?" data-tippy-animation="fade" data-tippy-theme="light bordered" data-tippy-arrow="true" data-tippy-flip="false">Light</button>
             </div>
             
@@ -152,7 +152,7 @@
             <h4>HTML <i class="material-icons icon-left">code</i></h4>
             <p>Tooltips can even contain HTML!</p>
             <div id="html-showcase" class="button-showcase d-flex justify-content-center flex-wrap">
-              <button class="btn btn-gradient tippy" id="html-tippy" data-tippy-interactiveBorder="15" data-tippy-trigger="click" data-tippy-theme="light" data-tippy-arrowTransform="scale(2, 2.5) translateY(2px)" data-tippy-distance="25" data-tippy-animation="scale" data-tippy-interactive="true" data-tippy-arrow="true">HTML templates <small class="opacity-low">(click)</small></button>
+              <button class="btn btn-gradient tippy" id="html-tippy" data-tippy-interactiveBorder="15" data-tippy-arrowType="round" data-tippy-trigger="click" data-tippy-theme="light" data-tippy-arrowTransform="scale(2, 2.5) translateY(2.5px)" data-tippy-distance="25" data-tippy-animation="scale" data-tippy-interactive="true" data-tippy-arrow="true">HTML templates <small class="opacity-low">(click)</small></button>
             </div>
             
             <h4 class="text-center">Misc <i class="material-icons icon-left">tag_faces</i></h4>
@@ -226,21 +226,21 @@
             <p>
                 Alternatively, you can install through npm:
             </p>
-            <pre><code>npm install --save tippy.js@beta</code></pre>
+            <pre><code>npm install --save tippy.js@beta.2</code></pre>
 
             <p>
-                or use the <a target="_blank" href="https://unpkg.com/tippy.js@beta">unpkg.com CDN</a>:
+                or use the <a target="_blank" href="https://unpkg.com/tippy.js@beta.2">unpkg.com CDN</a>:
             </p>
 
-            <pre><code>https://unpkg.com/tippy.js@beta/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js@beta.2/dist/</code></pre>
             
             <p>Simply include the <code>tippy.all.min.js</code> file in your document before your own scripts:</p>
-            <pre><code class="language-markup">&lt;script src="https://unpkg.com/tippy.js@beta/dist/tippy.all.min.js"&gt;&lt;/script&gt;</code></pre>
+            <pre><code class="language-markup">&lt;script src="https://unpkg.com/tippy.js@beta.2/dist/tippy.all.min.js"&gt;&lt;/script&gt;</code></pre>
             
             <p>This is the bundled version which includes Popper.js and automatically injects Tippy's CSS stylesheet
             into the document head.</p>
 
-            <p>Use <code>tippy.standalone.js</code> if you want use a different version of Popper.js.</p>
+            <p>Use <code>tippy.standalone.js</code> if you want to use a different version of Popper.js.</p>
           </section>
           <hr>
           <section id="creating-a-tooltip">
@@ -435,7 +435,8 @@ tippy(refObject)
                         <br><br>
                         Because of flipping, the syntax becomes dynamic.
                         You must use the syntax that gives the desired results for the <code>top</code> placement, even if you
-                        use a different placement.
+                        use a different placement. Only <code>translate</code> and <code>scale</code> are supported
+                        for dynamic syntax.
                         <br><br>
                         <code>'scaleX(1.5)'</code> = wider arrow<br>
                         <code>'scaleX(0.5)'</code> = narrower arrow<br>
@@ -588,12 +589,40 @@ tippy(refObject)
                       <td>Disables <code>data-tippy-*</code> attribute options to make initial instantiation time faster.</td>
                     </tr>
                     <tr>
+                      <td><code>onShow</code></td>
+                      <td>-</td>
+                      <td><code>Function</code></td>
+                      <td>Callback function triggered when a tooltip begins to show.</td>
+                    </tr>
+                    <tr>
+                      <td><code>onShown</code></td>
+                      <td>-</td>
+                      <td><code>Function</code></td>
+                      <td>Callback function triggered when a tooltip has fully transitioned in.</td>
+                    </tr>
+                    <tr>
+                      <td><code>onHide</code></td>
+                      <td>-</td>
+                      <td><code>Function</code></td>
+                      <td>Callback function triggered when a tooltip begins to hide.</td>
+                    </tr>
+                    <tr>
+                      <td><code>onHidden</code></td>
+                      <td>-</td>
+                      <td><code>Function</code></td>
+                      <td>Callback function triggered when a tooltip has fully transitioned out.</td>
+                    </tr>
+                    <tr>
                       <td><code>createPopperInstanceOnInit</code></td>
                       <td><code>false</code></td>
                       <td><code>Boolean</code></td>
                       <td>By default, the popper instance for a tooltip is not created until it is shown for the first time
                         in order to optimize performance.
-                      In some cases this may cause issues, so you can specify it to be created when you init with <code>tippy()</code>.</td>
+                      In some cases this may cause issues, so you can specify it to be created when you init with <code>tippy()</code>.
+                      <br><br>
+                      Safari seems to stutter slightly when the tooltip is shown for the first time. Certain CSS effects may also
+                      cause the transition to stutter on the first show. For these certain cases, you may want to set this option to <code>true</code>.
+                    </td>
                     </tr>
                     <tr>
                       <td><code>popperOptions</code></td>
@@ -604,6 +633,10 @@ tippy(refObject)
                   </tbody>
                 </table>
               </div>
+              
+              <h4>Modify the default options</h4>
+
+              <p>You can change the default options by accessing them via <code>tippy.defaults</code>, which will apply to every tippy instance.</p>
 
               <h4>Finer control over tooltips</h4>
 
@@ -684,9 +717,50 @@ tippy(refObject)
 
             <p>Note: This isn't supported in IE10 natively (unless polyfilled) because it uses <code>MutationObserver</code>.</p>
 
-            <h4>Modify the default options</h4>
+            <h4>Disabling tooltips on touch devices</h4>
+            <p>
+              It can be tricky to determine touch devices accurately, especially considering the existence of hybrid devices
+              (a mix of mouse and touch input). Simply detecting the user agent is not enough.
+            </p>
+            <p>
+              A user can switch between either input type at any time which is why dynamic input detection is enabled.
+              You can hook into Tippy's detection of user input changes by defining the following callback function:
+            </p>
+<pre><code class="language-javascript">tippy.browser.onUserInputChange = function (type) {
+  console.log('The user is now using', type, 'as an input method')
+}</code></pre>
+            <p>
+            Whenever the user changes their input method, you can react to it inside the callback function.
+            To disable tooltips for touch input, you can do the following:
+<pre><code class="language-javascript">const tip = tippy('[title]')
 
-            <p>You can change the default options by accessing them via <code>tippy.defaults</code>, which will apply to every tippy instance.</p>
+tippy.browser.onUserInputChange = function (type) {
+  if (type === 'touch') {
+    tip.destroyAll()
+  }
+}</code></pre>
+
+          <p>This works because <code>mouse</code> input is assumed by default, and a <code>touchstart</code> event
+            will trigger the callback function.</p>
+            
+          <p>However this has an issue: hybrid devices. When the user touches their screen, it will destroy all the tooltips.
+          Then, they may desire to switch back to their mouse (or trackpad) and the tooltips will be gone. This has a solution,
+        but it requires dynamically creating and destroying the instance.</p>
+              
+<pre><code class="language-javascript">const initTooltips = function () {
+  return tippy('[title]')
+}
+
+let tip = initTooltips()
+
+tippy.browser.onUserInputChange = function (type) {
+  if (type === 'touch') {
+    tip.destroyAll()
+  } else {
+    tip = initTooltips()
+  }
+}</code></pre>
+            </p>
 
             </section>
 

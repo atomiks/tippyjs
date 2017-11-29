@@ -5,8 +5,6 @@ import closest from '../utils/closest'
 import find from '../utils/find'
 import matches from '../utils/matches'
 
-import tippy from '../tippy'
-
 /**
 * Adds the needed event listeners
 */
@@ -24,7 +22,7 @@ export default function bindEventListeners() {
       document.addEventListener('mousemove', mousemoveHandler)
     }
     
-    tippy.onUserInputChange('touch')
+    browser.onUserInputChange('touch')
   }
 
   const mousemoveHandler = (() => {
@@ -40,7 +38,7 @@ export default function bindEventListeners() {
         if (!browser.iOS) {
           document.body.classList.remove('tippy-touch')
         }
-        tippy.onUserInputChange('mouse')
+        browser.onUserInputChange('mouse')
       }
 
       time = now
