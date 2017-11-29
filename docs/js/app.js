@@ -20,7 +20,9 @@ var DOM = {
   }
 }
 
-tippy('.tippy')
+tippy('.tippy', {
+  createPopperInstanceOnInit: !!window.safari
+})
 
 tippy('.flippy', {
   placement: 'right',

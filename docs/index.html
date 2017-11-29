@@ -731,33 +731,14 @@ tippy(refObject)
 }</code></pre>
             <p>
             Whenever the user changes their input method, you can react to it inside the callback function.
-            To disable tooltips for touch input, you can do the following:
+            To disable tooltips for touch input but keep them enabled for mouse input, you can do the following:
+              
 <pre><code class="language-javascript">const tip = tippy('[title]')
 
 tippy.browser.onUserInputChange = function (type) {
-  if (type === 'touch') {
-    tip.destroyAll()
-  }
-}</code></pre>
-
-          <p>This works because <code>mouse</code> input is assumed by default, and a <code>touchstart</code> event
-            will trigger the callback function.</p>
-            
-          <p>However this has an issue: hybrid devices. When the user touches their screen, it will destroy all the tooltips.
-          Then, they may desire to switch back to their mouse (or trackpad) and the tooltips will be gone. This has a solution,
-        but it requires dynamically creating and destroying the instance.</p>
-              
-<pre><code class="language-javascript">const initTooltips = function () {
-  return tippy('[title]')
-}
-
-let tip = initTooltips()
-
-tippy.browser.onUserInputChange = function (type) {
-  if (type === 'touch') {
-    tip.destroyAll()
-  } else {
-    tip = initTooltips()
+  const method = type === 'touch' ? 'disable' : 'enable'
+  for (const tooltip of tip.tooltips) {
+    tooltip[method]()
   }
 }</code></pre>
             </p>
@@ -786,8 +767,12 @@ tippy(btn)</code></pre>
             <p>The Tippy instance is stored on the reference element via the <code>_tippy</code> property:</p>
             <pre><code class="language-javascript">btn._tippy</code></pre>
 
-            <p>Tippy instances have 3 methods: <code>show()</code>, <code>hide()</code>, and <code>destroy()</code>.
-            This allows you to control the tooltip without the use of UI events.</p>
+            <p>
+              Tippy instances have 5 methods: <code>enable()</code>, <code>disable()</code>,
+              <code>show()</code>, <code>hide()</code>, and
+              <code>destroy()</code>.
+              This allows you to control the tooltip without the use of UI events.
+            </p>
             
             <h4>Show the tooltip</h4>
             <pre><code class="language-javascript">btn._tippy.show()</code></pre>
@@ -810,6 +795,13 @@ tippy(btn)</code></pre>
 tip.destroyAll()</code></pre>
 
             <p><code>tip.tooltips</code> is an array that contains all the individual Tippy instances that were created.</p>
+
+            <h4>Disable/enable the tooltip</h4>
+            <p>In cases where you want to temporarily disable a tooltip from showing or hiding but NOT destroy it,
+              you can use the <code>disable()</code> method.</p>
+            <pre><code class="language-javascript">btn._tippy.disable()</code></pre>
+            <p>To re-enable it:</p>
+            <pre><code class="language-javascript">btn._tippy.enable()</code></pre>
 
             <h4>Update the tooltip</h4>
             <p>In V1, for tooltips whose content needed to be changed, there was an <code>update()</code> method. This has been replaced by a much easier way.</p>

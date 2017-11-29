@@ -8,7 +8,7 @@
     "css": "rollup -c scripts/rollup.css.config.js --watch",
     "build": "npm run standalone && npm run bundle && npm run all",
     "all": "rollup -c scripts/rollup.all.config.js && rollup -c scripts/rollup.all.min.config.js",
-    "bundle": "rollup -c scripts/rollup.bundle.config.js",
+    "bundle": "rollup -c scripts/rollup.bundle.config.js && rollup -c scripts/rollup.bundle.min.config.js",
     "standalone": "rollup -c scripts/rollup.standalone.config.js && rollup -c scripts/rollup.standalone.min.config.js",
     "themes": "rollup -c scripts/rollup.themes.config.js",
     "test": "rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js"

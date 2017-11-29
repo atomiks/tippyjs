@@ -7,7 +7,6 @@ import find from '../../src/js/utils/find'
 import findIndex from '../../src/js/utils/findIndex'
 import prefix from '../../src/js/utils/prefix'
 import closest from '../../src/js/utils/closest'
-import isVisible from '../../src/js/utils/isVisible'
 import getOffsetDistanceInPx from '../../src/js/utils/getOffsetDistanceInPx'
 import applyTransitionDuration from '../../src/js/utils/applyTransitionDuration'
 import isObjectLiteral from '../../src/js/utils/isObjectLiteral'
@@ -1097,19 +1096,6 @@ describe('utils', () => {
       child.appendChild(grandchild)
 
       expect(closest(grandchild, '.parent') === parent).toBe(true)
-    })
-  })
-
-  describe('isVisible', () => {
-    it('determines if an element has a visible style', () => {
-      const popper = document.createElement('div')
-      popper.style.visibility = 'visible'
-
-      expect(isVisible(popper)).toBe(true)
-
-      popper.style.visibility = 'hidden'
-
-      expect(isVisible(popper)).toBe(false)
     })
   })
 

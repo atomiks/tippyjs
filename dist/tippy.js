@@ -15,6 +15,7 @@ if (isBrowser) {
   browser.eventsBound = false;
   browser.dynamicInputDetection = true;
   browser.iOS = /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream;
+  browser.onUserInputChange = function () {};
 }
 
 /**
@@ -53,7 +54,6 @@ var selectors = {
   inertia: false,
   updateDuration: 350,
   sticky: false,
-  stickyDuration: 200,
   appendTo: function appendTo() {
     return document.body;
   },
@@ -237,7 +237,6 @@ function createPopperElement(id, title, options) {
   var popper = document.createElement('div');
   popper.setAttribute('class', 'tippy-popper');
   popper.setAttribute('role', 'tooltip');
-  popper.setAttribute('aria-hidden', 'true');
   popper.setAttribute('id', 'tippy-' + id);
   popper.style.zIndex = zIndex;
   popper.style.maxWidth = maxWidth;
@@ -2852,15 +2851,6 @@ function defer(fn) {
 }
 
 /**
-* Determines if an element is currently visible
-* @param {Element} el
-* @return {Boolean}
-*/
-function isVisible(el) {
-  return el.style.visibility === 'visible';
-}
-
-/**
 * Returns inner elements of the popper element
 * @param {Element} popper
 * @return {Object}
@@ -2917,7 +2907,8 @@ function createPopperInstance(tippy) {
       flip = _tippy$options.flip,
       flipBehavior = _tippy$options.flipBehavior,
       arrowType = _tippy$options.arrowType,
-      arrowTransform = _tippy$options.arrowTransform;
+      arrowTransform = _tippy$options.arrowTransform,
+      sticky = _tippy$options.sticky;
 
   var _getInnerElements = getInnerElements(popper),
       tooltip = _getInnerElements.tooltip;
@@ -2949,6 +2940,10 @@ function createPopperInstance(tippy) {
       }
     },
     onUpdate: function onUpdate() {
+      if (!tippy.state.visible && !sticky && getComputedStyle(tooltip).opacity === '0') {
+        return tippy.hide(0);
+      }
+
       var styles = tooltip.style;
       styles.top = '';
       styles.bottom = '';
@@ -3146,7 +3141,7 @@ function getEventListeners(tippy, options) {
   var _show = function _show() {
     clearTimeouts();
 
-    if (isVisible(popper)) return;
+    if (tippy.state.visible) return;
 
     var _delay = Array.isArray(delay) ? delay[0] : delay;
 
@@ -3166,13 +3161,13 @@ function getEventListeners(tippy, options) {
   var hide = function hide() {
     clearTimeouts();
 
-    if (!isVisible(popper)) return;
+    if (!tippy.state.visible) return;
 
     var _delay = Array.isArray(delay) ? delay[1] : delay;
 
     if (delay) {
       hideDelay = setTimeout(function () {
-        if (!isVisible(popper)) return;
+        if (!tippy.state.visible) return;
         tippy.hide();
       }, _delay);
     } else {
@@ -3191,7 +3186,7 @@ function getEventListeners(tippy, options) {
     var isClick = event.type === 'click';
     var isNotPersistent = hideOnClick !== 'persistent';
 
-    isClick && isVisible(popper) && isNotPersistent ? hide() : show(event);
+    isClick && tippy.state.visible && isNotPersistent ? hide() : show(event);
 
     // iOS prevents click events from firing
     if (shouldStopEvent && browser.iOS && reference.click) {
@@ -3358,29 +3353,30 @@ function mountPopper(tippy) {
   var popper = tippy.popper,
       reference = tippy.reference,
       _tippy$options = tippy.options,
+      placement = _tippy$options.placement,
       appendTo = _tippy$options.appendTo,
       followCursor = _tippy$options.followCursor;
+  var popperInstance = tippy.popperInstance;
 
   // Already on the DOM
 
   if (appendTo.contains(popper)) return;
-
   appendTo.appendChild(popper);
 
-  if (!tippy.popperInstance) {
-    tippy.popperInstance = createPopperInstance(tippy);
+  if (!popperInstance) {
+    popperInstance = tippy.popperInstance = createPopperInstance(tippy);
   } else {
-    tippy.popperInstance.update();
+    popperInstance.update();
 
     if (!followCursor || browser.usingTouch) {
-      tippy.popperInstance.enableEventListeners();
+      popperInstance.enableEventListeners();
     }
   }
 
   // Since touch is determined dynamically, followCursor is set on mount
   if (followCursor && !browser.usingTouch) {
     document.addEventListener('mousemove', createFollowCursorListener(tippy));
-    tippy.popperInstance.disableEventListeners();
+    popperInstance.disableEventListeners();
   }
 }
 
@@ -3402,7 +3398,7 @@ function makeSticky(tippy) {
 
     applyTransitionDuration();
 
-    isVisible(tippy.popper) ? requestAnimationFrame(updatePosition) : removeTransitionDuration();
+    tippy.state.visible ? requestAnimationFrame(updatePosition) : removeTransitionDuration();
   };
 
   // Wait until Popper's position has been updated initially
@@ -3426,8 +3422,7 @@ function onTransitionEnd(tippy, duration, callback) {
 
   var toggleListeners = function toggleListeners(action, listener) {
     if (!listener) return;
-    tooltip[action + 'EventListener']('webkitTransitionEnd', listener);
-    tooltip[action + 'EventListener']('transitionend', listener);
+    tooltip[action + 'EventListener']('ontransitionend' in window ? 'transitionend' : 'webkitTransitionEnd', listener);
   };
 
   var listener = function listener(e) {
@@ -3500,22 +3495,44 @@ var Tippy = function () {
       this[prop] = config[prop];
     }
     this.state = {
-      destroyed: false
+      destroyed: false,
+      visible: false,
+      enabled: true
     };
   }
 
   /**
-  * Shows the tooltip
-  * @param {Number} duration in milliseconds
+  * Enables the tooltip to allow it to show or hide
   */
 
 
   createClass(Tippy, [{
+    key: 'enable',
+    value: function enable() {
+      this.state.enabled = true;
+    }
+
+    /**
+    * Disables the tooltip from showing or hiding, but does not destroy it
+    */
+
+  }, {
+    key: 'disable',
+    value: function disable() {
+      this.state.enabled = false;
+    }
+
+    /**
+    * Shows the tooltip
+    * @param {Number} duration in milliseconds
+    */
+
+  }, {
     key: 'show',
     value: function show(duration) {
       var _this = this;
 
-      if (this.state.destroyed) return;
+      if (this.state.destroyed || !this.state.enabled) return;
 
       var popper = this.popper,
           reference = this.reference,
@@ -3544,7 +3561,7 @@ var Tippy = function () {
       mountPopper(this);
 
       popper.style.visibility = 'visible';
-      popper.setAttribute('aria-hidden', 'false');
+      this.state.visible = true;
 
       // Wait for popper's position to update by deferring the callback, so
       // that the position update doesn't transition, only the normal animation
@@ -3552,11 +3569,9 @@ var Tippy = function () {
         // ~20ms can elapse before this defer callback is run, so the hide() method
         // may have been invoked -- check if the popper is still visible and cancel
         // this callback if not
-        if (!isVisible(popper)) return;
+        if (!_this.state.visible) return;
 
-        if (!options.followCursor) {
-          // The arrow is sometimes not in the correct position, so another update after mount is required
-          // May be a bug with Popper.js
+        if (!options.followCursor || browser.usingTouch) {
           _this.popperInstance.update();
           applyTransitionDuration([popper], options.updateDuration);
         }
@@ -3567,6 +3582,7 @@ var Tippy = function () {
         // Make content fade out a bit faster than the tooltip if `animateFill` is true
         if (backdrop) {
           content.style.opacity = 1;
+          backdrop.offsetHeight;
         }
 
         if (options.interactive) {
@@ -3580,7 +3596,10 @@ var Tippy = function () {
         setVisibilityState([tooltip, backdrop], 'visible');
 
         onTransitionEnd(_this, duration, function () {
-          if (isVisible(popper)) {
+          if (_this.state.visible) {
+            if (!options.updateDuration) {
+              tooltip.classList.add('tippy-notransition');
+            }
             options.interactive && popper.focus();
             options.onShown.call(popper);
           }
@@ -3598,7 +3617,7 @@ var Tippy = function () {
     value: function hide(duration) {
       var _this2 = this;
 
-      if (this.state.destroyed) return;
+      if (this.state.destroyed || !this.state.enabled) return;
 
       var popper = this.popper,
           reference = this.reference,
@@ -3613,12 +3632,16 @@ var Tippy = function () {
 
       duration = getDuration(duration !== undefined ? duration : options.duration, 1);
 
+      if (!options.updateDuration) {
+        tooltip.classList.remove('tippy-notransition');
+      }
+
       if (options.interactive) {
         reference.classList.remove('tippy-active');
       }
 
       popper.style.visibility = 'hidden';
-      popper.setAttribute('aria-hidden', 'true');
+      this.state.visible = false;
 
       applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration);
 
@@ -3633,15 +3656,10 @@ var Tippy = function () {
       }
 
       onTransitionEnd(this, duration, function () {
-        // `isVisible` is not completely reliable to determine if we shouldn't
-        // run the hidden callback, we need to check the computed opacity style.
-        // This prevents glitchy behavior of the transition when quickly showing
-        // and hiding a tooltip.
-        if (!isVisible(popper) && options.appendTo.contains(popper) && getComputedStyle(tooltip).opacity !== '1') {
-          document.removeEventListener('mousemove', _this2._followCursorListener);
+        if (!_this2.state.visible && getComputedStyle(tooltip).opacity !== '1') {
           _this2.popperInstance.disableEventListeners();
+          document.removeEventListener('mousemove', _this2._followCursorListener);
           options.appendTo.removeChild(popper);
-
           options.onHidden.call(popper);
         }
       });
@@ -3659,7 +3677,7 @@ var Tippy = function () {
       if (this.state.destroyed) return;
 
       // Ensure the popper is hidden
-      if (isVisible(this.popper)) {
+      if (this.state.visible) {
         this.hide(0);
       }
 
@@ -3791,6 +3809,8 @@ function hideAllPoppers(excludeTippy) {
 */
 function bindEventListeners() {
   var touchHandler = function touchHandler() {
+    if (browser.usingTouch) return;
+
     browser.usingTouch = true;
 
     if (browser.iOS) {
@@ -3800,6 +3820,8 @@ function bindEventListeners() {
     if (browser.dynamicInputDetection && window.performance) {
       document.addEventListener('mousemove', mousemoveHandler);
     }
+
+    browser.onUserInputChange('touch');
   };
 
   var mousemoveHandler = function () {
@@ -3815,6 +3837,7 @@ function bindEventListeners() {
         if (!browser.iOS) {
           document.body.classList.remove('tippy-touch');
         }
+        browser.onUserInputChange('mouse');
       }
 
       time = now;
@@ -3845,9 +3868,6 @@ function bindEventListeners() {
 
       if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1) return;
     }
-
-    // Don't needlessly run loop if no poppers are on the document
-    if (!document.querySelector(selectors.POPPER)) return;
 
     hideAllPoppers();
   };
