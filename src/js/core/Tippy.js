@@ -19,8 +19,23 @@ export default class Tippy {
     }
     this.state = {
       destroyed: false,
-      visible: false
+      visible: false,
+      enabled: true
     }
+  }
+  
+  /**
+  * Enables the tooltip to allow it to show or hide
+  */
+  enable() {
+    this.state.enabled = true
+  }
+  
+  /**
+  * Disables the tooltip from showing or hiding, but does not destroy it
+  */
+  disable() {
+    this.state.enabled = false
   }
   
   /**
@@ -28,7 +43,7 @@ export default class Tippy {
   * @param {Number} duration in milliseconds
   */
   show(duration) {
-    if (this.state.destroyed) return
+    if (this.state.destroyed || !this.state.enabled) return
 
     const { popper, reference, options } = this
     const { tooltip, backdrop, content } = getInnerElements(popper)
@@ -100,7 +115,7 @@ export default class Tippy {
   * @param {Number} duration in milliseconds
   */
   hide(duration) {
-    if (this.state.destroyed) return
+    if (this.state.destroyed || !this.state.enabled) return
 
     const { popper, reference, options } = this
     const { tooltip, backdrop, content } = getInnerElements(popper)
