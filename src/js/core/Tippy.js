@@ -83,9 +83,7 @@ export default class Tippy {
       // Re-apply transition durations
       applyTransitionDuration([tooltip, backdrop], duration)
 
-      // Make content fade out a bit faster than the tooltip if `animateFill` is true
       if (backdrop) {
-        content.style.opacity = 1
         getComputedStyle(backdrop)[prefix('transform')]
       }
 
@@ -138,11 +136,7 @@ export default class Tippy {
     popper.style.visibility = 'hidden'
     this.state.visible = false
 
-    applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration)
-
-    if (backdrop) {
-      content.style.opacity = 0
-    }
+    applyTransitionDuration([tooltip, backdrop], duration)
 
     setVisibilityState([tooltip, backdrop], 'hidden')
     
@@ -162,6 +156,8 @@ export default class Tippy {
     */
     defer(() => {
       onTransitionEnd(this, duration, () => {
+        if (this.state.visible || !options.appendTo.contains(popper)) return
+
         this.popperInstance.disableEventListeners()
         document.removeEventListener('mousemove', this._followCursorListener)
         options.appendTo.removeChild(popper)
