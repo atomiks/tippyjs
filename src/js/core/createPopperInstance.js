@@ -69,10 +69,6 @@ export default function createPopperInstance(tippy) {
       }
     },
     onUpdate() {
-      if (!tippy.state.visible && !sticky && getComputedStyle(tooltip).opacity === '0') {
-        return tippy.hide(0)
-      }
-      
       const styles = tooltip.style
       styles.top = ''
       styles.bottom = ''

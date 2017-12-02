@@ -6,6 +6,7 @@ import onTransitionEnd from './onTransitionEnd'
 
 import elementIsInViewport from '../utils/elementIsInViewport'
 import getInnerElements from '../utils/getInnerElements'
+import prefix from '../utils/prefix'
 import defer from '../utils/defer'
 import getDuration from '../utils/getDuration'
 import setVisibilityState from '../utils/setVisibilityState'
@@ -85,7 +86,7 @@ export default class Tippy {
       // Make content fade out a bit faster than the tooltip if `animateFill` is true
       if (backdrop) {
         content.style.opacity = 1
-        backdrop.offsetHeight
+        getComputedStyle(backdrop)[prefix('transform')]
       }
 
       if (options.interactive) {
@@ -99,13 +100,15 @@ export default class Tippy {
       setVisibilityState([tooltip, backdrop], 'visible')
       
       onTransitionEnd(this, duration, () => {
-        if (this.state.visible) {
-          if (!options.updateDuration) {
-            tooltip.classList.add('tippy-notransition')
-          }
-          options.interactive && popper.focus()
-          options.onShown.call(popper)
+        if (!options.updateDuration) {
+          tooltip.classList.add('tippy-notransition')
         }
+        
+        if (options.interactive) {
+          popper.focus()
+        }
+
+        options.onShown.call(popper)
       })
     })
   }
@@ -151,16 +154,19 @@ export default class Tippy {
       reference.focus()
     }
     
-    onTransitionEnd(this, duration, () => {
-      if (
-        !this.state.visible &&
-        getComputedStyle(tooltip).opacity !== '1'
-      ) {
+    /*
+    * This call is deferred because sometimes when the tooltip is still transitioning in but hide()
+    * is called before it finishes, the CSS transition won't reverse quickly enough, meaning
+    * the CSS transition will finish 1-2 frames later, and onHidden() will run since the JS set it
+    * more quickly. It should actually be onShown(). Seems to be something Chrome does, not Safari
+    */
+    defer(() => {
+      onTransitionEnd(this, duration, () => {
         this.popperInstance.disableEventListeners()
         document.removeEventListener('mousemove', this._followCursorListener)
         options.appendTo.removeChild(popper)
         options.onHidden.call(popper)
-      }
+      })
     })
   }
   
