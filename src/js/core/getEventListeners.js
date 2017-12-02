@@ -69,6 +69,8 @@ export default function getEventListeners(tippy, options) {
   }
 
   const handleTrigger = event => {
+    if (tippy.state.disabled) return
+    
     const shouldStopEvent = (
       browser.supportsTouch &&
       browser.usingTouch &&
