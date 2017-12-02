@@ -81,7 +81,7 @@ export default class Tippy {
       }
 
       // Re-apply transition durations
-      applyTransitionDuration([tooltip, backdrop], duration)
+      applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration)
 
       if (backdrop) {
         getComputedStyle(backdrop)[prefix('transform')]
@@ -136,7 +136,7 @@ export default class Tippy {
     popper.style.visibility = 'hidden'
     this.state.visible = false
 
-    applyTransitionDuration([tooltip, backdrop], duration)
+    applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration)
 
     setVisibilityState([tooltip, backdrop], 'hidden')
     

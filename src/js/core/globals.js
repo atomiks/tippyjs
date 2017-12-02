@@ -6,10 +6,10 @@ if (isBrowser) {
   browser.supported = 'requestAnimationFrame' in window
   browser.supportsTouch = 'ontouchstart' in window
   browser.usingTouch = false
-  browser.eventsBound = false
   browser.dynamicInputDetection = true
   browser.iOS = /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream
   browser.onUserInputChange = () => {}
+  browser._eventListenersBound = false
 }
 
 /**

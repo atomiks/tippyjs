@@ -13,9 +13,9 @@ import bindEventListeners from './core/bindEventListeners'
 * @return {Object}
 */
 function tippy(selector, options) {
-  if (browser.supported && !browser.eventsBound) {
+  if (browser.supported && !browser._eventListenersBound) {
     bindEventListeners()
-    browser.eventsBound = true
+    browser._eventListenersBound = true
   }
   
   if (isObjectLiteral(selector)) {
