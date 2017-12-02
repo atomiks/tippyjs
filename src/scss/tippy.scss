@@ -144,6 +144,21 @@
   &[data-animatefill] {
     overflow: hidden;
     background-color: transparent;
+    
+    &[data-state=visible] {
+      .tippy-content {
+        clip-path: ellipse(100% 100% at 50% 50%);
+      }
+    }
+    &[data-state=hidden] {
+      .tippy-content {
+        clip-path: ellipse(5% 20% at 50% 50%);
+      }
+    }
+    
+    .tippy-content {
+      transition: clip-path cubic-bezier(0.46, 0.1, 0.52, 0.98);
+    }
   }
 
   &[data-interactive] {
@@ -158,35 +173,62 @@
       transition-timing-function: ease;
     }
   }
+}
 
-  .tippy-arrow, .tippy-roundarrow {
-    position: absolute;
-    width: 0;
-    height: 0;
+.tippy-arrow, .tippy-roundarrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.tippy-backdrop {
+  position: absolute;
+  will-change: transform;
+  background-color: #333;
+  border-radius: 50%;
+  width: 26%;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  transition: all cubic-bezier(0.46, 0.1, 0.52, 0.98);
+  
+  &::after {
+    content: '';
+    float: left;
+    padding-top: 100%;
   }
+}
 
-  .tippy-backdrop {
-    position: absolute;
-    will-change: transform;
-    background-color: #333;
-    border-radius: 50%;
-    width: 26%;
-    left: 50%;
-    top: 50%;
-    z-index: -1;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    transition: all cubic-bezier(0.46, 0.1, 0.52, 0.98);
-    
-    &::after {
-      content: '';
-      float: left;
-      padding-top: 100%;
+.tippy-popper[x-placement=right] {
+  .tippy-tooltip[data-animatefill] {
+    &[data-state=visible] {
+      .tippy-content {
+        clip-path: ellipse(135% 100% at 0% 50%);
+      }
+    }
+    &[data-state=hidden] {
+      .tippy-content {
+        clip-path: ellipse(25% 100% at 0% 50%);
+      }
+    }
+  }
+}
+.tippy-popper[x-placement=left] {
+  .tippy-tooltip[data-animatefill] {
+    &[data-state=visible] {
+      .tippy-content {
+        clip-path: ellipse(135% 100% at 100% 50%);
+      }
+    }
+    &[data-state=hidden] {
+      .tippy-content {
+        clip-path: ellipse(25% 100% at 100% 50%);
+      }
     }
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 360px) {
   .tippy-popper {
     max-width: 96%;
     max-width: calc(100% - 20px);
