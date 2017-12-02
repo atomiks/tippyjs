@@ -14,34 +14,26 @@ import defer from '../utils/defer'
 * @param {Tippy} tippy
 */
 export default function mountPopper(tippy) {
-  const {
-    popper,
-    reference,
-    options: {
-      placement,
-      appendTo,
-      followCursor
-    }
-   } = tippy
-   
-   let { popperInstance } = tippy
+  const { popper, reference, options } = tippy
+  let { popperInstance } = tippy
 
   // Already on the DOM
-  if (appendTo.contains(popper)) return
-  appendTo.appendChild(popper)
+  if (options.appendTo.contains(popper)) return
+  options.appendTo.appendChild(popper)
   
   if (!popperInstance) {
     popperInstance = tippy.popperInstance = createPopperInstance(tippy)
   } else {
+    popper.style[prefix('transform')] = null
     popperInstance.update()
     
-    if (!followCursor || browser.usingTouch) {
+    if (!options.followCursor || browser.usingTouch) {
       popperInstance.enableEventListeners()
     }
   }
   
   // Since touch is determined dynamically, followCursor is set on mount
-  if (followCursor && !browser.usingTouch) {
+  if (options.followCursor && !browser.usingTouch) {
     document.addEventListener('mousemove', createFollowCursorListener(tippy))
     popperInstance.disableEventListeners()
   }
