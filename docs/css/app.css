@@ -39,6 +39,7 @@ code, pre {
   color: #2d61df;
   margin-bottom: 1rem;
   line-height: 1.7;
+  overflow-wrap: break-word;
 }
 
 pre {

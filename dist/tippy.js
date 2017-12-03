@@ -12,10 +12,10 @@ if (isBrowser) {
   browser.supported = 'requestAnimationFrame' in window;
   browser.supportsTouch = 'ontouchstart' in window;
   browser.usingTouch = false;
-  browser.eventsBound = false;
   browser.dynamicInputDetection = true;
   browser.iOS = /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream;
   browser.onUserInputChange = function () {};
+  browser._eventListenersBound = false;
 }
 
 /**
@@ -2940,10 +2940,6 @@ function createPopperInstance(tippy) {
       }
     },
     onUpdate: function onUpdate() {
-      if (!tippy.state.visible && !sticky && getComputedStyle(tooltip).opacity === '0') {
-        return tippy.hide(0);
-      }
-
       var styles = tooltip.style;
       styles.top = '';
       styles.bottom = '';
@@ -3176,6 +3172,8 @@ function getEventListeners(tippy, options) {
   };
 
   var handleTrigger = function handleTrigger(event) {
+    if (tippy.state.disabled) return;
+
     var shouldStopEvent = browser.supportsTouch && browser.usingTouch && (event.type === 'mouseenter' || event.type === 'focus');
 
     if (shouldStopEvent && touchHold) return;
@@ -3352,29 +3350,27 @@ function createFollowCursorListener(tippy) {
 function mountPopper(tippy) {
   var popper = tippy.popper,
       reference = tippy.reference,
-      _tippy$options = tippy.options,
-      placement = _tippy$options.placement,
-      appendTo = _tippy$options.appendTo,
-      followCursor = _tippy$options.followCursor;
+      options = tippy.options;
   var popperInstance = tippy.popperInstance;
 
   // Already on the DOM
 
-  if (appendTo.contains(popper)) return;
-  appendTo.appendChild(popper);
+  if (options.appendTo.contains(popper)) return;
+  options.appendTo.appendChild(popper);
 
   if (!popperInstance) {
     popperInstance = tippy.popperInstance = createPopperInstance(tippy);
   } else {
+    popper.style[prefix('transform')] = null;
     popperInstance.update();
 
-    if (!followCursor || browser.usingTouch) {
+    if (!options.followCursor || browser.usingTouch) {
       popperInstance.enableEventListeners();
     }
   }
 
   // Since touch is determined dynamically, followCursor is set on mount
-  if (followCursor && !browser.usingTouch) {
+  if (options.followCursor && !browser.usingTouch) {
     document.addEventListener('mousemove', createFollowCursorListener(tippy));
     popperInstance.disableEventListeners();
   }
@@ -3479,11 +3475,7 @@ function setVisibilityState(els, type) {
 function applyTransitionDuration(els, duration) {
   els.forEach(function (el) {
     if (!el) return;
-
-    var isContent = matches$1.call(el, selectors.CONTENT);
-    var _duration = isContent ? Math.round(duration / 1.3) : duration;
-
-    el.style[prefix('transitionDuration')] = _duration + 'ms';
+    el.style[prefix('transitionDuration')] = duration + 'ms';
   });
 }
 
@@ -3577,12 +3569,10 @@ var Tippy = function () {
         }
 
         // Re-apply transition durations
-        applyTransitionDuration([tooltip, backdrop], duration);
+        applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration);
 
-        // Make content fade out a bit faster than the tooltip if `animateFill` is true
         if (backdrop) {
-          content.style.opacity = 1;
-          backdrop.offsetHeight;
+          getComputedStyle(backdrop)[prefix('transform')];
         }
 
         if (options.interactive) {
@@ -3596,13 +3586,15 @@ var Tippy = function () {
         setVisibilityState([tooltip, backdrop], 'visible');
 
         onTransitionEnd(_this, duration, function () {
-          if (_this.state.visible) {
-            if (!options.updateDuration) {
-              tooltip.classList.add('tippy-notransition');
-            }
-            options.interactive && popper.focus();
-            options.onShown.call(popper);
+          if (!options.updateDuration) {
+            tooltip.classList.add('tippy-notransition');
           }
+
+          if (options.interactive) {
+            popper.focus();
+          }
+
+          options.onShown.call(popper);
         });
       });
     }
@@ -3645,23 +3637,27 @@ var Tippy = function () {
 
       applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration);
 
-      if (backdrop) {
-        content.style.opacity = 0;
-      }
-
       setVisibilityState([tooltip, backdrop], 'hidden');
 
       if (options.interactive && options.trigger.indexOf('click') > -1 && elementIsInViewport(reference)) {
         reference.focus();
       }
 
-      onTransitionEnd(this, duration, function () {
-        if (!_this2.state.visible && getComputedStyle(tooltip).opacity !== '1') {
+      /*
+      * This call is deferred because sometimes when the tooltip is still transitioning in but hide()
+      * is called before it finishes, the CSS transition won't reverse quickly enough, meaning
+      * the CSS transition will finish 1-2 frames later, and onHidden() will run since the JS set it
+      * more quickly. It should actually be onShown(). Seems to be something Chrome does, not Safari
+      */
+      defer(function () {
+        onTransitionEnd(_this2, duration, function () {
+          if (_this2.state.visible || !options.appendTo.contains(popper)) return;
+
           _this2.popperInstance.disableEventListeners();
           document.removeEventListener('mousemove', _this2._followCursorListener);
           options.appendTo.removeChild(popper);
           options.onHidden.call(popper);
-        }
+        });
       });
     }
 
@@ -3897,9 +3893,9 @@ function bindEventListeners() {
 * @return {Object}
 */
 function tippy$2(selector, options) {
-  if (browser.supported && !browser.eventsBound) {
+  if (browser.supported && !browser._eventListenersBound) {
     bindEventListeners();
-    browser.eventsBound = true;
+    browser._eventListenersBound = true;
   }
 
   if (isObjectLiteral(selector)) {

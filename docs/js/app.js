@@ -70,7 +70,7 @@ var template = $('#template')
 var htmlTip = tippy('#html-tippy', {
   html: template,
   onShown: function () {
-    if (window.innerWidth < 976) {
+    if (tippy.browser.usingTouch) {
       template.querySelector('.btn')._tippy.show()
     }
   },
@@ -99,7 +99,7 @@ var tip = tippy($ajax.btn, {
 
     tip.loading = true
 
-    fetch('https://unsplash.it/200/?random', { mode: 'cors' }).then(function(resp) {
+    fetch('https://unsplash.it/200/?random', { mode: 'cors' }).then(function (resp) {
       return resp.blob()
     }).then(function (blob) {
       var url = URL.createObjectURL(blob)

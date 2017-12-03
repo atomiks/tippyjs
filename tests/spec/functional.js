@@ -244,12 +244,12 @@ describe('core', () => {
       it('shows a tooltip when manually invoked', () => {
         const el = createVirtualElement()
 
-        const instance = tippy(el)
+        const tip = tippy(el)
         el._tippy.show()
 
-        expect(el._tippy.popper.style.visibility).toBe('visible')
+        expect(el._tippy.state.visible).toBe(true)
 
-        instance.destroyAll()
+        tip.destroyAll()
       })
 
       it('shows a tooltip when triggered by one of the events in the trigger string', () => {
@@ -301,7 +301,7 @@ describe('core', () => {
 
         el._tippy.hide()
 
-        expect(popper.style.visibility).toBe('hidden')
+        expect(el._tippy.state.visible).toBe(false)
 
         tip.destroyAll()
 
@@ -324,8 +324,6 @@ describe('core', () => {
         el._tippy.hide()
 
         expect(tooltip.style[prefix('transitionDuration')]).toBe('200ms')
-
-        tip.destroyAll()
       })
 
       it('applies the correct transition duration when duration is an array', () => {
@@ -538,11 +536,11 @@ describe('core', () => {
         el._tippy.show()
 
         el.dispatchEvent(new Event('mouseleave'))
-        expect(el._tippy.popper.style.visibility).toBe('hidden')
+        expect(el._tippy.state.visible).toBe(false)
         el._tippy.show()
 
         el.dispatchEvent(new Event('click'))
-        expect(el._tippy.popper.style.visibility).toBe('hidden')
+        expect(el._tippy.state.visible).toBe(false)
 
         tip.destroyAll()
       })
@@ -560,12 +558,13 @@ describe('core', () => {
           interactive: true,
           onShow() {
             setTimeout(() => {
-              done()
-              tip.destroyAll()
-            }, 20)
+              !el._tippy.state.destroyed && done()
+            }, 50)
           },
           onHide() {
             hideFired = true
+            tip.destroyAll()
+            done()
           }
         })
         el._tippy.show()
@@ -578,32 +577,27 @@ describe('core', () => {
     })
 
     describe('placement', () => {
-      it('is sets the correct `placement` setting in Popper.js config', () => {
-        const el = createVirtualElement()
-
+      it('sets the correct `placement` setting in Popper.js config', () => {
         ;['top', 'bottom', 'left', 'right'].forEach(placement => {
+          const el = createVirtualElement()
 
           const tip = tippy(el, {
-            placement
+            placement,
+            createPopperInstanceOnInit: true
           })
 
-          el._tippy.show()
-
-          expect(el._tippy.popper.getAttribute('x-placement')).toBe(placement)
+          expect(el._tippy.popperInstance.options.placement).toBe(placement)
 
           ;['-start', '-end'].forEach(shift => {
             const el = createVirtualElement()
 
             const tip = tippy(el, {
-              placement: placement + shift
+              placement: placement + shift,
+              createPopperInstanceOnInit: true
             })
 
-            el._tippy.show()
-            expect(el._tippy.popper.getAttribute('x-placement')).toBe(placement + shift)
-            tip.destroyAll()
+            expect(el._tippy.popperInstance.options.placement).toBe(placement + shift)
           })
-
-          tip.destroyAll()
         })
       })
     })
@@ -886,16 +880,6 @@ describe('core', () => {
 
     it('waits for transitions to complete', () => {
       expect(a).not.toBe(b)
-    })
-
-    it('is synchronous if duration is 0', () => {
-      let test = false
-      onTransitionEnd(el._tippy, 0, () => {
-        test = true
-      })
-      expect(test).toBe(true)
-      
-      tip.destroyAll()
     })
   })
 
