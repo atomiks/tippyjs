@@ -318,6 +318,10 @@ hr {
   font-size: 1.2rem;
   padding: 0.35rem 1rem;
   transition: all 0.2s ease;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 
 section .btn, section .btn:active {
