@@ -294,6 +294,11 @@ export default class Tippy {
         show(event)
       }
       
+      // Set initial positioning near cursor (document mousemove may not fire)
+      if (options.followCursor) {
+        this._followCursorListener(event)
+      }
+      
       // iOS prevents click events from firing
       if (shouldStopEvent && browser.iOS && reference.click) {
         reference.click()
