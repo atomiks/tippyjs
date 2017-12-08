@@ -76,8 +76,7 @@ export default class Tippy {
     popper.style.visibility = 'visible'
     this.state.visible = true
 
-    // Wait for popper's position to update by deferring the callback, so
-    // that the position update doesn't transition, only the normal animation
+    // Popper#update is async, requiring us to defer this code. Popper 2.0 will make it sync.
     defer(() => {
       // ~20ms can elapse before this defer callback is run, so the hide() method
       // may have been invoked -- check if the popper is still visible and cancel
@@ -285,7 +284,7 @@ export default class Tippy {
 
       if (shouldStopEvent && options.touchHold) return
       
-      this._lastTriggerEvent = event.type
+      this._lastTriggerEvent = event
       
       // Toggle show/hide when clicking click-triggered tooltips
       if (event.type === 'click' && options.hideOnClick !== 'persistent' && this.state.visible) {
@@ -432,9 +431,9 @@ export default class Tippy {
       this.popperInstance = this._createPopperInstance()
     } else {
       popper.style[prefix('transform')] = null
-      
+      this.popperInstance.update()
+
       if (!options.followCursor || browser.usingTouch) {
-        this.popperInstance.update()
         this.popperInstance.enableEventListeners()
       }
     }
@@ -446,6 +445,9 @@ export default class Tippy {
       }
       document.addEventListener('mousemove', this._followCursorListener)
       this.popperInstance.disableEventListeners()
+      defer(() => {
+        this._followCursorListener(this._lastTriggerEvent)
+      })
     }
   }
   
@@ -455,7 +457,7 @@ export default class Tippy {
   */
   _setFollowCursorListener() {
     this._followCursorListener = e => {
-      if (this._lastTriggerEvent === 'focus') return
+      if (this._lastTriggerEvent.type === 'focus') return
       
       const { popper, options: { offset } } = this
 
