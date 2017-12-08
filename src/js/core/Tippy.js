@@ -295,7 +295,7 @@ export default class Tippy {
       }
       
       // Set initial positioning near cursor (document mousemove may not fire)
-      if (options.followCursor) {
+      if (options.followCursor && !browser.usingTouch) {
         this._followCursorListener(event)
       }
       
