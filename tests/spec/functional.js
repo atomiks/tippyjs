@@ -14,13 +14,8 @@ import cursorIsOutsideInteractiveBorder from '../../src/js/utils/cursorIsOutside
 import transformNumbersBasedOnPlacement from '../../src/js/utils/transformNumbersBasedOnPlacement'
 import transformAxisBasedOnPlacement from '../../src/js/utils/transformAxisBasedOnPlacement'
 
-import createFollowCursorListener from '../../src/js/core/createFollowCursorListener'
 import createTrigger from '../../src/js/core/createTrigger'
-import onTransitionEnd from '../../src/js/core/onTransitionEnd'
-import mountPopper from '../../src/js/core/mountPopper'
-import makeSticky from '../../src/js/core/makeSticky'
 import createPopperElement from '../../src/js/core/createPopperElement'
-import createPopperInstance from '../../src/js/core/createPopperInstance'
 import getArrayOfElements from '../../src/js/core/getArrayOfElements'
 
 import tippy from '../../src/js/tippy.js'
@@ -643,12 +638,12 @@ describe('core', () => {
     })
   })
 
-  describe('createPopperInstance', () => {
+  describe('_createPopperInstance', () => {
     it('returns a new Popper instance', () => {
       const el = createVirtualElement()
 
       const tip = tippy(el)
-      const popperInstance = createPopperInstance(tip.tooltips[0])
+      const popperInstance = el._tippy._createPopperInstance()
 
       expect(typeof popperInstance.update).toBe('function')
 
@@ -843,7 +838,7 @@ describe('core', () => {
     })
   })
 
-  describe('onTransitionEnd', () => {
+  describe('_onTransitionEnd', () => {
     let a = false,
     b = false,
     c = false
@@ -870,7 +865,7 @@ describe('core', () => {
         setTimeout(done, DURATION + 100)
       }
 
-      onTransitionEnd(el._tippy, DURATION, () => {
+      el._tippy._onTransitionEnd(DURATION, () => {
         a = true
         if (firstItDone) {
           c = true
@@ -880,78 +875,6 @@ describe('core', () => {
 
     it('waits for transitions to complete', () => {
       expect(a).not.toBe(b)
-    })
-  })
-
-  describe('mountPopper', () => {
-    it('appends the popper to the DOM', () => {
-      const el = createVirtualElement()
-      const tip = tippy(el)
-      mountPopper(el._tippy)
-      expect(document.querySelector(selectors.POPPER)).not.toBeNull()
-      tip.tooltips[0].popper.style.visibility = 'visible'
-      tip.destroyAll()
-    })
-
-    it('creates a single popper instance on first mount', () => {
-      const el = createVirtualElement()
-
-      const tip = tippy(el)
-      const tippyInstance = el._tippy
-
-      mountPopper(tippyInstance)
-
-      const cache = tippyInstance.popperInstance
-
-      mountPopper(tippyInstance)
-
-      expect(tippyInstance.popperInstance).toBeDefined()
-      expect(tippyInstance.popperInstance).toBe(cache)
-
-      tippyInstance.popper.style.visibility = 'visible'
-      tip.destroyAll()
-    })
-
-    it('enables event listeners if `followCursor` is false or browser.usingTouch is true', () => {
-      const el = createVirtualElement()
-
-      let tip = tippy(el)
-
-      mountPopper(el._tippy)
-
-      expect(el._tippy.popperInstance.state.eventsEnabled).toBe(true)
-
-      el._tippy.popper.style.visibility = 'visible'
-      tip.destroyAll()
-
-      browser.usingTouch = true
-
-      tip = tippy(el, {
-        followCursor: true
-      })
-
-      mountPopper(el._tippy)
-
-      expect(el._tippy.popperInstance.state.eventsEnabled).toBe(true)
-
-      el._tippy.popper.style.visibility = 'visible'
-      tip.destroyAll()
-      browser.usingTouch = false
-    })
-
-    it('disables event listeners if `followCursor` is true', () => {
-      const el = createVirtualElement()
-
-      const tip = tippy(el, {
-        followCursor: true
-      })
-
-      mountPopper(el._tippy)
-
-      expect(el._tippy.popperInstance.state.eventsEnabled).toBe(false)
-
-      el._tippy.popper.style.visibility = 'visible'
-      tip.destroyAll()
     })
   })
 })

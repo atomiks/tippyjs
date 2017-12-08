@@ -1,13 +1,10 @@
 import getIndividualOptions from './getIndividualOptions'
 import createPopperElement  from './createPopperElement'
-import createPopperInstance  from './createPopperInstance'
 import createTrigger from './createTrigger'
-import getEventListeners from './getEventListeners'
 import evaluateOptions from './evaluateOptions'
 
 import getInnerElements from '../utils/getInnerElements'
 import removeTitle from '../utils/removeTitle'
-import addMutationObserver from '../utils/addMutationObserver'
 
 import { defaults, browser } from './globals'
 
@@ -58,18 +55,17 @@ export default function createTooltips(els, config) {
     })
     
     tippy.popperInstance = createPopperInstanceOnInit
-      ? createPopperInstance(tippy)
+      ? tippy._createPopperInstance()
       : null
 
-    const listeners = getEventListeners(tippy, options)
+    const listeners = tippy._getEventListeners()
     tippy.listeners = trigger.trim().split(' ').reduce((acc, eventType) => {
       return acc.concat(createTrigger(eventType, reference, listeners, touchHold))
     }, [])
 
     // Update tooltip content whenever the title attribute on the reference changes
     if (dynamicTitle) {
-      addMutationObserver({
-        tippy,
+      tippy._addMutationObserver({
         target: reference,
         callback() {
           const { content } = getInnerElements(popper)
