@@ -294,11 +294,6 @@ export default class Tippy {
         show(event)
       }
       
-      // Set initial positioning near cursor (document mousemove may not fire)
-      if (options.followCursor && !browser.usingTouch) {
-        this._followCursorListener(event)
-      }
-      
       // iOS prevents click events from firing
       if (shouldStopEvent && browser.iOS && reference.click) {
         reference.click()
@@ -437,9 +432,9 @@ export default class Tippy {
       this.popperInstance = this._createPopperInstance()
     } else {
       popper.style[prefix('transform')] = null
-      this.popperInstance.update()
       
       if (!options.followCursor || browser.usingTouch) {
+        this.popperInstance.update()
         this.popperInstance.enableEventListeners()
       }
     }
