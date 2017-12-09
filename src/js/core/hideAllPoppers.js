@@ -1,12 +1,12 @@
 import { selectors } from './globals'
 
 /**
-* Hides all poppers
-* @param {Tippy} excludeTippy - tippy to exclude if needed
-*/
+ * Hides all poppers
+ * @param {Tippy} excludeTippy - tippy to exclude if needed
+ */
 export default function hideAllPoppers(excludeTippy) {
   const poppers = [].slice.call(document.querySelectorAll(selectors.POPPER))
-  
+
   poppers.forEach(popper => {
     const tippy = popper._reference._tippy
     const { options } = tippy

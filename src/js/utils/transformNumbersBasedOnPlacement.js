@@ -1,14 +1,14 @@
 /**
-* Transforms the `arrowTransform` numbers based on the placement axis
-* @param {String} type 'scale' or 'translate'
-* @param {Number[]} numbers
-* @param {Boolean} isVertical
-* @param {Boolean} isReverse
-* @return {String}
-*/
+ * Transforms the `arrowTransform` numbers based on the placement axis
+ * @param {String} type 'scale' or 'translate'
+ * @param {Number[]} numbers
+ * @param {Boolean} isVertical
+ * @param {Boolean} isReverse
+ * @return {String}
+ */
 export default function transformNumbersBasedOnPlacementAxis(type, numbers, isVertical, isReverse) {
   if (!numbers.length) return ''
-  
+
   const transforms = {
     scale: (() => {
       if (numbers.length === 1) {
@@ -31,8 +31,8 @@ export default function transformNumbersBasedOnPlacementAxis(type, numbers, isVe
             : `${numbers[1]}px, ${numbers[0]}px`
         }
       }
-    })()
+    })(),
   }
-  
+
   return transforms[type]
 }

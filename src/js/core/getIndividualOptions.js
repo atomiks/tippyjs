@@ -1,14 +1,14 @@
 import { defaultsKeys } from './globals'
 
 /**
-* Returns an object of settings to override global settings
-* @param {Element} reference
-* @param {Object} instanceOptions
-* @return {Object} - individual options
-*/
+ * Returns an object of settings to override global settings
+ * @param {Element} reference
+ * @param {Object} instanceOptions
+ * @return {Object} - individual options
+ */
 export default function getIndividualOptions(reference, instanceOptions) {
   const options = defaultsKeys.reduce((acc, key) => {
-    let val = reference.getAttribute(`data-tippy-${ key.toLowerCase() }`) || instanceOptions[key]
+    let val = reference.getAttribute(`data-tippy-${key.toLowerCase()}`) || instanceOptions[key]
 
     // Convert strings to booleans
     if (val === 'false') val = false

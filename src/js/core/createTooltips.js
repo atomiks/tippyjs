@@ -1,5 +1,5 @@
 import getIndividualOptions from './getIndividualOptions'
-import createPopperElement  from './createPopperElement'
+import createPopperElement from './createPopperElement'
 import createTrigger from './createTrigger'
 import evaluateOptions from './evaluateOptions'
 
@@ -13,28 +13,21 @@ import { Tippy, _getEventListeners, _createPopperInstance, _addMutationObserver 
 let idCounter = 1
 
 /**
-* Creates tooltips for each reference element
-* @param {Element[]} els
-* @param {Object} config
-* @return {Tippy[]} Array of Tippy instances
-*/
+ * Creates tooltips for each reference element
+ * @param {Element[]} els
+ * @param {Object} config
+ * @return {Tippy[]} Array of Tippy instances
+ */
 export default function createTooltips(els, config) {
   return els.reduce((acc, reference) => {
     const id = idCounter
-    
-    const options = evaluateOptions(reference,
-      config.performance
-        ? config
-        : getIndividualOptions(reference, config)
+
+    const options = evaluateOptions(
+      reference,
+      config.performance ? config : getIndividualOptions(reference, config)
     )
 
-    const {
-      html,
-      trigger,
-      touchHold,
-      dynamicTitle,
-      createPopperInstanceOnInit
-    } = options
+    const { html, trigger, touchHold, dynamicTitle, createPopperInstanceOnInit } = options
 
     const title = reference.getAttribute('title')
     if (!title && !html) return acc
@@ -43,24 +36,25 @@ export default function createTooltips(els, config) {
     reference.setAttribute('aria-describedby', `tippy-${id}`)
 
     removeTitle(reference)
-    
+
     const popper = createPopperElement(id, title, options)
-    
+
     const tippy = new Tippy({
       id,
       reference,
       popper,
-      options
+      options,
     })
-    
-    tippy.popperInstance = createPopperInstanceOnInit
-      ? _createPopperInstance.call(tippy)
-      : null
+
+    tippy.popperInstance = createPopperInstanceOnInit ? _createPopperInstance.call(tippy) : null
 
     const listeners = _getEventListeners.call(tippy)
-    tippy.listeners = trigger.trim().split(' ').reduce((acc, eventType) => {
-      return acc.concat(createTrigger(eventType, reference, listeners, touchHold))
-    }, [])
+    tippy.listeners = trigger
+      .trim()
+      .split(' ')
+      .reduce((acc, eventType) => {
+        return acc.concat(createTrigger(eventType, reference, listeners, touchHold))
+      }, [])
 
     // Update tooltip content whenever the title attribute on the reference changes
     if (dynamicTitle) {
@@ -75,11 +69,11 @@ export default function createTooltips(els, config) {
           }
         },
         options: {
-          attributes: true
-        }
+          attributes: true,
+        },
       })
     }
-    
+
     // Shortcuts
     reference._tippy = tippy
     popper._reference = reference

@@ -21,42 +21,42 @@ class Tippy {
     for (const key in config) {
       this[key] = config[key]
     }
-    
+
     this.state = {
       destroyed: false,
       visible: false,
-      enabled: true
+      enabled: true,
     }
 
     this._internal = {
-      mutationObservers: []
+      mutationObservers: [],
     }
   }
-  
+
   /**
-  * Enables the tooltip to allow it to show or hide
-  * @memberof Tippy
-  * @public
-  */
+   * Enables the tooltip to allow it to show or hide
+   * @memberof Tippy
+   * @public
+   */
   enable() {
     this.state.enabled = true
   }
-  
+
   /**
-  * Disables the tooltip from showing or hiding, but does not destroy it
-  * @memberof Tippy
-  * @public
-  */
+   * Disables the tooltip from showing or hiding, but does not destroy it
+   * @memberof Tippy
+   * @public
+   */
   disable() {
     this.state.enabled = false
   }
-  
+
   /**
-  * Shows the tooltip
-  * @param {Number} duration in milliseconds
-  * @memberof Tippy
-  * @public
-  */
+   * Shows the tooltip
+   * @param {Number} duration in milliseconds
+   * @memberof Tippy
+   * @public
+   */
   show(duration) {
     if (this.state.destroyed || !this.state.enabled) return
 
@@ -70,9 +70,9 @@ class Tippy {
     }
 
     options.onShow.call(popper)
-    
+
     duration = getDuration(duration !== undefined ? duration : options.duration, 0)
-    
+
     // Prevent a transition when popper changes position
     applyTransitionDuration([popper, tooltip, backdrop], 0)
 
@@ -103,18 +103,18 @@ class Tippy {
       if (options.interactive) {
         reference.classList.add('tippy-active')
       }
-      
+
       if (options.sticky) {
         _makeSticky.call(this)
       }
 
       setVisibilityState([tooltip, backdrop], 'visible')
-      
+
       _onTransitionEnd.call(this, duration, () => {
         if (!options.updateDuration) {
           tooltip.classList.add('tippy-notransition')
         }
-        
+
         if (options.interactive) {
           popper.focus()
         }
@@ -123,13 +123,13 @@ class Tippy {
       })
     })
   }
-  
+
   /**
-  * Hides the tooltip
-  * @param {Number} duration in milliseconds
-  * @memberof Tippy
-  * @public
-  */
+   * Hides the tooltip
+   * @param {Number} duration in milliseconds
+   * @memberof Tippy
+   * @public
+   */
   hide(duration) {
     if (this.state.destroyed || !this.state.enabled) return
 
@@ -139,11 +139,11 @@ class Tippy {
     options.onHide.call(popper)
 
     duration = getDuration(duration !== undefined ? duration : options.duration, 1)
-    
+
     if (!options.updateDuration) {
       tooltip.classList.remove('tippy-notransition')
     }
-    
+
     if (options.interactive) {
       reference.classList.remove('tippy-active')
     }
@@ -154,7 +154,7 @@ class Tippy {
     applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration)
 
     setVisibilityState([tooltip, backdrop], 'hidden')
-    
+
     if (
       options.interactive &&
       options.trigger.indexOf('click') > -1 &&
@@ -162,7 +162,7 @@ class Tippy {
     ) {
       reference.focus()
     }
-    
+
     /*
     * This call is deferred because sometimes when the tooltip is still transitioning in but hide()
     * is called before it finishes, the CSS transition won't reverse quickly enough, meaning
@@ -180,12 +180,12 @@ class Tippy {
       })
     })
   }
-  
+
   /**
-  * Destroys the tooltip
-  * @memberof Tippy
-  * @public
-  */
+   * Destroys the tooltip
+   * @memberof Tippy
+   * @public
+   */
   destroy() {
     if (this.state.destroyed) return
 
@@ -202,12 +202,7 @@ class Tippy {
     this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'))
 
     delete this.reference._tippy
-
-    ;[
-      'data-original-title',
-      'data-tippy',
-      'aria-describedby'
-    ].forEach(attr => {
+    ;['data-original-title', 'data-tippy', 'aria-describedby'].forEach(attr => {
       this.reference.removeAttribute(attr)
     })
 
@@ -218,7 +213,7 @@ class Tippy {
     this._internal.mutationObservers.forEach(observer => {
       observer.disconnect()
     })
-    
+
     this.state.destroyed = true
   }
 }
@@ -232,26 +227,24 @@ class Tippy {
  */
 
 /**
-* Method used by event listeners to invoke the show method, taking into account delays and
-* the `wait` option
-* @param {Event} event
-* @memberof Tippy
-* @private
-*/
+ * Method used by event listeners to invoke the show method, taking into account delays and
+ * the `wait` option
+ * @param {Event} event
+ * @memberof Tippy
+ * @private
+ */
 function _enter(event) {
   _clearDelayTimeouts.call(this)
 
   if (this.state.visible) return
-  
+
   if (this.options.wait) {
     this.options.wait.call(this.popper, this.show.bind(this), event)
     return
   }
 
-  const delay = Array.isArray(this.options.delay)
-   ? this.options.delay[0]
-   : this.options.delay
-   
+  const delay = Array.isArray(this.options.delay) ? this.options.delay[0] : this.options.delay
+
   if (delay) {
     this._internal.showTimeout = setTimeout(() => {
       this.show()
@@ -262,19 +255,17 @@ function _enter(event) {
 }
 
 /**
-* Method used by event listeners to invoke the hide method, taking into account delays
-* @memberof Tippy
-* @private
-*/
+ * Method used by event listeners to invoke the hide method, taking into account delays
+ * @memberof Tippy
+ * @private
+ */
 function _leave() {
   _clearDelayTimeouts.call(this)
-  
+
   if (!this.state.visible) return
 
-  const delay = Array.isArray(this.options.delay)
-   ? this.options.delay[1]
-   : this.options.delay
-  
+  const delay = Array.isArray(this.options.delay) ? this.options.delay[1] : this.options.delay
+
   if (delay) {
     this._internal.hideTimeout = setTimeout(() => {
       if (!this.state.visible) return
@@ -286,103 +277,98 @@ function _leave() {
 }
 
 /**
-* Returns relevant listeners for the instance
-* @return {Object} of listeners
-* @memberof Tippy
-* @private
-*/
+ * Returns relevant listeners for the instance
+ * @return {Object} of listeners
+ * @memberof Tippy
+ * @private
+ */
 function _getEventListeners() {
- const handleTrigger = event => {
-   if (this.state.disabled) return
-   
-   const shouldStopEvent = (
-     browser.supportsTouch &&
-     browser.usingTouch &&
-     (
-       event.type === 'mouseenter' ||
-       event.type === 'focus'
-     )
-   )
+  const handleTrigger = event => {
+    if (this.state.disabled) return
 
-   if (shouldStopEvent && this.options.touchHold) return
-   
-   this._internal.lastTriggerEvent = event
-   
-   // Toggle show/hide when clicking click-triggered tooltips
-   if (event.type === 'click' && this.options.hideOnClick !== 'persistent' && this.state.visible) {
-     _leave.call(this)
-   } else {
-     _enter.call(this, event)
-   }
-   
-   // iOS prevents click events from firing
-   if (shouldStopEvent && browser.iOS && this.reference.click) {
-     this.reference.click()
-   }
- }
+    const shouldStopEvent =
+      browser.supportsTouch &&
+      browser.usingTouch &&
+      (event.type === 'mouseenter' || event.type === 'focus')
 
- const handleMouseleave = event => {
-   if (
-     event.type === 'mouseleave' &&
-     browser.supportsTouch &&
-     browser.usingTouch &&
-     this.options.touchHold
-   ) return
+    if (shouldStopEvent && this.options.touchHold) return
 
-   if (this.options.interactive) {
-     const hide = _leave.bind(this)
-     
-     // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
-     const handleMousemove = event => {
-       const referenceCursorIsOver = closest(event.target, selectors.REFERENCE)
-       const cursorIsOverPopper = closest(event.target, selectors.POPPER) === this.popper
-       const cursorIsOverReference = referenceCursorIsOver === this.reference
+    this._internal.lastTriggerEvent = event
 
-       if (cursorIsOverPopper || cursorIsOverReference) return
+    // Toggle show/hide when clicking click-triggered tooltips
+    if (event.type === 'click' && this.options.hideOnClick !== 'persistent' && this.state.visible) {
+      _leave.call(this)
+    } else {
+      _enter.call(this, event)
+    }
 
-       if (cursorIsOutsideInteractiveBorder(event, this.popper, this.options)) {
-         document.body.removeEventListener('mouseleave', hide)
-         document.removeEventListener('mousemove', handleMousemove)
-         _leave.call(this)
-       }
-     }
-     document.body.addEventListener('mouseleave', hide)
-     document.addEventListener('mousemove', handleMousemove)
-     return
-   }
+    // iOS prevents click events from firing
+    if (shouldStopEvent && browser.iOS && this.reference.click) {
+      this.reference.click()
+    }
+  }
 
-   _leave.call(this)
- }
+  const handleMouseleave = event => {
+    if (
+      event.type === 'mouseleave' &&
+      browser.supportsTouch &&
+      browser.usingTouch &&
+      this.options.touchHold
+    )
+      return
 
- const handleBlur = event => {
-   if (!event.relatedTarget || browser.usingTouch) return
-   if (closest(event.relatedTarget, selectors.POPPER)) return
-   _leave.call(this)
- }
+    if (this.options.interactive) {
+      const hide = _leave.bind(this)
 
- return {
-   handleTrigger,
-   handleMouseleave,
-   handleBlur
- }
+      // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
+      const handleMousemove = event => {
+        const referenceCursorIsOver = closest(event.target, selectors.REFERENCE)
+        const cursorIsOverPopper = closest(event.target, selectors.POPPER) === this.popper
+        const cursorIsOverReference = referenceCursorIsOver === this.reference
+
+        if (cursorIsOverPopper || cursorIsOverReference) return
+
+        if (cursorIsOutsideInteractiveBorder(event, this.popper, this.options)) {
+          document.body.removeEventListener('mouseleave', hide)
+          document.removeEventListener('mousemove', handleMousemove)
+          _leave.call(this)
+        }
+      }
+      document.body.addEventListener('mouseleave', hide)
+      document.addEventListener('mousemove', handleMousemove)
+      return
+    }
+
+    _leave.call(this)
+  }
+
+  const handleBlur = event => {
+    if (!event.relatedTarget || browser.usingTouch) return
+    if (closest(event.relatedTarget, selectors.POPPER)) return
+    _leave.call(this)
+  }
+
+  return {
+    handleTrigger,
+    handleMouseleave,
+    handleBlur,
+  }
 }
 
 /**
-* Creates and returns a new popper instance
-* @return {Popper}
-* @memberof Tippy
-* @private
-*/
+ * Creates and returns a new popper instance
+ * @return {Popper}
+ * @memberof Tippy
+ * @private
+ */
 function _createPopperInstance() {
   const { popper, reference, options } = this
   const { tooltip } = getInnerElements(popper)
   const popperOptions = options.popperOptions
-  
-  const arrowSelector = options.arrowType === 'round'
-    ? selectors.ROUND_ARROW
-    : selectors.ARROW
+
+  const arrowSelector = options.arrowType === 'round' ? selectors.ROUND_ARROW : selectors.ARROW
   const arrow = tooltip.querySelector(arrowSelector)
-    
+
   const config = {
     placement: options.placement,
     ...(popperOptions || {}),
@@ -390,22 +376,22 @@ function _createPopperInstance() {
       ...(popperOptions ? popperOptions.modifiers : {}),
       arrow: {
         element: arrowSelector,
-        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {})
+        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {}),
       },
       flip: {
         enabled: options.flip,
         padding: options.distance + 5 /* 5px from viewport boundary */,
         behavior: options.flipBehavior,
-        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {})
+        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {}),
       },
       offset: {
         offset: options.offset,
-        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
-      }
+        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {}),
+      },
     },
     onCreate() {
       tooltip.style[getPopperPlacement(popper)] = getOffsetDistanceInPx(options.distance)
-      
+
       if (arrow && options.arrowTransform) {
         computeArrowTransform(popper, arrow, options.arrowTransform)
       }
@@ -417,13 +403,13 @@ function _createPopperInstance() {
       styles.left = ''
       styles.right = ''
       styles[getPopperPlacement(popper)] = getOffsetDistanceInPx(options.distance)
-      
+
       if (arrow && options.arrowTransform) {
         computeArrowTransform(popper, arrow, options.arrowTransform)
       }
-    }
+    },
   }
-  
+
   _addMutationObserver.call(this, {
     target: popper,
     callback: () => {
@@ -437,24 +423,24 @@ function _createPopperInstance() {
     options: {
       childList: true,
       subtree: true,
-      characterData: true
-    }
+      characterData: true,
+    },
   })
 
   return new Popper(reference, popper, config)
 }
 
 /**
-* Appends the popper element to the DOM
-* @memberof Tippy
-* @private
-*/
+ * Appends the popper element to the DOM
+ * @memberof Tippy
+ * @private
+ */
 function _mount() {
   const { popper } = this
-  
+
   if (this.options.appendTo.contains(popper)) return
   this.options.appendTo.appendChild(popper)
-  
+
   if (!this.popperInstance) {
     this.popperInstance = _createPopperInstance.call(this)
   } else {
@@ -465,7 +451,7 @@ function _mount() {
       this.popperInstance.enableEventListeners()
     }
   }
-  
+
   // Since touch is determined dynamically, followCursor is set on mount
   if (this.options.followCursor && !browser.usingTouch) {
     if (!this._internal.followCursorListener) {
@@ -480,25 +466,25 @@ function _mount() {
 }
 
 /**
-* Clears the show and hide delay timeouts
-* @memberof Tippy
-* @private
-*/
+ * Clears the show and hide delay timeouts
+ * @memberof Tippy
+ * @private
+ */
 function _clearDelayTimeouts() {
   clearTimeout(this._internal.showTimeout)
   clearTimeout(this._internal.hideTimeout)
 }
 
 /**
-* Sets a mousemove event listener function for `followCursor` option
-* @return {Function} the event listener
-* @memberof Tippy
-* @private
-*/
+ * Sets a mousemove event listener function for `followCursor` option
+ * @return {Function} the event listener
+ * @memberof Tippy
+ * @private
+ */
 function _setFollowCursorListener() {
   this._internal.followCursorListener = e => {
     if (this._internal.lastTriggerEvent.type === 'focus') return
-    
+
     const { popper, options: { offset } } = this
 
     const placement = getPopperPlacement(popper)
@@ -549,13 +535,13 @@ function _setFollowCursorListener() {
 }
 
 /**
-* Updates the popper's position on each animation frame
-* @memberof Tippy
-* @private
-*/
+ * Updates the popper's position on each animation frame
+ * @memberof Tippy
+ * @private
+ */
 function _makeSticky() {
   const applyTransitionDuration = () => {
-    this.popper.style[prefix('transitionDuration')] = `${ this.options.updateDuration }ms`
+    this.popper.style[prefix('transitionDuration')] = `${this.options.updateDuration}ms`
   }
 
   const removeTransitionDuration = () => {
@@ -568,7 +554,7 @@ function _makeSticky() {
     }
 
     applyTransitionDuration()
-    
+
     if (this.state.visible) {
       requestAnimationFrame(updatePosition)
     } else {
@@ -581,26 +567,26 @@ function _makeSticky() {
 }
 
 /**
-* Adds a mutation observer to an element and stores it in the instance
-* @param {Object}
-* @memberof Tippy
-* @private
-*/
+ * Adds a mutation observer to an element and stores it in the instance
+ * @param {Object}
+ * @memberof Tippy
+ * @private
+ */
 function _addMutationObserver({ target, callback, options }) {
   if (!window.MutationObserver) return
-  
+
   const observer = new MutationObserver(callback)
   observer.observe(target, options)
   this._internal.mutationObservers.push(observer)
 }
 
 /**
-* Fires the callback functions once the CSS transition ends for `show` and `hide` methods
-* @param {Number} duration
-* @param {Function} callback - callback function to fire once transition completes
-* @memberof Tippy
-* @private
-*/
+ * Fires the callback functions once the CSS transition ends for `show` and `hide` methods
+ * @param {Number} duration
+ * @param {Function} callback - callback function to fire once transition completes
+ * @memberof Tippy
+ * @private
+ */
 function _onTransitionEnd(duration, callback) {
   // Make callback synchronous if duration is 0
   if (!duration) {
@@ -608,7 +594,7 @@ function _onTransitionEnd(duration, callback) {
   }
 
   const { tooltip } = getInnerElements(this.popper)
-  
+
   const toggleListeners = (action, listener) => {
     if (!listener) return
     tooltip[action + 'EventListener'](
@@ -616,17 +602,17 @@ function _onTransitionEnd(duration, callback) {
       listener
     )
   }
-  
+
   const listener = e => {
     if (e.target === tooltip) {
       toggleListeners('remove', listener)
       callback()
     }
   }
-  
+
   toggleListeners('remove', this._internal.transitionendListener)
   toggleListeners('add', listener)
-  
+
   this._internal.transitionendListener = listener
 }
 
@@ -641,5 +627,5 @@ export {
   _onTransitionEnd,
   _makeSticky,
   _setFollowCursorListener,
-  _clearDelayTimeouts
+  _clearDelayTimeouts,
 }

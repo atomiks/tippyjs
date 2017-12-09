@@ -13,8 +13,8 @@ if (isBrowser) {
 }
 
 /**
-* Selector constants used for grabbing elements
-*/
+ * Selector constants used for grabbing elements
+ */
 export const selectors = {
   POPPER: '.tippy-popper',
   TOOLTIP: '.tippy-tooltip',
@@ -22,12 +22,12 @@ export const selectors = {
   BACKDROP: '.tippy-backdrop',
   ARROW: '.tippy-arrow',
   ROUND_ARROW: '.tippy-roundarrow',
-  REFERENCE: '[data-tippy]'
+  REFERENCE: '[data-tippy]',
 }
 
 /**
-* The default options applied to each instance
-*/
+ * The default options applied to each instance
+ */
 export const defaults = {
   placement: 'top',
   trigger: 'mouseenter focus',
@@ -64,11 +64,11 @@ export const defaults = {
   onShow() {},
   onShown() {},
   onHide() {},
-  onHidden() {}
+  onHidden() {},
 }
 
 /**
-* The keys of the defaults object for reducing down into a new object
-* Used in `getIndividualOptions()`
-*/
+ * The keys of the defaults object for reducing down into a new object
+ * Used in `getIndividualOptions()`
+ */
 export const defaultsKeys = browser.supported && Object.keys(defaults)

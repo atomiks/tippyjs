@@ -1,12 +1,12 @@
 import prefix from '../utils/prefix'
 
 /**
-* Creates a popper element then returns it
-* @param {Number} id - the popper id
-* @param {String} title - the tooltip's `title` attribute
-* @param {Object} options - individual options
-* @return {Element} - the popper element
-*/
+ * Creates a popper element then returns it
+ * @param {Number} id - the popper id
+ * @param {String} title - the tooltip's `title` attribute
+ * @param {Object} options - individual options
+ * @return {Element} - the popper element
+ */
 export default function createPopperElement(id, title, options) {
   const {
     placement,
@@ -22,7 +22,7 @@ export default function createPopperElement(id, title, options) {
     html,
     zIndex,
     interactive,
-    maxWidth
+    maxWidth,
   } = options
 
   const popper = document.createElement('div')
@@ -57,7 +57,7 @@ export default function createPopperElement(id, title, options) {
     } else {
       arrow.classList.add('tippy-arrow')
     }
-    
+
     tooltip.appendChild(arrow)
   }
 
@@ -99,7 +99,7 @@ export default function createPopperElement(id, title, options) {
   } else {
     content.innerHTML = title
   }
-  
+
   tooltip.appendChild(content)
   popper.appendChild(tooltip)
 

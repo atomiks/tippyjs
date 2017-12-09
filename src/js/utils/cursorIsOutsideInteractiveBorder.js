@@ -1,12 +1,12 @@
 import getPopperPlacement from '../utils/getPopperPlacement'
 
 /**
-* Determines if the mouse's cursor is outside the interactive border
-* @param {MouseEvent} event
-* @param {Element} popper
-* @param {Object} options
-* @return {Boolean}
-*/
+ * Determines if the mouse's cursor is outside the interactive border
+ * @param {MouseEvent} event
+ * @param {Element} popper
+ * @param {Object} options
+ * @return {Boolean}
+ */
 export default function cursorIsOutsideInteractiveBorder(event, popper, options) {
   if (!popper.getAttribute('x-placement')) return true
 
@@ -21,7 +21,7 @@ export default function cursorIsOutsideInteractiveBorder(event, popper, options)
     top: rect.top - y > interactiveBorder,
     bottom: y - rect.bottom > interactiveBorder,
     left: rect.left - x > interactiveBorder,
-    right: x - rect.right > interactiveBorder
+    right: x - rect.right > interactiveBorder,
   }
 
   switch (placement) {

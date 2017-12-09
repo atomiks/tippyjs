@@ -1,8 +1,8 @@
 /**
-* Returns the supported prefixed property - only `webkit` is needed, `moz`, `ms` and `o` are obsolete
-* @param {String} property
-* @return {String} - browser supported prefixed property
-*/
+ * Returns the supported prefixed property - only `webkit` is needed, `moz`, `ms` and `o` are obsolete
+ * @param {String} property
+ * @return {String} - browser supported prefixed property
+ */
 export default function prefix(property) {
   const prefixes = [false, 'webkit']
   const upperProp = property.charAt(0).toUpperCase() + property.slice(1)
@@ -14,6 +14,6 @@ export default function prefix(property) {
       return prefixedProp
     }
   }
-  
+
   return null
 }

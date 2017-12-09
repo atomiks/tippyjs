@@ -6,14 +6,14 @@ import find from '../utils/find'
 import matches from '../utils/matches'
 
 /**
-* Adds the needed event listeners
-*/
+ * Adds the needed event listeners
+ */
 export default function bindEventListeners() {
   const touchHandler = () => {
     if (browser.usingTouch) return
-    
+
     browser.usingTouch = true
-    
+
     if (browser.iOS) {
       document.body.classList.add('tippy-touch')
     }
@@ -21,7 +21,7 @@ export default function bindEventListeners() {
     if (browser.dynamicInputDetection && window.performance) {
       document.addEventListener('mousemove', mousemoveHandler)
     }
-    
+
     browser.onUserInputChange('touch')
   }
 

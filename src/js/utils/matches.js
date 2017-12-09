@@ -5,12 +5,12 @@ let matches = {}
 if (isBrowser) {
   const e = Element.prototype
   matches =
-    e.matches               ||
-    e.matchesSelector       ||
+    e.matches ||
+    e.matchesSelector ||
     e.webkitMatchesSelector ||
-    e.mozMatchesSelector    ||
-    e.msMatchesSelector     ||
-    function (s) {
+    e.mozMatchesSelector ||
+    e.msMatchesSelector ||
+    function(s) {
       const matches = (this.document || this.ownerDocument).querySelectorAll(s)
       let i = matches.length
       while (--i >= 0 && matches.item(i) !== this) {}

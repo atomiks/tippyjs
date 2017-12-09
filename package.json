@@ -11,7 +11,8 @@
     "bundle": "rollup -c scripts/rollup.bundle.config.js && rollup -c scripts/rollup.bundle.min.config.js",
     "standalone": "rollup -c scripts/rollup.standalone.config.js && rollup -c scripts/rollup.standalone.min.config.js",
     "themes": "rollup -c scripts/rollup.themes.config.js",
-    "test": "rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js"
+    "test": "rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js",
+    "prettier": "prettier --print-width 100 --no-semi --single-quote --trailing-comma es5 --write 'src/**/*.js'"
   },
   "author": "atomiks",
   "license": "MIT",
@@ -34,6 +35,7 @@
     "postcss-cssnext": "^3.0.2",
     "postcss-nested": "^2.1.2",
     "postcss-simple-vars": "^4.1.0",
+    "prettier": "^1.9.1",
     "rollup": "^0.47.6",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-babili": "^3.1.0",

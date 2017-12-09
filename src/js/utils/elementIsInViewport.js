@@ -1,8 +1,8 @@
 /**
-* Determines if an element is visible in the viewport
-* @param {Element} el
-* @return {Boolean}
-*/
+ * Determines if an element is visible in the viewport
+ * @param {Element} el
+ * @return {Boolean}
+ */
 export default function elementIsInViewport(el) {
   const rect = el.getBoundingClientRect()
 
