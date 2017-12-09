@@ -8,7 +8,7 @@ import removeTitle from '../utils/removeTitle'
 
 import { defaults, browser } from './globals'
 
-import Tippy from './Tippy'
+import { Tippy, _getEventListeners, _createPopperInstance, _addMutationObserver } from './Tippy'
 
 let idCounter = 1
 
@@ -50,22 +50,21 @@ export default function createTooltips(els, config) {
       id,
       reference,
       popper,
-      options,
-      _mutationObservers: []
+      options
     })
     
     tippy.popperInstance = createPopperInstanceOnInit
-      ? tippy._createPopperInstance()
+      ? _createPopperInstance.call(tippy)
       : null
 
-    const listeners = tippy._getEventListeners()
+    const listeners = _getEventListeners.call(tippy)
     tippy.listeners = trigger.trim().split(' ').reduce((acc, eventType) => {
       return acc.concat(createTrigger(eventType, reference, listeners, touchHold))
     }, [])
 
     // Update tooltip content whenever the title attribute on the reference changes
     if (dynamicTitle) {
-      tippy._addMutationObserver({
+      _addMutationObserver.call(tippy, {
         target: reference,
         callback() {
           const { content } = getInnerElements(popper)

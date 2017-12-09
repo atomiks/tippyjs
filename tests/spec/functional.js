@@ -1,5 +1,7 @@
 import { browser, defaults, selectors } from '../../src/js/core/globals'
 
+import { _createPopperInstance, _onTransitionEnd } from '../../src/js/core/Tippy'
+
 import bindEventListeners from '../../src/js/core/bindEventListeners'
 import defer from '../../src/js/utils/defer'
 import getPopperPlacement from '../../src/js/utils/getPopperPlacement'
@@ -351,6 +353,59 @@ describe('core', () => {
         tip.destroyAll()
       })
     })
+    
+    describe('_onTransitionEnd', () => {
+      let a = false,
+      b = false,
+      c = false
+
+      const DURATION = 20
+
+      const el = createVirtualElement()
+      el.style[prefix('transitionDuration')] = DURATION
+
+      const tip = tippy(el, {
+        duration: DURATION
+      })
+
+      let firstItDone = false
+
+      beforeEach(done => {
+        if (!firstItDone) {
+          setTimeout(() => {
+            b = true
+            firstItDone = true
+            done()
+          }, DURATION - 1)
+        } else {
+          setTimeout(done, DURATION + 100)
+        }
+        
+      _onTransitionEnd.call(el._tippy, DURATION, () => {
+          a = true
+          if (firstItDone) {
+            c = true
+          }
+        })
+      })
+
+      it('waits for transitions to complete', () => {
+        expect(a).not.toBe(b)
+      })
+    })
+    
+    describe('_createPopperInstance', () => {
+      it('returns a new Popper instance', () => {
+        const el = createVirtualElement()
+
+        const tip = tippy(el)
+        const pop = _createPopperInstance.call(el._tippy)
+
+        expect(typeof pop.update).toBe('function')
+
+        tip.destroyAll()
+      })
+    })
   })
 
   describe('options', () => {
@@ -638,19 +693,6 @@ describe('core', () => {
     })
   })
 
-  describe('_createPopperInstance', () => {
-    it('returns a new Popper instance', () => {
-      const el = createVirtualElement()
-
-      const tip = tippy(el)
-      const popperInstance = el._tippy._createPopperInstance()
-
-      expect(typeof popperInstance.update).toBe('function')
-
-      tip.destroyAll()
-    })
-  })
-
   describe('getArrayOfElements', () => {
     it('returns an array of Elements', () => {
       const el1 = createVirtualElement()
@@ -835,46 +877,6 @@ describe('core', () => {
       const tip = tippy(el, { performance: true })
 
       expect(tip.tooltips[0].options.duration).toBe(tip.options.duration)
-    })
-  })
-
-  describe('_onTransitionEnd', () => {
-    let a = false,
-    b = false,
-    c = false
-
-    const DURATION = 20
-
-    const el = createVirtualElement()
-    el.style[prefix('transitionDuration')] = DURATION
-
-    const tip = tippy(el, {
-      duration: DURATION
-    })
-
-    let firstItDone = false
-
-    beforeEach(done => {
-      if (!firstItDone) {
-        setTimeout(() => {
-          b = true
-          firstItDone = true
-          done()
-        }, DURATION - 1)
-      } else {
-        setTimeout(done, DURATION + 100)
-      }
-
-      el._tippy._onTransitionEnd(DURATION, () => {
-        a = true
-        if (firstItDone) {
-          c = true
-        }
-      })
-    })
-
-    it('waits for transitions to complete', () => {
-      expect(a).not.toBe(b)
     })
   })
 })
