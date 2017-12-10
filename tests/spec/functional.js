@@ -15,10 +15,9 @@ import isObjectLiteral from '../../src/js/utils/isObjectLiteral'
 import cursorIsOutsideInteractiveBorder from '../../src/js/utils/cursorIsOutsideInteractiveBorder'
 import transformNumbersBasedOnPlacement from '../../src/js/utils/transformNumbersBasedOnPlacement'
 import transformAxisBasedOnPlacement from '../../src/js/utils/transformAxisBasedOnPlacement'
-
-import createTrigger from '../../src/js/core/createTrigger'
-import createPopperElement from '../../src/js/core/createPopperElement'
-import getArrayOfElements from '../../src/js/core/getArrayOfElements'
+import getArrayOfElements from '../../src/js/utils/getArrayOfElements'
+import createTrigger from '../../src/js/utils/createTrigger'
+import createPopperElement from '../../src/js/utils/createPopperElement'
 
 import tippy from '../../src/js/tippy.js'
 
