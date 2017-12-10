@@ -21,8 +21,8 @@ if (isBrowser) {
 }
 
 /**
-* Selector constants used for grabbing elements
-*/
+ * Selector constants used for grabbing elements
+ */
 var selectors = {
   POPPER: '.tippy-popper',
   TOOLTIP: '.tippy-tooltip',
@@ -33,8 +33,8 @@ var selectors = {
   REFERENCE: '[data-tippy]'
 
   /**
-  * The default options applied to each instance
-  */
+   * The default options applied to each instance
+   */
 };var defaults = {
   placement: 'top',
   trigger: 'mouseenter focus',
@@ -77,25 +77,25 @@ var selectors = {
 };
 
 /**
-* The keys of the defaults object for reducing down into a new object
-* Used in `getIndividualOptions()`
-*/
+ * The keys of the defaults object for reducing down into a new object
+ * Used in `getIndividualOptions()`
+ */
 var defaultsKeys = browser.supported && Object.keys(defaults);
 
 /**
-* Determines if a value is an object literal
-* @param {*} value
-* @return {Boolean}
-*/
+ * Determines if a value is an object literal
+ * @param {*} value
+ * @return {Boolean}
+ */
 function isObjectLiteral(value) {
   return Object.prototype.toString.call(value) === '[object Object]';
 }
 
 /**
-* Returns an array of elements based on the selector input
-* @param {String|Element|Element[]|NodeList|Object} selector
-* @return {Element[]}
-*/
+ * Returns an array of elements based on the selector input
+ * @param {String|Element|Element[]|NodeList|Object} selector
+ * @return {Element[]}
+ */
 function getArrayOfElements(selector) {
   if (selector instanceof Element || isObjectLiteral(selector)) {
     return [selector];
@@ -116,87 +116,11 @@ function getArrayOfElements(selector) {
   }
 }
 
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
 /**
-* Returns an object of settings to override global settings
-* @param {Element} reference
-* @param {Object} instanceOptions
-* @return {Object} - individual options
-*/
-function getIndividualOptions(reference, instanceOptions) {
-  var options = defaultsKeys.reduce(function (acc, key) {
-    var val = reference.getAttribute('data-tippy-' + key.toLowerCase()) || instanceOptions[key];
-
-    // Convert strings to booleans
-    if (val === 'false') val = false;
-    if (val === 'true') val = true;
-
-    // Convert number strings to true numbers
-    if (isFinite(val) && !isNaN(parseFloat(val))) {
-      val = parseFloat(val);
-    }
-
-    // Convert array strings to actual arrays
-    if (typeof val === 'string' && val.trim().charAt(0) === '[') {
-      val = JSON.parse(val);
-    }
-
-    acc[key] = val;
-
-    return acc;
-  }, {});
-
-  return _extends({}, instanceOptions, options);
-}
-
-/**
-* Returns the supported prefixed property - only `webkit` is needed, `moz`, `ms` and `o` are obsolete
-* @param {String} property
-* @return {String} - browser supported prefixed property
-*/
+ * Returns the supported prefixed property - only `webkit` is needed, `moz`, `ms` and `o` are obsolete
+ * @param {String} property
+ * @return {String} - browser supported prefixed property
+ */
 function prefix(property) {
   var prefixes = [false, 'webkit'];
   var upperProp = property.charAt(0).toUpperCase() + property.slice(1);
@@ -213,12 +137,12 @@ function prefix(property) {
 }
 
 /**
-* Creates a popper element then returns it
-* @param {Number} id - the popper id
-* @param {String} title - the tooltip's `title` attribute
-* @param {Object} options - individual options
-* @return {Element} - the popper element
-*/
+ * Creates a popper element then returns it
+ * @param {Number} id - the popper id
+ * @param {String} title - the tooltip's `title` attribute
+ * @param {Object} options - individual options
+ * @return {Element} - the popper element
+ */
 function createPopperElement(id, title, options) {
   var placement = options.placement,
       distance = options.distance,
@@ -313,13 +237,13 @@ function createPopperElement(id, title, options) {
 }
 
 /**
-* Creates a trigger by adding the necessary event listeners to the reference element
-* @param {String} eventType - the custom event specified in the `trigger` setting
-* @param {Element} reference
-* @param {Object} handlers - the handlers for each event
-* @param {Boolean} touchHold
-* @return {Array} - array of listener objects
-*/
+ * Creates a trigger by adding the necessary event listeners to the reference element
+ * @param {String} eventType - the custom event specified in the `trigger` setting
+ * @param {Element} reference
+ * @param {Object} handlers - the handlers for each event
+ * @param {Boolean} touchHold
+ * @return {Array} - array of listener objects
+ */
 function createTrigger(eventType, reference, handlers, touchHold) {
   var listeners = [];
 
@@ -365,12 +289,88 @@ function createTrigger(eventType, reference, handlers, touchHold) {
   return listeners;
 }
 
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
 /**
-* Evaluates/modifies the options object for appropriate behavior
-* @param {Element|Object} reference
-* @param {Object} options
-* @return {Object} modified/evaluated options
-*/
+ * Returns an object of settings to override global settings
+ * @param {Element} reference
+ * @param {Object} instanceOptions
+ * @return {Object} - individual options
+ */
+function getIndividualOptions(reference, instanceOptions) {
+  var options = defaultsKeys.reduce(function (acc, key) {
+    var val = reference.getAttribute('data-tippy-' + key.toLowerCase()) || instanceOptions[key];
+
+    // Convert strings to booleans
+    if (val === 'false') val = false;
+    if (val === 'true') val = true;
+
+    // Convert number strings to true numbers
+    if (isFinite(val) && !isNaN(parseFloat(val))) {
+      val = parseFloat(val);
+    }
+
+    // Convert array strings to actual arrays
+    if (typeof val === 'string' && val.trim().charAt(0) === '[') {
+      val = JSON.parse(val);
+    }
+
+    acc[key] = val;
+
+    return acc;
+  }, {});
+
+  return _extends({}, instanceOptions, options);
+}
+
+/**
+ * Evaluates/modifies the options object for appropriate behavior
+ * @param {Element|Object} reference
+ * @param {Object} options
+ * @return {Object} modified/evaluated options
+ */
 function evaluateOptions(reference, options) {
   // animateFill is disabled if an arrow is true
   if (options.arrow) {
@@ -389,10 +389,10 @@ function evaluateOptions(reference, options) {
 }
 
 /**
-* Returns inner elements of the popper element
-* @param {Element} popper
-* @return {Object}
-*/
+ * Returns inner elements of the popper element
+ * @param {Element} popper
+ * @return {Object}
+ */
 function getInnerElements(popper) {
   return {
     tooltip: popper.querySelector(selectors.TOOLTIP),
@@ -402,10 +402,10 @@ function getInnerElements(popper) {
 }
 
 /**
-* Removes the title from an element, setting `data-original-title`
-* appropriately
-* @param {Element} el
-*/
+ * Removes the title from an element, setting `data-original-title`
+ * appropriately
+ * @param {Element} el
+ */
 function removeTitle(el) {
   var title = el.getAttribute('title');
   // Only set `data-original-title` attr if there is a title
@@ -416,21 +416,21 @@ function removeTitle(el) {
 }
 
 /**
-* Returns the core placement ('top', 'bottom', 'left', 'right') of a popper
-* @param {Element} popper
-* @return {String}
-*/
+ * Returns the core placement ('top', 'bottom', 'left', 'right') of a popper
+ * @param {Element} popper
+ * @return {String}
+ */
 function getPopperPlacement(popper) {
   return popper.getAttribute('x-placement').replace(/-.+/, '');
 }
 
 /**
-* Determines if the mouse's cursor is outside the interactive border
-* @param {MouseEvent} event
-* @param {Element} popper
-* @param {Object} options
-* @return {Boolean}
-*/
+ * Determines if the mouse's cursor is outside the interactive border
+ * @param {MouseEvent} event
+ * @param {Element} popper
+ * @param {Object} options
+ * @return {Boolean}
+ */
 function cursorIsOutsideInteractiveBorder(event, popper, options) {
   if (!popper.getAttribute('x-placement')) return true;
 
@@ -470,13 +470,13 @@ function cursorIsOutsideInteractiveBorder(event, popper, options) {
 }
 
 /**
-* Transforms the `arrowTransform` numbers based on the placement axis
-* @param {String} type 'scale' or 'translate'
-* @param {Number[]} numbers
-* @param {Boolean} isVertical
-* @param {Boolean} isReverse
-* @return {String}
-*/
+ * Transforms the `arrowTransform` numbers based on the placement axis
+ * @param {String} type 'scale' or 'translate'
+ * @param {Number[]} numbers
+ * @param {Boolean} isVertical
+ * @param {Boolean} isReverse
+ * @return {String}
+ */
 function transformNumbersBasedOnPlacementAxis(type, numbers, isVertical, isReverse) {
   if (!numbers.length) return '';
 
@@ -505,26 +505,26 @@ function transformNumbersBasedOnPlacementAxis(type, numbers, isVertical, isRever
 }
 
 /**
-* Transforms the `arrowTransform` x or y axis based on the placement axis
-* @param {String} axis 'X', 'Y', ''
-* @param {Boolean} isVertical
-* @return {String}
-*/
+ * Transforms the `arrowTransform` x or y axis based on the placement axis
+ * @param {String} axis 'X', 'Y', ''
+ * @param {Boolean} isVertical
+ * @return {String}
+ */
 function transformAxis(axis, isVertical) {
   if (!axis) return '';
   var map = {
-    'X': 'Y',
-    'Y': 'X'
+    X: 'Y',
+    Y: 'X'
   };
   return isVertical ? axis : map[axis];
 }
 
 /**
-* Computes and applies the necessary arrow transform
-* @param {Element} popper
-* @param {Element} arrow
-* @param {String} arrowTransform
-*/
+ * Computes and applies the necessary arrow transform
+ * @param {Element} popper
+ * @param {Element} arrow
+ * @param {String} arrowTransform
+ */
 function computeArrowTransform(popper, arrow, arrowTransform) {
   var placement = getPopperPlacement(popper);
   var isVertical = placement === 'top' || placement === 'bottom';
@@ -562,10 +562,10 @@ function computeArrowTransform(popper, arrow, arrowTransform) {
 }
 
 /**
-* Determines if an element is visible in the viewport
-* @param {Element} el
-* @return {Boolean}
-*/
+ * Determines if an element is visible in the viewport
+ * @param {Element} el
+ * @return {Boolean}
+ */
 function elementIsInViewport(el) {
   var rect = el.getBoundingClientRect();
 
@@ -573,19 +573,19 @@ function elementIsInViewport(el) {
 }
 
 /**
-* Returns the distance taking into account the default distance due to
-* the transform: translate setting in CSS
-* @param {Number} distance
-* @return {String}
-*/
+ * Returns the distance taking into account the default distance due to
+ * the transform: translate setting in CSS
+ * @param {Number} distance
+ * @return {String}
+ */
 function getOffsetDistanceInPx(distance) {
   return -(distance - defaults.distance) + 'px';
 }
 
 /**
-* Waits until next repaint to execute a fn
-* @param {Function} fn
-*/
+ * Waits until next repaint to execute a fn
+ * @param {Function} fn
+ */
 function defer(fn) {
   requestAnimationFrame(function () {
     setTimeout(fn, 0);
@@ -607,11 +607,11 @@ if (isBrowser) {
 var matches$1 = matches;
 
 /**
-* Ponyfill to get the closest parent element
-* @param {Element} element - child of parent to be returned
-* @param {String} parentSelector - selector to match the parent if found
-* @return {Element}
-*/
+ * Ponyfill to get the closest parent element
+ * @param {Element} element - child of parent to be returned
+ * @param {String} parentSelector - selector to match the parent if found
+ * @return {Element}
+ */
 function closest(element, parentSelector) {
   var fn = Element.prototype.closest || function (selector) {
     var el = this;
@@ -627,20 +627,20 @@ function closest(element, parentSelector) {
 }
 
 /**
-* Returns duration taking into account the option being either a number or array
-* @param {Number} duration
-* @param {Number} index
-* @return {Number}
-*/
+ * Returns duration taking into account the option being either a number or array
+ * @param {Number} duration
+ * @param {Number} index
+ * @return {Number}
+ */
 function getDuration(duration, index) {
   return Array.isArray(duration) ? duration[index] : duration;
 }
 
 /**
-* Sets the visibility state of an element for transition to begin
-* @param {Element[]} els - array of elements
-* @param {String} type - 'visible' or 'hidden'
-*/
+ * Sets the visibility state of an element for transition to begin
+ * @param {Element[]} els - array of elements
+ * @param {String} type - 'visible' or 'hidden'
+ */
 function setVisibilityState(els, type) {
   els.forEach(function (el) {
     if (!el) return;
@@ -649,17 +649,17 @@ function setVisibilityState(els, type) {
 }
 
 /**
-* Ponyfill for Array.prototype.find
-* @param {Array} arr
-* @param {Function} fn
-* @return item in the array
-*/
+ * Ponyfill for Array.prototype.find
+ * @param {Array} arr
+ * @param {Function} fn
+ * @return item in the array
+ */
 
 /**
-* Applies the transition duration to each element
-* @param {Element[]} els - Array of elements
-* @param {Number} duration
-*/
+ * Applies the transition duration to each element
+ * @param {Element[]} els - Array of elements
+ * @param {Number} duration
+ */
 function applyTransitionDuration(els, duration) {
   els.forEach(function (el) {
     if (!el) return;
@@ -687,10 +687,10 @@ var Tippy = function () {
   }
 
   /**
-  * Enables the tooltip to allow it to show or hide
-  * @memberof Tippy
-  * @public
-  */
+   * Enables the tooltip to allow it to show or hide
+   * @memberof Tippy
+   * @public
+   */
 
 
   createClass(Tippy, [{
@@ -700,10 +700,10 @@ var Tippy = function () {
     }
 
     /**
-    * Disables the tooltip from showing or hiding, but does not destroy it
-    * @memberof Tippy
-    * @public
-    */
+     * Disables the tooltip from showing or hiding, but does not destroy it
+     * @memberof Tippy
+     * @public
+     */
 
   }, {
     key: 'disable',
@@ -712,11 +712,11 @@ var Tippy = function () {
     }
 
     /**
-    * Shows the tooltip
-    * @param {Number} duration in milliseconds
-    * @memberof Tippy
-    * @public
-    */
+     * Shows the tooltip
+     * @param {Number} duration in milliseconds
+     * @memberof Tippy
+     * @public
+     */
 
   }, {
     key: 'show',
@@ -737,7 +737,7 @@ var Tippy = function () {
       // Destroy tooltip if the reference element is no longer on the DOM
 
 
-      if (!reference.refObj && !document.body.contains(reference)) {
+      if (!reference.refObj && !document.documentElement.contains(reference)) {
         this.destroy();
         return;
       }
@@ -798,11 +798,11 @@ var Tippy = function () {
     }
 
     /**
-    * Hides the tooltip
-    * @param {Number} duration in milliseconds
-    * @memberof Tippy
-    * @public
-    */
+     * Hides the tooltip
+     * @param {Number} duration in milliseconds
+     * @memberof Tippy
+     * @public
+     */
 
   }, {
     key: 'hide',
@@ -862,10 +862,10 @@ var Tippy = function () {
     }
 
     /**
-    * Destroys the tooltip
-    * @memberof Tippy
-    * @public
-    */
+     * Destroys the tooltip
+     * @memberof Tippy
+     * @public
+     */
 
   }, {
     key: 'destroy',
@@ -913,12 +913,12 @@ var Tippy = function () {
  */
 
 /**
-* Method used by event listeners to invoke the show method, taking into account delays and
-* the `wait` option
-* @param {Event} event
-* @memberof Tippy
-* @private
-*/
+ * Method used by event listeners to invoke the show method, taking into account delays and
+ * the `wait` option
+ * @param {Event} event
+ * @memberof Tippy
+ * @private
+ */
 
 
 function _enter(event) {
@@ -945,10 +945,10 @@ function _enter(event) {
 }
 
 /**
-* Method used by event listeners to invoke the hide method, taking into account delays
-* @memberof Tippy
-* @private
-*/
+ * Method used by event listeners to invoke the hide method, taking into account delays
+ * @memberof Tippy
+ * @private
+ */
 function _leave() {
   var _this5 = this;
 
@@ -969,11 +969,11 @@ function _leave() {
 }
 
 /**
-* Returns relevant listeners for the instance
-* @return {Object} of listeners
-* @memberof Tippy
-* @private
-*/
+ * Returns relevant listeners for the instance
+ * @return {Object} of listeners
+ * @memberof Tippy
+ * @private
+ */
 function _getEventListeners() {
   var _this6 = this;
 
@@ -1041,11 +1041,11 @@ function _getEventListeners() {
 }
 
 /**
-* Creates and returns a new popper instance
-* @return {Popper}
-* @memberof Tippy
-* @private
-*/
+ * Creates and returns a new popper instance
+ * @return {Popper}
+ * @memberof Tippy
+ * @private
+ */
 function _createPopperInstance() {
   var _this7 = this;
 
@@ -1119,10 +1119,10 @@ function _createPopperInstance() {
 }
 
 /**
-* Appends the popper element to the DOM
-* @memberof Tippy
-* @private
-*/
+ * Appends the popper element to the DOM
+ * @memberof Tippy
+ * @private
+ */
 function _mount() {
   var _this8 = this;
 
@@ -1157,26 +1157,27 @@ function _mount() {
 }
 
 /**
-* Clears the show and hide delay timeouts
-* @memberof Tippy
-* @private
-*/
+ * Clears the show and hide delay timeouts
+ * @memberof Tippy
+ * @private
+ */
 function _clearDelayTimeouts() {
   clearTimeout(this._internal.showTimeout);
   clearTimeout(this._internal.hideTimeout);
 }
 
 /**
-* Sets a mousemove event listener function for `followCursor` option
-* @return {Function} the event listener
-* @memberof Tippy
-* @private
-*/
+ * Sets a mousemove event listener function for `followCursor` option
+ * @return {Function} the event listener
+ * @memberof Tippy
+ * @private
+ */
 function _setFollowCursorListener() {
   var _this9 = this;
 
   this._internal.followCursorListener = function (e) {
-    if (_this9._internal.lastTriggerEvent.type === 'focus') return;
+    // Ignore if the tooltip was triggered by `focus`
+    if (_this9._internal.lastTriggerEvent && _this9._internal.lastTriggerEvent.type === 'focus') return;
 
     var popper = _this9.popper,
         offset = _this9.options.offset;
@@ -1233,10 +1234,10 @@ function _setFollowCursorListener() {
 }
 
 /**
-* Updates the popper's position on each animation frame
-* @memberof Tippy
-* @private
-*/
+ * Updates the popper's position on each animation frame
+ * @memberof Tippy
+ * @private
+ */
 function _makeSticky() {
   var _this10 = this;
 
@@ -1267,11 +1268,11 @@ function _makeSticky() {
 }
 
 /**
-* Adds a mutation observer to an element and stores it in the instance
-* @param {Object}
-* @memberof Tippy
-* @private
-*/
+ * Adds a mutation observer to an element and stores it in the instance
+ * @param {Object}
+ * @memberof Tippy
+ * @private
+ */
 function _addMutationObserver(_ref) {
   var target = _ref.target,
       callback = _ref.callback,
@@ -1285,12 +1286,12 @@ function _addMutationObserver(_ref) {
 }
 
 /**
-* Fires the callback functions once the CSS transition ends for `show` and `hide` methods
-* @param {Number} duration
-* @param {Function} callback - callback function to fire once transition completes
-* @memberof Tippy
-* @private
-*/
+ * Fires the callback functions once the CSS transition ends for `show` and `hide` methods
+ * @param {Number} duration
+ * @param {Function} callback - callback function to fire once transition completes
+ * @memberof Tippy
+ * @private
+ */
 function _onTransitionEnd(duration, callback) {
   // Make callback synchronous if duration is 0
   if (!duration) {
@@ -1321,11 +1322,11 @@ function _onTransitionEnd(duration, callback) {
 var idCounter = 1;
 
 /**
-* Creates tooltips for each reference element
-* @param {Element[]} els
-* @param {Object} config
-* @return {Tippy[]} Array of Tippy instances
-*/
+ * Creates tooltips for each reference element
+ * @param {Element[]} els
+ * @param {Object} config
+ * @return {Tippy[]} Array of Tippy instances
+ */
 function createTooltips(els, config) {
   return els.reduce(function (acc, reference) {
     var id = idCounter;
@@ -1397,9 +1398,9 @@ function createTooltips(els, config) {
 }
 
 /**
-* Hides all poppers
-* @param {Tippy} excludeTippy - tippy to exclude if needed
-*/
+ * Hides all poppers
+ * @param {Tippy} excludeTippy - tippy to exclude if needed
+ */
 function hideAllPoppers(excludeTippy) {
   var poppers = [].slice.call(document.querySelectorAll(selectors.POPPER));
 
@@ -1415,8 +1416,8 @@ function hideAllPoppers(excludeTippy) {
 }
 
 /**
-* Adds the needed event listeners
-*/
+ * Adds the needed event listeners
+ */
 function bindEventListeners() {
   var touchHandler = function touchHandler() {
     if (browser.usingTouch) return;
@@ -1501,11 +1502,11 @@ function bindEventListeners() {
 }
 
 /**
-* Instantiates tooltips
-* @param {String|Element|Element[]|NodeList|Object} selector
-* @param {Object} options
-* @return {Object}
-*/
+ * Instantiates tooltips
+ * @param {String|Element|Element[]|NodeList|Object} selector
+ * @param {Object} options
+ * @return {Object}
+ */
 function tippy$2(selector, options) {
   if (browser.supported && !browser._eventListenersBound) {
     bindEventListeners();
