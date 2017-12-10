@@ -64,7 +64,7 @@ class Tippy {
     const { tooltip, backdrop, content } = getInnerElements(popper)
 
     // Destroy tooltip if the reference element is no longer on the DOM
-    if (!reference.refObj && !document.body.contains(reference)) {
+    if (!reference.refObj && !document.documentElement.contains(reference)) {
       this.destroy()
       return
     }
