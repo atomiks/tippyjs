@@ -1,4 +1,4 @@
-import isObjectLiteral from '../utils/isObjectLiteral'
+import isObjectLiteral from './isObjectLiteral'
 
 /**
  * Returns an array of elements based on the selector input

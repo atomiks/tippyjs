@@ -1,4 +1,4 @@
-import { selectors } from './globals'
+import { selectors } from '../core/globals'
 
 /**
  * Hides all poppers

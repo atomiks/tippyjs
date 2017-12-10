@@ -1,6 +1,6 @@
 import { browser, selectors } from './globals'
 
-import hideAllPoppers from './hideAllPoppers'
+import hideAllPoppers from '../utils/hideAllPoppers'
 import closest from '../utils/closest'
 import find from '../utils/find'
 import matches from '../utils/matches'

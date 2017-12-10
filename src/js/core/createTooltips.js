@@ -1,8 +1,8 @@
-import getIndividualOptions from './getIndividualOptions'
 import createPopperElement from './createPopperElement'
 import createTrigger from './createTrigger'
-import evaluateOptions from './evaluateOptions'
 
+import getIndividualOptions from '../utils/getIndividualOptions'
+import evaluateOptions from '../utils/evaluateOptions'
 import getInnerElements from '../utils/getInnerElements'
 import removeTitle from '../utils/removeTitle'
 

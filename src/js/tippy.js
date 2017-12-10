@@ -1,8 +1,8 @@
 import { browser, defaults } from './core/globals'
 
 import isObjectLiteral from './utils/isObjectLiteral'
+import getArrayOfElements from './utils/getArrayOfElements'
 
-import getArrayOfElements from './core/getArrayOfElements'
 import createTooltips from './core/createTooltips'
 import bindEventListeners from './core/bindEventListeners'
 
