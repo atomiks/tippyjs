@@ -484,10 +484,7 @@ function _clearDelayTimeouts() {
 function _setFollowCursorListener() {
   this._internal.followCursorListener = e => {
     // Ignore if the tooltip was triggered by `focus`
-    if (
-      this._internal.lastTriggerEvent &&
-      this._internal.lastTriggerEvent.type === 'focus'
-    ) return
+    if (this._internal.lastTriggerEvent && this._internal.lastTriggerEvent.type === 'focus') return
 
     const { popper, options: { offset } } = this
 

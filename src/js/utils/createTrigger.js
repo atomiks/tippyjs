@@ -1,4 +1,4 @@
-import { browser } from './globals'
+import { browser } from '../core/globals'
 
 /**
  * Creates a trigger by adding the necessary event listeners to the reference element

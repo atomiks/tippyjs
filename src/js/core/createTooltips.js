@@ -1,6 +1,5 @@
-import createPopperElement from './createPopperElement'
-import createTrigger from './createTrigger'
-
+import createPopperElement from '../utils/createPopperElement'
+import createTrigger from '../utils/createTrigger'
 import getIndividualOptions from '../utils/getIndividualOptions'
 import evaluateOptions from '../utils/evaluateOptions'
 import getInnerElements from '../utils/getInnerElements'

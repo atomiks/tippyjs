@@ -1,4 +1,4 @@
-import prefix from '../utils/prefix'
+import prefix from './prefix'
 
 /**
  * Creates a popper element then returns it
