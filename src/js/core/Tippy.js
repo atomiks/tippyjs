@@ -173,8 +173,11 @@ class Tippy {
       _onTransitionEnd.call(this, duration, () => {
         if (this.state.visible || !options.appendTo.contains(popper)) return
 
+        if (!this._internal.isPreparingToShow) {
+          document.removeEventListener('mousemove', this._internal.followCursorListener)
+        }
+
         this.popperInstance.disableEventListeners()
-        document.removeEventListener('mousemove', this._internal.followCursorListener)
         options.appendTo.removeChild(popper)
         options.onHidden.call(popper)
       })
@@ -237,6 +240,8 @@ function _enter(event) {
   _clearDelayTimeouts.call(this)
 
   if (this.state.visible) return
+  
+  this._internal.isPreparingToShow = true
 
   if (this.options.wait) {
     this.options.wait.call(this.popper, this.show.bind(this), event)
@@ -272,6 +277,8 @@ function _leave() {
   _clearDelayTimeouts.call(this)
 
   if (!this.state.visible) return
+  
+  this._internal.isPreparingToShow = false
 
   const delay = Array.isArray(this.options.delay) ? this.options.delay[1] : this.options.delay
 
@@ -503,7 +510,7 @@ function _setFollowCursorListener() {
     const { pageX, pageY } = event
     const PADDING = 5
     
-    let placement = this.options.placement
+    let placement = this.options.placement.replace(/-.+/, '')
     if (this.popper.getAttribute('x-placement')) {
       placement = getPopperPlacement(this.popper)
     }
