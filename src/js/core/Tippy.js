@@ -242,6 +242,15 @@ function _enter(event) {
     this.options.wait.call(this.popper, this.show.bind(this), event)
     return
   }
+  
+  // If the tooltip has a delay, we need to be listening to the mousemove as soon as the trigger
+  // event is fired so that it's in the correct position upon mount.
+  if (this.options.followCursor && !browser.usingTouch) {
+    if (!this._internal.followCursorListener) {
+      _setFollowCursorListener.call(this)
+    }
+    document.addEventListener('mousemove', this._internal.followCursorListener)
+  }
 
   const delay = Array.isArray(this.options.delay) ? this.options.delay[0] : this.options.delay
 
@@ -451,16 +460,15 @@ function _mount() {
       this.popperInstance.enableEventListeners()
     }
   }
-
-  // Since touch is determined dynamically, followCursor is set on mount
+  
+  // Set initial position near cursor
   if (this.options.followCursor && !browser.usingTouch) {
-    if (!this._internal.followCursorListener) {
-      _setFollowCursorListener.call(this)
-    }
-    document.addEventListener('mousemove', this._internal.followCursorListener)
     this.popperInstance.disableEventListeners()
     defer(() => {
-      this._internal.followCursorListener(this._internal.lastTriggerEvent)
+      this._internal.followCursorListener(
+        this._internal.lastMouseMoveEvent ||
+        this._internal.lastTriggerEvent
+      )
     })
   }
 }
@@ -476,25 +484,29 @@ function _clearDelayTimeouts() {
 }
 
 /**
- * Sets a mousemove event listener function for `followCursor` option
- * @return {Function} the event listener
+ * Sets the mousemove event listener function for `followCursor` option
  * @memberof Tippy
  * @private
  */
 function _setFollowCursorListener() {
-  this._internal.followCursorListener = e => {
+  this._internal.followCursorListener = event => {
     // Ignore if the tooltip was triggered by `focus`
     if (this._internal.lastTriggerEvent && this._internal.lastTriggerEvent.type === 'focus') return
+    
+    this._internal.lastMouseMoveEvent = event
 
-    const { popper, options: { offset } } = this
-
-    const placement = getPopperPlacement(popper)
-    const halfPopperWidth = Math.round(popper.offsetWidth / 2)
-    const halfPopperHeight = Math.round(popper.offsetHeight / 2)
-    const viewportPadding = 5
+    // Expensive operations, but their dimensions can change freely
     const pageWidth = document.documentElement.offsetWidth || document.body.offsetWidth
-
-    const { pageX, pageY } = e
+    const halfPopperWidth = Math.round(this.popper.offsetWidth / 2)
+    const halfPopperHeight = Math.round(this.popper.offsetHeight / 2)
+    const offset = this.options.offset
+    const { pageX, pageY } = event
+    const PADDING = 5
+    
+    let placement = this.options.placement
+    if (this.popper.getAttribute('x-placement')) {
+      placement = getPopperPlacement(this.popper)
+    }
 
     let x, y
 
@@ -517,21 +529,21 @@ function _setFollowCursorListener() {
         break
     }
 
-    const isRightOverflowing = pageX + viewportPadding + halfPopperWidth + offset > pageWidth
-    const isLeftOverflowing = pageX - viewportPadding - halfPopperWidth + offset < 0
+    const isRightOverflowing = pageX + PADDING + halfPopperWidth + offset > pageWidth
+    const isLeftOverflowing = pageX - PADDING - halfPopperWidth + offset < 0
 
     // Prevent left/right overflow
     if (placement === 'top' || placement === 'bottom') {
       if (isRightOverflowing) {
-        x = pageWidth - viewportPadding - 2 * halfPopperWidth
+        x = pageWidth - PADDING - 2 * halfPopperWidth
       }
 
       if (isLeftOverflowing) {
-        x = viewportPadding
+        x = PADDING
       }
     }
 
-    popper.style[prefix('transform')] = `translate3d(${x}px, ${y}px, 0)`
+    this.popper.style[prefix('transform')] = `translate3d(${x}px, ${y}px, 0)`
   }
 }
 
