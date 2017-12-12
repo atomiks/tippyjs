@@ -300,7 +300,7 @@ function _leave() {
  */
 function _getEventListeners() {
   const handleTrigger = event => {
-    if (this.state.disabled) return
+    if (!this.state.enabled) return
 
     const shouldStopEvent =
       browser.supportsTouch &&
