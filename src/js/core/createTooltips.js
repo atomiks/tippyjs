@@ -7,7 +7,8 @@ import removeTitle from '../utils/removeTitle'
 
 import { defaults, browser } from './globals'
 
-import { Tippy, _getEventListeners, _createPopperInstance, _addMutationObserver } from './Tippy'
+import T from './Tippy'
+const { Tippy, _getEventListeners, _createPopperInstance, _addMutationObserver } = T
 
 let idCounter = 1
 
