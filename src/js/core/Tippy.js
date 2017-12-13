@@ -648,15 +648,9 @@ export default (() => {
 
   return {
     Tippy,
-    _enter,
-    _leave,
-    _mount,
     _getEventListeners,
-    _createPopperInstance,
     _addMutationObserver,
+    _createPopperInstance,
     _onTransitionEnd,
-    _makeSticky,
-    _setFollowCursorListener,
-    _clearDelayTimeouts,
   }
 })()

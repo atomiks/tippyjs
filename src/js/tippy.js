@@ -7,7 +7,7 @@ import createTooltips from './core/createTooltips'
 import bindEventListeners from './core/bindEventListeners'
 
 /**
- * Instantiates tooltips
+ * Creates tooltips
  * @param {String|Element|Element[]|NodeList|Object} selector
  * @param {Object} options
  * @return {Object}

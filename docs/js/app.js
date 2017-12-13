@@ -136,15 +136,15 @@ var jsperf = (function () {
   var base = 100
   var counter = base
   var tippyTime = 0
-  var tooltips = []
+  var tip
 
   return {
     updateModel: function () {
       var value = parseInt($perf.model.value) || 1
       $perf.btn.innerHTML = 'Append ' + value + (value === 1 ? ' element!' : ' elements!')
 
-      if (tooltips.length) {
-        tooltips.destroyAll()
+      if (tip) {
+        tip.destroyAll()
       }
 
       this.reset(value)
@@ -172,7 +172,8 @@ var jsperf = (function () {
         duration: 0,
         arrow: true,
         performance: true,
-        animation: 'fade'
+        animation: 'fade',
+        updateDuration: 0
       })
       var t2 = performance.now()
 
