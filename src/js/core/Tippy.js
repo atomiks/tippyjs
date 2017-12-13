@@ -374,11 +374,25 @@ export default (() => {
 
       _leave.call(this)
     }
+    
+    const handleDelegationShow = event => {
+      if (closest(event.target, this.options.target) && event.target !== this.reference) {
+        handleTrigger(event)
+      }
+    }
+    
+    const handleDelegationHide = event => {
+      if (closest(event.target, this.options.target)) {
+        handleMouseleave(event)
+      }
+    }
 
     return {
       handleTrigger,
       handleMouseleave,
       handleBlur,
+      handleDelegationShow,
+      handleDelegationHide,
     }
   }
 
@@ -463,12 +477,27 @@ export default (() => {
    * @private
    */
   function _mount() {
-    if (this.options.appendTo.contains(this.popper)) return
+    if (
+      this.options.appendTo.contains(this.popper) &&
+      (
+        !this.options.target ||
+        this.popperInstance.reference === this._(key).lastTriggerEvent.target
+      )
+    ) return
+    
     this.options.appendTo.appendChild(this.popper)
+    
+    const updateReference = () => {
+      if (this.options.target) {
+        this.popperInstance.reference = this._(key).lastTriggerEvent.target
+      }
+    }
 
     if (!this.popperInstance) {
       this.popperInstance = _createPopperInstance.call(this)
+      updateReference()
     } else {
+      updateReference()
       this.popper.style[prefix('transform')] = null
       this.popperInstance.update()
 

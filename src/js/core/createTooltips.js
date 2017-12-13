@@ -53,7 +53,7 @@ export default function createTooltips(els, config) {
       .trim()
       .split(' ')
       .reduce((acc, eventType) => {
-        return acc.concat(createTrigger(eventType, reference, listeners, touchHold))
+        return acc.concat(createTrigger(eventType, reference, listeners, options))
       }, [])
 
     // Update tooltip content whenever the title attribute on the reference changes

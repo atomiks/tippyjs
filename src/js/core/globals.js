@@ -59,6 +59,7 @@ export const defaults = {
   arrowType: 'sharp',
   arrowTransform: '',
   maxWidth: '',
+  target: null,
   popperOptions: {},
   createPopperInstanceOnInit: false,
   onShow() {},
