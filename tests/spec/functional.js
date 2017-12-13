@@ -1,6 +1,7 @@
 import { browser, defaults, selectors } from '../../src/js/core/globals'
 
-import { _createPopperInstance, _onTransitionEnd } from '../../src/js/core/Tippy'
+import T from '../../src/js/core/Tippy'
+const { _createPopperInstance, _onTransitionEnd } = T
 
 import bindEventListeners from '../../src/js/core/bindEventListeners'
 import defer from '../../src/js/utils/defer'
