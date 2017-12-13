@@ -67,6 +67,7 @@ export default (() => {
 
       const { popper, reference, options } = this
       const { tooltip, backdrop, content } = getInnerElements(popper)
+      duration = getDuration(duration !== undefined ? duration : options.duration, 0)
 
       // Destroy tooltip if the reference element is no longer on the DOM
       if (!reference.refObj && !document.documentElement.contains(reference)) {
@@ -74,14 +75,12 @@ export default (() => {
         return
       }
 
-      options.onShow.call(popper)
-
-      duration = getDuration(duration !== undefined ? duration : options.duration, 0)
-
       // Prevent a transition when popper changes position
       applyTransitionDuration([popper, tooltip, backdrop], 0)
 
       _mount.call(this)
+
+      options.onShow.call(popper)
 
       popper.style.visibility = 'visible'
       this.state.visible = true
@@ -140,10 +139,9 @@ export default (() => {
 
       const { popper, reference, options } = this
       const { tooltip, backdrop, content } = getInnerElements(popper)
+      duration = getDuration(duration !== undefined ? duration : options.duration, 1)
 
       options.onHide.call(popper)
-
-      duration = getDuration(duration !== undefined ? duration : options.duration, 1)
 
       if (!options.updateDuration) {
         tooltip.classList.remove('tippy-notransition')
