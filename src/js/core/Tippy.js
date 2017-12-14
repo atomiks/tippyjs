@@ -340,7 +340,9 @@ export default (() => {
   function _getEventListeners() {
     let cursorIsInteracting = false
     const isChildOfTarget = relatedTarget =>
-      this.options.target && relatedTarget && closest(relatedTarget, this.options.target)
+      this.options.target &&
+      relatedTarget &&
+      closest(relatedTarget, this.options.target)
 
     const handleTrigger = event => {
       if (!this.state.enabled) return
@@ -431,7 +433,11 @@ export default (() => {
     }
 
     const handleDelegationShow = event => {
-      if (cursorIsInteracting || isChildOfTarget(event.relatedTarget || event.toElement)) return
+      if (
+        cursorIsInteracting ||
+        isChildOfTarget(event.relatedTarget || event.toElement)
+      )
+        return
       if (
         closest(event.target, this.options.target) &&
         event.target !== this.reference

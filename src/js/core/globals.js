@@ -22,7 +22,7 @@ export const selectors = {
   BACKDROP: '.tippy-backdrop',
   ARROW: '.tippy-arrow',
   ROUND_ARROW: '.tippy-roundarrow',
-  REFERENCE: '[data-tippy]',
+  REFERENCE: '[data-tippy]'
 }
 
 /**
@@ -65,7 +65,7 @@ export const defaults = {
   onShow() {},
   onShown() {},
   onHide() {},
-  onHidden() {},
+  onHidden() {}
 }
 
 /**

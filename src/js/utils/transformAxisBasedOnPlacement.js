@@ -8,7 +8,7 @@ export default function transformAxis(axis, isVertical) {
   if (!axis) return ''
   const map = {
     X: 'Y',
-    Y: 'X',
+    Y: 'X'
   }
   return isVertical ? axis : map[axis]
 }

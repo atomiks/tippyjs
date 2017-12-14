@@ -12,20 +12,20 @@ export default function createTrigger(eventType, reference, handlers, options) {
   const listeners = []
 
   if (eventType === 'manual') return listeners
-  
+
   const on = (eventType, handler) => {
     reference.addEventListener(eventType, handler)
     listeners.push({ event: eventType, handler })
   }
-  
+
   if (!options.target) {
     on(eventType, handlers.handleTrigger)
-    
+
     if (browser.supportsTouch && options.touchHold) {
       on('touchstart', handlers.handleTrigger)
       on('touchend', handlers.handleMouseleave)
     }
-    
+
     if (eventType === 'mouseenter') {
       on('mouseleave', handlers.handleMouseleave)
     }

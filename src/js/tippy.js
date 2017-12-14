@@ -37,7 +37,7 @@ function tippy(selector, options) {
         delete selector.classList.classNames[key]
         return true
       },
-      contains: key => !!selector.classList.classNames[key],
+      contains: key => !!selector.classList.classNames[key]
     }
   }
 
@@ -46,11 +46,13 @@ function tippy(selector, options) {
   return {
     selector,
     options,
-    tooltips: browser.supported ? createTooltips(getArrayOfElements(selector), options) : [],
+    tooltips: browser.supported
+      ? createTooltips(getArrayOfElements(selector), options)
+      : [],
     destroyAll() {
       this.tooltips.forEach(tooltip => tooltip.destroy())
       this.tooltips = []
-    },
+    }
   }
 }
 

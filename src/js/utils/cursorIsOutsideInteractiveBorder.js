@@ -7,7 +7,11 @@ import getPopperPlacement from './getPopperPlacement'
  * @param {Object} options
  * @return {Boolean}
  */
-export default function cursorIsOutsideInteractiveBorder(event, popper, options) {
+export default function cursorIsOutsideInteractiveBorder(
+  event,
+  popper,
+  options
+) {
   if (!popper.getAttribute('x-placement')) return true
 
   const { clientX: x, clientY: y } = event
@@ -21,7 +25,7 @@ export default function cursorIsOutsideInteractiveBorder(event, popper, options)
     top: rect.top - y > interactiveBorder,
     bottom: y - rect.bottom > interactiveBorder,
     left: rect.left - x > interactiveBorder,
-    right: x - rect.right > interactiveBorder,
+    right: x - rect.right > interactiveBorder
   }
 
   switch (placement) {
