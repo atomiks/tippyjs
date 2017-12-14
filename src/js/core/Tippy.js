@@ -17,6 +17,7 @@ import setVisibilityState from '../utils/setVisibilityState'
 import find from '../utils/find'
 import findIndex from '../utils/findIndex'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
+import isChildOfTarget from '../utils/isChildOfTarget'
 
 export default (() => {
   const key = {}
@@ -332,133 +333,165 @@ export default (() => {
   }
 
   /**
+   * Event listener for each `trigger` event
+   * @memberof Tippy
+   * @private
+   */
+  function _handleTrigger(event) {
+    if (!this.state.enabled) return
+
+    const shouldStopEvent =
+      browser.supportsTouch &&
+      browser.usingTouch &&
+      (event.type === 'mouseenter' || event.type === 'focus')
+
+    if (shouldStopEvent && this.options.touchHold) return
+
+    this._(key).lastTriggerEvent = event
+
+    // Toggle show/hide when clicking click-triggered tooltips
+    if (
+      event.type === 'click' &&
+      this.options.hideOnClick !== 'persistent' &&
+      this.state.visible
+    ) {
+      _leave.call(this)
+    } else {
+      _enter.call(this, event)
+    }
+
+    // iOS prevents click events from firing
+    if (shouldStopEvent && browser.iOS && this.reference.click) {
+      this.reference.click()
+    }
+  }
+
+  /**
+   * Opposite event listener for `mouseenter`
+   * @memberof Tippy
+   * @private
+   */
+  function _handleMouseLeave(event) {
+    if (
+      event.type === 'mouseleave' &&
+      browser.supportsTouch &&
+      browser.usingTouch &&
+      this.options.touchHold
+    )
+      return
+
+    if (this.options.interactive) {
+      const fallbackElement = document.createElement('div')
+      const hide = _leave.bind(this)
+
+      // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
+      const handleMouseMove = event => {
+        this._(key).cursorIsInteracting = true
+
+        const referenceCursorIsOver = this.options.target
+          ? closest(event.target, this.options.target)
+          : closest(event.target, selectors.REFERENCE)
+
+        const cursorIsOverPopper =
+          closest(event.target, selectors.POPPER) === this.popper
+
+        const cursorIsOverReference = this.options.target
+          ? matches.call(
+              referenceCursorIsOver || fallbackElement,
+              this.options.target
+            )
+          : referenceCursorIsOver === this.reference
+
+        if (cursorIsOverPopper || cursorIsOverReference) return
+
+        if (
+          cursorIsOutsideInteractiveBorder(event, this.popper, this.options)
+        ) {
+          this._(key).cursorIsInteracting = false
+
+          document.body.removeEventListener('mouseleave', hide)
+          document.removeEventListener('mousemove', handleMouseMove)
+
+          _leave.call(this)
+        }
+      }
+      document.body.addEventListener('mouseleave', hide)
+      document.addEventListener('mousemove', handleMouseMove)
+      return
+    }
+
+    _leave.call(this)
+  }
+
+  /**
+   * Opposite event listener for `focus`
+   * @memberof Tippy
+   * @private
+   */
+  function _handleBlur(event) {
+    if (!event.relatedTarget || browser.usingTouch) return
+    if (closest(event.relatedTarget, selectors.POPPER)) return
+
+    _leave.call(this)
+  }
+
+  /**
+   * Handles the `mouseover`/`focusin` event delegation
+   * @memberof Tippy
+   * @private
+   */
+  function _handleDelegateShow(event) {
+    const currentElement = closest(event.target, this.options.target)
+
+    const isMouseOver = event.type === 'mouseover'
+    const isInteracting = this._(key).cursorIsInteracting
+    const isChild = isChildOfTarget(
+      event.relatedTarget || event.toElement,
+      this.options.target
+    )
+    const sameElement = currentElement === this._(key).previousElement
+
+    if ((isMouseOver && isInteracting) || (isChild && sameElement)) return
+
+    this._(key).previousElement = currentElement
+
+    if (currentElement && event.target !== this.reference) {
+      _handleTrigger.call(this, event)
+    }
+  }
+
+  /**
+   * Handles the `mouseout`/`focusout` event delegation
+   * @memberof Tippy
+   * @private
+   */
+  function _handleDelegateHide(event) {
+    const isMouseOut = event.type === 'mouseout'
+    const isChild = isChildOfTarget(
+      event.relatedTarget || event.toElement,
+      this.options.target
+    )
+
+    if (isMouseOut && isChild) return
+
+    if (closest(event.target, this.options.target)) {
+      _handleMouseLeave.call(this, event)
+    }
+  }
+
+  /**
    * Returns relevant listeners for the instance
    * @return {Object} of listeners
    * @memberof Tippy
    * @private
    */
   function _getEventListeners() {
-    let cursorIsInteracting = false
-    const isChildOfTarget = relatedTarget =>
-      this.options.target &&
-      relatedTarget &&
-      closest(relatedTarget, this.options.target)
-
-    const handleTrigger = event => {
-      if (!this.state.enabled) return
-
-      const shouldStopEvent =
-        browser.supportsTouch &&
-        browser.usingTouch &&
-        (event.type === 'mouseenter' || event.type === 'focus')
-
-      if (shouldStopEvent && this.options.touchHold) return
-
-      this._(key).lastTriggerEvent = event
-
-      // Toggle show/hide when clicking click-triggered tooltips
-      if (
-        event.type === 'click' &&
-        this.options.hideOnClick !== 'persistent' &&
-        this.state.visible
-      ) {
-        _leave.call(this)
-      } else {
-        _enter.call(this, event)
-      }
-
-      // iOS prevents click events from firing
-      if (shouldStopEvent && browser.iOS && this.reference.click) {
-        this.reference.click()
-      }
-    }
-
-    const handleMouseleave = event => {
-      if (
-        event.type === 'mouseleave' &&
-        browser.supportsTouch &&
-        browser.usingTouch &&
-        this.options.touchHold
-      )
-        return
-
-      if (this.options.interactive) {
-        const fallbackElement = document.createElement('div')
-        const hide = _leave.bind(this)
-
-        // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
-        const handleMousemove = event => {
-          cursorIsInteracting = true
-
-          const referenceCursorIsOver = this.options.target
-            ? closest(event.target, this.options.target)
-            : closest(event.target, selectors.REFERENCE)
-
-          const cursorIsOverPopper =
-            closest(event.target, selectors.POPPER) === this.popper
-
-          const cursorIsOverReference = this.options.target
-            ? matches.call(
-                referenceCursorIsOver || fallbackElement,
-                this.options.target
-              )
-            : referenceCursorIsOver === this.reference
-
-          if (cursorIsOverPopper || cursorIsOverReference) return
-
-          if (
-            cursorIsOutsideInteractiveBorder(event, this.popper, this.options)
-          ) {
-            cursorIsInteracting = false
-
-            document.body.removeEventListener('mouseleave', hide)
-            document.removeEventListener('mousemove', handleMousemove)
-
-            _leave.call(this)
-          }
-        }
-        document.body.addEventListener('mouseleave', hide)
-        document.addEventListener('mousemove', handleMousemove)
-        return
-      }
-
-      _leave.call(this)
-    }
-
-    const handleBlur = event => {
-      if (!event.relatedTarget || browser.usingTouch) return
-      if (closest(event.relatedTarget, selectors.POPPER)) return
-
-      _leave.call(this)
-    }
-
-    const handleDelegationShow = event => {
-      if (
-        cursorIsInteracting ||
-        isChildOfTarget(event.relatedTarget || event.toElement)
-      )
-        return
-      if (
-        closest(event.target, this.options.target) &&
-        event.target !== this.reference
-      ) {
-        handleTrigger(event)
-      }
-    }
-
-    const handleDelegationHide = event => {
-      if (isChildOfTarget(event.relatedTarget || event.toElement)) return
-      if (closest(event.target, this.options.target)) {
-        handleMouseleave(event)
-      }
-    }
-
     return {
-      handleTrigger,
-      handleMouseleave,
-      handleBlur,
-      handleDelegationShow,
-      handleDelegationHide
+      handleTrigger: _handleTrigger.bind(this),
+      handleMouseLeave: _handleMouseLeave.bind(this),
+      handleBlur: _handleBlur.bind(this),
+      handleDelegateShow: _handleDelegateShow.bind(this),
+      handleDelegateHide: _handleDelegateHide.bind(this)
     }
   }
 

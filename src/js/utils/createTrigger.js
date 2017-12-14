@@ -23,23 +23,23 @@ export default function createTrigger(eventType, reference, handlers, options) {
 
     if (browser.supportsTouch && options.touchHold) {
       on('touchstart', handlers.handleTrigger)
-      on('touchend', handlers.handleMouseleave)
+      on('touchend', handlers.handleMouseLeave)
     }
 
     if (eventType === 'mouseenter') {
-      on('mouseleave', handlers.handleMouseleave)
+      on('mouseleave', handlers.handleMouseLeave)
     }
     if (eventType === 'focus') {
       on('blur', handlers.handleBlur)
     }
   } else {
     if (eventType === 'mouseenter') {
-      on('mouseover', handlers.handleDelegationShow)
-      on('mouseout', handlers.handleDelegationHide)
+      on('mouseover', handlers.handleDelegateShow)
+      on('mouseout', handlers.handleDelegateHide)
     }
     if (eventType === 'focus') {
-      on('focusin', handlers.handleDelegationShow)
-      on('focusout', handlers.handleDelegationHide)
+      on('focusin', handlers.handleDelegateShow)
+      on('focusout', handlers.handleDelegateHide)
     }
   }
 
