@@ -551,6 +551,7 @@ export default (() => {
     const DOMContainsPopper = this.options.appendTo.contains(this.popper)
     const isSameReference =
       this.popperInstance &&
+      this._(key).lastTriggerEvent &&
       this.popperInstance.reference ===
         closest(this._(key).lastTriggerEvent.target, this.options.target)
 
