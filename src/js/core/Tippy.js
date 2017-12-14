@@ -31,11 +31,11 @@ export default (() => {
       this.state = {
         destroyed: false,
         visible: false,
-        enabled: true,
+        enabled: true
       }
 
       this._ = store({
-        mutationObservers: [],
+        mutationObservers: []
       })
     }
 
@@ -68,7 +68,10 @@ export default (() => {
 
       const { popper, reference, options } = this
       const { tooltip, backdrop, content } = getInnerElements(popper)
-      duration = getDuration(duration !== undefined ? duration : options.duration, 0)
+      duration = getDuration(
+        duration !== undefined ? duration : options.duration,
+        0
+      )
 
       // Destroy tooltip if the reference element is no longer on the DOM
       if (!reference.refObj && !document.documentElement.contains(reference)) {
@@ -99,7 +102,10 @@ export default (() => {
         }
 
         // Re-apply transition durations
-        applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration)
+        applyTransitionDuration(
+          [tooltip, backdrop, backdrop ? content : null],
+          duration
+        )
 
         if (backdrop) {
           getComputedStyle(backdrop)[prefix('transform')]
@@ -140,7 +146,10 @@ export default (() => {
 
       const { popper, reference, options } = this
       const { tooltip, backdrop, content } = getInnerElements(popper)
-      duration = getDuration(duration !== undefined ? duration : options.duration, 1)
+      duration = getDuration(
+        duration !== undefined ? duration : options.duration,
+        1
+      )
 
       options.onHide.call(popper)
 
@@ -155,7 +164,10 @@ export default (() => {
       popper.style.visibility = 'hidden'
       this.state.visible = false
 
-      applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration)
+      applyTransitionDuration(
+        [tooltip, backdrop, backdrop ? content : null],
+        duration
+      )
 
       setVisibilityState([tooltip, backdrop], 'hidden')
 
@@ -178,7 +190,10 @@ export default (() => {
           if (this.state.visible || !options.appendTo.contains(popper)) return
 
           if (!this._(key).isPreparingToShow) {
-            document.removeEventListener('mousemove', this._(key).followCursorListener)
+            document.removeEventListener(
+              'mousemove',
+              this._(key).followCursorListener
+            )
           }
 
           this.popperInstance.disableEventListeners()
@@ -206,12 +221,17 @@ export default (() => {
       })
 
       // Restore title
-      this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'))
+      this.reference.setAttribute(
+        'title',
+        this.reference.getAttribute('data-original-title')
+      )
 
       delete this.reference._tippy
-      ;['data-original-title', 'data-tippy', 'aria-describedby'].forEach(attr => {
-        this.reference.removeAttribute(attr)
-      })
+      ;['data-original-title', 'data-tippy', 'aria-describedby'].forEach(
+        attr => {
+          this.reference.removeAttribute(attr)
+        }
+      )
 
       if (this.popperInstance) {
         this.popperInstance.destroy()
@@ -244,7 +264,10 @@ export default (() => {
     _clearDelayTimeouts.call(this)
 
     if (this.state.visible) {
-      if (this.options.target && event.target !== this.popperInstance.reference) {
+      if (
+        this.options.target &&
+        event.target !== this.popperInstance.reference
+      ) {
         // Since we're using event delegation, there's only one tooltip... we need to ensure
         // that we hide the current one to move it to the new reference
         this.hide()
@@ -269,7 +292,9 @@ export default (() => {
       document.addEventListener('mousemove', this._(key).followCursorListener)
     }
 
-    const delay = Array.isArray(this.options.delay) ? this.options.delay[0] : this.options.delay
+    const delay = Array.isArray(this.options.delay)
+      ? this.options.delay[0]
+      : this.options.delay
 
     if (delay) {
       this._(key).showTimeout = setTimeout(() => {
@@ -292,7 +317,9 @@ export default (() => {
 
     this._(key).isPreparingToShow = false
 
-    const delay = Array.isArray(this.options.delay) ? this.options.delay[1] : this.options.delay
+    const delay = Array.isArray(this.options.delay)
+      ? this.options.delay[1]
+      : this.options.delay
 
     if (delay) {
       this._(key).hideTimeout = setTimeout(() => {
@@ -312,6 +339,8 @@ export default (() => {
    */
   function _getEventListeners() {
     let cursorIsInteracting = false
+    const isChildOfTarget = relatedTarget =>
+      this.options.target && relatedTarget && closest(relatedTarget, this.options.target)
 
     const handleTrigger = event => {
       if (!this.state.enabled) return
@@ -358,22 +387,28 @@ export default (() => {
         // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
         const handleMousemove = event => {
           cursorIsInteracting = true
-          
+
           const referenceCursorIsOver = this.options.target
             ? closest(event.target, this.options.target)
             : closest(event.target, selectors.REFERENCE)
-            
-          const cursorIsOverPopper = closest(event.target, selectors.POPPER) === this.popper
-          
+
+          const cursorIsOverPopper =
+            closest(event.target, selectors.POPPER) === this.popper
+
           const cursorIsOverReference = this.options.target
-            ? matches.call(referenceCursorIsOver || fallbackElement, this.options.target)
+            ? matches.call(
+                referenceCursorIsOver || fallbackElement,
+                this.options.target
+              )
             : referenceCursorIsOver === this.reference
 
           if (cursorIsOverPopper || cursorIsOverReference) return
 
-          if (cursorIsOutsideInteractiveBorder(event, this.popper, this.options)) {
+          if (
+            cursorIsOutsideInteractiveBorder(event, this.popper, this.options)
+          ) {
             cursorIsInteracting = false
-            
+
             document.body.removeEventListener('mouseleave', hide)
             document.removeEventListener('mousemove', handleMousemove)
 
@@ -394,15 +429,19 @@ export default (() => {
 
       _leave.call(this)
     }
-    
+
     const handleDelegationShow = event => {
-      if (cursorIsInteracting) return
-      if (closest(event.target, this.options.target) && event.target !== this.reference) {
+      if (cursorIsInteracting || isChildOfTarget(event.relatedTarget || event.toElement)) return
+      if (
+        closest(event.target, this.options.target) &&
+        event.target !== this.reference
+      ) {
         handleTrigger(event)
       }
     }
-    
+
     const handleDelegationHide = event => {
+      if (isChildOfTarget(event.relatedTarget || event.toElement)) return
       if (closest(event.target, this.options.target)) {
         handleMouseleave(event)
       }
@@ -413,7 +452,7 @@ export default (() => {
       handleMouseleave,
       handleBlur,
       handleDelegationShow,
-      handleDelegationHide,
+      handleDelegationHide
     }
   }
 
@@ -428,7 +467,8 @@ export default (() => {
     const { tooltip } = getInnerElements(popper)
     const popperOptions = options.popperOptions
 
-    const arrowSelector = options.arrowType === 'round' ? selectors.ROUND_ARROW : selectors.ARROW
+    const arrowSelector =
+      options.arrowType === 'round' ? selectors.ROUND_ARROW : selectors.ARROW
     const arrow = tooltip.querySelector(arrowSelector)
 
     const config = {
@@ -438,21 +478,29 @@ export default (() => {
         ...(popperOptions ? popperOptions.modifiers : {}),
         arrow: {
           element: arrowSelector,
-          ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {}),
+          ...(popperOptions && popperOptions.modifiers
+            ? popperOptions.modifiers.arrow
+            : {})
         },
         flip: {
           enabled: options.flip,
           padding: options.distance + 5 /* 5px from viewport boundary */,
           behavior: options.flipBehavior,
-          ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {}),
+          ...(popperOptions && popperOptions.modifiers
+            ? popperOptions.modifiers.flip
+            : {})
         },
         offset: {
           offset: options.offset,
-          ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {}),
-        },
+          ...(popperOptions && popperOptions.modifiers
+            ? popperOptions.modifiers.offset
+            : {})
+        }
       },
       onCreate() {
-        tooltip.style[getPopperPlacement(popper)] = getOffsetDistanceInPx(options.distance)
+        tooltip.style[getPopperPlacement(popper)] = getOffsetDistanceInPx(
+          options.distance
+        )
 
         if (arrow && options.arrowTransform) {
           computeArrowTransform(popper, arrow, options.arrowTransform)
@@ -464,12 +512,14 @@ export default (() => {
         styles.bottom = ''
         styles.left = ''
         styles.right = ''
-        styles[getPopperPlacement(popper)] = getOffsetDistanceInPx(options.distance)
+        styles[getPopperPlacement(popper)] = getOffsetDistanceInPx(
+          options.distance
+        )
 
         if (arrow && options.arrowTransform) {
           computeArrowTransform(popper, arrow, options.arrowTransform)
         }
-      },
+      }
     }
 
     _addMutationObserver.call(this, {
@@ -485,8 +535,8 @@ export default (() => {
       options: {
         childList: true,
         subtree: true,
-        characterData: true,
-      },
+        characterData: true
+      }
     })
 
     return new Popper(reference, popper, config)
@@ -498,19 +548,22 @@ export default (() => {
    * @private
    */
   function _mount() {
-    if (
-      this.options.appendTo.contains(this.popper) &&
-      (
-        !this.options.target ||
-        this.popperInstance.reference === this._(key).lastTriggerEvent.target
-      )
-    ) return
-    
+    const DOMContainsPopper = this.options.appendTo.contains(this.popper)
+    const isSameReference =
+      this.popperInstance &&
+      this.popperInstance.reference ===
+        closest(this._(key).lastTriggerEvent.target, this.options.target)
+
+    if (DOMContainsPopper && (!this.options.target || isSameReference)) return
+
     this.options.appendTo.appendChild(this.popper)
-    
+
     const updateReference = () => {
       if (this.options.target) {
-        const newReference = this._(key).lastTriggerEvent.target
+        const newReference = closest(
+          this._(key).lastTriggerEvent.target,
+          this.options.target
+        )
         newReference._tippy = this
         this.popperInstance.reference = newReference
         this.popper._reference = newReference
@@ -560,12 +613,17 @@ export default (() => {
   function _setFollowCursorListener() {
     this._(key).followCursorListener = event => {
       // Ignore if the tooltip was triggered by `focus`
-      if (this._(key).lastTriggerEvent && this._(key).lastTriggerEvent.type === 'focus') return
+      if (
+        this._(key).lastTriggerEvent &&
+        this._(key).lastTriggerEvent.type === 'focus'
+      )
+        return
 
       this._(key).lastMouseMoveEvent = event
 
       // Expensive operations, but their dimensions can change freely
-      const pageWidth = document.documentElement.offsetWidth || document.body.offsetWidth
+      const pageWidth =
+        document.documentElement.offsetWidth || document.body.offsetWidth
       const halfPopperWidth = Math.round(this.popper.offsetWidth / 2)
       const halfPopperHeight = Math.round(this.popper.offsetHeight / 2)
       const offset = this.options.offset
@@ -598,7 +656,8 @@ export default (() => {
           break
       }
 
-      const isRightOverflowing = pageX + PADDING + halfPopperWidth + offset > pageWidth
+      const isRightOverflowing =
+        pageX + PADDING + halfPopperWidth + offset > pageWidth
       const isLeftOverflowing = pageX - PADDING - halfPopperWidth + offset < 0
 
       // Prevent left/right overflow
@@ -623,7 +682,9 @@ export default (() => {
    */
   function _makeSticky() {
     const applyTransitionDuration = () => {
-      this.popper.style[prefix('transitionDuration')] = `${this.options.updateDuration}ms`
+      this.popper.style[prefix('transitionDuration')] = `${
+        this.options.updateDuration
+      }ms`
     }
 
     const removeTransitionDuration = () => {
@@ -704,6 +765,6 @@ export default (() => {
     _getEventListeners,
     _addMutationObserver,
     _createPopperInstance,
-    _onTransitionEnd,
+    _onTransitionEnd
   }
 })()
