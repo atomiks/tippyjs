@@ -10,6 +10,7 @@ import getPopperPlacement from '../utils/getPopperPlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 import prefix from '../utils/prefix'
 import defer from '../utils/defer'
+import matches from '../utils/matches'
 import closest from '../utils/closest'
 import getDuration from '../utils/getDuration'
 import setVisibilityState from '../utils/setVisibilityState'
@@ -242,7 +243,15 @@ export default (() => {
   function _enter(event) {
     _clearDelayTimeouts.call(this)
 
-    if (this.state.visible) return
+    if (this.state.visible) {
+      if (this.options.target && event.target !== this.popperInstance.reference) {
+        // Since we're using event delegation, there's only one tooltip... we need to ensure
+        // that we hide the current one to move it to the new reference
+        this.hide()
+      } else {
+        return
+      }
+    }
 
     this._(key).isPreparingToShow = true
 
@@ -302,6 +311,8 @@ export default (() => {
    * @private
    */
   function _getEventListeners() {
+    let cursorIsInteracting = false
+
     const handleTrigger = event => {
       if (!this.state.enabled) return
 
@@ -341,17 +352,28 @@ export default (() => {
         return
 
       if (this.options.interactive) {
+        const fallbackElement = document.createElement('div')
         const hide = _leave.bind(this)
 
         // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
         const handleMousemove = event => {
-          const referenceCursorIsOver = closest(event.target, selectors.REFERENCE)
+          cursorIsInteracting = true
+          
+          const referenceCursorIsOver = this.options.target
+            ? closest(event.target, this.options.target)
+            : closest(event.target, selectors.REFERENCE)
+            
           const cursorIsOverPopper = closest(event.target, selectors.POPPER) === this.popper
-          const cursorIsOverReference = referenceCursorIsOver === this.reference
+          
+          const cursorIsOverReference = this.options.target
+            ? matches.call(referenceCursorIsOver || fallbackElement, this.options.target)
+            : referenceCursorIsOver === this.reference
 
           if (cursorIsOverPopper || cursorIsOverReference) return
 
           if (cursorIsOutsideInteractiveBorder(event, this.popper, this.options)) {
+            cursorIsInteracting = false
+            
             document.body.removeEventListener('mouseleave', hide)
             document.removeEventListener('mousemove', handleMousemove)
 
@@ -374,6 +396,7 @@ export default (() => {
     }
     
     const handleDelegationShow = event => {
+      if (cursorIsInteracting) return
       if (closest(event.target, this.options.target) && event.target !== this.reference) {
         handleTrigger(event)
       }
