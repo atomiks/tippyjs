@@ -510,7 +510,10 @@ export default (() => {
     
     const updateReference = () => {
       if (this.options.target) {
-        this.popperInstance.reference = this._(key).lastTriggerEvent.target
+        const newReference = this._(key).lastTriggerEvent.target
+        newReference._tippy = this
+        this.popperInstance.reference = newReference
+        this.popper._reference = newReference
       }
     }
 
