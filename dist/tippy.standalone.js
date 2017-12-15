@@ -10,6 +10,8 @@ var isBrowser = typeof window !== 'undefined';
 
 var browser = {};
 
+var isLongerTimeoutBrowser = isBrowser && /UCBrowser|SAMSUNG/.test(navigator.userAgent);
+
 if (isBrowser) {
   browser.supported = 'requestAnimationFrame' in window;
   browser.supportsTouch = 'ontouchstart' in window;
@@ -584,11 +586,12 @@ function getOffsetDistanceInPx(distance) {
 
 /**
  * Waits until next repaint to execute a fn
+ * NOTE: UC Browser / Samsung Internet need a longer timeout
  * @param {Function} fn
  */
 function defer(fn) {
   requestAnimationFrame(function () {
-    setTimeout(fn, 0);
+    setTimeout(fn, isLongerTimeoutBrowser ? 60 : 0);
   });
 }
 
@@ -1212,6 +1215,17 @@ var T = (function () {
           pageY = event.pageY;
 
       var PADDING = 5;
+
+      // Obscure case: If the user scrolled to the element without moving
+      // their mouse, it would be at the wrong position.
+      if (_this9.reference.getBoundingClientRect) {
+        var rect = _this9.reference.getBoundingClientRect();
+        var oY = window.scrollY || document.documentElement.scrollTop;
+        var oX = window.scrollX || document.documentElement.scrollLeft;
+        if (_this9.state.visible && _this9._(key).isPreparingToShow && (pageX < rect.left + oX || pageX > rect.right + oX || pageY > rect.bottom + oY || pageY < rect.top + oY)) {
+          return;
+        }
+      }
 
       var placement = _this9.options.placement.replace(/-.+/, '');
       if (_this9.popper.getAttribute('x-placement')) {

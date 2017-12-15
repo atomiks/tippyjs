@@ -171,48 +171,6 @@
 
           <hr>
 
-          <section id="browser-support">
-            <h2><a href="#browser-support"><i class="material-icons icon-left">important_devices</i>
-                <span>Browser support</span>
-            </a></h2>
-            <p>Tippy gracefully degrades on older browsers (and with JavaScript disabled) by using the
-              browser's default <code>title</code> tooltip.</p>
-            <h4>Supported browsers</h4>
-            <p>
-                Browsers which support <code>requestAnimationFrame</code>.
-                See <a target="_blank" href="https://caniuse.com/#search=requestAnimationFrame">caniuse</a>. If
-                your audience has low Opera Mini usage (common in western countries), then support should be
-                >96%.
-            </p>
-
-            <h4>Touch devices</h4>
-            <p>
-                Tippy supports touch devices. Standard behavior is to tap an element to show its tooltip, and then
-                tap elsewhere to hide it. It's also possible to change the behavior so that you can tap-and-hold to show it,
-                then release to hide it.
-            </p>
-
-            <h4>Dynamic input detection</h4>
-            <p>
-                For certain options to work reliably depending on the type of user input (such as mouse or touch),
-                dynamic input detection is enabled by default. To disable this behavior, set <code>dynamicInputDetection</code> to <code>false</code>:
-
-<pre><code class="language-javascript">tippy.browser.dynamicInputDetection = false</code></pre>
-            </p>
-
-            <p>To see Tippy's <code>browser</code> settings:
-                <pre><code class="language-javascript">tippy.browser</code></pre>
-            </p>
-
-            <h4>Accessibility</h4>
-            <p>
-                Tooltips have ARIA labelling to ensure accessibility.
-            </p>
-
-          </section>
-
-          <hr>
-
           <section id="getting-started">
             <h2><a href="#getting-started"><i class="material-icons icon-left">tag_faces</i><span>Getting started</span></a></h2>
 
@@ -226,16 +184,16 @@
             <p>
                 Alternatively, you can install through npm:
             </p>
-            <pre><code>npm install --save tippy.js@2.0.5</code></pre>
+            <pre><code>npm install --save tippy.js@2.0.6</code></pre>
 
             <p>
-                or use the <a target="_blank" href="https://unpkg.com/tippy.js@2.0.5">unpkg.com CDN</a>:
+                or use the <a target="_blank" href="https://unpkg.com/tippy.js@2.0.6">unpkg.com CDN</a>:
             </p>
 
-            <pre><code>https://unpkg.com/tippy.js@2.0.5/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js@2.0.6/dist/</code></pre>
             
             <p>Simply include the <code>tippy.all.min.js</code> file in your document before your own scripts:</p>
-            <pre><code class="language-markup">&lt;script src="https://unpkg.com/tippy.js@2.0.5/dist/tippy.all.min.js"&gt;&lt;/script&gt;</code></pre>
+            <pre><code class="language-markup">&lt;script src="https://unpkg.com/tippy.js@2.0.6/dist/tippy.all.min.js"&gt;&lt;/script&gt;</code></pre>
             
             <p>This is the bundled version which includes Popper.js and automatically injects Tippy's CSS stylesheet
             into the document head.</p>
@@ -1037,6 +995,67 @@ clonedTemplate.innerHTML = 'Updated!'
       <p>This will add the classes <code>.menu-theme</code> and <code>.light-theme</code> to the tooltip's class list.<p>
 
       </section>
+      
+      <hr>
+      
+      <section id="browser-support">
+        <h2><a href="#browser-support"><i class="material-icons icon-left">important_devices</i>
+            <span>Browser support</span>
+        </a></h2>
+        <p>Tippy gracefully degrades on older browsers (and with JavaScript disabled) by using the
+          browser's default <code>title</code> tooltip.</p>
+        <h4>Supported browsers</h4>
+        <p>
+            Browsers which support <code>requestAnimationFrame</code>.
+            See <a target="_blank" href="https://caniuse.com/#search=requestAnimationFrame">caniuse</a>. If
+            your audience has low Opera Mini usage (common in western countries), then support should be
+            >96%.
+        </p>
+
+        <h4>Touch devices</h4>
+        <p>
+            Tippy supports touch devices. Standard behavior is to tap an element to show its tooltip, and then
+            tap elsewhere to hide it. It's also possible to change the behavior so that you can tap-and-hold to show it,
+            then release to hide it.
+        </p>
+
+        <h4>Dynamic input detection</h4>
+        <p>
+            For certain options to work reliably depending on the type of user input (such as mouse or touch),
+            dynamic input detection is enabled by default. To disable this behavior, set <code>dynamicInputDetection</code> to <code>false</code>:
+
+<pre><code class="language-javascript">tippy.browser.dynamicInputDetection = false</code></pre>
+        </p>
+
+        <p>To see Tippy's <code>browser</code> settings:
+            <pre><code class="language-javascript">tippy.browser</code></pre>
+        </p>
+
+        <h4>Accessibility</h4>
+        <p>
+            Tooltips have ARIA labelling to ensure accessibility.
+        </p>
+        
+        <h4>Browser quirks</h4>
+        <p>
+            Certain browsers are buggy and don't handle things perfectly. Tippy tries to
+            work around them, but here's a known list of issues:
+            
+            <ul>
+              <li>
+                iOS browsers don't animate <code>clip-path</code> smoothly, so it is disabled.
+                This only applies to the <code>animateFill</code> backdrop filling animation. IE10+ and
+                Edge don't support it at all yet. The text will overflow when transitioning if the text
+                is not the same color as the background.
+              </li>
+              <li>
+                UC Browser disables <code>border-radius</code> with the backdrop filling animation.
+              </li>
+            </ul>
+        </p>
+
+      </section>
+
 
           <hr>
 
