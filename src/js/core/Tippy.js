@@ -572,7 +572,7 @@ export default (() => {
         const oY = window.scrollY || document.documentElement.scrollTop
         const oX = window.scrollX || document.documentElement.scrollLeft
         if (
-          this.state.visible &&
+          this.state.visible && this._(key).isPreparingToShow &&
           (pageX < rect.left + oX ||
             pageX > rect.right + oX ||
             pageY > rect.bottom + oY ||
