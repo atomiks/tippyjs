@@ -180,6 +180,7 @@
   top: 50%;
   z-index: -1;
   transition: all cubic-bezier(0.46, 0.1, 0.52, 0.98);
+  backface-visibility: hidden;
   
   &::after {
     content: '';
