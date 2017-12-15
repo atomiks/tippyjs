@@ -670,6 +670,23 @@ export default (() => {
       const { pageX, pageY } = event
       const PADDING = 5
 
+      // Obscure case: If the user scrolled to the element without moving
+      // their mouse, it would be at the wrong position.
+      if (this.reference.getBoundingClientRect) {
+        const rect = this.reference.getBoundingClientRect()
+        const oY = window.scrollY || document.documentElement.scrollTop
+        const oX = window.scrollX || document.documentElement.scrollLeft
+        if (
+          this.state.visible && this._(key).isPreparingToShow &&
+          (pageX < rect.left + oX ||
+            pageX > rect.right + oX ||
+            pageY > rect.bottom + oY ||
+            pageY < rect.top + oY)
+        ) {
+          return
+        }
+      }
+
       let placement = this.options.placement.replace(/-.+/, '')
       if (this.popper.getAttribute('x-placement')) {
         placement = getPopperPlacement(this.popper)

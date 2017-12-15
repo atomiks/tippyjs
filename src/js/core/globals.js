@@ -2,6 +2,9 @@ export const isBrowser = typeof window !== 'undefined'
 
 export const browser = {}
 
+export const isLongerTimeoutBrowser =
+  isBrowser && /UCBrowser|SAMSUNG/.test(navigator.userAgent)
+
 if (isBrowser) {
   browser.supported = 'requestAnimationFrame' in window
   browser.supportsTouch = 'ontouchstart' in window

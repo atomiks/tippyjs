@@ -318,23 +318,17 @@ hr {
   font-size: 1.2rem;
   padding: 0.35rem 1rem;
   transition: all 0.2s ease;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 
 section .btn, section .btn:active {
   margin: 0;
 }
-.is-safari .btn:hover, .is-safari .btn.active, .is-safari .btn:active {
-  opacity: 0.8;
-}
-body:not(.is-safari) .btn.btn-gradient:hover,
-body:not(.is-safari) .btn.btn-gradient.tippy-active,
-body:not(.is-safari) .btn.btn-gradient:active {
-  -webkit-filter: brightness(1.15) hue-rotate(10deg) contrast(1.5);
-  filter: brightness(1.15) hue-rotate(10deg) contrast(1.5);
+.btn.btn-gradient:hover,
+.btn.btn-gradient.tippy-active,
+.btn.btn-gradient:active {
+  opacity: 0.75;
 }
 
 .heading-top {
