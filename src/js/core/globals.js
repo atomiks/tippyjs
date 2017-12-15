@@ -2,6 +2,9 @@ export const isBrowser = typeof window !== 'undefined'
 
 export const browser = {}
 
+export const isLongerTimeoutBrowser =
+  isBrowser && /UCBrowser|SAMSUNG/.test(navigator.userAgent)
+
 if (isBrowser) {
   browser.supported = 'requestAnimationFrame' in window
   browser.supportsTouch = 'ontouchstart' in window
@@ -22,7 +25,7 @@ export const selectors = {
   BACKDROP: '.tippy-backdrop',
   ARROW: '.tippy-arrow',
   ROUND_ARROW: '.tippy-roundarrow',
-  REFERENCE: '[data-tippy]',
+  REFERENCE: '[data-tippy]'
 }
 
 /**
@@ -64,7 +67,7 @@ export const defaults = {
   onShow() {},
   onShown() {},
   onHide() {},
-  onHidden() {},
+  onHidden() {}
 }
 
 /**
