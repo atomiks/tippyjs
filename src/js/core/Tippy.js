@@ -84,20 +84,17 @@ export default (() => {
       // Prevent a transition when popper changes position
       applyTransitionDuration([popper, tooltip, backdrop], 0)
 
-      _mount.call(this)
-
       popper.style.visibility = 'visible'
       this.state.visible = true
 
-      // Popper#update is async, requiring us to defer this code. Popper 2.0 will make it sync.
-      defer(() => {
+      _mount.call(this, () => {
         // ~20ms can elapse before this defer callback is run, so the hide() method
         // may have been invoked -- check if the popper is still visible and cancel
         // this callback if not
         if (!this.state.visible) return
 
         if (!options.followCursor || browser.usingTouch) {
-          this.popperInstance.update()
+          this.popperInstance.scheduleUpdate()
           applyTransitionDuration([popper], options.updateDuration)
         }
 
@@ -499,23 +496,36 @@ export default (() => {
   }
 
   /**
-   * Appends the popper element to the DOM
+   * Appends the popper element to the DOM, updating or creating the popper instance
+   * @param {Function} callback
    * @memberof Tippy
    * @private
    */
-  function _mount() {
-    if (this.options.appendTo.contains(this.popper)) return
-    this.options.appendTo.appendChild(this.popper)
-
+  function _mount(callback) {
     if (!this.popperInstance) {
       this.popperInstance = _createPopperInstance.call(this)
     } else {
       this.popper.style[prefix('transform')] = null
-      this.popperInstance.update()
+
+      this.popperInstance.scheduleUpdate()
 
       if (!this.options.followCursor || browser.usingTouch) {
         this.popperInstance.enableEventListeners()
       }
+    }
+
+    const _onCreate = this.popperInstance.options.onCreate
+    const _onUpdate = this.popperInstance.options.onUpdate
+
+    this.popperInstance.options.onCreate = this.popperInstance.options.onUpdate = () => {
+      this.popper.offsetHeight // we need to cause document reflow
+      callback()
+      this.popperInstance.options.onUpdate = _onUpdate
+      this.popperInstance.options.onCreate = _onCreate
+    }
+
+    if (!this.options.appendTo.contains(this.popper)) {
+      this.options.appendTo.appendChild(this.popper)
     }
 
     // Set initial position near cursor
@@ -572,7 +582,8 @@ export default (() => {
         const oY = window.scrollY || document.documentElement.scrollTop
         const oX = window.scrollX || document.documentElement.scrollLeft
         if (
-          this.state.visible && this._(key).isPreparingToShow &&
+          this.state.visible &&
+          this._(key).isPreparingToShow &&
           (pageX < rect.left + oX ||
             pageX > rect.right + oX ||
             pageY > rect.bottom + oY ||
