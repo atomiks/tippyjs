@@ -479,11 +479,16 @@ export default (() => {
       target: popper,
       callback: () => {
         const styles = popper.style
-        styles[prefix('transitionDuration')] = '0ms'
-        this.popperInstance.update()
-        defer(() => {
+        styles[prefix('transitionDuration')] = null
+        
+        const _onUpdate = this.popperInstance.options.onUpdate
+        this.popperInstance.options.onUpdate = () => {
+          this.popper.offsetHeight
           styles[prefix('transitionDuration')] = options.updateDuration + 'ms'
-        })
+          this.popperInstance.options.onUpdate = _onUpdate
+        }
+        
+        this.popperInstance.update()
       },
       options: {
         childList: true,
