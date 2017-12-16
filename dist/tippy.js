@@ -3554,11 +3554,16 @@ var T = (function () {
       target: popper,
       callback: function callback() {
         var styles = popper.style;
-        styles[prefix('transitionDuration')] = '0ms';
-        _this7.popperInstance.update();
-        defer(function () {
+        styles[prefix('transitionDuration')] = null;
+
+        var _onUpdate = _this7.popperInstance.options.onUpdate;
+        _this7.popperInstance.options.onUpdate = function () {
+          _this7.popper.offsetHeight;
           styles[prefix('transitionDuration')] = options.updateDuration + 'ms';
-        });
+          _this7.popperInstance.options.onUpdate = _onUpdate;
+        };
+
+        _this7.popperInstance.update();
       },
       options: {
         childList: true,
