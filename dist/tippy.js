@@ -2712,8 +2712,6 @@ var Popper = function () {
 
     // make update() debounced, so that it only runs at most once-per-tick
     this.update = debounce(this.update.bind(this));
-    // NOTE: Temporary addition by Tippy.js.
-    this.updateSync = this.update.bind(this);
 
     // with {} we create a new object with the options inside it
     this.options = _extends$1({}, Popper.Defaults, options);
