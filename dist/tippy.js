@@ -8,8 +8,6 @@ var isBrowser = typeof window !== 'undefined';
 
 var browser = {};
 
-var isLongerTimeoutBrowser = isBrowser && /UCBrowser|SAMSUNG/.test(navigator.userAgent);
-
 if (isBrowser) {
   browser.supported = 'requestAnimationFrame' in window;
   browser.supportsTouch = 'ontouchstart' in window;
@@ -3015,12 +3013,11 @@ function getOffsetDistanceInPx(distance) {
 
 /**
  * Waits until next repaint to execute a fn
- * NOTE: UC Browser / Samsung Internet need a longer timeout
  * @param {Function} fn
  */
 function defer(fn) {
   requestAnimationFrame(function () {
-    setTimeout(fn, isLongerTimeoutBrowser ? 60 : 0);
+    setTimeout(fn);
   });
 }
 
@@ -3189,20 +3186,17 @@ var T = (function () {
         // Prevent a transition when popper changes position
         applyTransitionDuration([popper, tooltip, backdrop], 0);
 
-        _mount.call(this);
-
         popper.style.visibility = 'visible';
         this.state.visible = true;
 
-        // Popper#update is async, requiring us to defer this code. Popper 2.0 will make it sync.
-        defer(function () {
+        _mount.call(this, function () {
           // ~20ms can elapse before this defer callback is run, so the hide() method
           // may have been invoked -- check if the popper is still visible and cancel
           // this callback if not
           if (!_this.state.visible) return;
 
           if (!options.followCursor || browser.usingTouch) {
-            _this.popperInstance.update();
+            _this.popperInstance.scheduleUpdate();
             applyTransitionDuration([popper], options.updateDuration);
           }
 
@@ -3577,25 +3571,38 @@ var T = (function () {
   }
 
   /**
-   * Appends the popper element to the DOM
+   * Appends the popper element to the DOM, updating or creating the popper instance
+   * @param {Function} callback
    * @memberof Tippy
    * @private
    */
-  function _mount() {
+  function _mount(callback) {
     var _this8 = this;
-
-    if (this.options.appendTo.contains(this.popper)) return;
-    this.options.appendTo.appendChild(this.popper);
 
     if (!this.popperInstance) {
       this.popperInstance = _createPopperInstance.call(this);
     } else {
       this.popper.style[prefix('transform')] = null;
-      this.popperInstance.update();
+
+      this.popperInstance.scheduleUpdate();
 
       if (!this.options.followCursor || browser.usingTouch) {
         this.popperInstance.enableEventListeners();
       }
+    }
+
+    var _onCreate = this.popperInstance.options.onCreate;
+    var _onUpdate = this.popperInstance.options.onUpdate;
+
+    this.popperInstance.options.onCreate = this.popperInstance.options.onUpdate = function () {
+      _this8.popper.offsetHeight; // we need to cause document reflow
+      callback();
+      _this8.popperInstance.options.onUpdate = _onUpdate;
+      _this8.popperInstance.options.onCreate = _onCreate;
+    };
+
+    if (!this.options.appendTo.contains(this.popper)) {
+      this.options.appendTo.appendChild(this.popper);
     }
 
     // Set initial position near cursor
@@ -3817,15 +3824,8 @@ function createTooltips(els, config) {
 
     var options = evaluateOptions(reference, config.performance ? config : getIndividualOptions(reference, config));
 
-    var html = options.html,
-        trigger = options.trigger,
-        touchHold = options.touchHold,
-        dynamicTitle = options.dynamicTitle,
-        createPopperInstanceOnInit = options.createPopperInstanceOnInit;
-
-
     var title = reference.getAttribute('title');
-    if (!title && !html) return acc;
+    if (!title && !options.html) return acc;
 
     reference.setAttribute('data-tippy', '');
     reference.setAttribute('aria-describedby', 'tippy-' + id);
@@ -3838,18 +3838,22 @@ function createTooltips(els, config) {
       id: id,
       reference: reference,
       popper: popper,
-      options: options
+      options: options,
+      popperInstance: null
     });
 
-    tippy.popperInstance = createPopperInstanceOnInit ? _createPopperInstance.call(tippy) : null;
+    if (options.createPopperInstanceOnInit) {
+      tippy.popperInstance = _createPopperInstance.call(tippy);
+      tippy.popperInstance.disableEventListeners();
+    }
 
     var listeners = _getEventListeners.call(tippy);
-    tippy.listeners = trigger.trim().split(' ').reduce(function (acc, eventType) {
-      return acc.concat(createTrigger(eventType, reference, listeners, touchHold));
+    tippy.listeners = options.trigger.trim().split(' ').reduce(function (acc, eventType) {
+      return acc.concat(createTrigger(eventType, reference, listeners, options.touchHold));
     }, []);
 
     // Update tooltip content whenever the title attribute on the reference changes
-    if (dynamicTitle) {
+    if (options.dynamicTitle) {
       _addMutationObserver.call(tippy, {
         target: reference,
         callback: function callback() {
