@@ -32,16 +32,8 @@ export default function createTooltips(els, config) {
       config.performance ? config : getIndividualOptions(reference, config)
     )
 
-    const {
-      html,
-      trigger,
-      touchHold,
-      dynamicTitle,
-      createPopperInstanceOnInit
-    } = options
-
     const title = reference.getAttribute('title')
-    if (!title && !html) return acc
+    if (!title && !options.html) return acc
 
     reference.setAttribute('data-tippy', '')
     reference.setAttribute('aria-describedby', `tippy-${id}`)
@@ -54,15 +46,17 @@ export default function createTooltips(els, config) {
       id,
       reference,
       popper,
-      options
+      options,
+      popperInstance: null
     })
-
-    tippy.popperInstance = createPopperInstanceOnInit
-      ? _createPopperInstance.call(tippy)
-      : null
+    
+    if (options.createPopperInstanceOnInit) {
+      tippy.popperInstance = _createPopperInstance.call(tippy)
+      tippy.popperInstance.disableEventListeners()
+    }
 
     const listeners = _getEventListeners.call(tippy)
-    tippy.listeners = trigger
+    tippy.listeners = options.trigger
       .trim()
       .split(' ')
       .reduce((acc, eventType) => {
@@ -72,7 +66,7 @@ export default function createTooltips(els, config) {
       }, [])
 
     // Update tooltip content whenever the title attribute on the reference changes
-    if (dynamicTitle) {
+    if (options.dynamicTitle) {
       _addMutationObserver.call(tippy, {
         target: reference,
         callback() {
