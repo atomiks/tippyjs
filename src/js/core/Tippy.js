@@ -97,11 +97,13 @@ export default (() => {
           this.popperInstance.scheduleUpdate()
           applyTransitionDuration([popper], options.updateDuration)
         }
-        
+
         // Set initial position near the cursor
         if (options.followCursor && !browser.usingTouch) {
           this.popperInstance.disableEventListeners()
-          const delay = Array.isArray(options.delay) ? options.delay[0] : options.delay
+          const delay = Array.isArray(options.delay)
+            ? options.delay[0]
+            : options.delay
           if (this._(key).lastTriggerEvent) {
             this._(key).followCursorListener(
               delay && this._(key).lastMouseMoveEvent
@@ -110,7 +112,7 @@ export default (() => {
             )
           }
         }
-        
+
         // Re-apply transition durations
         applyTransitionDuration(
           [tooltip, backdrop, backdrop ? content : null],
@@ -494,14 +496,14 @@ export default (() => {
       callback: () => {
         const styles = popper.style
         styles[prefix('transitionDuration')] = null
-        
+
         const _onUpdate = this.popperInstance.options.onUpdate
         this.popperInstance.options.onUpdate = () => {
           this.popper.offsetHeight
           styles[prefix('transitionDuration')] = options.updateDuration + 'ms'
           this.popperInstance.options.onUpdate = _onUpdate
         }
-        
+
         this.popperInstance.update()
       },
       options: {

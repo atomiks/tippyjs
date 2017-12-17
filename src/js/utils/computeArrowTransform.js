@@ -26,18 +26,18 @@ export default function computeArrowTransform(popper, arrow, arrowTransform) {
 
   const re = {
     translate: /translateX?Y?\(([^)]+)\)/,
-    scale: /scaleX?Y?\(([^)]+)\)/,
+    scale: /scaleX?Y?\(([^)]+)\)/
   }
 
   const matches = {
     translate: {
       axis: getAxis(/translate([XY])/),
-      numbers: getNumbers(re.translate),
+      numbers: getNumbers(re.translate)
     },
     scale: {
       axis: getAxis(/scale([XY])/),
-      numbers: getNumbers(re.scale),
-    },
+      numbers: getNumbers(re.scale)
+    }
   }
 
   const computedTransform = arrowTransform

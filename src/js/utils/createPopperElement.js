@@ -22,7 +22,7 @@ export default function createPopperElement(id, title, options) {
     html,
     zIndex,
     interactive,
-    maxWidth,
+    maxWidth
   } = options
 
   const popper = document.createElement('div')

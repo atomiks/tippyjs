@@ -6,7 +6,12 @@
  * @param {Boolean} isReverse
  * @return {String}
  */
-export default function transformNumbersBasedOnPlacementAxis(type, numbers, isVertical, isReverse) {
+export default function transformNumbersBasedOnPlacementAxis(
+  type,
+  numbers,
+  isVertical,
+  isReverse
+) {
   if (!numbers.length) return ''
 
   const transforms = {
@@ -14,7 +19,9 @@ export default function transformNumbersBasedOnPlacementAxis(type, numbers, isVe
       if (numbers.length === 1) {
         return `${numbers[0]}`
       } else {
-        return isVertical ? `${numbers[0]}, ${numbers[1]}` : `${numbers[1]}, ${numbers[0]}`
+        return isVertical
+          ? `${numbers[0]}, ${numbers[1]}`
+          : `${numbers[1]}, ${numbers[0]}`
       }
     })(),
     translate: (() => {
@@ -31,7 +38,7 @@ export default function transformNumbersBasedOnPlacementAxis(type, numbers, isVe
             : `${numbers[1]}px, ${numbers[0]}px`
         }
       }
-    })(),
+    })()
   }
 
   return transforms[type]

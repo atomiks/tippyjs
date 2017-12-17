@@ -8,7 +8,12 @@ import removeTitle from '../utils/removeTitle'
 import { defaults, browser } from './globals'
 
 import T from './Tippy'
-const { Tippy, _getEventListeners, _createPopperInstance, _addMutationObserver } = T
+const {
+  Tippy,
+  _getEventListeners,
+  _createPopperInstance,
+  _addMutationObserver
+} = T
 
 let idCounter = 1
 
@@ -44,7 +49,7 @@ export default function createTooltips(els, config) {
       options,
       popperInstance: null
     })
-    
+
     if (options.createPopperInstanceOnInit) {
       tippy.popperInstance = _createPopperInstance.call(tippy)
       tippy.popperInstance.disableEventListeners()
@@ -55,7 +60,9 @@ export default function createTooltips(els, config) {
       .trim()
       .split(' ')
       .reduce((acc, eventType) => {
-        return acc.concat(createTrigger(eventType, reference, listeners, options.touchHold))
+        return acc.concat(
+          createTrigger(eventType, reference, listeners, options.touchHold)
+        )
       }, [])
 
     // Update tooltip content whenever the title attribute on the reference changes
@@ -71,8 +78,8 @@ export default function createTooltips(els, config) {
           }
         },
         options: {
-          attributes: true,
-        },
+          attributes: true
+        }
       })
     }
 

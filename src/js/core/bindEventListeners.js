@@ -69,7 +69,8 @@ export default function bindEventListeners() {
         return hideAllPoppers(reference._tippy)
       }
 
-      if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1) return
+      if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1)
+        return
     }
 
     hideAllPoppers()
@@ -86,7 +87,10 @@ export default function bindEventListeners() {
   document.addEventListener('touchstart', touchHandler)
   window.addEventListener('blur', blurHandler)
 
-  if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
+  if (
+    !browser.supportsTouch &&
+    (navigator.maxTouchPoints || navigator.msMaxTouchPoints)
+  ) {
     document.addEventListener('pointerdown', touchHandler)
   }
 }
