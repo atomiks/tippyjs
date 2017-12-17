@@ -22,7 +22,7 @@ export default function getIndividualOptions(reference, instanceOptions) {
     }
 
     // Convert array strings to actual arrays
-    if (typeof val === 'string' && val.trim().charAt(0) === '[') {
+    if (typeof val === 'string' && val.trim().charAt(0) === '[' && key !== 'target') {
       val = JSON.parse(val)
     }
 

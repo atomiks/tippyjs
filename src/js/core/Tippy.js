@@ -10,12 +10,14 @@ import getPopperPlacement from '../utils/getPopperPlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 import prefix from '../utils/prefix'
 import defer from '../utils/defer'
+import matches from '../utils/matches'
 import closest from '../utils/closest'
 import getDuration from '../utils/getDuration'
 import setVisibilityState from '../utils/setVisibilityState'
 import find from '../utils/find'
 import findIndex from '../utils/findIndex'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
+import isChildOfTarget from '../utils/isChildOfTarget'
 
 export default (() => {
   const key = {}
@@ -67,19 +69,16 @@ export default (() => {
 
       const { popper, reference, options } = this
       const { tooltip, backdrop, content } = getInnerElements(popper)
+      duration = getDuration(
+        duration !== undefined ? duration : options.duration,
+        0
+      )
 
       // Destroy tooltip if the reference element is no longer on the DOM
       if (!reference.refObj && !document.documentElement.contains(reference)) {
         this.destroy()
         return
       }
-
-      options.onShow.call(popper)
-
-      duration = getDuration(
-        duration !== undefined ? duration : options.duration,
-        0
-      )
 
       // Prevent a transition when popper changes position
       applyTransitionDuration([popper, tooltip, backdrop], 0)
@@ -145,6 +144,8 @@ export default (() => {
           options.onShown.call(popper)
         })
       })
+      
+      options.onShow.call(popper)
     }
 
     /**
@@ -158,13 +159,12 @@ export default (() => {
 
       const { popper, reference, options } = this
       const { tooltip, backdrop, content } = getInnerElements(popper)
-
-      options.onHide.call(popper)
-
       duration = getDuration(
         duration !== undefined ? duration : options.duration,
         1
       )
+
+      options.onHide.call(popper)
 
       if (!options.updateDuration) {
         tooltip.classList.remove('tippy-notransition')
@@ -277,7 +277,18 @@ export default (() => {
   function _enter(event) {
     _clearDelayTimeouts.call(this)
 
-    if (this.state.visible) return
+    if (this.state.visible) {
+      if (
+        this.options.target &&
+        event.target !== this.popperInstance.reference
+      ) {
+        // Since we're using event delegation, there's only one tooltip... we need to ensure
+        // that we hide the current one to move it to the new reference
+        this.hide()
+      } else {
+        return
+      }
+    }
 
     this._(key).isPreparingToShow = true
 
@@ -335,93 +346,166 @@ export default (() => {
   }
 
   /**
+   * Event listener for each `trigger` event
+   * @memberof Tippy
+   * @private
+   */
+  function _handleTrigger(event) {
+    if (!this.state.enabled) return
+
+    const shouldStopEvent =
+      browser.supportsTouch &&
+      browser.usingTouch &&
+      (event.type === 'mouseenter' || event.type === 'focus')
+
+    if (shouldStopEvent && this.options.touchHold) return
+
+    this._(key).lastTriggerEvent = event
+
+    // Toggle show/hide when clicking click-triggered tooltips
+    if (
+      event.type === 'click' &&
+      this.options.hideOnClick !== 'persistent' &&
+      this.state.visible
+    ) {
+      _leave.call(this)
+    } else {
+      _enter.call(this, event)
+    }
+
+    // iOS prevents click events from firing
+    if (shouldStopEvent && browser.iOS && this.reference.click) {
+      this.reference.click()
+    }
+  }
+
+  /**
+   * Opposite event listener for `mouseenter`
+   * @memberof Tippy
+   * @private
+   */
+  function _handleMouseLeave(event) {
+    if (
+      event.type === 'mouseleave' &&
+      browser.supportsTouch &&
+      browser.usingTouch &&
+      this.options.touchHold
+    )
+      return
+
+    if (this.options.interactive) {
+      const fallbackElement = document.createElement('div')
+      const hide = _leave.bind(this)
+
+      // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
+      const handleMouseMove = event => {
+        this._(key).cursorIsInteracting = true
+
+        const referenceCursorIsOver = this.options.target
+          ? closest(event.target, this.options.target)
+          : closest(event.target, selectors.REFERENCE)
+
+        const cursorIsOverPopper =
+          closest(event.target, selectors.POPPER) === this.popper
+
+        const cursorIsOverReference = this.options.target
+          ? matches.call(
+              referenceCursorIsOver || fallbackElement,
+              this.options.target
+            )
+          : referenceCursorIsOver === this.reference
+
+        if (cursorIsOverPopper || cursorIsOverReference) return
+
+        if (
+          cursorIsOutsideInteractiveBorder(event, this.popper, this.options)
+        ) {
+          this._(key).cursorIsInteracting = false
+
+          document.body.removeEventListener('mouseleave', hide)
+          document.removeEventListener('mousemove', handleMouseMove)
+
+          _leave.call(this)
+        }
+      }
+      document.body.addEventListener('mouseleave', hide)
+      document.addEventListener('mousemove', handleMouseMove)
+      return
+    }
+
+    _leave.call(this)
+  }
+
+  /**
+   * Opposite event listener for `focus`
+   * @memberof Tippy
+   * @private
+   */
+  function _handleBlur(event) {
+    if (!event.relatedTarget || browser.usingTouch) return
+    if (closest(event.relatedTarget, selectors.POPPER)) return
+
+    _leave.call(this)
+  }
+
+  /**
+   * Handles the `mouseover`/`focusin` event delegation
+   * @memberof Tippy
+   * @private
+   */
+  function _handleDelegateShow(event) {
+    const currentElement = closest(event.target, this.options.target)
+
+    const isMouseOver = event.type === 'mouseover'
+    const isInteracting = this._(key).cursorIsInteracting
+    const isChild = isChildOfTarget(
+      event.relatedTarget || event.toElement,
+      this.options.target
+    )
+    const isSameElement = currentElement === this._(key).previousElement
+
+    if ((isMouseOver && isInteracting) || (isChild && isSameElement)) return
+
+    this._(key).previousElement = currentElement
+    this._(key).isSameElement = isSameElement
+
+    if (currentElement && event.target !== this.reference) {
+      _handleTrigger.call(this, event)
+    }
+  }
+
+  /**
+   * Handles the `mouseout`/`focusout` event delegation
+   * @memberof Tippy
+   * @private
+   */
+  function _handleDelegateHide(event) {
+    const isMouseOut = event.type === 'mouseout'
+    const isChild = isChildOfTarget(
+      event.relatedTarget || event.toElement,
+      this.options.target
+    )
+
+    if (isMouseOut && isChild) return
+
+    if (closest(event.target, this.options.target)) {
+      _handleMouseLeave.call(this, event)
+    }
+  }
+
+  /**
    * Returns relevant listeners for the instance
    * @return {Object} of listeners
    * @memberof Tippy
    * @private
    */
   function _getEventListeners() {
-    const handleTrigger = event => {
-      if (!this.state.enabled) return
-
-      const shouldStopEvent =
-        browser.supportsTouch &&
-        browser.usingTouch &&
-        (event.type === 'mouseenter' || event.type === 'focus')
-
-      if (shouldStopEvent && this.options.touchHold) return
-
-      this._(key).lastTriggerEvent = event
-
-      // Toggle show/hide when clicking click-triggered tooltips
-      if (
-        event.type === 'click' &&
-        this.options.hideOnClick !== 'persistent' &&
-        this.state.visible
-      ) {
-        _leave.call(this)
-      } else {
-        _enter.call(this, event)
-      }
-
-      // iOS prevents click events from firing
-      if (shouldStopEvent && browser.iOS && this.reference.click) {
-        this.reference.click()
-      }
-    }
-
-    const handleMouseleave = event => {
-      if (
-        event.type === 'mouseleave' &&
-        browser.supportsTouch &&
-        browser.usingTouch &&
-        this.options.touchHold
-      )
-        return
-
-      if (this.options.interactive) {
-        const hide = _leave.bind(this)
-
-        // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
-        const handleMousemove = event => {
-          const referenceCursorIsOver = closest(
-            event.target,
-            selectors.REFERENCE
-          )
-          const cursorIsOverPopper =
-            closest(event.target, selectors.POPPER) === this.popper
-          const cursorIsOverReference = referenceCursorIsOver === this.reference
-
-          if (cursorIsOverPopper || cursorIsOverReference) return
-
-          if (
-            cursorIsOutsideInteractiveBorder(event, this.popper, this.options)
-          ) {
-            document.body.removeEventListener('mouseleave', hide)
-            document.removeEventListener('mousemove', handleMousemove)
-
-            _leave.call(this)
-          }
-        }
-        document.body.addEventListener('mouseleave', hide)
-        document.addEventListener('mousemove', handleMousemove)
-        return
-      }
-
-      _leave.call(this)
-    }
-
-    const handleBlur = event => {
-      if (!event.relatedTarget || browser.usingTouch) return
-      if (closest(event.relatedTarget, selectors.POPPER)) return
-
-      _leave.call(this)
-    }
-
     return {
-      handleTrigger,
-      handleMouseleave,
-      handleBlur
+      handleTrigger: _handleTrigger.bind(this),
+      handleMouseLeave: _handleMouseLeave.bind(this),
+      handleBlur: _handleBlur.bind(this),
+      handleDelegateShow: _handleDelegateShow.bind(this),
+      handleDelegateHide: _handleDelegateHide.bind(this)
     }
   }
 
@@ -533,6 +617,15 @@ export default (() => {
         this.popperInstance.enableEventListeners()
       }
     }
+    
+    if (this.options.target) {
+      const newReference = closest(
+        this._(key).lastTriggerEvent.target,
+        this.options.target
+      )
+      this.popperInstance.reference = newReference
+      this.popper._reference = newReference
+    }
 
     const _onCreate = this.popperInstance.options.onCreate
     const _onUpdate = this.popperInstance.options.onUpdate
@@ -544,7 +637,10 @@ export default (() => {
       this.popperInstance.options.onCreate = _onCreate
     }
 
-    if (!this.options.appendTo.contains(this.popper)) {
+    if (
+      (this._(key).isSameElement && this.options.target) ||
+      !this.options.appendTo.contains(this.popper)
+    ) {
       this.options.appendTo.appendChild(this.popper)
     }
   }

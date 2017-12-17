@@ -61,7 +61,7 @@ export default function createTooltips(els, config) {
       .split(' ')
       .reduce((acc, eventType) => {
         return acc.concat(
-          createTrigger(eventType, reference, listeners, options.touchHold)
+          createTrigger(eventType, reference, listeners, options)
         )
       }, [])
 
@@ -86,6 +86,7 @@ export default function createTooltips(els, config) {
     // Shortcuts
     reference._tippy = tippy
     popper._reference = reference
+    popper._tippy = tippy
 
     acc.push(tippy)
 

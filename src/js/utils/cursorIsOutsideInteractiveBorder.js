@@ -1,4 +1,4 @@
-import getPopperPlacement from '../utils/getPopperPlacement'
+import getPopperPlacement from './getPopperPlacement'
 
 /**
  * Determines if the mouse's cursor is outside the interactive border
