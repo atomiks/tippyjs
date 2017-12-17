@@ -462,11 +462,12 @@ export default (() => {
       event.relatedTarget || event.toElement,
       this.options.target
     )
-    const sameElement = currentElement === this._(key).previousElement
+    const isSameElement = currentElement === this._(key).previousElement
 
-    if ((isMouseOver && isInteracting) || (isChild && sameElement)) return
+    if ((isMouseOver && isInteracting) || (isChild && isSameElement)) return
 
     this._(key).previousElement = currentElement
+    this._(key).isSameElement = isSameElement
 
     if (currentElement && event.target !== this.reference) {
       _handleTrigger.call(this, event)
@@ -636,7 +637,10 @@ export default (() => {
       this.popperInstance.options.onCreate = _onCreate
     }
 
-    if (this.options.target || !this.options.appendTo.contains(this.popper)) {
+    if (
+      (this._(key).isSameElement && this.options.target) ||
+      !this.options.appendTo.contains(this.popper)
+    ) {
       this.options.appendTo.appendChild(this.popper)
     }
   }
