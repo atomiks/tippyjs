@@ -8,11 +8,10 @@ export default function hideAllPoppers(excludeTippy) {
   const poppers = [].slice.call(document.querySelectorAll(selectors.POPPER))
 
   poppers.forEach(popper => {
-    const tippy = popper._reference._tippy
-    const { options } = tippy
+    const tippy = popper._tippy
 
     if (
-      (options.hideOnClick === true || options.trigger.indexOf('focus') > -1) &&
+      (tippy.options.hideOnClick === true || tippy.options.trigger.indexOf('focus') > -1) &&
       (!excludeTippy || popper !== excludeTippy.popper)
     ) {
       tippy.hide()

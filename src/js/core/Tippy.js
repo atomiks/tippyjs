@@ -606,38 +606,24 @@ export default (() => {
    * @private
    */
   function _mount(callback) {
-    const DOMContainsPopper = this.options.appendTo.contains(this.popper)
-    const isSameReference =
-      this.popperInstance &&
-      this._(key).lastTriggerEvent &&
-      this.popperInstance.reference ===
-        closest(this._(key).lastTriggerEvent.target, this.options.target)
-
-    if (DOMContainsPopper && (!this.options.target || isSameReference)) return
-
-    const updateReference = () => {
-      if (this.options.target) {
-        const newReference = closest(
-          this._(key).lastTriggerEvent.target,
-          this.options.target
-        )
-        newReference._tippy = this
-        this.popperInstance.reference = newReference
-        this.popper._reference = newReference
-      }
-    }
-
     if (!this.popperInstance) {
       this.popperInstance = _createPopperInstance.call(this)
-      updateReference()
     } else {
-      updateReference()
       this.popper.style[prefix('transform')] = null
       this.popperInstance.scheduleUpdate()
 
       if (!this.options.followCursor || browser.usingTouch) {
         this.popperInstance.enableEventListeners()
       }
+    }
+    
+    if (this.options.target) {
+      const newReference = closest(
+        this._(key).lastTriggerEvent.target,
+        this.options.target
+      )
+      this.popperInstance.reference = newReference
+      this.popper._reference = newReference
     }
 
     const _onCreate = this.popperInstance.options.onCreate
@@ -650,7 +636,7 @@ export default (() => {
       this.popperInstance.options.onCreate = _onCreate
     }
 
-    if (!this.options.appendTo.contains(this.popper)) {
+    if (this.options.target || !this.options.appendTo.contains(this.popper)) {
       this.options.appendTo.appendChild(this.popper)
     }
   }
