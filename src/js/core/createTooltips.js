@@ -49,7 +49,7 @@ export default function createTooltips(els, config) {
       options,
       popperInstance: null
     })
-    
+
     if (options.createPopperInstanceOnInit) {
       tippy.popperInstance = _createPopperInstance.call(tippy)
       tippy.popperInstance.disableEventListeners()

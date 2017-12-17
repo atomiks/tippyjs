@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.all.js",
   "repository": {
@@ -16,7 +16,7 @@
     "standalone": "rollup -c scripts/rollup.standalone.config.js && rollup -c scripts/rollup.standalone.min.config.js",
     "themes": "rollup -c scripts/rollup.themes.config.js",
     "test": "rollup -c scripts/rollup.tests.config.js --format es && karma start karma.conf.js",
-    "prettier": "prettier --print-width 100 --no-semi --single-quote --trailing-comma es5 --write 'src/**/*.js'"
+    "prettier": "prettier --print-width 80 --no-semi --single-quote es5 --write 'src/**/*.js'"
   },
   "author": "atomiks",
   "license": "MIT",

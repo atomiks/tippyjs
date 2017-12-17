@@ -771,6 +771,15 @@ var T = (function () {
             applyTransitionDuration([popper], options.updateDuration);
           }
 
+          // Set initial position near the cursor
+          if (options.followCursor && !browser.usingTouch) {
+            _this.popperInstance.disableEventListeners();
+            var delay = Array.isArray(options.delay) ? options.delay[0] : options.delay;
+            if (_this._(key).lastTriggerEvent) {
+              _this._(key).followCursorListener(delay && _this._(key).lastMouseMoveEvent ? _this._(key).lastMouseMoveEvent : _this._(key).lastTriggerEvent);
+            }
+          }
+
           // Re-apply transition durations
           applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration);
 
@@ -860,6 +869,7 @@ var T = (function () {
 
             if (!_this2._(key).isPreparingToShow) {
               document.removeEventListener('mousemove', _this2._(key).followCursorListener);
+              _this2._(key).lastMouseMoveEvent = null;
             }
 
             _this2.popperInstance.disableEventListeners();
@@ -1159,7 +1169,6 @@ var T = (function () {
       this.popperInstance = _createPopperInstance.call(this);
     } else {
       this.popper.style[prefix('transform')] = null;
-
       this.popperInstance.scheduleUpdate();
 
       if (!this.options.followCursor || browser.usingTouch) {
@@ -1179,14 +1188,6 @@ var T = (function () {
 
     if (!this.options.appendTo.contains(this.popper)) {
       this.options.appendTo.appendChild(this.popper);
-    }
-
-    // Set initial position near cursor
-    if (this.options.followCursor && !browser.usingTouch) {
-      this.popperInstance.disableEventListeners();
-      defer(function () {
-        _this8._(key).followCursorListener(_this8._(key).lastMouseMoveEvent || _this8._(key).lastTriggerEvent);
-      });
     }
   }
 
@@ -1227,17 +1228,6 @@ var T = (function () {
           pageY = event.pageY;
 
       var PADDING = 5;
-
-      // Obscure case: If the user scrolled to the element without moving
-      // their mouse, it would be at the wrong position.
-      if (_this9.reference.getBoundingClientRect) {
-        var rect = _this9.reference.getBoundingClientRect();
-        var oY = window.scrollY || document.documentElement.scrollTop;
-        var oX = window.scrollX || document.documentElement.scrollLeft;
-        if (_this9.state.visible && _this9._(key).isPreparingToShow && (pageX < rect.left + oX || pageX > rect.right + oX || pageY > rect.bottom + oY || pageY < rect.top + oY)) {
-          return;
-        }
-      }
 
       var placement = _this9.options.placement.replace(/-.+/, '');
       if (_this9.popper.getAttribute('x-placement')) {
