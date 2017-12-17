@@ -97,7 +97,20 @@ export default (() => {
           this.popperInstance.scheduleUpdate()
           applyTransitionDuration([popper], options.updateDuration)
         }
-
+        
+        // Set initial position near the cursor
+        if (options.followCursor && !browser.usingTouch) {
+          this.popperInstance.disableEventListeners()
+          const delay = Array.isArray(options.delay) ? options.delay[0] : options.delay
+          if (this._(key).lastTriggerEvent) {
+            this._(key).followCursorListener(
+              delay && this._(key).lastMouseMoveEvent
+                ? this._(key).lastMouseMoveEvent
+                : this._(key).lastTriggerEvent
+            )
+          }
+        }
+        
         // Re-apply transition durations
         applyTransitionDuration(
           [tooltip, backdrop, backdrop ? content : null],
@@ -192,6 +205,7 @@ export default (() => {
               'mousemove',
               this._(key).followCursorListener
             )
+            this._(key).lastMouseMoveEvent = null
           }
 
           this.popperInstance.disableEventListeners()
@@ -511,7 +525,6 @@ export default (() => {
       this.popperInstance = _createPopperInstance.call(this)
     } else {
       this.popper.style[prefix('transform')] = null
-
       this.popperInstance.scheduleUpdate()
 
       if (!this.options.followCursor || browser.usingTouch) {
@@ -531,16 +544,6 @@ export default (() => {
 
     if (!this.options.appendTo.contains(this.popper)) {
       this.options.appendTo.appendChild(this.popper)
-    }
-
-    // Set initial position near cursor
-    if (this.options.followCursor && !browser.usingTouch) {
-      this.popperInstance.disableEventListeners()
-      defer(() => {
-        this._(key).followCursorListener(
-          this._(key).lastMouseMoveEvent || this._(key).lastTriggerEvent
-        )
-      })
     }
   }
 
@@ -579,24 +582,6 @@ export default (() => {
       const offset = this.options.offset
       const { pageX, pageY } = event
       const PADDING = 5
-
-      // Obscure case: If the user scrolled to the element without moving
-      // their mouse, it would be at the wrong position.
-      if (this.reference.getBoundingClientRect) {
-        const rect = this.reference.getBoundingClientRect()
-        const oY = window.scrollY || document.documentElement.scrollTop
-        const oX = window.scrollX || document.documentElement.scrollLeft
-        if (
-          this.state.visible &&
-          this._(key).isPreparingToShow &&
-          (pageX < rect.left + oX ||
-            pageX > rect.right + oX ||
-            pageY > rect.bottom + oY ||
-            pageY < rect.top + oY)
-        ) {
-          return
-        }
-      }
 
       let placement = this.options.placement.replace(/-.+/, '')
       if (this.popper.getAttribute('x-placement')) {
