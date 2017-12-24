@@ -2,7 +2,6 @@ import { browser, selectors } from './globals'
 
 import hideAllPoppers from '../utils/hideAllPoppers'
 import closest from '../utils/closest'
-import find from '../utils/find'
 import matches from '../utils/matches'
 
 /**
@@ -69,14 +68,13 @@ export default function bindEventListeners() {
         return hideAllPoppers(reference._tippy)
       }
 
-      if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1)
-        return
+      if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1) return
     }
 
     hideAllPoppers()
   }
 
-  const blurHandler = event => {
+  const blurHandler = () => {
     const { activeElement: el } = document
     if (el && el.blur && matches.call(el, selectors.REFERENCE)) {
       el.blur()
@@ -87,10 +85,7 @@ export default function bindEventListeners() {
   document.addEventListener('touchstart', touchHandler)
   window.addEventListener('blur', blurHandler)
 
-  if (
-    !browser.supportsTouch &&
-    (navigator.maxTouchPoints || navigator.msMaxTouchPoints)
-  ) {
+  if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
     document.addEventListener('pointerdown', touchHandler)
   }
 }

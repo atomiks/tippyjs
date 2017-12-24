@@ -13,7 +13,7 @@ if (isBrowser) {
     function(s) {
       const matches = (this.document || this.ownerDocument).querySelectorAll(s)
       let i = matches.length
-      while (--i >= 0 && matches.item(i) !== this) {}
+      while (--i >= 0 && matches.item(i) !== this) {} // eslint-disable-line no-empty
       return i > -1
     }
 }

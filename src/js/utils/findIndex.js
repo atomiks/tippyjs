@@ -7,7 +7,5 @@ import find from './find'
  * @return index of the item in the array
  */
 export default function findIndex(arr, fn) {
-  return Array.prototype.findIndex
-    ? arr.findIndex(fn)
-    : arr.indexOf(find(arr, fn))
+  return Array.prototype.findIndex ? arr.findIndex(fn) : arr.indexOf(find(arr, fn))
 }

@@ -46,9 +46,7 @@ function tippy(selector, options) {
   return {
     selector,
     options,
-    tooltips: browser.supported
-      ? createTooltips(getArrayOfElements(selector), options)
-      : [],
+    tooltips: browser.supported ? createTooltips(getArrayOfElements(selector), options) : [],
     destroyAll() {
       this.tooltips.forEach(tooltip => tooltip.destroy())
       this.tooltips = []

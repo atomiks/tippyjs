@@ -9,8 +9,6 @@ import prefix from './prefix'
  */
 export default function createPopperElement(id, title, options) {
   const {
-    placement,
-    distance,
     arrow,
     arrowType,
     arrowTransform,

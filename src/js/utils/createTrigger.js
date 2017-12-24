@@ -8,12 +8,7 @@ import { browser } from '../core/globals'
  * @param {Boolean} touchHold
  * @return {Array} - array of listener objects
  */
-export default function createTrigger(
-  eventType,
-  reference,
-  handlers,
-  touchHold
-) {
+export default function createTrigger(eventType, reference, handlers, touchHold) {
   const listeners = []
 
   if (eventType === 'manual') return listeners

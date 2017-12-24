@@ -1,7 +1,4 @@
-import { selectors } from '../core/globals'
-
 import prefix from './prefix'
-import matches from './matches'
 
 /**
  * Applies the transition duration to each element
