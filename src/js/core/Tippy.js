@@ -128,7 +128,7 @@ export default (() => {
             tooltip.classList.add('tippy-notransition')
           }
 
-          if (options.interactive) {
+          if (options.interactive && elementIsInViewport(reference)) {
             popper.focus()
           }
 
