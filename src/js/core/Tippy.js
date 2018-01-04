@@ -543,22 +543,22 @@ export default (() => {
       let x, y
 
       switch (placement) {
-      case 'top':
-        x = pageX - halfPopperWidth + offset
-        y = pageY - 2 * halfPopperHeight
-        break
-      case 'bottom':
-        x = pageX - halfPopperWidth + offset
-        y = pageY + 10
-        break
-      case 'left':
-        x = pageX - 2 * halfPopperWidth
-        y = pageY - halfPopperHeight + offset
-        break
-      case 'right':
-        x = pageX + 5
-        y = pageY - halfPopperHeight + offset
-        break
+        case 'top':
+          x = pageX - halfPopperWidth + offset
+          y = pageY - 2 * halfPopperHeight
+          break
+        case 'bottom':
+          x = pageX - halfPopperWidth + offset
+          y = pageY + 10
+          break
+        case 'left':
+          x = pageX - 2 * halfPopperWidth
+          y = pageY - halfPopperHeight + offset
+          break
+        case 'right':
+          x = pageX + 5
+          y = pageY - halfPopperHeight + offset
+          break
       }
 
       const isRightOverflowing = pageX + PADDING + halfPopperWidth + offset > pageWidth

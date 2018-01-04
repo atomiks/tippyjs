@@ -77,9 +77,7 @@ describe('core', () => {
         }
       })
 
-      expect(
-        Object.keys(optionsClone).every(key => optionsClone[key] === defaults[key])
-      ).toBe(true)
+      expect(Object.keys(optionsClone).every(key => optionsClone[key] === defaults[key])).toBe(true)
 
       expect(defaults.popperOptions.modifiers).toBeUndefined()
 
@@ -101,7 +99,7 @@ describe('core', () => {
       tippy(el)
       const instance = el._tippy
       el._tippy.show()
-      
+
       expect(el._tippy).toBeUndefined()
       expect(instance.state.destroyed).toBe(true)
     })
@@ -150,8 +148,8 @@ describe('core', () => {
 
       expect(
         tip.options.placement === 'bottom' &&
-        tip.options.delay[0] === 100 &&
-        tip.options.html === defaults.html
+          tip.options.delay[0] === 100 &&
+          tip.options.html === defaults.html
       ).toBe(true)
 
       tip.destroyAll()
@@ -176,9 +174,7 @@ describe('core', () => {
       })
 
       it('should work', () => {
-        expect(
-          showIsAFunction && eventIsAnEventObject && popperStaysHidden
-        ).toBe(true)
+        expect(showIsAFunction && eventIsAnEventObject && popperStaysHidden).toBe(true)
         tip.destroyAll()
       })
     })
@@ -189,17 +185,17 @@ describe('core', () => {
           a: createVirtualElement(),
           b: createVirtualElement()
         }
-        
+
         const instances = {
           a: tippy(els.a),
           b: tippy(els.b)
         }
-        
+
         const tippys = {
           a: els.a._tippy,
           b: els.b._tippy
         }
-        
+
         instances.a.destroyAll()
 
         expect(tippys.a.state.destroyed).toBe(true)
@@ -232,7 +228,7 @@ describe('core', () => {
 
         expect(test).toBe(true)
         expect(document.querySelector(selectors.POPPER)).toBeNull()
-        
+
         tip.destroyAll()
       })
     })
@@ -251,7 +247,7 @@ describe('core', () => {
 
       it('shows a tooltip when triggered by one of the events in the trigger string', () => {
         const el = createVirtualElement()
-        
+
         const tip = tippy(el, {
           trigger: 'mouseenter click'
         })
@@ -353,11 +349,11 @@ describe('core', () => {
         tip.destroyAll()
       })
     })
-    
+
     describe('_onTransitionEnd', () => {
       let a = false,
-      b = false,
-      c = false
+        b = false,
+        c = false
 
       const DURATION = 20
 
@@ -380,8 +376,8 @@ describe('core', () => {
         } else {
           setTimeout(done, DURATION + 100)
         }
-        
-      _onTransitionEnd.call(el._tippy, DURATION, () => {
+
+        _onTransitionEnd.call(el._tippy, DURATION, () => {
           a = true
           if (firstItDone) {
             c = true
@@ -393,7 +389,7 @@ describe('core', () => {
         expect(a).not.toBe(b)
       })
     })
-    
+
     describe('_createPopperInstance', () => {
       it('returns a new Popper instance', () => {
         const el = createVirtualElement()
@@ -448,7 +444,7 @@ describe('core', () => {
         })
 
         el._tippy.show()
-        
+
         expect(testContainer.contains(el._tippy.popper)).toBe(true)
 
         document.body.removeChild(testContainer)
@@ -505,7 +501,9 @@ describe('core', () => {
           animation: 'fade'
         })
 
-        expect(el._tippy.popper.querySelector(selectors.TOOLTIP).getAttribute('data-animation')).toBe('fade')
+        expect(
+          el._tippy.popper.querySelector(selectors.TOOLTIP).getAttribute('data-animation')
+        ).toBe('fade')
         tip.destroyAll()
       })
     })
@@ -518,7 +516,9 @@ describe('core', () => {
           arrow: true
         })
 
-        expect(el._tippy.popper.querySelector(selectors.TOOLTIP).querySelector(selectors.ARROW)).not.toBeNull()
+        expect(
+          el._tippy.popper.querySelector(selectors.TOOLTIP).querySelector(selectors.ARROW)
+        ).not.toBeNull()
         tip.destroyAll()
       })
     })
@@ -531,7 +531,9 @@ describe('core', () => {
           arrow: true
         })
 
-        expect(el._tippy.popper.querySelector(selectors.TOOLTIP).querySelector(selectors.BACKDROP)).toBeNull()
+        expect(
+          el._tippy.popper.querySelector(selectors.TOOLTIP).querySelector(selectors.BACKDROP)
+        ).toBeNull()
         tip.destroyAll()
       })
     })
@@ -637,7 +639,6 @@ describe('core', () => {
           })
 
           expect(el._tippy.popperInstance.options.placement).toBe(placement)
-
           ;['-start', '-end'].forEach(shift => {
             const el = createVirtualElement()
 
@@ -705,7 +706,6 @@ describe('core', () => {
       const res1 = getArrayOfElements(el1)
       const res2 = getArrayOfElements('.test')
       const res3 = getArrayOfElements([el3, el4])
-
       ;[res1, res2, res3].forEach(res =>
         expect(res.every(item => item instanceof Element)).toBe(true)
       )
@@ -716,7 +716,7 @@ describe('core', () => {
 
   describe('createTrigger', () => {
     const el = createVirtualElement()
-    
+
     const handlers = {
       handleTrigger() {},
       handleMouseleave() {},
@@ -727,24 +727,20 @@ describe('core', () => {
       const listeners1 = createTrigger('mouseenter', el, handlers, false)
       const listeners2 = createTrigger('focus', el, handlers, false)
 
-      expect(
-        find(listeners1, o => o.event === 'mouseleave')
-      ).toBeDefined()
+      expect(find(listeners1, o => o.event === 'mouseleave')).toBeDefined()
 
-      expect(
-        find(listeners2, o => o.event === 'blur')
-      ).toBeDefined()
+      expect(find(listeners2, o => o.event === 'blur')).toBeDefined()
     })
 
     it('creates `touchstart` and `touchend` events if `touchHold` setting is true', () => {
       const listeners = createTrigger('mouseenter', el, handlers, true)
 
       if (browser.supportsTouch) {
-        ['touchstart', 'touchend'].forEach(e =>
+        ;['touchstart', 'touchend'].forEach(e =>
           expect(find(listeners, o => o.event === e)).toBeDefined()
         )
       } else {
-        ['touchstart', 'touchend'].forEach(e =>
+        ;['touchstart', 'touchend'].forEach(e =>
           expect(find(listeners, o => o.event === e)).toBeUndefined()
         )
       }
@@ -892,52 +888,53 @@ describe('utils', () => {
       expect(transformAxisBasedOnPlacement('', true)).toBe('')
     })
   })
-  
+
   describe('transformNumbersBasedOnPlacement', () => {
     it('correctly transforms scale with 1 number', () => {
       expect(transformNumbersBasedOnPlacement('scale', [0.5], true, false)).toBe('0.5')
     })
-    
+
     it('correctly transforms scale with 2 numbers', () => {
-      expect(transformNumbersBasedOnPlacement('scale', [0.5,0.9], true, false)).toBe('0.5, 0.9')
-      expect(transformNumbersBasedOnPlacement('scale', [0.5,0.9], false, false)).toBe('0.9, 0.5')
+      expect(transformNumbersBasedOnPlacement('scale', [0.5, 0.9], true, false)).toBe('0.5, 0.9')
+      expect(transformNumbersBasedOnPlacement('scale', [0.5, 0.9], false, false)).toBe('0.9, 0.5')
     })
-    
+
     it('correctly transforms translate numbers with 1 number', () => {
       expect(transformNumbersBasedOnPlacement('translate', [0.5], false, false)).toBe('0.5px')
       expect(transformNumbersBasedOnPlacement('translate', [0.5], false, true)).toBe('-0.5px')
     })
-    
+
     it('correctly transforms translate numbers with 2 numbers', () => {
-      expect(transformNumbersBasedOnPlacement('translate', [0.5,1], true, false)).toBe('0.5px, 1px')
-      expect(transformNumbersBasedOnPlacement('translate', [0.5,1], true, true)).toBe('0.5px, -1px')
-      expect(transformNumbersBasedOnPlacement('translate', [0.5,1], false, true)).toBe('-1px, 0.5px')
-      expect(transformNumbersBasedOnPlacement('translate', [0.5,1], false, false)).toBe('1px, 0.5px')
+      expect(transformNumbersBasedOnPlacement('translate', [0.5, 1], true, false)).toBe(
+        '0.5px, 1px'
+      )
+      expect(transformNumbersBasedOnPlacement('translate', [0.5, 1], true, true)).toBe(
+        '0.5px, -1px'
+      )
+      expect(transformNumbersBasedOnPlacement('translate', [0.5, 1], false, true)).toBe(
+        '-1px, 0.5px'
+      )
+      expect(transformNumbersBasedOnPlacement('translate', [0.5, 1], false, false)).toBe(
+        '1px, 0.5px'
+      )
     })
   })
-  
+
   describe('getPopperPlacement', () => {
     const popper = document.createElement('div')
-    
-    it('returns the non-shifted placement for all combinations', () => {
-      ['top', 'bottom', 'left', 'right'].forEach(placement => {
-        popper.setAttribute('x-placement', placement)
-        
-        expect(
-          getPopperPlacement(popper)
-        ).toBe(placement)
 
+    it('returns the non-shifted placement for all combinations', () => {
+      ;['top', 'bottom', 'left', 'right'].forEach(placement => {
+        popper.setAttribute('x-placement', placement)
+
+        expect(getPopperPlacement(popper)).toBe(placement)
         ;['-start', '-end'].forEach(shift => {
           popper.setAttribute('x-placement', placement + shift)
-          
-          expect(
-            getPopperPlacement(popper)
-          ).toBe(placement)
-        })
 
+          expect(getPopperPlacement(popper)).toBe(placement)
+        })
       })
     })
-
   })
 
   describe('find', () => {
@@ -948,13 +945,9 @@ describe('utils', () => {
         { name: 'Bob', city: 'London' }
       ]
 
-      expect(
-        find(arr, o => o.name === 'Bob').city
-      ).toBe('Los Angeles')
+      expect(find(arr, o => o.name === 'Bob').city).toBe('Los Angeles')
 
-      expect(
-        find(arr, o => o.city === 'London')
-      ).toBe(arr[2])
+      expect(find(arr, o => o.city === 'London')).toBe(arr[2])
     })
   })
 
@@ -976,13 +969,9 @@ describe('utils', () => {
         { name: 'Bob', city: 'London' }
       ]
 
-      expect(
-        findIndex(arr, o => o.name === 'Bob')
-      ).toBe(0)
+      expect(findIndex(arr, o => o.name === 'Bob')).toBe(0)
 
-      expect(
-        findIndex(arr, o => o.city === 'London')
-      ).toBe(2)
+      expect(findIndex(arr, o => o.city === 'London')).toBe(2)
     })
   })
 

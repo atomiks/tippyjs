@@ -14,26 +14,25 @@
   perspective: 700px;
   z-index: 9999;
   outline: 0;
-  transition-timing-function: cubic-bezier(.165, .84, .44, 1);
+  transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
   pointer-events: none;
-  
+
   &[data-html] {
     max-width: 96%;
     max-width: calc(100% - 20px);
   }
 
   @each $placement in $placements {
-    &[x-placement^=#{$placement}] {
-      
+    &[x-placement^='#{$placement}'] {
       .tippy-backdrop {
         border-radius: nth($backdrop-border-radii, index($placements, $placement));
       }
-      
+
       .tippy-roundarrow {
         @include roundarrow($placement, 23px, #333);
         @include arrow-position($placement, 15px);
         @include roundarrow-margin($placement);
-        
+
         svg {
           @include roundarrow-transform($placement);
         }
@@ -48,71 +47,71 @@
       .tippy-backdrop {
         transform-origin: nth($backdrop-origins, index($placements, $placement));
 
-        &[data-state=visible] {
+        &[data-state='visible'] {
           @include backdrop-transform-enter($placement);
           opacity: 1;
         }
 
-        &[data-state=hidden] {
+        &[data-state='hidden'] {
           @include backdrop-transform-leave($placement);
           opacity: 0;
         }
       }
-      
-      [data-animation=shift-toward] {
-        &[data-state=visible] {
+
+      [data-animation='shift-toward'] {
+        &[data-state='visible'] {
           opacity: 1;
           @include enter-transform($placement, 'fade');
         }
-        &[data-state=hidden] {
+        &[data-state='hidden'] {
           opacity: 0;
           @include leave-transform($placement, 'shift-toward');
         }
       }
 
-      [data-animation=perspective] {
+      [data-animation='perspective'] {
         transform-origin: nth($origins, index($placements, $placement));
 
-        &[data-state=visible] {
+        &[data-state='visible'] {
           opacity: 1;
           @include enter-transform($placement, 'perspective');
         }
-        &[data-state=hidden] {
+        &[data-state='hidden'] {
           opacity: 0;
           @include leave-transform($placement, 'perspective');
         }
       }
 
-      [data-animation=fade] {
-        &[data-state=visible] {
+      [data-animation='fade'] {
+        &[data-state='visible'] {
           opacity: 1;
-          @include enter-transform($placement, 'fade')
+          @include enter-transform($placement, 'fade');
         }
-        &[data-state=hidden] {
+        &[data-state='hidden'] {
           opacity: 0;
-          @include enter-transform($placement, 'fade')
+          @include enter-transform($placement, 'fade');
         }
       }
 
-      [data-animation=shift-away] {
-        &[data-state=visible] {
+      [data-animation='shift-away'] {
+        &[data-state='visible'] {
           opacity: 1;
-          @include enter-transform($placement, 'fade')
+          @include enter-transform($placement, 'fade');
         }
-        &[data-state=hidden] {
+        &[data-state='hidden'] {
           opacity: 0;
-          @include leave-transform($placement, 'shift-away')
+          @include leave-transform($placement, 'shift-away');
         }
       }
 
-      [data-animation=scale] {
-        &[data-state=visible] {
+      [data-animation='scale'] {
+        &[data-state='visible'] {
           opacity: 1;
-          @include enter-transform($placement, 'scale')
+          @include enter-transform($placement, 'scale');
         }
-        &[data-state=hidden] {
+        &[data-state='hidden'] {
           opacity: 0;
-          @include leave-transform($placement, 'scale')
+          @include leave-transform($placement, 'scale');
         }
       }
     }
@@ -131,12 +130,12 @@
   -moz-osx-font-smoothing: grayscale;
   background-color: #333;
 
-  &[data-size=small] {
+  &[data-size='small'] {
     padding: 0.2rem 0.4rem;
     font-size: 0.75rem;
   }
 
-  &[data-size=large] {
+  &[data-size='large'] {
     padding: 0.4rem 0.8rem;
     font-size: 1rem;
   }
@@ -144,7 +143,7 @@
   &[data-animatefill] {
     overflow: hidden;
     background-color: transparent;
-    
+
     .tippy-content {
       transition: clip-path cubic-bezier(0.46, 0.1, 0.52, 0.98);
     }
@@ -155,16 +154,17 @@
   }
 
   &[data-inertia] {
-    &[data-state=visible] {
-      transition-timing-function: cubic-bezier(.53,2,.36,.85);
+    &[data-state='visible'] {
+      transition-timing-function: cubic-bezier(0.53, 2, 0.36, 0.85);
     }
-    &[data-state=hidden] {
+    &[data-state='hidden'] {
       transition-timing-function: ease;
     }
   }
 }
 
-.tippy-arrow, .tippy-roundarrow {
+.tippy-arrow,
+.tippy-roundarrow {
   position: absolute;
   width: 0;
   height: 0;
@@ -181,7 +181,7 @@
   z-index: -1;
   transition: all cubic-bezier(0.46, 0.1, 0.52, 0.98);
   backface-visibility: hidden;
-  
+
   &::after {
     content: '';
     float: left;
@@ -192,40 +192,40 @@
 /* iOS Safari does not like clip path transition */
 body:not(.tippy-touch) {
   .tippy-tooltip[data-animatefill] {
-    &[data-state=visible] {
+    &[data-state='visible'] {
       .tippy-content {
         clip-path: ellipse(100% 100% at 50% 50%);
       }
     }
-    &[data-state=hidden] {
+    &[data-state='hidden'] {
       .tippy-content {
         clip-path: ellipse(5% 50% at 50% 50%);
       }
     }
   }
-  
-  .tippy-popper[x-placement=right] {
+
+  .tippy-popper[x-placement='right'] {
     .tippy-tooltip[data-animatefill] {
-      &[data-state=visible] {
+      &[data-state='visible'] {
         .tippy-content {
           clip-path: ellipse(135% 100% at 0% 50%);
         }
       }
-      &[data-state=hidden] {
+      &[data-state='hidden'] {
         .tippy-content {
           clip-path: ellipse(25% 100% at 0% 50%);
         }
       }
     }
   }
-  .tippy-popper[x-placement=left] {
+  .tippy-popper[x-placement='left'] {
     .tippy-tooltip[data-animatefill] {
-      &[data-state=visible] {
+      &[data-state='visible'] {
         .tippy-content {
           clip-path: ellipse(135% 100% at 100% 50%);
         }
       }
-      &[data-state=hidden] {
+      &[data-state='hidden'] {
         .tippy-content {
           clip-path: ellipse(25% 100% at 100% 50%);
         }
