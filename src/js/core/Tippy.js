@@ -542,6 +542,7 @@ export default (() => {
 
       let x, y
 
+      /* eslint-disable indent */
       switch (placement) {
         case 'top':
           x = pageX - halfPopperWidth + offset
@@ -560,6 +561,7 @@ export default (() => {
           y = pageY - halfPopperHeight + offset
           break
       }
+      /* eslint-enable indent */
 
       const isRightOverflowing = pageX + PADDING + halfPopperWidth + offset > pageWidth
       const isLeftOverflowing = pageX - PADDING - halfPopperWidth + offset < 0
