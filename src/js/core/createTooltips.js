@@ -26,7 +26,12 @@ export default function createTooltips(els, config) {
     )
 
     const title = reference.getAttribute('title')
-    if (!title && !options.html) return acc
+
+    // Don't create an instance when:
+    // * the `title` attribute is falsy (null or empty string), and
+    // * there is no html template specified, and
+    // * `dynamicTitle` option is false
+    if (!title && !options.html && !options.dynamicTitle) return acc
 
     reference.setAttribute('data-tippy', '')
     reference.setAttribute('aria-describedby', `tippy-${id}`)
