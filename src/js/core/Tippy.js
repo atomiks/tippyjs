@@ -66,6 +66,11 @@ export default (() => {
       const { popper, reference, options } = this
       const { tooltip, backdrop, content } = getInnerElements(popper)
 
+      // If the `dynamicTitle` option is true, the instance is allowed
+      // to be created with an empty title. Make sure that the tooltip
+      // content is not empty before showing it
+      if (options.dynamicTitle && !reference.getAttribute('data-original-title')) return
+
       // Destroy tooltip if the reference element is no longer on the DOM
       if (!reference.refObj && !document.documentElement.contains(reference)) {
         this.destroy()
