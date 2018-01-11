@@ -170,6 +170,14 @@
   height: 0;
 }
 
+.tippy-roundarrow {
+  pointer-events: none;
+
+  path {
+    pointer-events: auto;
+  }
+}
+
 .tippy-backdrop {
   position: absolute;
   will-change: transform;
