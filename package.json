@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.all.js",
   "repository": {
@@ -22,6 +22,7 @@
   },
   "author": "atomiks",
   "license": "MIT",
+  "keywords": ["tooltip"],
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.25.0",

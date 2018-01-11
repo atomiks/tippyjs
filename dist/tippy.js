@@ -142,9 +142,7 @@ function prefix(property) {
  * @return {Element} - the popper element
  */
 function createPopperElement(id, title, options) {
-  var placement = options.placement,
-      distance = options.distance,
-      arrow = options.arrow,
+  var arrow = options.arrow,
       arrowType = options.arrowType,
       arrowTransform = options.arrowTransform,
       animateFill = options.animateFill,
@@ -181,7 +179,7 @@ function createPopperElement(id, title, options) {
 
     if (arrowType === 'round') {
       _arrow.classList.add('tippy-roundarrow');
-      _arrow.innerHTML = '\n      <svg width="100%" height="100%" viewBox="0 0 64 20" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">\n        <g transform="matrix(1.04009,0,0,1.45139,-1.26297,-65.9145)">\n          <path d="M1.214,59.185C1.214,59.185 12.868,59.992 21.5,51.55C29.887,43.347 33.898,43.308 42.5,51.55C51.352,60.031 62.747,59.185 62.747,59.185L1.214,59.185Z"/>\n        </g>\n      </svg>';
+      _arrow.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 64 20" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><g transform="matrix(1.04009,0,0,1.45139,-1.26297,-65.9145)"><path d="M1.214,59.185C1.214,59.185 12.868,59.992 21.5,51.55C29.887,43.347 33.898,43.308 42.5,51.55C51.352,60.031 62.747,59.185 62.747,59.185L1.214,59.185Z"/></g></svg>';
     } else {
       _arrow.classList.add('tippy-arrow');
     }
@@ -3026,7 +3024,7 @@ if (isBrowser) {
   matches = e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || function (s) {
     var matches = (this.document || this.ownerDocument).querySelectorAll(s);
     var i = matches.length;
-    while (--i >= 0 && matches.item(i) !== this) {}
+    while (--i >= 0 && matches.item(i) !== this) {} // eslint-disable-line no-empty
     return i > -1;
   };
 }
@@ -3074,13 +3072,6 @@ function setVisibilityState(els, type) {
     el.setAttribute('data-state', type);
   });
 }
-
-/**
- * Ponyfill for Array.prototype.find
- * @param {Array} arr
- * @param {Function} fn
- * @return item in the array
- */
 
 /**
  * Applies the transition duration to each element
@@ -3169,9 +3160,14 @@ var T = (function () {
             backdrop = _getInnerElements.backdrop,
             content = _getInnerElements.content;
 
+        // If the `dynamicTitle` option is true, the instance is allowed
+        // to be created with an empty title. Make sure that the tooltip
+        // content is not empty before showing it
+
+
+        if (options.dynamicTitle && !reference.getAttribute('data-original-title')) return;
+
         // Destroy tooltip if the reference element is no longer on the DOM
-
-
         if (!reference.refObj && !document.documentElement.contains(reference)) {
           this.destroy();
           return;
@@ -3229,9 +3225,11 @@ var T = (function () {
               tooltip.classList.add('tippy-notransition');
             }
 
-            if (options.interactive) {
+            if (options.interactive && elementIsInViewport(reference)) {
               popper.focus();
             }
+
+            reference.setAttribute('aria-describedby', 'tippy-' + _this.id);
 
             options.onShown.call(popper);
           });
@@ -3299,6 +3297,7 @@ var T = (function () {
               _this2._(key).lastMouseMoveEvent = null;
             }
 
+            reference.removeAttribute('aria-describedby');
             _this2.popperInstance.disableEventListeners();
             options.appendTo.removeChild(popper);
             options.onHidden.call(popper);
@@ -3331,7 +3330,7 @@ var T = (function () {
         // Restore title
         this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'));
 
-        delete this.reference._tippy;['data-original-title', 'data-tippy', 'aria-describedby'].forEach(function (attr) {
+        delete this.reference._tippy;['data-original-title', 'data-tippy'].forEach(function (attr) {
           _this3.reference.removeAttribute(attr);
         });
 
@@ -3664,6 +3663,7 @@ var T = (function () {
       var x = void 0,
           y = void 0;
 
+      /* eslint-disable indent */
       switch (placement) {
         case 'top':
           x = pageX - halfPopperWidth + offset;
@@ -3682,6 +3682,7 @@ var T = (function () {
           y = pageY - halfPopperHeight + offset;
           break;
       }
+      /* eslint-enable indent */
 
       var isRightOverflowing = pageX + PADDING + halfPopperWidth + offset > pageWidth;
       var isLeftOverflowing = pageX - PADDING - halfPopperWidth + offset < 0;
@@ -3818,10 +3819,14 @@ function createTooltips(els, config) {
     var options = evaluateOptions(reference, config.performance ? config : getIndividualOptions(reference, config));
 
     var title = reference.getAttribute('title');
-    if (!title && !options.html) return acc;
+
+    // Don't create an instance when:
+    // * the `title` attribute is falsy (null or empty string), and
+    // * there is no html template specified, and
+    // * `dynamicTitle` option is false
+    if (!title && !options.html && !options.dynamicTitle) return acc;
 
     reference.setAttribute('data-tippy', '');
-    reference.setAttribute('aria-describedby', 'tippy-' + id);
 
     removeTitle(reference);
 
@@ -3964,7 +3969,7 @@ function bindEventListeners() {
     hideAllPoppers();
   };
 
-  var blurHandler = function blurHandler(event) {
+  var blurHandler = function blurHandler() {
     var _document = document,
         el = _document.activeElement;
 

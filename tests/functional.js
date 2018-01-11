@@ -1,10 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
-	(global.tippy = factory());
+	(factory());
 }(this, (function () { 'use strict';
-
-var styles = ".tippy-touch{cursor:pointer!important}.tippy-notransition{transition:none!important}.tippy-popper{max-width:350px;-webkit-perspective:700px;perspective:700px;z-index:9999;outline:0;transition-timing-function:cubic-bezier(.165,.84,.44,1);pointer-events:none}.tippy-popper[data-html]{max-width:96%;max-width:calc(100% - 20px)}.tippy-popper[x-placement^=top] .tippy-backdrop{border-radius:40% 40% 0 0}.tippy-popper[x-placement^=top] .tippy-roundarrow{width:23px;height:23px;fill:#333;bottom:-15px;margin:0 6px}.tippy-popper[x-placement^=top] .tippy-roundarrow svg{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.tippy-popper[x-placement^=top] .tippy-arrow{border-top:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;bottom:-7px;margin:0 7px}.tippy-popper[x-placement^=top] .tippy-backdrop{-webkit-transform-origin:0 100%;transform-origin:0 100%}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(5.5) translate(-50%,25%);transform:scale(5.5) translate(-50%,25%);opacity:1}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(1) translate(-50%,25%);transform:scale(1) translate(-50%,25%);opacity:0}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(-20px);transform:translateY(-20px)}.tippy-popper[x-placement^=top] [data-animation=perspective]{-webkit-transform-origin:bottom;transform-origin:bottom}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) rotateX(0);transform:translateY(-10px) rotateX(0)}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(90deg);transform:translateY(0) rotateX(90deg)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) scale(1);transform:translateY(-10px) scale(1)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=bottom] .tippy-backdrop{border-radius:0 0 30% 30%}.tippy-popper[x-placement^=bottom] .tippy-roundarrow{width:23px;height:23px;fill:#333;top:-15px;margin:0 6px}.tippy-popper[x-placement^=bottom] .tippy-roundarrow svg{-webkit-transform:rotate(0);transform:rotate(0)}.tippy-popper[x-placement^=bottom] .tippy-arrow{border-bottom:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;top:-7px;margin:0 7px}.tippy-popper[x-placement^=bottom] .tippy-backdrop{-webkit-transform-origin:0 -100%;transform-origin:0 -100%}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(5.5) translate(-50%,-125%);transform:scale(5.5) translate(-50%,-125%);opacity:1}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(1) translate(-50%,-125%);transform:scale(1) translate(-50%,-125%);opacity:0}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(20px);transform:translateY(20px)}.tippy-popper[x-placement^=bottom] [data-animation=perspective]{-webkit-transform-origin:top;transform-origin:top}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) rotateX(0);transform:translateY(10px) rotateX(0)}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(-90deg);transform:translateY(0) rotateX(-90deg)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) scale(1);transform:translateY(10px) scale(1)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=left] .tippy-backdrop{border-radius:30% 0 0 30%}.tippy-popper[x-placement^=left] .tippy-roundarrow{width:23px;height:23px;fill:#333;right:-15px;margin:4px 0}.tippy-popper[x-placement^=left] .tippy-roundarrow svg{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.tippy-popper[x-placement^=left] .tippy-arrow{border-left:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;right:-7px;margin:4px 0}.tippy-popper[x-placement^=left] .tippy-backdrop{-webkit-transform-origin:100% 0;transform-origin:100% 0}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(5.5) translate(33%,-50%);transform:scale(5.5) translate(33%,-50%);opacity:1}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(1.5) translate(33%,-50%);transform:scale(1.5) translate(33%,-50%);opacity:0}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(-20px);transform:translateX(-20px)}.tippy-popper[x-placement^=left] [data-animation=perspective]{-webkit-transform-origin:right;transform-origin:right}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) rotateY(0);transform:translateX(-10px) rotateY(0)}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(-90deg);transform:translateX(0) rotateY(-90deg)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) scale(1);transform:translateX(-10px) scale(1)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-popper[x-placement^=right] .tippy-backdrop{border-radius:0 30% 30% 0}.tippy-popper[x-placement^=right] .tippy-roundarrow{width:23px;height:23px;fill:#333;left:-15px;margin:4px 0}.tippy-popper[x-placement^=right] .tippy-roundarrow svg{-webkit-transform:rotate(-90deg);transform:rotate(-90deg)}.tippy-popper[x-placement^=right] .tippy-arrow{border-right:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;left:-7px;margin:4px 0}.tippy-popper[x-placement^=right] .tippy-backdrop{-webkit-transform-origin:-100% 0;transform-origin:-100% 0}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(5.5) translate(-133%,-50%);transform:scale(5.5) translate(-133%,-50%);opacity:1}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(1.5) translate(-133%,-50%);transform:scale(1.5) translate(-133%,-50%);opacity:0}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(20px);transform:translateX(20px)}.tippy-popper[x-placement^=right] [data-animation=perspective]{-webkit-transform-origin:left;transform-origin:left}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) rotateY(0);transform:translateX(10px) rotateY(0)}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(90deg);transform:translateX(0) rotateY(90deg)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) scale(1);transform:translateX(10px) scale(1)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-tooltip{position:relative;color:#fff;border-radius:4px;font-size:.9rem;padding:.3rem .6rem;text-align:center;will-change:transform;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:#333}.tippy-tooltip[data-size=small]{padding:.2rem .4rem;font-size:.75rem}.tippy-tooltip[data-size=large]{padding:.4rem .8rem;font-size:1rem}.tippy-tooltip[data-animatefill]{overflow:hidden;background-color:transparent}.tippy-tooltip[data-animatefill] .tippy-content{transition:-webkit-clip-path cubic-bezier(.46,.1,.52,.98);transition:clip-path cubic-bezier(.46,.1,.52,.98);transition:clip-path cubic-bezier(.46,.1,.52,.98),-webkit-clip-path cubic-bezier(.46,.1,.52,.98)}.tippy-tooltip[data-interactive]{pointer-events:auto}.tippy-tooltip[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.53,2,.36,.85)}.tippy-tooltip[data-inertia][data-state=hidden]{transition-timing-function:ease}.tippy-arrow,.tippy-roundarrow{position:absolute;width:0;height:0}.tippy-roundarrow{pointer-events:none}.tippy-roundarrow path{pointer-events:auto}.tippy-backdrop{position:absolute;will-change:transform;background-color:#333;border-radius:50%;width:26%;left:50%;top:50%;z-index:-1;transition:all cubic-bezier(.46,.1,.52,.98);-webkit-backface-visibility:hidden;backface-visibility:hidden}.tippy-backdrop:after{content:\"\";float:left;padding-top:100%}body:not(.tippy-touch) .tippy-tooltip[data-animatefill][data-state=visible] .tippy-content{-webkit-clip-path:ellipse(100% 100% at 50% 50%);clip-path:ellipse(100% 100% at 50% 50%)}body:not(.tippy-touch) .tippy-tooltip[data-animatefill][data-state=hidden] .tippy-content{-webkit-clip-path:ellipse(5% 50% at 50% 50%);clip-path:ellipse(5% 50% at 50% 50%)}body:not(.tippy-touch) .tippy-popper[x-placement=right] .tippy-tooltip[data-animatefill][data-state=visible] .tippy-content{-webkit-clip-path:ellipse(135% 100% at 0 50%);clip-path:ellipse(135% 100% at 0 50%)}body:not(.tippy-touch) .tippy-popper[x-placement=right] .tippy-tooltip[data-animatefill][data-state=hidden] .tippy-content{-webkit-clip-path:ellipse(25% 100% at 0 50%);clip-path:ellipse(25% 100% at 0 50%)}body:not(.tippy-touch) .tippy-popper[x-placement=left] .tippy-tooltip[data-animatefill][data-state=visible] .tippy-content{-webkit-clip-path:ellipse(135% 100% at 100% 50%);clip-path:ellipse(135% 100% at 100% 50%)}body:not(.tippy-touch) .tippy-popper[x-placement=left] .tippy-tooltip[data-animatefill][data-state=hidden] .tippy-content{-webkit-clip-path:ellipse(25% 100% at 100% 50%);clip-path:ellipse(25% 100% at 100% 50%)}@media (max-width:360px){.tippy-popper{max-width:96%;max-width:calc(100% - 20px)}}";
 
 var isBrowser = typeof window !== 'undefined';
 
@@ -181,7 +179,7 @@ function createPopperElement(id, title, options) {
 
     if (arrowType === 'round') {
       _arrow.classList.add('tippy-roundarrow');
-      _arrow.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 64 20" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><g transform="matrix(1.04009,0,0,1.45139,-1.26297,-65.9145)"><path d="M1.214,59.185C1.214,59.185 12.868,59.992 21.5,51.55C29.887,43.347 33.898,43.308 42.5,51.55C51.352,60.031 62.747,59.185 62.747,59.185L1.214,59.185Z"/></g></svg>';
+      _arrow.innerHTML = '\n      <svg width="100%" height="100%" viewBox="0 0 64 20" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">\n        <g transform="matrix(1.04009,0,0,1.45139,-1.26297,-65.9145)">\n          <path d="M1.214,59.185C1.214,59.185 12.868,59.992 21.5,51.55C29.887,43.347 33.898,43.308 42.5,51.55C51.352,60.031 62.747,59.185 62.747,59.185L1.214,59.185Z"/>\n        </g>\n      </svg>';
     } else {
       _arrow.classList.add('tippy-arrow');
     }
@@ -286,6 +284,22 @@ function createTrigger(eventType, reference, handlers, touchHold) {
 
   return listeners;
 }
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -731,7 +745,7 @@ function getBordersSize(styles, axis) {
  */
 var isIE10 = undefined;
 
-var isIE10$1 = function isIE10$1() {
+var isIE10$1 = function () {
   if (isIE10 === undefined) {
     isIE10 = navigator.appVersion.indexOf('MSIE 10') !== -1;
   }
@@ -753,7 +767,7 @@ function getWindowSizes() {
   };
 }
 
-var classCallCheck$1 = function classCallCheck(instance, Constructor) {
+var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
@@ -777,7 +791,11 @@ var createClass$1 = function () {
   };
 }();
 
-var defineProperty$1 = function defineProperty(obj, key, value) {
+
+
+
+
+var defineProperty$1 = function (obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -2797,6 +2815,7 @@ var Popper = function () {
      * @memberof Popper
      */
 
+
     /**
      * Collection of utilities useful when writing custom modifiers.
      * Starting from version 1.7, this method is available only if you
@@ -2837,6 +2856,7 @@ var Popper = function () {
  * @property {number} data.clientHeight
  * An ES6 getter that will return the height of the virtual reference element.
  */
+
 
 Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
@@ -3162,14 +3182,9 @@ var T = (function () {
             backdrop = _getInnerElements.backdrop,
             content = _getInnerElements.content;
 
-        // If the `dynamicTitle` option is true, the instance is allowed
-        // to be created with an empty title. Make sure that the tooltip
-        // content is not empty before showing it
-
-
-        if (options.dynamicTitle && !reference.getAttribute('data-original-title')) return;
-
         // Destroy tooltip if the reference element is no longer on the DOM
+
+
         if (!reference.refObj && !document.documentElement.contains(reference)) {
           this.destroy();
           return;
@@ -3227,11 +3242,9 @@ var T = (function () {
               tooltip.classList.add('tippy-notransition');
             }
 
-            if (options.interactive && elementIsInViewport(reference)) {
+            if (options.interactive) {
               popper.focus();
             }
-
-            reference.setAttribute('aria-describedby', 'tippy-' + _this.id);
 
             options.onShown.call(popper);
           });
@@ -3299,7 +3312,6 @@ var T = (function () {
               _this2._(key).lastMouseMoveEvent = null;
             }
 
-            reference.removeAttribute('aria-describedby');
             _this2.popperInstance.disableEventListeners();
             options.appendTo.removeChild(popper);
             options.onHidden.call(popper);
@@ -3332,7 +3344,7 @@ var T = (function () {
         // Restore title
         this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'));
 
-        delete this.reference._tippy;['data-original-title', 'data-tippy'].forEach(function (attr) {
+        delete this.reference._tippy;['data-original-title', 'data-tippy', 'aria-describedby'].forEach(function (attr) {
           _this3.reference.removeAttribute(attr);
         });
 
@@ -3800,9 +3812,9 @@ var T = (function () {
   };
 })();
 
-var Tippy = T.Tippy;
+var Tippy$1 = T.Tippy;
 var _getEventListeners = T._getEventListeners;
-var _createPopperInstance = T._createPopperInstance;
+var _createPopperInstance$1 = T._createPopperInstance;
 var _addMutationObserver = T._addMutationObserver;
 
 
@@ -3821,20 +3833,16 @@ function createTooltips(els, config) {
     var options = evaluateOptions(reference, config.performance ? config : getIndividualOptions(reference, config));
 
     var title = reference.getAttribute('title');
-
-    // Don't create an instance when:
-    // * the `title` attribute is falsy (null or empty string), and
-    // * there is no html template specified, and
-    // * `dynamicTitle` option is false
-    if (!title && !options.html && !options.dynamicTitle) return acc;
+    if (!title && !options.html) return acc;
 
     reference.setAttribute('data-tippy', '');
+    reference.setAttribute('aria-describedby', 'tippy-' + id);
 
     removeTitle(reference);
 
     var popper = createPopperElement(id, title, options);
 
-    var tippy = new Tippy({
+    var tippy = new Tippy$1({
       id: id,
       reference: reference,
       popper: popper,
@@ -3843,7 +3851,7 @@ function createTooltips(els, config) {
     });
 
     if (options.createPopperInstanceOnInit) {
-      tippy.popperInstance = _createPopperInstance.call(tippy);
+      tippy.popperInstance = _createPopperInstance$1.call(tippy);
       tippy.popperInstance.disableEventListeners();
     }
 
@@ -3995,7 +4003,7 @@ function bindEventListeners() {
  * @param {Object} options
  * @return {Object}
  */
-function tippy$1(selector, options) {
+function tippy(selector, options) {
   if (browser.supported && !browser._eventListenersBound) {
     bindEventListeners();
     browser._eventListenersBound = true;
@@ -4045,32 +4053,1010 @@ function tippy$1(selector, options) {
   };
 }
 
-tippy$1.browser = browser;
-tippy$1.defaults = defaults;
+tippy.browser = browser;
+tippy.defaults = defaults;
 
 /**
- * Injects CSS styles to document head
- * @param {String} css
+ * Ponyfill for Array.prototype.find
+ * @param {Array} arr
+ * @param {Function} fn
+ * @return item in the array
  */
-function injectCSS() {
-  var css = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-
-  if (isBrowser && browser.supported) {
-    var head = document.head || document.querySelector('head');
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    head.insertBefore(style, head.firstChild);
-
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
-  }
+function find$1(arr, fn) {
+  return Array.prototype.find ? arr.find(fn) : arr.filter(fn)[0];
 }
 
-injectCSS(styles);
+/**
+ * Ponyfill for Array.prototype.findIndex
+ * @param {Array} arr
+ * @param {Function} fn
+ * @return index of the item in the array
+ */
+function findIndex$1(arr, fn) {
+  return Array.prototype.findIndex ? arr.findIndex(fn) : arr.indexOf(find$1(arr, fn));
+}
 
-return tippy$1;
+var createReferenceElement = (function () {
+  var append = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+  var el = document.createElement('div');
+  el.className = 'test';
+  el.setAttribute('title', 'tooltip');
+  el.cleanup = function () {
+    return document.body.removeChild(el);
+  };
+  if (append) document.body.appendChild(el);
+  return el;
+});
+
+// Tippy modules
+var Tippy = T.Tippy;
+
+// Testing meta modules
+
+/**
+ * ========================================================
+ * Exposed tippy() module
+ * ========================================================
+ */
+test('tippy is a function', function (t) {
+  t.equal(typeof tippy === 'undefined' ? 'undefined' : _typeof(tippy), 'function');
+  t.end();
+});
+test('calling tippy() with no arguments results in no error', function (t) {
+  t.pass(tippy());
+  t.end();
+});
+test('tippy() returns an object', function (t) {
+  t.equal(_typeof(tippy()), 'object');
+  t.end();
+});
+test('tippy().selector is the selector input', function (t) {
+  t.equal(tippy('t').selector, 't');
+  t.end();
+});
+test('tippy().destroyAll is a function', function (t) {
+  t.equal(_typeof(tippy().destroyAll), 'function');
+  t.end();
+});
+test('tippy().tooltips is an array', function (t) {
+  t.true(Array.isArray(tippy().tooltips));
+  t.end();
+});
+test('tippy(CSSSelector) works', function (t) {
+  var el = createReferenceElement(true);
+  var tip = tippy('.test');
+  t.ok(tip.tooltips[0] instanceof Tippy);
+  el.cleanup();
+  t.end();
+});
+test('tippy(Element) works', function (t) {
+  var el = createReferenceElement();
+  var tip = tippy(el);
+  t.true(tip.tooltips[0] instanceof Tippy);
+  t.end();
+});
+test('tippy(Element[]) works', function (t) {
+  var arr = [createReferenceElement()];
+  var tip = tippy(arr);
+  t.true(tip.tooltips[0] instanceof Tippy);
+  t.end();
+});
+test('tippy(NodeList) works', function (t) {
+  var el = createReferenceElement(true);
+  var nodeList = document.querySelectorAll('.test');
+  var tip = tippy(nodeList);
+  t.true(tip.tooltips[0] instanceof Tippy);
+  el.cleanup();
+  t.end();
+});
+test('tippy() sets the `_tippy` property on the reference element', function (t) {
+  var el = createReferenceElement();
+  tippy(el);
+  t.notEqual(_typeof(el._tippy), 'undefined');
+  t.end();
+});
+test('tippy() sets the required attributes on the reference element', function (t) {
+  var el = createReferenceElement();
+  tippy(el);
+  t.true(el.hasAttribute('data-original-title'));
+  t.true(el.hasAttribute('data-tippy'));
+  t.true(el.hasAttribute('aria-describedby'));
+  t.end();
+});
+
+/**
+ * ========================================================
+ * Tippy instances
+ * ========================================================
+ */
+test('the _tippy property refers to the tippy instance', function (t) {
+  var el = createReferenceElement();
+  var tip = tippy(el);
+  t.equal(el._tippy, tip.tooltips[0]);
+  t.end();
+});
+test('tippy instance method types', function (t) {
+  var el = createReferenceElement();
+  tippy(el);
+  var instance = el._tippy;
+  t.equal(_typeof(instance.show), 'function');
+  t.equal(_typeof(instance.hide), 'function');
+  t.equal(_typeof(instance.enable), 'function');
+  t.equal(_typeof(instance.disable), 'function');
+  t.equal(_typeof(instance.destroy), 'function');
+  t.end();
+});
+test('Tippy#id', function (t) {
+  var el = createReferenceElement();
+  tippy(el);
+  var instance = el._tippy;
+  t.equal(_typeof(instance.id), 'number');
+  t.end();
+});
+test('Tippy#options', function (t) {
+  var el = createReferenceElement();
+  tippy(el);
+  var instance = el._tippy;
+  // appendTo in options is an element reference,
+  // whereas it is a function that returns an element in the defaults
+  instance.options.appendTo = defaults.appendTo;
+  t.same(instance.options, defaults);
+  t.end();
+});
+test('Tippy#state', function (t) {
+  var el = createReferenceElement();
+  tippy(el);
+  var instance = el._tippy;
+  t.same(instance.state, {
+    destroyed: false,
+    visible: false,
+    enabled: true
+  });
+  t.end();
+});
+test('Tippy#popper', function (t) {
+  var el = createReferenceElement();
+  tippy(el);
+  var instance = el._tippy;
+  t.equal(instance.popper instanceof Element, true);
+  t.equal(instance.popper.className, 'tippy-popper');
+  t.end();
+});
+test('Tippy#reference', function (t) {
+  var el = createReferenceElement();
+  tippy(el);
+  var instance = el._tippy;
+  t.equal(instance.reference, el);
+  t.end();
+});
+test('Tippy#listeners', function (t) {
+  var el = createReferenceElement();
+  tippy(el);
+  var instance = el._tippy;
+  t.true(Array.isArray(instance.listeners));
+  t.end();
+});
+
+/**
+ * ========================================================
+ * Tippy methods
+ * ========================================================
+ */
+test('Tippy#show shows the tooltip and sets visible state to true', function (t) {
+  var el = createReferenceElement(true);
+  tippy(el);
+  var instance = el._tippy;
+  instance.show();
+  t.equal(document.body.contains(instance.popper), true);
+  t.equal(instance.state.visible, true);
+  el.cleanup();
+  instance.destroy();
+  t.end();
+});
+test('Tippy#hide hides the tooltip and sets visible state to false', function (t) {
+  var el = createReferenceElement(true);
+  tippy(el);
+  var instance = el._tippy;
+  instance.show();
+  instance.hide();
+  t.equal(instance.state.visible, false);
+  el.cleanup();
+  instance.destroy();
+  t.end();
+});
+test('Tippy#enable allows the tooltip to show/hide', function (t) {
+  var el = createReferenceElement(true);
+  tippy(el);
+  var instance = el._tippy;
+  instance.enable();
+  instance.show();
+  t.equal(instance.state.visible, true);
+  el.cleanup();
+  instance.destroy();
+  t.end();
+});
+test('Tippy#disable disallows the tooltip to show/hide', function (t) {
+  var el = createReferenceElement(true);
+  tippy(el);
+  var instance = el._tippy;
+  instance.disable();
+  instance.show();
+  t.equal(instance.state.visible, false);
+  el.cleanup();
+  instance.destroy();
+  t.end();
+});
+test('Tippy#destroy fully destroys the tooltip, even while showing', function (t) {
+  var el = createReferenceElement(true);
+  var titleCache = el.title;
+  var tip = tippy(el);
+  var instance = el._tippy;
+  instance.show();
+  instance.destroy();
+
+  t.equal(_typeof(el._tippy), 'undefined', '_tippy property is removed');
+  t.equal(el.title, titleCache, '`title` attribute is restored');
+  t.false(el.getAttribute('data-original-title'), 'has no `data-original-title` attribute');
+  t.false(el.getAttribute('data-tippy'), 'has no `data-tippy` attribute');
+  t.false(el.getAttribute('aria-describedby'), 'has no `aria-describedby` attribute');
+  t.equal(tip.tooltips[0].state.destroyed, true, 'is destroyed state');
+
+  el.cleanup();
+  t.end();
+});
+
+/**
+ * ========================================================
+ * core
+ * ========================================================
+ */
+test('core/createTooltips: returns an array of Tippy instances', function (t) {
+  var els = Array(2).fill().map(function (_) {
+    return createReferenceElement();
+  });
+  var instances = createTooltips(els, _extends({}, defaults));
+  t.true(Array.isArray(instances));
+  t.true(instances.every(function (x) {
+    return x instanceof Tippy;
+  }));
+  t.end();
+});
+
+/**
+ * ========================================================
+ * utils
+ * ========================================================
+ */
+test('utils/closest', function (t) {
+  var h = function h(str) {
+    var div = document.createElement('div');
+    div.innerHTML = str;
+    return div.firstElementChild;
+  };
+
+  var el = h('<div class="container">\n      <div class="outer">\n        <p class="inner">text</p>\n      </div>\n    </div>');
+  var inner = el.querySelector('.inner');
+
+  t.equal(closest(inner, '.container'), el);
+  t.end();
+});
+test('utils/computeArrowTransform', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('utils/createPopperElement', function (t) {
+  var popper = createPopperElement(1, 'title', defaults);
+  t.true(popper.classList.contains('tippy-popper'));
+  t.true(popper.querySelector(selectors.TOOLTIP));
+  t.true(popper.querySelector(selectors.CONTENT));
+  t.end();
+});
+test('utils/createTrigger', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('utils/cursorIsOutsideInteractiveBorder', function (t) {
+  var wrapper = document.createElement('div');
+  wrapper.style.position = 'absolute';
+  wrapper.style.left = '100px';
+  wrapper.style.top = '100px';
+
+  var popper = document.createElement('div');
+  popper.setAttribute('x-placement', 'top');
+  popper.innerHTML = 'text';
+
+  wrapper.appendChild(popper);
+
+  document.body.appendChild(wrapper);
+
+  var options = {
+    interactiveBorder: 10,
+    distance: 10
+
+    // Inside element
+  };t.false(cursorIsOutsideInteractiveBorder({ clientX: 105, clientY: 105 }, popper, options));
+
+  // Outside element: TOP/LEFT
+  t.false(cursorIsOutsideInteractiveBorder({
+    clientX: 92,
+    clientY: 94
+  }, popper, options));
+
+  // Outside element: TOP/RIGHT
+  t.false(cursorIsOutsideInteractiveBorder({
+    clientX: 125,
+    clientY: 92
+  }, popper, options));
+
+  // Outside element: BOTTOM/LEFT
+  t.false(cursorIsOutsideInteractiveBorder({
+    clientX: 92,
+    clientY: 110
+  }, popper, options));
+
+  // Outside element: BOTTOM/RIGHT
+  t.false(cursorIsOutsideInteractiveBorder({
+    clientX: 125,
+    clientY: 115
+  }, popper, options));
+
+  // Outside border
+  t.true(cursorIsOutsideInteractiveBorder({
+    clientX: 150,
+    clientY: 88
+  }, popper, options));
+  t.true(cursorIsOutsideInteractiveBorder({
+    clientX: 105,
+    clientY: 140
+  }, popper, options));
+
+  document.body.removeChild(wrapper);
+  t.end();
+});
+test('utils/defer', function (t) {
+  var called = false;
+  defer(function () {
+    called = true;
+  });
+  t.false(called, 'waits for the call stack to clear');
+  t.end();
+});
+test('utils/elementIsInViewport', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('utils/evaluateOptions', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('utils/find', function (t) {
+  var test = [{ x: 'string' }, { x: 1000 }, { x: true }];
+  t.equal(find$1(test, function (o) {
+    return o.x === 1000;
+  }), test[1], 'behaves like Array.prototype.find');
+  t.equal(find$1(test, function (o) {
+    return o.x === true;
+  }), test[2], 'behaves like Array.prototype.find');
+  t.end();
+});
+test('utils/findIndex', function (t) {
+  var test = [{ x: 'string' }, { x: 1000 }, { x: true }];
+  t.equal(findIndex$1(test, function (o) {
+    return o.x === 1000;
+  }), 1, 'behaves like Array.prototype.findIndex');
+  t.equal(findIndex$1(test, function (o) {
+    return o.x === true;
+  }), 2, 'behaves like Array.prototype.findIndex');
+  t.end();
+});
+test('utils/getArrayOfElements', function (t) {
+  var elementArr = Array(5).fill().map(function () {
+    return createReferenceElement();
+  });
+  // TODO: const nodeList
+  var element = createReferenceElement();
+  var string = '.test';
+  var _test = createReferenceElement(true);
+
+  t.equal(getArrayOfElements(element).length, 1);
+  t.true(getArrayOfElements(elementArr).every(function (el) {
+    return el instanceof Element;
+  }));
+  t.true(getArrayOfElements(string)[0] instanceof Element);
+
+  _test.cleanup();
+  t.end();
+});
+test('utils/getDuration', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('utils/getIndividualOptions', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+
+/**
+ * ========================================================
+ * Tippy options
+ * ========================================================
+ */
+test('omitted options will use defaults', function (t) {
+  var el = createReferenceElement();
+  tippy(el);
+  var instance = el._tippy;
+  t.end();
+});
+test('empty options object will use defaults', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {});
+  var instance = el._tippy;
+  t.end();
+});
+test('supplied options will override defaults (merging them)', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    placement: 'bottom',
+    duration: 5000
+  });
+  var instance = el._tippy;
+
+  t.equal(instance.options.placement, 'bottom');
+  t.equal(instance.options.duration, 5000);
+
+  instance.options.placement = defaults.placement;
+  instance.options.duration = defaults.duration;
+  instance.options.appendTo = defaults.appendTo;
+  t.same(instance.options, defaults);
+
+  t.end();
+});
+test('options.createPopperInstanceOnInit: creates the Popper instance on init', function (t) {
+  var el = createReferenceElement();
+  tippy(el, { createPopperInstanceOnInit: true });
+  t.notEqual(el._tippy.popperInstance, null);
+  t.equal(el._tippy.popperInstance.state.eventsEnabled, false);
+  t.end();
+});
+test('options.placement: correctly sets the placement in the Popper instance', function (t) {
+  ['top', 'bottom', 'left', 'right'].forEach(function (placement) {
+    var el = createReferenceElement();
+    tippy(el, { placement: placement, createPopperInstanceOnInit: true });
+    t.equal(el._tippy.popperInstance.options.placement, placement);['-start', '-end'].forEach(function (shift) {
+      var el = createReferenceElement();
+      tippy(el, {
+        placement: placement + shift,
+        createPopperInstanceOnInit: true
+      });
+      t.equal(el._tippy.popperInstance.options.placement, placement + shift);
+    });
+  });
+  t.end();
+});
+test('options.trigger: adds the correct event listeners for `mouseenter`', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    trigger: 'mouseenter'
+  });
+  t.equal(el._tippy.listeners.every(function (_ref) {
+    var event = _ref.event;
+    return ['mouseenter', 'mouseleave'].includes(event);
+  }), true);
+  t.end();
+});
+test('options.trigger: adds the correct event listeners for `focus`', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    trigger: 'focus'
+  });
+  t.equal(el._tippy.listeners.every(function (_ref2) {
+    var event = _ref2.event;
+    return ['focus', 'blur'].includes(event);
+  }), true);
+  t.end();
+});
+test('options.trigger: adds the correct event listeners for `click`', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    trigger: 'click'
+  });
+  t.equal(el._tippy.listeners.every(function (_ref3) {
+    var event = _ref3.event;
+    return ['click'].includes(event);
+  }), true);
+  t.end();
+});
+test('options.trigger: adds no listeners if `manual`', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    trigger: 'manual'
+  });
+  t.equal(el._tippy.listeners.length, 0);
+  t.end();
+});
+test('options.trigger: adds all listeners necessary when string-delimited', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    trigger: 'mouseenter focus click'
+  });
+  t.equal(el._tippy.listeners.every(function (_ref4) {
+    var event = _ref4.event;
+    return ['mouseenter', 'mouseleave', 'focus', 'blur', 'click'].includes(event);
+  }), true);
+  t.end();
+});
+test('options.animation: sets the correct `data-animation` attribute on the tooltip', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    animation: 'scale'
+  });
+  t.equal(el._tippy.popper.querySelector(selectors.TOOLTIP).getAttribute('data-animation'), 'scale');
+  t.end();
+});
+test('options.html: works with a CSS selector', function (t) {
+  var el = createReferenceElement();
+  var template = document.createElement('div');
+  template.id = 'id';
+  template.innerHTML = 'templateContent';
+  document.body.appendChild(template);
+  tippy(el, {
+    html: '#id'
+  });
+  t.equal(el._tippy.popper.querySelector(selectors.CONTENT).innerHTML, 'templateContent');
+  document.body.removeChild(template);
+  t.end();
+});
+test('options.html: works with a HTML template', function (t) {
+  var el = createReferenceElement();
+  var template = document.createElement('div');
+  document.body.appendChild(template);
+  tippy(el, {
+    html: template
+  });
+  // Content's first element child is the template with a direct element
+  t.equal(el._tippy.popper.querySelector(selectors.CONTENT).firstElementChild, template);
+  // Template is removed from document
+  t.equal(document.documentElement.contains(template), false);
+  t.end();
+});
+test('options.animateFill: sets the `data-animatefill` property on the tooltip element', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    animateFill: true
+  });
+  var tooltip = el._tippy.popper.querySelector(selectors.TOOLTIP);
+  t.equal(tooltip.hasAttribute('data-animatefill'), true);
+  t.end();
+});
+test('options.animateFill: is disabled if the `arrow` option is set to true', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    animateFill: true,
+    arrow: true
+  });
+  var tooltip = el._tippy.popper.querySelector(selectors.TOOLTIP);
+  t.equal(tooltip.hasAttribute('data-animatefill'), false);
+  t.end();
+});
+test('options.arrow: adds an arrow element when set to true', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    arrow: true
+  });
+  t.true(el._tippy.popper.querySelector(selectors.ARROW));
+  t.end();
+});
+test('options.arrow: does not add an arrow element when set to false', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    arrow: false
+  });
+  t.false(el._tippy.popper.querySelector(selectors.ARROW));
+  t.end();
+});
+test('options.delay(number): delays a tooltip from showing upon triggering', function (t) {
+  t.plan(3);
+
+  var el = createReferenceElement(true);
+  tippy(el, {
+    delay: 25
+  });
+  el.dispatchEvent(new Event('mouseenter'));
+  t.false(el._tippy.state.visible);
+  setTimeout(function () {
+    t.true(el._tippy.state.visible);
+    el._tippy.destroy();
+    el.cleanup();
+    t.pass();
+  }, 26);
+});
+test('options.delay(number): delays a tooltip from hiding upon triggering', function (t) {
+  t.plan(3);
+
+  var el = createReferenceElement(true);
+  tippy(el, {
+    delay: 25
+  });
+  el._tippy.show();
+  el.dispatchEvent(new Event('mouseleave'));
+  t.true(el._tippy.state.visible);
+  setTimeout(function () {
+    t.false(el._tippy.state.visible);
+    el._tippy.destroy();
+    el.cleanup();
+    t.pass();
+  }, 26);
+});
+test('options.delay(array): correct show delay', function (t) {
+  t.plan(3);
+
+  var el = createReferenceElement(true);
+  tippy(el, {
+    delay: [25, 0]
+  });
+  el.dispatchEvent(new Event('mouseenter'));
+  t.false(el._tippy.state.visible);
+  setTimeout(function () {
+    t.true(el._tippy.state.visible);
+    el._tippy.destroy();
+    el.cleanup();
+    t.pass();
+  }, 26);
+});
+test('options.delay(array): correct hide delay', function (t) {
+  t.plan(3);
+
+  var el = createReferenceElement(true);
+  tippy(el, {
+    delay: [0, 25]
+  });
+  el.dispatchEvent(new Event('mouseenter'));
+  t.true(el._tippy.state.visible);
+  el.dispatchEvent(new Event('mouseleave'));
+  setTimeout(function () {
+    t.false(el._tippy.state.visible);
+    el._tippy.destroy();
+    el.cleanup();
+    t.pass();
+  }, 26);
+});
+test('options.delay(array): correct show and hide delay', function (t) {
+  t.plan(4);
+
+  var el = createReferenceElement(true);
+  tippy(el, {
+    delay: [15, 25]
+  });
+  el.dispatchEvent(new Event('mouseenter'));
+  t.false(el._tippy.state.visible);
+  setTimeout(function () {
+    t.true(el._tippy.state.visible);
+    el.dispatchEvent(new Event('mouseleave'));
+    setTimeout(function () {
+      t.false(el._tippy.state.visible);
+      el._tippy.destroy();
+      el.cleanup();
+      t.pass();
+    }, 26);
+  }, 16);
+});
+test('options.duration(number): correct show duration', function (t) {
+  t.plan(2);
+
+  var el = createReferenceElement(true);
+  tippy(el, {
+    duration: 25
+  });
+  var tooltip = el._tippy.popper.querySelector(selectors.TOOLTIP);
+  setTimeout(function () {
+    t.equal(getComputedStyle(tooltip).opacity, '1');
+    el._tippy.destroy();
+    el.cleanup();
+    t.pass();
+  }, 26);
+  el._tippy.show();
+});
+test('options.duration(number): correct hide duration', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.duration(array): correct show duration', function (t) {
+  t.plan(2);
+
+  var el = createReferenceElement(true);
+  tippy(el, {
+    duration: [25, 35]
+  });
+  var tooltip = el._tippy.popper.querySelector(selectors.TOOLTIP);
+  setTimeout(function () {
+    t.equal(getComputedStyle(tooltip).opacity, '1');
+    el._tippy.destroy();
+    el.cleanup();
+    t.pass();
+  }, 26);
+  el._tippy.show();
+});
+test('options.duration(array): correct hide duration', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.interactive: tooltip will not hide upon click', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.interactiveBorder: tooltip will not close when cursor is inside border', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.theme: adds each theme to the tooltip classList', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    theme: 'custom custom-two'
+  });
+  var tooltip = el._tippy.popper.querySelector(selectors.TOOLTIP);
+  t.true(tooltip.classList.contains('custom-theme'));
+  t.true(tooltip.classList.contains('custom-two-theme'));
+  t.end();
+});
+test('options.size: adds the size to the `data-size` attribute on the tooltip', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    size: 'small'
+  });
+  var tooltip = el._tippy.popper.querySelector(selectors.TOOLTIP);
+  t.equal(tooltip.getAttribute('data-size'), 'small');
+  t.end();
+});
+test('options.distance: sets the distance from the reference element', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.offset: sets the offset in the Popper instance', function (t) {
+  var el = createReferenceElement();
+  var offset = '10, 5';
+  tippy(el, {
+    offset: offset,
+    createPopperInstanceOnInit: true
+  });
+  var instance = el._tippy;
+  t.equal(instance.popperInstance.options.modifiers.offset.offset, offset);
+  t.end();
+});
+test('options.hideOnClick', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.multiple', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.followCursor', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.inertia: sets the `data-inertia` attribute on the tooltip', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    inertia: true
+  });
+  var tooltip = el._tippy.popper.querySelector(selectors.TOOLTIP);
+  t.true(tooltip.hasAttribute('data-inertia'));
+  t.end();
+});
+test('options.updateDuration: sets the correct transition duration on the popper', function (t) {
+  // TODO
+  // Relies on the onUpdate() callback firing
+  t.pass();
+  t.end();
+});
+test('options.sticky', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.appendTo: correctly appended to the specified element', function (t) {
+  var el = createReferenceElement(true);
+  var container = document.createElement('div');
+  document.body.appendChild(container);
+  tippy(el, {
+    appendTo: container
+  });
+  var instance = el._tippy;
+  instance.show();
+  t.true(container.contains(instance.popper));
+  document.body.removeChild(container);
+  instance.destroy();
+  el.cleanup();
+  t.end();
+});
+test('options.zIndex: correctly sets zIndex on the popper', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    zIndex: 666
+  });
+  var instance = el._tippy;
+  t.equal(instance.popper.style.zIndex, '666');
+  t.end();
+});
+test('options.touchHold', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.performance', function (t) {
+  // TODO
+  t.pass();
+  t.end();
+});
+test('options.dynamicTitle: changes the tooltip content whenever title attr changes', function (t) {
+  t.plan(2);
+
+  var el = createReferenceElement();
+  tippy(el, {
+    dynamicTitle: true
+  });
+  var content = el._tippy.popper.querySelector(selectors.CONTENT);
+  t.equal(content.innerHTML, 'tooltip'); // default title set by createReferenceElement()
+  el.title = 'new';
+  // MutationObserver is async
+  setTimeout(function () {
+    t.equal(content.innerHTML, 'new');
+  }, 1);
+});
+
+test('options.flip: sets the `enabled` flip modifier it in the Popper instance', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    flip: false,
+    createPopperInstanceOnInit: true
+  });
+  t.false(el._tippy.popperInstance.options.modifiers.flip.enabled);
+  t.end();
+});
+test('options.flipBehavior: sets the `behavior` flip modifier in the Popper instance', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    flipBehavior: 'clockwise',
+    createPopperInstanceOnInit: true
+  });
+  t.equal(el._tippy.popperInstance.options.modifiers.flip.behavior, 'clockwise');
+  t.end();
+});
+test('options.arrowType="sharp": uses CSS triangle arrow', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    arrow: true,
+    arrowType: 'sharp'
+  });
+  t.true(el._tippy.popper.querySelector(selectors.ARROW));
+  t.end();
+});
+test('options.arrowType="round": uses SVG arrow', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    arrow: true,
+    arrowType: 'round'
+  });
+  t.true(el._tippy.popper.querySelector(selectors.ROUND_ARROW));
+  t.end();
+});
+test('options.arrowTransform', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    arrow: true,
+    arrowTransform: 'scale(2)'
+  });
+  t.equal(el._tippy.popper.querySelector(selectors.ARROW).style.transform, 'scale(2)');
+  t.end();
+});
+test('options.maxWidth', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    maxWidth: '200px'
+  });
+  t.equal(el._tippy.popper.style.maxWidth, '200px');
+  t.end();
+});
+test('options.popperOptions', function (t) {
+  var el = createReferenceElement();
+  tippy(el, {
+    createPopperInstanceOnInit: true,
+    popperOptions: {
+      modifiers: {
+        preventOverflow: {
+          enabled: false
+        },
+        hide: {
+          enabled: false
+        }
+      }
+    }
+  });
+  t.false(el._tippy.popperInstance.options.modifiers.preventOverflow.enabled);
+  t.end();
+});
+test('options.onShow: is successfully called after tooltip shows', function (t) {
+  var el = createReferenceElement(true);
+  var called = false;
+  tippy(el, {
+    onShow: function onShow() {
+      called = true;
+    }
+  });
+  el._tippy.show();
+  el._tippy.destroy();
+  el.cleanup();
+  t.true(called);
+  t.end();
+});
+test('options.onHide: is successfully called after tooltip hides', function (t) {
+  var el = createReferenceElement(true);
+  var called = false;
+  tippy(el, {
+    onHide: function onHide() {
+      called = true;
+    }
+  });
+  el._tippy.show();
+  el._tippy.hide();
+  el._tippy.destroy();
+  el.cleanup();
+  t.true(called);
+  t.end();
+});
+test('options.onShown: is successfully called after tooltip is transitioned in', function (t) {
+  t.plan(1);
+
+  var el = createReferenceElement(true);
+  var called = false;
+  tippy(el, {
+    duration: 0,
+    onShown: function onShown() {
+      called = true;
+    }
+  });
+  el._tippy.show();
+
+  setTimeout(function () {
+    el._tippy.destroy();
+    el.cleanup();
+    t.true(called);
+  }, 20);
+});
+test('options.onHidden: is successfully called after tooltip transitions out', function (t) {
+  t.plan(1);
+
+  var el = createReferenceElement(true);
+  var called = false;
+  tippy(el, {
+    duration: 0,
+    onHidden: function onHidden() {
+      called = true;
+    }
+  });
+  el._tippy.show();
+  el._tippy.hide();
+
+  setTimeout(function () {
+    el._tippy.destroy();
+    el.cleanup();
+    t.true(called);
+  }, 20);
+});
 
 })));
