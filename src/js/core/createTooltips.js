@@ -34,7 +34,6 @@ export default function createTooltips(els, config) {
     if (!title && !options.html && !options.dynamicTitle) return acc
 
     reference.setAttribute('data-tippy', '')
-    reference.setAttribute('aria-describedby', `tippy-${id}`)
 
     removeTitle(reference)
 

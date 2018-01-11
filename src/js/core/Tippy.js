@@ -137,6 +137,8 @@ export default (() => {
             popper.focus()
           }
 
+          reference.setAttribute('aria-describedby', `tippy-${this.id}`)
+
           options.onShown.call(popper)
         })
       })
@@ -196,6 +198,7 @@ export default (() => {
             this._(key).lastMouseMoveEvent = null
           }
 
+          reference.removeAttribute('aria-describedby')
           this.popperInstance.disableEventListeners()
           options.appendTo.removeChild(popper)
           options.onHidden.call(popper)
@@ -224,7 +227,7 @@ export default (() => {
       this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'))
 
       delete this.reference._tippy
-      ;['data-original-title', 'data-tippy', 'aria-describedby'].forEach(attr => {
+      ;['data-original-title', 'data-tippy'].forEach(attr => {
         this.reference.removeAttribute(attr)
       })
 
