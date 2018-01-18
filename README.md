@@ -18,30 +18,41 @@ CDN: https://unpkg.com/tippy.js/dist/
 
 ## Basic usage
 
-1. Give elements a `title` attribute containing the tooltip content.
+#### 1. Give elements a `title` attribute containing the tooltip content.
 ```html
 <button title="Tooltip">Text</button>
 <button title="Another tooltip">Text</button>
 ```
 
-2. Include the `tippy.all.min.js` script in your document, which automatically injects Tippy's CSS into `head`.
+#### 2. Include the `tippy.all.min.js` script in your document, which automatically injects Tippy's CSS into `head`.
 Use the full version link! Visit the link in `src` below to get the latest version.
 
 ```html
 <script src="https://unpkg.com/tippy.js/dist/tippy.all.min.js"></script>
 ```
 
-3. Now call `tippy()` with a CSS selector to give them a nice tooltip!
+#### 3. Now call `tippy()` with a CSS selector to give them a nice tooltip!
+
+```html
+<script>
+  tippy('button')
+</script>
+```
+
+#### Basic example
 
 ```html
 <!DOCTYPE html>
 <html>
-  <head><title>Tippy Example</title></head>
+<head><title>Tippy Example</title></head>
 <body>
+  <!-- Elements with `title` attributes -->
   <button title="Tooltip">Text</button>
   <button title="Another tooltip">Text</button>
-  
+
+  <!-- Include Tippy -->
   <script src="https://unpkg.com/tippy.js@2.0.9/dist/tippy.all.min.js"></script>
+  <!-- Initialize tooltips by calling the `tippy` function with a CSS selector -->
   <script>
     tippy('button')
   </script>
