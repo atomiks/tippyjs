@@ -272,10 +272,8 @@ export default (() => {
   function _createDelegateChildTippy(event) {
     const targetEl = closest(event.target, this.options.target)
     if (targetEl && !targetEl._tippy) {
-      const isClickTriggered =
-        (targetEl.getAttribute('data-tippy-trigger') || '').indexOf('click') > -1
       const title = targetEl.getAttribute('title') || this.title
-      if (title && !isClickTriggered) {
+      if (title) {
         targetEl.setAttribute('title', title)
         tippy(targetEl, { ...this.options, target: null })
         targetEl._tippy.show()

@@ -3330,9 +3330,8 @@ var T = (function () {
   function _createDelegateChildTippy(event) {
     var targetEl = closest(event.target, this.options.target);
     if (targetEl && !targetEl._tippy) {
-      var isClickTriggered = (targetEl.getAttribute('data-tippy-trigger') || '').indexOf('click') > -1;
       var title = targetEl.getAttribute('title') || this.title;
-      if (title && !isClickTriggered) {
+      if (title) {
         targetEl.setAttribute('title', title);
         tippy$1(targetEl, _extends({}, this.options, { target: null }));
         targetEl._tippy.show();

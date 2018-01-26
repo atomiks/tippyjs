@@ -157,10 +157,10 @@
             
             <h4>Event delegation <i class="material-icons icon-left">settings_input_antenna</i> <span class="badge">v2.1</span></h4>
             <p>Bind a Tippy instance to a parent container and freely add new child elements without worrying about creating new Tippy instances for them.</p>
-            <div id="html-showcase" class="button-showcase d-flex justify-content-center flex-wrap tippy" data-tippy-target=".is-tippy-target" title="Shared global title">
-              <button class="btn btn-gradient is-tippy-target">Child</button>
-              <button class="btn btn-gradient is-tippy-target">Child</button>
-              <button class="btn btn-gradient is-tippy-target" title="Individual title">Child</button>
+            <div id="html-showcase" class="button-showcase d-flex justify-content-center flex-wrap tippy" data-tippy-target=".is-tippy-target" title="Shared title">
+              <button class="btn btn-gradient is-tippy-target">Shared title</button>
+              <button class="btn btn-gradient is-tippy-target" title="Tooltip">Custom title</button>
+              <button class="btn btn-gradient is-tippy-target" title="Tooltip" data-tippy-placement="right" data-tippy-arrow="true" data-tippy-animation="shift-toward">Custom options</button>
             </div>
 
             <h4 class="text-center">Misc <i class="material-icons icon-left">tag_faces</i></h4>
@@ -695,12 +695,18 @@ tippy(refObject)
 </code></pre>
 
           <p>
-            If the <code>target</code> option is specified, the reference(s) being created become delegates and
+            If the <code>target</code> option is specified, the reference(s) become delegates and
             receive a <code>data-tippy-delegate</code> attribute instead of <code>data-tippy</code>.
           </p>
           
 <pre><code class="language-markup">&lt;div id=&quot;parent&quot; title="Shared title" data-tippy-delegate&gt;&lt;/div&gt;</code></pre>
         
+          <h5>Caveats</h5>
+          <p>
+            Child targets cannot specify an individual/custom <code>trigger</code> option, as that
+            is the delegate's responsibility.
+          </p>
+          
           <h5>Destroying delegates</h5>
           <p>
             When you destroy a delegate's Tippy instance, it will destroy all target children's Tippy instances as well.
