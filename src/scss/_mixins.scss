@@ -121,15 +121,25 @@
   }
 }
 
-@mixin arrow-position ($placement, $width) {
+@mixin arrow-position ($placement, $width, $isRoundArrow) {
   @if ($placement == 'top') {
     bottom: -$width;
   } @else if ($placement == 'bottom') {
     top: -$width;
-  } @else if ($placement == 'left') {
-    right: -$width;
-  } @else if ($placement == 'right') {
-    left: -$width;
+  }
+
+  @if ($isRoundArrow) {
+    @if ($placement == 'left') {
+      right: -$width * 2;
+    } @else if ($placement == 'right') {
+      left: -$width * 2;
+    }
+  } @else {
+    @if ($placement == 'left') {
+      right: -$width;
+    } @else if ($placement == 'right') {
+      left: -$width;
+    }
   }
 }
 
@@ -139,12 +149,6 @@
   } @else {
     margin: 4px 0;
   }
-}
-
-@mixin roundarrow ($placement, $width, $color) {
-  width: $width;
-  height: $width;
-  fill: $color;
 }
 
 @mixin roundarrow-margin ($placement) {
@@ -164,5 +168,17 @@
     transform: rotate(90deg);
   } @else if ($placement == 'right') {
     transform: rotate(-90deg);
+  }
+}
+
+@mixin arrow-transform-origin ($placement) {
+  @if ($placement == 'top') {
+    transform-origin: 50% 0%;
+  } @else if ($placement == 'bottom') {
+    transform-origin: 50% 100%;
+  } @else if ($placement == 'left') {
+    transform-origin: 0% 50%;
+  } @else if ($placement == 'right') {
+    transform-origin: 100% 50%;
   }
 }
