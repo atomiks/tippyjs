@@ -1,4 +1,5 @@
 import isObjectLiteral from './isObjectLiteral'
+import toArray from './toArray'
 
 /**
  * Returns an array of elements based on the selector input
@@ -11,7 +12,7 @@ export default function getArrayOfElements(selector) {
   }
 
   if (selector instanceof NodeList) {
-    return [].slice.call(selector)
+    return toArray(selector)
   }
 
   if (Array.isArray(selector)) {
@@ -19,7 +20,7 @@ export default function getArrayOfElements(selector) {
   }
 
   try {
-    return [].slice.call(document.querySelectorAll(selector))
+    return toArray(document.querySelectorAll(selector))
   } catch (_) {
     return []
   }

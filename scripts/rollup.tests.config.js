@@ -10,7 +10,7 @@ export default {
     babel({
       presets: ['es2015-rollup'],
       plugins: ['transform-object-rest-spread', 'transform-object-assign'],
-      exclude: 'node_modules/**',
+      exclude: 'node_modules/**'
     }),
     commonjs({
       namedExports: {
@@ -19,6 +19,6 @@ export default {
     }),
     resolve({
       browser: true
-    }),
+    })
   ]
 }

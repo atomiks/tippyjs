@@ -1,97 +1,95 @@
-/* http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascript */
-/**
- * prism.js default theme for JavaScript, CSS and HTML
- * Based on dabblet (http://dabblet.com)
- * @author Lea Verou
- */
+code[class*='language-'],
+pre[class*='language-'] {
+  color: #666;
+  background: none;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 2;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  -webkit-overflow-scrolling: touch;
 
-code[class*="language-"],
-pre[class*="language-"] {
-	color: #666;
-	background: none;
-	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-	text-align: left;
-	white-space: pre;
-	word-spacing: normal;
-	word-break: normal;
-	word-wrap: normal;
-	line-height: 2;
-	font-size: 1rem;
-	margin-bottom: 1.5rem;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
 
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
-	tab-size: 4;
-
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
-	hyphens: none;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
 }
 
-pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
-code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
-	text-shadow: none;
-	background: #b3d4fc;
+pre[class*='language-']::-moz-selection,
+pre[class*='language-'] ::-moz-selection,
+code[class*='language-']::-moz-selection,
+code[class*='language-'] ::-moz-selection {
+  text-shadow: none;
+  background: #b3d4fc;
 }
 
-pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
-code[class*="language-"]::selection, code[class*="language-"] ::selection {
-	text-shadow: none;
-	background: #b3d4fc;
+pre[class*='language-']::selection,
+pre[class*='language-'] ::selection,
+code[class*='language-']::selection,
+code[class*='language-'] ::selection {
+  text-shadow: none;
+  background: #b3d4fc;
 }
 
 @media print {
-	code[class*="language-"],
-	pre[class*="language-"] {
-		text-shadow: none;
-	}
+  code[class*='language-'],
+  pre[class*='language-'] {
+    text-shadow: none;
+  }
 }
 
 /* Code blocks */
-pre[class*="language-"] {
-	overflow: auto;
+pre[class*='language-'] {
+  overflow: auto;
 }
 
 pre.is-option {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
-	background: #f5f6f9;
-	border-radius: 5px;
+:not(pre) > code[class*='language-'],
+pre[class*='language-'] {
+  background: #f5f6f9;
+  border-radius: 5px;
 }
 
 /* Inline code */
-:not(pre) > code[class*="language-"] {
-	padding: .1em;
-	border-radius: .3em;
-	white-space: normal;
+:not(pre) > code[class*='language-'] {
+  padding: 0.1em;
+  border-radius: 0.3em;
+  white-space: normal;
 }
 
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-	color: #8ca2d3;
+  color: #8ca2d3;
 }
 
 .token.attr-name {
-	color: #e3840f;
+  color: #e3840f;
 }
 
 .token.punctuation {
-	color: #a4b1d8;
+  color: #a4b1d8;
 }
 
 .namespace {
-	opacity: .7;
+  opacity: 0.7;
 }
 
 .token.tag {
-	color: #e15555;
+  color: #e15555;
 }
 
 .token.property,
@@ -100,7 +98,7 @@ pre[class*="language-"] {
 .token.constant,
 .token.symbol,
 .token.deleted {
-	color: #e1773f;
+  color: #e1773f;
 }
 
 .token.selector,
@@ -109,7 +107,7 @@ pre[class*="language-"] {
 .token.char,
 .token.builtin,
 .token.inserted {
-	color: #0aa395;
+  color: #0aa395;
 }
 
 .token.operator,
@@ -117,31 +115,31 @@ pre[class*="language-"] {
 .token.url,
 .language-css .token.string,
 .style .token.string {
-	color: #f53737;
+  color: #f53737;
 }
 
 .token.important,
 .token.atrule,
 .token.keyword {
-	color: #7552ff;
+  color: #7552ff;
 }
 
 .token.function {
-	color: #5c87ff;
+  color: #5c87ff;
 }
 
 .token.regex,
 .token.variable {
-	color: #00a8d4;
+  color: #00a8d4;
 }
 
 .token.bold {
-	font-weight: bold;
+  font-weight: bold;
 }
 .token.italic {
-	font-style: italic;
+  font-style: italic;
 }
 
 .token.entity {
-	cursor: help;
+  cursor: help;
 }

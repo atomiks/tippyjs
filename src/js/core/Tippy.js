@@ -2,6 +2,8 @@ import { selectors, browser } from './globals'
 
 import Popper from 'popper.js'
 
+import tippy from '../tippy'
+
 import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiveBorder'
 import computeArrowTransform from '../utils/computeArrowTransform'
 import elementIsInViewport from '../utils/elementIsInViewport'
@@ -14,6 +16,7 @@ import closest from '../utils/closest'
 import getDuration from '../utils/getDuration'
 import setVisibilityState from '../utils/setVisibilityState'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
+import toArray from '../utils/toArray'
 
 export default (() => {
   const key = {}
@@ -207,11 +210,12 @@ export default (() => {
     }
 
     /**
-     * Destroys the tooltip
+     * Destroys the tooltip instance
+     * @param {Boolean} destroyTargetInstances - relevant only when destroying delegates
      * @memberof Tippy
      * @public
      */
-    destroy() {
+    destroy(destroyTargetInstances = true) {
       if (this.state.destroyed) return
 
       // Ensure the popper is hidden
@@ -227,9 +231,17 @@ export default (() => {
       this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'))
 
       delete this.reference._tippy
-      ;['data-original-title', 'data-tippy'].forEach(attr => {
+
+      const attributes = ['data-original-title', 'data-tippy', 'data-tippy-delegate']
+      attributes.forEach(attr => {
         this.reference.removeAttribute(attr)
       })
+
+      if (this.options.target && destroyTargetInstances) {
+        toArray(this.reference.querySelectorAll(this.options.target)).forEach(
+          child => child._tippy && child._tippy.destroy()
+        )
+      }
 
       if (this.popperInstance) {
         this.popperInstance.destroy()
@@ -252,6 +264,26 @@ export default (() => {
    */
 
   /**
+   * Creates the Tippy instance for the child target of the delegate container
+   * @param {Event} event
+   * @memberof Tippy
+   * @private
+   */
+  function _createDelegateChildTippy(event) {
+    const targetEl = closest(event.target, this.options.target)
+    if (targetEl && !targetEl._tippy) {
+      const isClickTriggered =
+        (targetEl.getAttribute('data-tippy-trigger') || '').indexOf('click') > -1
+      const title = targetEl.getAttribute('title') || this.title
+      if (title && !isClickTriggered) {
+        targetEl.setAttribute('title', title)
+        tippy(targetEl, { ...this.options, target: null })
+        targetEl._tippy.show()
+      }
+    }
+  }
+
+  /**
    * Method used by event listeners to invoke the show method, taking into account delays and
    * the `wait` option
    * @param {Event} event
@@ -262,6 +294,12 @@ export default (() => {
     _clearDelayTimeouts.call(this)
 
     if (this.state.visible) return
+
+    // Is a delegate, create Tippy instance for the child target
+    if (this.options.target) {
+      _createDelegateChildTippy.call(this, event)
+      return
+    }
 
     this._(key).isPreparingToShow = true
 
@@ -350,7 +388,7 @@ export default (() => {
       }
     }
 
-    const handleMouseleave = event => {
+    const handleMouseLeave = event => {
       if (
         event.type === 'mouseleave' &&
         browser.supportsTouch &&
@@ -363,7 +401,7 @@ export default (() => {
         const hide = _leave.bind(this)
 
         // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
-        const handleMousemove = event => {
+        const handleMouseMove = event => {
           const referenceCursorIsOver = closest(event.target, selectors.REFERENCE)
           const cursorIsOverPopper = closest(event.target, selectors.POPPER) === this.popper
           const cursorIsOverReference = referenceCursorIsOver === this.reference
@@ -372,13 +410,13 @@ export default (() => {
 
           if (cursorIsOutsideInteractiveBorder(event, this.popper, this.options)) {
             document.body.removeEventListener('mouseleave', hide)
-            document.removeEventListener('mousemove', handleMousemove)
+            document.removeEventListener('mousemove', handleMouseMove)
 
             _leave.call(this)
           }
         }
         document.body.addEventListener('mouseleave', hide)
-        document.addEventListener('mousemove', handleMousemove)
+        document.addEventListener('mousemove', handleMouseMove)
         return
       }
 
@@ -392,10 +430,24 @@ export default (() => {
       _leave.call(this)
     }
 
+    const handleDelegateShow = event => {
+      if (closest(event.target, this.options.target)) {
+        _enter.call(this, event)
+      }
+    }
+
+    const handleDelegateHide = event => {
+      if (closest(event.target, this.options.target)) {
+        _leave.call(this)
+      }
+    }
+
     return {
       handleTrigger,
-      handleMouseleave,
-      handleBlur
+      handleMouseLeave,
+      handleBlur,
+      handleDelegateShow,
+      handleDelegateHide
     }
   }
 
