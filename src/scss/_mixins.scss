@@ -182,3 +182,15 @@
     transform-origin: 100% 50%;
   }
 }
+
+@mixin roundarrow-transform-origin ($placement) {
+  @if ($placement == 'top') {
+    transform-origin: 50% 0%;
+  } @else if ($placement == 'bottom') {
+    transform-origin: 50% 100%;
+  } @else if ($placement == 'left') {
+    transform-origin: 33.33333333% 50%;
+  } @else if ($placement == 'right') {
+    transform-origin: 66.66666666% 50%;
+  }
+}

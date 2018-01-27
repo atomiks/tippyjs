@@ -47,7 +47,7 @@ export default function createPopperElement(id, title, options) {
     if (arrowType === 'round') {
       arrow.classList.add('tippy-roundarrow')
       arrow.innerHTML =
-        '<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414"><path d="M0 8s5.102-.043 7.912-4.403c3.084-4.785 5.115-4.806 8.191 0C18.907 7.977 24 8 24 8H0z"/></svg>'
+        '<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414"><path d="M1 8s4.577-.019 7.253-4.218c2.357-3.698 5.175-3.721 7.508 0C18.404 7.997 23 8 23 8H1z"/></svg>'
     } else {
       arrow.classList.add('tippy-arrow')
     }
