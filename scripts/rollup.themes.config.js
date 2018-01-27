@@ -5,10 +5,10 @@ import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
 
 export default Object.assign(base, {
-  entry: './themes.js',
+  input: './themes.js',
   plugins: [
     sass({
-      output: './dist/themes/themes.css',
+      output: './dist/tippy.themes.css',
       processor: css =>
         postcss([autoprefixer, cssnano])
           .process(css)

@@ -1,6 +1,9 @@
 export default {
-  entry: './main.js',
-  dest: './docs/tippy/tippy.js',
-  format: 'umd',
-  moduleName: 'tippy'
+  input: './main.js',
+  output: {
+    file: './docs/tippy/tippy.js',
+    format: 'umd',
+    name: 'tippy',
+    globals: { 'popper.js': 'Popper' }
+  }
 }
