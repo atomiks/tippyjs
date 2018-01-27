@@ -29,19 +29,22 @@
       }
 
       .tippy-roundarrow {
-        @include roundarrow($placement, 23px, #333);
-        @include arrow-position($placement, 15px);
+        @include arrow-position($placement, 8px, true);
         @include roundarrow-margin($placement);
+        @include roundarrow-transform-origin($placement);
 
         svg {
+          position: absolute;
+          left: 0;
           @include roundarrow-transform($placement);
         }
       }
 
       .tippy-arrow {
         @include arrow($placement, 7px, #333);
-        @include arrow-position($placement, 7px);
+        @include arrow-position($placement, 7px, false);
         @include arrow-margin($placement);
+        @include arrow-transform-origin($placement);
       }
 
       .tippy-backdrop {
@@ -171,6 +174,9 @@
 }
 
 .tippy-roundarrow {
+  width: 24px;
+  height: 8px;
+  fill: #333;
   pointer-events: none;
 
   path {
