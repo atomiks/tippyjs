@@ -10,30 +10,22 @@ import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 
 export default Object.assign(base, {
-  dest: './dist/tippy.all.min.js',
-  external: ['Popper'],
+  output: Object.assign(base.output, { file: './dist/tippy.all.min.js' }),
   plugins: [
     sass({
       output: './dist/tippy.css',
-      processor: css => postcss([autoprefixer, cssnano])
-      .process(css)
-      .then(result => result.css)
+      processor: css =>
+        postcss([autoprefixer, cssnano])
+          .process(css)
+          .then(result => result.css)
     }),
     css({ output: false }),
     babel({
       presets: ['es2015-rollup'],
       plugins: ['transform-object-rest-spread', 'transform-object-assign']
     }),
-    babili({
-      comments: false
-    }),
-    commonjs({
-      namedExports: {
-        'node_modules/popper.js/dist/popper.js': ['Popper']
-      }
-    }),
-    resolve({
-      browser: true
-    }),
+    babili({ comments: false }),
+    commonjs({ namedExports: { 'node_modules/popper.js/dist/popper.js': ['Popper'] } }),
+    resolve({ browser: true })
   ]
 })

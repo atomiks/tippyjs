@@ -3,31 +3,31 @@
 
 .tippy-popper {
   @each $placement in $placements {
-    &[x-placement^=#{$placement}] {
+    &[x-placement^='#{$placement}'] {
       .tippy-tooltip.light-theme {
         .tippy-arrow {
           @include arrow($placement, 7px, white);
         }
-        .tippy-roundarrow {
-          @include roundarrow($placement, 24px, white);
-        }
       }
     }
   }
+}
 
-  .tippy-tooltip.light-theme {
-    color: #26323d;
-    box-shadow: 0 0 20px 4px rgba(154, 161, 177, 0.15),
-    0 4px 80px -8px rgba(36, 40, 47, 0.25),
+.tippy-tooltip.light-theme {
+  color: #26323d;
+  box-shadow: 0 0 20px 4px rgba(154, 161, 177, 0.15), 0 4px 80px -8px rgba(36, 40, 47, 0.25),
     0 4px 4px -2px rgba(91, 94, 105, 0.15);
-    background-color: white;
-    
-    .tippy-backdrop {
-      background-color: white;
-    }
+  background-color: white;
 
-    &[data-animatefill] {
-      background-color: transparent;
-    }
+  .tippy-backdrop {
+    background-color: white;
+  }
+
+  .tippy-roundarrow {
+    fill: white;
+  }
+
+  &[data-animatefill] {
+    background-color: transparent;
   }
 }
