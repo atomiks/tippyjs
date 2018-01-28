@@ -36,7 +36,6 @@ tippy('.tippy-link', {
   theme: 'translucent',
   arrow: true,
   arrowType: 'round',
-  arrowTransform: 'translateY(0.7px)',
   animation: 'fade'
 })
 
