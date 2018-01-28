@@ -9,7 +9,7 @@ export default function hideAllPoppers(excludeTippy) {
   const poppers = toArray(document.querySelectorAll(selectors.POPPER))
 
   poppers.forEach(popper => {
-    const tippy = popper._reference._tippy
+    const tippy = popper._tippy
     const { options } = tippy
 
     if (

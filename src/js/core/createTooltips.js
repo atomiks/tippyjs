@@ -86,6 +86,7 @@ export default function createTooltips(els, config) {
 
     // Shortcuts
     reference._tippy = tippy
+    popper._tippy = tippy
     popper._reference = reference
 
     acc.push(tippy)
