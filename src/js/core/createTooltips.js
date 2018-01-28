@@ -29,11 +29,15 @@ export default function createTooltips(els, config) {
 
     // Don't create an instance when:
     // * the `title` attribute is falsy (null or empty string), and
+    // * it's not a delegate for tooltips, and
     // * there is no html template specified, and
     // * `dynamicTitle` option is false
-    if (!title && !options.html && !options.dynamicTitle) return acc
+    if (!title && !options.target && !options.html && !options.dynamicTitle) {
+      return acc
+    }
 
-    reference.setAttribute('data-tippy', '')
+    // Delegates should be highlighted as different
+    reference.setAttribute(options.target ? 'data-tippy-delegate' : 'data-tippy', '')
 
     removeTitle(reference)
 
@@ -44,6 +48,7 @@ export default function createTooltips(els, config) {
       reference,
       popper,
       options,
+      title,
       popperInstance: null
     })
 
@@ -56,9 +61,10 @@ export default function createTooltips(els, config) {
     tippy.listeners = options.trigger
       .trim()
       .split(' ')
-      .reduce((acc, eventType) => {
-        return acc.concat(createTrigger(eventType, reference, listeners, options.touchHold))
-      }, [])
+      .reduce(
+        (acc, eventType) => acc.concat(createTrigger(eventType, reference, listeners, options)),
+        []
+      )
 
     // Update tooltip content whenever the title attribute on the reference changes
     if (options.dynamicTitle) {
@@ -68,7 +74,7 @@ export default function createTooltips(els, config) {
           const { content } = getInnerElements(popper)
           const title = reference.getAttribute('title')
           if (title) {
-            content.innerHTML = title
+            content.innerHTML = tippy.title = title
             removeTitle(reference)
           }
         },
