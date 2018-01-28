@@ -5,7 +5,7 @@ import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
 
 export default Object.assign(base, {
-  input: './themes.js',
+  input: './build/themes.js',
   plugins: [
     sass({
       output: './dist/tippy.themes.css',

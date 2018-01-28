@@ -8,7 +8,7 @@ import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 
 export default Object.assign(base, {
-  input: './bundle.js',
+  input: './build/bundle.js',
   output: Object.assign(base.output, { file: './dist/tippy.js' }),
   plugins: [
     sass({

@@ -3,3 +3,4 @@ node_modules/
 scripts/
 tests/
 src/
+build/

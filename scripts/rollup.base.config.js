@@ -1,5 +1,5 @@
 export default {
-  input: './main.js',
+  input: './build/main.js',
   output: {
     file: './docs/tippy/tippy.js',
     format: 'umd',
