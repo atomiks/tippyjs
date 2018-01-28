@@ -79,8 +79,8 @@
               <button class="btn btn-gradient tippy" title="I have a nice round arrow." data-tippy-arrow="true" data-tippy-arrowType="round" data-tippy-animation="fade">Round</button>
               <button class="btn btn-gradient tippy" title="My arrow is wide." data-tippy-arrow="true" data-tippy-arrowtransform="scaleX(1.4)" data-tippy-animation="fade">Wide</button>
               <button class="btn btn-gradient tippy" title="My arrow is skinny and round." data-tippy-arrow="true" data-tippy-arrowType="round" data-tippy-arrowtransform="scale(0.7, 1)" data-tippy-animation="fade">Skinny</button>
-              <button class="btn btn-gradient tippy" title="My arrow is small." data-tippy-arrow="true" data-tippy-arrowtransform="scale(0.75) translateY(-1.5px)" data-tippy-animation="fade">Small</button>
-              <button class="btn btn-gradient tippy" title="My arrow is large." data-tippy-arrow="true" data-tippy-arrowtransform="scale(1.75)" data-tippy-animation="fade">Large</button>
+              <button class="btn btn-gradient tippy" title="My arrow is small." data-tippy-arrow="true" data-tippy-arrowtransform="scale(0.75)" data-tippy-animation="fade">Small</button>
+              <button class="btn btn-gradient tippy" title="My arrow is large." data-tippy-arrow="true" data-tippy-arrowtransform="scale(1.5)" data-tippy-animation="fade">Large</button>
             </div>
 
             <h4>Triggers <i class="material-icons icon-left">touch_app</i></h4>
@@ -152,15 +152,7 @@
             <h4>HTML <i class="material-icons icon-left">code</i></h4>
             <p>Tooltips can even contain HTML!</p>
             <div id="html-showcase" class="button-showcase d-flex justify-content-center flex-wrap">
-              <button class="btn btn-gradient tippy" id="html-tippy" data-tippy-interactiveBorder="15" data-tippy-arrowType="round" data-tippy-trigger="click" data-tippy-theme="light" data-tippy-arrowTransform="scale(2, 2.5) translateY(2.5px)" data-tippy-distance="25" data-tippy-animation="scale" data-tippy-interactive="true" data-tippy-arrow="true">HTML templates <small class="opacity-low">(click)</small></button>
-            </div>
-            
-            <h4>Event delegation <i class="material-icons icon-left">settings_input_antenna</i> <span class="badge">v2.1</span></h4>
-            <p>Bind a Tippy instance to a parent container and freely add new child elements without worrying about creating new Tippy instances for them.</p>
-            <div id="html-showcase" class="button-showcase d-flex justify-content-center flex-wrap tippy" data-tippy-target=".is-tippy-target" title="Shared title">
-              <button class="btn btn-gradient is-tippy-target">Shared title</button>
-              <button class="btn btn-gradient is-tippy-target" title="Tooltip">Custom title</button>
-              <button class="btn btn-gradient is-tippy-target" title="Tooltip" data-tippy-placement="right" data-tippy-arrow="true" data-tippy-animation="shift-toward">Custom options</button>
+              <button class="btn btn-gradient tippy" id="html-tippy" data-tippy-interactiveBorder="15" data-tippy-arrowType="round" data-tippy-trigger="click" data-tippy-theme="light" data-tippy-arrowTransform="scale(2, 2.5)" data-tippy-distance="25" data-tippy-animation="scale" data-tippy-interactive="true" data-tippy-arrow="true">HTML templates <small class="opacity-low">(click)</small></button>
             </div>
 
             <h4 class="text-center">Misc <i class="material-icons icon-left">tag_faces</i></h4>
@@ -413,12 +405,6 @@ tippy(refObject)
                       </td>
                     </tr>
                     <tr>
-                      <td><code>target</code> <span class="badge badge-small">v2.1</span></td>
-                      <td><code>null</code></td>
-                      <td><code>String</code> | <code>null</code></td>
-                      <td>A CSS selector string used for event delegation. When specified, it will make the element a delegate. The selector should match the child elements that should receive a tooltip.</td>
-                    </tr>
-                    <tr>
                       <td><code>delay</code></td>
                       <td><code>0</code></td>
                       <td><code>Number</code> | <code>Array</code> (milliseconds)</td>
@@ -617,6 +603,25 @@ tippy(refObject)
                   to see the options you can specify.
               </p>
 
+              <h4>Tooltips inside a scrollable container</h4>
+
+              <p>
+                  You may encounter issues with tooltip positioning when it's given to an element within a scrollable container.
+                  Firstly, when the element is no longer visible, the tooltip will stay stuck within the viewport. Secondly, it transitions between position updates.
+                  To solve this, simply specify a <code>updateDuration</code> of <code>0</code> and add the following <code>popperOptions</code>:
+              </p>
+
+<pre><code class="language-javascript">tippy('.mySelector', {
+  updateDuration: 0,
+  popperOptions: {
+    modifiers: {
+      preventOverflow: {
+        enabled: false
+      }
+    }
+  }
+})</code></pre>
+
               <h4>Callbacks</h4>
 
               <p>If you want things to happen at certain times during a tooltip's show/hide events, you can add callback functions in the options object. There are 5 to use:</p>
@@ -662,82 +667,6 @@ tippy(refObject)
             </div>
 
             <p><a target="_blank" href="https://codepen.io/anon/pen/GEmOQy">Codepen demo</a></p>
-            
-            <h4>Event delegation <span class="badge">v2.1</span></h4>
-            <p>
-              Event delegation only requires minimal setup. Your setup should look similar to this, with a parent element wrapping the child elements
-              you would like to give tooltips to:
-            </p>
-
-<pre><code class="language-markup">&lt;div id=&quot;parent&quot; title="Shared title"&gt;
-  &lt;div class=&quot;child&quot;&gt;Text&lt;/div&gt;
-  &lt;div class=&quot;child&quot;&gt;Text&lt;/div&gt;
-  &lt;div class=&quot;child&quot;&gt;Text&lt;/div&gt;
-  &lt;div class=&quot;other&quot;&gt;Text&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-
-            <p>Specify a CSS selector string as the <code>target</code> that matches the child elements which should
-              receive tooltips.</p>
-
-<pre><code class="language-javascript">tippy('#parent', {
-  target: '.child'
-})
-</code></pre>
-
-          <p>
-            Specify a <code>title</code> attribute on a child element to override the shared title.
-          </p>
-          
-<pre><code class="language-markup">&lt;div id=&quot;parent&quot; title="Shared title"&gt;
-  &lt;div class=&quot;child&quot; title=&quot;Individual title&quot;&gt;Text&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-
-          <p>
-            If the <code>target</code> option is specified, the reference(s) become delegates and
-            receive a <code>data-tippy-delegate</code> attribute instead of <code>data-tippy</code>.
-          </p>
-          
-<pre><code class="language-markup">&lt;div id=&quot;parent&quot; title="Shared title" data-tippy-delegate&gt;&lt;/div&gt;</code></pre>
-        
-          <h5>Caveats</h5>
-          <p>
-            Child targets cannot specify an individual/custom <code>trigger</code> option, as that
-            is the delegate's responsibility.
-          </p>
-          
-          <h5>Destroying delegates</h5>
-          <p>
-            When you destroy a delegate's Tippy instance, it will destroy all target children's Tippy instances as well.
-            To disable this behavior, pass <code>false</code> into the <code>destroy()</code> method.
-          </p>
-          
-<pre><code class="language-javascript">const parent = document.querySelector('#parent')
-tippy(parent, {
-  target: '.child'
-})
-parent._tippy.destroy(false) // Will not destroy any child target instances (if they had been created)
-</code></pre>
-
-            <h4>Tooltips inside a scrollable container</h4>
-
-            <p>
-                You may encounter issues with tooltip positioning when it's given to an element within a scrollable container.
-                Firstly, when the element is no longer visible, the tooltip will stay stuck within the viewport. Secondly, it transitions between position updates.
-                To solve this, simply specify a <code>updateDuration</code> of <code>0</code> and add the following <code>popperOptions</code>:
-            </p>
-
-<pre><code class="language-javascript">tippy('.mySelector', {
-  updateDuration: 0,
-  popperOptions: {
-    modifiers: {
-      preventOverflow: {
-        enabled: false
-      }
-    }
-  }
-})</code></pre>
 
             <h4>Reactivity</h4>
 
@@ -794,6 +723,7 @@ tippy.browser.onUserInputChange = function (type) {
   }
 })
 </code></pre>
+
             </section>
 
             <hr>
@@ -1138,17 +1068,13 @@ clonedTemplate.innerHTML = 'Updated!'
               </h2>
 
               <p>
-                You can have thousands of tooltipped elements without affecting page
-                performance after the initialization. Tooltips are only appended to the DOM when shown, and removed
-                when hidden. Popper.js only listens to scroll and resize events when a tooltip is showing.
-              </p>
-              
-              <p>
-                Event delegation defers tooltip initialization until it's triggered and is O(1) to init, making
-                it the ideal candidate for performance-critical scenarios.
+                  You can have thousands of tooltipped elements without affecting page
+                  performance after the initial instantiation. Tooltips are only appended to the DOM when shown, and removed
+                  when hidden. Popper.js only listens to scroll and resize events when a popper (tooltip) is showing,
+                  and also updates the position on show.
               </p>
 
-              <p>Note: these tooltips are created with <code>performance</code> mode set to <code>true</code> (but without event delegation).</p>
+              <p>Note: these tooltips are created with <code>performance</code> mode set to <code>true</code>.</p>
 
               <div class="form-group">
                   <label for="performance-model"><strong>Elements to append</strong></label>
