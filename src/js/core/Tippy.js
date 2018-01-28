@@ -80,7 +80,7 @@ export default (() => {
         return
       }
 
-      options.onShow.call(popper)
+      options.onShow.call(popper, this)
 
       duration = getDuration(duration !== undefined ? duration : options.duration, 0)
 
@@ -142,7 +142,7 @@ export default (() => {
 
           reference.setAttribute('aria-describedby', `tippy-${this.id}`)
 
-          options.onShown.call(popper)
+          options.onShown.call(popper, this)
         })
       })
     }
@@ -159,7 +159,7 @@ export default (() => {
       const { popper, reference, options } = this
       const { tooltip, backdrop, content } = getInnerElements(popper)
 
-      options.onHide.call(popper)
+      options.onHide.call(popper, this)
 
       duration = getDuration(duration !== undefined ? duration : options.duration, 1)
 
@@ -204,7 +204,7 @@ export default (() => {
           reference.removeAttribute('aria-describedby')
           this.popperInstance.disableEventListeners()
           options.appendTo.removeChild(popper)
-          options.onHidden.call(popper)
+          options.onHidden.call(popper, this)
         })
       })
     }
