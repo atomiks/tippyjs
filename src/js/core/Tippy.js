@@ -17,6 +17,7 @@ import getDuration from '../utils/getDuration'
 import setVisibilityState from '../utils/setVisibilityState'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
 import toArray from '../utils/toArray'
+import reflow from '../utils/reflow'
 
 export default (() => {
   const key = {}
@@ -363,7 +364,7 @@ export default (() => {
       const shouldStopEvent =
         browser.supportsTouch &&
         browser.usingTouch &&
-        (event.type === 'mouseenter' || event.type === 'focus')
+        ['mouseenter', 'mouseover', 'focus'].indexOf(event.type) > -1
 
       if (shouldStopEvent && this.options.touchHold) return
 
@@ -388,7 +389,7 @@ export default (() => {
 
     const handleMouseLeave = event => {
       if (
-        event.type === 'mouseleave' &&
+        ['mouseleave', 'mouseout'].indexOf(event.type) > -1 &&
         browser.supportsTouch &&
         browser.usingTouch &&
         this.options.touchHold
@@ -512,7 +513,7 @@ export default (() => {
 
         const _onUpdate = this.popperInstance.options.onUpdate
         this.popperInstance.options.onUpdate = () => {
-          this.popper.offsetHeight
+          reflow(this.popper)
           styles[prefix('transitionDuration')] = options.updateDuration + 'ms'
           this.popperInstance.options.onUpdate = _onUpdate
         }
@@ -551,7 +552,7 @@ export default (() => {
     const _onUpdate = this.popperInstance.options.onUpdate
 
     this.popperInstance.options.onCreate = this.popperInstance.options.onUpdate = () => {
-      this.popper.offsetHeight // we need to cause document reflow
+      reflow(this.popper)
       callback()
       this.popperInstance.options.onUpdate = _onUpdate
       this.popperInstance.options.onCreate = _onCreate

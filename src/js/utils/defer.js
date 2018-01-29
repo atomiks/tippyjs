@@ -4,6 +4,6 @@
  */
 export default function defer(fn) {
   requestAnimationFrame(() => {
-    setTimeout(fn)
+    setTimeout(fn, 1)
   })
 }
