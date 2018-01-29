@@ -21,7 +21,7 @@
   },
   "author": "atomiks",
   "license": "MIT",
-  "keywords": ["tooltip"],
+  "keywords": ["tooltip", "tippy", "tippy.js"],
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.25.0",
