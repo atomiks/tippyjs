@@ -68,6 +68,7 @@ var selectors = {
   arrowType: 'sharp',
   arrowTransform: '',
   maxWidth: '',
+  target: null,
   popperOptions: {},
   createPopperInstanceOnInit: false,
   onShow: function onShow() {},
@@ -92,6 +93,15 @@ function isObjectLiteral(value) {
 }
 
 /**
+ * Ponyfill for Array.from
+ * @param {*} value
+ * @return {Array}
+ */
+function toArray(value) {
+  return [].slice.call(value);
+}
+
+/**
  * Returns an array of elements based on the selector input
  * @param {String|Element|Element[]|NodeList|Object} selector
  * @return {Element[]}
@@ -102,7 +112,7 @@ function getArrayOfElements(selector) {
   }
 
   if (selector instanceof NodeList) {
-    return [].slice.call(selector);
+    return toArray(selector);
   }
 
   if (Array.isArray(selector)) {
@@ -110,7 +120,7 @@ function getArrayOfElements(selector) {
   }
 
   try {
-    return [].slice.call(document.querySelectorAll(selector));
+    return toArray(document.querySelectorAll(selector));
   } catch (_) {
     return [];
   }
@@ -181,7 +191,7 @@ function createPopperElement(id, title, options) {
 
     if (arrowType === 'round') {
       _arrow.classList.add('tippy-roundarrow');
-      _arrow.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 64 20" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><g transform="matrix(1.04009,0,0,1.45139,-1.26297,-65.9145)"><path d="M1.214,59.185C1.214,59.185 12.868,59.992 21.5,51.55C29.887,43.347 33.898,43.308 42.5,51.55C51.352,60.031 62.747,59.185 62.747,59.185L1.214,59.185Z"/></g></svg>';
+      _arrow.innerHTML = '<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414"><path d="M1 8s4.577-.019 7.253-4.218c2.357-3.698 5.175-3.721 7.508 0C18.404 7.997 23 8 23 8H1z"/></svg>';
     } else {
       _arrow.classList.add('tippy-arrow');
     }
@@ -239,49 +249,54 @@ function createPopperElement(id, title, options) {
  * @param {String} eventType - the custom event specified in the `trigger` setting
  * @param {Element} reference
  * @param {Object} handlers - the handlers for each event
- * @param {Boolean} touchHold
+ * @param {Object} options
  * @return {Array} - array of listener objects
  */
-function createTrigger(eventType, reference, handlers, touchHold) {
+function createTrigger(eventType, reference, handlers, options) {
+  var handleTrigger = handlers.handleTrigger,
+      handleMouseLeave = handlers.handleMouseLeave,
+      handleBlur = handlers.handleBlur,
+      handleDelegateShow = handlers.handleDelegateShow,
+      handleDelegateHide = handlers.handleDelegateHide;
+
   var listeners = [];
 
   if (eventType === 'manual') return listeners;
 
-  // Show
-  reference.addEventListener(eventType, handlers.handleTrigger);
-  listeners.push({
-    event: eventType,
-    handler: handlers.handleTrigger
-  });
+  var on = function on(eventType, handler) {
+    reference.addEventListener(eventType, handler);
+    listeners.push({ event: eventType, handler: handler });
+  };
 
-  // Hide
-  if (eventType === 'mouseenter') {
-    if (browser.supportsTouch && touchHold) {
-      reference.addEventListener('touchstart', handlers.handleTrigger);
-      listeners.push({
-        event: 'touchstart',
-        handler: handlers.handleTrigger
-      });
-      reference.addEventListener('touchend', handlers.handleMouseleave);
-      listeners.push({
-        event: 'touchend',
-        handler: handlers.handleMouseleave
-      });
+  if (!options.target) {
+    on(eventType, handleTrigger);
+
+    if (browser.supportsTouch && options.touchHold) {
+      on('touchstart', handleTrigger);
+      on('touchend', handleMouseLeave);
     }
-
-    reference.addEventListener('mouseleave', handlers.handleMouseleave);
-    listeners.push({
-      event: 'mouseleave',
-      handler: handlers.handleMouseleave
-    });
-  }
-
-  if (eventType === 'focus') {
-    reference.addEventListener('blur', handlers.handleBlur);
-    listeners.push({
-      event: 'blur',
-      handler: handlers.handleBlur
-    });
+    if (eventType === 'mouseenter') {
+      on('mouseleave', handleMouseLeave);
+    }
+    if (eventType === 'focus') {
+      on('blur', handleBlur);
+    }
+  } else {
+    if (browser.supportsTouch && options.touchHold) {
+      on('touchstart', handleDelegateShow);
+      on('touchend', handleDelegateHide);
+    }
+    if (eventType === 'mouseenter') {
+      on('mouseover', handleDelegateShow);
+      on('mouseout', handleDelegateHide);
+    }
+    if (eventType === 'focus') {
+      on('focusin', handleDelegateShow);
+      on('focusout', handleDelegateHide);
+    }
+    if (eventType === 'click') {
+      on('click', handleDelegateShow);
+    }
   }
 
   return listeners;
@@ -351,7 +366,7 @@ function getIndividualOptions(reference, instanceOptions) {
     }
 
     // Convert array strings to actual arrays
-    if (typeof val === 'string' && val.trim().charAt(0) === '[') {
+    if (key !== 'target' && typeof val === 'string' && val.trim().charAt(0) === '[') {
       val = JSON.parse(val);
     }
 
@@ -586,7 +601,7 @@ function getOffsetDistanceInPx(distance) {
  */
 function defer(fn) {
   requestAnimationFrame(function () {
-    setTimeout(fn);
+    setTimeout(fn, 1);
   });
 }
 
@@ -656,6 +671,16 @@ function applyTransitionDuration(els, duration) {
     if (!el) return;
     el.style[prefix('transitionDuration')] = duration + 'ms';
   });
+}
+
+/**
+ * Triggers document reflow.
+ * Use void because some minifiers or engines think simply accessing the property
+ * is unnecessary.
+ * @param {Element} popper
+ */
+function reflow(popper) {
+  void popper.offsetHeight;
 }
 
 var T = (function () {
@@ -746,7 +771,7 @@ var T = (function () {
           return;
         }
 
-        options.onShow.call(popper);
+        options.onShow.call(popper, this);
 
         duration = getDuration(duration !== undefined ? duration : options.duration, 0);
 
@@ -804,7 +829,7 @@ var T = (function () {
 
             reference.setAttribute('aria-describedby', 'tippy-' + _this.id);
 
-            options.onShown.call(popper);
+            options.onShown.call(popper, _this);
           });
         });
       }
@@ -832,7 +857,7 @@ var T = (function () {
             backdrop = _getInnerElements2.backdrop,
             content = _getInnerElements2.content;
 
-        options.onHide.call(popper);
+        options.onHide.call(popper, this);
 
         duration = getDuration(duration !== undefined ? duration : options.duration, 1);
 
@@ -873,13 +898,14 @@ var T = (function () {
             reference.removeAttribute('aria-describedby');
             _this2.popperInstance.disableEventListeners();
             options.appendTo.removeChild(popper);
-            options.onHidden.call(popper);
+            options.onHidden.call(popper, _this2);
           });
         });
       }
 
       /**
-       * Destroys the tooltip
+       * Destroys the tooltip instance
+       * @param {Boolean} destroyTargetInstances - relevant only when destroying delegates
        * @memberof Tippy
        * @public
        */
@@ -888,6 +914,8 @@ var T = (function () {
       key: 'destroy',
       value: function destroy() {
         var _this3 = this;
+
+        var destroyTargetInstances = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
         if (this.state.destroyed) return;
 
@@ -903,9 +931,18 @@ var T = (function () {
         // Restore title
         this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'));
 
-        delete this.reference._tippy;['data-original-title', 'data-tippy'].forEach(function (attr) {
+        delete this.reference._tippy;
+
+        var attributes = ['data-original-title', 'data-tippy', 'data-tippy-delegate'];
+        attributes.forEach(function (attr) {
           _this3.reference.removeAttribute(attr);
         });
+
+        if (this.options.target && destroyTargetInstances) {
+          toArray(this.reference.querySelectorAll(this.options.target)).forEach(function (child) {
+            return child._tippy && child._tippy.destroy();
+          });
+        }
 
         if (this.popperInstance) {
           this.popperInstance.destroy();
@@ -930,20 +967,44 @@ var T = (function () {
    */
 
   /**
-   * Method used by event listeners to invoke the show method, taking into account delays and
-   * the `wait` option
+   * Creates the Tippy instance for the child target of the delegate container
    * @param {Event} event
    * @memberof Tippy
    * @private
    */
 
 
+  function _createDelegateChildTippy(event) {
+    var targetEl = closest(event.target, this.options.target);
+    if (targetEl && !targetEl._tippy) {
+      var title = targetEl.getAttribute('title') || this.title;
+      if (title) {
+        targetEl.setAttribute('title', title);
+        tippy$1(targetEl, _extends({}, this.options, { target: null }));
+        targetEl._tippy.show();
+      }
+    }
+  }
+
+  /**
+   * Method used by event listeners to invoke the show method, taking into account delays and
+   * the `wait` option
+   * @param {Event} event
+   * @memberof Tippy
+   * @private
+   */
   function _enter(event) {
     var _this4 = this;
 
     _clearDelayTimeouts.call(this);
 
     if (this.state.visible) return;
+
+    // Is a delegate, create Tippy instance for the child target
+    if (this.options.target) {
+      _createDelegateChildTippy.call(this, event);
+      return;
+    }
 
     this._(key).isPreparingToShow = true;
 
@@ -1010,7 +1071,7 @@ var T = (function () {
     var handleTrigger = function handleTrigger(event) {
       if (!_this6.state.enabled) return;
 
-      var shouldStopEvent = browser.supportsTouch && browser.usingTouch && (event.type === 'mouseenter' || event.type === 'focus');
+      var shouldStopEvent = browser.supportsTouch && browser.usingTouch && ['mouseenter', 'mouseover', 'focus'].indexOf(event.type) > -1;
 
       if (shouldStopEvent && _this6.options.touchHold) return;
 
@@ -1029,14 +1090,14 @@ var T = (function () {
       }
     };
 
-    var handleMouseleave = function handleMouseleave(event) {
-      if (event.type === 'mouseleave' && browser.supportsTouch && browser.usingTouch && _this6.options.touchHold) return;
+    var handleMouseLeave = function handleMouseLeave(event) {
+      if (['mouseleave', 'mouseout'].indexOf(event.type) > -1 && browser.supportsTouch && browser.usingTouch && _this6.options.touchHold) return;
 
       if (_this6.options.interactive) {
         var hide = _leave.bind(_this6);
 
         // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
-        var handleMousemove = function handleMousemove(event) {
+        var handleMouseMove = function handleMouseMove(event) {
           var referenceCursorIsOver = closest(event.target, selectors.REFERENCE);
           var cursorIsOverPopper = closest(event.target, selectors.POPPER) === _this6.popper;
           var cursorIsOverReference = referenceCursorIsOver === _this6.reference;
@@ -1045,13 +1106,13 @@ var T = (function () {
 
           if (cursorIsOutsideInteractiveBorder(event, _this6.popper, _this6.options)) {
             document.body.removeEventListener('mouseleave', hide);
-            document.removeEventListener('mousemove', handleMousemove);
+            document.removeEventListener('mousemove', handleMouseMove);
 
             _leave.call(_this6);
           }
         };
         document.body.addEventListener('mouseleave', hide);
-        document.addEventListener('mousemove', handleMousemove);
+        document.addEventListener('mousemove', handleMouseMove);
         return;
       }
 
@@ -1065,10 +1126,24 @@ var T = (function () {
       _leave.call(_this6);
     };
 
+    var handleDelegateShow = function handleDelegateShow(event) {
+      if (closest(event.target, _this6.options.target)) {
+        _enter.call(_this6, event);
+      }
+    };
+
+    var handleDelegateHide = function handleDelegateHide(event) {
+      if (closest(event.target, _this6.options.target)) {
+        _leave.call(_this6);
+      }
+    };
+
     return {
       handleTrigger: handleTrigger,
-      handleMouseleave: handleMouseleave,
-      handleBlur: handleBlur
+      handleMouseLeave: handleMouseLeave,
+      handleBlur: handleBlur,
+      handleDelegateShow: handleDelegateShow,
+      handleDelegateHide: handleDelegateHide
     };
   }
 
@@ -1138,7 +1213,7 @@ var T = (function () {
 
         var _onUpdate = _this7.popperInstance.options.onUpdate;
         _this7.popperInstance.options.onUpdate = function () {
-          _this7.popper.offsetHeight;
+          reflow(_this7.popper);
           styles[prefix('transitionDuration')] = options.updateDuration + 'ms';
           _this7.popperInstance.options.onUpdate = _onUpdate;
         };
@@ -1179,7 +1254,7 @@ var T = (function () {
     var _onUpdate = this.popperInstance.options.onUpdate;
 
     this.popperInstance.options.onCreate = this.popperInstance.options.onUpdate = function () {
-      _this8.popper.offsetHeight; // we need to cause document reflow
+      reflow(_this8.popper);
       callback();
       _this8.popperInstance.options.onUpdate = _onUpdate;
       _this8.popperInstance.options.onCreate = _onCreate;
@@ -1395,11 +1470,15 @@ function createTooltips(els, config) {
 
     // Don't create an instance when:
     // * the `title` attribute is falsy (null or empty string), and
+    // * it's not a delegate for tooltips, and
     // * there is no html template specified, and
     // * `dynamicTitle` option is false
-    if (!title && !options.html && !options.dynamicTitle) return acc;
+    if (!title && !options.target && !options.html && !options.dynamicTitle) {
+      return acc;
+    }
 
-    reference.setAttribute('data-tippy', '');
+    // Delegates should be highlighted as different
+    reference.setAttribute(options.target ? 'data-tippy-delegate' : 'data-tippy', '');
 
     removeTitle(reference);
 
@@ -1410,6 +1489,7 @@ function createTooltips(els, config) {
       reference: reference,
       popper: popper,
       options: options,
+      title: title,
       popperInstance: null
     });
 
@@ -1420,7 +1500,7 @@ function createTooltips(els, config) {
 
     var listeners = _getEventListeners.call(tippy);
     tippy.listeners = options.trigger.trim().split(' ').reduce(function (acc, eventType) {
-      return acc.concat(createTrigger(eventType, reference, listeners, options.touchHold));
+      return acc.concat(createTrigger(eventType, reference, listeners, options));
     }, []);
 
     // Update tooltip content whenever the title attribute on the reference changes
@@ -1433,7 +1513,7 @@ function createTooltips(els, config) {
 
           var title = reference.getAttribute('title');
           if (title) {
-            content.innerHTML = title;
+            content.innerHTML = tippy.title = title;
             removeTitle(reference);
           }
         },
@@ -1446,6 +1526,7 @@ function createTooltips(els, config) {
 
     // Shortcuts
     reference._tippy = tippy;
+    popper._tippy = tippy;
     popper._reference = reference;
 
     acc.push(tippy);
@@ -1461,10 +1542,10 @@ function createTooltips(els, config) {
  * @param {Tippy} excludeTippy - tippy to exclude if needed
  */
 function hideAllPoppers(excludeTippy) {
-  var poppers = [].slice.call(document.querySelectorAll(selectors.POPPER));
+  var poppers = toArray(document.querySelectorAll(selectors.POPPER));
 
   poppers.forEach(function (popper) {
-    var tippy = popper._reference._tippy;
+    var tippy = popper._tippy;
     var options = tippy.options;
 
 
@@ -1566,7 +1647,7 @@ function bindEventListeners() {
  * @param {Object} options
  * @return {Object}
  */
-function tippy$2(selector, options) {
+function tippy$1(selector, options) {
   if (browser.supported && !browser._eventListenersBound) {
     bindEventListeners();
     browser._eventListenersBound = true;
@@ -1616,9 +1697,9 @@ function tippy$2(selector, options) {
   };
 }
 
-tippy$2.browser = browser;
-tippy$2.defaults = defaults;
+tippy$1.browser = browser;
+tippy$1.defaults = defaults;
 
-return tippy$2;
+return tippy$1;
 
 })));

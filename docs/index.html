@@ -19,7 +19,7 @@
     <header class="hero">
       <div class="container">
         <div>
-            <img alt="Tippy logo" draggable="false" class="logo" src="img/tippy.svg">
+          <img alt="Tippy logo" draggable="false" class="logo" src="img/tippy.svg">
         </div>
         <h1 class="hero-heading">Tippy.js</h1>
         <h2 class="hero-subheading">A lightweight, vanilla JavaScript tooltip library</h2>
@@ -52,7 +52,7 @@
       <div class="content-wrapper">
         <div class="container-fluid">
           <section id="features">
-            <h2 class="heading-top">Features</h2>
+            <h2 class="heading-top">🎉 Features</h2>
             <h4>Default</h4>
             <p>The default tooltip looks like this when Tippy is given no options. It has a nifty backdrop filling animation!</p>
             <div class="button-showcase d-flex justify-content-center flex-wrap">
@@ -154,6 +154,14 @@
             <div id="html-showcase" class="button-showcase d-flex justify-content-center flex-wrap">
               <button class="btn btn-gradient tippy" id="html-tippy" data-tippy-interactiveBorder="15" data-tippy-arrowType="round" data-tippy-trigger="click" data-tippy-theme="light" data-tippy-arrowTransform="scale(2, 2.5)" data-tippy-distance="25" data-tippy-animation="scale" data-tippy-interactive="true" data-tippy-arrow="true">HTML templates <small class="opacity-low">(click)</small></button>
             </div>
+            
+            <h4>Event delegation <i class="material-icons icon-left">settings_input_antenna</i> <span class="badge">v2.1</span></h4>
+            <p>Bind a Tippy instance to a parent container and freely add new child elements without worrying about creating new Tippy instances for them.</p>
+            <div id="html-showcase" class="button-showcase d-flex justify-content-center flex-wrap tippy" data-tippy-target=".is-tippy-target" title="Shared title">
+              <button class="btn btn-gradient is-tippy-target">Shared title</button>
+              <button class="btn btn-gradient is-tippy-target" title="Tooltip">Custom title</button>
+              <button class="btn btn-gradient is-tippy-target" title="Tooltip" data-tippy-placement="right" data-tippy-arrow="true" data-tippy-animation="shift-toward">Custom options</button>
+            </div>
 
             <h4 class="text-center">Misc <i class="material-icons icon-left">tag_faces</i></h4>
             <p>Tippy has many more features! These are just some of them.</p>
@@ -172,71 +180,91 @@
           <hr>
 
           <section id="getting-started">
-            <h2><a href="#getting-started"><i class="material-icons icon-left">tag_faces</i><span>Getting started</span></a></h2>
-
-            <p><strong>
+            <h2><a href="#getting-started">📦 <span>Getting started</span></a></h2>
+            <p>
+              <strong>
                 <a href="https://github.com/atomiks/tippyjs/releases" title="GitHub Releases"
                     class="tippy-link">
                     <i class="material-icons">file_download</i>
-                    <span>Download the latest release (.zip)</span>
-                </a></strong>
+                    <span>Download (/dist/ folder)</span>
+                </a>
+              </strong>
             </p>
             <p>
                 Alternatively, you can install through npm:
             </p>
-            <pre><code>npm install --save tippy.js@2.0.9</code></pre>
+            <pre><code>npm install --save tippy.js@2.1.0</code></pre>
 
             <p>
-                Or use the <a target="_blank" href="https://unpkg.com/tippy.js@2.0.9">unpkg.com CDN</a>:
+              Or use the <a target="_blank" href="https://unpkg.com/tippy.js@2.1.0">unpkg.com CDN</a>:
             </p>
-
-            <pre><code>https://unpkg.com/tippy.js@2.0.9/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js@2.1.0/dist/</code></pre>
 
             <p>Simply include the <code>tippy.all.min.js</code> file in your document before your own scripts:</p>
-            <pre><code class="language-markup">&lt;script src="https://unpkg.com/tippy.js@2.0.9/dist/tippy.all.min.js"&gt;&lt;/script&gt;</code></pre>
+            <pre><code class="language-markup">&lt;script src="https://unpkg.com/tippy.js@2.1.0/dist/tippy.all.min.js"&gt;&lt;/script&gt;</code></pre>
 
             <p>This is the bundled version which includes Popper.js and automatically injects Tippy's CSS stylesheet
             into the document head.</p>
 
             <p>Use <code>tippy.standalone.js</code> if you want to use a different version of Popper.js.</p>
+            
+            <h4>🗒️ Note</h4>
+            
+            <p>Tippy supports <a href="#browser-support">IE10+</a>, but JavaScript in these docs is written in ES2015.</p>
+            <p>If you want to copy code from these docs, you will need to use <a href="https://babeljs.io/repl/" target="_blank">Babel</a>
+              to transpile it to ensure support for older browsers.</p>
           </section>
+          
           <hr>
+          
           <section id="creating-a-tooltip">
-                      <h2><a href="#creating-a-tooltip"><i class="material-icons icon-left">build</i><span>Creating a tooltip</span></a></h2>
-                      <p>First, give your element(s) a <code>title</code> attribute containing what you want the tooltip to say.</p>
+            <h2><a href="#creating-a-tooltip">🔧 <span>Creating a tooltip</span></a></h2>
+            <p>First, give your element(s) a <code>title</code> attribute containing what you want the tooltip to say.</p>
 
-                      <pre><code class="language-markup">&lt;button class="btn" title="I'm a tooltip!"&gt;Text&lt;/button&gt;</code></pre>
+<pre><code class="language-markup">&lt;button class="btn" title="I'm a tooltip!"&gt;Text&lt;/button&gt;
+&lt;button class="btn" title="&lt;strong&gt;I'm a bold tooltip!&lt;/strong&gt;"&gt;Text&lt;/button&gt;</code></pre>
 
-                      <p>Then, to give them a Tippy tooltip, call the <code>tippy()</code> function by passing in a CSS selector.</p>
-                      <pre><code class="language-javascript">tippy('.btn')</code></pre>
+            <p>Then, to give them a Tippy tooltip, call the <code>tippy()</code> function by passing in a CSS selector.</p>
+            <pre><code class="language-js">tippy('.btn')</code></pre>
 
-                      <div class="result-box">
-                        <p class="text-muted">Result:</p>
-                        <button class="btn btn-gradient tippy" title="I'm a tooltip!">Text</button>
-                      </div>
+            <div class="result-box">
+              <p class="text-muted">Result:</p>
+              <button class="btn btn-gradient tippy" title="I'm a tooltip!">Text</button>
+              <button class="btn btn-gradient tippy" title="<strong>I'm a bold tooltip!</strong>">Text</button>
+            </div>
+            
+            <p>The <code>title</code> attributes can contain HTML as it gets parsed when setting <code>innerHTML</code>.</p>
 
-                      <p>To give all elements with a <code>title</code> attribute a tooltip, you can use:</p>
-                      <pre><code class="language-javascript">tippy('[title]')</code></pre>
+            <h4>Tippify all titled elements</h4>
 
-                      <p>For details on the type of CSS selector string you can use, see <a class="tippy-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll" target="_blank" title="MDN">document.querySelectorAll()</a> for reference.</p>
+            <p>To give all elements with a <code>title</code> attribute a tooltip, you can use:</p>
+            <pre><code class="language-js">tippy('[title]')</code></pre>
 
-                      <h4>Additional selector options</h4>
+            <p>
+              For details on the type of CSS selector string you can use, see
+              <a class="tippy-link"
+                href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"
+                target="_blank" title="MDN">
+                document.querySelectorAll()
+              </a>
+                for reference.
+            </p>
 
-                      <p>You aren't limited to just a CSS selector string as input. You can also directly use a DOM element (or an array of elements):</p>
-<pre><code class="language-javascript">tippy(document.querySelector('#myElement'))</code></pre>
+            <h4>Additional selector options</h4>
 
-                      <p>Or a NodeList:</p>
+            <p>You aren't limited to just a CSS selector string as input. You can also directly use a DOM element (or an array of elements):</p>
+            <pre><code class="language-js">tippy(document.querySelector('#myElement'))</code></pre>
 
-<pre><code class="language-javascript">tippy(document.querySelectorAll('.myElements'))</code></pre>
+            <p>Or a NodeList:</p>
+            <pre><code class="language-js">tippy(document.querySelectorAll('.myElements'))</code></pre>
 
-                      <h4>Advanced</h4>
+            <h4>Advanced</h4>
+            <p>
+              For more specialized cases, you can also pass in a custom virtual object
+              instead of a DOM node to act as the positioning reference.
+            </p>
 
-                      <p>
-                        For more specialized cases, you can also pass in a custom virtual object
-                        instead of a DOM node to act as the positioning reference.
-                      </p>
-
-<pre><code class="language-javascript">const refObject = {
+<pre><code class="language-js">const refObject = {
   attributes: {
     title: 'Tooltip text'
   },
@@ -261,16 +289,33 @@
 tippy(refObject)
 </code></pre>
 
-                      <p>Elements without a <code>title</code> attribute (or an empty title) and without an HTML template will not receive a tooltip.</p>
+              <p>Elements without a <code>title</code> attribute (or an empty title) and without an HTML template will not receive a tooltip.</p>
+            
+              <h4>Mutations</h4>
+              
+              <p>When you invoke <code>tippy()</code>, it modifies the reference element targets.</p>
+
+              <p><strong>Before:</strong></p>
+              <pre><code class="language-markup">&lt;button title=&quot;Tooltip&quot;&gt;My element&lt;/button&gt;</code></pre>
+              
+              <p><strong>After:</strong></p>
+              <pre><code class="language-markup">&lt;button data-tippy data-original-title="Tooltip"&gt;My element&lt;/button&gt;</code></pre>
+              <ul>
+                <li><code>title</code> attribute is removed</li>
+                <li><code>data-tippy</code> empty attribute is added</li>
+                <li><code>data-original-title</code> attribute is added</li>
+              </ul>
+              <p>Additionally, for a11y, when the tooltip has fully transitioned in, an <code>aria-describedby</code> attribute is added.</p>
             </section>
+            
             <hr>
+            
             <section id="customizing-tooltips">
+              <h2><a href="#customizing-tooltips">⚙️ <span>Customizing tooltips</span></a></h2>
 
-              <h2><a href="#customizing-tooltips"><i class="material-icons icon-left">settings</i><span>Customizing tooltips</span></a></h2>
+              <p><code>tippy()</code> takes an object as a second argument for you to customize the tooltips being created. Here's an example:</p>
 
-              <p><code>tippy()</code> takes an object as a second argument for you to customize the tooltips being instantiated. Here's an example:</p>
-
-<pre><code class="language-javascript">tippy('.btn', {
+<pre><code class="language-js">tippy('.btn', {
   placement: 'right',
   animation: 'scale',
   duration: 1000,
@@ -283,7 +328,6 @@ tippy(refObject)
               </div>
 
               <h4>Data attributes</h4>
-
               <p>You can also specify options on the element itself by adding <code>data-tippy-*</code> attributes. This overrides any global options specified in the instance.</p>
 
 <pre><code class="language-markup">&lt;button
@@ -304,9 +348,11 @@ tippy(refObject)
 
               <p>This is helpful if you want to globally define options, but make a few tooltips different without having to call <code>tippy()</code> again with different options.</p>
             </section>
+            
             <hr>
+            
             <section id="all-options">
-              <h2><a href="#all-options"><i class="material-icons icon-left">settings_applications</i><span>All options</span></a></h2>
+              <h2><a href="#all-options">🔮 <span>All options</span></a></h2>
 
               <p><small>Note: options with camelCase are lowercase in HTML. For example, <code>animateFill</code> is <code>data-tippy-animatefill</code> in HTML.</small></p>
 
@@ -403,6 +449,12 @@ tippy(refObject)
                         <code>'translateY(-5px)'</code> = arrow closer to tooltip<br>
                         <code>'translateY(5px)'</code> = arrow farther from tooltip
                       </td>
+                    </tr>
+                    <tr>
+                      <td><code>target</code> <span class="badge badge-small">v2.1</span></td>
+                      <td><code>null</code></td>
+                      <td><code>String</code> | <code>null</code></td>
+                      <td>A CSS selector string used for event delegation. When specified, it will make the element a delegate. The selector should match the child elements that should receive a tooltip.</td>
                     </tr>
                     <tr>
                       <td><code>delay</code></td>
@@ -603,55 +655,41 @@ tippy(refObject)
                   to see the options you can specify.
               </p>
 
-              <h4>Tooltips inside a scrollable container</h4>
-
-              <p>
-                  You may encounter issues with tooltip positioning when it's given to an element within a scrollable container.
-                  Firstly, when the element is no longer visible, the tooltip will stay stuck within the viewport. Secondly, it transitions between position updates.
-                  To solve this, simply specify a <code>updateDuration</code> of <code>0</code> and add the following <code>popperOptions</code>:
-              </p>
-
-<pre><code class="language-javascript">tippy('.mySelector', {
-  updateDuration: 0,
-  popperOptions: {
-    modifiers: {
-      preventOverflow: {
-        enabled: false
-      }
-    }
-  }
-})</code></pre>
-
               <h4>Callbacks</h4>
 
               <p>If you want things to happen at certain times during a tooltip's show/hide events, you can add callback functions in the options object. There are 5 to use:</p>
 
-<pre><code class="language-javascript">tippy('.btn', {
-  onShow: function () {
+<pre><code class="language-js">tippy('.btn', {
+  onShow() {
     // When the tooltip has been triggered and has started to transition in
   },
-  onShown: function () {
+  onShown() {
     // When the tooltip has fully transitioned in and is showing
   },
-  onHide: function () {
+  onHide() {
     // When the tooltip has begun to transition out
   },
-  onHidden: function () {
+  onHidden() {
     // When the tooltip has fully transitioned out and is hidden
   },
-  wait: function (show, event) {
-    // See below for an explanation
+  wait(show, event) {
+    // Delays showing the tooltip until you manually invoke `show()`
   }
 })</code>
 </pre>
 
-            <p><code>this</code> inside the callbacks refers to the popper being shown or hidden.</p>
-
+            <p><code>this</code> inside the callbacks refers to the popper element (if not using arrow functions).</p>
             <p>
-                <code>wait</code> is a special callback that allows you to control the <code>show</code> method
-                for easier integration into UI libraries like React when using HTML tooltips with components.
-                To show the tooltip once you have done the necessary steps inside the function, simply invoke <code>show()</code>.
+              <code>tippy()</code> can create multiple tooltips at once, so your callbacks are reused for each instance.
+              The relevant instance is passed as an argument to the callback.<span class="badge badge-small">v2.1</span>
             </p>
+            
+<pre><code class="language-js">tippy('.btn', {
+  onShow(instance) {
+    console.log(instance)
+    // In v2.0.x, `this._reference._tippy` is the instance
+  }
+})</code>
 </pre>
 
             <h4>AJAX tooltips</h4>
@@ -667,6 +705,105 @@ tippy(refObject)
             </div>
 
             <p><a target="_blank" href="https://codepen.io/anon/pen/GEmOQy">Codepen demo</a></p>
+            
+            <h4>Event delegation <span class="badge">v2.1</span></h4>
+            <p>
+              Event delegation only requires minimal setup. Your setup should look similar to this, with a parent element wrapping the child elements
+              you would like to give tooltips to:
+            </p>
+
+<pre><code class="language-markup">&lt;div id=&quot;parent&quot; title="Shared title"&gt;
+  &lt;div class=&quot;child&quot;&gt;Text&lt;/div&gt;
+  &lt;div class=&quot;child&quot;&gt;Text&lt;/div&gt;
+  &lt;div class=&quot;child&quot;&gt;Text&lt;/div&gt;
+  &lt;div class=&quot;other&quot;&gt;Text&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+            <p>Specify a CSS selector string as the <code>target</code> that matches the child elements which should
+              receive tooltips.</p>
+
+<pre><code class="language-js">tippy('#parent', {
+  target: '.child'
+})
+</code></pre>
+
+          <p>
+            Specify a <code>title</code> attribute on a child element to override the shared title.
+          </p>
+          
+<pre><code class="language-markup">&lt;div id=&quot;parent&quot; title="Shared title"&gt;
+  &lt;div class=&quot;child&quot; title=&quot;Individual title&quot;&gt;Text&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+          <p>
+            If the <code>target</code> option is specified, the reference(s) become delegates and
+            receive a <code>data-tippy-delegate</code> attribute instead of <code>data-tippy</code>.
+          </p>
+          
+<pre><code class="language-markup">&lt;div id=&quot;parent&quot; title="Shared title" data-tippy-delegate&gt;&lt;/div&gt;</code></pre>
+        
+          <h5>Caveats</h5>
+          <p>
+            Child targets cannot specify an individual/custom <code>trigger</code> option, as that
+            is the delegate's responsibility.
+          </p>
+          
+          <h5>Destroying delegates</h5>
+          <p>
+            When you destroy a delegate's Tippy instance, it will destroy all target children's Tippy instances as well.
+            To disable this behavior, pass <code>false</code> into the <code>destroy()</code> method.
+          </p>
+          
+<pre><code class="language-js">const parent = document.querySelector('#parent')
+tippy(parent, {
+  target: '.child'
+})
+parent._tippy.destroy(false) // Will not destroy any child target instances (if they had been created)
+</code></pre>
+
+            <h4>Tooltips inside a scrollable container</h4>
+
+            <p>
+                You may encounter issues with tooltip positioning when it's given to an element within a scrollable container.
+                Firstly, when the element is no longer visible, the tooltip will stay stuck within the viewport. Secondly, it transitions between position updates.
+                To solve this, simply specify a <code>updateDuration</code> of <code>0</code> and add the following <code>popperOptions</code>:
+            </p>
+
+<pre><code class="language-js">tippy('.mySelector', {
+  updateDuration: 0,
+  popperOptions: {
+    modifiers: {
+      preventOverflow: {
+        enabled: false
+      }
+    }
+  }
+})</code></pre>
+
+            <h4>Blurry tooltips</h4>
+            
+            <p>
+              You may have problems with tooltips appearing blurry in some browsers. This is
+              likely caused by the <code>translate3d</code> transform used by Popper.js to
+              use GPU acceleration to increase performance.
+            </p>
+            
+            <p>
+              A temporary workaround is to disable <code>gpuAcceleration</code>, but be warned
+              this has a performance impact.
+            </p>
+            
+<pre><code class="language-js">tippy('.mySelector', {
+  popperOptions: {
+    modifiers: {
+      computeStyle: {
+        gpuAcceleration: false
+      }
+    }
+  }
+})</code></pre>
 
             <h4>Reactivity</h4>
 
@@ -684,7 +821,7 @@ tippy(refObject)
               A user can switch between either input type at any time which is why dynamic input detection is enabled.
               You can hook into Tippy's detection of user input changes by defining the following callback function:
             </p>
-<pre><code class="language-javascript">tippy.browser.onUserInputChange = function (type) {
+<pre><code class="language-js">tippy.browser.onUserInputChange = type => {
   console.log('The user is now using', type, 'as an input method')
 }</code></pre>
           <p>
@@ -692,9 +829,9 @@ tippy(refObject)
             To disable tooltips for touch input but keep them enabled for mouse input, you can do the following:
           </p>
 
-<pre><code class="language-javascript">const tip = tippy('[title]')
+<pre><code class="language-js">const tip = tippy('[title]')
 
-tippy.browser.onUserInputChange = function (type) {
+tippy.browser.onUserInputChange = type => {
   const method = type === 'touch' ? 'disable' : 'enable'
   for (const tooltip of tip.tooltips) {
     tooltip[method]()
@@ -710,43 +847,192 @@ tippy.browser.onUserInputChange = function (type) {
               tap somewhere else.
             </p>
 
-<pre><code class="language-javascript">window.addEventListener('scroll', function () {
-  const poppers = document.querySelectorAll('.tippy-popper')
+<pre><code class="language-js">window.addEventListener('scroll', () => {
+  for (const popper of document.querySelectorAll('.tippy-popper')) {
+    const instance = popper._tippy
 
-  for (const popper of poppers) {
-    const tooltip = popper._reference._tippy
-
-    if (tooltip.state.visible) {
-      tooltip.popperInstance.disableEventListeners()
-      tooltip.hide()
+    if (instance.state.visible) {
+      instance.popperInstance.disableEventListeners()
+      instance.hide()
     }
   }
 })
 </code></pre>
+        </section>
+        
+        <hr>
 
-            </section>
+        <section id="props">
+            <h2>
+                <a href="#props">
+                    🏷️ <span>Props</span>
+                </a>
+            </h2>
+            
+            <p>
+              It's important to distinguish between the object returned from calling <code>tippy()</code> and a <code>Tippy</code> instance.
+              When you call <code>tippy()</code>, it can create multiple tooltips (Tippy instances) at once.
+            </p>
+            <p>Tippy instances refer to individual tooltips, whereas the object returned from <code>tippy()</code> refers to the
+            collection.</p>
+            
+            <h4><code>tippy()</code> object</h4>
+            
+            <pre><code class="language-js">const tipObj = tippy('.btn')</code></pre>
+            <p><code>tipObj</code> is a plain object.</code></p>
+            
+            <div class="table-wrapper">
+              <table class="table table-responsive">
+                <thead>
+                  <tr>
+                    <th>Key<i class="material-icons icon-right">vpn_key</i></th>
+                    <th>Type<i class="material-icons icon-right">memory</i></th>
+                    <th>Description<i class="material-icons icon-right">description</i></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>selector</code></td>
+                    <td>
+                        <code>String</code> |
+                        <code>Element</code> |
+                        <code>NodeList</code> |
+                        <code>Object</code> |
+                        <code>Array</code>
+                    </td>
+                    <td>
+                      The target references to be given tooltips.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>tooltips</code></td>
+                    <td><code>Array</code></td>
+                    <td>
+                      Array of all Tippy instances that were created.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>options</code></td>
+                    <td><code>Object</code></td>
+                    <td>
+                      Default + instance options merged.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>destroyAll</code></td>
+                    <td><code>Function</code></td>
+                    <td>
+                      Method to destroy all tooltips that were created (all Tippy instances inside <code>tooltips</code>)
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <h4><code>Tippy</code> instances</h4>
+            <p>Stored on reference elements via the <code>_tippy</code> property.</p>
+            
+<pre><code class="language-js">tippy('.btn')
+const btn = document.querySelector('.btn')
+const tipInstance = btn._tippy</code></pre>
+            <p><code>tipInstance</code> is a Tippy instance.</code></p>
 
-            <hr>
+            <div class="table-wrapper">
+              <table class="table table-responsive">
+                <thead>
+                  <tr>
+                    <th>Key<i class="material-icons icon-right">vpn_key</i></th>
+                    <th>Type<i class="material-icons icon-right">memory</i></th>
+                    <th>Description<i class="material-icons icon-right">description</i></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>id</code></td>
+                    <td>
+                        <code>Number</code>
+                    </td>
+                    <td>
+                      The ID of the instance.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>title</code><span class="badge badge-small">v2.1</span></td>
+                    <td><code>String</code></td>
+                    <td>
+                      The content of the tooltip (if not HTML).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>popper</code></td>
+                    <td><code>Element</code></td>
+                    <td>
+                      The popper element which contains the tooltip element and content.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>popperInstance</code></td>
+                    <td><code>Popper</code> | <code>null</code></td>
+                    <td>
+                      The Popper instance. Not created until the tooltip is shown for the first time, unless
+                      specified otherwise.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>reference</code></td>
+                    <td><code>Element</code></td>
+                    <td>
+                      The element you gave the tooltip to.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>listeners</code></td>
+                    <td><code>Array</code></td>
+                    <td>
+                      Array of objects containing the event type and handler which were bound to
+                      the reference element based on the <code>trigger</code> option.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>options</code></td>
+                    <td><code>Object</code></td>
+                    <td>
+                      Default + instance + individual options merged together.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>state</code></td>
+                    <td><code>Object</code></td>
+                    <td>
+                      Object containing boolean values about the state of the tooltip. <br>
+                      <code>destroyed</code> - has the instance been destroyed? <br>
+                      <code>enabled</code> - is the tooltip enabled? <br>
+                      <code>visible</code> - is the tooltip currently visible and not transitioning out?
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>For details on Tippy instance methods, go to the <a href="#methods">Methods</a> section.</p>
+        </section>
+
+        <hr>
 
         <section id="methods">
-
             <h2>
                 <a href="#methods">
-                    <i class="material-icons icon-left">settings_remote</i><span>Methods</span>
+                    🎮 <span>Methods</span>
                 </a>
             </h2>
 
             <p>Suppose you have the following element which has been given a Tippy tooltip:</p>
 
             <pre><code class="language-markup">&lt;button id="myButton" title=&quot;Tooltip&quot;&gt;My element&lt;/button&gt;</code></pre>
-            <pre><code class="language-javascript">const btn = document.querySelector('#myButton')
+            <pre><code class="language-js">const btn = document.querySelector('#myButton')
 tippy(btn)</code></pre>
 
-            <p>Every element with a Tippy tooltip is given an attribute of <code>data-tippy</code>:</p>
-            <pre><code class="language-markup">&lt;button id="myButton" title=&quot;Tooltip&quot; data-tippy&gt;My element&lt;/button&gt;</code></pre>
-
             <p>The Tippy instance is stored on the reference element via the <code>_tippy</code> property:</p>
-            <pre><code class="language-javascript">btn._tippy</code></pre>
+            <pre><code class="language-js">btn._tippy</code></pre>
 
             <p>
               Tippy instances have 5 methods: <code>enable()</code>, <code>disable()</code>,
@@ -756,23 +1042,23 @@ tippy(btn)</code></pre>
             </p>
 
             <h4>Show the tooltip</h4>
-            <pre><code class="language-javascript">btn._tippy.show()</code></pre>
+            <pre><code class="language-js">btn._tippy.show()</code></pre>
 
             <h4>Hide the tooltip</h4>
-            <pre><code class="language-javascript">btn._tippy.hide()</code></pre>
+            <pre><code class="language-js">btn._tippy.hide()</code></pre>
 
             <p>Pass a number in as an argument to specify a custom transition duration in milliseconds:</p>
-            <pre><code class="language-javascript">btn._tippy.show(500)</code></pre>
-            <pre><code class="language-javascript">btn._tippy.hide(500)</code></pre>
+            <pre><code class="language-js">btn._tippy.show(500)</code></pre>
+            <pre><code class="language-js">btn._tippy.hide(500)</code></pre>
 
             <h4>Destroy the tooltip</h4>
-            <pre><code class="language-javascript">btn._tippy.destroy()</code></pre>
+            <pre><code class="language-js">btn._tippy.destroy()</code></pre>
 
             <p>Destroying the tooltip will delete the <code>_tippy</code> property from the reference element.</p>
 
             <p>To destroy all the tooltips that were created, use the <code>destroyAll()</code> method on the object
               returned from <code>tippy()</code>:</p>
-<pre><code class="language-javascript">const tip = tippy('.btn')
+<pre><code class="language-js">const tip = tippy('.btn')
 tip.destroyAll()</code></pre>
 
             <p><code>tip.tooltips</code> is an array that contains all the individual Tippy instances that were created.</p>
@@ -780,36 +1066,43 @@ tip.destroyAll()</code></pre>
             <h4>Disable/enable the tooltip</h4>
             <p>In cases where you want to temporarily disable a tooltip from showing or hiding but NOT destroy it,
               you can use the <code>disable()</code> method.</p>
-            <pre><code class="language-javascript">btn._tippy.disable()</code></pre>
+            <pre><code class="language-js">btn._tippy.disable()</code></pre>
             <p>To re-enable it:</p>
-            <pre><code class="language-javascript">btn._tippy.enable()</code></pre>
+            <pre><code class="language-js">btn._tippy.enable()</code></pre>
 
             <h4>Update the tooltip</h4>
             <p>In V1, for tooltips whose content needed to be changed, there was an <code>update()</code> method. This has been replaced by a much easier way.</p>
             <p>For standard tooltips, simply set the <code>dynamicTitle</code> option to <code>true</code>.</p>
-<pre><code class="language-javascript">tippy(btn, {
+<pre><code class="language-js">tippy(btn, {
   dynamicTitle: true
 })</code></pre>
 <p>Whenever the title attribute on the reference element changes, the tooltip's content will automatically be updated.</p>
 
             <h4>Retrieve the reference element from a popper</h4>
             <p>The reference element is attached to the popper element via the <code>_reference</code> property.</p>
-            <pre><code class="language-javascript">popper._reference</code></pre>
-            <p>An example of this being useful is when handling a click event inside the popper element, and needing
-              to know which element it refers to (and therefore its Tippy instance).</p>
-              <pre><code class="language-javascript">popper._reference._tippy</code></pre>
+            <pre><code class="language-js">popper._reference</code></pre>
+            <p>
+              An example of this being useful is when handling a click event inside the popper element, and needing
+              to know which element it refers to.
+            </p>
+            <p>
+              The Tippy instance is also attached to the popper element via <code>_tippy</code>.
+            </p>
+            <pre><code class="language-js">popper._tippy</code></pre>
 
             <h4>Get all Tippy instances</h4>
             <p>Getting all (non-destroyed) Tippy instances on the document can be done in one single line:</p>
-            <pre><code class="language-javascript">Array.from(document.querySelectorAll('[data-tippy]'), el => el._tippy)</code></pre>
-            <p>This returns an array holding every current Tippy instance which can be filtered or manipulated in any way.</p>
+            <pre><code class="language-js">Array.from(document.querySelectorAll('[data-tippy]'), el => el._tippy)</code></pre>
+            <p>This returns an array holding every current Tippy instance (excluding delegates). To include delegates, use this selector:</p>
+            <pre><code class="language-js">'[data-tippy], [data-tippy-delegate]'</code></pre>
+            <p>⚠️ <code>Array.from</code> needs a polyfill for older browsers.</p>
         </section>
 
         <hr>
 
         <section id="creating-html-templates">
 
-          <h2><a href="#creating-html-templates"><i class="material-icons icon-left">code</i><span>Creating HTML templates</span></a></h2>
+          <h2><a href="#creating-html-templates">💎 <span>Creating HTML templates</span></a></h2>
 
           <p>There are two options you have when creating a template. You can either clone it or use it directly.</p>
 
@@ -849,7 +1142,7 @@ tip.destroyAll()</code></pre>
   <img alt="cat" height="150" src="img/cat.jpg">
 </div>
 
-<pre><code class="language-javascript">tippy('#myElement', {
+<pre><code class="language-js">tippy('#myElement', {
   html: document.querySelector('#myTemplate'), // Direct element option
   arrow: true,
   animation: 'fade',
@@ -871,14 +1164,14 @@ tip.destroyAll()</code></pre>
         <h4>Updating tooltips with HTML content</h4>
 
         <p>For HTML tooltips, save your template to a variable in order to modify it later.</p>
-<pre><code class="language-javascript">const template = document.querySelector('#myTemplate')
+<pre><code class="language-js">const template = document.querySelector('#myTemplate')
 tippy(btn, {
   html: template
 })
 template.innerHTML = 'Updated!'</code></pre>
 
         <p>If you want to re-use the template multiple times, use <code>cloneNode(true)</code>:</p>
-<pre><code class="language-javascript">const template = document.querySelector('#myTemplate')
+<pre><code class="language-js">const template = document.querySelector('#myTemplate')
 const clonedTemplate = template.cloneNode(true)
 tippy(btn, {
   html: clonedTemplate
@@ -894,7 +1187,7 @@ clonedTemplate.innerHTML = 'Updated!'
           This is useful for cases in which you have multiple elements, each one having its own unique tooltip.
         </p>
 
-<pre class="language-javascript"><code>tippy('.myElements', {
+<pre class="language-js"><code>tippy('.myElements', {
   html: el => el.querySelector('.popup')
 })</code></pre>
 
@@ -924,7 +1217,7 @@ clonedTemplate.innerHTML = 'Updated!'
 
         <section id="creating-themes">
 
-          <h2><a href="#creating-themes"><i class="material-icons icon-left">brush</i><span>Creating themes</span></a></h2>
+          <h2><a href="#creating-themes">🖌️ <span>Creating themes</span></a></h2>
 
           <p>Creating a theme for your tooltips is easy. If you wanted to make a theme called <code>honeybee</code>, then your CSS would look like:</p>
 
@@ -971,7 +1264,7 @@ clonedTemplate.innerHTML = 'Updated!'
 
           <h4>Specify a theme</h4>
 
-<pre><code class="language-javascript">tippy('.btn', {
+<pre><code class="language-js">tippy('.btn', {
   theme: 'honeybee'
 })</code></pre>
 
@@ -988,7 +1281,7 @@ clonedTemplate.innerHTML = 'Updated!'
 
         <p>Add multiple themes by separating each by a space.</p>
 
-<pre><code class="language-javascript">tippy('.btn', {
+<pre><code class="language-js">tippy('.btn', {
   theme: 'menu light'
 })</code></pre>
 
@@ -999,44 +1292,53 @@ clonedTemplate.innerHTML = 'Updated!'
       <hr>
 
       <section id="browser-support">
-        <h2><a href="#browser-support"><i class="material-icons icon-left">important_devices</i>
+        <h2><a href="#browser-support">🖥️
             <span>Browser support</span>
         </a></h2>
+        
         <p>Tippy gracefully degrades on older browsers (and with JavaScript disabled) by using the
           browser's default <code>title</code> tooltip.</p>
-        <h4>Supported browsers</h4>
+          
+        <h4>✅ Supported browsers</h4>
         <p>
             Browsers which support <code>requestAnimationFrame</code>.
             See <a target="_blank" href="https://caniuse.com/#search=requestAnimationFrame">caniuse</a>. If
             your audience has low Opera Mini usage (common in western countries), then support should be
             >96%.
         </p>
+        
+        <h4>⚠️ IE10</h4>
+        <p>
+          IE10 is only partially supported. Most features work, but
+          <code>dynamicTitle</code> requires a <code>MutationObserver</code> polyfill.
+          Fortunately, IE10 usage is tiny compared to IE11 which is fully supported (0.1% vs 2.8% usage).
+        </p>
 
-        <h4>Touch devices</h4>
+        <h4>📱 Touch devices</h4>
         <p>
             Tippy supports touch devices. Standard behavior is to tap an element to show its tooltip, and then
             tap elsewhere to hide it. It's also possible to change the behavior so that you can tap-and-hold to show it,
             then release to hide it.
         </p>
 
-        <h4>Dynamic input detection</h4>
+        <h4>🖐️ Dynamic input detection</h4>
         <p>
             For certain options to work reliably depending on the type of user input (such as mouse or touch),
             dynamic input detection is enabled by default. To disable this behavior, set <code>dynamicInputDetection</code> to <code>false</code>:
 
-<pre><code class="language-javascript">tippy.browser.dynamicInputDetection = false</code></pre>
+<pre><code class="language-js">tippy.browser.dynamicInputDetection = false</code></pre>
         </p>
 
         <p>To see Tippy's <code>browser</code> settings:
-            <pre><code class="language-javascript">tippy.browser</code></pre>
+            <pre><code class="language-js">tippy.browser</code></pre>
         </p>
 
-        <h4>Accessibility</h4>
+        <h4>♿ Accessibility</h4>
         <p>
             Tooltips have ARIA labelling to ensure accessibility.
         </p>
 
-        <h4>Browser quirks</h4>
+        <h4>🐛 Browser quirks</h4>
         <p>
             Certain browsers are buggy and don't handle things perfectly. Tippy tries to
             work around them, but here's a known list of issues:
@@ -1068,13 +1370,17 @@ clonedTemplate.innerHTML = 'Updated!'
               </h2>
 
               <p>
-                  You can have thousands of tooltipped elements without affecting page
-                  performance after the initial instantiation. Tooltips are only appended to the DOM when shown, and removed
-                  when hidden. Popper.js only listens to scroll and resize events when a popper (tooltip) is showing,
-                  and also updates the position on show.
+                You can have thousands of tooltipped elements without affecting page
+                performance after the initialization. Tooltips are only appended to the DOM when shown, and removed
+                when hidden. Popper.js only listens to scroll and resize events when a tooltip is showing.
+              </p>
+              
+              <p>
+                Event delegation defers tooltip initialization until it's triggered and is O(1) to init, making
+                it the ideal candidate for performance-critical scenarios.
               </p>
 
-              <p>Note: these tooltips are created with <code>performance</code> mode set to <code>true</code>.</p>
+              <p>Note: these tooltips are created with <code>performance</code> mode set to <code>true</code> (but without event delegation).</p>
 
               <div class="form-group">
                   <label for="performance-model"><strong>Elements to append</strong></label>
