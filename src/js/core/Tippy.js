@@ -137,8 +137,12 @@ export default (() => {
             tooltip.classList.add('tippy-notransition')
           }
 
-          if (options.interactive && elementIsInViewport(reference)) {
+          if (options.interactive) {
+            // Prevent scroll jump when focusing popper if it's not entirely within the viewport
+            const scrollY = window.pageYOffset || window.scrollY
+            const scrollX = window.pageXOffset || window.scrollX
             popper.focus()
+            window.scroll(scrollX, scrollY)
           }
 
           reference.setAttribute('aria-describedby', `tippy-${this.id}`)
