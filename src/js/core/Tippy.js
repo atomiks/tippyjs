@@ -6,7 +6,6 @@ import tippy from '../tippy'
 
 import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiveBorder'
 import computeArrowTransform from '../utils/computeArrowTransform'
-import elementIsInViewport from '../utils/elementIsInViewport'
 import getInnerElements from '../utils/getInnerElements'
 import getPopperPlacement from '../utils/getPopperPlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
@@ -18,6 +17,7 @@ import setVisibilityState from '../utils/setVisibilityState'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
 import toArray from '../utils/toArray'
 import reflow from '../utils/reflow'
+import focus from '../utils/focus'
 
 export default (() => {
   const key = {}
@@ -138,11 +138,7 @@ export default (() => {
           }
 
           if (options.interactive) {
-            // Prevent scroll jump when focusing popper if it's not entirely within the viewport
-            const scrollY = window.pageYOffset || window.scrollY
-            const scrollX = window.pageXOffset || window.scrollX
-            popper.focus()
-            window.scroll(scrollX, scrollY)
+            focus(popper)
           }
 
           reference.setAttribute('aria-describedby', `tippy-${this.id}`)
@@ -183,12 +179,8 @@ export default (() => {
 
       setVisibilityState([tooltip, backdrop], 'hidden')
 
-      if (
-        options.interactive &&
-        options.trigger.indexOf('click') > -1 &&
-        elementIsInViewport(reference)
-      ) {
-        reference.focus()
+      if (options.interactive && options.trigger.indexOf('click') > -1) {
+        focus(reference)
       }
 
       /*
