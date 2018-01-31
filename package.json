@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.all.js",
   "repository": {
@@ -15,7 +15,8 @@
       "rollup -c scripts/rollup.bundle.config.js && rollup -c scripts/rollup.bundle.min.config.js",
     "standalone":
       "rollup -c scripts/rollup.standalone.config.js && rollup -c scripts/rollup.standalone.min.config.js",
-    "themes": "rollup -c scripts/themes/rollup.light.config.js && rollup -c scripts/themes/rollup.translucent.config.js",
+    "themes":
+      "rollup -c scripts/themes/rollup.light.config.js && rollup -c scripts/themes/rollup.translucent.config.js",
     "test": "eslint 'src/**/*.js'",
     "prettier": "prettier --print-width 100 --no-semi --single-quote es5 --write 'src/**/*.js'"
   },

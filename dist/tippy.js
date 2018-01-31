@@ -3002,17 +3002,6 @@ function computeArrowTransform(popper, arrow, arrowTransform) {
 }
 
 /**
- * Determines if an element is visible in the viewport
- * @param {Element} el
- * @return {Boolean}
- */
-function elementIsInViewport(el) {
-  var rect = el.getBoundingClientRect();
-
-  return rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
-}
-
-/**
  * Returns the distance taking into account the default distance due to
  * the transform: translate setting in CSS
  * @param {Number} distance
@@ -3108,6 +3097,17 @@ function applyTransitionDuration(els, duration) {
  */
 function reflow(popper) {
   void popper.offsetHeight;
+}
+
+/**
+ * Focuses an element while preventing a scroll jump if it's not entirely within the viewport
+ * @param {Element} el
+ */
+function focus(el) {
+  var x = window.scrollX || window.pageXOffset;
+  var y = window.scrollY || window.pageYOffset;
+  el.focus();
+  scroll(x, y);
 }
 
 var T = (function () {
@@ -3250,8 +3250,8 @@ var T = (function () {
               tooltip.classList.add('tippy-notransition');
             }
 
-            if (options.interactive && elementIsInViewport(reference)) {
-              popper.focus();
+            if (options.interactive) {
+              focus(popper);
             }
 
             reference.setAttribute('aria-describedby', 'tippy-' + _this.id);
@@ -3303,8 +3303,8 @@ var T = (function () {
 
         setVisibilityState([tooltip, backdrop], 'hidden');
 
-        if (options.interactive && options.trigger.indexOf('click') > -1 && elementIsInViewport(reference)) {
-          reference.focus();
+        if (options.interactive && options.trigger.indexOf('click') > -1) {
+          focus(reference);
         }
 
         /*
