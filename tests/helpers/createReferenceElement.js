@@ -1,8 +1,11 @@
 export default (append = false) => {
   const el = document.createElement('div')
-  el.className = 'test'
-  el.setAttribute('title', 'tooltip')
-  el.cleanup = () => document.body.removeChild(el)
+  el.className = 'TEST'
+  el.setAttribute('title', 'TOOLTIP')
+  Object.assign(el, {
+    _selector: '.TEST',
+    _title: 'TOOLTIP'
+  })
   if (append) document.body.appendChild(el)
   return el
 }

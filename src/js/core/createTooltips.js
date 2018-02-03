@@ -5,8 +5,7 @@ import evaluateOptions from '../utils/evaluateOptions'
 import getInnerElements from '../utils/getInnerElements'
 import removeTitle from '../utils/removeTitle'
 
-import T from './Tippy'
-const { Tippy, _getEventListeners, _createPopperInstance, _addMutationObserver } = T
+import { Tippy, _getEventListeners, _createPopperInstance, _addMutationObserver } from './Tippy'
 
 let idCounter = 1
 

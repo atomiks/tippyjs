@@ -11,33 +11,39 @@
     "dev": "rollup -c scripts/rollup.dev.config.js --watch",
     "build": "npm run themes && npm run standalone && npm run bundle && npm run all",
     "all": "rollup -c scripts/rollup.all.config.js && rollup -c scripts/rollup.all.min.config.js",
-    "bundle":
-      "rollup -c scripts/rollup.bundle.config.js && rollup -c scripts/rollup.bundle.min.config.js",
-    "standalone":
-      "rollup -c scripts/rollup.standalone.config.js && rollup -c scripts/rollup.standalone.min.config.js",
-    "themes":
-      "rollup -c scripts/themes/rollup.light.config.js && rollup -c scripts/themes/rollup.translucent.config.js",
-    "test": "eslint 'src/**/*.js'",
+    "bundle": "rollup -c scripts/rollup.bundle.config.js && rollup -c scripts/rollup.bundle.min.config.js",
+    "standalone": "rollup -c scripts/rollup.standalone.config.js && rollup -c scripts/rollup.standalone.min.config.js",
+    "themes": "rollup -c scripts/themes/rollup.light.config.js && rollup -c scripts/themes/rollup.translucent.config.js",
+    "test": "eslint 'src/**/*.js' && jest --verbose",
     "prettier": "prettier --print-width 100 --no-semi --single-quote es5 --write 'src/**/*.js'"
+  },
+  "jest": {
+    "setupFiles": [
+      "./tests/polyfills/createRange.js",
+      "./tests/polyfills/MutationObserver.js"
+    ]
   },
   "author": "atomiks",
   "license": "MIT",
-  "keywords": ["tooltip", "tippy", "tippy.js"],
+  "keywords": [
+    "tooltip",
+    "tippy",
+    "tippy.js"
+  ],
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.25.0",
+    "babel-jest": "^22.1.0",
     "babel-loader": "^6.4.1",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-es2015-rollup": "^3.0.0",
     "cssnano": "^3.10.0",
     "eslint": "^4.14.0",
-    "jasmine": "^2.8.0",
-    "karma": "^1.7.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-firefox-launcher": "^1.0.1",
-    "karma-jasmine": "^1.1.1",
+    "jest": "^22.1.4",
+    "jsdom": "^11.6.2",
+    "mutation-observer": "^1.0.3",
     "postcss": "^5.2.16",
     "postcss-cssnext": "^3.0.2",
     "postcss-nested": "^2.1.2",
