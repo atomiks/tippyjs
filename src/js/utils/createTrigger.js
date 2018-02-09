@@ -36,7 +36,7 @@ export default function createTrigger(eventType, reference, handlers, options) {
       on('mouseleave', handleMouseLeave)
     }
     if (eventType === 'focus') {
-      on('blur', handleBlur)
+      on('focusout', handleBlur)
     }
   } else {
     if (browser.supportsTouch && options.touchHold) {
