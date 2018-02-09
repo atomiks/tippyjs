@@ -1,5 +1,7 @@
 export const isBrowser = typeof window !== 'undefined'
 
+export const isIE = isBrowser && /MSIE |Trident\//.test(navigator.userAgent)
+
 export const browser = {}
 
 if (isBrowser) {
