@@ -1,4 +1,4 @@
-import { browser } from '../core/globals'
+import { browser, isIE } from '../core/globals'
 
 /**
  * Creates a trigger by adding the necessary event listeners to the reference element
@@ -36,7 +36,7 @@ export default function createTrigger(eventType, reference, handlers, options) {
       on('mouseleave', handleMouseLeave)
     }
     if (eventType === 'focus') {
-      on('focusout', handleBlur)
+      on(isIE ? 'focusout' : 'blur', handleBlur)
     }
   } else {
     if (browser.supportsTouch && options.touchHold) {
