@@ -4,6 +4,7 @@ import Popper from 'popper.js'
 
 import tippy from '../tippy'
 
+import updatePopperPosition from '../utils/updatePopperPosition'
 import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiveBorder'
 import computeArrowTransform from '../utils/computeArrowTransform'
 import getInnerElements from '../utils/getInnerElements'
@@ -97,8 +98,9 @@ export class Tippy {
       if (!this.state.visible) return
 
       if (!options.followCursor || browser.usingTouch) {
-        this.popperInstance.scheduleUpdate()
-        applyTransitionDuration([popper], options.updateDuration)
+        updatePopperPosition(this.popperInstance, () => {
+          applyTransitionDuration([popper], options.updateDuration)
+        })
       }
 
       // Set initial position near the cursor
@@ -538,16 +540,8 @@ export function _mount(callback) {
       this.popperInstance.enableEventListeners()
     }
   }
-
-  const _onCreate = this.popperInstance.options.onCreate
-  const _onUpdate = this.popperInstance.options.onUpdate
-
-  this.popperInstance.options.onCreate = this.popperInstance.options.onUpdate = () => {
-    reflow(this.popper)
-    callback()
-    this.popperInstance.options.onUpdate = _onUpdate
-    this.popperInstance.options.onCreate = _onCreate
-  }
+  
+  updatePopperPosition(this.popperInstance, callback, true)
 
   if (!this.options.appendTo.contains(this.popper)) {
     this.options.appendTo.appendChild(this.popper)
