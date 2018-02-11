@@ -44,11 +44,11 @@ export default function createPopperElement(id, title, options) {
     const arrow = document.createElement('div')
     arrow.style[prefix('transform')] = arrowTransform
     
-    if (arrowType === 'sharp') {
-      arrow.classList.add('tippy-arrow')
-    } else {
+    if (arrowType === 'round') {
       arrow.classList.add('tippy-roundarrow')
       arrow.innerHTML = '<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg"><path d="M1 8s4.577-.019 7.253-4.218c2.357-3.698 5.175-3.721 7.508 0C18.404 7.997 23 8 23 8H1z"/></svg>'
+    } else {
+      arrow.classList.add('tippy-arrow')
     }
 
     tooltip.appendChild(arrow)
