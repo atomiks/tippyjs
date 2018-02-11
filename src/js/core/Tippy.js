@@ -18,7 +18,6 @@ import getDuration from '../utils/getDuration'
 import setVisibilityState from '../utils/setVisibilityState'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
 import toArray from '../utils/toArray'
-import reflow from '../utils/reflow'
 import focus from '../utils/focus'
 
 const key = {}
