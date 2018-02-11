@@ -3,12 +3,13 @@ import { browser, selectors } from './globals'
 import hideAllPoppers from '../utils/hideAllPoppers'
 import closest from '../utils/closest'
 import matches from '../utils/matches'
+import toArray from '../utils/toArray'
 
 /**
  * Adds the needed event listeners
  */
 export default function bindEventListeners() {
-  const touchHandler = () => {
+  const onDocumentTouch = () => {
     if (browser.usingTouch) return
 
     browser.usingTouch = true
@@ -18,13 +19,13 @@ export default function bindEventListeners() {
     }
 
     if (browser.dynamicInputDetection && window.performance) {
-      document.addEventListener('mousemove', mousemoveHandler)
+      document.addEventListener('mousemove', onDocumentMouseMove)
     }
 
     browser.onUserInputChange('touch')
   }
 
-  const mousemoveHandler = (() => {
+  const onDocumentMouseMove = (() => {
     let time
 
     return () => {
@@ -33,7 +34,7 @@ export default function bindEventListeners() {
       // Chrome 60+ is 1 mousemove per animation frame, use 20ms time difference
       if (now - time < 20) {
         browser.usingTouch = false
-        document.removeEventListener('mousemove', mousemoveHandler)
+        document.removeEventListener('mousemove', onDocumentMouseMove)
         if (!browser.iOS) {
           document.body.classList.remove('tippy-touch')
         }
@@ -44,7 +45,7 @@ export default function bindEventListeners() {
     }
   })()
 
-  const clickHandler = event => {
+  const onDocumentClick = event => {
     // Simulated events dispatched on the document
     if (!(event.target instanceof Element)) {
       return hideAllPoppers()
@@ -74,18 +75,28 @@ export default function bindEventListeners() {
     hideAllPoppers()
   }
 
-  const blurHandler = () => {
+  const onWindowBlur = () => {
     const { activeElement: el } = document
     if (el && el.blur && matches.call(el, selectors.REFERENCE)) {
       el.blur()
     }
   }
 
-  document.addEventListener('click', clickHandler)
-  document.addEventListener('touchstart', touchHandler)
-  window.addEventListener('blur', blurHandler)
+  const onWindowResize = () => {
+    toArray(document.querySelectorAll(selectors.POPPER)).forEach(popper => {
+      const tippyInstance = popper._tippy
+      if (!tippyInstance.options.livePlacement) {
+        tippyInstance.popperInstance.scheduleUpdate()
+      }
+    })
+  }
+
+  document.addEventListener('click', onDocumentClick)
+  document.addEventListener('touchstart', onDocumentTouch)
+  window.addEventListener('blur', onWindowBlur)
+  window.addEventListener('resize', onWindowResize)
 
   if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
-    document.addEventListener('pointerdown', touchHandler)
+    document.addEventListener('pointerdown', onDocumentTouch)
   }
 }

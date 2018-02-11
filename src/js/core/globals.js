@@ -11,7 +11,6 @@ if (isBrowser) {
   browser.dynamicInputDetection = true
   browser.iOS = /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream
   browser.onUserInputChange = () => {}
-  browser._eventListenersBound = false
 }
 
 /**
@@ -32,6 +31,7 @@ export const selectors = {
  */
 export const defaults = {
   placement: 'top',
+  livePlacement: true,
   trigger: 'mouseenter focus',
   animation: 'shift-away',
   html: false,
