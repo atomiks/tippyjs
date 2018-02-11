@@ -4,6 +4,7 @@ import Popper from 'popper.js'
 
 import tippy from '../tippy'
 
+import resetPopperPosition from '../utils/resetPopperPosition'
 import updatePopperPosition from '../utils/updatePopperPosition'
 import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiveBorder'
 import computeArrowTransform from '../utils/computeArrowTransform'
@@ -92,15 +93,11 @@ export class Tippy {
     this.state.visible = true
 
     _mount.call(this, () => {
-      // ~20ms can elapse before this defer callback is run, so the hide() method
-      // may have been invoked -- check if the popper is still visible and cancel
-      // this callback if not
       if (!this.state.visible) return
 
       if (!options.followCursor || browser.usingTouch) {
-        updatePopperPosition(this.popperInstance, () => {
-          applyTransitionDuration([popper], options.updateDuration)
-        })
+        // FIX: Arrow will sometimes not be positioned correctly. Force another update.
+        this.popperInstance.scheduleUpdate()
       }
 
       // Set initial position near the cursor
@@ -497,21 +494,11 @@ export function _createPopperInstance() {
       }
     }
   }
-
+  
   _addMutationObserver.call(this, {
     target: popper,
     callback: () => {
-      const styles = popper.style
-      styles[prefix('transitionDuration')] = null
-
-      const _onUpdate = this.popperInstance.options.onUpdate
-      this.popperInstance.options.onUpdate = () => {
-        reflow(this.popper)
-        styles[prefix('transitionDuration')] = options.updateDuration + 'ms'
-        this.popperInstance.options.onUpdate = _onUpdate
-      }
-
-      this.popperInstance.update()
+      this.popperInstance.scheduleUpdate()
     },
     options: {
       childList: true,
@@ -530,21 +517,25 @@ export function _createPopperInstance() {
  * @private
  */
 export function _mount(callback) {
+  const { options } = this
+  
   if (!this.popperInstance) {
     this.popperInstance = _createPopperInstance.call(this)
+    if (!options.livePlacement) {
+      this.popperInstance.disableEventListeners()
+    }
   } else {
-    this.popper.style[prefix('transform')] = null
+    resetPopperPosition(this.popper)
     this.popperInstance.scheduleUpdate()
-
-    if (!this.options.followCursor || browser.usingTouch) {
+    if (options.livePlacement && (!options.followCursor || browser.usingTouch)) {
       this.popperInstance.enableEventListeners()
     }
   }
   
   updatePopperPosition(this.popperInstance, callback, true)
 
-  if (!this.options.appendTo.contains(this.popper)) {
-    this.options.appendTo.appendChild(this.popper)
+  if (!options.appendTo.contains(this.popper)) {
+    options.appendTo.appendChild(this.popper)
   }
 }
 

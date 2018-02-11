@@ -6,6 +6,8 @@ import getArrayOfElements from './utils/getArrayOfElements'
 import createTooltips from './core/createTooltips'
 import bindEventListeners from './core/bindEventListeners'
 
+let eventListenersBound = false
+
 /**
  * Creates tooltips
  * @param {String|Element|Element[]|NodeList|Object} selector
@@ -13,9 +15,9 @@ import bindEventListeners from './core/bindEventListeners'
  * @return {Object}
  */
 function tippy(selector, options) {
-  if (browser.supported && !browser._eventListenersBound) {
+  if (browser.supported && !eventListenersBound) {
     bindEventListeners()
-    browser._eventListenersBound = true
+    eventListenersBound = true
   }
 
   if (isObjectLiteral(selector)) {

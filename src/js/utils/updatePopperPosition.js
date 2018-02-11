@@ -6,7 +6,7 @@ import reflow from './reflow'
  * Hackish workaround until Popper 2.0's update() becomes sync.
  * @param {Popper} popperInstance
  * @param {Function} callback: to run once popper's position was updated
- * @param {Boolean} scheduleUpdateAlreadyCalled: was scheduleUpdate() already called?
+ * @param {Boolean} updateAlreadyCalled: was scheduleUpdate() already called?
  */
 export default function updatePopperPosition(popperInstance, callback, updateAlreadyCalled) {
   const { popper, options } = popperInstance
@@ -14,7 +14,7 @@ export default function updatePopperPosition(popperInstance, callback, updateAlr
   const onUpdate = options.onUpdate
 
   options.onCreate = options.onUpdate = () => {
-    reflow(popper), callback(), onUpdate()
+    reflow(popper), callback && callback(), onUpdate()
     options.onCreate = onCreate
     options.onUpdate = onUpdate
   }
