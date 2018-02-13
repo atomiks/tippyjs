@@ -493,7 +493,7 @@ export function _createPopperInstance() {
       }
     }
   }
-  
+
   _addMutationObserver.call(this, {
     target: popper,
     callback: () => {
@@ -517,7 +517,7 @@ export function _createPopperInstance() {
  */
 export function _mount(callback) {
   const { options } = this
-  
+
   if (!this.popperInstance) {
     this.popperInstance = _createPopperInstance.call(this)
     if (!options.livePlacement) {
@@ -530,7 +530,7 @@ export function _mount(callback) {
       this.popperInstance.enableEventListeners()
     }
   }
-  
+
   updatePopperPosition(this.popperInstance, callback, true)
 
   if (!options.appendTo.contains(this.popper)) {
