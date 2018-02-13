@@ -497,7 +497,7 @@ export function _createPopperInstance() {
   _addMutationObserver.call(this, {
     target: popper,
     callback: () => {
-      this.popperInstance.scheduleUpdate()
+      this.popperInstance.update()
     },
     options: {
       childList: true,
