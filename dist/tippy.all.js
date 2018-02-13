@@ -3670,7 +3670,7 @@ function _createPopperInstance() {
   _addMutationObserver.call(this, {
     target: popper,
     callback: function callback() {
-      _this7.popperInstance.scheduleUpdate();
+      _this7.popperInstance.update();
     },
     options: {
       childList: true,
