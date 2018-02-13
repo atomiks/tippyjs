@@ -1,6 +1,8 @@
 # Tippy.js
+
 [![Build Status](https://travis-ci.org/atomiks/tippyjs.svg?branch=master)](https://travis-ci.org/atomiks/tippyjs)
 [![npm Downloads](https://img.shields.io/npm/dt/tippy.js.svg)](https://www.npmjs.com/package/tippy.js)
+[![gzip Size](img.badgesize.io/https://unpkg.com/tippy.js/dist/tippy.all.min.js?compression=gzip&label=gzip size)
 
 Tippy.js is a lightweight, vanilla JS tooltip library powered by Popper.js.
 
@@ -11,7 +13,7 @@ https://atomiks.github.io/tippyjs/
 ## Installation
 
 ```
-npm install --save tippy.js
+npm install tippy.js
 ```
 
 CDN: https://unpkg.com/tippy.js/dist/
@@ -19,12 +21,14 @@ CDN: https://unpkg.com/tippy.js/dist/
 ## Basic usage
 
 #### 1. Give elements a `title` attribute containing the tooltip content.
+
 ```html
 <button title="Tooltip">Text</button>
 <button title="Another tooltip">Text</button>
 ```
 
 #### 2. Include the `tippy.all.min.js` script in your document, which automatically injects Tippy's CSS into `head`.
+
 Use the full version link! Visit the link in `src` below to get the latest version.
 
 ```html
