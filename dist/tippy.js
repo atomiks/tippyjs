@@ -3441,7 +3441,7 @@ function _createDelegateChildTippy(event) {
     if (title) {
       targetEl.setAttribute('title', title);
       tippy$1(targetEl, _extends({}, this.options, { target: null }));
-      targetEl._tippy.show();
+      _enter.call(targetEl._tippy, event);
     }
   }
 }
