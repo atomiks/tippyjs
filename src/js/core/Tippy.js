@@ -270,7 +270,7 @@ export function _createDelegateChildTippy(event) {
     if (title) {
       targetEl.setAttribute('title', title)
       tippy(targetEl, { ...this.options, target: null })
-      targetEl._tippy.show()
+      _enter.call(targetEl._tippy, event)
     }
   }
 }
