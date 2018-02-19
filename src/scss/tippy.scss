@@ -16,6 +16,7 @@
   outline: 0;
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
   pointer-events: none;
+  line-height: 1.4;
 
   &[data-html] {
     max-width: 96%;
