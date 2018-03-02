@@ -10,6 +10,8 @@ export default function hideAllPoppers(excludeTippy) {
 
   poppers.forEach(popper => {
     const tippy = popper._tippy
+    if (!tippy) return
+
     const { options } = tippy
 
     if (
