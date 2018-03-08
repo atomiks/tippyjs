@@ -515,14 +515,13 @@ export function _mount(callback) {
     this.popperInstance = _createPopperInstance.call(this)
     if (!options.livePlacement) {
       this.popperInstance.disableEventListeners()
-      setFlipModifier(false)
     }
   } else {
+    setFlipModifier(!!options.flip)
     resetPopperPosition(this.popper)
     this.popperInstance.scheduleUpdate()
     if (options.livePlacement && (!options.followCursor || browser.usingTouch)) {
       this.popperInstance.enableEventListeners()
-      setFlipModifier(true)
     }
   }
 
@@ -551,6 +550,9 @@ export function _clearDelayTimeouts() {
  */
 export function _setFollowCursorListener() {
   this._(key).followCursorListener = event => {
+    // Ignore if tooltip was triggered by `focus`
+    if (this._(key).lastTriggerEvent.type === 'focus') return
+
     const { clientX, clientY } = event
 
     this.popperInstance.reference = {
