@@ -19,7 +19,6 @@ import setVisibilityState from '../utils/setVisibilityState'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
 import toArray from '../utils/toArray'
 import focus from '../utils/focus'
-import find from '../utils/find'
 
 const key = {}
 const store = data => k => k === key && data
