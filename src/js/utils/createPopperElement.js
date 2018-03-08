@@ -85,7 +85,7 @@ export default function createPopperElement(id, title, options) {
       templateId = '#' + html.id || 'tippy-html-template'
     } else {
       // trick linters: https://github.com/atomiks/tippyjs/issues/197
-      content[true && 'innerHTML'] = document.querySelector(html).innerHTML
+      content[true && 'innerHTML'] = document.querySelector(html)[true && 'innerHTML']
       templateId = html
     }
 
