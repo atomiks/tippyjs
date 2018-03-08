@@ -73,7 +73,7 @@ export default function createTooltips(els, config) {
           const { content } = getInnerElements(popper)
           const title = reference.getAttribute('title')
           if (title) {
-            content.innerHTML = tippy.title = title
+            content[options.allowTitleHTML ? 'innerHTML' : 'textContent'] = tippy.title = title
             removeTitle(reference)
           }
         },
