@@ -506,18 +506,12 @@ export function _createPopperInstance() {
 export function _mount(callback) {
   const { options } = this
 
-  const setFlipModifier = bool => {
-    const flip = find(this.popperInstance.modifiers, m => m.name === 'flip')
-    if (flip) flip.enabled = bool
-  }
-
   if (!this.popperInstance) {
     this.popperInstance = _createPopperInstance.call(this)
     if (!options.livePlacement) {
       this.popperInstance.disableEventListeners()
     }
   } else {
-    setFlipModifier(!!options.flip)
     resetPopperPosition(this.popper)
     this.popperInstance.scheduleUpdate()
     if (options.livePlacement && (!options.followCursor || browser.usingTouch)) {
