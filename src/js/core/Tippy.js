@@ -19,6 +19,7 @@ import setVisibilityState from '../utils/setVisibilityState'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
 import toArray from '../utils/toArray'
 import focus from '../utils/focus'
+import find from '../utils/find'
 
 const key = {}
 const store = data => k => k === key && data
@@ -97,19 +98,6 @@ export class Tippy {
       if (!options.followCursor || browser.usingTouch) {
         // FIX: Arrow will sometimes not be positioned correctly. Force another update.
         this.popperInstance.scheduleUpdate()
-      }
-
-      // Set initial position near the cursor
-      if (options.followCursor && !browser.usingTouch) {
-        this.popperInstance.disableEventListeners()
-        const delay = Array.isArray(options.delay) ? options.delay[0] : options.delay
-        if (this._(key).lastTriggerEvent) {
-          this._(key).followCursorListener(
-            delay && this._(key).lastMouseMoveEvent
-              ? this._(key).lastMouseMoveEvent
-              : this._(key).lastTriggerEvent
-          )
-        }
       }
 
       // Re-apply transition durations
@@ -518,16 +506,23 @@ export function _createPopperInstance() {
 export function _mount(callback) {
   const { options } = this
 
+  const setFlipModifier = bool => {
+    const flip = find(this.popperInstance.modifiers, m => m.name === 'flip')
+    if (flip) flip.enabled = bool
+  }
+
   if (!this.popperInstance) {
     this.popperInstance = _createPopperInstance.call(this)
     if (!options.livePlacement) {
       this.popperInstance.disableEventListeners()
+      setFlipModifier(false)
     }
   } else {
     resetPopperPosition(this.popper)
     this.popperInstance.scheduleUpdate()
     if (options.livePlacement && (!options.followCursor || browser.usingTouch)) {
       this.popperInstance.enableEventListeners()
+      setFlipModifier(true)
     }
   }
 
@@ -556,62 +551,22 @@ export function _clearDelayTimeouts() {
  */
 export function _setFollowCursorListener() {
   this._(key).followCursorListener = event => {
-    // Ignore if the tooltip was triggered by `focus`
-    if (this._(key).lastTriggerEvent && this._(key).lastTriggerEvent.type === 'focus') return
+    const { clientX, clientY } = event
 
-    this._(key).lastMouseMoveEvent = event
-
-    // Expensive operations, but their dimensions can change freely
-    const pageWidth = document.documentElement.offsetWidth || document.body.offsetWidth
-    const halfPopperWidth = Math.round(this.popper.offsetWidth / 2)
-    const halfPopperHeight = Math.round(this.popper.offsetHeight / 2)
-    const offset = this.options.offset
-    const { pageX, pageY } = event
-    const PADDING = 5
-
-    let placement = this.options.placement.replace(/-.+/, '')
-    if (this.popper.getAttribute('x-placement')) {
-      placement = getPopperPlacement(this.popper)
+    this.popperInstance.reference = {
+      getBoundingClientRect: () => ({
+        width: 0,
+        height: 0,
+        top: clientY,
+        left: clientX,
+        right: clientX,
+        bottom: clientY
+      }),
+      clientWidth: 0,
+      clientHeight: 0
     }
 
-    let x, y
-
-    /* eslint-disable indent */
-    switch (placement) {
-      case 'top':
-        x = pageX - halfPopperWidth + offset
-        y = pageY - 2 * halfPopperHeight
-        break
-      case 'bottom':
-        x = pageX - halfPopperWidth + offset
-        y = pageY + 10
-        break
-      case 'left':
-        x = pageX - 2 * halfPopperWidth
-        y = pageY - halfPopperHeight + offset
-        break
-      case 'right':
-        x = pageX + 5
-        y = pageY - halfPopperHeight + offset
-        break
-    }
-    /* eslint-enable indent */
-
-    const isRightOverflowing = pageX + PADDING + halfPopperWidth + offset > pageWidth
-    const isLeftOverflowing = pageX - PADDING - halfPopperWidth + offset < 0
-
-    // Prevent left/right overflow
-    if (placement === 'top' || placement === 'bottom') {
-      if (isRightOverflowing) {
-        x = pageWidth - PADDING - 2 * halfPopperWidth
-      }
-
-      if (isLeftOverflowing) {
-        x = PADDING
-      }
-    }
-
-    this.popper.style[prefix('transform')] = `translate3d(${x}px, ${y}px, 0)`
+    this.popperInstance.scheduleUpdate()
   }
 }
 

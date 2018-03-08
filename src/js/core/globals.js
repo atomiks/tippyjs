@@ -62,6 +62,7 @@ export const defaults = {
   arrowTransform: '',
   maxWidth: '',
   target: null,
+  allowTitleHTML: true,
   popperOptions: {},
   createPopperInstanceOnInit: false,
   onShow() {},
