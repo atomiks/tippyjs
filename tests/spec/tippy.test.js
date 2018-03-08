@@ -85,3 +85,14 @@ test('tippy(Object) modifies the input value as the ref obj selector', () => {
   tippy(ref)
   expect(ref.refObj).toBe(true)
 })
+
+test('tippy.disableAnimations() sets all animation/transition-related defaults to 0/false', () => {
+  const clone = { ...defaults }
+  tippy.disableAnimations()
+  expect(defaults.duration).toBe(0)
+  expect(defaults.updateDuration).toBe(0)
+  expect(defaults.animateFill).toBe(false)
+  defaults.duration = clone.duration
+  defaults.updateDuration = clone.updateDuration
+  defaults.animateFill = clone.animateFill
+})

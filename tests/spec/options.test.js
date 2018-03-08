@@ -5,6 +5,7 @@ import cleanDocument from '../helpers/cleanDocument'
 
 import tippy from '../../src/js/tippy'
 import { Tippy } from '../../src/js/core/Tippy'
+import { selectors } from '../../src/js/core/globals'
 
 const o = options => ({ createPopperInstanceOnInit: true, ...options })
 
@@ -54,4 +55,16 @@ test('trigger', () => {
   tippy(el, o({ trigger }))
   el.dispatchEvent(new Event('click'))
   expect(el._tippy.state.visible).toBe(true)
+})
+
+test('allowTitleHTML', () => {
+  const el = createReferenceElement()
+  el.title = '<strong>tooltip</strong>'
+
+  tippy(el, { allowTitleHTML: false })
+  expect(el._tippy.popper.querySelector(selectors.CONTENT).querySelector('strong')).toBeNull()
+  el._tippy.destroy()
+
+  tippy(el, { allowTitleHTML: true })
+  expect(el._tippy.popper.querySelector(selectors.CONTENT).querySelector('strong')).not.toBeNull()
 })
