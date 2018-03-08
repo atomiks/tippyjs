@@ -1,1 +1,4052 @@
-(function(t,e){'object'==typeof exports&&'undefined'!=typeof module?module.exports=e():'function'==typeof define&&define.amd?define(e):t.tippy=e()})(this,function(){'use strict';function t(t){return'[object Object]'===Object.prototype.toString.call(t)}function a(t){return[].slice.call(t)}function o(e){if(e instanceof Element||t(e))return[e];if(e instanceof NodeList)return a(e);if(Array.isArray(e))return e;try{return a(document.querySelectorAll(e))}catch(t){return[]}}function r(t){for(var e=[!1,'webkit'],a=t.charAt(0).toUpperCase()+t.slice(1),o=0;o<e.length;o++){var i=e[o],r=i?''+i+a:t;if('undefined'!=typeof document.body.style[r])return r}return null}function p(t,e,a){var i=a.arrow,o=a.arrowType,p=a.arrowTransform,n=a.animateFill,s=a.inertia,l=a.animation,d=a.size,c=a.theme,m=a.html,f=a.zIndex,h=a.interactive,b=a.maxWidth,u=document.createElement('div');u.setAttribute('class','tippy-popper'),u.setAttribute('role','tooltip'),u.setAttribute('id','tippy-'+t),u.style.zIndex=f,u.style.maxWidth=b;var y=document.createElement('div');if(y.setAttribute('class','tippy-tooltip'),y.setAttribute('data-size',d),y.setAttribute('data-animation',l),y.setAttribute('data-state','hidden'),c.split(' ').forEach(function(e){y.classList.add(e+'-theme')}),i){var g=document.createElement('div');g.style[r('transform')]=p,'round'===o?(g.classList.add('tippy-roundarrow'),g.innerHTML='<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg"><path d="M1 8s4.577-.019 7.253-4.218c2.357-3.698 5.175-3.721 7.508 0C18.404 7.997 23 8 23 8H1z"/></svg>'):g.classList.add('tippy-arrow'),y.appendChild(g)}if(n){y.setAttribute('data-animatefill','');var w=document.createElement('div');w.setAttribute('data-state','hidden'),w.classList.add('tippy-backdrop'),y.appendChild(w)}s&&y.setAttribute('data-inertia',''),h&&y.setAttribute('data-interactive','');var x=document.createElement('div');if(x.setAttribute('class','tippy-content'),m){var v;m instanceof Element?(x.appendChild(m),v='#'+m.id||'tippy-html-template'):(x.innerHTML=document.querySelector(m).innerHTML,v=m),u.setAttribute('data-html',''),h&&u.setAttribute('tabindex','-1'),y.setAttribute('data-template-id',v)}else x.innerHTML=e;return y.appendChild(x),u.appendChild(y),u}function n(t,e,a,i){var o=a.handleTrigger,r=a.handleMouseLeave,p=a.handleBlur,n=a.handleDelegateShow,s=a.handleDelegateHide,l=[];if('manual'===t)return l;var d=function(t,a){e.addEventListener(t,a),l.push({event:t,handler:a})};return i.target?(Wt.supportsTouch&&i.touchHold&&(d('touchstart',n),d('touchend',s)),'mouseenter'===t&&(d('mouseover',n),d('mouseout',s)),'focus'===t&&(d('focusin',n),d('focusout',s)),'click'===t&&d('click',n)):(d(t,o),Wt.supportsTouch&&i.touchHold&&(d('touchstart',o),d('touchend',r)),'mouseenter'===t&&d('mouseleave',r),'focus'===t&&d(Mt?'focusout':'blur',p)),l}function s(t,e){var a=Ut.reduce(function(a,i){var o=t.getAttribute('data-tippy-'+i.toLowerCase())||e[i];return'false'===o&&(o=!1),'true'===o&&(o=!0),isFinite(o)&&!isNaN(parseFloat(o))&&(o=parseFloat(o)),'target'!==i&&'string'==typeof o&&'['===o.trim().charAt(0)&&(o=JSON.parse(o)),a[i]=o,a},{});return jt({},e,a)}function l(t,e){return e.arrow&&(e.animateFill=!1),e.appendTo&&'function'==typeof e.appendTo&&(e.appendTo=e.appendTo()),'function'==typeof e.html&&(e.html=e.html(t)),e}function d(t){return{tooltip:t.querySelector(Bt.TOOLTIP),backdrop:t.querySelector(Bt.BACKDROP),content:t.querySelector(Bt.CONTENT)}}function c(t){var e=t.getAttribute('title');e&&t.setAttribute('data-original-title',e),t.removeAttribute('title')}function m(t){return t&&'[object Function]'==={}.toString.call(t)}function f(t,e){if(1!==t.nodeType)return[];var a=getComputedStyle(t,null);return e?a[e]:a}function h(t){return'HTML'===t.nodeName?t:t.parentNode||t.host}function b(t){if(!t)return document.body;switch(t.nodeName){case'HTML':case'BODY':return t.ownerDocument.body;case'#document':return t.body;}var e=f(t),a=e.overflow,i=e.overflowX,o=e.overflowY;return /(auto|scroll)/.test(a+o+i)?t:b(h(t))}function u(t){var e=t&&t.offsetParent,a=e&&e.nodeName;return a&&'BODY'!==a&&'HTML'!==a?-1!==['TD','TABLE'].indexOf(e.nodeName)&&'static'===f(e,'position')?u(e):e:t?t.ownerDocument.documentElement:document.documentElement}function y(t){var e=t.nodeName;return'BODY'!==e&&('HTML'===e||u(t.firstElementChild)===t)}function g(t){return null===t.parentNode?t:g(t.parentNode)}function w(t,e){if(!t||!t.nodeType||!e||!e.nodeType)return document.documentElement;var a=t.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING,i=a?t:e,o=a?e:t,r=document.createRange();r.setStart(i,0),r.setEnd(o,0);var p=r.commonAncestorContainer;if(t!==p&&e!==p||i.contains(o))return y(p)?p:u(p);var n=g(t);return n.host?w(n.host,e):w(t,g(e).host)}function x(t){var e=1<arguments.length&&void 0!==arguments[1]?arguments[1]:'top',a='top'===e?'scrollTop':'scrollLeft',i=t.nodeName;if('BODY'===i||'HTML'===i){var o=t.ownerDocument.documentElement,r=t.ownerDocument.scrollingElement||o;return r[a]}return t[a]}function v(t,e){var a=2<arguments.length&&void 0!==arguments[2]&&arguments[2],i=x(e,'top'),o=x(e,'left'),r=a?-1:1;return t.top+=i*r,t.bottom+=i*r,t.left+=o*r,t.right+=o*r,t}function k(t,e){var a='x'===e?'Left':'Top',i='Left'==a?'Right':'Bottom';return parseFloat(t['border'+a+'Width'],10)+parseFloat(t['border'+i+'Width'],10)}function E(t,e,a,i){return Ht(e['offset'+t],e['scroll'+t],a['client'+t],a['offset'+t],a['scroll'+t],Qt()?a['offset'+t]+i['margin'+('Height'===t?'Top':'Left')]+i['margin'+('Height'===t?'Bottom':'Right')]:0)}function T(){var t=document.body,e=document.documentElement,a=Qt()&&getComputedStyle(e);return{height:E('Height',t,e,a),width:E('Width',t,e,a)}}function L(t){return ie({},t,{right:t.left+t.width,bottom:t.top+t.height})}function O(t){var e={};if(Qt())try{e=t.getBoundingClientRect();var a=x(t,'top'),i=x(t,'left');e.top+=a,e.left+=i,e.bottom+=a,e.right+=i}catch(t){}else e=t.getBoundingClientRect();var o={left:e.left,top:e.top,width:e.right-e.left,height:e.bottom-e.top},r='HTML'===t.nodeName?T():{},p=r.width||t.clientWidth||o.right-o.left,n=r.height||t.clientHeight||o.bottom-o.top,s=t.offsetWidth-p,l=t.offsetHeight-n;if(s||l){var d=f(t);s-=k(d,'x'),l-=k(d,'y'),o.width-=s,o.height-=l}return L(o)}function A(t,e){var a=Qt(),i='HTML'===e.nodeName,o=O(t),r=O(e),p=b(t),n=f(e),s=parseFloat(n.borderTopWidth,10),l=parseFloat(n.borderLeftWidth,10),d=L({top:o.top-r.top-s,left:o.left-r.left-l,width:o.width,height:o.height});if(d.marginTop=0,d.marginLeft=0,!a&&i){var c=parseFloat(n.marginTop,10),m=parseFloat(n.marginLeft,10);d.top-=s-c,d.bottom-=s-c,d.left-=l-m,d.right-=l-m,d.marginTop=c,d.marginLeft=m}return(a?e.contains(p):e===p&&'BODY'!==p.nodeName)&&(d=v(d,e)),d}function C(t){var e=t.ownerDocument.documentElement,a=A(t,e),i=Ht(e.clientWidth,window.innerWidth||0),o=Ht(e.clientHeight,window.innerHeight||0),r=x(e),p=x(e,'left'),n={top:r-a.top+a.marginTop,left:p-a.left+a.marginLeft,width:i,height:o};return L(n)}function S(t){var e=t.nodeName;return'BODY'===e||'HTML'===e?!1:'fixed'===f(t,'position')||S(h(t))}function Y(t,e,a,i){var o={top:0,left:0},r=w(t,e);if('viewport'===i)o=C(r);else{var p;'scrollParent'===i?(p=b(h(e)),'BODY'===p.nodeName&&(p=t.ownerDocument.documentElement)):'window'===i?p=t.ownerDocument.documentElement:p=i;var n=A(p,r);if('HTML'===p.nodeName&&!S(r)){var s=T(),l=s.height,d=s.width;o.top+=n.top-n.marginTop,o.bottom=l+n.top,o.left+=n.left-n.marginLeft,o.right=d+n.left}else o=n}return o.left+=a,o.top+=a,o.right-=a,o.bottom-=a,o}function P(t){var e=t.width,a=t.height;return e*a}function X(t,e,a,i,o){var r=5<arguments.length&&void 0!==arguments[5]?arguments[5]:0;if(-1===t.indexOf('auto'))return t;var p=Y(a,i,r,o),n={top:{width:p.width,height:e.top-p.top},right:{width:p.right-e.right,height:p.height},bottom:{width:p.width,height:p.bottom-e.bottom},left:{width:e.left-p.left,height:p.height}},s=Object.keys(n).map(function(t){return ie({key:t},n[t],{area:P(n[t])})}).sort(function(t,e){return e.area-t.area}),l=s.filter(function(t){var e=t.width,i=t.height;return e>=a.clientWidth&&i>=a.clientHeight}),d=0<l.length?l[0].key:s[0].key,c=t.split('-')[1];return d+(c?'-'+c:'')}function D(t,e,a){var i=w(e,a);return A(a,i)}function I(t){var e=getComputedStyle(t),a=parseFloat(e.marginTop)+parseFloat(e.marginBottom),i=parseFloat(e.marginLeft)+parseFloat(e.marginRight),o={width:t.offsetWidth+i,height:t.offsetHeight+a};return o}function _(t){var e={left:'right',right:'left',bottom:'top',top:'bottom'};return t.replace(/left|right|bottom|top/g,function(t){return e[t]})}function N(t,e,a){a=a.split('-')[0];var i=I(t),o={width:i.width,height:i.height},r=-1!==['right','left'].indexOf(a),p=r?'top':'left',n=r?'left':'top',s=r?'height':'width',l=r?'width':'height';return o[p]=e[p]+e[s]/2-i[s]/2,o[n]=a===n?e[n]-i[l]:e[_(n)],o}function H(t,e){return Array.prototype.find?t.find(e):t.filter(e)[0]}function R(t,e,a){if(Array.prototype.findIndex)return t.findIndex(function(t){return t[e]===a});var i=H(t,function(t){return t[e]===a});return t.indexOf(i)}function M(t,e,a){var i=void 0===a?t:t.slice(0,R(t,'name',a));return i.forEach(function(t){t['function']&&console.warn('`modifier.function` is deprecated, use `modifier.fn`!');var a=t['function']||t.fn;t.enabled&&m(a)&&(e.offsets.popper=L(e.offsets.popper),e.offsets.reference=L(e.offsets.reference),e=a(e,t))}),e}function W(){if(!this.state.isDestroyed){var t={instance:this,styles:{},arrowStyles:{},attributes:{},flipped:!1,offsets:{}};t.offsets.reference=D(this.state,this.popper,this.reference),t.placement=X(this.options.placement,t.offsets.reference,this.popper,this.reference,this.options.modifiers.flip.boundariesElement,this.options.modifiers.flip.padding),t.originalPlacement=t.placement,t.offsets.popper=N(this.popper,t.offsets.reference,t.placement),t.offsets.popper.position='absolute',t=M(this.modifiers,t),this.state.isCreated?this.options.onUpdate(t):(this.state.isCreated=!0,this.options.onCreate(t))}}function B(t,e){return t.some(function(t){var a=t.name,i=t.enabled;return i&&a===e})}function z(t){for(var e=[!1,'ms','Webkit','Moz','O'],a=t.charAt(0).toUpperCase()+t.slice(1),o=0;o<e.length-1;o++){var i=e[o],r=i?''+i+a:t;if('undefined'!=typeof document.body.style[r])return r}return null}function U(){return this.state.isDestroyed=!0,B(this.modifiers,'applyStyle')&&(this.popper.removeAttribute('x-placement'),this.popper.style.left='',this.popper.style.position='',this.popper.style.top='',this.popper.style[z('transform')]=''),this.disableEventListeners(),this.options.removeOnDestroy&&this.popper.parentNode.removeChild(this.popper),this}function q(t){var e=t.ownerDocument;return e?e.defaultView:window}function F(t,e,a,i){var o='BODY'===t.nodeName,r=o?t.ownerDocument.defaultView:t;r.addEventListener(e,a,{passive:!0}),o||F(b(r.parentNode),e,a,i),i.push(r)}function j(t,e,a,i){a.updateBound=i,q(t).addEventListener('resize',a.updateBound,{passive:!0});var o=b(t);return F(o,'scroll',a.updateBound,a.scrollParents),a.scrollElement=o,a.eventsEnabled=!0,a}function K(){this.state.eventsEnabled||(this.state=j(this.reference,this.options,this.state,this.scheduleUpdate))}function V(t,e){return q(t).removeEventListener('resize',e.updateBound),e.scrollParents.forEach(function(t){t.removeEventListener('scroll',e.updateBound)}),e.updateBound=null,e.scrollParents=[],e.scrollElement=null,e.eventsEnabled=!1,e}function G(){this.state.eventsEnabled&&(cancelAnimationFrame(this.scheduleUpdate),this.state=V(this.reference,this.state))}function J(t){return''!==t&&!isNaN(parseFloat(t))&&isFinite(t)}function Z(t,e){Object.keys(e).forEach(function(a){var i='';-1!==['width','height','top','right','bottom','left'].indexOf(a)&&J(e[a])&&(i='px'),t.style[a]=e[a]+i})}function $(t,e){Object.keys(e).forEach(function(a){var i=e[a];!1===i?t.removeAttribute(a):t.setAttribute(a,e[a])})}function Q(t,e,a){var i=H(t,function(t){var a=t.name;return a===e}),o=!!i&&t.some(function(t){return t.name===a&&t.enabled&&t.order<i.order});if(!o){var r='`'+e+'`';console.warn('`'+a+'`'+' modifier is required by '+r+' modifier in order to work, be sure to include it before '+r+'!')}return o}function tt(t){return'end'===t?'start':'start'===t?'end':t}function et(t){var e=1<arguments.length&&void 0!==arguments[1]&&arguments[1],a=re.indexOf(t),i=re.slice(a+1).concat(re.slice(0,a));return e?i.reverse():i}function at(t,e,a,i){var o=t.match(/((?:\-|\+)?\d*\.?\d*)(.*)/),r=+o[1],p=o[2];if(!r)return t;if(0===p.indexOf('%')){var n;switch(p){case'%p':n=a;break;case'%':case'%r':default:n=i;}var s=L(n);return s[e]/100*r}if('vh'===p||'vw'===p){var l;return l='vh'===p?Ht(document.documentElement.clientHeight,window.innerHeight||0):Ht(document.documentElement.clientWidth,window.innerWidth||0),l/100*r}return r}function it(t,e,a,i){var o=[0,0],r=-1!==['right','left'].indexOf(i),p=t.split(/(\+|\-)/).map(function(t){return t.trim()}),n=p.indexOf(H(p,function(t){return-1!==t.search(/,|\s/)}));p[n]&&-1===p[n].indexOf(',')&&console.warn('Offsets separated by white space(s) are deprecated, use a comma (,) instead.');var s=/\s*,\s*|\s+/,l=-1===n?[p]:[p.slice(0,n).concat([p[n].split(s)[0]]),[p[n].split(s)[1],p.slice(n+1)]];return l=l.map(function(t,i){var o=(1===i?!r:r)?'height':'width',p=!1;return t.reduce(function(t,e){return''===t[t.length-1]&&-1!==['+','-'].indexOf(e)?(t[t.length-1]=e,p=!0,t):p?(t[t.length-1]+=e,p=!1,t):t.concat(e)},[]).map(function(t){return at(t,o,e,a)})}),l.forEach(function(t,e){t.forEach(function(a,i){J(a)&&(o[e]+=a*('-'===t[i-1]?-1:1))})}),o}function ot(t){var e=t.style;e[r('transform')]=null,e.top=null,e.left=null}function rt(t){void t.offsetHeight}function pt(t,e,a){var i=t.popper,o=t.options,r=o.onCreate,p=o.onUpdate;o.onCreate=o.onUpdate=function(){rt(i),e&&e(),p(),o.onCreate=r,o.onUpdate=p},a||t.scheduleUpdate()}function nt(t){return t.getAttribute('x-placement').replace(/-.+/,'')}function st(t,e,a){if(!e.getAttribute('x-placement'))return!0;var i=t.clientX,o=t.clientY,r=a.interactiveBorder,p=a.distance,n=e.getBoundingClientRect(),s=nt(e),l=r+p,d={top:n.top-o>r,bottom:o-n.bottom>r,left:n.left-i>r,right:i-n.right>r};return'top'===s?d.top=n.top-o>l:'bottom'===s?d.bottom=o-n.bottom>l:'left'===s?d.left=n.left-i>l:'right'===s?d.right=i-n.right>l:void 0,d.top||d.bottom||d.left||d.right}function lt(t,e,a,i){if(!e.length)return'';var o={scale:function(){return 1===e.length?''+e[0]:a?e[0]+', '+e[1]:e[1]+', '+e[0]}(),translate:function(){return 1===e.length?i?-e[0]+'px':e[0]+'px':a?i?e[0]+'px, '+-e[1]+'px':e[0]+'px, '+e[1]+'px':i?-e[1]+'px, '+e[0]+'px':e[1]+'px, '+e[0]+'px'}()};return o[t]}function dt(t,e){if(!t)return'';return e?t:{X:'Y',Y:'X'}[t]}function ct(t,e,a){var i=nt(t),o='top'===i||'bottom'===i,p='right'===i||'bottom'===i,n=function(t){var e=a.match(t);return e?e[1]:''},s=function(t){var e=a.match(t);return e?e[1].split(',').map(parseFloat):[]},l={translate:/translateX?Y?\(([^)]+)\)/,scale:/scaleX?Y?\(([^)]+)\)/},d={translate:{axis:n(/translate([XY])/),numbers:s(l.translate)},scale:{axis:n(/scale([XY])/),numbers:s(l.scale)}},c=a.replace(l.translate,'translate'+dt(d.translate.axis,o)+'('+lt('translate',d.translate.numbers,o,p)+')').replace(l.scale,'scale'+dt(d.scale.axis,o)+'('+lt('scale',d.scale.numbers,o,p)+')');e.style[r('transform')]=c}function mt(t){return-(t-zt.distance)+'px'}function ft(t){requestAnimationFrame(function(){setTimeout(t,1)})}function ht(t,a){var i=Element.prototype.closest||function(t){for(var a=this;a;){if(e.call(a,t))return a;a=a.parentElement}};return i.call(t,a)}function bt(t,e){return Array.isArray(t)?t[e]:t}function ut(t,e){t.forEach(function(t){t&&t.setAttribute('data-state',e)})}function yt(t,e){t.forEach(function(t){t&&(t.style[r('transitionDuration')]=e+'ms')})}function gt(t){var e=window.scrollX||window.pageXOffset,a=window.scrollY||window.pageYOffset;t.focus(),scroll(e,a)}function wt(t){var e=ht(t.target,this.options.target);if(e&&!e._tippy){var a=e.getAttribute('title')||this.title;a&&(e.setAttribute('title',a),Dt(e,jt({},this.options,{target:null})),xt.call(e._tippy,t))}}function xt(t){var e=this;if(Lt.call(this),!this.state.visible){if(this.options.target)return void wt.call(this,t);if(this._(de).isPreparingToShow=!0,this.options.wait)return void this.options.wait.call(this.popper,this.show.bind(this),t);this.options.followCursor&&!Wt.usingTouch&&(!this._(de).followCursorListener&&Ot.call(this),document.addEventListener('mousemove',this._(de).followCursorListener));var a=Array.isArray(this.options.delay)?this.options.delay[0]:this.options.delay;a?this._(de).showTimeout=setTimeout(function(){e.show()},a):this.show()}}function vt(){var t=this;if(Lt.call(this),!!this.state.visible){this._(de).isPreparingToShow=!1;var e=Array.isArray(this.options.delay)?this.options.delay[1]:this.options.delay;e?this._(de).hideTimeout=setTimeout(function(){t.state.visible&&t.hide()},e):this.hide()}}function kt(){var t=this;return{handleTrigger:function(e){if(t.state.enabled){var a=Wt.supportsTouch&&Wt.usingTouch&&-1<['mouseenter','mouseover','focus'].indexOf(e.type);a&&t.options.touchHold||(t._(de).lastTriggerEvent=e,'click'===e.type&&'persistent'!==t.options.hideOnClick&&t.state.visible?vt.call(t):xt.call(t,e),a&&Wt.iOS&&t.reference.click&&t.reference.click())}},handleMouseLeave:function(e){if(!(-1<['mouseleave','mouseout'].indexOf(e.type)&&Wt.supportsTouch&&Wt.usingTouch&&t.options.touchHold)){if(t.options.interactive){var a=vt.bind(t),i=function e(i){var o=ht(i.target,Bt.REFERENCE),r=ht(i.target,Bt.POPPER)===t.popper,p=o===t.reference;r||p||st(i,t.popper,t.options)&&(document.body.removeEventListener('mouseleave',a),document.removeEventListener('mousemove',e),vt.call(t))};return document.body.addEventListener('mouseleave',a),void document.addEventListener('mousemove',i)}vt.call(t)}},handleBlur:function(e){e.target!==t.reference||!e.relatedTarget||Wt.usingTouch||ht(e.relatedTarget,Bt.POPPER)||vt.call(t)},handleDelegateShow:function(e){ht(e.target,t.options.target)&&xt.call(t,e)},handleDelegateHide:function(e){ht(e.target,t.options.target)&&vt.call(t)}}}function Et(){var t=this,e=this.popper,a=this.reference,i=this.options,o=d(e),r=o.tooltip,p=i.popperOptions,n='round'===i.arrowType?Bt.ROUND_ARROW:Bt.ARROW,s=r.querySelector(n),l=jt({placement:i.placement},p||{},{modifiers:jt({},p?p.modifiers:{},{arrow:jt({element:n},p&&p.modifiers?p.modifiers.arrow:{}),flip:jt({enabled:i.flip,padding:i.distance+5,behavior:i.flipBehavior},p&&p.modifiers?p.modifiers.flip:{}),offset:jt({offset:i.offset},p&&p.modifiers?p.modifiers.offset:{})}),onCreate:function(){r.style[nt(e)]=mt(i.distance),s&&i.arrowTransform&&ct(e,s,i.arrowTransform)},onUpdate:function(){var t=r.style;t.top='',t.bottom='',t.left='',t.right='',t[nt(e)]=mt(i.distance),s&&i.arrowTransform&&ct(e,s,i.arrowTransform)}});return Ct.call(this,{target:e,callback:function(){t.popperInstance.update()},options:{childList:!0,subtree:!0,characterData:!0}}),new ne(a,e,l)}function Tt(t){var e=this.options;this.popperInstance?(ot(this.popper),this.popperInstance.scheduleUpdate(),e.livePlacement&&(!e.followCursor||Wt.usingTouch)&&this.popperInstance.enableEventListeners()):(this.popperInstance=Et.call(this),!e.livePlacement&&this.popperInstance.disableEventListeners()),pt(this.popperInstance,t,!0),e.appendTo.contains(this.popper)||e.appendTo.appendChild(this.popper)}function Lt(){var t=this._(de),e=t.showTimeout,a=t.hideTimeout;clearTimeout(e),clearTimeout(a)}function Ot(){var t=this;this._(de).followCursorListener=function(e){if(!(t._(de).lastTriggerEvent&&'focus'===t._(de).lastTriggerEvent.type)){t._(de).lastMouseMoveEvent=e;var a=document.documentElement.offsetWidth||document.body.offsetWidth,i=It(t.popper.offsetWidth/2),o=It(t.popper.offsetHeight/2),p=t.options.offset,n=e.pageX,s=e.pageY,l=5,d=t.options.placement.replace(/-.+/,'');t.popper.getAttribute('x-placement')&&(d=nt(t.popper));var c,m;'top'===d?(c=n-i+p,m=s-2*o):'bottom'===d?(c=n-i+p,m=s+10):'left'===d?(c=n-2*i,m=s-o+p):'right'===d?(c=n+5,m=s-o+p):void 0;('top'===d||'bottom'===d)&&(n+l+i+p>a&&(c=a-l-2*i),0>n-l-i+p&&(c=l)),t.popper.style[r('transform')]='translate3d('+c+'px, '+m+'px, 0)'}}}function At(){var t=this,e=function(){t.popper.style[r('transitionDuration')]=t.options.updateDuration+'ms'},a=function(){t.popper.style[r('transitionDuration')]=''};ft(function i(){t.popperInstance&&t.popperInstance.scheduleUpdate(),e(),t.state.visible?requestAnimationFrame(i):a()})}function Ct(t){var e=t.target,a=t.callback,i=t.options;if(window.MutationObserver){var o=new MutationObserver(a);o.observe(e,i),this._(de).mutationObservers.push(o)}}function St(t,a){if(!t)return a();var e=d(this.popper),i=e.tooltip,o=function(t,e){e&&i[t+'EventListener']('ontransitionend'in window?'transitionend':'webkitTransitionEnd',e)},r=function t(r){r.target===i&&(o('remove',t),a())};o('remove',this._(de).transitionendListener),o('add',r),this._(de).transitionendListener=r}function Yt(t,e){return t.reduce(function(t,a){var i=fe,o=l(a,e.performance?e:s(a,e)),r=a.getAttribute('title');if(!r&&!o.target&&!o.html&&!o.dynamicTitle)return t;a.setAttribute(o.target?'data-tippy-delegate':'data-tippy',''),c(a);var m=p(i,r,o),f=new me({id:i,reference:a,popper:m,options:o,title:r,popperInstance:null});o.createPopperInstanceOnInit&&(f.popperInstance=Et.call(f),f.popperInstance.disableEventListeners());var h=kt.call(f);return f.listeners=o.trigger.trim().split(' ').reduce(function(t,e){return t.concat(n(e,a,h,o))},[]),o.dynamicTitle&&Ct.call(f,{target:a,callback:function(){var t=d(m),e=t.content,i=a.getAttribute('title');i&&(e.innerHTML=f.title=i,c(a))},options:{attributes:!0}}),a._tippy=f,m._tippy=f,m._reference=a,t.push(f),fe++,t},[])}function Pt(t){var e=a(document.querySelectorAll(Bt.POPPER));e.forEach(function(e){var a=e._tippy,i=a.options;(!0===i.hideOnClick||-1<i.trigger.indexOf('focus'))&&(!t||e!==t.popper)&&a.hide()})}function Xt(){var t=function(){Wt.usingTouch||(Wt.usingTouch=!0,Wt.iOS&&document.body.classList.add('tippy-touch'),Wt.dynamicInputDetection&&window.performance&&document.addEventListener('mousemove',i),Wt.onUserInputChange('touch'))},i=function(){var t;return function(){var e=performance.now();20>e-t&&(Wt.usingTouch=!1,document.removeEventListener('mousemove',i),!Wt.iOS&&document.body.classList.remove('tippy-touch'),Wt.onUserInputChange('mouse')),t=e}}();document.addEventListener('click',function(t){if(!(t.target instanceof Element))return Pt();var e=ht(t.target,Bt.REFERENCE),a=ht(t.target,Bt.POPPER);if(!(a&&a._reference._tippy.options.interactive)){if(e){var i=e._tippy.options;if(!i.multiple&&Wt.usingTouch||!i.multiple&&-1<i.trigger.indexOf('click'))return Pt(e._tippy);if(!0!==i.hideOnClick||-1<i.trigger.indexOf('click'))return}Pt()}}),document.addEventListener('touchstart',t),window.addEventListener('blur',function(){var t=document,a=t.activeElement;a&&a.blur&&e.call(a,Bt.REFERENCE)&&a.blur()}),window.addEventListener('resize',function(){a(document.querySelectorAll(Bt.POPPER)).forEach(function(t){var e=t._tippy;e.options.livePlacement||e.popperInstance.scheduleUpdate()})}),!Wt.supportsTouch&&(navigator.maxTouchPoints||navigator.msMaxTouchPoints)&&document.addEventListener('pointerdown',t)}function Dt(e,a){return Wt.supported&&!he&&(Xt(),he=!0),t(e)&&(e.refObj=!0,e.attributes=e.attributes||{},e.setAttribute=function(t,a){e.attributes[t]=a},e.getAttribute=function(t){return e.attributes[t]},e.removeAttribute=function(t){delete e.attributes[t]},e.addEventListener=function(){},e.removeEventListener=function(){},e.classList={classNames:{},add:function(t){return e.classList.classNames[t]=!0},remove:function(t){return delete e.classList.classNames[t],!0},contains:function(t){return!!e.classList.classNames[t]}}),a=jt({},zt,a),{selector:e,options:a,tooltips:Wt.supported?Yt(o(e),a):[],destroyAll:function(){this.tooltips.forEach(function(t){return t.destroy()}),this.tooltips=[]}}}var It=Math.round,_t=Math.min,Nt=Math.floor,Ht=Math.max,Rt='undefined'!=typeof window,Mt=Rt&&/MSIE |Trident\//.test(navigator.userAgent),Wt={};Rt&&(Wt.supported='requestAnimationFrame'in window,Wt.supportsTouch='ontouchstart'in window,Wt.usingTouch=!1,Wt.dynamicInputDetection=!0,Wt.iOS=/iPhone|iPad|iPod/.test(navigator.platform)&&!window.MSStream,Wt.onUserInputChange=function(){});for(var Bt={POPPER:'.tippy-popper',TOOLTIP:'.tippy-tooltip',CONTENT:'.tippy-content',BACKDROP:'.tippy-backdrop',ARROW:'.tippy-arrow',ROUND_ARROW:'.tippy-roundarrow',REFERENCE:'[data-tippy]'},zt={placement:'top',livePlacement:!0,trigger:'mouseenter focus',animation:'shift-away',html:!1,animateFill:!0,arrow:!1,delay:0,duration:[350,300],interactive:!1,interactiveBorder:2,theme:'dark',size:'regular',distance:10,offset:0,hideOnClick:!0,multiple:!1,followCursor:!1,inertia:!1,updateDuration:350,sticky:!1,appendTo:function(){return document.body},zIndex:9999,touchHold:!1,performance:!1,dynamicTitle:!1,flip:!0,flipBehavior:'flip',arrowType:'sharp',arrowTransform:'',maxWidth:'',target:null,popperOptions:{},createPopperInstanceOnInit:!1,onShow:function(){},onShown:function(){},onHide:function(){},onHidden:function(){}},Ut=Wt.supported&&Object.keys(zt),qt=function(t,e){if(!(t instanceof e))throw new TypeError('Cannot call a class as a function')},Ft=function(){function t(t,e){for(var a,o=0;o<e.length;o++)a=e[o],a.enumerable=a.enumerable||!1,a.configurable=!0,('value'in a)&&(a.writable=!0),Object.defineProperty(t,a.key,a)}return function(e,a,i){return a&&t(e.prototype,a),i&&t(e,i),e}}(),jt=Object.assign||function(t){for(var e,a=1;a<arguments.length;a++)for(var i in e=arguments[a],e)Object.prototype.hasOwnProperty.call(e,i)&&(t[i]=e[i]);return t},Kt='undefined'!=typeof window&&'undefined'!=typeof document,Vt=['Edge','Trident','Firefox'],Gt=0,Jt=0;Jt<Vt.length;Jt+=1)if(Kt&&0<=navigator.userAgent.indexOf(Vt[Jt])){Gt=1;break}var i,Zt=Kt&&window.Promise,$t=Zt?function(t){var e=!1;return function(){e||(e=!0,window.Promise.resolve().then(function(){e=!1,t()}))}}:function(t){var e=!1;return function(){e||(e=!0,setTimeout(function(){e=!1,t()},Gt))}},Qt=function(){return void 0==i&&(i=-1!==navigator.appVersion.indexOf('MSIE 10')),i},te=function(t,e){if(!(t instanceof e))throw new TypeError('Cannot call a class as a function')},ee=function(){function t(t,e){for(var a,o=0;o<e.length;o++)a=e[o],a.enumerable=a.enumerable||!1,a.configurable=!0,'value'in a&&(a.writable=!0),Object.defineProperty(t,a.key,a)}return function(e,a,i){return a&&t(e.prototype,a),i&&t(e,i),e}}(),ae=function(t,e,a){return e in t?Object.defineProperty(t,e,{value:a,enumerable:!0,configurable:!0,writable:!0}):t[e]=a,t},ie=Object.assign||function(t){for(var e,a=1;a<arguments.length;a++)for(var i in e=arguments[a],e)Object.prototype.hasOwnProperty.call(e,i)&&(t[i]=e[i]);return t},oe=['auto-start','auto','auto-end','top-start','top','top-end','right-start','right','right-end','bottom-end','bottom','bottom-start','left-end','left','left-start'],re=oe.slice(3),pe={FLIP:'flip',CLOCKWISE:'clockwise',COUNTERCLOCKWISE:'counterclockwise'},ne=function(){function t(e,a){var i=this,o=2<arguments.length&&void 0!==arguments[2]?arguments[2]:{};te(this,t),this.scheduleUpdate=function(){return requestAnimationFrame(i.update)},this.update=$t(this.update.bind(this)),this.options=ie({},t.Defaults,o),this.state={isDestroyed:!1,isCreated:!1,scrollParents:[]},this.reference=e&&e.jquery?e[0]:e,this.popper=a&&a.jquery?a[0]:a,this.options.modifiers={},Object.keys(ie({},t.Defaults.modifiers,o.modifiers)).forEach(function(e){i.options.modifiers[e]=ie({},t.Defaults.modifiers[e]||{},o.modifiers?o.modifiers[e]:{})}),this.modifiers=Object.keys(this.options.modifiers).map(function(t){return ie({name:t},i.options.modifiers[t])}).sort(function(t,e){return t.order-e.order}),this.modifiers.forEach(function(t){t.enabled&&m(t.onLoad)&&t.onLoad(i.reference,i.popper,i.options,t,i.state)}),this.update();var r=this.options.eventsEnabled;r&&this.enableEventListeners(),this.state.eventsEnabled=r}return ee(t,[{key:'update',value:function(){return W.call(this)}},{key:'destroy',value:function(){return U.call(this)}},{key:'enableEventListeners',value:function(){return K.call(this)}},{key:'disableEventListeners',value:function(){return G.call(this)}}]),t}();ne.Utils=('undefined'==typeof window?global:window).PopperUtils,ne.placements=oe,ne.Defaults={placement:'bottom',eventsEnabled:!0,removeOnDestroy:!1,onCreate:function(){},onUpdate:function(){},modifiers:{shift:{order:100,enabled:!0,fn:function(t){var e=t.placement,a=e.split('-')[0],i=e.split('-')[1];if(i){var o=t.offsets,r=o.reference,p=o.popper,n=-1!==['bottom','top'].indexOf(a),s=n?'left':'top',l=n?'width':'height',d={start:ae({},s,r[s]),end:ae({},s,r[s]+r[l]-p[l])};t.offsets.popper=ie({},p,d[i])}return t}},offset:{order:200,enabled:!0,fn:function(t,e){var a,i=e.offset,o=t.placement,r=t.offsets,p=r.popper,n=r.reference,s=o.split('-')[0];return a=J(+i)?[+i,0]:it(i,p,n,s),'left'===s?(p.top+=a[0],p.left-=a[1]):'right'===s?(p.top+=a[0],p.left+=a[1]):'top'===s?(p.left+=a[0],p.top-=a[1]):'bottom'===s&&(p.left+=a[0],p.top+=a[1]),t.popper=p,t},offset:0},preventOverflow:{order:300,enabled:!0,fn:function(t,e){var a=e.boundariesElement||u(t.instance.popper);t.instance.reference===a&&(a=u(a));var i=Y(t.instance.popper,t.instance.reference,e.padding,a);e.boundaries=i;var o=e.priority,r=t.offsets.popper,p={primary:function(t){var a=r[t];return r[t]<i[t]&&!e.escapeWithReference&&(a=Ht(r[t],i[t])),ae({},t,a)},secondary:function(t){var a='right'===t?'left':'top',o=r[a];return r[t]>i[t]&&!e.escapeWithReference&&(o=_t(r[a],i[t]-('right'===t?r.width:r.height))),ae({},a,o)}};return o.forEach(function(t){var e=-1===['left','top'].indexOf(t)?'secondary':'primary';r=ie({},r,p[e](t))}),t.offsets.popper=r,t},priority:['left','right','top','bottom'],padding:5,boundariesElement:'scrollParent'},keepTogether:{order:400,enabled:!0,fn:function(t){var e=t.offsets,a=e.popper,i=e.reference,o=t.placement.split('-')[0],r=Nt,p=-1!==['top','bottom'].indexOf(o),n=p?'right':'bottom',s=p?'left':'top',l=p?'width':'height';return a[n]<r(i[s])&&(t.offsets.popper[s]=r(i[s])-a[l]),a[s]>r(i[n])&&(t.offsets.popper[s]=r(i[n])),t}},arrow:{order:500,enabled:!0,fn:function(t,e){var a;if(!Q(t.instance.modifiers,'arrow','keepTogether'))return t;var i=e.element;if('string'==typeof i){if(i=t.instance.popper.querySelector(i),!i)return t;}else if(!t.instance.popper.contains(i))return console.warn('WARNING: `arrow.element` must be child of its popper element!'),t;var o=t.placement.split('-')[0],r=t.offsets,p=r.popper,n=r.reference,s=-1!==['left','right'].indexOf(o),l=s?'height':'width',d=s?'Top':'Left',c=d.toLowerCase(),m=s?'left':'top',h=s?'bottom':'right',b=I(i)[l];n[h]-b<p[c]&&(t.offsets.popper[c]-=p[c]-(n[h]-b)),n[c]+b>p[h]&&(t.offsets.popper[c]+=n[c]+b-p[h]),t.offsets.popper=L(t.offsets.popper);var u=n[c]+n[l]/2-b/2,y=f(t.instance.popper),g=parseFloat(y['margin'+d],10),w=parseFloat(y['border'+d+'Width'],10),x=u-t.offsets.popper[c]-g-w;return x=Ht(_t(p[l]-b,x),0),t.arrowElement=i,t.offsets.arrow=(a={},ae(a,c,It(x)),ae(a,m,''),a),t},element:'[x-arrow]'},flip:{order:600,enabled:!0,fn:function(t,e){if(B(t.instance.modifiers,'inner'))return t;if(t.flipped&&t.placement===t.originalPlacement)return t;var a=Y(t.instance.popper,t.instance.reference,e.padding,e.boundariesElement),i=t.placement.split('-')[0],o=_(i),r=t.placement.split('-')[1]||'',p=[];switch(e.behavior){case pe.FLIP:p=[i,o];break;case pe.CLOCKWISE:p=et(i);break;case pe.COUNTERCLOCKWISE:p=et(i,!0);break;default:p=e.behavior;}return p.forEach(function(n,s){if(i!==n||p.length===s+1)return t;i=t.placement.split('-')[0],o=_(i);var l=t.offsets.popper,d=t.offsets.reference,c=Nt,m='left'===i&&c(l.right)>c(d.left)||'right'===i&&c(l.left)<c(d.right)||'top'===i&&c(l.bottom)>c(d.top)||'bottom'===i&&c(l.top)<c(d.bottom),f=c(l.left)<c(a.left),h=c(l.right)>c(a.right),b=c(l.top)<c(a.top),u=c(l.bottom)>c(a.bottom),y='left'===i&&f||'right'===i&&h||'top'===i&&b||'bottom'===i&&u,g=-1!==['top','bottom'].indexOf(i),w=!!e.flipVariations&&(g&&'start'===r&&f||g&&'end'===r&&h||!g&&'start'===r&&b||!g&&'end'===r&&u);(m||y||w)&&(t.flipped=!0,(m||y)&&(i=p[s+1]),w&&(r=tt(r)),t.placement=i+(r?'-'+r:''),t.offsets.popper=ie({},t.offsets.popper,N(t.instance.popper,t.offsets.reference,t.placement)),t=M(t.instance.modifiers,t,'flip'))}),t},behavior:'flip',padding:5,boundariesElement:'viewport'},inner:{order:700,enabled:!1,fn:function(t){var e=t.placement,a=e.split('-')[0],i=t.offsets,o=i.popper,r=i.reference,p=-1!==['left','right'].indexOf(a),n=-1===['top','left'].indexOf(a);return o[p?'left':'top']=r[a]-(n?o[p?'width':'height']:0),t.placement=_(e),t.offsets.popper=L(o),t}},hide:{order:800,enabled:!0,fn:function(t){if(!Q(t.instance.modifiers,'hide','preventOverflow'))return t;var e=t.offsets.reference,a=H(t.instance.modifiers,function(t){return'preventOverflow'===t.name}).boundaries;if(e.bottom<a.top||e.left>a.right||e.top>a.bottom||e.right<a.left){if(!0===t.hide)return t;t.hide=!0,t.attributes['x-out-of-boundaries']=''}else{if(!1===t.hide)return t;t.hide=!1,t.attributes['x-out-of-boundaries']=!1}return t}},computeStyle:{order:850,enabled:!0,fn:function(t,e){var a=e.x,i=e.y,o=t.offsets.popper,r=H(t.instance.modifiers,function(t){return'applyStyle'===t.name}).gpuAcceleration;void 0!==r&&console.warn('WARNING: `gpuAcceleration` option moved to `computeStyle` modifier and will not be supported in future versions of Popper.js!');var p,n,s=void 0===r?e.gpuAcceleration:r,l=u(t.instance.popper),d=O(l),c={position:o.position},m={left:Nt(o.left),top:Nt(o.top),bottom:Nt(o.bottom),right:Nt(o.right)},f='bottom'===a?'top':'bottom',h='right'===i?'left':'right',b=z('transform');if(n='bottom'==f?-d.height+m.bottom:m.top,p='right'==h?-d.width+m.right:m.left,s&&b)c[b]='translate3d('+p+'px, '+n+'px, 0)',c[f]=0,c[h]=0,c.willChange='transform';else{var y='bottom'==f?-1:1,g='right'==h?-1:1;c[f]=n*y,c[h]=p*g,c.willChange=f+', '+h}var w={"x-placement":t.placement};return t.attributes=ie({},w,t.attributes),t.styles=ie({},c,t.styles),t.arrowStyles=ie({},t.offsets.arrow,t.arrowStyles),t},gpuAcceleration:!0,x:'bottom',y:'right'},applyStyle:{order:900,enabled:!0,fn:function(t){return Z(t.instance.popper,t.styles),$(t.instance.popper,t.attributes),t.arrowElement&&Object.keys(t.arrowStyles).length&&Z(t.arrowElement,t.arrowStyles),t},onLoad:function(t,e,a,i,o){var r=D(o,e,t),p=X(a.placement,r,e,t,a.modifiers.flip.boundariesElement,a.modifiers.flip.padding);return e.setAttribute('x-placement',p),Z(e,{position:'absolute'}),a},gpuAcceleration:void 0}}};var se={};if(Rt){var le=Element.prototype;se=le.matches||le.matchesSelector||le.webkitMatchesSelector||le.mozMatchesSelector||le.msMatchesSelector||function(t){for(var e=(this.document||this.ownerDocument).querySelectorAll(t),a=e.length;0<=--a&&e.item(a)!==this;);return-1<a}}var e=se,de={},ce=function(t){return function(e){return e===de&&t}},me=function(){function t(e){for(var a in qt(this,t),e)this[a]=e[a];this.state={destroyed:!1,visible:!1,enabled:!0},this._=ce({mutationObservers:[]})}return Ft(t,[{key:'enable',value:function(){this.state.enabled=!0}},{key:'disable',value:function(){this.state.enabled=!1}},{key:'show',value:function(t){var e=this;if(!this.state.destroyed&&this.state.enabled){var a=this.popper,i=this.reference,o=this.options,p=d(a),n=p.tooltip,s=p.backdrop,l=p.content;return o.dynamicTitle&&!i.getAttribute('data-original-title')?void 0:i.refObj||document.documentElement.contains(i)?void(o.onShow.call(a,this),t=bt(void 0===t?o.duration:t,0),yt([a,n,s],0),a.style.visibility='visible',this.state.visible=!0,Tt.call(this,function(){if(e.state.visible){if((!o.followCursor||Wt.usingTouch)&&e.popperInstance.scheduleUpdate(),o.followCursor&&!Wt.usingTouch){e.popperInstance.disableEventListeners();var p=Array.isArray(o.delay)?o.delay[0]:o.delay;e._(de).lastTriggerEvent&&e._(de).followCursorListener(p&&e._(de).lastMouseMoveEvent?e._(de).lastMouseMoveEvent:e._(de).lastTriggerEvent)}yt([n,s,s?l:null],t),s&&getComputedStyle(s)[r('transform')],o.interactive&&i.classList.add('tippy-active'),o.sticky&&At.call(e),ut([n,s],'visible'),St.call(e,t,function(){o.updateDuration||n.classList.add('tippy-notransition'),o.interactive&&gt(a),i.setAttribute('aria-describedby','tippy-'+e.id),o.onShown.call(a,e)})}})):void this.destroy()}}},{key:'hide',value:function(t){var e=this;if(!this.state.destroyed&&this.state.enabled){var a=this.popper,i=this.reference,o=this.options,r=d(a),p=r.tooltip,n=r.backdrop,s=r.content;o.onHide.call(a,this),t=bt(void 0===t?o.duration:t,1),o.updateDuration||p.classList.remove('tippy-notransition'),o.interactive&&i.classList.remove('tippy-active'),a.style.visibility='hidden',this.state.visible=!1,yt([p,n,n?s:null],t),ut([p,n],'hidden'),o.interactive&&-1<o.trigger.indexOf('click')&&gt(i),ft(function(){St.call(e,t,function(){e.state.visible||!o.appendTo.contains(a)||(!e._(de).isPreparingToShow&&(document.removeEventListener('mousemove',e._(de).followCursorListener),e._(de).lastMouseMoveEvent=null),i.removeAttribute('aria-describedby'),e.popperInstance.disableEventListeners(),o.appendTo.removeChild(a),o.onHidden.call(a,e))})})}}},{key:'destroy',value:function(){var t=this,e=0<arguments.length&&void 0!==arguments[0]?arguments[0]:!0;if(!this.state.destroyed){this.state.visible&&this.hide(0),this.listeners.forEach(function(e){t.reference.removeEventListener(e.event,e.handler)}),this.reference.setAttribute('title',this.reference.getAttribute('data-original-title')),delete this.reference._tippy;['data-original-title','data-tippy','data-tippy-delegate'].forEach(function(e){t.reference.removeAttribute(e)}),this.options.target&&e&&a(this.reference.querySelectorAll(this.options.target)).forEach(function(t){return t._tippy&&t._tippy.destroy()}),this.popperInstance&&this.popperInstance.destroy(),this._(de).mutationObservers.forEach(function(t){t.disconnect()}),this.state.destroyed=!0}}}]),t}(),fe=1,he=!1;return Dt.browser=Wt,Dt.defaults=zt,function(){var t=0<arguments.length&&void 0!==arguments[0]?arguments[0]:'';if(Rt&&Wt.supported){var e=document.head||document.querySelector('head'),a=document.createElement('style');a.type='text/css',e.insertBefore(a,e.firstChild),a.styleSheet?a.styleSheet.cssText=t:a.appendChild(document.createTextNode(t))}}('.tippy-touch{cursor:pointer!important}.tippy-notransition{-webkit-transition:none!important;transition:none!important}.tippy-popper{max-width:350px;-webkit-perspective:700px;perspective:700px;z-index:9999;outline:0;-webkit-transition-timing-function:cubic-bezier(.165,.84,.44,1);transition-timing-function:cubic-bezier(.165,.84,.44,1);pointer-events:none;line-height:1.4}.tippy-popper[data-html]{max-width:96%;max-width:calc(100% - 20px)}.tippy-popper[x-placement^=top] .tippy-backdrop{border-radius:40% 40% 0 0}.tippy-popper[x-placement^=top] .tippy-roundarrow{bottom:-8px;margin:0 6px;-webkit-transform-origin:50% 0;transform-origin:50% 0}.tippy-popper[x-placement^=top] .tippy-roundarrow svg{position:absolute;left:0;-webkit-transform:rotate(180deg);transform:rotate(180deg)}.tippy-popper[x-placement^=top] .tippy-arrow{border-top:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;bottom:-7px;margin:0 7px;-webkit-transform-origin:50% 0;transform-origin:50% 0}.tippy-popper[x-placement^=top] .tippy-backdrop{-webkit-transform-origin:0 100%;transform-origin:0 100%}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(5.5) translate(-50%,25%);transform:scale(5.5) translate(-50%,25%);opacity:1}.tippy-popper[x-placement^=top] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(1) translate(-50%,25%);transform:scale(1) translate(-50%,25%);opacity:0}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(-20px);transform:translateY(-20px)}.tippy-popper[x-placement^=top] [data-animation=perspective]{-webkit-transform-origin:bottom;transform-origin:bottom}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) rotateX(0);transform:translateY(-10px) rotateX(0)}.tippy-popper[x-placement^=top] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(90deg);transform:translateY(0) rotateX(90deg)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px);transform:translateY(-10px)}.tippy-popper[x-placement^=top] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(-10px) scale(1);transform:translateY(-10px) scale(1)}.tippy-popper[x-placement^=top] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=bottom] .tippy-backdrop{border-radius:0 0 30% 30%}.tippy-popper[x-placement^=bottom] .tippy-roundarrow{top:-8px;margin:0 6px;-webkit-transform-origin:50% 100%;transform-origin:50% 100%}.tippy-popper[x-placement^=bottom] .tippy-roundarrow svg{position:absolute;left:0;-webkit-transform:rotate(0);transform:rotate(0)}.tippy-popper[x-placement^=bottom] .tippy-arrow{border-bottom:7px solid #333;border-right:7px solid transparent;border-left:7px solid transparent;top:-7px;margin:0 7px;-webkit-transform-origin:50% 100%;transform-origin:50% 100%}.tippy-popper[x-placement^=bottom] .tippy-backdrop{-webkit-transform-origin:0 -100%;transform-origin:0 -100%}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(5.5) translate(-50%,-125%);transform:scale(5.5) translate(-50%,-125%);opacity:1}.tippy-popper[x-placement^=bottom] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(1) translate(-50%,-125%);transform:scale(1) translate(-50%,-125%);opacity:0}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateY(20px);transform:translateY(20px)}.tippy-popper[x-placement^=bottom] [data-animation=perspective]{-webkit-transform-origin:top;transform-origin:top}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) rotateX(0);transform:translateY(10px) rotateX(0)}.tippy-popper[x-placement^=bottom] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) rotateX(-90deg);transform:translateY(0) rotateX(-90deg)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateY(10px);transform:translateY(10px)}.tippy-popper[x-placement^=bottom] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateY(0);transform:translateY(0)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateY(10px) scale(1);transform:translateY(10px) scale(1)}.tippy-popper[x-placement^=bottom] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateY(0) scale(0);transform:translateY(0) scale(0)}.tippy-popper[x-placement^=left] .tippy-backdrop{border-radius:30% 0 0 30%}.tippy-popper[x-placement^=left] .tippy-roundarrow{right:-16px;margin:4px 0;-webkit-transform-origin:33.33333333% 50%;transform-origin:33.33333333% 50%}.tippy-popper[x-placement^=left] .tippy-roundarrow svg{position:absolute;left:0;-webkit-transform:rotate(90deg);transform:rotate(90deg)}.tippy-popper[x-placement^=left] .tippy-arrow{border-left:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;right:-7px;margin:4px 0;-webkit-transform-origin:0 50%;transform-origin:0 50%}.tippy-popper[x-placement^=left] .tippy-backdrop{-webkit-transform-origin:100% 0;transform-origin:100% 0}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(5.5) translate(33%,-50%);transform:scale(5.5) translate(33%,-50%);opacity:1}.tippy-popper[x-placement^=left] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(1.5) translate(33%,-50%);transform:scale(1.5) translate(33%,-50%);opacity:0}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(-20px);transform:translateX(-20px)}.tippy-popper[x-placement^=left] [data-animation=perspective]{-webkit-transform-origin:right;transform-origin:right}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) rotateY(0);transform:translateX(-10px) rotateY(0)}.tippy-popper[x-placement^=left] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(-90deg);transform:translateX(0) rotateY(-90deg)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px);transform:translateX(-10px)}.tippy-popper[x-placement^=left] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(-10px) scale(1);transform:translateX(-10px) scale(1)}.tippy-popper[x-placement^=left] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-popper[x-placement^=right] .tippy-backdrop{border-radius:0 30% 30% 0}.tippy-popper[x-placement^=right] .tippy-roundarrow{left:-16px;margin:4px 0;-webkit-transform-origin:66.66666666% 50%;transform-origin:66.66666666% 50%}.tippy-popper[x-placement^=right] .tippy-roundarrow svg{position:absolute;left:0;-webkit-transform:rotate(-90deg);transform:rotate(-90deg)}.tippy-popper[x-placement^=right] .tippy-arrow{border-right:7px solid #333;border-top:7px solid transparent;border-bottom:7px solid transparent;left:-7px;margin:4px 0;-webkit-transform-origin:100% 50%;transform-origin:100% 50%}.tippy-popper[x-placement^=right] .tippy-backdrop{-webkit-transform-origin:-100% 0;transform-origin:-100% 0}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=visible]{-webkit-transform:scale(5.5) translate(-133%,-50%);transform:scale(5.5) translate(-133%,-50%);opacity:1}.tippy-popper[x-placement^=right] .tippy-backdrop[data-state=hidden]{-webkit-transform:scale(1.5) translate(-133%,-50%);transform:scale(1.5) translate(-133%,-50%);opacity:0}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-toward][data-state=hidden]{opacity:0;-webkit-transform:translateX(20px);transform:translateX(20px)}.tippy-popper[x-placement^=right] [data-animation=perspective]{-webkit-transform-origin:left;transform-origin:left}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) rotateY(0);transform:translateX(10px) rotateY(0)}.tippy-popper[x-placement^=right] [data-animation=perspective][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) rotateY(90deg);transform:translateX(0) rotateY(90deg)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=fade][data-state=hidden]{opacity:0;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=visible]{opacity:1;-webkit-transform:translateX(10px);transform:translateX(10px)}.tippy-popper[x-placement^=right] [data-animation=shift-away][data-state=hidden]{opacity:0;-webkit-transform:translateX(0);transform:translateX(0)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=visible]{opacity:1;-webkit-transform:translateX(10px) scale(1);transform:translateX(10px) scale(1)}.tippy-popper[x-placement^=right] [data-animation=scale][data-state=hidden]{opacity:0;-webkit-transform:translateX(0) scale(0);transform:translateX(0) scale(0)}.tippy-tooltip{position:relative;color:#fff;border-radius:4px;font-size:.9rem;padding:.3rem .6rem;text-align:center;will-change:transform;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:#333}.tippy-tooltip[data-size=small]{padding:.2rem .4rem;font-size:.75rem}.tippy-tooltip[data-size=large]{padding:.4rem .8rem;font-size:1rem}.tippy-tooltip[data-animatefill]{overflow:hidden;background-color:transparent}.tippy-tooltip[data-animatefill] .tippy-content{-webkit-transition:-webkit-clip-path cubic-bezier(.46,.1,.52,.98);transition:-webkit-clip-path cubic-bezier(.46,.1,.52,.98);transition:clip-path cubic-bezier(.46,.1,.52,.98);transition:clip-path cubic-bezier(.46,.1,.52,.98),-webkit-clip-path cubic-bezier(.46,.1,.52,.98)}.tippy-tooltip[data-interactive]{pointer-events:auto}.tippy-tooltip[data-inertia][data-state=visible]{-webkit-transition-timing-function:cubic-bezier(.53,2,.36,.85);transition-timing-function:cubic-bezier(.53,2,.36,.85)}.tippy-tooltip[data-inertia][data-state=hidden]{-webkit-transition-timing-function:ease;transition-timing-function:ease}.tippy-arrow,.tippy-roundarrow{position:absolute;width:0;height:0}.tippy-roundarrow{width:24px;height:8px;fill:#333;pointer-events:none}.tippy-roundarrow path{pointer-events:auto}.tippy-backdrop{position:absolute;will-change:transform;background-color:#333;border-radius:50%;width:26%;left:50%;top:50%;z-index:-1;-webkit-transition:all cubic-bezier(.46,.1,.52,.98);transition:all cubic-bezier(.46,.1,.52,.98);-webkit-backface-visibility:hidden;backface-visibility:hidden}.tippy-backdrop:after{content:"";float:left;padding-top:100%}body:not(.tippy-touch) .tippy-tooltip[data-animatefill][data-state=visible] .tippy-content{-webkit-clip-path:ellipse(100% 100% at 50% 50%);clip-path:ellipse(100% 100% at 50% 50%)}body:not(.tippy-touch) .tippy-tooltip[data-animatefill][data-state=hidden] .tippy-content{-webkit-clip-path:ellipse(5% 50% at 50% 50%);clip-path:ellipse(5% 50% at 50% 50%)}body:not(.tippy-touch) .tippy-popper[x-placement=right] .tippy-tooltip[data-animatefill][data-state=visible] .tippy-content{-webkit-clip-path:ellipse(135% 100% at 0 50%);clip-path:ellipse(135% 100% at 0 50%)}body:not(.tippy-touch) .tippy-popper[x-placement=right] .tippy-tooltip[data-animatefill][data-state=hidden] .tippy-content{-webkit-clip-path:ellipse(25% 100% at 0 50%);clip-path:ellipse(25% 100% at 0 50%)}body:not(.tippy-touch) .tippy-popper[x-placement=left] .tippy-tooltip[data-animatefill][data-state=visible] .tippy-content{-webkit-clip-path:ellipse(135% 100% at 100% 50%);clip-path:ellipse(135% 100% at 100% 50%)}body:not(.tippy-touch) .tippy-popper[x-placement=left] .tippy-tooltip[data-animatefill][data-state=hidden] .tippy-content{-webkit-clip-path:ellipse(25% 100% at 100% 50%);clip-path:ellipse(25% 100% at 100% 50%)}@media (max-width:360px){.tippy-popper{max-width:96%;max-width:calc(100% - 20px)}}'),Dt});
+document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.tippy = factory());
+}(this, (function () { 'use strict';
+
+var isBrowser = typeof window !== 'undefined';
+
+var isIE = isBrowser && /MSIE |Trident\//.test(navigator.userAgent);
+
+var browser = {};
+
+if (isBrowser) {
+  browser.supported = 'requestAnimationFrame' in window;
+  browser.supportsTouch = 'ontouchstart' in window;
+  browser.usingTouch = false;
+  browser.dynamicInputDetection = true;
+  browser.iOS = /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream;
+  browser.onUserInputChange = function () {};
+}
+
+/**
+ * Selector constants used for grabbing elements
+ */
+var selectors = {
+  POPPER: '.tippy-popper',
+  TOOLTIP: '.tippy-tooltip',
+  CONTENT: '.tippy-content',
+  BACKDROP: '.tippy-backdrop',
+  ARROW: '.tippy-arrow',
+  ROUND_ARROW: '.tippy-roundarrow',
+  REFERENCE: '[data-tippy]'
+
+  /**
+   * The default options applied to each instance
+   */
+};var defaults = {
+  placement: 'top',
+  livePlacement: true,
+  trigger: 'mouseenter focus',
+  animation: 'shift-away',
+  html: false,
+  animateFill: true,
+  arrow: false,
+  delay: 0,
+  duration: [350, 300],
+  interactive: false,
+  interactiveBorder: 2,
+  theme: 'dark',
+  size: 'regular',
+  distance: 10,
+  offset: 0,
+  hideOnClick: true,
+  multiple: false,
+  followCursor: false,
+  inertia: false,
+  updateDuration: 350,
+  sticky: false,
+  appendTo: function appendTo() {
+    return document.body;
+  },
+  zIndex: 9999,
+  touchHold: false,
+  performance: false,
+  dynamicTitle: false,
+  flip: true,
+  flipBehavior: 'flip',
+  arrowType: 'sharp',
+  arrowTransform: '',
+  maxWidth: '',
+  target: null,
+  allowTitleHTML: true,
+  popperOptions: {},
+  createPopperInstanceOnInit: false,
+  onShow: function onShow() {},
+  onShown: function onShown() {},
+  onHide: function onHide() {},
+  onHidden: function onHidden() {}
+};
+
+/**
+ * The keys of the defaults object for reducing down into a new object
+ * Used in `getIndividualOptions()`
+ */
+var defaultsKeys = browser.supported && Object.keys(defaults);
+
+/**
+ * Determines if a value is an object literal
+ * @param {*} value
+ * @return {Boolean}
+ */
+function isObjectLiteral(value) {
+  return Object.prototype.toString.call(value) === '[object Object]';
+}
+
+/**
+ * Ponyfill for Array.from
+ * @param {*} value
+ * @return {Array}
+ */
+function toArray(value) {
+  return [].slice.call(value);
+}
+
+function getArrayOfElements(selector) {
+  if (selector instanceof Element || isObjectLiteral(selector)) {
+    return [selector];
+  }
+
+  if (selector instanceof NodeList) {
+    return toArray(selector);
+  }
+
+  if (Array.isArray(selector)) {
+    return selector;
+  }
+
+  try {
+    return toArray(document.querySelectorAll(selector));
+  } catch (_) {
+    return [];
+  }
+}
+
+/**
+ * Returns the supported prefixed property - only `webkit` is needed, `moz`, `ms` and `o` are obsolete
+ * @param {String} property
+ * @return {String} - browser supported prefixed property
+ */
+function prefix(property) {
+  var prefixes = [false, 'webkit'];
+  var upperProp = property.charAt(0).toUpperCase() + property.slice(1);
+
+  for (var i = 0; i < prefixes.length; i++) {
+    var _prefix = prefixes[i];
+    var prefixedProp = _prefix ? '' + _prefix + upperProp : property;
+    if (typeof document.body.style[prefixedProp] !== 'undefined') {
+      return prefixedProp;
+    }
+  }
+
+  return null;
+}
+
+function createPopperElement(id, title, options) {
+  var arrow = options.arrow,
+      arrowType = options.arrowType,
+      arrowTransform = options.arrowTransform,
+      animateFill = options.animateFill,
+      inertia = options.inertia,
+      animation = options.animation,
+      size = options.size,
+      theme = options.theme,
+      html = options.html,
+      zIndex = options.zIndex,
+      interactive = options.interactive,
+      maxWidth = options.maxWidth,
+      allowTitleHTML = options.allowTitleHTML;
+
+
+  var popper = document.createElement('div');
+  popper.setAttribute('class', 'tippy-popper');
+  popper.setAttribute('role', 'tooltip');
+  popper.setAttribute('id', 'tippy-' + id);
+  popper.style.zIndex = zIndex;
+  popper.style.maxWidth = maxWidth;
+
+  var tooltip = document.createElement('div');
+  tooltip.setAttribute('class', 'tippy-tooltip');
+  tooltip.setAttribute('data-size', size);
+  tooltip.setAttribute('data-animation', animation);
+  tooltip.setAttribute('data-state', 'hidden');
+
+  theme.split(' ').forEach(function (t) {
+    tooltip.classList.add(t + '-theme');
+  });
+
+  if (arrow) {
+    var _arrow = document.createElement('div');
+    _arrow.style[prefix('transform')] = arrowTransform;
+
+    if (arrowType === 'round') {
+      _arrow.classList.add('tippy-roundarrow');
+      _arrow.innerHTML = '<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg"><path d="M1 8s4.577-.019 7.253-4.218c2.357-3.698 5.175-3.721 7.508 0C18.404 7.997 23 8 23 8H1z"/></svg>';
+    } else {
+      _arrow.classList.add('tippy-arrow');
+    }
+
+    tooltip.appendChild(_arrow);
+  }
+
+  if (animateFill) {
+    // Create animateFill circle element for animation
+    tooltip.setAttribute('data-animatefill', '');
+    var circle = document.createElement('div');
+    circle.setAttribute('data-state', 'hidden');
+    circle.classList.add('tippy-backdrop');
+    tooltip.appendChild(circle);
+  }
+
+  if (inertia) {
+    // Change transition timing function cubic bezier
+    tooltip.setAttribute('data-inertia', '');
+  }
+
+  if (interactive) {
+    tooltip.setAttribute('data-interactive', '');
+  }
+
+  var content = document.createElement('div');
+  content.setAttribute('class', 'tippy-content');
+
+  if (html) {
+    var templateId = void 0;
+
+    if (html instanceof Element) {
+      content.appendChild(html);
+      templateId = '#' + html.id || 'tippy-html-template';
+    } else {
+      content.innerHTML = document.querySelector(html).innerHTML;
+      templateId = html;
+    }
+
+    popper.setAttribute('data-html', '');
+    interactive && popper.setAttribute('tabindex', '-1');
+    tooltip.setAttribute('data-template-id', templateId);
+  } else {
+    content[allowTitleHTML ? 'innerHTML' : 'textContent'] = title;
+  }
+
+  tooltip.appendChild(content);
+  popper.appendChild(tooltip);
+
+  return popper;
+}
+
+function createTrigger(eventType, reference, handlers, options) {
+  var handleTrigger = handlers.handleTrigger,
+      handleMouseLeave = handlers.handleMouseLeave,
+      handleBlur = handlers.handleBlur,
+      handleDelegateShow = handlers.handleDelegateShow,
+      handleDelegateHide = handlers.handleDelegateHide;
+
+  var listeners = [];
+
+  if (eventType === 'manual') return listeners;
+
+  var on = function on(eventType, handler) {
+    reference.addEventListener(eventType, handler);
+    listeners.push({ event: eventType, handler: handler });
+  };
+
+  if (!options.target) {
+    on(eventType, handleTrigger);
+
+    if (browser.supportsTouch && options.touchHold) {
+      on('touchstart', handleTrigger);
+      on('touchend', handleMouseLeave);
+    }
+    if (eventType === 'mouseenter') {
+      on('mouseleave', handleMouseLeave);
+    }
+    if (eventType === 'focus') {
+      on(isIE ? 'focusout' : 'blur', handleBlur);
+    }
+  } else {
+    if (browser.supportsTouch && options.touchHold) {
+      on('touchstart', handleDelegateShow);
+      on('touchend', handleDelegateHide);
+    }
+    if (eventType === 'mouseenter') {
+      on('mouseover', handleDelegateShow);
+      on('mouseout', handleDelegateHide);
+    }
+    if (eventType === 'focus') {
+      on('focusin', handleDelegateShow);
+      on('focusout', handleDelegateHide);
+    }
+    if (eventType === 'click') {
+      on('click', handleDelegateShow);
+    }
+  }
+
+  return listeners;
+}
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+function getIndividualOptions(reference, instanceOptions) {
+  var options = defaultsKeys.reduce(function (acc, key) {
+    var val = reference.getAttribute('data-tippy-' + key.toLowerCase()) || instanceOptions[key];
+
+    // Convert strings to booleans
+    if (val === 'false') val = false;
+    if (val === 'true') val = true;
+
+    // Convert number strings to true numbers
+    if (isFinite(val) && !isNaN(parseFloat(val))) {
+      val = parseFloat(val);
+    }
+
+    // Convert array strings to actual arrays
+    if (key !== 'target' && typeof val === 'string' && val.trim().charAt(0) === '[') {
+      val = JSON.parse(val);
+    }
+
+    acc[key] = val;
+
+    return acc;
+  }, {});
+
+  return _extends({}, instanceOptions, options);
+}
+
+/**
+ * Evaluates/modifies the options object for appropriate behavior
+ * @param {Element|Object} reference
+ * @param {Object} options
+ * @return {Object} modified/evaluated options
+ */
+function evaluateOptions(reference, options) {
+  // animateFill is disabled if an arrow is true
+  if (options.arrow) {
+    options.animateFill = false;
+  }
+
+  if (options.appendTo && typeof options.appendTo === 'function') {
+    options.appendTo = options.appendTo();
+  }
+
+  if (typeof options.html === 'function') {
+    options.html = options.html(reference);
+  }
+
+  return options;
+}
+
+function getInnerElements(popper) {
+  return {
+    tooltip: popper.querySelector(selectors.TOOLTIP),
+    backdrop: popper.querySelector(selectors.BACKDROP),
+    content: popper.querySelector(selectors.CONTENT)
+  };
+}
+
+/**
+ * Removes the title from an element, setting `data-original-title`
+ * appropriately
+ * @param {Element} el
+ */
+function removeTitle(el) {
+  var title = el.getAttribute('title');
+  // Only set `data-original-title` attr if there is a title
+  if (title) {
+    el.setAttribute('data-original-title', title);
+  }
+  el.removeAttribute('title');
+}
+
+/**!
+ * @fileOverview Kickass library to create and place poppers near their reference elements.
+ * @version 1.13.0
+ * @license
+ * Copyright (c) 2016 Federico Zivolo and contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+var isBrowser$1 = typeof window !== 'undefined' && typeof document !== 'undefined';
+var longerTimeoutBrowsers = ['Edge', 'Trident', 'Firefox'];
+var timeoutDuration = 0;
+for (var i = 0; i < longerTimeoutBrowsers.length; i += 1) {
+  if (isBrowser$1 && navigator.userAgent.indexOf(longerTimeoutBrowsers[i]) >= 0) {
+    timeoutDuration = 1;
+    break;
+  }
+}
+
+function microtaskDebounce(fn) {
+  var called = false;
+  return function () {
+    if (called) {
+      return;
+    }
+    called = true;
+    window.Promise.resolve().then(function () {
+      called = false;
+      fn();
+    });
+  };
+}
+
+function taskDebounce(fn) {
+  var scheduled = false;
+  return function () {
+    if (!scheduled) {
+      scheduled = true;
+      setTimeout(function () {
+        scheduled = false;
+        fn();
+      }, timeoutDuration);
+    }
+  };
+}
+
+var supportsMicroTasks = isBrowser$1 && window.Promise;
+
+/**
+* Create a debounced version of a method, that's asynchronously deferred
+* but called in the minimum time possible.
+*
+* @method
+* @memberof Popper.Utils
+* @argument {Function} fn
+* @returns {Function}
+*/
+var debounce = supportsMicroTasks ? microtaskDebounce : taskDebounce;
+
+/**
+ * Check if the given variable is a function
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Any} functionToCheck - variable to check
+ * @returns {Boolean} answer to: is a function?
+ */
+function isFunction(functionToCheck) {
+  var getType = {};
+  return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+}
+
+/**
+ * Get CSS computed property of the given element
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Eement} element
+ * @argument {String} property
+ */
+function getStyleComputedProperty(element, property) {
+  if (element.nodeType !== 1) {
+    return [];
+  }
+  // NOTE: 1 DOM access here
+  var css = getComputedStyle(element, null);
+  return property ? css[property] : css;
+}
+
+/**
+ * Returns the parentNode or the host of the element
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Element} element
+ * @returns {Element} parent
+ */
+function getParentNode(element) {
+  if (element.nodeName === 'HTML') {
+    return element;
+  }
+  return element.parentNode || element.host;
+}
+
+/**
+ * Returns the scrolling parent of the given element
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Element} element
+ * @returns {Element} scroll parent
+ */
+function getScrollParent(element) {
+  // Return body, `getScroll` will take care to get the correct `scrollTop` from it
+  if (!element) {
+    return document.body;
+  }
+
+  switch (element.nodeName) {
+    case 'HTML':
+    case 'BODY':
+      return element.ownerDocument.body;
+    case '#document':
+      return element.body;
+  }
+
+  // Firefox want us to check `-x` and `-y` variations as well
+
+  var _getStyleComputedProp = getStyleComputedProperty(element),
+      overflow = _getStyleComputedProp.overflow,
+      overflowX = _getStyleComputedProp.overflowX,
+      overflowY = _getStyleComputedProp.overflowY;
+
+  if (/(auto|scroll)/.test(overflow + overflowY + overflowX)) {
+    return element;
+  }
+
+  return getScrollParent(getParentNode(element));
+}
+
+/**
+ * Returns the offset parent of the given element
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Element} element
+ * @returns {Element} offset parent
+ */
+function getOffsetParent(element) {
+  // NOTE: 1 DOM access here
+  var offsetParent = element && element.offsetParent;
+  var nodeName = offsetParent && offsetParent.nodeName;
+
+  if (!nodeName || nodeName === 'BODY' || nodeName === 'HTML') {
+    if (element) {
+      return element.ownerDocument.documentElement;
+    }
+
+    return document.documentElement;
+  }
+
+  // .offsetParent will return the closest TD or TABLE in case
+  // no offsetParent is present, I hate this job...
+  if (['TD', 'TABLE'].indexOf(offsetParent.nodeName) !== -1 && getStyleComputedProperty(offsetParent, 'position') === 'static') {
+    return getOffsetParent(offsetParent);
+  }
+
+  return offsetParent;
+}
+
+function isOffsetContainer(element) {
+  var nodeName = element.nodeName;
+
+  if (nodeName === 'BODY') {
+    return false;
+  }
+  return nodeName === 'HTML' || getOffsetParent(element.firstElementChild) === element;
+}
+
+/**
+ * Finds the root node (document, shadowDOM root) of the given element
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Element} node
+ * @returns {Element} root node
+ */
+function getRoot(node) {
+  if (node.parentNode !== null) {
+    return getRoot(node.parentNode);
+  }
+
+  return node;
+}
+
+/**
+ * Finds the offset parent common to the two provided nodes
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Element} element1
+ * @argument {Element} element2
+ * @returns {Element} common offset parent
+ */
+function findCommonOffsetParent(element1, element2) {
+  // This check is needed to avoid errors in case one of the elements isn't defined for any reason
+  if (!element1 || !element1.nodeType || !element2 || !element2.nodeType) {
+    return document.documentElement;
+  }
+
+  // Here we make sure to give as "start" the element that comes first in the DOM
+  var order = element1.compareDocumentPosition(element2) & Node.DOCUMENT_POSITION_FOLLOWING;
+  var start = order ? element1 : element2;
+  var end = order ? element2 : element1;
+
+  // Get common ancestor container
+  var range = document.createRange();
+  range.setStart(start, 0);
+  range.setEnd(end, 0);
+  var commonAncestorContainer = range.commonAncestorContainer;
+
+  // Both nodes are inside #document
+
+  if (element1 !== commonAncestorContainer && element2 !== commonAncestorContainer || start.contains(end)) {
+    if (isOffsetContainer(commonAncestorContainer)) {
+      return commonAncestorContainer;
+    }
+
+    return getOffsetParent(commonAncestorContainer);
+  }
+
+  // one of the nodes is inside shadowDOM, find which one
+  var element1root = getRoot(element1);
+  if (element1root.host) {
+    return findCommonOffsetParent(element1root.host, element2);
+  } else {
+    return findCommonOffsetParent(element1, getRoot(element2).host);
+  }
+}
+
+/**
+ * Gets the scroll value of the given element in the given side (top and left)
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Element} element
+ * @argument {String} side `top` or `left`
+ * @returns {number} amount of scrolled pixels
+ */
+function getScroll(element) {
+  var side = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'top';
+
+  var upperSide = side === 'top' ? 'scrollTop' : 'scrollLeft';
+  var nodeName = element.nodeName;
+
+  if (nodeName === 'BODY' || nodeName === 'HTML') {
+    var html = element.ownerDocument.documentElement;
+    var scrollingElement = element.ownerDocument.scrollingElement || html;
+    return scrollingElement[upperSide];
+  }
+
+  return element[upperSide];
+}
+
+/*
+ * Sum or subtract the element scroll values (left and top) from a given rect object
+ * @method
+ * @memberof Popper.Utils
+ * @param {Object} rect - Rect object you want to change
+ * @param {HTMLElement} element - The element from the function reads the scroll values
+ * @param {Boolean} subtract - set to true if you want to subtract the scroll values
+ * @return {Object} rect - The modifier rect object
+ */
+function includeScroll(rect, element) {
+  var subtract = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+  var scrollTop = getScroll(element, 'top');
+  var scrollLeft = getScroll(element, 'left');
+  var modifier = subtract ? -1 : 1;
+  rect.top += scrollTop * modifier;
+  rect.bottom += scrollTop * modifier;
+  rect.left += scrollLeft * modifier;
+  rect.right += scrollLeft * modifier;
+  return rect;
+}
+
+/*
+ * Helper to detect borders of a given element
+ * @method
+ * @memberof Popper.Utils
+ * @param {CSSStyleDeclaration} styles
+ * Result of `getStyleComputedProperty` on the given element
+ * @param {String} axis - `x` or `y`
+ * @return {number} borders - The borders size of the given axis
+ */
+
+function getBordersSize(styles, axis) {
+  var sideA = axis === 'x' ? 'Left' : 'Top';
+  var sideB = sideA === 'Left' ? 'Right' : 'Bottom';
+
+  return parseFloat(styles['border' + sideA + 'Width'], 10) + parseFloat(styles['border' + sideB + 'Width'], 10);
+}
+
+/**
+ * Tells if you are running Internet Explorer 10
+ * @method
+ * @memberof Popper.Utils
+ * @returns {Boolean} isIE10
+ */
+var isIE10 = undefined;
+
+var isIE10$1 = function isIE10$1() {
+  if (isIE10 === undefined) {
+    isIE10 = navigator.appVersion.indexOf('MSIE 10') !== -1;
+  }
+  return isIE10;
+};
+
+function getSize(axis, body, html, computedStyle) {
+  return Math.max(body['offset' + axis], body['scroll' + axis], html['client' + axis], html['offset' + axis], html['scroll' + axis], isIE10$1() ? html['offset' + axis] + computedStyle['margin' + (axis === 'Height' ? 'Top' : 'Left')] + computedStyle['margin' + (axis === 'Height' ? 'Bottom' : 'Right')] : 0);
+}
+
+function getWindowSizes() {
+  var body = document.body;
+  var html = document.documentElement;
+  var computedStyle = isIE10$1() && getComputedStyle(html);
+
+  return {
+    height: getSize('Height', body, html, computedStyle),
+    width: getSize('Width', body, html, computedStyle)
+  };
+}
+
+var classCallCheck$1 = function classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass$1 = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+var defineProperty$1 = function defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
+
+var _extends$1 = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+/**
+ * Given element offsets, generate an output similar to getBoundingClientRect
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Object} offsets
+ * @returns {Object} ClientRect like output
+ */
+function getClientRect(offsets) {
+  return _extends$1({}, offsets, {
+    right: offsets.left + offsets.width,
+    bottom: offsets.top + offsets.height
+  });
+}
+
+/**
+ * Get bounding client rect of given element
+ * @method
+ * @memberof Popper.Utils
+ * @param {HTMLElement} element
+ * @return {Object} client rect
+ */
+function getBoundingClientRect(element) {
+  var rect = {};
+
+  // IE10 10 FIX: Please, don't ask, the element isn't
+  // considered in DOM in some circumstances...
+  // This isn't reproducible in IE10 compatibility mode of IE11
+  if (isIE10$1()) {
+    try {
+      rect = element.getBoundingClientRect();
+      var scrollTop = getScroll(element, 'top');
+      var scrollLeft = getScroll(element, 'left');
+      rect.top += scrollTop;
+      rect.left += scrollLeft;
+      rect.bottom += scrollTop;
+      rect.right += scrollLeft;
+    } catch (err) {}
+  } else {
+    rect = element.getBoundingClientRect();
+  }
+
+  var result = {
+    left: rect.left,
+    top: rect.top,
+    width: rect.right - rect.left,
+    height: rect.bottom - rect.top
+  };
+
+  // subtract scrollbar size from sizes
+  var sizes = element.nodeName === 'HTML' ? getWindowSizes() : {};
+  var width = sizes.width || element.clientWidth || result.right - result.left;
+  var height = sizes.height || element.clientHeight || result.bottom - result.top;
+
+  var horizScrollbar = element.offsetWidth - width;
+  var vertScrollbar = element.offsetHeight - height;
+
+  // if an hypothetical scrollbar is detected, we must be sure it's not a `border`
+  // we make this check conditional for performance reasons
+  if (horizScrollbar || vertScrollbar) {
+    var styles = getStyleComputedProperty(element);
+    horizScrollbar -= getBordersSize(styles, 'x');
+    vertScrollbar -= getBordersSize(styles, 'y');
+
+    result.width -= horizScrollbar;
+    result.height -= vertScrollbar;
+  }
+
+  return getClientRect(result);
+}
+
+function getOffsetRectRelativeToArbitraryNode(children, parent) {
+  var isIE10 = isIE10$1();
+  var isHTML = parent.nodeName === 'HTML';
+  var childrenRect = getBoundingClientRect(children);
+  var parentRect = getBoundingClientRect(parent);
+  var scrollParent = getScrollParent(children);
+
+  var styles = getStyleComputedProperty(parent);
+  var borderTopWidth = parseFloat(styles.borderTopWidth, 10);
+  var borderLeftWidth = parseFloat(styles.borderLeftWidth, 10);
+
+  var offsets = getClientRect({
+    top: childrenRect.top - parentRect.top - borderTopWidth,
+    left: childrenRect.left - parentRect.left - borderLeftWidth,
+    width: childrenRect.width,
+    height: childrenRect.height
+  });
+  offsets.marginTop = 0;
+  offsets.marginLeft = 0;
+
+  // Subtract margins of documentElement in case it's being used as parent
+  // we do this only on HTML because it's the only element that behaves
+  // differently when margins are applied to it. The margins are included in
+  // the box of the documentElement, in the other cases not.
+  if (!isIE10 && isHTML) {
+    var marginTop = parseFloat(styles.marginTop, 10);
+    var marginLeft = parseFloat(styles.marginLeft, 10);
+
+    offsets.top -= borderTopWidth - marginTop;
+    offsets.bottom -= borderTopWidth - marginTop;
+    offsets.left -= borderLeftWidth - marginLeft;
+    offsets.right -= borderLeftWidth - marginLeft;
+
+    // Attach marginTop and marginLeft because in some circumstances we may need them
+    offsets.marginTop = marginTop;
+    offsets.marginLeft = marginLeft;
+  }
+
+  if (isIE10 ? parent.contains(scrollParent) : parent === scrollParent && scrollParent.nodeName !== 'BODY') {
+    offsets = includeScroll(offsets, parent);
+  }
+
+  return offsets;
+}
+
+function getViewportOffsetRectRelativeToArtbitraryNode(element) {
+  var html = element.ownerDocument.documentElement;
+  var relativeOffset = getOffsetRectRelativeToArbitraryNode(element, html);
+  var width = Math.max(html.clientWidth, window.innerWidth || 0);
+  var height = Math.max(html.clientHeight, window.innerHeight || 0);
+
+  var scrollTop = getScroll(html);
+  var scrollLeft = getScroll(html, 'left');
+
+  var offset = {
+    top: scrollTop - relativeOffset.top + relativeOffset.marginTop,
+    left: scrollLeft - relativeOffset.left + relativeOffset.marginLeft,
+    width: width,
+    height: height
+  };
+
+  return getClientRect(offset);
+}
+
+/**
+ * Check if the given element is fixed or is inside a fixed parent
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Element} element
+ * @argument {Element} customContainer
+ * @returns {Boolean} answer to "isFixed?"
+ */
+function isFixed(element) {
+  var nodeName = element.nodeName;
+  if (nodeName === 'BODY' || nodeName === 'HTML') {
+    return false;
+  }
+  if (getStyleComputedProperty(element, 'position') === 'fixed') {
+    return true;
+  }
+  return isFixed(getParentNode(element));
+}
+
+/**
+ * Computed the boundaries limits and return them
+ * @method
+ * @memberof Popper.Utils
+ * @param {HTMLElement} popper
+ * @param {HTMLElement} reference
+ * @param {number} padding
+ * @param {HTMLElement} boundariesElement - Element used to define the boundaries
+ * @returns {Object} Coordinates of the boundaries
+ */
+function getBoundaries(popper, reference, padding, boundariesElement) {
+  // NOTE: 1 DOM access here
+  var boundaries = { top: 0, left: 0 };
+  var offsetParent = findCommonOffsetParent(popper, reference);
+
+  // Handle viewport case
+  if (boundariesElement === 'viewport') {
+    boundaries = getViewportOffsetRectRelativeToArtbitraryNode(offsetParent);
+  } else {
+    // Handle other cases based on DOM element used as boundaries
+    var boundariesNode = void 0;
+    if (boundariesElement === 'scrollParent') {
+      boundariesNode = getScrollParent(getParentNode(reference));
+      if (boundariesNode.nodeName === 'BODY') {
+        boundariesNode = popper.ownerDocument.documentElement;
+      }
+    } else if (boundariesElement === 'window') {
+      boundariesNode = popper.ownerDocument.documentElement;
+    } else {
+      boundariesNode = boundariesElement;
+    }
+
+    var offsets = getOffsetRectRelativeToArbitraryNode(boundariesNode, offsetParent);
+
+    // In case of HTML, we need a different computation
+    if (boundariesNode.nodeName === 'HTML' && !isFixed(offsetParent)) {
+      var _getWindowSizes = getWindowSizes(),
+          height = _getWindowSizes.height,
+          width = _getWindowSizes.width;
+
+      boundaries.top += offsets.top - offsets.marginTop;
+      boundaries.bottom = height + offsets.top;
+      boundaries.left += offsets.left - offsets.marginLeft;
+      boundaries.right = width + offsets.left;
+    } else {
+      // for all the other DOM elements, this one is good
+      boundaries = offsets;
+    }
+  }
+
+  // Add paddings
+  boundaries.left += padding;
+  boundaries.top += padding;
+  boundaries.right -= padding;
+  boundaries.bottom -= padding;
+
+  return boundaries;
+}
+
+function getArea(_ref) {
+  var width = _ref.width,
+      height = _ref.height;
+
+  return width * height;
+}
+
+/**
+ * Utility used to transform the `auto` placement to the placement with more
+ * available space.
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Object} data - The data object generated by update method
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {Object} The data object, properly modified
+ */
+function computeAutoPlacement(placement, refRect, popper, reference, boundariesElement) {
+  var padding = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
+
+  if (placement.indexOf('auto') === -1) {
+    return placement;
+  }
+
+  var boundaries = getBoundaries(popper, reference, padding, boundariesElement);
+
+  var rects = {
+    top: {
+      width: boundaries.width,
+      height: refRect.top - boundaries.top
+    },
+    right: {
+      width: boundaries.right - refRect.right,
+      height: boundaries.height
+    },
+    bottom: {
+      width: boundaries.width,
+      height: boundaries.bottom - refRect.bottom
+    },
+    left: {
+      width: refRect.left - boundaries.left,
+      height: boundaries.height
+    }
+  };
+
+  var sortedAreas = Object.keys(rects).map(function (key) {
+    return _extends$1({
+      key: key
+    }, rects[key], {
+      area: getArea(rects[key])
+    });
+  }).sort(function (a, b) {
+    return b.area - a.area;
+  });
+
+  var filteredAreas = sortedAreas.filter(function (_ref2) {
+    var width = _ref2.width,
+        height = _ref2.height;
+    return width >= popper.clientWidth && height >= popper.clientHeight;
+  });
+
+  var computedPlacement = filteredAreas.length > 0 ? filteredAreas[0].key : sortedAreas[0].key;
+
+  var variation = placement.split('-')[1];
+
+  return computedPlacement + (variation ? '-' + variation : '');
+}
+
+/**
+ * Get offsets to the reference element
+ * @method
+ * @memberof Popper.Utils
+ * @param {Object} state
+ * @param {Element} popper - the popper element
+ * @param {Element} reference - the reference element (the popper will be relative to this)
+ * @returns {Object} An object containing the offsets which will be applied to the popper
+ */
+function getReferenceOffsets(state, popper, reference) {
+  var commonOffsetParent = findCommonOffsetParent(popper, reference);
+  return getOffsetRectRelativeToArbitraryNode(reference, commonOffsetParent);
+}
+
+/**
+ * Get the outer sizes of the given element (offset size + margins)
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Element} element
+ * @returns {Object} object containing width and height properties
+ */
+function getOuterSizes(element) {
+  var styles = getComputedStyle(element);
+  var x = parseFloat(styles.marginTop) + parseFloat(styles.marginBottom);
+  var y = parseFloat(styles.marginLeft) + parseFloat(styles.marginRight);
+  var result = {
+    width: element.offsetWidth + y,
+    height: element.offsetHeight + x
+  };
+  return result;
+}
+
+/**
+ * Get the opposite placement of the given one
+ * @method
+ * @memberof Popper.Utils
+ * @argument {String} placement
+ * @returns {String} flipped placement
+ */
+function getOppositePlacement(placement) {
+  var hash = { left: 'right', right: 'left', bottom: 'top', top: 'bottom' };
+  return placement.replace(/left|right|bottom|top/g, function (matched) {
+    return hash[matched];
+  });
+}
+
+/**
+ * Get offsets to the popper
+ * @method
+ * @memberof Popper.Utils
+ * @param {Object} position - CSS position the Popper will get applied
+ * @param {HTMLElement} popper - the popper element
+ * @param {Object} referenceOffsets - the reference offsets (the popper will be relative to this)
+ * @param {String} placement - one of the valid placement options
+ * @returns {Object} popperOffsets - An object containing the offsets which will be applied to the popper
+ */
+function getPopperOffsets(popper, referenceOffsets, placement) {
+  placement = placement.split('-')[0];
+
+  // Get popper node sizes
+  var popperRect = getOuterSizes(popper);
+
+  // Add position, width and height to our offsets object
+  var popperOffsets = {
+    width: popperRect.width,
+    height: popperRect.height
+  };
+
+  // depending by the popper placement we have to compute its offsets slightly differently
+  var isHoriz = ['right', 'left'].indexOf(placement) !== -1;
+  var mainSide = isHoriz ? 'top' : 'left';
+  var secondarySide = isHoriz ? 'left' : 'top';
+  var measurement = isHoriz ? 'height' : 'width';
+  var secondaryMeasurement = !isHoriz ? 'height' : 'width';
+
+  popperOffsets[mainSide] = referenceOffsets[mainSide] + referenceOffsets[measurement] / 2 - popperRect[measurement] / 2;
+  if (placement === secondarySide) {
+    popperOffsets[secondarySide] = referenceOffsets[secondarySide] - popperRect[secondaryMeasurement];
+  } else {
+    popperOffsets[secondarySide] = referenceOffsets[getOppositePlacement(secondarySide)];
+  }
+
+  return popperOffsets;
+}
+
+/**
+ * Mimics the `find` method of Array
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Array} arr
+ * @argument prop
+ * @argument value
+ * @returns index or -1
+ */
+function find(arr, check) {
+  // use native find if supported
+  if (Array.prototype.find) {
+    return arr.find(check);
+  }
+
+  // use `filter` to obtain the same behavior of `find`
+  return arr.filter(check)[0];
+}
+
+/**
+ * Return the index of the matching object
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Array} arr
+ * @argument prop
+ * @argument value
+ * @returns index or -1
+ */
+function findIndex(arr, prop, value) {
+  // use native findIndex if supported
+  if (Array.prototype.findIndex) {
+    return arr.findIndex(function (cur) {
+      return cur[prop] === value;
+    });
+  }
+
+  // use `find` + `indexOf` if `findIndex` isn't supported
+  var match = find(arr, function (obj) {
+    return obj[prop] === value;
+  });
+  return arr.indexOf(match);
+}
+
+/**
+ * Loop trough the list of modifiers and run them in order,
+ * each of them will then edit the data object.
+ * @method
+ * @memberof Popper.Utils
+ * @param {dataObject} data
+ * @param {Array} modifiers
+ * @param {String} ends - Optional modifier name used as stopper
+ * @returns {dataObject}
+ */
+function runModifiers(modifiers, data, ends) {
+  var modifiersToRun = ends === undefined ? modifiers : modifiers.slice(0, findIndex(modifiers, 'name', ends));
+
+  modifiersToRun.forEach(function (modifier) {
+    if (modifier['function']) {
+      // eslint-disable-line dot-notation
+      console.warn('`modifier.function` is deprecated, use `modifier.fn`!');
+    }
+    var fn = modifier['function'] || modifier.fn; // eslint-disable-line dot-notation
+    if (modifier.enabled && isFunction(fn)) {
+      // Add properties to offsets to make them a complete clientRect object
+      // we do this before each modifier to make sure the previous one doesn't
+      // mess with these values
+      data.offsets.popper = getClientRect(data.offsets.popper);
+      data.offsets.reference = getClientRect(data.offsets.reference);
+
+      data = fn(data, modifier);
+    }
+  });
+
+  return data;
+}
+
+/**
+ * Updates the position of the popper, computing the new offsets and applying
+ * the new style.<br />
+ * Prefer `scheduleUpdate` over `update` because of performance reasons.
+ * @method
+ * @memberof Popper
+ */
+function update() {
+  // if popper is destroyed, don't perform any further update
+  if (this.state.isDestroyed) {
+    return;
+  }
+
+  var data = {
+    instance: this,
+    styles: {},
+    arrowStyles: {},
+    attributes: {},
+    flipped: false,
+    offsets: {}
+  };
+
+  // compute reference element offsets
+  data.offsets.reference = getReferenceOffsets(this.state, this.popper, this.reference);
+
+  // compute auto placement, store placement inside the data object,
+  // modifiers will be able to edit `placement` if needed
+  // and refer to originalPlacement to know the original value
+  data.placement = computeAutoPlacement(this.options.placement, data.offsets.reference, this.popper, this.reference, this.options.modifiers.flip.boundariesElement, this.options.modifiers.flip.padding);
+
+  // store the computed placement inside `originalPlacement`
+  data.originalPlacement = data.placement;
+
+  // compute the popper offsets
+  data.offsets.popper = getPopperOffsets(this.popper, data.offsets.reference, data.placement);
+  data.offsets.popper.position = 'absolute';
+
+  // run the modifiers
+  data = runModifiers(this.modifiers, data);
+
+  // the first `update` will call `onCreate` callback
+  // the other ones will call `onUpdate` callback
+  if (!this.state.isCreated) {
+    this.state.isCreated = true;
+    this.options.onCreate(data);
+  } else {
+    this.options.onUpdate(data);
+  }
+}
+
+/**
+ * Helper used to know if the given modifier is enabled.
+ * @method
+ * @memberof Popper.Utils
+ * @returns {Boolean}
+ */
+function isModifierEnabled(modifiers, modifierName) {
+  return modifiers.some(function (_ref) {
+    var name = _ref.name,
+        enabled = _ref.enabled;
+    return enabled && name === modifierName;
+  });
+}
+
+/**
+ * Get the prefixed supported property name
+ * @method
+ * @memberof Popper.Utils
+ * @argument {String} property (camelCase)
+ * @returns {String} prefixed property (camelCase or PascalCase, depending on the vendor prefix)
+ */
+function getSupportedPropertyName(property) {
+  var prefixes = [false, 'ms', 'Webkit', 'Moz', 'O'];
+  var upperProp = property.charAt(0).toUpperCase() + property.slice(1);
+
+  for (var i = 0; i < prefixes.length - 1; i++) {
+    var prefix = prefixes[i];
+    var toCheck = prefix ? '' + prefix + upperProp : property;
+    if (typeof document.body.style[toCheck] !== 'undefined') {
+      return toCheck;
+    }
+  }
+  return null;
+}
+
+/**
+ * Destroy the popper
+ * @method
+ * @memberof Popper
+ */
+function destroy() {
+  this.state.isDestroyed = true;
+
+  // touch DOM only if `applyStyle` modifier is enabled
+  if (isModifierEnabled(this.modifiers, 'applyStyle')) {
+    this.popper.removeAttribute('x-placement');
+    this.popper.style.left = '';
+    this.popper.style.position = '';
+    this.popper.style.top = '';
+    this.popper.style[getSupportedPropertyName('transform')] = '';
+  }
+
+  this.disableEventListeners();
+
+  // remove the popper if user explicity asked for the deletion on destroy
+  // do not use `remove` because IE11 doesn't support it
+  if (this.options.removeOnDestroy) {
+    this.popper.parentNode.removeChild(this.popper);
+  }
+  return this;
+}
+
+/**
+ * Get the window associated with the element
+ * @argument {Element} element
+ * @returns {Window}
+ */
+function getWindow(element) {
+  var ownerDocument = element.ownerDocument;
+  return ownerDocument ? ownerDocument.defaultView : window;
+}
+
+function attachToScrollParents(scrollParent, event, callback, scrollParents) {
+  var isBody = scrollParent.nodeName === 'BODY';
+  var target = isBody ? scrollParent.ownerDocument.defaultView : scrollParent;
+  target.addEventListener(event, callback, { passive: true });
+
+  if (!isBody) {
+    attachToScrollParents(getScrollParent(target.parentNode), event, callback, scrollParents);
+  }
+  scrollParents.push(target);
+}
+
+/**
+ * Setup needed event listeners used to update the popper position
+ * @method
+ * @memberof Popper.Utils
+ * @private
+ */
+function setupEventListeners(reference, options, state, updateBound) {
+  // Resize event listener on window
+  state.updateBound = updateBound;
+  getWindow(reference).addEventListener('resize', state.updateBound, { passive: true });
+
+  // Scroll event listener on scroll parents
+  var scrollElement = getScrollParent(reference);
+  attachToScrollParents(scrollElement, 'scroll', state.updateBound, state.scrollParents);
+  state.scrollElement = scrollElement;
+  state.eventsEnabled = true;
+
+  return state;
+}
+
+/**
+ * It will add resize/scroll events and start recalculating
+ * position of the popper element when they are triggered.
+ * @method
+ * @memberof Popper
+ */
+function enableEventListeners() {
+  if (!this.state.eventsEnabled) {
+    this.state = setupEventListeners(this.reference, this.options, this.state, this.scheduleUpdate);
+  }
+}
+
+/**
+ * Remove event listeners used to update the popper position
+ * @method
+ * @memberof Popper.Utils
+ * @private
+ */
+function removeEventListeners(reference, state) {
+  // Remove resize event listener on window
+  getWindow(reference).removeEventListener('resize', state.updateBound);
+
+  // Remove scroll event listener on scroll parents
+  state.scrollParents.forEach(function (target) {
+    target.removeEventListener('scroll', state.updateBound);
+  });
+
+  // Reset state
+  state.updateBound = null;
+  state.scrollParents = [];
+  state.scrollElement = null;
+  state.eventsEnabled = false;
+  return state;
+}
+
+/**
+ * It will remove resize/scroll events and won't recalculate popper position
+ * when they are triggered. It also won't trigger onUpdate callback anymore,
+ * unless you call `update` method manually.
+ * @method
+ * @memberof Popper
+ */
+function disableEventListeners() {
+  if (this.state.eventsEnabled) {
+    cancelAnimationFrame(this.scheduleUpdate);
+    this.state = removeEventListeners(this.reference, this.state);
+  }
+}
+
+/**
+ * Tells if a given input is a number
+ * @method
+ * @memberof Popper.Utils
+ * @param {*} input to check
+ * @return {Boolean}
+ */
+function isNumeric(n) {
+  return n !== '' && !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+/**
+ * Set the style to the given popper
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Element} element - Element to apply the style to
+ * @argument {Object} styles
+ * Object with a list of properties and values which will be applied to the element
+ */
+function setStyles(element, styles) {
+  Object.keys(styles).forEach(function (prop) {
+    var unit = '';
+    // add unit if the value is numeric and is one of the following
+    if (['width', 'height', 'top', 'right', 'bottom', 'left'].indexOf(prop) !== -1 && isNumeric(styles[prop])) {
+      unit = 'px';
+    }
+    element.style[prop] = styles[prop] + unit;
+  });
+}
+
+/**
+ * Set the attributes to the given popper
+ * @method
+ * @memberof Popper.Utils
+ * @argument {Element} element - Element to apply the attributes to
+ * @argument {Object} styles
+ * Object with a list of properties and values which will be applied to the element
+ */
+function setAttributes(element, attributes) {
+  Object.keys(attributes).forEach(function (prop) {
+    var value = attributes[prop];
+    if (value !== false) {
+      element.setAttribute(prop, attributes[prop]);
+    } else {
+      element.removeAttribute(prop);
+    }
+  });
+}
+
+/**
+ * @function
+ * @memberof Modifiers
+ * @argument {Object} data - The data object generated by `update` method
+ * @argument {Object} data.styles - List of style properties - values to apply to popper element
+ * @argument {Object} data.attributes - List of attribute properties - values to apply to popper element
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {Object} The same data object
+ */
+function applyStyle(data) {
+  // any property present in `data.styles` will be applied to the popper,
+  // in this way we can make the 3rd party modifiers add custom styles to it
+  // Be aware, modifiers could override the properties defined in the previous
+  // lines of this modifier!
+  setStyles(data.instance.popper, data.styles);
+
+  // any property present in `data.attributes` will be applied to the popper,
+  // they will be set as HTML attributes of the element
+  setAttributes(data.instance.popper, data.attributes);
+
+  // if arrowElement is defined and arrowStyles has some properties
+  if (data.arrowElement && Object.keys(data.arrowStyles).length) {
+    setStyles(data.arrowElement, data.arrowStyles);
+  }
+
+  return data;
+}
+
+/**
+ * Set the x-placement attribute before everything else because it could be used
+ * to add margins to the popper margins needs to be calculated to get the
+ * correct popper offsets.
+ * @method
+ * @memberof Popper.modifiers
+ * @param {HTMLElement} reference - The reference element used to position the popper
+ * @param {HTMLElement} popper - The HTML element used as popper.
+ * @param {Object} options - Popper.js options
+ */
+function applyStyleOnLoad(reference, popper, options, modifierOptions, state) {
+  // compute reference element offsets
+  var referenceOffsets = getReferenceOffsets(state, popper, reference);
+
+  // compute auto placement, store placement inside the data object,
+  // modifiers will be able to edit `placement` if needed
+  // and refer to originalPlacement to know the original value
+  var placement = computeAutoPlacement(options.placement, referenceOffsets, popper, reference, options.modifiers.flip.boundariesElement, options.modifiers.flip.padding);
+
+  popper.setAttribute('x-placement', placement);
+
+  // Apply `position` to popper before anything else because
+  // without the position applied we can't guarantee correct computations
+  setStyles(popper, { position: 'absolute' });
+
+  return options;
+}
+
+/**
+ * @function
+ * @memberof Modifiers
+ * @argument {Object} data - The data object generated by `update` method
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {Object} The data object, properly modified
+ */
+function computeStyle(data, options) {
+  var x = options.x,
+      y = options.y;
+  var popper = data.offsets.popper;
+
+  // Remove this legacy support in Popper.js v2
+
+  var legacyGpuAccelerationOption = find(data.instance.modifiers, function (modifier) {
+    return modifier.name === 'applyStyle';
+  }).gpuAcceleration;
+  if (legacyGpuAccelerationOption !== undefined) {
+    console.warn('WARNING: `gpuAcceleration` option moved to `computeStyle` modifier and will not be supported in future versions of Popper.js!');
+  }
+  var gpuAcceleration = legacyGpuAccelerationOption !== undefined ? legacyGpuAccelerationOption : options.gpuAcceleration;
+
+  var offsetParent = getOffsetParent(data.instance.popper);
+  var offsetParentRect = getBoundingClientRect(offsetParent);
+
+  // Styles
+  var styles = {
+    position: popper.position
+  };
+
+  // floor sides to avoid blurry text
+  var offsets = {
+    left: Math.floor(popper.left),
+    top: Math.floor(popper.top),
+    bottom: Math.floor(popper.bottom),
+    right: Math.floor(popper.right)
+  };
+
+  var sideA = x === 'bottom' ? 'top' : 'bottom';
+  var sideB = y === 'right' ? 'left' : 'right';
+
+  // if gpuAcceleration is set to `true` and transform is supported,
+  //  we use `translate3d` to apply the position to the popper we
+  // automatically use the supported prefixed version if needed
+  var prefixedProperty = getSupportedPropertyName('transform');
+
+  // now, let's make a step back and look at this code closely (wtf?)
+  // If the content of the popper grows once it's been positioned, it
+  // may happen that the popper gets misplaced because of the new content
+  // overflowing its reference element
+  // To avoid this problem, we provide two options (x and y), which allow
+  // the consumer to define the offset origin.
+  // If we position a popper on top of a reference element, we can set
+  // `x` to `top` to make the popper grow towards its top instead of
+  // its bottom.
+  var left = void 0,
+      top = void 0;
+  if (sideA === 'bottom') {
+    top = -offsetParentRect.height + offsets.bottom;
+  } else {
+    top = offsets.top;
+  }
+  if (sideB === 'right') {
+    left = -offsetParentRect.width + offsets.right;
+  } else {
+    left = offsets.left;
+  }
+  if (gpuAcceleration && prefixedProperty) {
+    styles[prefixedProperty] = 'translate3d(' + left + 'px, ' + top + 'px, 0)';
+    styles[sideA] = 0;
+    styles[sideB] = 0;
+    styles.willChange = 'transform';
+  } else {
+    // othwerise, we use the standard `top`, `left`, `bottom` and `right` properties
+    var invertTop = sideA === 'bottom' ? -1 : 1;
+    var invertLeft = sideB === 'right' ? -1 : 1;
+    styles[sideA] = top * invertTop;
+    styles[sideB] = left * invertLeft;
+    styles.willChange = sideA + ', ' + sideB;
+  }
+
+  // Attributes
+  var attributes = {
+    'x-placement': data.placement
+  };
+
+  // Update `data` attributes, styles and arrowStyles
+  data.attributes = _extends$1({}, attributes, data.attributes);
+  data.styles = _extends$1({}, styles, data.styles);
+  data.arrowStyles = _extends$1({}, data.offsets.arrow, data.arrowStyles);
+
+  return data;
+}
+
+/**
+ * Helper used to know if the given modifier depends from another one.<br />
+ * It checks if the needed modifier is listed and enabled.
+ * @method
+ * @memberof Popper.Utils
+ * @param {Array} modifiers - list of modifiers
+ * @param {String} requestingName - name of requesting modifier
+ * @param {String} requestedName - name of requested modifier
+ * @returns {Boolean}
+ */
+function isModifierRequired(modifiers, requestingName, requestedName) {
+  var requesting = find(modifiers, function (_ref) {
+    var name = _ref.name;
+    return name === requestingName;
+  });
+
+  var isRequired = !!requesting && modifiers.some(function (modifier) {
+    return modifier.name === requestedName && modifier.enabled && modifier.order < requesting.order;
+  });
+
+  if (!isRequired) {
+    var _requesting = '`' + requestingName + '`';
+    var requested = '`' + requestedName + '`';
+    console.warn(requested + ' modifier is required by ' + _requesting + ' modifier in order to work, be sure to include it before ' + _requesting + '!');
+  }
+  return isRequired;
+}
+
+/**
+ * @function
+ * @memberof Modifiers
+ * @argument {Object} data - The data object generated by update method
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {Object} The data object, properly modified
+ */
+function arrow(data, options) {
+  var _data$offsets$arrow;
+
+  // arrow depends on keepTogether in order to work
+  if (!isModifierRequired(data.instance.modifiers, 'arrow', 'keepTogether')) {
+    return data;
+  }
+
+  var arrowElement = options.element;
+
+  // if arrowElement is a string, suppose it's a CSS selector
+  if (typeof arrowElement === 'string') {
+    arrowElement = data.instance.popper.querySelector(arrowElement);
+
+    // if arrowElement is not found, don't run the modifier
+    if (!arrowElement) {
+      return data;
+    }
+  } else {
+    // if the arrowElement isn't a query selector we must check that the
+    // provided DOM node is child of its popper node
+    if (!data.instance.popper.contains(arrowElement)) {
+      console.warn('WARNING: `arrow.element` must be child of its popper element!');
+      return data;
+    }
+  }
+
+  var placement = data.placement.split('-')[0];
+  var _data$offsets = data.offsets,
+      popper = _data$offsets.popper,
+      reference = _data$offsets.reference;
+
+  var isVertical = ['left', 'right'].indexOf(placement) !== -1;
+
+  var len = isVertical ? 'height' : 'width';
+  var sideCapitalized = isVertical ? 'Top' : 'Left';
+  var side = sideCapitalized.toLowerCase();
+  var altSide = isVertical ? 'left' : 'top';
+  var opSide = isVertical ? 'bottom' : 'right';
+  var arrowElementSize = getOuterSizes(arrowElement)[len];
+
+  //
+  // extends keepTogether behavior making sure the popper and its
+  // reference have enough pixels in conjuction
+  //
+
+  // top/left side
+  if (reference[opSide] - arrowElementSize < popper[side]) {
+    data.offsets.popper[side] -= popper[side] - (reference[opSide] - arrowElementSize);
+  }
+  // bottom/right side
+  if (reference[side] + arrowElementSize > popper[opSide]) {
+    data.offsets.popper[side] += reference[side] + arrowElementSize - popper[opSide];
+  }
+  data.offsets.popper = getClientRect(data.offsets.popper);
+
+  // compute center of the popper
+  var center = reference[side] + reference[len] / 2 - arrowElementSize / 2;
+
+  // Compute the sideValue using the updated popper offsets
+  // take popper margin in account because we don't have this info available
+  var css = getStyleComputedProperty(data.instance.popper);
+  var popperMarginSide = parseFloat(css['margin' + sideCapitalized], 10);
+  var popperBorderSide = parseFloat(css['border' + sideCapitalized + 'Width'], 10);
+  var sideValue = center - data.offsets.popper[side] - popperMarginSide - popperBorderSide;
+
+  // prevent arrowElement from being placed not contiguously to its popper
+  sideValue = Math.max(Math.min(popper[len] - arrowElementSize, sideValue), 0);
+
+  data.arrowElement = arrowElement;
+  data.offsets.arrow = (_data$offsets$arrow = {}, defineProperty$1(_data$offsets$arrow, side, Math.round(sideValue)), defineProperty$1(_data$offsets$arrow, altSide, ''), _data$offsets$arrow);
+
+  return data;
+}
+
+/**
+ * Get the opposite placement variation of the given one
+ * @method
+ * @memberof Popper.Utils
+ * @argument {String} placement variation
+ * @returns {String} flipped placement variation
+ */
+function getOppositeVariation(variation) {
+  if (variation === 'end') {
+    return 'start';
+  } else if (variation === 'start') {
+    return 'end';
+  }
+  return variation;
+}
+
+/**
+ * List of accepted placements to use as values of the `placement` option.<br />
+ * Valid placements are:
+ * - `auto`
+ * - `top`
+ * - `right`
+ * - `bottom`
+ * - `left`
+ *
+ * Each placement can have a variation from this list:
+ * - `-start`
+ * - `-end`
+ *
+ * Variations are interpreted easily if you think of them as the left to right
+ * written languages. Horizontally (`top` and `bottom`), `start` is left and `end`
+ * is right.<br />
+ * Vertically (`left` and `right`), `start` is top and `end` is bottom.
+ *
+ * Some valid examples are:
+ * - `top-end` (on top of reference, right aligned)
+ * - `right-start` (on right of reference, top aligned)
+ * - `bottom` (on bottom, centered)
+ * - `auto-right` (on the side with more space available, alignment depends by placement)
+ *
+ * @static
+ * @type {Array}
+ * @enum {String}
+ * @readonly
+ * @method placements
+ * @memberof Popper
+ */
+var placements = ['auto-start', 'auto', 'auto-end', 'top-start', 'top', 'top-end', 'right-start', 'right', 'right-end', 'bottom-end', 'bottom', 'bottom-start', 'left-end', 'left', 'left-start'];
+
+// Get rid of `auto` `auto-start` and `auto-end`
+var validPlacements = placements.slice(3);
+
+/**
+ * Given an initial placement, returns all the subsequent placements
+ * clockwise (or counter-clockwise).
+ *
+ * @method
+ * @memberof Popper.Utils
+ * @argument {String} placement - A valid placement (it accepts variations)
+ * @argument {Boolean} counter - Set to true to walk the placements counterclockwise
+ * @returns {Array} placements including their variations
+ */
+function clockwise(placement) {
+  var counter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  var index = validPlacements.indexOf(placement);
+  var arr = validPlacements.slice(index + 1).concat(validPlacements.slice(0, index));
+  return counter ? arr.reverse() : arr;
+}
+
+var BEHAVIORS = {
+  FLIP: 'flip',
+  CLOCKWISE: 'clockwise',
+  COUNTERCLOCKWISE: 'counterclockwise'
+};
+
+/**
+ * @function
+ * @memberof Modifiers
+ * @argument {Object} data - The data object generated by update method
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {Object} The data object, properly modified
+ */
+function flip(data, options) {
+  // if `inner` modifier is enabled, we can't use the `flip` modifier
+  if (isModifierEnabled(data.instance.modifiers, 'inner')) {
+    return data;
+  }
+
+  if (data.flipped && data.placement === data.originalPlacement) {
+    // seems like flip is trying to loop, probably there's not enough space on any of the flippable sides
+    return data;
+  }
+
+  var boundaries = getBoundaries(data.instance.popper, data.instance.reference, options.padding, options.boundariesElement);
+
+  var placement = data.placement.split('-')[0];
+  var placementOpposite = getOppositePlacement(placement);
+  var variation = data.placement.split('-')[1] || '';
+
+  var flipOrder = [];
+
+  switch (options.behavior) {
+    case BEHAVIORS.FLIP:
+      flipOrder = [placement, placementOpposite];
+      break;
+    case BEHAVIORS.CLOCKWISE:
+      flipOrder = clockwise(placement);
+      break;
+    case BEHAVIORS.COUNTERCLOCKWISE:
+      flipOrder = clockwise(placement, true);
+      break;
+    default:
+      flipOrder = options.behavior;
+  }
+
+  flipOrder.forEach(function (step, index) {
+    if (placement !== step || flipOrder.length === index + 1) {
+      return data;
+    }
+
+    placement = data.placement.split('-')[0];
+    placementOpposite = getOppositePlacement(placement);
+
+    var popperOffsets = data.offsets.popper;
+    var refOffsets = data.offsets.reference;
+
+    // using floor because the reference offsets may contain decimals we are not going to consider here
+    var floor = Math.floor;
+    var overlapsRef = placement === 'left' && floor(popperOffsets.right) > floor(refOffsets.left) || placement === 'right' && floor(popperOffsets.left) < floor(refOffsets.right) || placement === 'top' && floor(popperOffsets.bottom) > floor(refOffsets.top) || placement === 'bottom' && floor(popperOffsets.top) < floor(refOffsets.bottom);
+
+    var overflowsLeft = floor(popperOffsets.left) < floor(boundaries.left);
+    var overflowsRight = floor(popperOffsets.right) > floor(boundaries.right);
+    var overflowsTop = floor(popperOffsets.top) < floor(boundaries.top);
+    var overflowsBottom = floor(popperOffsets.bottom) > floor(boundaries.bottom);
+
+    var overflowsBoundaries = placement === 'left' && overflowsLeft || placement === 'right' && overflowsRight || placement === 'top' && overflowsTop || placement === 'bottom' && overflowsBottom;
+
+    // flip the variation if required
+    var isVertical = ['top', 'bottom'].indexOf(placement) !== -1;
+    var flippedVariation = !!options.flipVariations && (isVertical && variation === 'start' && overflowsLeft || isVertical && variation === 'end' && overflowsRight || !isVertical && variation === 'start' && overflowsTop || !isVertical && variation === 'end' && overflowsBottom);
+
+    if (overlapsRef || overflowsBoundaries || flippedVariation) {
+      // this boolean to detect any flip loop
+      data.flipped = true;
+
+      if (overlapsRef || overflowsBoundaries) {
+        placement = flipOrder[index + 1];
+      }
+
+      if (flippedVariation) {
+        variation = getOppositeVariation(variation);
+      }
+
+      data.placement = placement + (variation ? '-' + variation : '');
+
+      // this object contains `position`, we want to preserve it along with
+      // any additional property we may add in the future
+      data.offsets.popper = _extends$1({}, data.offsets.popper, getPopperOffsets(data.instance.popper, data.offsets.reference, data.placement));
+
+      data = runModifiers(data.instance.modifiers, data, 'flip');
+    }
+  });
+  return data;
+}
+
+/**
+ * @function
+ * @memberof Modifiers
+ * @argument {Object} data - The data object generated by update method
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {Object} The data object, properly modified
+ */
+function keepTogether(data) {
+  var _data$offsets = data.offsets,
+      popper = _data$offsets.popper,
+      reference = _data$offsets.reference;
+
+  var placement = data.placement.split('-')[0];
+  var floor = Math.floor;
+  var isVertical = ['top', 'bottom'].indexOf(placement) !== -1;
+  var side = isVertical ? 'right' : 'bottom';
+  var opSide = isVertical ? 'left' : 'top';
+  var measurement = isVertical ? 'width' : 'height';
+
+  if (popper[side] < floor(reference[opSide])) {
+    data.offsets.popper[opSide] = floor(reference[opSide]) - popper[measurement];
+  }
+  if (popper[opSide] > floor(reference[side])) {
+    data.offsets.popper[opSide] = floor(reference[side]);
+  }
+
+  return data;
+}
+
+/**
+ * Converts a string containing value + unit into a px value number
+ * @function
+ * @memberof {modifiers~offset}
+ * @private
+ * @argument {String} str - Value + unit string
+ * @argument {String} measurement - `height` or `width`
+ * @argument {Object} popperOffsets
+ * @argument {Object} referenceOffsets
+ * @returns {Number|String}
+ * Value in pixels, or original string if no values were extracted
+ */
+function toValue(str, measurement, popperOffsets, referenceOffsets) {
+  // separate value from unit
+  var split = str.match(/((?:\-|\+)?\d*\.?\d*)(.*)/);
+  var value = +split[1];
+  var unit = split[2];
+
+  // If it's not a number it's an operator, I guess
+  if (!value) {
+    return str;
+  }
+
+  if (unit.indexOf('%') === 0) {
+    var element = void 0;
+    switch (unit) {
+      case '%p':
+        element = popperOffsets;
+        break;
+      case '%':
+      case '%r':
+      default:
+        element = referenceOffsets;
+    }
+
+    var rect = getClientRect(element);
+    return rect[measurement] / 100 * value;
+  } else if (unit === 'vh' || unit === 'vw') {
+    // if is a vh or vw, we calculate the size based on the viewport
+    var size = void 0;
+    if (unit === 'vh') {
+      size = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    } else {
+      size = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    }
+    return size / 100 * value;
+  } else {
+    // if is an explicit pixel unit, we get rid of the unit and keep the value
+    // if is an implicit unit, it's px, and we return just the value
+    return value;
+  }
+}
+
+/**
+ * Parse an `offset` string to extrapolate `x` and `y` numeric offsets.
+ * @function
+ * @memberof {modifiers~offset}
+ * @private
+ * @argument {String} offset
+ * @argument {Object} popperOffsets
+ * @argument {Object} referenceOffsets
+ * @argument {String} basePlacement
+ * @returns {Array} a two cells array with x and y offsets in numbers
+ */
+function parseOffset(offset, popperOffsets, referenceOffsets, basePlacement) {
+  var offsets = [0, 0];
+
+  // Use height if placement is left or right and index is 0 otherwise use width
+  // in this way the first offset will use an axis and the second one
+  // will use the other one
+  var useHeight = ['right', 'left'].indexOf(basePlacement) !== -1;
+
+  // Split the offset string to obtain a list of values and operands
+  // The regex addresses values with the plus or minus sign in front (+10, -20, etc)
+  var fragments = offset.split(/(\+|\-)/).map(function (frag) {
+    return frag.trim();
+  });
+
+  // Detect if the offset string contains a pair of values or a single one
+  // they could be separated by comma or space
+  var divider = fragments.indexOf(find(fragments, function (frag) {
+    return frag.search(/,|\s/) !== -1;
+  }));
+
+  if (fragments[divider] && fragments[divider].indexOf(',') === -1) {
+    console.warn('Offsets separated by white space(s) are deprecated, use a comma (,) instead.');
+  }
+
+  // If divider is found, we divide the list of values and operands to divide
+  // them by ofset X and Y.
+  var splitRegex = /\s*,\s*|\s+/;
+  var ops = divider !== -1 ? [fragments.slice(0, divider).concat([fragments[divider].split(splitRegex)[0]]), [fragments[divider].split(splitRegex)[1]].concat(fragments.slice(divider + 1))] : [fragments];
+
+  // Convert the values with units to absolute pixels to allow our computations
+  ops = ops.map(function (op, index) {
+    // Most of the units rely on the orientation of the popper
+    var measurement = (index === 1 ? !useHeight : useHeight) ? 'height' : 'width';
+    var mergeWithPrevious = false;
+    return op
+    // This aggregates any `+` or `-` sign that aren't considered operators
+    // e.g.: 10 + +5 => [10, +, +5]
+    .reduce(function (a, b) {
+      if (a[a.length - 1] === '' && ['+', '-'].indexOf(b) !== -1) {
+        a[a.length - 1] = b;
+        mergeWithPrevious = true;
+        return a;
+      } else if (mergeWithPrevious) {
+        a[a.length - 1] += b;
+        mergeWithPrevious = false;
+        return a;
+      } else {
+        return a.concat(b);
+      }
+    }, [])
+    // Here we convert the string values into number values (in px)
+    .map(function (str) {
+      return toValue(str, measurement, popperOffsets, referenceOffsets);
+    });
+  });
+
+  // Loop trough the offsets arrays and execute the operations
+  ops.forEach(function (op, index) {
+    op.forEach(function (frag, index2) {
+      if (isNumeric(frag)) {
+        offsets[index] += frag * (op[index2 - 1] === '-' ? -1 : 1);
+      }
+    });
+  });
+  return offsets;
+}
+
+/**
+ * @function
+ * @memberof Modifiers
+ * @argument {Object} data - The data object generated by update method
+ * @argument {Object} options - Modifiers configuration and options
+ * @argument {Number|String} options.offset=0
+ * The offset value as described in the modifier description
+ * @returns {Object} The data object, properly modified
+ */
+function offset(data, _ref) {
+  var offset = _ref.offset;
+  var placement = data.placement,
+      _data$offsets = data.offsets,
+      popper = _data$offsets.popper,
+      reference = _data$offsets.reference;
+
+  var basePlacement = placement.split('-')[0];
+
+  var offsets = void 0;
+  if (isNumeric(+offset)) {
+    offsets = [+offset, 0];
+  } else {
+    offsets = parseOffset(offset, popper, reference, basePlacement);
+  }
+
+  if (basePlacement === 'left') {
+    popper.top += offsets[0];
+    popper.left -= offsets[1];
+  } else if (basePlacement === 'right') {
+    popper.top += offsets[0];
+    popper.left += offsets[1];
+  } else if (basePlacement === 'top') {
+    popper.left += offsets[0];
+    popper.top -= offsets[1];
+  } else if (basePlacement === 'bottom') {
+    popper.left += offsets[0];
+    popper.top += offsets[1];
+  }
+
+  data.popper = popper;
+  return data;
+}
+
+/**
+ * @function
+ * @memberof Modifiers
+ * @argument {Object} data - The data object generated by `update` method
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {Object} The data object, properly modified
+ */
+function preventOverflow(data, options) {
+  var boundariesElement = options.boundariesElement || getOffsetParent(data.instance.popper);
+
+  // If offsetParent is the reference element, we really want to
+  // go one step up and use the next offsetParent as reference to
+  // avoid to make this modifier completely useless and look like broken
+  if (data.instance.reference === boundariesElement) {
+    boundariesElement = getOffsetParent(boundariesElement);
+  }
+
+  var boundaries = getBoundaries(data.instance.popper, data.instance.reference, options.padding, boundariesElement);
+  options.boundaries = boundaries;
+
+  var order = options.priority;
+  var popper = data.offsets.popper;
+
+  var check = {
+    primary: function primary(placement) {
+      var value = popper[placement];
+      if (popper[placement] < boundaries[placement] && !options.escapeWithReference) {
+        value = Math.max(popper[placement], boundaries[placement]);
+      }
+      return defineProperty$1({}, placement, value);
+    },
+    secondary: function secondary(placement) {
+      var mainSide = placement === 'right' ? 'left' : 'top';
+      var value = popper[mainSide];
+      if (popper[placement] > boundaries[placement] && !options.escapeWithReference) {
+        value = Math.min(popper[mainSide], boundaries[placement] - (placement === 'right' ? popper.width : popper.height));
+      }
+      return defineProperty$1({}, mainSide, value);
+    }
+  };
+
+  order.forEach(function (placement) {
+    var side = ['left', 'top'].indexOf(placement) !== -1 ? 'primary' : 'secondary';
+    popper = _extends$1({}, popper, check[side](placement));
+  });
+
+  data.offsets.popper = popper;
+
+  return data;
+}
+
+/**
+ * @function
+ * @memberof Modifiers
+ * @argument {Object} data - The data object generated by `update` method
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {Object} The data object, properly modified
+ */
+function shift(data) {
+  var placement = data.placement;
+  var basePlacement = placement.split('-')[0];
+  var shiftvariation = placement.split('-')[1];
+
+  // if shift shiftvariation is specified, run the modifier
+  if (shiftvariation) {
+    var _data$offsets = data.offsets,
+        reference = _data$offsets.reference,
+        popper = _data$offsets.popper;
+
+    var isVertical = ['bottom', 'top'].indexOf(basePlacement) !== -1;
+    var side = isVertical ? 'left' : 'top';
+    var measurement = isVertical ? 'width' : 'height';
+
+    var shiftOffsets = {
+      start: defineProperty$1({}, side, reference[side]),
+      end: defineProperty$1({}, side, reference[side] + reference[measurement] - popper[measurement])
+    };
+
+    data.offsets.popper = _extends$1({}, popper, shiftOffsets[shiftvariation]);
+  }
+
+  return data;
+}
+
+/**
+ * @function
+ * @memberof Modifiers
+ * @argument {Object} data - The data object generated by update method
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {Object} The data object, properly modified
+ */
+function hide(data) {
+  if (!isModifierRequired(data.instance.modifiers, 'hide', 'preventOverflow')) {
+    return data;
+  }
+
+  var refRect = data.offsets.reference;
+  var bound = find(data.instance.modifiers, function (modifier) {
+    return modifier.name === 'preventOverflow';
+  }).boundaries;
+
+  if (refRect.bottom < bound.top || refRect.left > bound.right || refRect.top > bound.bottom || refRect.right < bound.left) {
+    // Avoid unnecessary DOM access if visibility hasn't changed
+    if (data.hide === true) {
+      return data;
+    }
+
+    data.hide = true;
+    data.attributes['x-out-of-boundaries'] = '';
+  } else {
+    // Avoid unnecessary DOM access if visibility hasn't changed
+    if (data.hide === false) {
+      return data;
+    }
+
+    data.hide = false;
+    data.attributes['x-out-of-boundaries'] = false;
+  }
+
+  return data;
+}
+
+/**
+ * @function
+ * @memberof Modifiers
+ * @argument {Object} data - The data object generated by `update` method
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {Object} The data object, properly modified
+ */
+function inner(data) {
+  var placement = data.placement;
+  var basePlacement = placement.split('-')[0];
+  var _data$offsets = data.offsets,
+      popper = _data$offsets.popper,
+      reference = _data$offsets.reference;
+
+  var isHoriz = ['left', 'right'].indexOf(basePlacement) !== -1;
+
+  var subtractLength = ['top', 'left'].indexOf(basePlacement) === -1;
+
+  popper[isHoriz ? 'left' : 'top'] = reference[basePlacement] - (subtractLength ? popper[isHoriz ? 'width' : 'height'] : 0);
+
+  data.placement = getOppositePlacement(placement);
+  data.offsets.popper = getClientRect(popper);
+
+  return data;
+}
+
+/**
+ * Modifier function, each modifier can have a function of this type assigned
+ * to its `fn` property.<br />
+ * These functions will be called on each update, this means that you must
+ * make sure they are performant enough to avoid performance bottlenecks.
+ *
+ * @function ModifierFn
+ * @argument {dataObject} data - The data object generated by `update` method
+ * @argument {Object} options - Modifiers configuration and options
+ * @returns {dataObject} The data object, properly modified
+ */
+
+/**
+ * Modifiers are plugins used to alter the behavior of your poppers.<br />
+ * Popper.js uses a set of 9 modifiers to provide all the basic functionalities
+ * needed by the library.
+ *
+ * Usually you don't want to override the `order`, `fn` and `onLoad` props.
+ * All the other properties are configurations that could be tweaked.
+ * @namespace modifiers
+ */
+var modifiers = {
+  /**
+   * Modifier used to shift the popper on the start or end of its reference
+   * element.<br />
+   * It will read the variation of the `placement` property.<br />
+   * It can be one either `-end` or `-start`.
+   * @memberof modifiers
+   * @inner
+   */
+  shift: {
+    /** @prop {number} order=100 - Index used to define the order of execution */
+    order: 100,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
+    enabled: true,
+    /** @prop {ModifierFn} */
+    fn: shift
+  },
+
+  /**
+   * The `offset` modifier can shift your popper on both its axis.
+   *
+   * It accepts the following units:
+   * - `px` or unitless, interpreted as pixels
+   * - `%` or `%r`, percentage relative to the length of the reference element
+   * - `%p`, percentage relative to the length of the popper element
+   * - `vw`, CSS viewport width unit
+   * - `vh`, CSS viewport height unit
+   *
+   * For length is intended the main axis relative to the placement of the popper.<br />
+   * This means that if the placement is `top` or `bottom`, the length will be the
+   * `width`. In case of `left` or `right`, it will be the height.
+   *
+   * You can provide a single value (as `Number` or `String`), or a pair of values
+   * as `String` divided by a comma or one (or more) white spaces.<br />
+   * The latter is a deprecated method because it leads to confusion and will be
+   * removed in v2.<br />
+   * Additionally, it accepts additions and subtractions between different units.
+   * Note that multiplications and divisions aren't supported.
+   *
+   * Valid examples are:
+   * ```
+   * 10
+   * '10%'
+   * '10, 10'
+   * '10%, 10'
+   * '10 + 10%'
+   * '10 - 5vh + 3%'
+   * '-10px + 5vh, 5px - 6%'
+   * ```
+   * > **NB**: If you desire to apply offsets to your poppers in a way that may make them overlap
+   * > with their reference element, unfortunately, you will have to disable the `flip` modifier.
+   * > More on this [reading this issue](https://github.com/FezVrasta/popper.js/issues/373)
+   *
+   * @memberof modifiers
+   * @inner
+   */
+  offset: {
+    /** @prop {number} order=200 - Index used to define the order of execution */
+    order: 200,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
+    enabled: true,
+    /** @prop {ModifierFn} */
+    fn: offset,
+    /** @prop {Number|String} offset=0
+     * The offset value as described in the modifier description
+     */
+    offset: 0
+  },
+
+  /**
+   * Modifier used to prevent the popper from being positioned outside the boundary.
+   *
+   * An scenario exists where the reference itself is not within the boundaries.<br />
+   * We can say it has "escaped the boundaries" — or just "escaped".<br />
+   * In this case we need to decide whether the popper should either:
+   *
+   * - detach from the reference and remain "trapped" in the boundaries, or
+   * - if it should ignore the boundary and "escape with its reference"
+   *
+   * When `escapeWithReference` is set to`true` and reference is completely
+   * outside its boundaries, the popper will overflow (or completely leave)
+   * the boundaries in order to remain attached to the edge of the reference.
+   *
+   * @memberof modifiers
+   * @inner
+   */
+  preventOverflow: {
+    /** @prop {number} order=300 - Index used to define the order of execution */
+    order: 300,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
+    enabled: true,
+    /** @prop {ModifierFn} */
+    fn: preventOverflow,
+    /**
+     * @prop {Array} [priority=['left','right','top','bottom']]
+     * Popper will try to prevent overflow following these priorities by default,
+     * then, it could overflow on the left and on top of the `boundariesElement`
+     */
+    priority: ['left', 'right', 'top', 'bottom'],
+    /**
+     * @prop {number} padding=5
+     * Amount of pixel used to define a minimum distance between the boundaries
+     * and the popper this makes sure the popper has always a little padding
+     * between the edges of its container
+     */
+    padding: 5,
+    /**
+     * @prop {String|HTMLElement} boundariesElement='scrollParent'
+     * Boundaries used by the modifier, can be `scrollParent`, `window`,
+     * `viewport` or any DOM element.
+     */
+    boundariesElement: 'scrollParent'
+  },
+
+  /**
+   * Modifier used to make sure the reference and its popper stay near eachothers
+   * without leaving any gap between the two. Expecially useful when the arrow is
+   * enabled and you want to assure it to point to its reference element.
+   * It cares only about the first axis, you can still have poppers with margin
+   * between the popper and its reference element.
+   * @memberof modifiers
+   * @inner
+   */
+  keepTogether: {
+    /** @prop {number} order=400 - Index used to define the order of execution */
+    order: 400,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
+    enabled: true,
+    /** @prop {ModifierFn} */
+    fn: keepTogether
+  },
+
+  /**
+   * This modifier is used to move the `arrowElement` of the popper to make
+   * sure it is positioned between the reference element and its popper element.
+   * It will read the outer size of the `arrowElement` node to detect how many
+   * pixels of conjuction are needed.
+   *
+   * It has no effect if no `arrowElement` is provided.
+   * @memberof modifiers
+   * @inner
+   */
+  arrow: {
+    /** @prop {number} order=500 - Index used to define the order of execution */
+    order: 500,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
+    enabled: true,
+    /** @prop {ModifierFn} */
+    fn: arrow,
+    /** @prop {String|HTMLElement} element='[x-arrow]' - Selector or node used as arrow */
+    element: '[x-arrow]'
+  },
+
+  /**
+   * Modifier used to flip the popper's placement when it starts to overlap its
+   * reference element.
+   *
+   * Requires the `preventOverflow` modifier before it in order to work.
+   *
+   * **NOTE:** this modifier will interrupt the current update cycle and will
+   * restart it if it detects the need to flip the placement.
+   * @memberof modifiers
+   * @inner
+   */
+  flip: {
+    /** @prop {number} order=600 - Index used to define the order of execution */
+    order: 600,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
+    enabled: true,
+    /** @prop {ModifierFn} */
+    fn: flip,
+    /**
+     * @prop {String|Array} behavior='flip'
+     * The behavior used to change the popper's placement. It can be one of
+     * `flip`, `clockwise`, `counterclockwise` or an array with a list of valid
+     * placements (with optional variations).
+     */
+    behavior: 'flip',
+    /**
+     * @prop {number} padding=5
+     * The popper will flip if it hits the edges of the `boundariesElement`
+     */
+    padding: 5,
+    /**
+     * @prop {String|HTMLElement} boundariesElement='viewport'
+     * The element which will define the boundaries of the popper position,
+     * the popper will never be placed outside of the defined boundaries
+     * (except if keepTogether is enabled)
+     */
+    boundariesElement: 'viewport'
+  },
+
+  /**
+   * Modifier used to make the popper flow toward the inner of the reference element.
+   * By default, when this modifier is disabled, the popper will be placed outside
+   * the reference element.
+   * @memberof modifiers
+   * @inner
+   */
+  inner: {
+    /** @prop {number} order=700 - Index used to define the order of execution */
+    order: 700,
+    /** @prop {Boolean} enabled=false - Whether the modifier is enabled or not */
+    enabled: false,
+    /** @prop {ModifierFn} */
+    fn: inner
+  },
+
+  /**
+   * Modifier used to hide the popper when its reference element is outside of the
+   * popper boundaries. It will set a `x-out-of-boundaries` attribute which can
+   * be used to hide with a CSS selector the popper when its reference is
+   * out of boundaries.
+   *
+   * Requires the `preventOverflow` modifier before it in order to work.
+   * @memberof modifiers
+   * @inner
+   */
+  hide: {
+    /** @prop {number} order=800 - Index used to define the order of execution */
+    order: 800,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
+    enabled: true,
+    /** @prop {ModifierFn} */
+    fn: hide
+  },
+
+  /**
+   * Computes the style that will be applied to the popper element to gets
+   * properly positioned.
+   *
+   * Note that this modifier will not touch the DOM, it just prepares the styles
+   * so that `applyStyle` modifier can apply it. This separation is useful
+   * in case you need to replace `applyStyle` with a custom implementation.
+   *
+   * This modifier has `850` as `order` value to maintain backward compatibility
+   * with previous versions of Popper.js. Expect the modifiers ordering method
+   * to change in future major versions of the library.
+   *
+   * @memberof modifiers
+   * @inner
+   */
+  computeStyle: {
+    /** @prop {number} order=850 - Index used to define the order of execution */
+    order: 850,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
+    enabled: true,
+    /** @prop {ModifierFn} */
+    fn: computeStyle,
+    /**
+     * @prop {Boolean} gpuAcceleration=true
+     * If true, it uses the CSS 3d transformation to position the popper.
+     * Otherwise, it will use the `top` and `left` properties.
+     */
+    gpuAcceleration: true,
+    /**
+     * @prop {string} [x='bottom']
+     * Where to anchor the X axis (`bottom` or `top`). AKA X offset origin.
+     * Change this if your popper should grow in a direction different from `bottom`
+     */
+    x: 'bottom',
+    /**
+     * @prop {string} [x='left']
+     * Where to anchor the Y axis (`left` or `right`). AKA Y offset origin.
+     * Change this if your popper should grow in a direction different from `right`
+     */
+    y: 'right'
+  },
+
+  /**
+   * Applies the computed styles to the popper element.
+   *
+   * All the DOM manipulations are limited to this modifier. This is useful in case
+   * you want to integrate Popper.js inside a framework or view library and you
+   * want to delegate all the DOM manipulations to it.
+   *
+   * Note that if you disable this modifier, you must make sure the popper element
+   * has its position set to `absolute` before Popper.js can do its work!
+   *
+   * Just disable this modifier and define you own to achieve the desired effect.
+   *
+   * @memberof modifiers
+   * @inner
+   */
+  applyStyle: {
+    /** @prop {number} order=900 - Index used to define the order of execution */
+    order: 900,
+    /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
+    enabled: true,
+    /** @prop {ModifierFn} */
+    fn: applyStyle,
+    /** @prop {Function} */
+    onLoad: applyStyleOnLoad,
+    /**
+     * @deprecated since version 1.10.0, the property moved to `computeStyle` modifier
+     * @prop {Boolean} gpuAcceleration=true
+     * If true, it uses the CSS 3d transformation to position the popper.
+     * Otherwise, it will use the `top` and `left` properties.
+     */
+    gpuAcceleration: undefined
+  }
+};
+
+/**
+ * The `dataObject` is an object containing all the informations used by Popper.js
+ * this object get passed to modifiers and to the `onCreate` and `onUpdate` callbacks.
+ * @name dataObject
+ * @property {Object} data.instance The Popper.js instance
+ * @property {String} data.placement Placement applied to popper
+ * @property {String} data.originalPlacement Placement originally defined on init
+ * @property {Boolean} data.flipped True if popper has been flipped by flip modifier
+ * @property {Boolean} data.hide True if the reference element is out of boundaries, useful to know when to hide the popper.
+ * @property {HTMLElement} data.arrowElement Node used as arrow by arrow modifier
+ * @property {Object} data.styles Any CSS property defined here will be applied to the popper, it expects the JavaScript nomenclature (eg. `marginBottom`)
+ * @property {Object} data.arrowStyles Any CSS property defined here will be applied to the popper arrow, it expects the JavaScript nomenclature (eg. `marginBottom`)
+ * @property {Object} data.boundaries Offsets of the popper boundaries
+ * @property {Object} data.offsets The measurements of popper, reference and arrow elements.
+ * @property {Object} data.offsets.popper `top`, `left`, `width`, `height` values
+ * @property {Object} data.offsets.reference `top`, `left`, `width`, `height` values
+ * @property {Object} data.offsets.arrow] `top` and `left` offsets, only one of them will be different from 0
+ */
+
+/**
+ * Default options provided to Popper.js constructor.<br />
+ * These can be overriden using the `options` argument of Popper.js.<br />
+ * To override an option, simply pass as 3rd argument an object with the same
+ * structure of this object, example:
+ * ```
+ * new Popper(ref, pop, {
+ *   modifiers: {
+ *     preventOverflow: { enabled: false }
+ *   }
+ * })
+ * ```
+ * @type {Object}
+ * @static
+ * @memberof Popper
+ */
+var Defaults = {
+  /**
+   * Popper's placement
+   * @prop {Popper.placements} placement='bottom'
+   */
+  placement: 'bottom',
+
+  /**
+   * Whether events (resize, scroll) are initially enabled
+   * @prop {Boolean} eventsEnabled=true
+   */
+  eventsEnabled: true,
+
+  /**
+   * Set to true if you want to automatically remove the popper when
+   * you call the `destroy` method.
+   * @prop {Boolean} removeOnDestroy=false
+   */
+  removeOnDestroy: false,
+
+  /**
+   * Callback called when the popper is created.<br />
+   * By default, is set to no-op.<br />
+   * Access Popper.js instance with `data.instance`.
+   * @prop {onCreate}
+   */
+  onCreate: function onCreate() {},
+
+  /**
+   * Callback called when the popper is updated, this callback is not called
+   * on the initialization/creation of the popper, but only on subsequent
+   * updates.<br />
+   * By default, is set to no-op.<br />
+   * Access Popper.js instance with `data.instance`.
+   * @prop {onUpdate}
+   */
+  onUpdate: function onUpdate() {},
+
+  /**
+   * List of modifiers used to modify the offsets before they are applied to the popper.
+   * They provide most of the functionalities of Popper.js
+   * @prop {modifiers}
+   */
+  modifiers: modifiers
+};
+
+/**
+ * @callback onCreate
+ * @param {dataObject} data
+ */
+
+/**
+ * @callback onUpdate
+ * @param {dataObject} data
+ */
+
+// Utils
+// Methods
+var Popper = function () {
+  /**
+   * Create a new Popper.js instance
+   * @class Popper
+   * @param {HTMLElement|referenceObject} reference - The reference element used to position the popper
+   * @param {HTMLElement} popper - The HTML element used as popper.
+   * @param {Object} options - Your custom options to override the ones defined in [Defaults](#defaults)
+   * @return {Object} instance - The generated Popper.js instance
+   */
+  function Popper(reference, popper) {
+    var _this = this;
+
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    classCallCheck$1(this, Popper);
+
+    this.scheduleUpdate = function () {
+      return requestAnimationFrame(_this.update);
+    };
+
+    // make update() debounced, so that it only runs at most once-per-tick
+    this.update = debounce(this.update.bind(this));
+
+    // with {} we create a new object with the options inside it
+    this.options = _extends$1({}, Popper.Defaults, options);
+
+    // init state
+    this.state = {
+      isDestroyed: false,
+      isCreated: false,
+      scrollParents: []
+    };
+
+    // get reference and popper elements (allow jQuery wrappers)
+    this.reference = reference && reference.jquery ? reference[0] : reference;
+    this.popper = popper && popper.jquery ? popper[0] : popper;
+
+    // Deep merge modifiers options
+    this.options.modifiers = {};
+    Object.keys(_extends$1({}, Popper.Defaults.modifiers, options.modifiers)).forEach(function (name) {
+      _this.options.modifiers[name] = _extends$1({}, Popper.Defaults.modifiers[name] || {}, options.modifiers ? options.modifiers[name] : {});
+    });
+
+    // Refactoring modifiers' list (Object => Array)
+    this.modifiers = Object.keys(this.options.modifiers).map(function (name) {
+      return _extends$1({
+        name: name
+      }, _this.options.modifiers[name]);
+    })
+    // sort the modifiers by order
+    .sort(function (a, b) {
+      return a.order - b.order;
+    });
+
+    // modifiers have the ability to execute arbitrary code when Popper.js get inited
+    // such code is executed in the same order of its modifier
+    // they could add new properties to their options configuration
+    // BE AWARE: don't add options to `options.modifiers.name` but to `modifierOptions`!
+    this.modifiers.forEach(function (modifierOptions) {
+      if (modifierOptions.enabled && isFunction(modifierOptions.onLoad)) {
+        modifierOptions.onLoad(_this.reference, _this.popper, _this.options, modifierOptions, _this.state);
+      }
+    });
+
+    // fire the first update to position the popper in the right place
+    this.update();
+
+    var eventsEnabled = this.options.eventsEnabled;
+    if (eventsEnabled) {
+      // setup event listeners, they will take care of update the position in specific situations
+      this.enableEventListeners();
+    }
+
+    this.state.eventsEnabled = eventsEnabled;
+  }
+
+  // We can't use class properties because they don't get listed in the
+  // class prototype and break stuff like Sinon stubs
+
+
+  createClass$1(Popper, [{
+    key: 'update',
+    value: function update$$1() {
+      return update.call(this);
+    }
+  }, {
+    key: 'destroy',
+    value: function destroy$$1() {
+      return destroy.call(this);
+    }
+  }, {
+    key: 'enableEventListeners',
+    value: function enableEventListeners$$1() {
+      return enableEventListeners.call(this);
+    }
+  }, {
+    key: 'disableEventListeners',
+    value: function disableEventListeners$$1() {
+      return disableEventListeners.call(this);
+    }
+
+    /**
+     * Schedule an update, it will run on the next UI update available
+     * @method scheduleUpdate
+     * @memberof Popper
+     */
+
+    /**
+     * Collection of utilities useful when writing custom modifiers.
+     * Starting from version 1.7, this method is available only if you
+     * include `popper-utils.js` before `popper.js`.
+     *
+     * **DEPRECATION**: This way to access PopperUtils is deprecated
+     * and will be removed in v2! Use the PopperUtils module directly instead.
+     * Due to the high instability of the methods contained in Utils, we can't
+     * guarantee them to follow semver. Use them at your own risk!
+     * @static
+     * @private
+     * @type {Object}
+     * @deprecated since version 1.8
+     * @member Utils
+     * @memberof Popper
+     */
+
+  }]);
+  return Popper;
+}();
+
+/**
+ * The `referenceObject` is an object that provides an interface compatible with Popper.js
+ * and lets you use it as replacement of a real DOM node.<br />
+ * You can use this method to position a popper relatively to a set of coordinates
+ * in case you don't have a DOM node to use as reference.
+ *
+ * ```
+ * new Popper(referenceObject, popperNode);
+ * ```
+ *
+ * NB: This feature isn't supported in Internet Explorer 10
+ * @name referenceObject
+ * @property {Function} data.getBoundingClientRect
+ * A function that returns a set of coordinates compatible with the native `getBoundingClientRect` method.
+ * @property {number} data.clientWidth
+ * An ES6 getter that will return the width of the virtual reference element.
+ * @property {number} data.clientHeight
+ * An ES6 getter that will return the height of the virtual reference element.
+ */
+
+Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
+Popper.placements = placements;
+Popper.Defaults = Defaults;
+
+
+//# sourceMappingURL=popper.js.map
+
+function resetPopperPosition(popper) {
+  var styles = popper.style;
+  styles[prefix('transform')] = null;
+  styles.top = null;
+  styles.left = null;
+}
+
+/**
+ * Triggers document reflow.
+ * Use void because some minifiers or engines think simply accessing the property
+ * is unnecessary.
+ * @param {Element} popper
+ */
+function reflow(popper) {
+  void popper.offsetHeight;
+}
+
+function updatePopperPosition(popperInstance, callback, updateAlreadyCalled) {
+  var popper = popperInstance.popper,
+      options = popperInstance.options;
+
+  var onCreate = options.onCreate;
+  var onUpdate = options.onUpdate;
+
+  options.onCreate = options.onUpdate = function () {
+    reflow(popper), callback && callback(), onUpdate();
+    options.onCreate = onCreate;
+    options.onUpdate = onUpdate;
+  };
+
+  if (!updateAlreadyCalled) {
+    popperInstance.scheduleUpdate();
+  }
+}
+
+/**
+ * Returns the core placement ('top', 'bottom', 'left', 'right') of a popper
+ * @param {Element} popper
+ * @return {String}
+ */
+function getPopperPlacement(popper) {
+  return popper.getAttribute('x-placement').replace(/-.+/, '');
+}
+
+function cursorIsOutsideInteractiveBorder(event, popper, options) {
+  if (!popper.getAttribute('x-placement')) return true;
+
+  var x = event.clientX,
+      y = event.clientY;
+  var interactiveBorder = options.interactiveBorder,
+      distance = options.distance;
+
+
+  var rect = popper.getBoundingClientRect();
+  var placement = getPopperPlacement(popper);
+  var borderWithDistance = interactiveBorder + distance;
+
+  var exceeds = {
+    top: rect.top - y > interactiveBorder,
+    bottom: y - rect.bottom > interactiveBorder,
+    left: rect.left - x > interactiveBorder,
+    right: x - rect.right > interactiveBorder
+  };
+
+  switch (placement) {
+    case 'top':
+      exceeds.top = rect.top - y > borderWithDistance;
+      break;
+    case 'bottom':
+      exceeds.bottom = y - rect.bottom > borderWithDistance;
+      break;
+    case 'left':
+      exceeds.left = rect.left - x > borderWithDistance;
+      break;
+    case 'right':
+      exceeds.right = x - rect.right > borderWithDistance;
+      break;
+  }
+
+  return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right;
+}
+
+/**
+ * Transforms the `arrowTransform` numbers based on the placement axis
+ * @param {String} type 'scale' or 'translate'
+ * @param {Number[]} numbers
+ * @param {Boolean} isVertical
+ * @param {Boolean} isReverse
+ * @return {String}
+ */
+function transformNumbersBasedOnPlacementAxis(type, numbers, isVertical, isReverse) {
+  if (!numbers.length) return '';
+
+  var transforms = {
+    scale: function () {
+      if (numbers.length === 1) {
+        return '' + numbers[0];
+      } else {
+        return isVertical ? numbers[0] + ', ' + numbers[1] : numbers[1] + ', ' + numbers[0];
+      }
+    }(),
+    translate: function () {
+      if (numbers.length === 1) {
+        return isReverse ? -numbers[0] + 'px' : numbers[0] + 'px';
+      } else {
+        if (isVertical) {
+          return isReverse ? numbers[0] + 'px, ' + -numbers[1] + 'px' : numbers[0] + 'px, ' + numbers[1] + 'px';
+        } else {
+          return isReverse ? -numbers[1] + 'px, ' + numbers[0] + 'px' : numbers[1] + 'px, ' + numbers[0] + 'px';
+        }
+      }
+    }()
+  };
+
+  return transforms[type];
+}
+
+/**
+ * Transforms the `arrowTransform` x or y axis based on the placement axis
+ * @param {String} axis 'X', 'Y', ''
+ * @param {Boolean} isVertical
+ * @return {String}
+ */
+function transformAxis(axis, isVertical) {
+  if (!axis) return '';
+  var map = {
+    X: 'Y',
+    Y: 'X'
+  };
+  return isVertical ? axis : map[axis];
+}
+
+function computeArrowTransform(popper, arrow, arrowTransform) {
+  var placement = getPopperPlacement(popper);
+  var isVertical = placement === 'top' || placement === 'bottom';
+  var isReverse = placement === 'right' || placement === 'bottom';
+
+  var getAxis = function getAxis(re) {
+    var match = arrowTransform.match(re);
+    return match ? match[1] : '';
+  };
+
+  var getNumbers = function getNumbers(re) {
+    var match = arrowTransform.match(re);
+    return match ? match[1].split(',').map(parseFloat) : [];
+  };
+
+  var re = {
+    translate: /translateX?Y?\(([^)]+)\)/,
+    scale: /scaleX?Y?\(([^)]+)\)/
+  };
+
+  var matches = {
+    translate: {
+      axis: getAxis(/translate([XY])/),
+      numbers: getNumbers(re.translate)
+    },
+    scale: {
+      axis: getAxis(/scale([XY])/),
+      numbers: getNumbers(re.scale)
+    }
+  };
+
+  var computedTransform = arrowTransform.replace(re.translate, 'translate' + transformAxis(matches.translate.axis, isVertical) + '(' + transformNumbersBasedOnPlacementAxis('translate', matches.translate.numbers, isVertical, isReverse) + ')').replace(re.scale, 'scale' + transformAxis(matches.scale.axis, isVertical) + '(' + transformNumbersBasedOnPlacementAxis('scale', matches.scale.numbers, isVertical, isReverse) + ')');
+
+  arrow.style[prefix('transform')] = computedTransform;
+}
+
+function getOffsetDistanceInPx(distance) {
+  return -(distance - defaults.distance) + 'px';
+}
+
+/**
+ * Waits until next repaint to execute a fn
+ * @param {Function} fn
+ */
+function defer(fn) {
+  requestAnimationFrame(function () {
+    setTimeout(fn, 1);
+  });
+}
+
+var matches = {};
+
+if (isBrowser) {
+  var e = Element.prototype;
+  matches = e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || function (s) {
+    var matches = (this.document || this.ownerDocument).querySelectorAll(s);
+    var i = matches.length;
+    while (--i >= 0 && matches.item(i) !== this) {} // eslint-disable-line no-empty
+    return i > -1;
+  };
+}
+
+var matches$1 = matches;
+
+function closest(element, parentSelector) {
+  var fn = Element.prototype.closest || function (selector) {
+    var el = this;
+    while (el) {
+      if (matches$1.call(el, selector)) {
+        return el;
+      }
+      el = el.parentElement;
+    }
+  };
+
+  return fn.call(element, parentSelector);
+}
+
+/**
+ * Returns duration taking into account the option being either a number or array
+ * @param {Number} duration
+ * @param {Number} index
+ * @return {Number}
+ */
+function getDuration(duration, index) {
+  return Array.isArray(duration) ? duration[index] : duration;
+}
+
+/**
+ * Sets the visibility state of an element for transition to begin
+ * @param {Element[]} els - array of elements
+ * @param {String} type - 'visible' or 'hidden'
+ */
+function setVisibilityState(els, type) {
+  els.forEach(function (el) {
+    if (!el) return;
+    el.setAttribute('data-state', type);
+  });
+}
+
+function applyTransitionDuration(els, duration) {
+  els.forEach(function (el) {
+    if (!el) return;
+    el.style[prefix('transitionDuration')] = duration + 'ms';
+  });
+}
+
+/**
+ * Focuses an element while preventing a scroll jump if it's not entirely within the viewport
+ * @param {Element} el
+ */
+function focus(el) {
+  var x = window.scrollX || window.pageXOffset;
+  var y = window.scrollY || window.pageYOffset;
+  el.focus();
+  scroll(x, y);
+}
+
+/**
+ * Ponyfill for Array.prototype.find
+ * @param {Array} arr
+ * @param {Function} fn
+ * @return item in the array
+ */
+function find$1(arr, fn) {
+  return Array.prototype.find ? arr.find(fn) : arr.filter(fn)[0];
+}
+
+var key = {};
+var store = function store(data) {
+  return function (k) {
+    return k === key && data;
+  };
+};
+
+var Tippy = function () {
+  function Tippy(config) {
+    classCallCheck(this, Tippy);
+
+    for (var _key in config) {
+      this[_key] = config[_key];
+    }
+
+    this.state = {
+      destroyed: false,
+      visible: false,
+      enabled: true
+    };
+
+    this._ = store({
+      mutationObservers: []
+    });
+  }
+
+  /**
+   * Enables the tooltip to allow it to show or hide
+   * @memberof Tippy
+   * @public
+   */
+
+
+  createClass(Tippy, [{
+    key: 'enable',
+    value: function enable() {
+      this.state.enabled = true;
+    }
+
+    /**
+     * Disables the tooltip from showing or hiding, but does not destroy it
+     * @memberof Tippy
+     * @public
+     */
+
+  }, {
+    key: 'disable',
+    value: function disable() {
+      this.state.enabled = false;
+    }
+
+    /**
+     * Shows the tooltip
+     * @param {Number} duration in milliseconds
+     * @memberof Tippy
+     * @public
+     */
+
+  }, {
+    key: 'show',
+    value: function show(duration) {
+      var _this = this;
+
+      if (this.state.destroyed || !this.state.enabled) return;
+
+      var popper = this.popper,
+          reference = this.reference,
+          options = this.options;
+
+      var _getInnerElements = getInnerElements(popper),
+          tooltip = _getInnerElements.tooltip,
+          backdrop = _getInnerElements.backdrop,
+          content = _getInnerElements.content;
+
+      // If the `dynamicTitle` option is true, the instance is allowed
+      // to be created with an empty title. Make sure that the tooltip
+      // content is not empty before showing it
+
+
+      if (options.dynamicTitle && !reference.getAttribute('data-original-title')) return;
+
+      // Destroy tooltip if the reference element is no longer on the DOM
+      if (!reference.refObj && !document.documentElement.contains(reference)) {
+        this.destroy();
+        return;
+      }
+
+      options.onShow.call(popper, this);
+
+      duration = getDuration(duration !== undefined ? duration : options.duration, 0);
+
+      // Prevent a transition when popper changes position
+      applyTransitionDuration([popper, tooltip, backdrop], 0);
+
+      popper.style.visibility = 'visible';
+      this.state.visible = true;
+
+      _mount.call(this, function () {
+        if (!_this.state.visible) return;
+
+        if (!options.followCursor || browser.usingTouch) {
+          // FIX: Arrow will sometimes not be positioned correctly. Force another update.
+          _this.popperInstance.scheduleUpdate();
+        }
+
+        // Re-apply transition durations
+        applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration);
+
+        if (backdrop) {
+          getComputedStyle(backdrop)[prefix('transform')];
+        }
+
+        if (options.interactive) {
+          reference.classList.add('tippy-active');
+        }
+
+        if (options.sticky) {
+          _makeSticky.call(_this);
+        }
+
+        setVisibilityState([tooltip, backdrop], 'visible');
+
+        _onTransitionEnd.call(_this, duration, function () {
+          if (!options.updateDuration) {
+            tooltip.classList.add('tippy-notransition');
+          }
+
+          if (options.interactive) {
+            focus(popper);
+          }
+
+          reference.setAttribute('aria-describedby', 'tippy-' + _this.id);
+
+          options.onShown.call(popper, _this);
+        });
+      });
+    }
+
+    /**
+     * Hides the tooltip
+     * @param {Number} duration in milliseconds
+     * @memberof Tippy
+     * @public
+     */
+
+  }, {
+    key: 'hide',
+    value: function hide(duration) {
+      var _this2 = this;
+
+      if (this.state.destroyed || !this.state.enabled) return;
+
+      var popper = this.popper,
+          reference = this.reference,
+          options = this.options;
+
+      var _getInnerElements2 = getInnerElements(popper),
+          tooltip = _getInnerElements2.tooltip,
+          backdrop = _getInnerElements2.backdrop,
+          content = _getInnerElements2.content;
+
+      options.onHide.call(popper, this);
+
+      duration = getDuration(duration !== undefined ? duration : options.duration, 1);
+
+      if (!options.updateDuration) {
+        tooltip.classList.remove('tippy-notransition');
+      }
+
+      if (options.interactive) {
+        reference.classList.remove('tippy-active');
+      }
+
+      popper.style.visibility = 'hidden';
+      this.state.visible = false;
+
+      applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration);
+
+      setVisibilityState([tooltip, backdrop], 'hidden');
+
+      if (options.interactive && options.trigger.indexOf('click') > -1) {
+        focus(reference);
+      }
+
+      /*
+      * This call is deferred because sometimes when the tooltip is still transitioning in but hide()
+      * is called before it finishes, the CSS transition won't reverse quickly enough, meaning
+      * the CSS transition will finish 1-2 frames later, and onHidden() will run since the JS set it
+      * more quickly. It should actually be onShown(). Seems to be something Chrome does, not Safari
+      */
+      defer(function () {
+        _onTransitionEnd.call(_this2, duration, function () {
+          if (_this2.state.visible || !options.appendTo.contains(popper)) return;
+
+          if (!_this2._(key).isPreparingToShow) {
+            document.removeEventListener('mousemove', _this2._(key).followCursorListener);
+            _this2._(key).lastMouseMoveEvent = null;
+          }
+
+          reference.removeAttribute('aria-describedby');
+          _this2.popperInstance.disableEventListeners();
+          options.appendTo.removeChild(popper);
+          options.onHidden.call(popper, _this2);
+        });
+      });
+    }
+
+    /**
+     * Destroys the tooltip instance
+     * @param {Boolean} destroyTargetInstances - relevant only when destroying delegates
+     * @memberof Tippy
+     * @public
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      var _this3 = this;
+
+      var destroyTargetInstances = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+      if (this.state.destroyed) return;
+
+      // Ensure the popper is hidden
+      if (this.state.visible) {
+        this.hide(0);
+      }
+
+      this.listeners.forEach(function (listener) {
+        _this3.reference.removeEventListener(listener.event, listener.handler);
+      });
+
+      // Restore title
+      this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'));
+
+      delete this.reference._tippy;
+
+      var attributes = ['data-original-title', 'data-tippy', 'data-tippy-delegate'];
+      attributes.forEach(function (attr) {
+        _this3.reference.removeAttribute(attr);
+      });
+
+      if (this.options.target && destroyTargetInstances) {
+        toArray(this.reference.querySelectorAll(this.options.target)).forEach(function (child) {
+          return child._tippy && child._tippy.destroy();
+        });
+      }
+
+      if (this.popperInstance) {
+        this.popperInstance.destroy();
+      }
+
+      this._(key).mutationObservers.forEach(function (observer) {
+        observer.disconnect();
+      });
+
+      this.state.destroyed = true;
+    }
+  }]);
+  return Tippy;
+}();
+
+/**
+ * ------------------------------------------------------------------------
+ * Private methods
+ * ------------------------------------------------------------------------
+ * Standalone functions to be called with the instance's `this` context to make
+ * them truly private and not accessible on the prototype
+ */
+
+/**
+ * Creates the Tippy instance for the child target of the delegate container
+ * @param {Event} event
+ * @memberof Tippy
+ * @private
+ */
+function _createDelegateChildTippy(event) {
+  var targetEl = closest(event.target, this.options.target);
+  if (targetEl && !targetEl._tippy) {
+    var title = targetEl.getAttribute('title') || this.title;
+    if (title) {
+      targetEl.setAttribute('title', title);
+      tippy$1(targetEl, _extends({}, this.options, { target: null }));
+      _enter.call(targetEl._tippy, event);
+    }
+  }
+}
+
+/**
+ * Method used by event listeners to invoke the show method, taking into account delays and
+ * the `wait` option
+ * @param {Event} event
+ * @memberof Tippy
+ * @private
+ */
+function _enter(event) {
+  var _this4 = this;
+
+  _clearDelayTimeouts.call(this);
+
+  if (this.state.visible) return;
+
+  // Is a delegate, create Tippy instance for the child target
+  if (this.options.target) {
+    _createDelegateChildTippy.call(this, event);
+    return;
+  }
+
+  this._(key).isPreparingToShow = true;
+
+  if (this.options.wait) {
+    this.options.wait.call(this.popper, this.show.bind(this), event);
+    return;
+  }
+
+  // If the tooltip has a delay, we need to be listening to the mousemove as soon as the trigger
+  // event is fired so that it's in the correct position upon mount.
+  if (this.options.followCursor && !browser.usingTouch) {
+    if (!this._(key).followCursorListener) {
+      _setFollowCursorListener.call(this);
+    }
+    document.addEventListener('mousemove', this._(key).followCursorListener);
+  }
+
+  var delay = Array.isArray(this.options.delay) ? this.options.delay[0] : this.options.delay;
+
+  if (delay) {
+    this._(key).showTimeout = setTimeout(function () {
+      _this4.show();
+    }, delay);
+  } else {
+    this.show();
+  }
+}
+
+/**
+ * Method used by event listeners to invoke the hide method, taking into account delays
+ * @memberof Tippy
+ * @private
+ */
+function _leave() {
+  var _this5 = this;
+
+  _clearDelayTimeouts.call(this);
+
+  if (!this.state.visible) return;
+
+  this._(key).isPreparingToShow = false;
+
+  var delay = Array.isArray(this.options.delay) ? this.options.delay[1] : this.options.delay;
+
+  if (delay) {
+    this._(key).hideTimeout = setTimeout(function () {
+      if (!_this5.state.visible) return;
+      _this5.hide();
+    }, delay);
+  } else {
+    this.hide();
+  }
+}
+
+/**
+ * Returns relevant listeners for the instance
+ * @return {Object} of listeners
+ * @memberof Tippy
+ * @private
+ */
+function _getEventListeners() {
+  var _this6 = this;
+
+  var handleTrigger = function handleTrigger(event) {
+    if (!_this6.state.enabled) return;
+
+    var shouldStopEvent = browser.supportsTouch && browser.usingTouch && ['mouseenter', 'mouseover', 'focus'].indexOf(event.type) > -1;
+
+    if (shouldStopEvent && _this6.options.touchHold) return;
+
+    _this6._(key).lastTriggerEvent = event;
+
+    // Toggle show/hide when clicking click-triggered tooltips
+    if (event.type === 'click' && _this6.options.hideOnClick !== 'persistent' && _this6.state.visible) {
+      _leave.call(_this6);
+    } else {
+      _enter.call(_this6, event);
+    }
+
+    // iOS prevents click events from firing
+    if (shouldStopEvent && browser.iOS && _this6.reference.click) {
+      _this6.reference.click();
+    }
+  };
+
+  var handleMouseLeave = function handleMouseLeave(event) {
+    if (['mouseleave', 'mouseout'].indexOf(event.type) > -1 && browser.supportsTouch && browser.usingTouch && _this6.options.touchHold) return;
+
+    if (_this6.options.interactive) {
+      var hide = _leave.bind(_this6);
+
+      // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
+      var handleMouseMove = function handleMouseMove(event) {
+        var referenceCursorIsOver = closest(event.target, selectors.REFERENCE);
+        var cursorIsOverPopper = closest(event.target, selectors.POPPER) === _this6.popper;
+        var cursorIsOverReference = referenceCursorIsOver === _this6.reference;
+
+        if (cursorIsOverPopper || cursorIsOverReference) return;
+
+        if (cursorIsOutsideInteractiveBorder(event, _this6.popper, _this6.options)) {
+          document.body.removeEventListener('mouseleave', hide);
+          document.removeEventListener('mousemove', handleMouseMove);
+
+          _leave.call(_this6);
+        }
+      };
+      document.body.addEventListener('mouseleave', hide);
+      document.addEventListener('mousemove', handleMouseMove);
+      return;
+    }
+
+    _leave.call(_this6);
+  };
+
+  var handleBlur = function handleBlur(event) {
+    if (event.target !== _this6.reference || !event.relatedTarget || browser.usingTouch) return;
+    if (closest(event.relatedTarget, selectors.POPPER)) return;
+
+    _leave.call(_this6);
+  };
+
+  var handleDelegateShow = function handleDelegateShow(event) {
+    if (closest(event.target, _this6.options.target)) {
+      _enter.call(_this6, event);
+    }
+  };
+
+  var handleDelegateHide = function handleDelegateHide(event) {
+    if (closest(event.target, _this6.options.target)) {
+      _leave.call(_this6);
+    }
+  };
+
+  return {
+    handleTrigger: handleTrigger,
+    handleMouseLeave: handleMouseLeave,
+    handleBlur: handleBlur,
+    handleDelegateShow: handleDelegateShow,
+    handleDelegateHide: handleDelegateHide
+  };
+}
+
+/**
+ * Creates and returns a new popper instance
+ * @return {Popper}
+ * @memberof Tippy
+ * @private
+ */
+function _createPopperInstance() {
+  var _this7 = this;
+
+  var popper = this.popper,
+      reference = this.reference,
+      options = this.options;
+
+  var _getInnerElements3 = getInnerElements(popper),
+      tooltip = _getInnerElements3.tooltip;
+
+  var popperOptions = options.popperOptions;
+
+  var arrowSelector = options.arrowType === 'round' ? selectors.ROUND_ARROW : selectors.ARROW;
+  var arrow = tooltip.querySelector(arrowSelector);
+
+  var config = _extends({
+    placement: options.placement
+  }, popperOptions || {}, {
+    modifiers: _extends({}, popperOptions ? popperOptions.modifiers : {}, {
+      arrow: _extends({
+        element: arrowSelector
+      }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {}),
+      flip: _extends({
+        enabled: options.flip,
+        padding: options.distance + 5 /* 5px from viewport boundary */
+        , behavior: options.flipBehavior
+      }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {}),
+      offset: _extends({
+        offset: options.offset
+      }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
+    }),
+    onCreate: function onCreate() {
+      tooltip.style[getPopperPlacement(popper)] = getOffsetDistanceInPx(options.distance);
+
+      if (arrow && options.arrowTransform) {
+        computeArrowTransform(popper, arrow, options.arrowTransform);
+      }
+    },
+    onUpdate: function onUpdate() {
+      var styles = tooltip.style;
+      styles.top = '';
+      styles.bottom = '';
+      styles.left = '';
+      styles.right = '';
+      styles[getPopperPlacement(popper)] = getOffsetDistanceInPx(options.distance);
+
+      if (arrow && options.arrowTransform) {
+        computeArrowTransform(popper, arrow, options.arrowTransform);
+      }
+    }
+  });
+
+  _addMutationObserver.call(this, {
+    target: popper,
+    callback: function callback() {
+      _this7.popperInstance.update();
+    },
+    options: {
+      childList: true,
+      subtree: true,
+      characterData: true
+    }
+  });
+
+  return new Popper(reference, popper, config);
+}
+
+/**
+ * Appends the popper element to the DOM, updating or creating the popper instance
+ * @param {Function} callback
+ * @memberof Tippy
+ * @private
+ */
+function _mount(callback) {
+  var _this8 = this;
+
+  var options = this.options;
+
+
+  var setFlipModifier = function setFlipModifier(bool) {
+    var flip = find$1(_this8.popperInstance.modifiers, function (m) {
+      return m.name === 'flip';
+    });
+    if (flip) flip.enabled = bool;
+  };
+
+  if (!this.popperInstance) {
+    this.popperInstance = _createPopperInstance.call(this);
+    if (!options.livePlacement) {
+      this.popperInstance.disableEventListeners();
+      setFlipModifier(false);
+    }
+  } else {
+    resetPopperPosition(this.popper);
+    this.popperInstance.scheduleUpdate();
+    if (options.livePlacement && (!options.followCursor || browser.usingTouch)) {
+      this.popperInstance.enableEventListeners();
+      setFlipModifier(true);
+    }
+  }
+
+  updatePopperPosition(this.popperInstance, callback, true);
+
+  if (!options.appendTo.contains(this.popper)) {
+    options.appendTo.appendChild(this.popper);
+  }
+}
+
+/**
+ * Clears the show and hide delay timeouts
+ * @memberof Tippy
+ * @private
+ */
+function _clearDelayTimeouts() {
+  var _ref = this._(key),
+      showTimeout = _ref.showTimeout,
+      hideTimeout = _ref.hideTimeout;
+
+  clearTimeout(showTimeout);
+  clearTimeout(hideTimeout);
+}
+
+/**
+ * Sets the mousemove event listener function for `followCursor` option
+ * @memberof Tippy
+ * @private
+ */
+function _setFollowCursorListener() {
+  var _this9 = this;
+
+  this._(key).followCursorListener = function (event) {
+    var clientX = event.clientX,
+        clientY = event.clientY;
+
+
+    _this9.popperInstance.reference = {
+      getBoundingClientRect: function getBoundingClientRect() {
+        return {
+          width: 0,
+          height: 0,
+          top: clientY,
+          left: clientX,
+          right: clientX,
+          bottom: clientY
+        };
+      },
+      clientWidth: 0,
+      clientHeight: 0
+    };
+
+    _this9.popperInstance.scheduleUpdate();
+  };
+}
+
+/**
+ * Updates the popper's position on each animation frame
+ * @memberof Tippy
+ * @private
+ */
+function _makeSticky() {
+  var _this10 = this;
+
+  var applyTransitionDuration$$1 = function applyTransitionDuration$$1() {
+    _this10.popper.style[prefix('transitionDuration')] = _this10.options.updateDuration + 'ms';
+  };
+
+  var removeTransitionDuration = function removeTransitionDuration() {
+    _this10.popper.style[prefix('transitionDuration')] = '';
+  };
+
+  var updatePosition = function updatePosition() {
+    if (_this10.popperInstance) {
+      _this10.popperInstance.scheduleUpdate();
+    }
+
+    applyTransitionDuration$$1();
+
+    if (_this10.state.visible) {
+      requestAnimationFrame(updatePosition);
+    } else {
+      removeTransitionDuration();
+    }
+  };
+
+  // Wait until the popper's position has been updated initially
+  defer(updatePosition);
+}
+
+/**
+ * Adds a mutation observer to an element and stores it in the instance
+ * @param {Object}
+ * @memberof Tippy
+ * @private
+ */
+function _addMutationObserver(_ref2) {
+  var target = _ref2.target,
+      callback = _ref2.callback,
+      options = _ref2.options;
+
+  if (!window.MutationObserver) return;
+
+  var observer = new MutationObserver(callback);
+  observer.observe(target, options);
+
+  this._(key).mutationObservers.push(observer);
+}
+
+/**
+ * Fires the callback functions once the CSS transition ends for `show` and `hide` methods
+ * @param {Number} duration
+ * @param {Function} callback - callback function to fire once transition completes
+ * @memberof Tippy
+ * @private
+ */
+function _onTransitionEnd(duration, callback) {
+  // Make callback synchronous if duration is 0
+  if (!duration) {
+    return callback();
+  }
+
+  var _getInnerElements4 = getInnerElements(this.popper),
+      tooltip = _getInnerElements4.tooltip;
+
+  var toggleListeners = function toggleListeners(action, listener) {
+    if (!listener) return;
+    tooltip[action + 'EventListener']('ontransitionend' in window ? 'transitionend' : 'webkitTransitionEnd', listener);
+  };
+
+  var listener = function listener(e) {
+    if (e.target === tooltip) {
+      toggleListeners('remove', listener);
+      callback();
+    }
+  };
+
+  toggleListeners('remove', this._(key).transitionendListener);
+  toggleListeners('add', listener);
+
+  this._(key).transitionendListener = listener;
+}
+
+var idCounter = 1;
+
+/**
+ * Creates tooltips for each reference element
+ * @param {Element[]} els
+ * @param {Object} config
+ * @return {Tippy[]} Array of Tippy instances
+ */
+function createTooltips(els, config) {
+  return els.reduce(function (acc, reference) {
+    var id = idCounter;
+
+    var options = evaluateOptions(reference, config.performance ? config : getIndividualOptions(reference, config));
+
+    var title = reference.getAttribute('title');
+
+    // Don't create an instance when:
+    // * the `title` attribute is falsy (null or empty string), and
+    // * it's not a delegate for tooltips, and
+    // * there is no html template specified, and
+    // * `dynamicTitle` option is false
+    if (!title && !options.target && !options.html && !options.dynamicTitle) {
+      return acc;
+    }
+
+    // Delegates should be highlighted as different
+    reference.setAttribute(options.target ? 'data-tippy-delegate' : 'data-tippy', '');
+
+    removeTitle(reference);
+
+    var popper = createPopperElement(id, title, options);
+
+    var tippy = new Tippy({
+      id: id,
+      reference: reference,
+      popper: popper,
+      options: options,
+      title: title,
+      popperInstance: null
+    });
+
+    if (options.createPopperInstanceOnInit) {
+      tippy.popperInstance = _createPopperInstance.call(tippy);
+      tippy.popperInstance.disableEventListeners();
+    }
+
+    var listeners = _getEventListeners.call(tippy);
+    tippy.listeners = options.trigger.trim().split(' ').reduce(function (acc, eventType) {
+      return acc.concat(createTrigger(eventType, reference, listeners, options));
+    }, []);
+
+    // Update tooltip content whenever the title attribute on the reference changes
+    if (options.dynamicTitle) {
+      _addMutationObserver.call(tippy, {
+        target: reference,
+        callback: function callback() {
+          var _getInnerElements = getInnerElements(popper),
+              content = _getInnerElements.content;
+
+          var title = reference.getAttribute('title');
+          if (title) {
+            content.innerHTML = tippy.title = title;
+            removeTitle(reference);
+          }
+        },
+
+        options: {
+          attributes: true
+        }
+      });
+    }
+
+    // Shortcuts
+    reference._tippy = tippy;
+    popper._tippy = tippy;
+    popper._reference = reference;
+
+    acc.push(tippy);
+
+    idCounter++;
+
+    return acc;
+  }, []);
+}
+
+function hideAllPoppers(excludeTippy) {
+  var poppers = toArray(document.querySelectorAll(selectors.POPPER));
+
+  poppers.forEach(function (popper) {
+    var tippy = popper._tippy;
+    if (!tippy) return;
+
+    var options = tippy.options;
+
+
+    if ((options.hideOnClick === true || options.trigger.indexOf('focus') > -1) && (!excludeTippy || popper !== excludeTippy.popper)) {
+      tippy.hide();
+    }
+  });
+}
+
+function bindEventListeners() {
+  var onDocumentTouch = function onDocumentTouch() {
+    if (browser.usingTouch) return;
+
+    browser.usingTouch = true;
+
+    if (browser.iOS) {
+      document.body.classList.add('tippy-touch');
+    }
+
+    if (browser.dynamicInputDetection && window.performance) {
+      document.addEventListener('mousemove', onDocumentMouseMove);
+    }
+
+    browser.onUserInputChange('touch');
+  };
+
+  var onDocumentMouseMove = function () {
+    var time = void 0;
+
+    return function () {
+      var now = performance.now();
+
+      // Chrome 60+ is 1 mousemove per animation frame, use 20ms time difference
+      if (now - time < 20) {
+        browser.usingTouch = false;
+        document.removeEventListener('mousemove', onDocumentMouseMove);
+        if (!browser.iOS) {
+          document.body.classList.remove('tippy-touch');
+        }
+        browser.onUserInputChange('mouse');
+      }
+
+      time = now;
+    };
+  }();
+
+  var onDocumentClick = function onDocumentClick(event) {
+    // Simulated events dispatched on the document
+    if (!(event.target instanceof Element)) {
+      return hideAllPoppers();
+    }
+
+    var reference = closest(event.target, selectors.REFERENCE);
+    var popper = closest(event.target, selectors.POPPER);
+
+    if (popper && popper._reference._tippy.options.interactive) return;
+
+    if (reference) {
+      var options = reference._tippy.options;
+
+      // Hide all poppers except the one belonging to the element that was clicked IF
+      // `multiple` is false AND they are a touch user, OR
+      // `multiple` is false AND it's triggered by a click
+
+      if (!options.multiple && browser.usingTouch || !options.multiple && options.trigger.indexOf('click') > -1) {
+        return hideAllPoppers(reference._tippy);
+      }
+
+      if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1) return;
+    }
+
+    hideAllPoppers();
+  };
+
+  var onWindowBlur = function onWindowBlur() {
+    var _document = document,
+        el = _document.activeElement;
+
+    if (el && el.blur && matches$1.call(el, selectors.REFERENCE)) {
+      el.blur();
+    }
+  };
+
+  var onWindowResize = function onWindowResize() {
+    toArray(document.querySelectorAll(selectors.POPPER)).forEach(function (popper) {
+      var tippyInstance = popper._tippy;
+      if (!tippyInstance.options.livePlacement) {
+        tippyInstance.popperInstance.scheduleUpdate();
+      }
+    });
+  };
+
+  document.addEventListener('click', onDocumentClick);
+  document.addEventListener('touchstart', onDocumentTouch);
+  window.addEventListener('blur', onWindowBlur);
+  window.addEventListener('resize', onWindowResize);
+
+  if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
+    document.addEventListener('pointerdown', onDocumentTouch);
+  }
+}
+
+var eventListenersBound = false;
+
+/**
+ * Exported module
+ * @param {String|Element|Element[]|NodeList|Object} selector
+ * @param {Object} options
+ * @return {Object}
+ */
+function tippy$1(selector, options) {
+  if (browser.supported && !eventListenersBound) {
+    bindEventListeners();
+    eventListenersBound = true;
+  }
+
+  if (isObjectLiteral(selector)) {
+    selector.refObj = true;
+    selector.attributes = selector.attributes || {};
+    selector.setAttribute = function (key, val) {
+      selector.attributes[key] = val;
+    };
+    selector.getAttribute = function (key) {
+      return selector.attributes[key];
+    };
+    selector.removeAttribute = function (key) {
+      delete selector.attributes[key];
+    };
+    selector.addEventListener = function () {};
+    selector.removeEventListener = function () {};
+    selector.classList = {
+      classNames: {},
+      add: function add(key) {
+        return selector.classList.classNames[key] = true;
+      },
+      remove: function remove(key) {
+        delete selector.classList.classNames[key];
+        return true;
+      },
+      contains: function contains(key) {
+        return !!selector.classList.classNames[key];
+      }
+    };
+  }
+
+  options = _extends({}, defaults, options);
+
+  return {
+    selector: selector,
+    options: options,
+    tooltips: browser.supported ? createTooltips(getArrayOfElements(selector), options) : [],
+    destroyAll: function destroyAll() {
+      this.tooltips.forEach(function (tooltip) {
+        return tooltip.destroy();
+      });
+      this.tooltips = [];
+    }
+  };
+}
+
+tippy$1.browser = browser;
+tippy$1.defaults = defaults;
+tippy$1.disableAnimations = function () {
+  defaults.updateDuration = defaults.duration = 0;
+  defaults.animateFill = false;
+};
+
+return tippy$1;
+
+})));
