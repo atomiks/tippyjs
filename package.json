@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "2.2.3",
+  "version": "2.3.0",
   "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.all.js",
   "repository": {
@@ -32,35 +32,32 @@
   ],
   "devDependencies": {
     "autoprefixer": "^6.7.7",
-    "babel-core": "^6.25.0",
-    "babel-jest": "^22.1.0",
+    "babel-core": "^6.26.0",
+    "babel-jest": "^22.4.1",
     "babel-loader": "^6.4.1",
     "babel-plugin-transform-object-assign": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015-rollup": "^3.0.0",
     "cssnano": "^3.10.0",
-    "eslint": "^4.14.0",
-    "jest": "^22.1.4",
+    "eslint": "^4.18.2",
+    "jest": "^22.4.2",
     "jsdom": "^11.6.2",
     "mutation-observer": "^1.0.3",
-    "postcss": "^5.2.16",
-    "postcss-cssnext": "^3.0.2",
-    "postcss-nested": "^2.1.2",
-    "postcss-simple-vars": "^4.1.0",
-    "prettier": "^1.9.1",
-    "rollup": "^0.55.1",
+    "postcss": "^5.2.18",
+    "prettier": "^1.11.1",
+    "rollup": "^0.55.5",
     "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-babili": "^3.1.0",
-    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-babili": "^3.1.1",
+    "rollup-plugin-commonjs": "^8.4.1",
     "rollup-plugin-css-only": "^0.2.0",
     "rollup-plugin-livereload": "^0.4.0",
-    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-node-resolve": "^3.2.0",
     "rollup-plugin-sass": "^0.4.10",
     "rollup-plugin-serve": "^0.3.0",
     "rollup-watch": "^3.2.2"
   },
   "dependencies": {
-    "popper.js": "^1.12.9"
+    "popper.js": "^1.13.0"
   }
 }
