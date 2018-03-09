@@ -14,7 +14,7 @@ import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 import prefix from '../utils/prefix'
 import defer from '../utils/defer'
 import closest from '../utils/closest'
-import getDuration from '../utils/getDuration'
+import getValue from '../utils/getValue'
 import setVisibilityState from '../utils/setVisibilityState'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
 import toArray from '../utils/toArray'
@@ -83,10 +83,11 @@ export class Tippy {
 
     options.onShow.call(popper, this)
 
-    duration = getDuration(duration !== undefined ? duration : options.duration, 0)
+    duration = getValue(duration !== undefined ? duration : options.duration, 0)
 
     // Prevent a transition when popper changes position
     applyTransitionDuration([popper, tooltip, backdrop], 0)
+    tooltip.style[prefix('transitionTimingFunction')] = options.easing
 
     popper.style.visibility = 'visible'
     this.state.visible = true
@@ -97,6 +98,19 @@ export class Tippy {
       if (!options.followCursor || browser.usingTouch) {
         // FIX: Arrow will sometimes not be positioned correctly. Force another update.
         this.popperInstance.scheduleUpdate()
+      }
+
+      // Set initial position near the cursor
+      if (options.followCursor && !browser.usingTouch) {
+        this.popperInstance.disableEventListeners()
+        const delay = getValue(options.delay, 0)
+        if (this._(key).lastTriggerEvent) {
+          this._(key).followCursorListener(
+            delay && this._(key).lastMouseMoveEvent
+              ? this._(key).lastMouseMoveEvent
+              : this._(key).lastTriggerEvent
+          )
+        }
       }
 
       // Re-apply transition durations
@@ -146,7 +160,7 @@ export class Tippy {
 
     options.onHide.call(popper, this)
 
-    duration = getDuration(duration !== undefined ? duration : options.duration, 1)
+    duration = getValue(duration !== undefined ? duration : options.duration, 1)
 
     if (!options.updateDuration) {
       tooltip.classList.remove('tippy-notransition')
@@ -270,33 +284,35 @@ export function _createDelegateChildTippy(event) {
  * @private
  */
 export function _enter(event) {
+  const { options } = this
+
   _clearDelayTimeouts.call(this)
 
   if (this.state.visible) return
 
   // Is a delegate, create Tippy instance for the child target
-  if (this.options.target) {
+  if (options.target) {
     _createDelegateChildTippy.call(this, event)
     return
   }
 
   this._(key).isPreparingToShow = true
 
-  if (this.options.wait) {
-    this.options.wait.call(this.popper, this.show.bind(this), event)
+  if (options.wait) {
+    options.wait.call(this.popper, this.show.bind(this), event)
     return
   }
 
   // If the tooltip has a delay, we need to be listening to the mousemove as soon as the trigger
   // event is fired so that it's in the correct position upon mount.
-  if (this.options.followCursor && !browser.usingTouch) {
+  if (options.followCursor && !browser.usingTouch) {
     if (!this._(key).followCursorListener) {
       _setFollowCursorListener.call(this)
     }
     document.addEventListener('mousemove', this._(key).followCursorListener)
   }
 
-  const delay = Array.isArray(this.options.delay) ? this.options.delay[0] : this.options.delay
+  const delay = getValue(options.delay, 0)
 
   if (delay) {
     this._(key).showTimeout = setTimeout(() => {
@@ -319,7 +335,7 @@ export function _leave() {
 
   this._(key).isPreparingToShow = false
 
-  const delay = Array.isArray(this.options.delay) ? this.options.delay[1] : this.options.delay
+  const delay = getValue(this.options.delay, 1)
 
   if (delay) {
     this._(key).hideTimeout = setTimeout(() => {
@@ -543,7 +559,7 @@ export function _clearDelayTimeouts() {
  */
 export function _setFollowCursorListener() {
   this._(key).followCursorListener = event => {
-    // Ignore if tooltip was triggered by `focus`
+    // Ignore if tooltip was triggered by 'focus'
     if (this._(key).lastTriggerEvent.type === 'focus') return
 
     const { clientX, clientY } = event
