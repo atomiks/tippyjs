@@ -94,20 +94,21 @@ export class Tippy {
     _mount.call(this, () => {
       if (!this.state.visible) return
 
-      if (!options.followCursor || browser.usingTouch) {
+      if (!_hasFollowCursorBehavior.call(this)) {
         // FIX: Arrow will sometimes not be positioned correctly. Force another update.
         this.popperInstance.scheduleUpdate()
       }
 
       // Set initial position near the cursor
-      if (options.followCursor && !browser.usingTouch) {
+      if (_hasFollowCursorBehavior.call(this)) {
         this.popperInstance.disableEventListeners()
         const delay = getValue(options.delay, 0)
-        if (this._(key).lastTriggerEvent) {
+        const lastTriggerEvent = this._(key).lastTriggerEvent
+        if (lastTriggerEvent) {
           this._(key).followCursorListener(
             delay && this._(key).lastMouseMoveEvent
               ? this._(key).lastMouseMoveEvent
-              : this._(key).lastTriggerEvent
+              : lastTriggerEvent
           )
         }
       }
@@ -258,6 +259,22 @@ export class Tippy {
  */
 
 /**
+ * Determines if the tooltip instance has followCursor behavior
+ * @return {Boolean}
+ * @memberof Tippy
+ * @private
+ */
+export function _hasFollowCursorBehavior() {
+  const lastTriggerEvent = this._(key).lastTriggerEvent
+  return (
+    this.options.followCursor &&
+    !browser.usingTouch &&
+    lastTriggerEvent &&
+    lastTriggerEvent.type !== 'focus'
+  )
+}
+
+/**
  * Creates the Tippy instance for the child target of the delegate container
  * @param {Event} event
  * @memberof Tippy
@@ -304,10 +321,12 @@ export function _enter(event) {
 
   // If the tooltip has a delay, we need to be listening to the mousemove as soon as the trigger
   // event is fired so that it's in the correct position upon mount.
-  if (options.followCursor && !browser.usingTouch) {
+  if (_hasFollowCursorBehavior.call(this)) {
     if (!this._(key).followCursorListener) {
       _setFollowCursorListener.call(this)
     }
+    const { arrow } = getInnerElements(this.popper)
+    if (arrow) arrow.style.margin = '0'
     document.addEventListener('mousemove', this._(key).followCursorListener)
   }
 
@@ -528,9 +547,17 @@ export function _mount(callback) {
   } else {
     resetPopperPosition(this.popper)
     this.popperInstance.scheduleUpdate()
-    if (options.livePlacement && (!options.followCursor || browser.usingTouch)) {
+    if (options.livePlacement && !_hasFollowCursorBehavior.call(this)) {
       this.popperInstance.enableEventListeners()
     }
+  }
+
+  // If the instance previously had followCursor behavior, it will be positioned incorrectly
+  // if triggered by `focus` afterwards - update the reference back to the real DOM element
+  if (!_hasFollowCursorBehavior.call(this)) {
+    const { arrow } = getInnerElements(this.popper)
+    if (arrow) arrow.style.margin = ''
+    this.popperInstance.reference = this.reference
   }
 
   updatePopperPosition(this.popperInstance, callback, true)
@@ -560,11 +587,7 @@ export function _setFollowCursorListener() {
   this._(key).followCursorListener = event => {
     const { clientX, clientY } = (this._(key).lastMouseMoveEvent = event)
 
-    // Ignore if tooltip was triggered by 'focus' or the popperInstance has not been created yet
-    const lastTriggerEvent = this._(key).lastTriggerEvent
-    if ((lastTriggerEvent && lastTriggerEvent.type === 'focus') || !this.popperInstance) {
-      return
-    }
+    if (!this.popperInstance) return
 
     this.popperInstance.reference = {
       getBoundingClientRect: () => ({
