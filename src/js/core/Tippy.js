@@ -559,10 +559,13 @@ export function _clearDelayTimeouts() {
  */
 export function _setFollowCursorListener() {
   this._(key).followCursorListener = event => {
-    // Ignore if tooltip was triggered by 'focus'
-    if (this._(key).lastTriggerEvent.type === 'focus') return
+    const { clientX, clientY } = (this._(key).lastMouseMoveEvent = event)
 
-    const { clientX, clientY } = event
+    // Ignore if tooltip was triggered by 'focus' or the popperInstance has not been created yet
+    const lastTriggerEvent = this._(key).lastTriggerEvent
+    if ((lastTriggerEvent && lastTriggerEvent.type === 'focus') || !this.popperInstance) {
+      return
+    }
 
     this.popperInstance.reference = {
       getBoundingClientRect: () => ({
