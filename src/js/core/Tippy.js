@@ -87,7 +87,6 @@ export class Tippy {
 
     // Prevent a transition when popper changes position
     applyTransitionDuration([popper, tooltip, backdrop], 0)
-    tooltip.style[prefix('transitionTimingFunction')] = options.easing
 
     popper.style.visibility = 'visible'
     this.state.visible = true
@@ -354,7 +353,7 @@ export function _leave() {
  * @private
  */
 export function _getEventListeners() {
-  const handleTrigger = event => {
+  const onTrigger = event => {
     if (!this.state.enabled) return
 
     const shouldStopEvent =
@@ -379,7 +378,7 @@ export function _getEventListeners() {
     }
   }
 
-  const handleMouseLeave = event => {
+  const onMouseLeave = event => {
     if (
       ['mouseleave', 'mouseout'].indexOf(event.type) > -1 &&
       browser.supportsTouch &&
@@ -392,7 +391,7 @@ export function _getEventListeners() {
       const hide = _leave.bind(this)
 
       // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
-      const handleMouseMove = event => {
+      const onMouseMove = event => {
         const referenceCursorIsOver = closest(event.target, selectors.REFERENCE)
         const cursorIsOverPopper = closest(event.target, selectors.POPPER) === this.popper
         const cursorIsOverReference = referenceCursorIsOver === this.reference
@@ -401,44 +400,44 @@ export function _getEventListeners() {
 
         if (cursorIsOutsideInteractiveBorder(event, this.popper, this.options)) {
           document.body.removeEventListener('mouseleave', hide)
-          document.removeEventListener('mousemove', handleMouseMove)
+          document.removeEventListener('mousemove', onMouseMove)
 
           _leave.call(this)
         }
       }
       document.body.addEventListener('mouseleave', hide)
-      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mousemove', onMouseMove)
       return
     }
 
     _leave.call(this)
   }
 
-  const handleBlur = event => {
+  const onBlur = event => {
     if (event.target !== this.reference || !event.relatedTarget || browser.usingTouch) return
     if (closest(event.relatedTarget, selectors.POPPER)) return
 
     _leave.call(this)
   }
 
-  const handleDelegateShow = event => {
+  const onDelegateShow = event => {
     if (closest(event.target, this.options.target)) {
       _enter.call(this, event)
     }
   }
 
-  const handleDelegateHide = event => {
+  const onDelegateHide = event => {
     if (closest(event.target, this.options.target)) {
       _leave.call(this)
     }
   }
 
   return {
-    handleTrigger,
-    handleMouseLeave,
-    handleBlur,
-    handleDelegateShow,
-    handleDelegateHide
+    onTrigger,
+    onMouseLeave,
+    onBlur,
+    onDelegateShow,
+    onDelegateHide
   }
 }
 
