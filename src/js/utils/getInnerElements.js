@@ -6,9 +6,11 @@ import { selectors } from '../core/globals'
  * @return {Object}
  */
 export default function getInnerElements(popper) {
+  const select = s => popper.querySelector(s)
   return {
-    tooltip: popper.querySelector(selectors.TOOLTIP),
-    backdrop: popper.querySelector(selectors.BACKDROP),
-    content: popper.querySelector(selectors.CONTENT)
+    tooltip: select(selectors.TOOLTIP),
+    backdrop: select(selectors.BACKDROP),
+    content: select(selectors.CONTENT),
+    arrow: select(selectors.ARROW) || select(selectors.ROUND_ARROW)
   }
 }

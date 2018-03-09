@@ -1,13 +1,12 @@
 import prefix from './prefix'
 
 /**
- * Applies the transition duration to each element
+ * Sets the transition property to each element
  * @param {Element[]} els - Array of elements
- * @param {Number} duration
+ * @param {String} value
  */
-export default function applyTransitionDuration(els, duration) {
-  els.forEach(el => {
-    if (!el) return
-    el.style[prefix('transitionDuration')] = duration + 'ms'
+export default function applyTransitionDuration(els, value) {
+  els.filter(Boolean).forEach(el => {
+    el.style[prefix('transitionDuration')] = `${value}ms`
   })
 }

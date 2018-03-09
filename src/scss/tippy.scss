@@ -31,7 +31,6 @@
 
       .tippy-roundarrow {
         @include arrow-position($placement, 8px, true);
-        @include roundarrow-margin($placement);
         @include roundarrow-transform-origin($placement);
 
         svg {

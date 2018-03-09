@@ -9,8 +9,9 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700" rel="stylesheet">
   <script defer src="js/focus-ring.js"></script>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="tippy/themes.css">
+  <link rel="stylesheet" href="tippy/tippy.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/prism.css">
   <link rel="icon" href="favicon.ico">
@@ -23,10 +24,10 @@
           <img alt="Tippy logo" draggable="false" class="logo" src="img/tippy.svg">
         </div>
         <h1 class="hero-heading">Tippy.js</h1>
-        <h2 class="hero-subheading">A lightweight, vanilla JavaScript tooltip library</h2>
+        <h2 class="hero-subheading">Highly customizable vanilla JavaScript tooltip &amp; popover library</h2>
         <div class="d-flex justify-content-center align-items-center flex-wrap">
           <small class="hero-badge">
-            <i class="material-icons icon-left">code</i><span>14KB gzipped</span>
+            <i class="material-icons icon-left">code</i><span>14 kB gzipped</span>
           </small>
           <small class="hero-badge">
             <a href="https://popper.js.org" target="_blank" class="hero-link">
@@ -194,15 +195,15 @@
             <p>
                 Alternatively, you can install through npm:
             </p>
-            <pre><code>npm install --save tippy.js@2.2.3</code></pre>
+            <pre><code>npm install --save tippy.js@2.3.0</code></pre>
 
             <p>
-              Or use the <a target="_blank" href="https://unpkg.com/tippy.js@2.2.3">unpkg.com CDN</a>:
+              Or use the <a target="_blank" href="https://unpkg.com/tippy.js@2.3.0">unpkg.com CDN</a>:
             </p>
-            <pre><code>https://unpkg.com/tippy.js@2.2.3/dist/</code></pre>
+            <pre><code>https://unpkg.com/tippy.js@2.3.0/dist/</code></pre>
 
             <p>Then include the <code>tippy.all.min.js</code> file in your document before your own scripts:</p>
-            <pre><code class="language-markup">&lt;script src="https://unpkg.com/tippy.js@2.2.3/dist/tippy.all.min.js"&gt;&lt;/script&gt;</code></pre>
+            <pre><code class="language-markup">&lt;script src="https://unpkg.com/tippy.js@2.3.0/dist/tippy.all.min.js"&gt;&lt;/script&gt;</code></pre>
 
             <p>This is the bundled version which includes Popper.js and automatically injects Tippy's CSS stylesheet
             into the document head.</p>
@@ -234,7 +235,11 @@
               <button class="btn btn-gradient tippy" title="<strong>I'm a bold tooltip!</strong>">Text</button>
             </div>
             
-            <p>The <code>title</code> attributes can contain HTML as it gets parsed when setting <code>innerHTML</code>.</p>
+            <p>The <code>title</code> attribute can contain HTML as it gets parsed when setting <code>innerHTML</code>.</p>
+            <p>
+              If you are concerned about XSS attacks, you can prevent HTML from being rendered
+              inside <code>title</code> by setting the <code>allowTitleHTML</code> option to <code>false</code> <span class="badge badge-small">v2.3</span>.
+            </p>
 
             <h4>Tippify all titled elements</h4>
 
@@ -611,6 +616,14 @@ tippy(refObject)
                       <td>Disables <code>data-tippy-*</code> attribute options to make initial instantiation time faster.</td>
                     </tr>
                     <tr>
+                      <td><code>allowTitleHTML</code> <span class="badge badge-small">v2.3</span></td>
+                      <td><code>true</code></td>
+                      <td><code>Boolean</code></td>
+                      <td>
+                        If <code>true</code>, HTML inside the <code>title</code> attribute will be parsed and rendered inside the tooltip.
+                      </td>
+                    </tr>
+                    <tr>
                       <td><code>onShow</code></td>
                       <td>-</td>
                       <td><code>Function</code></td>
@@ -873,6 +886,13 @@ tippy.browser.onUserInputChange = type => {
   }
 })
 </code></pre>
+
+          <h4>Get all Tippy instances</h4>
+          <p>Getting all (non-destroyed) Tippy instances on the document can be done in one single line:</p>
+          <pre><code class="language-js">Array.from(document.querySelectorAll('[data-tippy]'), el => el._tippy)</code></pre>
+          <p>This returns an array holding every current Tippy instance (excluding delegates). To include delegates, use this selector:</p>
+          <pre><code class="language-js">'[data-tippy], [data-tippy-delegate]'</code></pre>
+          <p>⚠️ <code>Array.from</code> needs a polyfill for older browsers.</p>
         </section>
         
         <hr>
@@ -1104,13 +1124,13 @@ tip.destroyAll()</code></pre>
               The Tippy instance is also attached to the popper element via <code>_tippy</code>.
             </p>
             <pre><code class="language-js">popper._tippy</code></pre>
-
-            <h4>Get all Tippy instances</h4>
-            <p>Getting all (non-destroyed) Tippy instances on the document can be done in one single line:</p>
-            <pre><code class="language-js">Array.from(document.querySelectorAll('[data-tippy]'), el => el._tippy)</code></pre>
-            <p>This returns an array holding every current Tippy instance (excluding delegates). To include delegates, use this selector:</p>
-            <pre><code class="language-js">'[data-tippy], [data-tippy-delegate]'</code></pre>
-            <p>⚠️ <code>Array.from</code> needs a polyfill for older browsers.</p>
+            
+            <h4>Static methods</h4>
+            <h5><code>tippy.disableAnimations()</code></h5>
+            <p>
+              Modifies <code>tippy.defaults</code> to ensure newly created tooltips will have no animations/transitions,
+              which can be problematic during automated testing.
+            </p>
         </section>
 
         <hr>
@@ -1285,7 +1305,13 @@ clonedTemplate.innerHTML = 'Updated!'
 
           <p>...or specify a <code>data-tippy-theme</code> attribute on the reference element.
 
-        <pre><code class="language-markup">&lt;button class="btn tippy" title="I'm a tooltip" data-tippy-theme="honeybee"&gt;Honeybee theme&lt;/button&gt;</code></pre>
+<pre><code class="language-markup">&lt;button
+  class="btn tippy"
+  title="I'm a tooltip"
+  data-tippy-theme="honeybee"
+&gt;
+  Honeybee theme
+&lt;/button&gt;</code></pre>
 
         <div class="result-box">
           <p class="text-muted">Example custom theme:</p>

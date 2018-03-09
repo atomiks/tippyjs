@@ -145,17 +145,9 @@
 
 @mixin arrow-margin ($placement) {
   @if ($placement == 'top' or $placement == 'bottom') {
-    margin: 0 7px;
-  } @else {
-    margin: 4px 0;
-  }
-}
-
-@mixin roundarrow-margin ($placement) {
-  @if ($placement == 'top' or $placement == 'bottom') {
     margin: 0 6px;
   } @else {
-    margin: 4px 0;
+    margin: 3px 0;
   }
 }
 

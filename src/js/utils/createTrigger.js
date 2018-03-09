@@ -9,13 +9,7 @@ import { browser, isIE } from '../core/globals'
  * @return {Array} - array of listener objects
  */
 export default function createTrigger(eventType, reference, handlers, options) {
-  const {
-    handleTrigger,
-    handleMouseLeave,
-    handleBlur,
-    handleDelegateShow,
-    handleDelegateHide
-  } = handlers
+  const { onTrigger, onMouseLeave, onBlur, onDelegateShow, onDelegateHide } = handlers
   const listeners = []
 
   if (eventType === 'manual') return listeners
@@ -26,33 +20,33 @@ export default function createTrigger(eventType, reference, handlers, options) {
   }
 
   if (!options.target) {
-    on(eventType, handleTrigger)
+    on(eventType, onTrigger)
 
     if (browser.supportsTouch && options.touchHold) {
-      on('touchstart', handleTrigger)
-      on('touchend', handleMouseLeave)
+      on('touchstart', onTrigger)
+      on('touchend', onMouseLeave)
     }
     if (eventType === 'mouseenter') {
-      on('mouseleave', handleMouseLeave)
+      on('mouseleave', onMouseLeave)
     }
     if (eventType === 'focus') {
-      on(isIE ? 'focusout' : 'blur', handleBlur)
+      on(isIE ? 'focusout' : 'blur', onBlur)
     }
   } else {
     if (browser.supportsTouch && options.touchHold) {
-      on('touchstart', handleDelegateShow)
-      on('touchend', handleDelegateHide)
+      on('touchstart', onDelegateShow)
+      on('touchend', onDelegateHide)
     }
     if (eventType === 'mouseenter') {
-      on('mouseover', handleDelegateShow)
-      on('mouseout', handleDelegateHide)
+      on('mouseover', onDelegateShow)
+      on('mouseout', onDelegateHide)
     }
     if (eventType === 'focus') {
-      on('focusin', handleDelegateShow)
-      on('focusout', handleDelegateHide)
+      on('focusin', onDelegateShow)
+      on('focusout', onDelegateHide)
     }
     if (eventType === 'click') {
-      on('click', handleDelegateShow)
+      on('click', onDelegateShow)
     }
   }
 

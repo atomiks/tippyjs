@@ -11,16 +11,16 @@ import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 
 export default Object.assign(base, {
+  input: './build/bundle.js',
   output: Object.assign(base.output, { file: './docs/tippy/tippy.js' }),
   plugins: [
     sass({
-      output: './dist/tippy.css',
+      output: './docs//tippy/tippy.css',
       processor: css =>
         postcss([autoprefixer, cssnano])
           .process(css)
           .then(result => result.css)
     }),
-    css({ output: false }),
     babel({
       presets: ['es2015-rollup'],
       plugins: ['transform-object-rest-spread', 'transform-object-assign']

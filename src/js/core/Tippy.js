@@ -14,7 +14,7 @@ import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 import prefix from '../utils/prefix'
 import defer from '../utils/defer'
 import closest from '../utils/closest'
-import getDuration from '../utils/getDuration'
+import getValue from '../utils/getValue'
 import setVisibilityState from '../utils/setVisibilityState'
 import applyTransitionDuration from '../utils/applyTransitionDuration'
 import toArray from '../utils/toArray'
@@ -83,7 +83,7 @@ export class Tippy {
 
     options.onShow.call(popper, this)
 
-    duration = getDuration(duration !== undefined ? duration : options.duration, 0)
+    duration = getValue(duration !== undefined ? duration : options.duration, 0)
 
     // Prevent a transition when popper changes position
     applyTransitionDuration([popper, tooltip, backdrop], 0)
@@ -94,20 +94,21 @@ export class Tippy {
     _mount.call(this, () => {
       if (!this.state.visible) return
 
-      if (!options.followCursor || browser.usingTouch) {
+      if (!_hasFollowCursorBehavior.call(this)) {
         // FIX: Arrow will sometimes not be positioned correctly. Force another update.
         this.popperInstance.scheduleUpdate()
       }
 
       // Set initial position near the cursor
-      if (options.followCursor && !browser.usingTouch) {
+      if (_hasFollowCursorBehavior.call(this)) {
         this.popperInstance.disableEventListeners()
-        const delay = Array.isArray(options.delay) ? options.delay[0] : options.delay
-        if (this._(key).lastTriggerEvent) {
+        const delay = getValue(options.delay, 0)
+        const lastTriggerEvent = this._(key).lastTriggerEvent
+        if (lastTriggerEvent) {
           this._(key).followCursorListener(
             delay && this._(key).lastMouseMoveEvent
               ? this._(key).lastMouseMoveEvent
-              : this._(key).lastTriggerEvent
+              : lastTriggerEvent
           )
         }
       }
@@ -159,7 +160,7 @@ export class Tippy {
 
     options.onHide.call(popper, this)
 
-    duration = getDuration(duration !== undefined ? duration : options.duration, 1)
+    duration = getValue(duration !== undefined ? duration : options.duration, 1)
 
     if (!options.updateDuration) {
       tooltip.classList.remove('tippy-notransition')
@@ -258,6 +259,22 @@ export class Tippy {
  */
 
 /**
+ * Determines if the tooltip instance has followCursor behavior
+ * @return {Boolean}
+ * @memberof Tippy
+ * @private
+ */
+export function _hasFollowCursorBehavior() {
+  const lastTriggerEvent = this._(key).lastTriggerEvent
+  return (
+    this.options.followCursor &&
+    !browser.usingTouch &&
+    lastTriggerEvent &&
+    lastTriggerEvent.type !== 'focus'
+  )
+}
+
+/**
  * Creates the Tippy instance for the child target of the delegate container
  * @param {Event} event
  * @memberof Tippy
@@ -283,33 +300,37 @@ export function _createDelegateChildTippy(event) {
  * @private
  */
 export function _enter(event) {
+  const { options } = this
+
   _clearDelayTimeouts.call(this)
 
   if (this.state.visible) return
 
   // Is a delegate, create Tippy instance for the child target
-  if (this.options.target) {
+  if (options.target) {
     _createDelegateChildTippy.call(this, event)
     return
   }
 
   this._(key).isPreparingToShow = true
 
-  if (this.options.wait) {
-    this.options.wait.call(this.popper, this.show.bind(this), event)
+  if (options.wait) {
+    options.wait.call(this.popper, this.show.bind(this), event)
     return
   }
 
   // If the tooltip has a delay, we need to be listening to the mousemove as soon as the trigger
   // event is fired so that it's in the correct position upon mount.
-  if (this.options.followCursor && !browser.usingTouch) {
+  if (_hasFollowCursorBehavior.call(this)) {
     if (!this._(key).followCursorListener) {
       _setFollowCursorListener.call(this)
     }
+    const { arrow } = getInnerElements(this.popper)
+    if (arrow) arrow.style.margin = '0'
     document.addEventListener('mousemove', this._(key).followCursorListener)
   }
 
-  const delay = Array.isArray(this.options.delay) ? this.options.delay[0] : this.options.delay
+  const delay = getValue(options.delay, 0)
 
   if (delay) {
     this._(key).showTimeout = setTimeout(() => {
@@ -332,7 +353,7 @@ export function _leave() {
 
   this._(key).isPreparingToShow = false
 
-  const delay = Array.isArray(this.options.delay) ? this.options.delay[1] : this.options.delay
+  const delay = getValue(this.options.delay, 1)
 
   if (delay) {
     this._(key).hideTimeout = setTimeout(() => {
@@ -351,7 +372,7 @@ export function _leave() {
  * @private
  */
 export function _getEventListeners() {
-  const handleTrigger = event => {
+  const onTrigger = event => {
     if (!this.state.enabled) return
 
     const shouldStopEvent =
@@ -376,7 +397,7 @@ export function _getEventListeners() {
     }
   }
 
-  const handleMouseLeave = event => {
+  const onMouseLeave = event => {
     if (
       ['mouseleave', 'mouseout'].indexOf(event.type) > -1 &&
       browser.supportsTouch &&
@@ -389,7 +410,7 @@ export function _getEventListeners() {
       const hide = _leave.bind(this)
 
       // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
-      const handleMouseMove = event => {
+      const onMouseMove = event => {
         const referenceCursorIsOver = closest(event.target, selectors.REFERENCE)
         const cursorIsOverPopper = closest(event.target, selectors.POPPER) === this.popper
         const cursorIsOverReference = referenceCursorIsOver === this.reference
@@ -398,44 +419,44 @@ export function _getEventListeners() {
 
         if (cursorIsOutsideInteractiveBorder(event, this.popper, this.options)) {
           document.body.removeEventListener('mouseleave', hide)
-          document.removeEventListener('mousemove', handleMouseMove)
+          document.removeEventListener('mousemove', onMouseMove)
 
           _leave.call(this)
         }
       }
       document.body.addEventListener('mouseleave', hide)
-      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mousemove', onMouseMove)
       return
     }
 
     _leave.call(this)
   }
 
-  const handleBlur = event => {
+  const onBlur = event => {
     if (event.target !== this.reference || !event.relatedTarget || browser.usingTouch) return
     if (closest(event.relatedTarget, selectors.POPPER)) return
 
     _leave.call(this)
   }
 
-  const handleDelegateShow = event => {
+  const onDelegateShow = event => {
     if (closest(event.target, this.options.target)) {
       _enter.call(this, event)
     }
   }
 
-  const handleDelegateHide = event => {
+  const onDelegateHide = event => {
     if (closest(event.target, this.options.target)) {
       _leave.call(this)
     }
   }
 
   return {
-    handleTrigger,
-    handleMouseLeave,
-    handleBlur,
-    handleDelegateShow,
-    handleDelegateHide
+    onTrigger,
+    onMouseLeave,
+    onBlur,
+    onDelegateShow,
+    onDelegateHide
   }
 }
 
@@ -526,9 +547,17 @@ export function _mount(callback) {
   } else {
     resetPopperPosition(this.popper)
     this.popperInstance.scheduleUpdate()
-    if (options.livePlacement && (!options.followCursor || browser.usingTouch)) {
+    if (options.livePlacement && !_hasFollowCursorBehavior.call(this)) {
       this.popperInstance.enableEventListeners()
     }
+  }
+
+  // If the instance previously had followCursor behavior, it will be positioned incorrectly
+  // if triggered by `focus` afterwards - update the reference back to the real DOM element
+  if (!_hasFollowCursorBehavior.call(this)) {
+    const { arrow } = getInnerElements(this.popper)
+    if (arrow) arrow.style.margin = ''
+    this.popperInstance.reference = this.reference
   }
 
   updatePopperPosition(this.popperInstance, callback, true)
@@ -556,62 +585,24 @@ export function _clearDelayTimeouts() {
  */
 export function _setFollowCursorListener() {
   this._(key).followCursorListener = event => {
-    // Ignore if the tooltip was triggered by `focus`
-    if (this._(key).lastTriggerEvent && this._(key).lastTriggerEvent.type === 'focus') return
+    const { clientX, clientY } = (this._(key).lastMouseMoveEvent = event)
 
-    this._(key).lastMouseMoveEvent = event
+    if (!this.popperInstance) return
 
-    // Expensive operations, but their dimensions can change freely
-    const pageWidth = document.documentElement.offsetWidth || document.body.offsetWidth
-    const halfPopperWidth = Math.round(this.popper.offsetWidth / 2)
-    const halfPopperHeight = Math.round(this.popper.offsetHeight / 2)
-    const offset = this.options.offset
-    const { pageX, pageY } = event
-    const PADDING = 5
-
-    let placement = this.options.placement.replace(/-.+/, '')
-    if (this.popper.getAttribute('x-placement')) {
-      placement = getPopperPlacement(this.popper)
+    this.popperInstance.reference = {
+      getBoundingClientRect: () => ({
+        width: 0,
+        height: 0,
+        top: clientY,
+        left: clientX,
+        right: clientX,
+        bottom: clientY
+      }),
+      clientWidth: 0,
+      clientHeight: 0
     }
 
-    let x, y
-
-    /* eslint-disable indent */
-    switch (placement) {
-      case 'top':
-        x = pageX - halfPopperWidth + offset
-        y = pageY - 2 * halfPopperHeight
-        break
-      case 'bottom':
-        x = pageX - halfPopperWidth + offset
-        y = pageY + 10
-        break
-      case 'left':
-        x = pageX - 2 * halfPopperWidth
-        y = pageY - halfPopperHeight + offset
-        break
-      case 'right':
-        x = pageX + 5
-        y = pageY - halfPopperHeight + offset
-        break
-    }
-    /* eslint-enable indent */
-
-    const isRightOverflowing = pageX + PADDING + halfPopperWidth + offset > pageWidth
-    const isLeftOverflowing = pageX - PADDING - halfPopperWidth + offset < 0
-
-    // Prevent left/right overflow
-    if (placement === 'top' || placement === 'bottom') {
-      if (isRightOverflowing) {
-        x = pageWidth - PADDING - 2 * halfPopperWidth
-      }
-
-      if (isLeftOverflowing) {
-        x = PADDING
-      }
-    }
-
-    this.popper.style[prefix('transform')] = `translate3d(${x}px, ${y}px, 0)`
+    this.popperInstance.scheduleUpdate()
   }
 }
 

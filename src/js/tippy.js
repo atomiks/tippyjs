@@ -9,7 +9,7 @@ import bindEventListeners from './core/bindEventListeners'
 let eventListenersBound = false
 
 /**
- * Creates tooltips
+ * Exported module
  * @param {String|Element|Element[]|NodeList|Object} selector
  * @param {Object} options
  * @return {Object}
@@ -58,5 +58,9 @@ function tippy(selector, options) {
 
 tippy.browser = browser
 tippy.defaults = defaults
+tippy.disableAnimations = () => {
+  defaults.updateDuration = defaults.duration = 0
+  defaults.animateFill = false
+}
 
 export default tippy
