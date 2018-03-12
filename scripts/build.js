@@ -32,12 +32,14 @@ const r = (entryFile, plugins = [], excludePopper) =>
         : [pluginJSON, pluginSCSS, pluginCSS, ...plugins, pluginCJS, pluginResolve],
     external: excludePopper ? ['popper.js'] : []
   })
-const output = type => fileName => ({
+const output = type => (fileName, isMinified) => ({
   name: 'tippy',
   format: type,
   file: `./dist/${fileName}`,
   globals: { 'popper.js': 'Popper' },
-  banner: `/*!
+  banner: isMinified
+    ? false
+    : `/*!
 * Tippy.js v${pkg.version}
 * (c) 2017-${new Date().getFullYear()} atomiks
 * MIT
@@ -84,11 +86,11 @@ const esm = output('es')
   const allMin = await r('main.js', [pluginES5, pluginMinify])
   const allES2017 = await r('main.js', [pluginES2017])
 
-  bundleMin.write(umd('tippy.min.js'))
+  bundleMin.write(umd('tippy.min.js', true))
   all.write(umd('tippy.all.js'))
-  allMin.write(umd('tippy.all.min.js'))
+  allMin.write(umd('tippy.all.min.js', true))
   standalone.write(umd('tippy.standalone.js'))
-  standaloneMin.write(umd('tippy.standalone.min.js'))
+  standaloneMin.write(umd('tippy.standalone.min.js', true))
 
   for (const theme of THEMES) {
     const t = await r(`themes/${theme}.js`, `./dist/themes/${theme}.css`)
