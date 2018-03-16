@@ -223,7 +223,9 @@ export class Tippy {
     })
 
     // Restore title
-    this.reference.setAttribute('title', this.reference.getAttribute('data-original-title'))
+    if (this.title) {
+      this.reference.setAttribute('title', this.title)
+    }
 
     delete this.reference._tippy
 
