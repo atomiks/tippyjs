@@ -9,19 +9,20 @@
   },
   "scripts": {
     "dev": "rollup -c scripts/rollup.dev.config.js --watch",
-    "build": "npm run themes && npm run standalone && npm run bundle && npm run all",
-    "all": "rollup -c scripts/rollup.all.config.js && rollup -c scripts/rollup.all.min.config.js",
-    "bundle": "rollup -c scripts/rollup.bundle.config.js && rollup -c scripts/rollup.bundle.min.config.js",
-    "standalone": "rollup -c scripts/rollup.standalone.config.js && rollup -c scripts/rollup.standalone.min.config.js",
-    "themes": "rollup -c scripts/themes/rollup.light.config.js && rollup -c scripts/themes/rollup.translucent.config.js",
+    "build": "node ./scripts/build.js && npm run prettier",
     "test": "eslint 'src/**/*.js' && jest --verbose",
-    "prettier": "prettier --print-width 100 --no-semi --single-quote es5 --write 'src/**/*.js'"
+    "prettier": "prettier --write \"**/*.{js,scss}\""
   },
   "jest": {
     "setupFiles": [
       "./tests/polyfills/createRange.js",
       "./tests/polyfills/MutationObserver.js"
     ]
+  },
+  "prettier": {
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": true
   },
   "author": "atomiks",
   "license": "MIT",
@@ -35,10 +36,12 @@
     "babel-core": "^6.26.0",
     "babel-jest": "^22.4.1",
     "babel-loader": "^6.4.1",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015-rollup": "^3.0.0",
+    "babel-preset-stage-2": "^6.24.1",
     "cssnano": "^3.10.0",
     "eslint": "^4.18.2",
     "jest": "^22.4.2",
@@ -48,9 +51,10 @@
     "prettier": "^1.11.1",
     "rollup": "^0.55.5",
     "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-babili": "^3.1.1",
+    "rollup-plugin-babel-minify": "^4.0.0",
     "rollup-plugin-commonjs": "^8.4.1",
     "rollup-plugin-css-only": "^0.2.0",
+    "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-livereload": "^0.4.0",
     "rollup-plugin-node-resolve": "^3.2.0",
     "rollup-plugin-sass": "^0.4.10",

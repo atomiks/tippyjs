@@ -25,18 +25,18 @@ export default function cursorIsOutsideInteractiveBorder(event, popper, options)
   }
 
   switch (placement) {
-  case 'top':
-    exceeds.top = rect.top - y > borderWithDistance
-    break
-  case 'bottom':
-    exceeds.bottom = y - rect.bottom > borderWithDistance
-    break
-  case 'left':
-    exceeds.left = rect.left - x > borderWithDistance
-    break
-  case 'right':
-    exceeds.right = x - rect.right > borderWithDistance
-    break
+    case 'top':
+      exceeds.top = rect.top - y > borderWithDistance
+      break
+    case 'bottom':
+      exceeds.bottom = y - rect.bottom > borderWithDistance
+      break
+    case 'left':
+      exceeds.left = rect.left - x > borderWithDistance
+      break
+    case 'right':
+      exceeds.right = x - rect.right > borderWithDistance
+      break
   }
 
   return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right
