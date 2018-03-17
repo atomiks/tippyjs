@@ -8,16 +8,13 @@
     "url": "git+https://github.com/atomiks/tippyjs.git"
   },
   "scripts": {
-    "dev": "rollup -c scripts/rollup.dev.config.js --watch",
+    "dev": "rollup -c scripts/dev.js --watch",
     "build": "node ./scripts/build.js && npm run prettier",
     "test": "eslint 'src/**/*.js' && jest --verbose",
     "prettier": "prettier --write \"**/*.{js,scss}\""
   },
   "jest": {
-    "setupFiles": [
-      "./tests/polyfills/createRange.js",
-      "./tests/polyfills/MutationObserver.js"
-    ]
+    "setupFiles": ["./tests/polyfills/createRange.js", "./tests/polyfills/MutationObserver.js"]
   },
   "prettier": {
     "printWidth": 100,
@@ -26,11 +23,7 @@
   },
   "author": "atomiks",
   "license": "MIT",
-  "keywords": [
-    "tooltip",
-    "tippy",
-    "tippy.js"
-  ],
+  "keywords": ["tooltip", "tippy", "tippy.js"],
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.26.0",
