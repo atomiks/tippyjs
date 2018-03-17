@@ -1,4 +1,3 @@
-import base from './rollup.base.config'
 import babel from 'rollup-plugin-babel'
 import sass from 'rollup-plugin-sass'
 import serve from 'rollup-plugin-serve'
@@ -9,11 +8,17 @@ import cssnano from 'cssnano'
 import livereload from 'rollup-plugin-livereload'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
+import json from 'rollup-plugin-json'
 
-export default Object.assign(base, {
+export default {
   input: './build/bundle.js',
-  output: Object.assign(base.output, { file: './docs/tippy/tippy.js' }),
+  output: {
+    file: './docs/tippy/tippy.js',
+    name: 'tippy',
+    format: 'umd'
+  },
   plugins: [
+    json(),
     sass({
       output: './docs//tippy/tippy.css',
       processor: css =>
@@ -30,4 +35,4 @@ export default Object.assign(base, {
     serve('docs'),
     livereload()
   ]
-})
+}
