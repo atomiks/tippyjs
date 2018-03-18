@@ -357,8 +357,9 @@ export function _leave() {
 
   if (delay) {
     this._(key).hideTimeout = setTimeout(() => {
-      if (!this.state.visible) return
-      this.hide()
+      if (this.state.visible) {
+        this.hide()
+      }
     }, delay)
   } else {
     this.hide()
@@ -409,7 +410,6 @@ export function _getEventListeners() {
     if (this.options.interactive) {
       const hide = _leave.bind(this)
 
-      // Temporarily handle mousemove to check if the mouse left somewhere other than the popper
       const onMouseMove = event => {
         const referenceCursorIsOver = closest(event.target, selectors.REFERENCE)
         const cursorIsOverPopper = closest(event.target, selectors.POPPER) === this.popper
@@ -421,9 +421,10 @@ export function _getEventListeners() {
           document.body.removeEventListener('mouseleave', hide)
           document.removeEventListener('mousemove', onMouseMove)
 
-          _leave.call(this)
+          _leave.call(this, onMouseMove)
         }
       }
+
       document.body.addEventListener('mouseleave', hide)
       document.addEventListener('mousemove', onMouseMove)
       return

@@ -1,41 +1,77 @@
+code,
+pre {
+  font-family: Monaco, Menlo, 'SFMono-Regular', Consolas, 'Liberation Mono', Courier, monospace;
+}
+
+.code-wrapper {
+  position: relative;
+
+  &::after {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: 'Nunito Sans', sans-serif;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 800;
+    position: absolute;
+    top: -10px;
+    right: -6px;
+    z-index: 1;
+    line-height: 2.5;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  &[data-lang='html']::after {
+    content: 'html';
+    background: linear-gradient(135deg, #ff8792, #ff4c9f);
+  }
+
+  &[data-lang='shell']::after {
+    content: 'shell';
+    background: linear-gradient(135deg, #a1a6c9, #7d80a2);
+  }
+
+  &[data-lang='js']::after {
+    content: 'javascript';
+    background: linear-gradient(135deg, #ffd07a, #ff9133);
+  }
+
+  &[data-lang='css']::after {
+    content: 'css';
+    background: linear-gradient(135deg, #7983ff, #5f9de9);
+  }
+}
+
+code:not([class*='language-']) {
+  background: #f5f8ff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  color: #4760f0;
+}
+
 code[class*='language-'],
 pre[class*='language-'] {
   color: rgb(50, 75, 100);
   background: none;
-  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   text-align: left;
   white-space: pre;
   word-spacing: normal;
   word-break: normal;
   word-wrap: normal;
   line-height: 2;
-  font-size: 1rem;
+  font-size: 16px;
   -webkit-overflow-scrolling: touch;
-
-  -moz-tab-size: 4;
-  -o-tab-size: 4;
-  tab-size: 4;
-
+  -moz-tab-size: 2;
+  -o-tab-size: 2;
+  tab-size: 2;
   -webkit-hyphens: none;
   -moz-hyphens: none;
   -ms-hyphens: none;
   hyphens: none;
-}
-
-pre[class*='language-']::-moz-selection,
-pre[class*='language-'] ::-moz-selection,
-code[class*='language-']::-moz-selection,
-code[class*='language-'] ::-moz-selection {
-  text-shadow: none;
-  background: #b3d4fc;
-}
-
-pre[class*='language-']::selection,
-pre[class*='language-'] ::selection,
-code[class*='language-']::selection,
-code[class*='language-'] ::selection {
-  text-shadow: none;
-  background: #b3d4fc;
 }
 
 @media print {
@@ -48,6 +84,8 @@ code[class*='language-'] ::selection {
 /* Code blocks */
 pre[class*='language-'] {
   overflow: auto;
+  padding: 12px 16px;
+  border-radius: 4px;
 }
 
 pre.is-option {
@@ -58,7 +96,6 @@ pre.is-option {
 :not(pre) > code[class*='language-'],
 pre[class*='language-'] {
   background: #f8f9fd;
-  border-radius: 0.25rem;
   box-shadow: 0 0 0 1px #dfe6ff;
 }
 
@@ -73,7 +110,7 @@ pre[class*='language-'] {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: #8ca2d3;
+  color: #7b8eb7;
 }
 
 .token.selector,
@@ -118,7 +155,7 @@ pre[class*='language-'] {
 .token.operator,
 .token.entity,
 .style .token.string {
-  color: #f53737;
+  color: #ff4485;
 }
 
 .token.important,

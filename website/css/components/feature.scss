@@ -1,0 +1,42 @@
+.feature {
+  margin-bottom: 48px;
+
+  &__heading {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    margin-top: 12px;
+  }
+
+  h3 {
+    font-weight: 600;
+    margin-top: 24px;
+    font-size: 28px;
+  }
+
+  &__icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(#ffffff, #f3f8ff);
+    border-radius: 25%;
+    border: 1px solid #e8efff;
+    border-bottom-color: #d8e2f9;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px -1px rgba(0, 32, 128, 0.1);
+
+    .emoji {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      stroke: #5477f5;
+    }
+  }
+
+  .btn {
+    margin: 0 10px;
+    margin-bottom: 20px;
+  }
+}
