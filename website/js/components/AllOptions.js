@@ -14,7 +14,7 @@ export const actions = {
       onShow(instance) {
         const content = instance.popper.querySelector('.tippy-content')
 
-        if (tip.loading || content.innerHTML !== initialText) return
+        if (tip.loading || content.textContent !== initialText) return
 
         tip.loading = true
 
