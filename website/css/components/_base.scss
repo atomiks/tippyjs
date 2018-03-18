@@ -1,0 +1,106 @@
+:root {
+  --background-gradient: linear-gradient(90deg, #5733ea, #4894ff 70%, #a5bcff);
+  --text-gradient: -webkit-linear-gradient(0deg, #a5ffd1, #fff7bf);
+
+  --very-light-gray: #eee;
+  --purple: #9079ff;
+  --blue: #016ec1;
+
+  --focus-visible: 0 0 0 4px color(#73a5ff a(50%));
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 0.9375em;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  background: var(--background-gradient);
+  font-family: 'Nunito Sans', Avenir, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu,
+    Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: rgb(50, 75, 100);
+  line-height: 1.7;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+a {
+  color: #115ed8;
+  text-decoration: none;
+
+  &:hover {
+    color: color(#115ed8 tint(25%) s(150%));
+  }
+
+  &.is-white {
+    color: white;
+    text-decoration: underline;
+    font-weight: 700;
+
+    &:hover {
+      color: cyan;
+    }
+  }
+}
+
+.focus-visible {
+  box-shadow: var(--focus-visible) !important;
+}
+
+.container {
+  max-width: 1170px;
+  padding: 0 4%;
+  margin: 0 auto;
+}
+
+.feather {
+  position: relative;
+  top: -2px;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  stroke: currentColor;
+}
+
+.tippy {
+  background: rgba(255, 202, 223, 0.5);
+  color: #d22489;
+  outline: 0;
+  border-bottom: 1px solid #f27da6;
+  padding: 0 4px;
+  font-weight: 600;
+  cursor: help;
+}
+
+.tippy-tooltip.rounded-theme {
+  border-radius: 10px;
+}
+
+.tippy-tooltip.gradient-theme {
+  font-weight: bold;
+
+  .tippy-backdrop {
+    background: radial-gradient(circle at 67% 60%, #95d8ff, #363cff, #9c24ff, red);
+  }
+}
+
+.tippy-tooltip.honeybee-theme {
+  background-color: yellow;
+  border: 2px solid orange;
+  color: #333;
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 1em;
+  }
+}

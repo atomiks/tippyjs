@@ -1,0 +1,29 @@
+.main {
+  margin-top: 24px;
+
+  > .container {
+    max-width: 1050px;
+    padding: 4% 0;
+    margin-bottom: 48px;
+  }
+
+  &__body {
+    background: white;
+  }
+}
+
+@media (min-width: 768px) {
+  .main {
+    > .container {
+      padding: 36px;
+    }
+  }
+}
+
+@media (min-width: 1050px) {
+  .main {
+    > .container {
+      border-radius: 10px;
+    }
+  }
+}

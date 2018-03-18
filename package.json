@@ -8,10 +8,10 @@
     "url": "git+https://github.com/atomiks/tippyjs.git"
   },
   "scripts": {
-    "dev": "rollup -c scripts/dev.js --watch",
-    "build": "node ./scripts/build.js && npm run prettier",
-    "test": "eslint 'src/**/*.js' && jest --verbose",
-    "prettier": "prettier --write \"**/*.{js,scss}\""
+    "dev": "parcel website/index.html -d docs/",
+    "build:docs": "parcel build website/index.html -d docs/",
+    "build": "node ./scripts/build.js && npm run prettier && npm run build:docs",
+    "test": "eslint 'src/**/*.js' && jest --verbose"
   },
   "jest": {
     "setupFiles": ["./tests/polyfills/createRange.js", "./tests/polyfills/MutationObserver.js"]
@@ -25,6 +25,7 @@
   "license": "MIT",
   "keywords": ["tooltip", "tippy", "tippy.js"],
   "devDependencies": {
+    "animejs": "^2.2.0",
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.26.0",
     "babel-jest": "^22.4.1",
@@ -35,13 +36,23 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-stage-2": "^6.24.1",
+    "caniuse-lite": "^1.0.30000815",
     "cssnano": "^3.10.0",
     "eslint": "^4.18.2",
+    "feather-icons": "^4.7.0",
+    "focus-visible": "^4.1.1",
+    "hyperapp": "^1.1.2",
     "jest": "^22.4.2",
     "jsdom": "^11.6.2",
     "mutation-observer": "^1.0.3",
+    "normalize.css": "^8.0.0",
+    "parcel-bundler": "^1.6.2",
     "postcss": "^5.2.18",
+    "postcss-cssnext": "^3.1.0",
+    "postcss-import": "^11.1.0",
+    "postcss-pxtorem": "^4.0.1",
     "prettier": "^1.11.1",
+    "prismjs": "^1.12.2",
     "rollup": "^0.55.5",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-babel-minify": "^4.0.0",
