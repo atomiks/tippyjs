@@ -1,4 +1,4 @@
-@mixin enter-transform ($placement, $animation) {
+@mixin enter-transform($placement, $animation) {
   @if ($animation == 'perspective') {
     @if ($placement == 'top') {
       transform: translateY(-10px) rotateX(0);
@@ -32,7 +32,7 @@
   }
 }
 
-@mixin leave-transform ($placement, $animation) {
+@mixin leave-transform($placement, $animation) {
   @if ($animation == 'perspective') {
     @if ($placement == 'top') {
       transform: translateY(0) rotateX(90deg);
@@ -76,7 +76,7 @@
   }
 }
 
-@mixin backdrop-transform-enter ($placement) {
+@mixin backdrop-transform-enter($placement) {
   $scale: 5.5;
   @if ($placement == 'top') {
     transform: scale($scale) translate(-50%, 25%);
@@ -89,7 +89,7 @@
   }
 }
 
-@mixin backdrop-transform-leave ($placement) {
+@mixin backdrop-transform-leave($placement) {
   @if ($placement == 'top') {
     transform: scale(1) translate(-50%, 25%);
   } @else if ($placement == 'bottom') {
@@ -101,7 +101,7 @@
   }
 }
 
-@mixin arrow ($placement, $width, $color) {
+@mixin arrow($placement, $width, $color) {
   @if ($placement == 'top') {
     border-top: $width solid $color;
     border-right: $width solid transparent;
@@ -121,7 +121,7 @@
   }
 }
 
-@mixin arrow-position ($placement, $width, $isRoundArrow) {
+@mixin arrow-position($placement, $width, $isRoundArrow) {
   @if ($placement == 'top') {
     bottom: -$width;
   } @else if ($placement == 'bottom') {
@@ -143,7 +143,7 @@
   }
 }
 
-@mixin arrow-margin ($placement) {
+@mixin arrow-margin($placement) {
   @if ($placement == 'top' or $placement == 'bottom') {
     margin: 0 6px;
   } @else {
@@ -151,7 +151,7 @@
   }
 }
 
-@mixin roundarrow-transform ($placement) {
+@mixin roundarrow-transform($placement) {
   @if ($placement == 'top') {
     transform: rotate(180deg);
   } @else if ($placement == 'bottom') {
@@ -163,7 +163,7 @@
   }
 }
 
-@mixin arrow-transform-origin ($placement) {
+@mixin arrow-transform-origin($placement) {
   @if ($placement == 'top') {
     transform-origin: 50% 0%;
   } @else if ($placement == 'bottom') {
@@ -175,7 +175,7 @@
   }
 }
 
-@mixin roundarrow-transform-origin ($placement) {
+@mixin roundarrow-transform-origin($placement) {
   @if ($placement == 'top') {
     transform-origin: 50% 0%;
   } @else if ($placement == 'bottom') {

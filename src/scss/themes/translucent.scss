@@ -6,7 +6,7 @@
     &[x-placement^='#{$placement}'] {
       .tippy-tooltip.translucent-theme {
         .tippy-arrow {
-          @include arrow($placement, 7px, rgba(0,0,0,0.7));
+          @include arrow($placement, 7px, rgba(0, 0, 0, 0.7));
         }
       }
     }

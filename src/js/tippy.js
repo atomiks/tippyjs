@@ -1,3 +1,5 @@
+import { version } from '../../package.json'
+
 import { browser, defaults } from './core/globals'
 
 import isObjectLiteral from './utils/isObjectLiteral'
@@ -56,6 +58,7 @@ function tippy(selector, options) {
   }
 }
 
+tippy.version = version
 tippy.browser = browser
 tippy.defaults = defaults
 tippy.disableAnimations = () => {
