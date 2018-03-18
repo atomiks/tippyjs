@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "parcel website/index.html -d docs/",
-    "build:docs": "parcel build website/index.html -d docs/",
+    "build:docs": "parcel build website/index.html -d docs/ --public-url ./",
     "build": "node ./scripts/build.js && npm run prettier && npm run build:docs",
     "test": "eslint 'src/**/*.js' && jest --verbose"
   },
