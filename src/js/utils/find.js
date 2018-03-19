@@ -5,5 +5,5 @@
  * @return item in the array
  */
 export default function find(arr, fn) {
-  return Array.prototype.find ? arr.find(fn) : arr.filter(fn)[0]
+  return [].find ? arr.find(fn) : arr.filter(fn)[0]
 }
