@@ -436,8 +436,12 @@ export function _getEventListeners() {
   }
 
   const onBlur = event => {
-    if (event.target !== this.reference || !event.relatedTarget || browser.usingTouch) return
-    if (closest(event.relatedTarget, selectors.POPPER)) return
+    if (event.target !== this.reference || browser.usingTouch) return
+
+    if (this.options.interactive) {
+      if (!event.relatedTarget) return
+      if (closest(event.relatedTarget, selectors.POPPER)) return
+    }
 
     _leave.call(this)
   }
