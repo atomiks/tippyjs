@@ -2,8 +2,12 @@ import { h } from 'hyperapp'
 import { emoji } from '../utils'
 import tippy from '../../../src/js/tippy.js'
 
+import { view as Code } from './Code'
+
 export const actions = {
   ajaxTippy(el) {
+    if (el._tippy) return
+
     const template = el.parentNode.querySelector('#allOptions__ajax-template')
     const initialText = template.textContent
 
@@ -59,9 +63,8 @@ export const view = ({ state, actions }) => (
       Below is a list of all possible options you can supply to <code>tippy()</code>. The values are
       the default ones used, with the different inputs being listed as a comment next to it.
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`tippy(ref, {
+    <Code lang="js">
+      {`tippy(ref, {
   // Available v2.3+ - If true, HTML can be injected in the title attribute
   allowTitleHTML: true,
 
@@ -201,9 +204,8 @@ export const view = ({ state, actions }) => (
 
   // The z-index of the popper
   zIndex: 9999
-})`}</code>
-      </pre>
-    </div>
+})`}
+    </Code>
 
     <h3>Modifying the default options</h3>
     <p>
@@ -227,9 +229,8 @@ export const view = ({ state, actions }) => (
       If you want things to occur during tooltips' show and hide events, you can specify callback
       functions in the options object.
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`tippy(ref, {
+    <Code lang="js">
+      {`tippy(ref, {
   onShow(instance) {
     // When the tooltip begins to transition in
   },
@@ -245,9 +246,8 @@ export const view = ({ state, actions }) => (
   wait(show, event) {
     // Delays showing the tooltip until you manually invoke show()
   }
-})`}</code>
-      </pre>
-    </div>
+})`}
+    </Code>
 
     <h3>
       AJAX tooltips <span class="section__emoji" innerHTML={emoji('🌐')} />
@@ -258,7 +258,7 @@ export const view = ({ state, actions }) => (
       which supports the newer fetch API.
     </p>
     <div class="section__result">
-      <button class="btn" oncreate={actions.ajaxTippy}>
+      <button class="btn" oncreate={actions.ajaxTippy} data-local>
         Hover for a new image
       </button>
       <div id="allOptions__ajax-template">Loading...</div>
@@ -275,29 +275,28 @@ export const view = ({ state, actions }) => (
       Event delegation only requires minimal setup. Your setup should look similar to this, with a
       parent element wrapping the child elements you would like to give tooltips to:
     </p>
-    <div class="code-wrapper" data-lang="html">
-      <pre>
-        <code class="lang-html">{`<div id="parent" title="Shared title">
+
+    <Code lang="html">
+      {`<div id="parent" title="Shared title">
   <div class="child">Text</div>
   <div class="child">Text</div>
   <div class="child">Text</div>
   <div class="other">Text</div>
 </div>
-`}</code>
-      </pre>
-    </div>
+`}
+    </Code>
+
     <p>
       Then, specify a CSS selector as the <code>target</code> that matches child elements which
       should receive tooltips
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`tippy('#parent', {
+    <Code lang="js">
+      {`tippy('#parent', {
   target: '.child'
 })
-`}</code>
-      </pre>
-    </div>
+`}
+    </Code>
+
     <h4>Note</h4>
     <p>
       <span class="section__emoji" innerHTML={emoji('⚠️')} />Avoid binding a Tippy instance to the
@@ -310,17 +309,13 @@ export const view = ({ state, actions }) => (
       instances as well. To disable this behavior, pass <code>false</code> into the{' '}
       <code>destroy()</code> method.
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`const parent = document.querySelector('#parent')
+    <Code lang="js">{`const parent = document.querySelector('#parent')
 tippy(parent, { target: '.child' })
 // Will not destroy any child target instances (if they had been created)
 parent._tippy.destroy(false)
-`}</code>
-      </pre>
-    </div>
+`}</Code>
     <p>
-      If the target option is specified, the parent reference(s) become delegates and receive a
+      If the target option is specified, the parent reference(s) become delegates and receive a{' '}
       <code>data-tippy-delegate</code> attribute instead of <code>data-tippy</code>.
     </p>
     <div class="code-wrapper" data-lang="html">
@@ -331,9 +326,8 @@ parent._tippy.destroy(false)
 
     <h3>Tooltips inside a scrollable container</h3>
     <p>Add the following options to make the tooltip not stay stuck within the viewport.</p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`tippy('.mySelector', {
+
+    <Code lang="js">{`tippy('.mySelector', {
   appendTo: document.querySelector('.mySelector').parentNode,
   popperOptions: {
     modifiers: {
@@ -346,9 +340,7 @@ parent._tippy.destroy(false)
     }
   }
 })
-`}</code>
-      </pre>
-    </div>
+`}</Code>
 
     <h3>Disabling tooltips on touch devices</h3>
     <p>
@@ -361,22 +353,20 @@ parent._tippy.destroy(false)
       is enabled. You can hook into Tippy's detection of user input changes by defining the
       following callback function:
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`tippy.browser.onUserInputChange = type => {
+
+    <Code>{`tippy.browser.onUserInputChange = type => {
   console.log('The user is now using', type, 'as an input method')
 }
-`}</code>
-      </pre>
-    </div>
+`}</Code>
+
     <p>
       Whenever the user changes their input method, you can react to it inside the callback
       function. To disable tooltips for touch input but keep them enabled for mouse input, you can
       do the following:
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`const tip = tippy('[title]')
+
+    <Code lang="js">
+      {`const tip = tippy('[title]')
 
 tippy.browser.onUserInputChange = type => {
   const method = type === 'touch' ? 'disable' : 'enable'
@@ -384,9 +374,8 @@ tippy.browser.onUserInputChange = type => {
     tooltip[method]()
   }
 }
-`}</code>
-      </pre>
-    </div>
+`}
+    </Code>
 
     <h3>Hiding tooltips on scroll</h3>
     <p>
@@ -396,9 +385,8 @@ tippy.browser.onUserInputChange = type => {
       begin hiding out of the way whenever they scroll, rather than whenever they tap somewhere
       else.
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`window.addEventListener('scroll', () => {
+
+    <Code lang="js">{`window.addEventListener('scroll', () => {
   for (const popper of document.querySelectorAll('.tippy-popper')) {
     const instance = popper._tippy
 
@@ -408,31 +396,21 @@ tippy.browser.onUserInputChange = type => {
     }
   }
 })
-`}</code>
-      </pre>
-    </div>
+`}</Code>
 
     <h3>Get all Tippy instances</h3>
     <p>
       Getting all (non-destroyed) Tippy instances on the document can be done in one single line:
     </p>
 
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`Array.from(document.querySelectorAll('[data-tippy]'), el => el._tippy)`}</code>
-      </pre>
-    </div>
+    <Code lang="js">{`Array.from(document.querySelectorAll('[data-tippy]'), el => el._tippy)`}</Code>
 
     <p>
       This returns an array holding every current Tippy instance (excluding delegates). To include
       delegates, use this selector:
     </p>
 
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`'[data-tippy], [data-tippy-delegate]'`}</code>
-      </pre>
-    </div>
+    <Code lang="js">{`'[data-tippy], [data-tippy-delegate]'`}</Code>
 
     <p>
       <span class="section__emoji" innerHTML={emoji('⚠️')} />

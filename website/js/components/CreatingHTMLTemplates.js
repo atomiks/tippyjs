@@ -2,8 +2,12 @@ import { h } from 'hyperapp'
 import { emoji } from '../utils'
 import tippy from '../../../src/js/tippy.js'
 
+import { view as Code } from './Code'
+
 export const actions = {
   initHTMLTemplateTippy(el) {
+    if (el._tippy) return
+
     const template = document.createElement('div')
     template.innerHTML = `<h3>
   Cool <span style="color: pink;">HTML</span> inside here!
@@ -54,50 +58,43 @@ export const view = ({ state, actions }) => (
     <p>On the document or in JavaScript somewhere, make a template.</p>
 
     <h4>Cloning</h4>
-    <div class="code-wrapper" data-lang="html">
-      <pre>
-        <code class="lang-html">{`<div id="myTemplate" style="display: none;">
+
+    <Code lang="html">
+      {`<div id="myTemplate" style="display: none;">
   <h3>Cool <span style="color: pink;">HTML</span> inside here!</h3>
-</div>`}</code>
-      </pre>
-    </div>
+</div>`}
+    </Code>
 
     <h4>Direct element reference</h4>
-    <div class="code-wrapper" data-lang="html">
-      <pre>
-        <code class="lang-html">{`<div id="myTemplate">
+    <Code lang="html">
+      {`<div id="myTemplate">
   <h3>Cool <span style="color: pink;">HTML</span> inside here!</h3>
-</div>`}</code>
-      </pre>
-    </div>
+</div>`}
+    </Code>
 
     <h4>Dynamic element with JS</h4>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`const myTemplate = document.createElement('div')
-myTemplate.innerHTML = '<h3>Cool <span style="color: pink;">HTML</span> inside here!</h3>'`}</code>
-      </pre>
-    </div>
+    <Code lang="js">
+      {`const myTemplate = document.createElement('div')
+myTemplate.innerHTML = '<h3>Cool <span style="color: pink;">HTML</span> inside here!</h3>'`}
+    </Code>
 
     <p>
       Then specify a <code>html</code> option, choosing one of the choices.
     </p>
 
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`tippy('selector', {
+    <Code lang="js">
+      {`tippy('selector', {
   html: '#myTemplate',
   // ...or...
   html: document.querySelector('#myTemplate'),
   // ...or you can clone a direct element too...
   html: document.querySelector('#myTemplate').cloneNode(true)
-})`}</code>
-      </pre>
-    </div>
+})`}
+    </Code>
 
     <div class="section__result">
       <p class="section__result-text">Result:</p>
-      <button oncreate={actions.initHTMLTemplateTippy} class="btn">
+      <button oncreate={actions.initHTMLTemplateTippy} class="btn" data-local>
         I have an HTML template!
       </button>
     </div>

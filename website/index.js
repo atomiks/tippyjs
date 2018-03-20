@@ -24,6 +24,12 @@ const state = {
 
 const actions = {
   init() {
+    ;[].forEach.call(document.querySelectorAll('[data-tippy], [data-tippy-delegate]'), el => {
+      if (!el.hasAttribute('data-local') && el._tippy) {
+        el._tippy.destroy()
+      }
+    })
+
     tippy('[title]:not(.tippy):not([data-exclude])')
     tippy('.tippy', {
       arrow: true,

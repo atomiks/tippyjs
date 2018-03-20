@@ -5,11 +5,14 @@ import { emoji } from '../utils'
 
 export const actions = {
   initHTMLTippy(el) {
+    if (el._tippy) return
+
     const container = el.parentNode
     const button = container.querySelector('[data-close]')
     button.onclick = () => el._tippy.hide()
     tippy(el, {
-      html: container.querySelector('[data-template]')
+      html: container.querySelector('[data-template]'),
+      appendTo: el.parentNode
     })
   }
 }
@@ -261,7 +264,11 @@ export const view = ({ state, actions }) => (
 
       <p>
         Tooltips can delay showing or{' '}
-        <span class="tippy" title="*Hide delay is always 0 on touch devices for UX reasons">
+        <span
+          tabindex="0"
+          class="tippy"
+          title="*Hide delay is always 0 on touch devices for UX reasons"
+        >
           hiding*
         </span>{' '}
         after a trigger.
@@ -312,6 +319,7 @@ export const view = ({ state, actions }) => (
         data-tippy-animation="fade"
         data-tippy-distance="15"
         data-tippy-interactiveBorder="20"
+        data-local
       >
         HTML Templates
       </button>
