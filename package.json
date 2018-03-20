@@ -30,7 +30,6 @@
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.26.0",
     "babel-jest": "^22.4.1",
-    "babel-loader": "^6.4.1",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
