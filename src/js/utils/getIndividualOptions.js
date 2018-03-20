@@ -1,4 +1,4 @@
-import { defaultsKeys } from '../core/globals'
+import { defaultsKeys } from '../core/defaults'
 
 /**
  * Returns an object of settings to override global settings

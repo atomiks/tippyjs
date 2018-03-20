@@ -12,8 +12,6 @@ const commonjs = require('rollup-plugin-commonjs')
 const cssOnly = require('rollup-plugin-css-only')
 const json = require('rollup-plugin-json')
 
-const THEMES = ['light', 'translucent']
-
 // wrapper utils
 const sassPluginOutput = name =>
   sass({
@@ -92,7 +90,8 @@ const esm = output('es')
   standalone.write(umd('tippy.standalone.js'))
   standaloneMin.write(umd('tippy.standalone.min.js', true))
 
-  for (const theme of THEMES) {
+  for (let theme of fs.readdirSync('./src/scss/themes')) {
+    theme = theme.replace('.scss', '')
     const t = await r(`themes/${theme}.js`, `./dist/themes/${theme}.css`)
     await t.write(umd(`tippy.${theme}.js`))
     fs.unlinkSync(`./dist/tippy.${theme}.js`)

@@ -6,7 +6,8 @@ import createArrayOfReferenceElements from '../helpers/createArrayOfReferenceEle
 import hasTippy from '../helpers/hasTippy'
 import cleanDocument from '../helpers/cleanDocument'
 
-import { defaults, browser, selectors } from '../../src/js/core/globals'
+import { browser, selectors } from '../../src/js/core/globals'
+import defaults from '../../src/js/core/defaults'
 import tippy from '../../src/js/tippy'
 import { Tippy } from '../../src/js/core/Tippy'
 

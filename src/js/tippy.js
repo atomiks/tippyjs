@@ -1,6 +1,7 @@
 import { version } from '../../package.json'
 
-import { browser, defaults } from './core/globals'
+import { browser } from './core/globals'
+import defaults from './core/defaults'
 
 import isObjectLiteral from './utils/isObjectLiteral'
 import getArrayOfElements from './utils/getArrayOfElements'

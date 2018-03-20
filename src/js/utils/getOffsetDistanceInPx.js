@@ -1,4 +1,4 @@
-import { defaults } from '../core/globals'
+import defaults from '../core/defaults'
 
 /**
  * Returns the distance taking into account the default distance due to

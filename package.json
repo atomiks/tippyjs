@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.all.js",
   "repository": {
@@ -11,7 +11,8 @@
     "dev": "parcel website/index.html -d docs/",
     "build:docs": "parcel build website/index.html -d docs/ --public-url ./",
     "build": "node ./scripts/build.js && npm run prettier && npm run build:docs",
-    "test": "eslint 'src/**/*.js' && jest --verbose"
+    "test": "eslint \"src/**/*.js\" && jest --verbose",
+    "prettier": "prettier --write \"./**/*{js,scss}\""
   },
   "jest": {
     "setupFiles": ["./tests/polyfills/createRange.js", "./tests/polyfills/MutationObserver.js"]
@@ -59,13 +60,10 @@
     "rollup-plugin-commonjs": "^8.4.1",
     "rollup-plugin-css-only": "^0.2.0",
     "rollup-plugin-json": "^2.3.0",
-    "rollup-plugin-livereload": "^0.4.0",
     "rollup-plugin-node-resolve": "^3.2.0",
-    "rollup-plugin-sass": "^0.4.10",
-    "rollup-plugin-serve": "^0.3.0",
-    "rollup-watch": "^3.2.2"
+    "rollup-plugin-sass": "^0.4.10"
   },
   "dependencies": {
-    "popper.js": "^1.13.0"
+    "popper.js": "^1.14.1"
   }
 }
