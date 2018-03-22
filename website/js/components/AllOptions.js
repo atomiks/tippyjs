@@ -354,7 +354,7 @@ parent._tippy.destroy(false)
       following callback function:
     </p>
 
-    <Code>{`tippy.browser.onUserInputChange = type => {
+    <Code lang="js">{`tippy.browser.onUserInputChange = type => {
   console.log('The user is now using', type, 'as an input method')
 }
 `}</Code>
