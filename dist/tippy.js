@@ -1,5 +1,5 @@
 /*!
-* Tippy.js v2.4.0
+* Tippy.js v2.4.1
 * (c) 2017-2018 atomiks
 * MIT
 */
@@ -9,7 +9,7 @@
 	(global.tippy = factory());
 }(this, (function () { 'use strict';
 
-var version = "2.4.0";
+var version = "2.4.1";
 
 var isBrowser = typeof window !== 'undefined';
 

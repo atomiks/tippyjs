@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.all.js",
   "repository": {
@@ -33,6 +33,7 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-stage-2": "^6.24.1",

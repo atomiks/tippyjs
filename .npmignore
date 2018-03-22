@@ -5,3 +5,9 @@ tests/
 src/
 build/
 .cache/
+.github/
+website/
+.babelrc
+.prettierignore
+.travis.yml
+.gitignore
