@@ -8,8 +8,9 @@
     "url": "git+https://github.com/atomiks/tippyjs.git"
   },
   "scripts": {
-    "dev": "parcel website/index.html -d docs/",
+    "dev:docs": "parcel website/index.html -d docs/",
     "build:docs": "parcel build website/index.html -d docs/ --public-url ./",
+    "dev": "parcel tests/index.html -d tests/dist/",
     "build": "node ./scripts/build.js && npm run prettier && npm run build:docs",
     "test": "eslint \"src/**/*.js\" && jest --verbose",
     "prettier": "prettier --write \"./**/*{js,scss}\""
