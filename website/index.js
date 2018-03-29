@@ -2,6 +2,8 @@ import { h, app } from 'hyperapp'
 
 import tippy from '../dist/tippy.js'
 import '../dist/tippy.css'
+import '../dist/themes/light.css'
+import '../dist/themes/translucent.css'
 
 import 'normalize.css' // Normalize different browser CSS styling
 import './css/index.scss' // CSS for docs
