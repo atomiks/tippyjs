@@ -1,7 +1,7 @@
 import { h } from 'hyperapp'
 import anime from 'animejs'
 import logo from '../../assets/img/logo.svg'
-import pkg from '../../../package.json'
+import { version } from '../../../package.json'
 
 export const actions = {
   animateLogo(el) {
@@ -52,7 +52,7 @@ const styles = {
   }
 }
 
-export const view = ({ state, actions }) => (
+export const view = () => (state, { header: actions }) => (
   <header class="header">
     <div class="container">
       <img class="header__logo" src={logo} oncreate={actions.animateLogo} style={styles.logo} />
@@ -60,7 +60,7 @@ export const view = ({ state, actions }) => (
         <h1 class="header__heading">
           Tippy.js
           <span oncreate={actions.animateVersion} class="header__version" style={styles.version}>
-            v{pkg.version}
+            v{version}
           </span>
         </h1>
       </div>

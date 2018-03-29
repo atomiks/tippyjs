@@ -31,7 +31,7 @@ export const actions = {
   creatingHTMLTemplates: CreatingHTMLTemplatesComponent.actions
 }
 
-export const view = ({ state, actions }) => (
+export const view = () => (state, { main: actions }) => (
   <main class="main">
     <div class="container main__body">
       <Demo actions={actions.demo} />

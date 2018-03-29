@@ -78,7 +78,7 @@ export const view = ({ state, actions }) => (
   appendTo: document.body, // Element or Function that returns an element
 
   // Whether to display the arrow. Disables the animateFill option
-  arrow: true,
+  arrow: false,
 
   // Transforms the arrow element to make it larger, wider, skinnier, offset, etc.
   arrowTransform: '', // CSS syntax: 'scaleX(0.5)', 'scale(2)', 'translateX(5px)' etc.

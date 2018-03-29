@@ -305,7 +305,7 @@ export const view = ({ state, actions }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('🗃️')} />
+      <div class="feature__icon" innerHTML={emoji('🖼️')} />
       <h3 class="feature__heading">HTML</h3>
       <p>Tooltips can contain HTML, allowing you to craft awesome interactive popovers.</p>
       <button

@@ -49,8 +49,8 @@ const actions = {
 
 const view = (state, actions) => (
   <div class="app" oncreate={actions.init}>
-    <Header state={state.header} actions={actions.header} />
-    <Main state={state.main} actions={actions.main} />
+    <Header />
+    <Main />
   </div>
 )
 

@@ -1,5 +1,6 @@
 import { h } from 'hyperapp'
 import { emoji } from '../utils'
+import { view as Code } from './Code'
 
 export const view = ({ state, actions }) => (
   <section class="section" id="props">
@@ -10,12 +11,13 @@ export const view = ({ state, actions }) => (
       </a>
     </div>
     <p>
-      It's important to distinguish between the object returned from calling tippy() and a Tippy
-      instance. When you call tippy(), it can create multiple tooltips (Tippy instances) at once.
+      It's important to distinguish between the object returned from calling <code>tippy()</code>{' '}
+      and a Tippy instance. When you call <code>tippy()</code>, it can create multiple tooltips
+      (Tippy instances) at once.
     </p>
     <p>
-      Tippy instances refer to individual tooltips, whereas the object returned from tippy() refers
-      to the collection.
+      Tippy instances refer to individual tooltips, whereas the object returned from{' '}
+      <code>tippy()</code> refers to the collection.
     </p>
 
     <h3>
@@ -23,15 +25,14 @@ export const view = ({ state, actions }) => (
     </h3>
     <div class="code-wrapper" data-lang="js">
       <pre>
-        <code class="lang-js">{`const tipObj = tippy('.btn')`}</code>
+        <code class="lang-js">{`const tip = tippy('.btn')`}</code>
       </pre>
     </div>
     <p>
-      <code>tipObj</code> is a plain object.
+      <code>tip</code> is a plain object.
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`{
+    <Code lang="js">
+      {`{
   // selector that was supplied to tippy()
   selector: '.btn', 
 
@@ -43,29 +44,23 @@ export const view = ({ state, actions }) => (
 
   // Method to destroy all the tooltips that were created
   destroyAll() { }
-}`}</code>
-      </pre>
-    </div>
+}`}
+    </Code>
 
     <h3>Tippy instances</h3>
     <p>
       Stored on reference elements via the <code>_tippy</code> property, and inside the{' '}
       <code>tooltips</code> array of the <code>tippy()</code> object.
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`tippy('.btn')
+    <Code lang="js">{`tippy('.btn')
 const btn = document.querySelector('.btn')
-const tipInstance = btn._tippy`}</code>
-      </pre>
-    </div>
+const tipInstance = btn._tippy`}</Code>
+
     <p>
       <code>tipInstance</code> is a Tippy instance.
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">
-          {`{
+    <Code lang="js">
+      {`{
   // id of the Tippy instance (1 to Infinity)
   id: 1,
 
@@ -98,21 +93,14 @@ const tipInstance = btn._tippy`}</code>
   // title content of the tooltip (null if HTML)
   title: 'example'
 }`}
-        </code>
-      </pre>
-    </div>
-
+    </Code>
     <h3>Shortcuts</h3>
     <p>There are several shortcuts available for accessing the instance.</p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`// The popper element has the instance attached to it:
+    <Code lang="js">{`// The popper element has the instance attached to it:
 popper._tippy
 // As does the reference element (as seen above):
 reference._tippy
 // The popper also has the reference directly attached:
-popper._reference`}</code>
-      </pre>
-    </div>
+popper._reference`}</Code>
   </section>
 )

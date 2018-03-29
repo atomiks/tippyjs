@@ -18,7 +18,7 @@ export const actions = {
 
 export const view = ({ state, actions }) => (
   <section class="section" id="creating-html-templates">
-    <div class="section__icon-wrapper" innerHTML={emoji('🎟')} />
+    <div class="section__icon-wrapper" innerHTML={emoji('🖼️')} />
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#creating-html-templates">
         Creating HTML Templates

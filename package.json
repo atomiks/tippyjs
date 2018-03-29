@@ -43,7 +43,7 @@
     "eslint": "^4.18.2",
     "feather-icons": "^4.7.0",
     "focus-visible": "^4.1.1",
-    "hyperapp": "^1.1.2",
+    "hyperapp": "^1.2.5",
     "jest": "^22.4.2",
     "jsdom": "^11.6.2",
     "mutation-observer": "^1.0.3",
