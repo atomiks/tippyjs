@@ -1,23 +1,8 @@
 import { h } from 'hyperapp'
 import logo from '../../assets/img/logo.svg'
-import tippy from '../../../src/js/tippy.js'
 import { emoji } from '../utils'
 
-export const actions = {
-  initHTMLTippy(el) {
-    if (el._tippy) return
-
-    const container = el.parentNode
-    const button = container.querySelector('[data-close]')
-    button.onclick = () => el._tippy.hide()
-    tippy(el, {
-      html: container.querySelector('[data-template]'),
-      appendTo: el.parentNode
-    })
-  }
-}
-
-export const view = ({ state, actions }) => (
+export default () => (state, { demo }) => (
   <section class="section" id="demo">
     <h2 class="section__heading">Tippy's features</h2>
     <div class="feature">
@@ -309,7 +294,7 @@ export const view = ({ state, actions }) => (
       <h3 class="feature__heading">HTML</h3>
       <p>Tooltips can contain HTML, allowing you to craft awesome interactive popovers.</p>
       <button
-        oncreate={actions.initHTMLTippy}
+        oncreate={demo.htmlTippy}
         class="btn"
         data-tippy-interactive="true"
         data-tippy-theme="light rounded"

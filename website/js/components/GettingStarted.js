@@ -2,7 +2,9 @@ import { h } from 'hyperapp'
 import pkg from '../../../package.json'
 import { emoji } from '../utils'
 
-export const view = ({ state, actions }) => (
+import Code from './Code'
+
+export default () => (state, actions) => (
   <section class="section" id="getting-started">
     <div class="section__icon-wrapper" innerHTML={emoji('📦')} />
     <div class="section__heading-wrapper">
@@ -24,15 +26,9 @@ export const view = ({ state, actions }) => (
       </span>{' '}
       in your HTML document before your own scripts:
     </p>
-    <div class="code-wrapper" data-lang="html">
-      <pre>
-        <code class="lang-html">
-          {`<script src="https://unpkg.com/tippy.js@${
-            pkg.version
-          }/dist/tippy.all.min.js"></script>`}
-        </code>
-      </pre>
-    </div>
+    <Code lang="html">
+      {`<script src="https://unpkg.com/tippy.js@${pkg.version}/dist/tippy.all.min.js"></script>`}
+    </Code>
     <p>
       Once it's loaded, you'll have access to the <code>tippy</code> module which will allow you to
       create awesome tooltips!
@@ -43,31 +39,19 @@ export const view = ({ state, actions }) => (
     </h3>
     <p>Install using either npm or yarn:</p>
 
-    <div class="code-wrapper" data-lang="shell">
-      <pre class="lang-shell">
-        <code>npm install tippy.js</code>
-      </pre>
-    </div>
-    <div class="code-wrapper" data-lang="shell">
-      <pre class="lang-shell">
-        <code>yarn add tippy.js</code>
-      </pre>
-    </div>
+    <Code lang="shell">{`npm install tippy.js`}</Code>
+    <Code lang="shell">{`yarn add tippy.js`}</Code>
 
     <p>
       Then you can import the <code>tippy</code> module:
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre class="lang-js">
-        <code>
-          {`// Node environment
+    <Code lang="js">
+      {`// Node environment
 const tippy = require('tippy.js')
 // With a module bundler (webpack/rollup/parcel)
 import tippy from 'tippy.js'
 `}
-        </code>
-      </pre>
-    </div>
+    </Code>
 
     <h3 class="section__subheading">
       Files <span class="section__emoji" innerHTML={emoji('📁')} />

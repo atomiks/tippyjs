@@ -1,7 +1,7 @@
 import { h } from 'hyperapp'
 import { emoji } from '../utils'
 
-export const view = ({ state, actions }) => (
+export default () => (state, actions) => (
   <section class="section" id="creating-tooltips">
     <div class="section__icon-wrapper" innerHTML={emoji('🔧')} />
     <div class="section__heading-wrapper">

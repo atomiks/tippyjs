@@ -1,57 +1,8 @@
 import { h } from 'hyperapp'
 import { emoji } from '../utils'
-import tippy from '../../../src/js/tippy.js'
+import Code from './Code'
 
-import { view as Code } from './Code'
-
-export const actions = {
-  ajaxTippy(el) {
-    if (el._tippy) return
-
-    const template = el.parentNode.querySelector('#allOptions__ajax-template')
-    const initialText = template.textContent
-
-    const tip = tippy(el, {
-      animation: 'shift-toward',
-      arrow: true,
-      html: template,
-      onShow(instance) {
-        const content = instance.popper.querySelector('.tippy-content')
-
-        if (tip.loading || content.textContent !== initialText) return
-
-        tip.loading = true
-
-        fetch('https://unsplash.it/200/?random')
-          .then(resp => resp.blob())
-          .then(blob => {
-            content.innerHTML = `<img width="200" height="200" src="${URL.createObjectURL(blob)}">`
-            tip.loading = false
-          })
-          .catch(e => {
-            content.innerHTML = 'Loading failed'
-            tip.loading = false
-          })
-      },
-      onHidden(instance) {
-        instance.popper.querySelector('.tippy-content').innerHTML = initialText
-      },
-      // prevent tooltip from displaying over button
-      popperOptions: {
-        modifiers: {
-          preventOverflow: {
-            enabled: false
-          },
-          hide: {
-            enabled: false
-          }
-        }
-      }
-    })
-  }
-}
-
-export const view = ({ state, actions }) => (
+export default () => (state, { allOptions }) => (
   <section class="section" id="all-options">
     <div class="section__icon-wrapper" innerHTML={emoji('🔮')} />
     <div class="section__heading-wrapper">
@@ -258,7 +209,7 @@ export const view = ({ state, actions }) => (
       which supports the newer fetch API.
     </p>
     <div class="section__result">
-      <button class="btn" oncreate={actions.ajaxTippy} data-local>
+      <button class="btn" oncreate={allOptions.ajaxTippy} data-local>
         Hover for a new image
       </button>
       <div id="allOptions__ajax-template">Loading...</div>

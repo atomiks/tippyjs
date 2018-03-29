@@ -1,44 +1,6 @@
 import { h } from 'hyperapp'
-import anime from 'animejs'
 import logo from '../../assets/img/logo.svg'
 import { version } from '../../../package.json'
-
-export const actions = {
-  animateLogo(el) {
-    anime({
-      targets: el,
-      translateY: 210,
-      duration: 2000,
-      elasticity: 250,
-      delay: 400
-    })
-  },
-  animateVersion(el) {
-    anime({
-      targets: el,
-      scale: 1,
-      opacity: 1,
-      duration: 2500,
-      delay: 1000
-    })
-  },
-  animateItems(el) {
-    el.style.pointerEvents = 'none'
-    anime({
-      targets: el,
-      translateY: 0,
-      opacity: 1,
-      delay: 1500,
-      duration: 2000,
-      elasticity: 200,
-      begin() {
-        el.style.pointerEvents = 'auto'
-      }
-    })
-  }
-}
-
-export const state = {}
 
 const styles = {
   logo: {},
@@ -52,20 +14,20 @@ const styles = {
   }
 }
 
-export const view = () => (state, { header: actions }) => (
+export default () => (state, { header }) => (
   <header class="header">
     <div class="container">
-      <img class="header__logo" src={logo} oncreate={actions.animateLogo} style={styles.logo} />
+      <img class="header__logo" src={logo} oncreate={header.animateLogo} style={styles.logo} />
       <div class="header__heading-wrapper">
         <h1 class="header__heading">
           Tippy.js
-          <span oncreate={actions.animateVersion} class="header__version" style={styles.version}>
+          <span oncreate={header.animateVersion} class="header__version" style={styles.version}>
             v{version}
           </span>
         </h1>
       </div>
       <h2 class="header__slogan">A highly customizable vanilla JS tooltip & popover library</h2>
-      <div oncreate={actions.animateItems} class="header__items" style={styles.items}>
+      <div oncreate={header.animateItems} class="header__items" style={styles.items}>
         <div class="header__item">
           <p>
             <i class="header__icon is-code" data-feather="code" />

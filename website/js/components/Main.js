@@ -1,47 +1,29 @@
 import { h } from 'hyperapp'
 import pkg from '../../../package.json'
 
-import * as DemoComponent from './Demo'
-import * as GettingStartedComponent from './GettingStarted'
-import * as CreatingTooltipsComponent from './CreatingTooltips'
-import * as CustomizingTooltipsComponent from './CustomizingTooltips'
-import * as AllOptionsComponent from './AllOptions'
-import * as PropsComponent from './Props'
-import * as MethodsComponent from './Methods'
-import * as CreatingHTMLTemplatesComponent from './CreatingHTMLTemplates'
-import * as CreatingCustomThemesComponent from './CreatingCustomThemes'
-import * as BrowserSupportComponent from './BrowserSupport'
-import * as PerformanceComponent from './Performance'
+import Demo from './Demo'
+import GettingStarted from './GettingStarted'
+import CreatingTooltips from './CreatingTooltips'
+import CustomizingTooltips from './CustomizingTooltips'
+import AllOptions from './AllOptions'
+import Props from './Props'
+import Methods from './Methods'
+import CreatingHTMLTemplates from './CreatingHTMLTemplates'
+import CreatingCustomThemes from './CreatingCustomThemes'
+import BrowserSupport from './BrowserSupport'
+import Performance from './Performance'
 
-const { view: Demo } = DemoComponent
-const { view: GettingStarted } = GettingStartedComponent
-const { view: CreatingTooltips } = CreatingTooltipsComponent
-const { view: CustomizingTooltips } = CustomizingTooltipsComponent
-const { view: AllOptions } = AllOptionsComponent
-const { view: Props } = PropsComponent
-const { view: Methods } = MethodsComponent
-const { view: CreatingHTMLTemplates } = CreatingHTMLTemplatesComponent
-const { view: CreatingCustomThemes } = CreatingCustomThemesComponent
-const { view: BrowserSupport } = BrowserSupportComponent
-const { view: Performance } = PerformanceComponent
-
-export const actions = {
-  demo: DemoComponent.actions,
-  allOptions: AllOptionsComponent.actions,
-  creatingHTMLTemplates: CreatingHTMLTemplatesComponent.actions
-}
-
-export const view = () => (state, { main: actions }) => (
+export default () => (state, actions) => (
   <main class="main">
     <div class="container main__body">
-      <Demo actions={actions.demo} />
+      <Demo />
       <GettingStarted />
       <CreatingTooltips />
       <CustomizingTooltips />
-      <AllOptions actions={actions.allOptions} />
+      <AllOptions />
       <Props />
       <Methods />
-      <CreatingHTMLTemplates actions={actions.creatingHTMLTemplates} />
+      <CreatingHTMLTemplates />
       <CreatingCustomThemes />
       <BrowserSupport />
       <Performance />

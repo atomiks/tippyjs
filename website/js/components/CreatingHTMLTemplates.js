@@ -1,22 +1,9 @@
 import { h } from 'hyperapp'
 import { emoji } from '../utils'
-import tippy from '../../../src/js/tippy.js'
 
-import { view as Code } from './Code'
+import Code from './Code'
 
-export const actions = {
-  initHTMLTemplateTippy(el) {
-    if (el._tippy) return
-
-    const template = document.createElement('div')
-    template.innerHTML = `<h3>
-  Cool <span style="color: pink;">HTML</span> inside here!
-</h3>`
-    tippy(el, { html: template })
-  }
-}
-
-export const view = ({ state, actions }) => (
+export default () => (state, { creatingHTMLTemplates }) => (
   <section class="section" id="creating-html-templates">
     <div class="section__icon-wrapper" innerHTML={emoji('🖼️')} />
     <div class="section__heading-wrapper">
@@ -94,7 +81,7 @@ myTemplate.innerHTML = '<h3>Cool <span style="color: pink;">HTML</span> inside h
 
     <div class="section__result">
       <p class="section__result-text">Result:</p>
-      <button oncreate={actions.initHTMLTemplateTippy} class="btn" data-local>
+      <button oncreate={creatingHTMLTemplates.htmlTippy} class="btn" data-local>
         I have an HTML template!
       </button>
     </div>

@@ -1,10 +1,7 @@
 import { h } from 'hyperapp'
 import { emoji } from '../utils'
-import tippy from '../../../src/js/tippy.js'
 
-export const actions = {}
-
-export const view = ({ state, actions }) => (
+export default () => (state, actions) => (
   <section class="section" id="creating-custom-themes">
     <div class="section__icon-wrapper" innerHTML={emoji('🖌')} />
     <div class="section__heading-wrapper">
