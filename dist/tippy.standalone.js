@@ -1,5 +1,5 @@
 /*!
-* Tippy.js v2.4.1
+* Tippy.js v2.4.2
 * (c) 2017-2018 atomiks
 * MIT
 */
@@ -11,7 +11,7 @@
 
 Popper = Popper && Popper.hasOwnProperty('default') ? Popper['default'] : Popper;
 
-var version = "2.4.1";
+var version = "2.4.2";
 
 var isBrowser = typeof window !== 'undefined';
 
@@ -132,6 +132,40 @@ function getArrayOfElements(selector) {
   } catch (_) {
     return [];
   }
+}
+
+/**
+ * Polyfills needed props/methods for a virtual reference object
+ * NOTE: in v3.0 this will be pure
+ * @param {Object} reference
+ */
+function polyfillVirtualReferenceProps(reference) {
+  reference.refObj = true;
+  reference.attributes = reference.attributes || {};
+  reference.setAttribute = function (key, val) {
+    reference.attributes[key] = val;
+  };
+  reference.getAttribute = function (key) {
+    return reference.attributes[key];
+  };
+  reference.removeAttribute = function (key) {
+    delete reference.attributes[key];
+  };
+  reference.addEventListener = function () {};
+  reference.removeEventListener = function () {};
+  reference.classList = {
+    classNames: {},
+    add: function add(key) {
+      return reference.classList.classNames[key] = true;
+    },
+    remove: function remove(key) {
+      delete reference.classList.classNames[key];
+      return true;
+    },
+    contains: function contains(key) {
+      return !!reference.classList.classNames[key];
+    }
+  };
 }
 
 /**
@@ -429,17 +463,6 @@ function removeTitle(el) {
     el.setAttribute('data-original-title', title);
   }
   el.removeAttribute('title');
-}
-
-/**
- * Resets a popper's position to fix https://github.com/FezVrasta/popper.js/issues/251
- * @param {Element} popper
- */
-function resetPopperPosition(popper) {
-  var styles = popper.style;
-  styles[prefix('transform')] = null;
-  styles.top = null;
-  styles.left = null;
 }
 
 /**
@@ -1296,7 +1319,6 @@ function _mount(callback) {
       this.popperInstance.disableEventListeners();
     }
   } else {
-    resetPopperPosition(this.popper);
     this.popperInstance.scheduleUpdate();
     if (options.livePlacement && !_hasFollowCursorBehavior.call(this)) {
       this.popperInstance.enableEventListeners();
@@ -1671,32 +1693,7 @@ function tippy$1(selector, options) {
   }
 
   if (isObjectLiteral(selector)) {
-    selector.refObj = true;
-    selector.attributes = selector.attributes || {};
-    selector.setAttribute = function (key, val) {
-      selector.attributes[key] = val;
-    };
-    selector.getAttribute = function (key) {
-      return selector.attributes[key];
-    };
-    selector.removeAttribute = function (key) {
-      delete selector.attributes[key];
-    };
-    selector.addEventListener = function () {};
-    selector.removeEventListener = function () {};
-    selector.classList = {
-      classNames: {},
-      add: function add(key) {
-        return selector.classList.classNames[key] = true;
-      },
-      remove: function remove(key) {
-        delete selector.classList.classNames[key];
-        return true;
-      },
-      contains: function contains(key) {
-        return !!selector.classList.classNames[key];
-      }
-    };
+    polyfillVirtualReferenceProps(selector);
   }
 
   options = _extends({}, defaults, options);
@@ -1717,6 +1714,9 @@ function tippy$1(selector, options) {
 tippy$1.version = version;
 tippy$1.browser = browser;
 tippy$1.defaults = defaults;
+tippy$1.one = function (selector, options) {
+  return tippy$1(selector, options).tooltips[0];
+};
 tippy$1.disableAnimations = function () {
   defaults.updateDuration = defaults.duration = 0;
   defaults.animateFill = false;

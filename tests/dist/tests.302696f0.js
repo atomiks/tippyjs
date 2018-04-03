@@ -1,21 +1,172 @@
-/*!
-* Tippy.js v2.4.2
-* (c) 2017-2018 atomiks
-* MIT
-*/
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.tippy = factory());
-}(this, (function () { 'use strict';
+// modules are defined as an array
+// [ module function, map of requires ]
+//
+// map of requires is short require name -> numeric require
+//
+// anything defined in a previous bundle is accessed via the
+// orig method which is the require for previous bundles
 
-var version = "2.4.2";
+// eslint-disable-next-line no-global-assign
+parcelRequire = (function (modules, cache, entry) {
+  // Save the require from previous bundle to this closure if any
+  var previousRequire = typeof parcelRequire === 'function' && parcelRequire;
+  var nodeRequire = typeof require === 'function' && require;
 
-var isBrowser = typeof window !== 'undefined';
+  function newRequire(name, jumped) {
+    if (!cache[name]) {
+      if (!modules[name]) {
+        // if we cannot find the module within our internal map or
+        // cache jump to the current global require ie. the last bundle
+        // that was added to the page.
+        var currentRequire = typeof parcelRequire === 'function' && parcelRequire;
+        if (!jumped && currentRequire) {
+          return currentRequire(name, true);
+        }
 
-var isIE = isBrowser && /MSIE |Trident\//.test(navigator.userAgent);
+        // If there are other bundles on this page the require from the
+        // previous one is saved to 'previousRequire'. Repeat this as
+        // many times as there are bundles until the module is found or
+        // we exhaust the require chain.
+        if (previousRequire) {
+          return previousRequire(name, true);
+        }
 
-var browser = {};
+        // Try the node require function if it exists.
+        if (nodeRequire && typeof name === 'string') {
+          return nodeRequire(name);
+        }
+
+        var err = new Error('Cannot find module \'' + name + '\'');
+        err.code = 'MODULE_NOT_FOUND';
+        throw err;
+      }
+
+      localRequire.resolve = resolve;
+
+      var module = cache[name] = new newRequire.Module(name);
+
+      modules[name][0].call(module.exports, localRequire, module, module.exports);
+    }
+
+    return cache[name].exports;
+
+    function localRequire(x){
+      return newRequire(localRequire.resolve(x));
+    }
+
+    function resolve(x){
+      return modules[name][1][x] || x;
+    }
+  }
+
+  function Module(moduleName) {
+    this.id = moduleName;
+    this.bundle = newRequire;
+    this.exports = {};
+  }
+
+  newRequire.isParcelRequire = true;
+  newRequire.Module = Module;
+  newRequire.modules = modules;
+  newRequire.cache = cache;
+  newRequire.parent = previousRequire;
+
+  for (var i = 0; i < entry.length; i++) {
+    newRequire(entry[i]);
+  }
+
+  // Override the current require with this new one
+  return newRequire;
+})({6:[function(require,module,exports) {
+module.exports = {
+  "name": "tippy.js",
+  "version": "2.4.2",
+  "description": "Vanilla JS Tooltip Library",
+  "main": "dist/tippy.all.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomiks/tippyjs.git"
+  },
+  "scripts": {
+    "dev:docs": "parcel website/index.html -d docs/",
+    "build:docs": "parcel build website/index.html -d docs/ --public-url ./",
+    "dev": "parcel tests/index.html -d tests/dist/",
+    "build": "node ./scripts/build.js && npm run prettier && npm run build:docs",
+    "test": "eslint \"src/**/*.js\" && jest --verbose",
+    "prettier": "prettier --write \"./**/*{js,scss}\""
+  },
+  "jest": {
+    "setupFiles": [
+      "./tests/polyfills/createRange.js",
+      "./tests/polyfills/MutationObserver.js"
+    ]
+  },
+  "prettier": {
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": true
+  },
+  "author": "atomiks",
+  "license": "MIT",
+  "keywords": [
+    "tooltip",
+    "tippy",
+    "tippy.js"
+  ],
+  "devDependencies": {
+    "animejs": "^2.2.0",
+    "autoprefixer": "^6.7.7",
+    "babel-core": "^6.26.0",
+    "babel-jest": "^22.4.1",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "caniuse-lite": "^1.0.30000815",
+    "cssnano": "^3.10.0",
+    "eslint": "^4.18.2",
+    "feather-icons": "^4.7.0",
+    "focus-visible": "^4.1.1",
+    "hyperapp": "^1.2.5",
+    "jest": "^22.4.2",
+    "jsdom": "^11.6.2",
+    "mutation-observer": "^1.0.3",
+    "normalize.css": "^8.0.0",
+    "parcel-bundler": "^1.7.0",
+    "postcss": "^5.2.18",
+    "postcss-cssnext": "^3.1.0",
+    "postcss-import": "^11.1.0",
+    "postcss-pxtorem": "^4.0.1",
+    "prettier": "^1.11.1",
+    "prismjs": "^1.12.2",
+    "rollup": "^0.55.5",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-babel-minify": "^4.0.0",
+    "rollup-plugin-commonjs": "^8.4.1",
+    "rollup-plugin-css-only": "^0.2.0",
+    "rollup-plugin-json": "^2.3.0",
+    "rollup-plugin-node-resolve": "^3.2.0",
+    "rollup-plugin-sass": "^0.4.10"
+  },
+  "dependencies": {
+    "popper.js": "^1.14.2"
+  }
+}
+;
+},{}],7:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var isBrowser = exports.isBrowser = typeof window !== 'undefined';
+
+var isIE = exports.isIE = isBrowser && /MSIE |Trident\//.test(navigator.userAgent);
+
+var browser = exports.browser = {};
 
 if (isBrowser) {
   browser.supported = 'requestAnimationFrame' in window;
@@ -29,7 +180,7 @@ if (isBrowser) {
 /**
  * Selector constants used for grabbing elements
  */
-var selectors = {
+var selectors = exports.selectors = {
   POPPER: '.tippy-popper',
   TOOLTIP: '.tippy-tooltip',
   CONTENT: '.tippy-content',
@@ -38,6 +189,15 @@ var selectors = {
   ROUND_ARROW: '.tippy-roundarrow',
   REFERENCE: '[data-tippy]'
 };
+},{}],8:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.defaultsKeys = undefined;
+
+var _globals = require('./globals');
 
 var defaults = {
   placement: 'top',
@@ -83,12 +243,21 @@ var defaults = {
   onHidden: function onHidden() {}
 };
 
+exports.default = defaults;
+
 /**
  * The keys of the defaults object for reducing down into a new object
  * Used in `getIndividualOptions()`
  */
-var defaultsKeys = browser.supported && Object.keys(defaults);
 
+var defaultsKeys = exports.defaultsKeys = _globals.browser.supported && Object.keys(defaults);
+},{"./globals":7}],9:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isObjectLiteral;
 /**
  * Determines if a value is an object literal
  * @param {*} value
@@ -97,7 +266,13 @@ var defaultsKeys = browser.supported && Object.keys(defaults);
 function isObjectLiteral(value) {
   return {}.toString.call(value) === '[object Object]';
 }
+},{}],15:[function(require,module,exports) {
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toArray;
 /**
  * Ponyfill for Array.from
  * @param {*} value
@@ -106,6 +281,23 @@ function isObjectLiteral(value) {
 function toArray(value) {
   return [].slice.call(value);
 }
+},{}],10:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = getArrayOfElements;
+
+var _isObjectLiteral = require('./isObjectLiteral');
+
+var _isObjectLiteral2 = _interopRequireDefault(_isObjectLiteral);
+
+var _toArray = require('./toArray');
+
+var _toArray2 = _interopRequireDefault(_toArray);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Returns an array of elements based on the selector input
@@ -113,12 +305,12 @@ function toArray(value) {
  * @return {Element[]}
  */
 function getArrayOfElements(selector) {
-  if (selector instanceof Element || isObjectLiteral(selector)) {
+  if (selector instanceof Element || (0, _isObjectLiteral2.default)(selector)) {
     return [selector];
   }
 
   if (selector instanceof NodeList) {
-    return toArray(selector);
+    return (0, _toArray2.default)(selector);
   }
 
   if (Array.isArray(selector)) {
@@ -126,12 +318,18 @@ function getArrayOfElements(selector) {
   }
 
   try {
-    return toArray(document.querySelectorAll(selector));
+    return (0, _toArray2.default)(document.querySelectorAll(selector));
   } catch (_) {
     return [];
   }
 }
+},{"./isObjectLiteral":9,"./toArray":15}],11:[function(require,module,exports) {
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = polyfillVirtualReferenceProps;
 /**
  * Polyfills needed props/methods for a virtual reference object
  * NOTE: in v3.0 this will be pure
@@ -165,7 +363,13 @@ function polyfillVirtualReferenceProps(reference) {
     }
   };
 }
+},{}],26:[function(require,module,exports) {
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = prefix;
 /**
  * Returns the supported prefixed property - only `webkit` is needed, `moz`, `ms` and `o` are obsolete
  * @param {String} property
@@ -185,6 +389,19 @@ function prefix(property) {
 
   return null;
 }
+},{}],19:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createPopperElement;
+
+var _prefix = require('./prefix');
+
+var _prefix2 = _interopRequireDefault(_prefix);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Creates a popper element then returns it
@@ -213,7 +430,7 @@ function createPopperElement(id, title, options) {
 
   if (options.arrow) {
     var arrow = document.createElement('div');
-    arrow.style[prefix('transform')] = options.arrowTransform;
+    arrow.style[(0, _prefix2.default)('transform')] = options.arrowTransform;
 
     if (options.arrowType === 'round') {
       arrow.classList.add('tippy-roundarrow');
@@ -274,6 +491,15 @@ function createPopperElement(id, title, options) {
 
   return popper;
 }
+},{"./prefix":26}],22:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createTrigger;
+
+var _globals = require('../core/globals');
 
 /**
  * Creates a trigger by adding the necessary event listeners to the reference element
@@ -302,7 +528,7 @@ function createTrigger(eventType, reference, handlers, options) {
   if (!options.target) {
     on(eventType, onTrigger);
 
-    if (browser.supportsTouch && options.touchHold) {
+    if (_globals.browser.supportsTouch && options.touchHold) {
       on('touchstart', onTrigger);
       on('touchend', onMouseLeave);
     }
@@ -310,10 +536,10 @@ function createTrigger(eventType, reference, handlers, options) {
       on('mouseleave', onMouseLeave);
     }
     if (eventType === 'focus') {
-      on(isIE ? 'focusout' : 'blur', onBlur);
+      on(_globals.isIE ? 'focusout' : 'blur', onBlur);
     }
   } else {
-    if (browser.supportsTouch && options.touchHold) {
+    if (_globals.browser.supportsTouch && options.touchHold) {
       on('touchstart', onDelegateShow);
       on('touchend', onDelegateHide);
     }
@@ -332,50 +558,18 @@ function createTrigger(eventType, reference, handlers, options) {
 
   return listeners;
 }
+},{"../core/globals":7}],20:[function(require,module,exports) {
+'use strict';
 
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
+exports.default = getIndividualOptions;
 
-
-
-
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
+var _defaults = require('../core/defaults');
 
 /**
  * Returns an object of settings to override global settings
@@ -384,7 +578,7 @@ var _extends = Object.assign || function (target) {
  * @return {Object} - individual options
  */
 function getIndividualOptions(reference, instanceOptions) {
-  var options = defaultsKeys.reduce(function (acc, key) {
+  var options = _defaults.defaultsKeys.reduce(function (acc, key) {
     var val = reference.getAttribute('data-tippy-' + key.toLowerCase()) || instanceOptions[key];
 
     // Convert strings to booleans
@@ -408,7 +602,13 @@ function getIndividualOptions(reference, instanceOptions) {
 
   return _extends({}, instanceOptions, options);
 }
+},{"../core/defaults":8}],21:[function(require,module,exports) {
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = evaluateOptions;
 /**
  * Evaluates/modifies the options object for appropriate behavior
  * @param {Element|Object} reference
@@ -431,6 +631,15 @@ function evaluateOptions(reference, options) {
 
   return options;
 }
+},{}],24:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = getInnerElements;
+
+var _globals = require('../core/globals');
 
 /**
  * Returns inner elements of the popper element
@@ -442,13 +651,19 @@ function getInnerElements(popper) {
     return popper.querySelector(s);
   };
   return {
-    tooltip: select(selectors.TOOLTIP),
-    backdrop: select(selectors.BACKDROP),
-    content: select(selectors.CONTENT),
-    arrow: select(selectors.ARROW) || select(selectors.ROUND_ARROW)
+    tooltip: select(_globals.selectors.TOOLTIP),
+    backdrop: select(_globals.selectors.BACKDROP),
+    content: select(_globals.selectors.CONTENT),
+    arrow: select(_globals.selectors.ARROW) || select(_globals.selectors.ROUND_ARROW)
   };
 }
+},{"../core/globals":7}],25:[function(require,module,exports) {
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = removeTitle;
 /**
  * Removes the title from an element, setting `data-original-title`
  * appropriately
@@ -462,7 +677,13 @@ function removeTitle(el) {
   }
   el.removeAttribute('title');
 }
+},{}],37:[function(require,module,exports) {
+var global = (1,eval)("this");
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
  * @version 1.14.2
@@ -487,12 +708,12 @@ function removeTitle(el) {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-var isBrowser$1 = typeof window !== 'undefined' && typeof document !== 'undefined';
+var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
 var longerTimeoutBrowsers = ['Edge', 'Trident', 'Firefox'];
 var timeoutDuration = 0;
 for (var i = 0; i < longerTimeoutBrowsers.length; i += 1) {
-  if (isBrowser$1 && navigator.userAgent.indexOf(longerTimeoutBrowsers[i]) >= 0) {
+  if (isBrowser && navigator.userAgent.indexOf(longerTimeoutBrowsers[i]) >= 0) {
     timeoutDuration = 1;
     break;
   }
@@ -525,7 +746,7 @@ function taskDebounce(fn) {
   };
 }
 
-var supportsMicroTasks = isBrowser$1 && window.Promise;
+var supportsMicroTasks = isBrowser && window.Promise;
 
 /**
 * Create a debounced version of a method, that's asynchronously deferred
@@ -615,8 +836,8 @@ function getScrollParent(element) {
   return getScrollParent(getParentNode(element));
 }
 
-var isIE11 = isBrowser$1 && !!(window.MSInputMethodContext && document.documentMode);
-var isIE10 = isBrowser$1 && /MSIE 10/.test(navigator.userAgent);
+var isIE11 = isBrowser && !!(window.MSInputMethodContext && document.documentMode);
+var isIE10 = isBrowser && /MSIE 10/.test(navigator.userAgent);
 
 /**
  * Determines if the browser is Internet Explorer
@@ -625,7 +846,7 @@ var isIE10 = isBrowser$1 && /MSIE 10/.test(navigator.userAgent);
  * @param {Number} version to check
  * @returns {Boolean} isIE
  */
-function isIE$1(version) {
+function isIE(version) {
   if (version === 11) {
     return isIE11;
   }
@@ -647,7 +868,7 @@ function getOffsetParent(element) {
     return document.documentElement;
   }
 
-  var noOffsetParent = isIE$1(10) ? document.body : null;
+  var noOffsetParent = isIE(10) ? document.body : null;
 
   // NOTE: 1 DOM access here
   var offsetParent = element.offsetParent;
@@ -802,13 +1023,13 @@ function getBordersSize(styles, axis) {
 }
 
 function getSize(axis, body, html, computedStyle) {
-  return Math.max(body['offset' + axis], body['scroll' + axis], html['client' + axis], html['offset' + axis], html['scroll' + axis], isIE$1(10) ? html['offset' + axis] + computedStyle['margin' + (axis === 'Height' ? 'Top' : 'Left')] + computedStyle['margin' + (axis === 'Height' ? 'Bottom' : 'Right')] : 0);
+  return Math.max(body['offset' + axis], body['scroll' + axis], html['client' + axis], html['offset' + axis], html['scroll' + axis], isIE(10) ? html['offset' + axis] + computedStyle['margin' + (axis === 'Height' ? 'Top' : 'Left')] + computedStyle['margin' + (axis === 'Height' ? 'Bottom' : 'Right')] : 0);
 }
 
 function getWindowSizes() {
   var body = document.body;
   var html = document.documentElement;
-  var computedStyle = isIE$1(10) && getComputedStyle(html);
+  var computedStyle = isIE(10) && getComputedStyle(html);
 
   return {
     height: getSize('Height', body, html, computedStyle),
@@ -816,13 +1037,13 @@ function getWindowSizes() {
   };
 }
 
-var classCallCheck$1 = function classCallCheck(instance, Constructor) {
+var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
 };
 
-var createClass$1 = function () {
+var createClass = function () {
   function defineProperties(target, props) {
     for (var i = 0; i < props.length; i++) {
       var descriptor = props[i];
@@ -840,7 +1061,7 @@ var createClass$1 = function () {
   };
 }();
 
-var defineProperty$1 = function defineProperty(obj, key, value) {
+var defineProperty = function (obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -855,7 +1076,7 @@ var defineProperty$1 = function defineProperty(obj, key, value) {
   return obj;
 };
 
-var _extends$1 = Object.assign || function (target) {
+var _extends = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
 
@@ -877,7 +1098,7 @@ var _extends$1 = Object.assign || function (target) {
  * @returns {Object} ClientRect like output
  */
 function getClientRect(offsets) {
-  return _extends$1({}, offsets, {
+  return _extends({}, offsets, {
     right: offsets.left + offsets.width,
     bottom: offsets.top + offsets.height
   });
@@ -897,7 +1118,7 @@ function getBoundingClientRect(element) {
   // considered in DOM in some circumstances...
   // This isn't reproducible in IE10 compatibility mode of IE11
   try {
-    if (isIE$1(10)) {
+    if (isIE(10)) {
       rect = element.getBoundingClientRect();
       var scrollTop = getScroll(element, 'top');
       var scrollLeft = getScroll(element, 'left');
@@ -942,7 +1163,7 @@ function getBoundingClientRect(element) {
 function getOffsetRectRelativeToArbitraryNode(children, parent) {
   var fixedPosition = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-  var isIE10 = isIE$1(10);
+  var isIE10 = isIE(10);
   var isHTML = parent.nodeName === 'HTML';
   var childrenRect = getBoundingClientRect(children);
   var parentRect = getBoundingClientRect(parent);
@@ -1041,7 +1262,7 @@ function isFixed(element) {
 
 function getFixedPositionOffsetParent(element) {
   // This check is needed to avoid errors in case one of the elements isn't defined for any reason
-  if (!element || !element.parentElement || isIE$1()) {
+  if (!element || !element.parentElement || isIE()) {
     return document.documentElement;
   }
   var el = element.parentElement;
@@ -1159,7 +1380,7 @@ function computeAutoPlacement(placement, refRect, popper, reference, boundariesE
   };
 
   var sortedAreas = Object.keys(rects).map(function (key) {
-    return _extends$1({
+    return _extends({
       key: key
     }, rects[key], {
       area: getArea(rects[key])
@@ -1754,9 +1975,9 @@ function computeStyle(data, options) {
   };
 
   // Update `data` attributes, styles and arrowStyles
-  data.attributes = _extends$1({}, attributes, data.attributes);
-  data.styles = _extends$1({}, styles, data.styles);
-  data.arrowStyles = _extends$1({}, data.offsets.arrow, data.arrowStyles);
+  data.attributes = _extends({}, attributes, data.attributes);
+  data.styles = _extends({}, styles, data.styles);
+  data.arrowStyles = _extends({}, data.offsets.arrow, data.arrowStyles);
 
   return data;
 }
@@ -1866,7 +2087,7 @@ function arrow(data, options) {
   sideValue = Math.max(Math.min(popper[len] - arrowElementSize, sideValue), 0);
 
   data.arrowElement = arrowElement;
-  data.offsets.arrow = (_data$offsets$arrow = {}, defineProperty$1(_data$offsets$arrow, side, Math.round(sideValue)), defineProperty$1(_data$offsets$arrow, altSide, ''), _data$offsets$arrow);
+  data.offsets.arrow = (_data$offsets$arrow = {}, defineProperty(_data$offsets$arrow, side, Math.round(sideValue)), defineProperty(_data$offsets$arrow, altSide, ''), _data$offsets$arrow);
 
   return data;
 }
@@ -2029,7 +2250,7 @@ function flip(data, options) {
 
       // this object contains `position`, we want to preserve it along with
       // any additional property we may add in the future
-      data.offsets.popper = _extends$1({}, data.offsets.popper, getPopperOffsets(data.instance.popper, data.offsets.reference, data.placement));
+      data.offsets.popper = _extends({}, data.offsets.popper, getPopperOffsets(data.instance.popper, data.offsets.reference, data.placement));
 
       data = runModifiers(data.instance.modifiers, data, 'flip');
     }
@@ -2269,7 +2490,7 @@ function preventOverflow(data, options) {
       if (popper[placement] < boundaries[placement] && !options.escapeWithReference) {
         value = Math.max(popper[placement], boundaries[placement]);
       }
-      return defineProperty$1({}, placement, value);
+      return defineProperty({}, placement, value);
     },
     secondary: function secondary(placement) {
       var mainSide = placement === 'right' ? 'left' : 'top';
@@ -2277,13 +2498,13 @@ function preventOverflow(data, options) {
       if (popper[placement] > boundaries[placement] && !options.escapeWithReference) {
         value = Math.min(popper[mainSide], boundaries[placement] - (placement === 'right' ? popper.width : popper.height));
       }
-      return defineProperty$1({}, mainSide, value);
+      return defineProperty({}, mainSide, value);
     }
   };
 
   order.forEach(function (placement) {
     var side = ['left', 'top'].indexOf(placement) !== -1 ? 'primary' : 'secondary';
-    popper = _extends$1({}, popper, check[side](placement));
+    popper = _extends({}, popper, check[side](placement));
   });
 
   data.offsets.popper = popper;
@@ -2314,11 +2535,11 @@ function shift(data) {
     var measurement = isVertical ? 'width' : 'height';
 
     var shiftOffsets = {
-      start: defineProperty$1({}, side, reference[side]),
-      end: defineProperty$1({}, side, reference[side] + reference[measurement] - popper[measurement])
+      start: defineProperty({}, side, reference[side]),
+      end: defineProperty({}, side, reference[side] + reference[measurement] - popper[measurement])
     };
 
-    data.offsets.popper = _extends$1({}, popper, shiftOffsets[shiftvariation]);
+    data.offsets.popper = _extends({}, popper, shiftOffsets[shiftvariation]);
   }
 
   return data;
@@ -2824,7 +3045,7 @@ var Popper = function () {
     var _this = this;
 
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    classCallCheck$1(this, Popper);
+    classCallCheck(this, Popper);
 
     this.scheduleUpdate = function () {
       return requestAnimationFrame(_this.update);
@@ -2834,7 +3055,7 @@ var Popper = function () {
     this.update = debounce(this.update.bind(this));
 
     // with {} we create a new object with the options inside it
-    this.options = _extends$1({}, Popper.Defaults, options);
+    this.options = _extends({}, Popper.Defaults, options);
 
     // init state
     this.state = {
@@ -2849,13 +3070,13 @@ var Popper = function () {
 
     // Deep merge modifiers options
     this.options.modifiers = {};
-    Object.keys(_extends$1({}, Popper.Defaults.modifiers, options.modifiers)).forEach(function (name) {
-      _this.options.modifiers[name] = _extends$1({}, Popper.Defaults.modifiers[name] || {}, options.modifiers ? options.modifiers[name] : {});
+    Object.keys(_extends({}, Popper.Defaults.modifiers, options.modifiers)).forEach(function (name) {
+      _this.options.modifiers[name] = _extends({}, Popper.Defaults.modifiers[name] || {}, options.modifiers ? options.modifiers[name] : {});
     });
 
     // Refactoring modifiers' list (Object => Array)
     this.modifiers = Object.keys(this.options.modifiers).map(function (name) {
-      return _extends$1({
+      return _extends({
         name: name
       }, _this.options.modifiers[name]);
     })
@@ -2890,7 +3111,7 @@ var Popper = function () {
   // class prototype and break stuff like Sinon stubs
 
 
-  createClass$1(Popper, [{
+  createClass(Popper, [{
     key: 'update',
     value: function update$$1() {
       return update.call(this);
@@ -2962,6 +3183,15 @@ Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = Defaults;
 
+exports.default = Popper;
+//# sourceMappingURL=popper.js.map
+},{}],38:[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = reflow;
 /**
  * Triggers document reflow.
  * Use void because some minifiers or engines think simply accessing the property
@@ -2971,6 +3201,19 @@ Popper.Defaults = Defaults;
 function reflow(popper) {
   void popper.offsetHeight;
 }
+},{}],27:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = updatePopperPosition;
+
+var _reflow = require('./reflow');
+
+var _reflow2 = _interopRequireDefault(_reflow);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Wrapper util for popper position updating.
@@ -2988,7 +3231,7 @@ function updatePopperPosition(popperInstance, callback, updateAlreadyCalled) {
   var onUpdate = options.onUpdate;
 
   options.onCreate = options.onUpdate = function () {
-    reflow(popper), callback && callback(), onUpdate();
+    (0, _reflow2.default)(popper), callback && callback(), onUpdate();
     options.onCreate = onCreate;
     options.onUpdate = onUpdate;
   };
@@ -2997,7 +3240,13 @@ function updatePopperPosition(popperInstance, callback, updateAlreadyCalled) {
     popperInstance.scheduleUpdate();
   }
 }
+},{"./reflow":38}],30:[function(require,module,exports) {
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = getPopperPlacement;
 /**
  * Returns the core placement ('top', 'bottom', 'left', 'right') of a popper
  * @param {Element} popper
@@ -3006,6 +3255,19 @@ function updatePopperPosition(popperInstance, callback, updateAlreadyCalled) {
 function getPopperPlacement(popper) {
   return popper.getAttribute('x-placement').replace(/-.+/, '');
 }
+},{}],28:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = cursorIsOutsideInteractiveBorder;
+
+var _getPopperPlacement = require('../utils/getPopperPlacement');
+
+var _getPopperPlacement2 = _interopRequireDefault(_getPopperPlacement);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Determines if the mouse's cursor is outside the interactive border
@@ -3024,7 +3286,7 @@ function cursorIsOutsideInteractiveBorder(event, popper, options) {
 
 
   var rect = popper.getBoundingClientRect();
-  var placement = getPopperPlacement(popper);
+  var placement = (0, _getPopperPlacement2.default)(popper);
   var borderWithDistance = interactiveBorder + distance;
 
   var exceeds = {
@@ -3051,7 +3313,13 @@ function cursorIsOutsideInteractiveBorder(event, popper, options) {
 
   return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right;
 }
+},{"../utils/getPopperPlacement":30}],39:[function(require,module,exports) {
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = transformNumbersBasedOnPlacementAxis;
 /**
  * Transforms the `arrowTransform` numbers based on the placement axis
  * @param {String} type 'scale' or 'translate'
@@ -3086,7 +3354,13 @@ function transformNumbersBasedOnPlacementAxis(type, numbers, isVertical, isRever
 
   return transforms[type];
 }
+},{}],40:[function(require,module,exports) {
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = transformAxis;
 /**
  * Transforms the `arrowTransform` x or y axis based on the placement axis
  * @param {String} axis 'X', 'Y', ''
@@ -3101,6 +3375,31 @@ function transformAxis(axis, isVertical) {
   };
   return isVertical ? axis : map[axis];
 }
+},{}],29:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = computeArrowTransform;
+
+var _prefix = require('../utils/prefix');
+
+var _prefix2 = _interopRequireDefault(_prefix);
+
+var _transformNumbersBasedOnPlacement = require('../utils/transformNumbersBasedOnPlacement');
+
+var _transformNumbersBasedOnPlacement2 = _interopRequireDefault(_transformNumbersBasedOnPlacement);
+
+var _transformAxisBasedOnPlacement = require('../utils/transformAxisBasedOnPlacement');
+
+var _transformAxisBasedOnPlacement2 = _interopRequireDefault(_transformAxisBasedOnPlacement);
+
+var _getPopperPlacement = require('../utils/getPopperPlacement');
+
+var _getPopperPlacement2 = _interopRequireDefault(_getPopperPlacement);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Computes and applies the necessary arrow transform
@@ -3109,7 +3408,7 @@ function transformAxis(axis, isVertical) {
  * @param {String} arrowTransform
  */
 function computeArrowTransform(popper, arrow, arrowTransform) {
-  var placement = getPopperPlacement(popper);
+  var placement = (0, _getPopperPlacement2.default)(popper);
   var isVertical = placement === 'top' || placement === 'bottom';
   var isReverse = placement === 'right' || placement === 'bottom';
 
@@ -3139,10 +3438,23 @@ function computeArrowTransform(popper, arrow, arrowTransform) {
     }
   };
 
-  var computedTransform = arrowTransform.replace(re.translate, 'translate' + transformAxis(matches.translate.axis, isVertical) + '(' + transformNumbersBasedOnPlacementAxis('translate', matches.translate.numbers, isVertical, isReverse) + ')').replace(re.scale, 'scale' + transformAxis(matches.scale.axis, isVertical) + '(' + transformNumbersBasedOnPlacementAxis('scale', matches.scale.numbers, isVertical, isReverse) + ')');
+  var computedTransform = arrowTransform.replace(re.translate, 'translate' + (0, _transformAxisBasedOnPlacement2.default)(matches.translate.axis, isVertical) + '(' + (0, _transformNumbersBasedOnPlacement2.default)('translate', matches.translate.numbers, isVertical, isReverse) + ')').replace(re.scale, 'scale' + (0, _transformAxisBasedOnPlacement2.default)(matches.scale.axis, isVertical) + '(' + (0, _transformNumbersBasedOnPlacement2.default)('scale', matches.scale.numbers, isVertical, isReverse) + ')');
 
-  arrow.style[prefix('transform')] = computedTransform;
+  arrow.style[(0, _prefix2.default)('transform')] = computedTransform;
 }
+},{"../utils/prefix":26,"../utils/transformNumbersBasedOnPlacement":39,"../utils/transformAxisBasedOnPlacement":40,"../utils/getPopperPlacement":30}],31:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = getOffsetDistanceInPx;
+
+var _defaults = require('../core/defaults');
+
+var _defaults2 = _interopRequireDefault(_defaults);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Returns the distance taking into account the default distance due to
@@ -3151,9 +3463,15 @@ function computeArrowTransform(popper, arrow, arrowTransform) {
  * @return {String}
  */
 function getOffsetDistanceInPx(distance) {
-  return -(distance - defaults.distance) + 'px';
+  return -(distance - _defaults2.default.distance) + 'px';
 }
+},{"../core/defaults":8}],32:[function(require,module,exports) {
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = defer;
 /**
  * Waits until next repaint to execute a fn
  * @param {Function} fn
@@ -3163,10 +3481,18 @@ function defer(fn) {
     setTimeout(fn, 1);
   });
 }
+},{}],18:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _globals = require('../core/globals');
 
 var matches = {};
 
-if (isBrowser) {
+if (_globals.isBrowser) {
   var e = Element.prototype;
   matches = e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || function (s) {
     var matches = (this.document || this.ownerDocument).querySelectorAll(s);
@@ -3176,7 +3502,20 @@ if (isBrowser) {
   };
 }
 
-var matches$1 = matches;
+exports.default = matches;
+},{"../core/globals":7}],17:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = closest;
+
+var _matches = require('./matches');
+
+var _matches2 = _interopRequireDefault(_matches);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Ponyfill to get the closest parent element
@@ -3188,7 +3527,7 @@ function closest(element, parentSelector) {
   var fn = Element.prototype.closest || function (selector) {
     var el = this;
     while (el) {
-      if (matches$1.call(el, selector)) {
+      if (_matches2.default.call(el, selector)) {
         return el;
       }
       el = el.parentElement;
@@ -3197,7 +3536,13 @@ function closest(element, parentSelector) {
 
   return fn.call(element, parentSelector);
 }
+},{"./matches":18}],33:[function(require,module,exports) {
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = getValue;
 /**
  * Returns the value taking into account the value being either a number or array
  * @param {Number|Array} value
@@ -3207,7 +3552,13 @@ function closest(element, parentSelector) {
 function getValue(value, index) {
   return Array.isArray(value) ? value[index] : value;
 }
+},{}],34:[function(require,module,exports) {
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = setVisibilityState;
 /**
  * Sets the visibility state of an element for transition to begin
  * @param {Element[]} els - array of elements
@@ -3219,6 +3570,19 @@ function setVisibilityState(els, type) {
     el.setAttribute('data-state', type);
   });
 }
+},{}],35:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = applyTransitionDuration;
+
+var _prefix = require('./prefix');
+
+var _prefix2 = _interopRequireDefault(_prefix);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Sets the transition property to each element
@@ -3227,10 +3591,16 @@ function setVisibilityState(els, type) {
  */
 function applyTransitionDuration(els, value) {
   els.filter(Boolean).forEach(function (el) {
-    el.style[prefix('transitionDuration')] = value + 'ms';
+    el.style[(0, _prefix2.default)('transitionDuration')] = value + 'ms';
   });
 }
+},{"./prefix":26}],36:[function(require,module,exports) {
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = focus;
 /**
  * Focuses an element while preventing a scroll jump if it's not entirely within the viewport
  * @param {Element} el
@@ -3241,6 +3611,100 @@ function focus(el) {
   el.focus();
   scroll(x, y);
 }
+},{}],23:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Tippy = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+exports._hasFollowCursorBehavior = _hasFollowCursorBehavior;
+exports._createDelegateChildTippy = _createDelegateChildTippy;
+exports._enter = _enter;
+exports._leave = _leave;
+exports._getEventListeners = _getEventListeners;
+exports._createPopperInstance = _createPopperInstance;
+exports._mount = _mount;
+exports._clearDelayTimeouts = _clearDelayTimeouts;
+exports._setFollowCursorListener = _setFollowCursorListener;
+exports._makeSticky = _makeSticky;
+exports._addMutationObserver = _addMutationObserver;
+exports._onTransitionEnd = _onTransitionEnd;
+
+var _globals = require('./globals');
+
+var _popper = require('popper.js');
+
+var _popper2 = _interopRequireDefault(_popper);
+
+var _tippy = require('../tippy');
+
+var _tippy2 = _interopRequireDefault(_tippy);
+
+var _updatePopperPosition = require('../utils/updatePopperPosition');
+
+var _updatePopperPosition2 = _interopRequireDefault(_updatePopperPosition);
+
+var _cursorIsOutsideInteractiveBorder = require('../utils/cursorIsOutsideInteractiveBorder');
+
+var _cursorIsOutsideInteractiveBorder2 = _interopRequireDefault(_cursorIsOutsideInteractiveBorder);
+
+var _computeArrowTransform = require('../utils/computeArrowTransform');
+
+var _computeArrowTransform2 = _interopRequireDefault(_computeArrowTransform);
+
+var _getInnerElements7 = require('../utils/getInnerElements');
+
+var _getInnerElements8 = _interopRequireDefault(_getInnerElements7);
+
+var _getPopperPlacement = require('../utils/getPopperPlacement');
+
+var _getPopperPlacement2 = _interopRequireDefault(_getPopperPlacement);
+
+var _getOffsetDistanceInPx = require('../utils/getOffsetDistanceInPx');
+
+var _getOffsetDistanceInPx2 = _interopRequireDefault(_getOffsetDistanceInPx);
+
+var _prefix = require('../utils/prefix');
+
+var _prefix2 = _interopRequireDefault(_prefix);
+
+var _defer = require('../utils/defer');
+
+var _defer2 = _interopRequireDefault(_defer);
+
+var _closest = require('../utils/closest');
+
+var _closest2 = _interopRequireDefault(_closest);
+
+var _getValue = require('../utils/getValue');
+
+var _getValue2 = _interopRequireDefault(_getValue);
+
+var _setVisibilityState = require('../utils/setVisibilityState');
+
+var _setVisibilityState2 = _interopRequireDefault(_setVisibilityState);
+
+var _applyTransitionDuration = require('../utils/applyTransitionDuration');
+
+var _applyTransitionDuration2 = _interopRequireDefault(_applyTransitionDuration);
+
+var _toArray = require('../utils/toArray');
+
+var _toArray2 = _interopRequireDefault(_toArray);
+
+var _focus = require('../utils/focus');
+
+var _focus2 = _interopRequireDefault(_focus);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var key = {};
 var store = function store(data) {
@@ -3249,9 +3713,9 @@ var store = function store(data) {
   };
 };
 
-var Tippy = function () {
+var Tippy = exports.Tippy = function () {
   function Tippy(config) {
-    classCallCheck(this, Tippy);
+    _classCallCheck(this, Tippy);
 
     for (var _key in config) {
       this[_key] = config[_key];
@@ -3275,7 +3739,7 @@ var Tippy = function () {
    */
 
 
-  createClass(Tippy, [{
+  _createClass(Tippy, [{
     key: 'enable',
     value: function enable() {
       this.state.enabled = true;
@@ -3311,7 +3775,7 @@ var Tippy = function () {
           reference = this.reference,
           options = this.options;
 
-      var _getInnerElements = getInnerElements(popper),
+      var _getInnerElements = (0, _getInnerElements8.default)(popper),
           tooltip = _getInnerElements.tooltip,
           backdrop = _getInnerElements.backdrop,
           content = _getInnerElements.content;
@@ -3331,10 +3795,10 @@ var Tippy = function () {
 
       options.onShow.call(popper, this);
 
-      duration = getValue(duration !== undefined ? duration : options.duration, 0);
+      duration = (0, _getValue2.default)(duration !== undefined ? duration : options.duration, 0);
 
       // Prevent a transition when popper changes position
-      applyTransitionDuration([popper, tooltip, backdrop], 0);
+      (0, _applyTransitionDuration2.default)([popper, tooltip, backdrop], 0);
 
       popper.style.visibility = 'visible';
       this.state.visible = true;
@@ -3350,7 +3814,7 @@ var Tippy = function () {
         // Set initial position near the cursor
         if (_hasFollowCursorBehavior.call(_this)) {
           _this.popperInstance.disableEventListeners();
-          var delay = getValue(options.delay, 0);
+          var delay = (0, _getValue2.default)(options.delay, 0);
           var lastTriggerEvent = _this._(key).lastTriggerEvent;
           if (lastTriggerEvent) {
             _this._(key).followCursorListener(delay && _this._(key).lastMouseMoveEvent ? _this._(key).lastMouseMoveEvent : lastTriggerEvent);
@@ -3358,10 +3822,10 @@ var Tippy = function () {
         }
 
         // Re-apply transition durations
-        applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration);
+        (0, _applyTransitionDuration2.default)([tooltip, backdrop, backdrop ? content : null], duration);
 
         if (backdrop) {
-          getComputedStyle(backdrop)[prefix('transform')];
+          getComputedStyle(backdrop)[(0, _prefix2.default)('transform')];
         }
 
         if (options.interactive) {
@@ -3372,7 +3836,7 @@ var Tippy = function () {
           _makeSticky.call(_this);
         }
 
-        setVisibilityState([tooltip, backdrop], 'visible');
+        (0, _setVisibilityState2.default)([tooltip, backdrop], 'visible');
 
         _onTransitionEnd.call(_this, duration, function () {
           if (!options.updateDuration) {
@@ -3380,7 +3844,7 @@ var Tippy = function () {
           }
 
           if (options.interactive) {
-            focus(popper);
+            (0, _focus2.default)(popper);
           }
 
           reference.setAttribute('aria-describedby', 'tippy-' + _this.id);
@@ -3408,14 +3872,14 @@ var Tippy = function () {
           reference = this.reference,
           options = this.options;
 
-      var _getInnerElements2 = getInnerElements(popper),
+      var _getInnerElements2 = (0, _getInnerElements8.default)(popper),
           tooltip = _getInnerElements2.tooltip,
           backdrop = _getInnerElements2.backdrop,
           content = _getInnerElements2.content;
 
       options.onHide.call(popper, this);
 
-      duration = getValue(duration !== undefined ? duration : options.duration, 1);
+      duration = (0, _getValue2.default)(duration !== undefined ? duration : options.duration, 1);
 
       if (!options.updateDuration) {
         tooltip.classList.remove('tippy-notransition');
@@ -3428,12 +3892,12 @@ var Tippy = function () {
       popper.style.visibility = 'hidden';
       this.state.visible = false;
 
-      applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration);
+      (0, _applyTransitionDuration2.default)([tooltip, backdrop, backdrop ? content : null], duration);
 
-      setVisibilityState([tooltip, backdrop], 'hidden');
+      (0, _setVisibilityState2.default)([tooltip, backdrop], 'hidden');
 
       if (options.interactive && options.trigger.indexOf('click') > -1) {
-        focus(reference);
+        (0, _focus2.default)(reference);
       }
 
       /*
@@ -3442,7 +3906,7 @@ var Tippy = function () {
       * the CSS transition will finish 1-2 frames later, and onHidden() will run since the JS set it
       * more quickly. It should actually be onShown(). Seems to be something Chrome does, not Safari
       */
-      defer(function () {
+      (0, _defer2.default)(function () {
         _onTransitionEnd.call(_this2, duration, function () {
           if (_this2.state.visible || !options.appendTo.contains(popper)) return;
 
@@ -3497,7 +3961,7 @@ var Tippy = function () {
       });
 
       if (this.options.target && destroyTargetInstances) {
-        toArray(this.reference.querySelectorAll(this.options.target)).forEach(function (child) {
+        (0, _toArray2.default)(this.reference.querySelectorAll(this.options.target)).forEach(function (child) {
           return child._tippy && child._tippy.destroy();
         });
       }
@@ -3513,6 +3977,7 @@ var Tippy = function () {
       this.state.destroyed = true;
     }
   }]);
+
   return Tippy;
 }();
 
@@ -3530,9 +3995,11 @@ var Tippy = function () {
  * @memberof Tippy
  * @private
  */
+
+
 function _hasFollowCursorBehavior() {
   var lastTriggerEvent = this._(key).lastTriggerEvent;
-  return this.options.followCursor && !browser.usingTouch && lastTriggerEvent && lastTriggerEvent.type !== 'focus';
+  return this.options.followCursor && !_globals.browser.usingTouch && lastTriggerEvent && lastTriggerEvent.type !== 'focus';
 }
 
 /**
@@ -3542,12 +4009,12 @@ function _hasFollowCursorBehavior() {
  * @private
  */
 function _createDelegateChildTippy(event) {
-  var targetEl = closest(event.target, this.options.target);
+  var targetEl = (0, _closest2.default)(event.target, this.options.target);
   if (targetEl && !targetEl._tippy) {
     var title = targetEl.getAttribute('title') || this.title;
     if (title) {
       targetEl.setAttribute('title', title);
-      tippy$1(targetEl, _extends({}, this.options, { target: null }));
+      (0, _tippy2.default)(targetEl, _extends({}, this.options, { target: null }));
       _enter.call(targetEl._tippy, event);
     }
   }
@@ -3590,14 +4057,14 @@ function _enter(event) {
       _setFollowCursorListener.call(this);
     }
 
-    var _getInnerElements3 = getInnerElements(this.popper),
+    var _getInnerElements3 = (0, _getInnerElements8.default)(this.popper),
         arrow = _getInnerElements3.arrow;
 
     if (arrow) arrow.style.margin = '0';
     document.addEventListener('mousemove', this._(key).followCursorListener);
   }
 
-  var delay = getValue(options.delay, 0);
+  var delay = (0, _getValue2.default)(options.delay, 0);
 
   if (delay) {
     this._(key).showTimeout = setTimeout(function () {
@@ -3622,7 +4089,7 @@ function _leave() {
 
   this._(key).isPreparingToShow = false;
 
-  var delay = getValue(this.options.delay, 1);
+  var delay = (0, _getValue2.default)(this.options.delay, 1);
 
   if (delay) {
     this._(key).hideTimeout = setTimeout(function () {
@@ -3647,7 +4114,7 @@ function _getEventListeners() {
   var onTrigger = function onTrigger(event) {
     if (!_this6.state.enabled) return;
 
-    var shouldStopEvent = browser.supportsTouch && browser.usingTouch && ['mouseenter', 'mouseover', 'focus'].indexOf(event.type) > -1;
+    var shouldStopEvent = _globals.browser.supportsTouch && _globals.browser.usingTouch && ['mouseenter', 'mouseover', 'focus'].indexOf(event.type) > -1;
 
     if (shouldStopEvent && _this6.options.touchHold) return;
 
@@ -3661,25 +4128,25 @@ function _getEventListeners() {
     }
 
     // iOS prevents click events from firing
-    if (shouldStopEvent && browser.iOS && _this6.reference.click) {
+    if (shouldStopEvent && _globals.browser.iOS && _this6.reference.click) {
       _this6.reference.click();
     }
   };
 
   var onMouseLeave = function onMouseLeave(event) {
-    if (['mouseleave', 'mouseout'].indexOf(event.type) > -1 && browser.supportsTouch && browser.usingTouch && _this6.options.touchHold) return;
+    if (['mouseleave', 'mouseout'].indexOf(event.type) > -1 && _globals.browser.supportsTouch && _globals.browser.usingTouch && _this6.options.touchHold) return;
 
     if (_this6.options.interactive) {
       var hide = _leave.bind(_this6);
 
       var onMouseMove = function onMouseMove(event) {
-        var referenceCursorIsOver = closest(event.target, selectors.REFERENCE);
-        var cursorIsOverPopper = closest(event.target, selectors.POPPER) === _this6.popper;
+        var referenceCursorIsOver = (0, _closest2.default)(event.target, _globals.selectors.REFERENCE);
+        var cursorIsOverPopper = (0, _closest2.default)(event.target, _globals.selectors.POPPER) === _this6.popper;
         var cursorIsOverReference = referenceCursorIsOver === _this6.reference;
 
         if (cursorIsOverPopper || cursorIsOverReference) return;
 
-        if (cursorIsOutsideInteractiveBorder(event, _this6.popper, _this6.options)) {
+        if ((0, _cursorIsOutsideInteractiveBorder2.default)(event, _this6.popper, _this6.options)) {
           document.body.removeEventListener('mouseleave', hide);
           document.removeEventListener('mousemove', onMouseMove);
 
@@ -3696,24 +4163,24 @@ function _getEventListeners() {
   };
 
   var onBlur = function onBlur(event) {
-    if (event.target !== _this6.reference || browser.usingTouch) return;
+    if (event.target !== _this6.reference || _globals.browser.usingTouch) return;
 
     if (_this6.options.interactive) {
       if (!event.relatedTarget) return;
-      if (closest(event.relatedTarget, selectors.POPPER)) return;
+      if ((0, _closest2.default)(event.relatedTarget, _globals.selectors.POPPER)) return;
     }
 
     _leave.call(_this6);
   };
 
   var onDelegateShow = function onDelegateShow(event) {
-    if (closest(event.target, _this6.options.target)) {
+    if ((0, _closest2.default)(event.target, _this6.options.target)) {
       _enter.call(_this6, event);
     }
   };
 
   var onDelegateHide = function onDelegateHide(event) {
-    if (closest(event.target, _this6.options.target)) {
+    if ((0, _closest2.default)(event.target, _this6.options.target)) {
       _leave.call(_this6);
     }
   };
@@ -3740,12 +4207,12 @@ function _createPopperInstance() {
       reference = this.reference,
       options = this.options;
 
-  var _getInnerElements4 = getInnerElements(popper),
+  var _getInnerElements4 = (0, _getInnerElements8.default)(popper),
       tooltip = _getInnerElements4.tooltip;
 
   var popperOptions = options.popperOptions;
 
-  var arrowSelector = options.arrowType === 'round' ? selectors.ROUND_ARROW : selectors.ARROW;
+  var arrowSelector = options.arrowType === 'round' ? _globals.selectors.ROUND_ARROW : _globals.selectors.ARROW;
   var arrow = tooltip.querySelector(arrowSelector);
 
   var config = _extends({
@@ -3765,10 +4232,10 @@ function _createPopperInstance() {
       }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
     }),
     onCreate: function onCreate() {
-      tooltip.style[getPopperPlacement(popper)] = getOffsetDistanceInPx(options.distance);
+      tooltip.style[(0, _getPopperPlacement2.default)(popper)] = (0, _getOffsetDistanceInPx2.default)(options.distance);
 
       if (arrow && options.arrowTransform) {
-        computeArrowTransform(popper, arrow, options.arrowTransform);
+        (0, _computeArrowTransform2.default)(popper, arrow, options.arrowTransform);
       }
     },
     onUpdate: function onUpdate() {
@@ -3777,10 +4244,10 @@ function _createPopperInstance() {
       styles.bottom = '';
       styles.left = '';
       styles.right = '';
-      styles[getPopperPlacement(popper)] = getOffsetDistanceInPx(options.distance);
+      styles[(0, _getPopperPlacement2.default)(popper)] = (0, _getOffsetDistanceInPx2.default)(options.distance);
 
       if (arrow && options.arrowTransform) {
-        computeArrowTransform(popper, arrow, options.arrowTransform);
+        (0, _computeArrowTransform2.default)(popper, arrow, options.arrowTransform);
       }
     }
   });
@@ -3797,7 +4264,7 @@ function _createPopperInstance() {
     }
   });
 
-  return new Popper(reference, popper, config);
+  return new _popper2.default(reference, popper, config);
 }
 
 /**
@@ -3825,14 +4292,14 @@ function _mount(callback) {
   // If the instance previously had followCursor behavior, it will be positioned incorrectly
   // if triggered by `focus` afterwards - update the reference back to the real DOM element
   if (!_hasFollowCursorBehavior.call(this)) {
-    var _getInnerElements5 = getInnerElements(this.popper),
+    var _getInnerElements5 = (0, _getInnerElements8.default)(this.popper),
         arrow = _getInnerElements5.arrow;
 
     if (arrow) arrow.style.margin = '';
     this.popperInstance.reference = this.reference;
   }
 
-  updatePopperPosition(this.popperInstance, callback, true);
+  (0, _updatePopperPosition2.default)(this.popperInstance, callback, true);
 
   if (!options.appendTo.contains(this.popper)) {
     options.appendTo.appendChild(this.popper);
@@ -3895,12 +4362,12 @@ function _setFollowCursorListener() {
 function _makeSticky() {
   var _this9 = this;
 
-  var applyTransitionDuration$$1 = function applyTransitionDuration$$1() {
-    _this9.popper.style[prefix('transitionDuration')] = _this9.options.updateDuration + 'ms';
+  var applyTransitionDuration = function applyTransitionDuration() {
+    _this9.popper.style[(0, _prefix2.default)('transitionDuration')] = _this9.options.updateDuration + 'ms';
   };
 
   var removeTransitionDuration = function removeTransitionDuration() {
-    _this9.popper.style[prefix('transitionDuration')] = '';
+    _this9.popper.style[(0, _prefix2.default)('transitionDuration')] = '';
   };
 
   var updatePosition = function updatePosition() {
@@ -3908,7 +4375,7 @@ function _makeSticky() {
       _this9.popperInstance.scheduleUpdate();
     }
 
-    applyTransitionDuration$$1();
+    applyTransitionDuration();
 
     if (_this9.state.visible) {
       requestAnimationFrame(updatePosition);
@@ -3918,7 +4385,7 @@ function _makeSticky() {
   };
 
   // Wait until the popper's position has been updated initially
-  defer(updatePosition);
+  (0, _defer2.default)(updatePosition);
 }
 
 /**
@@ -3953,7 +4420,7 @@ function _onTransitionEnd(duration, callback) {
     return callback();
   }
 
-  var _getInnerElements6 = getInnerElements(this.popper),
+  var _getInnerElements6 = (0, _getInnerElements8.default)(this.popper),
       tooltip = _getInnerElements6.tooltip;
 
   var toggleListeners = function toggleListeners(action, listener) {
@@ -3973,6 +4440,41 @@ function _onTransitionEnd(duration, callback) {
 
   this._(key).transitionendListener = listener;
 }
+},{"./globals":7,"popper.js":37,"../tippy":3,"../utils/updatePopperPosition":27,"../utils/cursorIsOutsideInteractiveBorder":28,"../utils/computeArrowTransform":29,"../utils/getInnerElements":24,"../utils/getPopperPlacement":30,"../utils/getOffsetDistanceInPx":31,"../utils/prefix":26,"../utils/defer":32,"../utils/closest":17,"../utils/getValue":33,"../utils/setVisibilityState":34,"../utils/applyTransitionDuration":35,"../utils/toArray":15,"../utils/focus":36}],13:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createTooltips;
+
+var _createPopperElement = require('../utils/createPopperElement');
+
+var _createPopperElement2 = _interopRequireDefault(_createPopperElement);
+
+var _createTrigger = require('../utils/createTrigger');
+
+var _createTrigger2 = _interopRequireDefault(_createTrigger);
+
+var _getIndividualOptions = require('../utils/getIndividualOptions');
+
+var _getIndividualOptions2 = _interopRequireDefault(_getIndividualOptions);
+
+var _evaluateOptions = require('../utils/evaluateOptions');
+
+var _evaluateOptions2 = _interopRequireDefault(_evaluateOptions);
+
+var _getInnerElements2 = require('../utils/getInnerElements');
+
+var _getInnerElements3 = _interopRequireDefault(_getInnerElements2);
+
+var _removeTitle = require('../utils/removeTitle');
+
+var _removeTitle2 = _interopRequireDefault(_removeTitle);
+
+var _Tippy = require('./Tippy');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var idCounter = 1;
 
@@ -3986,7 +4488,7 @@ function createTooltips(els, config) {
   return els.reduce(function (acc, reference) {
     var id = idCounter;
 
-    var options = evaluateOptions(reference, config.performance ? config : getIndividualOptions(reference, config));
+    var options = (0, _evaluateOptions2.default)(reference, config.performance ? config : (0, _getIndividualOptions2.default)(reference, config));
 
     var title = reference.getAttribute('title');
 
@@ -4002,11 +4504,11 @@ function createTooltips(els, config) {
     // Delegates should be highlighted as different
     reference.setAttribute(options.target ? 'data-tippy-delegate' : 'data-tippy', '');
 
-    removeTitle(reference);
+    (0, _removeTitle2.default)(reference);
 
-    var popper = createPopperElement(id, title, options);
+    var popper = (0, _createPopperElement2.default)(id, title, options);
 
-    var tippy = new Tippy({
+    var tippy = new _Tippy.Tippy({
       id: id,
       reference: reference,
       popper: popper,
@@ -4016,27 +4518,27 @@ function createTooltips(els, config) {
     });
 
     if (options.createPopperInstanceOnInit) {
-      tippy.popperInstance = _createPopperInstance.call(tippy);
+      tippy.popperInstance = _Tippy._createPopperInstance.call(tippy);
       tippy.popperInstance.disableEventListeners();
     }
 
-    var listeners = _getEventListeners.call(tippy);
+    var listeners = _Tippy._getEventListeners.call(tippy);
     tippy.listeners = options.trigger.trim().split(' ').reduce(function (acc, eventType) {
-      return acc.concat(createTrigger(eventType, reference, listeners, options));
+      return acc.concat((0, _createTrigger2.default)(eventType, reference, listeners, options));
     }, []);
 
     // Update tooltip content whenever the title attribute on the reference changes
     if (options.dynamicTitle) {
-      _addMutationObserver.call(tippy, {
+      _Tippy._addMutationObserver.call(tippy, {
         target: reference,
         callback: function callback() {
-          var _getInnerElements = getInnerElements(popper),
+          var _getInnerElements = (0, _getInnerElements3.default)(popper),
               content = _getInnerElements.content;
 
           var title = reference.getAttribute('title');
           if (title) {
             content[options.allowTitleHTML ? 'innerHTML' : 'textContent'] = tippy.title = title;
-            removeTitle(reference);
+            (0, _removeTitle2.default)(reference);
           }
         },
 
@@ -4058,13 +4560,28 @@ function createTooltips(els, config) {
     return acc;
   }, []);
 }
+},{"../utils/createPopperElement":19,"../utils/createTrigger":22,"../utils/getIndividualOptions":20,"../utils/evaluateOptions":21,"../utils/getInnerElements":24,"../utils/removeTitle":25,"./Tippy":23}],16:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = hideAllPoppers;
+
+var _globals = require('../core/globals');
+
+var _toArray = require('./toArray');
+
+var _toArray2 = _interopRequireDefault(_toArray);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Hides all poppers
  * @param {Tippy} excludeTippy - tippy to exclude if needed
  */
 function hideAllPoppers(excludeTippy) {
-  var poppers = toArray(document.querySelectorAll(selectors.POPPER));
+  var poppers = (0, _toArray2.default)(document.querySelectorAll(_globals.selectors.POPPER));
 
   poppers.forEach(function (popper) {
     var tippy = popper._tippy;
@@ -4078,25 +4595,52 @@ function hideAllPoppers(excludeTippy) {
     }
   });
 }
+},{"../core/globals":7,"./toArray":15}],12:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = bindEventListeners;
+
+var _globals = require('./globals');
+
+var _hideAllPoppers = require('../utils/hideAllPoppers');
+
+var _hideAllPoppers2 = _interopRequireDefault(_hideAllPoppers);
+
+var _closest = require('../utils/closest');
+
+var _closest2 = _interopRequireDefault(_closest);
+
+var _matches = require('../utils/matches');
+
+var _matches2 = _interopRequireDefault(_matches);
+
+var _toArray = require('../utils/toArray');
+
+var _toArray2 = _interopRequireDefault(_toArray);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Adds the needed event listeners
  */
 function bindEventListeners() {
   var onDocumentTouch = function onDocumentTouch() {
-    if (browser.usingTouch) return;
+    if (_globals.browser.usingTouch) return;
 
-    browser.usingTouch = true;
+    _globals.browser.usingTouch = true;
 
-    if (browser.iOS) {
+    if (_globals.browser.iOS) {
       document.body.classList.add('tippy-touch');
     }
 
-    if (browser.dynamicInputDetection && window.performance) {
+    if (_globals.browser.dynamicInputDetection && window.performance) {
       document.addEventListener('mousemove', onDocumentMouseMove);
     }
 
-    browser.onUserInputChange('touch');
+    _globals.browser.onUserInputChange('touch');
   };
 
   var onDocumentMouseMove = function () {
@@ -4107,12 +4651,12 @@ function bindEventListeners() {
 
       // Chrome 60+ is 1 mousemove per animation frame, use 20ms time difference
       if (now - time < 20) {
-        browser.usingTouch = false;
+        _globals.browser.usingTouch = false;
         document.removeEventListener('mousemove', onDocumentMouseMove);
-        if (!browser.iOS) {
+        if (!_globals.browser.iOS) {
           document.body.classList.remove('tippy-touch');
         }
-        browser.onUserInputChange('mouse');
+        _globals.browser.onUserInputChange('mouse');
       }
 
       time = now;
@@ -4122,11 +4666,11 @@ function bindEventListeners() {
   var onDocumentClick = function onDocumentClick(event) {
     // Simulated events dispatched on the document
     if (!(event.target instanceof Element)) {
-      return hideAllPoppers();
+      return (0, _hideAllPoppers2.default)();
     }
 
-    var reference = closest(event.target, selectors.REFERENCE);
-    var popper = closest(event.target, selectors.POPPER);
+    var reference = (0, _closest2.default)(event.target, _globals.selectors.REFERENCE);
+    var popper = (0, _closest2.default)(event.target, _globals.selectors.POPPER);
 
     if (popper && popper._reference._tippy.options.interactive) return;
 
@@ -4137,27 +4681,27 @@ function bindEventListeners() {
       // `multiple` is false AND they are a touch user, OR
       // `multiple` is false AND it's triggered by a click
 
-      if (!options.multiple && browser.usingTouch || !options.multiple && options.trigger.indexOf('click') > -1) {
-        return hideAllPoppers(reference._tippy);
+      if (!options.multiple && _globals.browser.usingTouch || !options.multiple && options.trigger.indexOf('click') > -1) {
+        return (0, _hideAllPoppers2.default)(reference._tippy);
       }
 
       if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1) return;
     }
 
-    hideAllPoppers();
+    (0, _hideAllPoppers2.default)();
   };
 
   var onWindowBlur = function onWindowBlur() {
     var _document = document,
         el = _document.activeElement;
 
-    if (el && el.blur && matches$1.call(el, selectors.REFERENCE)) {
+    if (el && el.blur && _matches2.default.call(el, _globals.selectors.REFERENCE)) {
       el.blur();
     }
   };
 
   var onWindowResize = function onWindowResize() {
-    toArray(document.querySelectorAll(selectors.POPPER)).forEach(function (popper) {
+    (0, _toArray2.default)(document.querySelectorAll(_globals.selectors.POPPER)).forEach(function (popper) {
       var tippyInstance = popper._tippy;
       if (!tippyInstance.options.livePlacement) {
         tippyInstance.popperInstance.scheduleUpdate();
@@ -4170,10 +4714,48 @@ function bindEventListeners() {
   window.addEventListener('blur', onWindowBlur);
   window.addEventListener('resize', onWindowResize);
 
-  if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
+  if (!_globals.browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
     document.addEventListener('pointerdown', onDocumentTouch);
   }
 }
+},{"./globals":7,"../utils/hideAllPoppers":16,"../utils/closest":17,"../utils/matches":18,"../utils/toArray":15}],3:[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _package = require('../../package.json');
+
+var _globals = require('./core/globals');
+
+var _defaults = require('./core/defaults');
+
+var _defaults2 = _interopRequireDefault(_defaults);
+
+var _isObjectLiteral = require('./utils/isObjectLiteral');
+
+var _isObjectLiteral2 = _interopRequireDefault(_isObjectLiteral);
+
+var _getArrayOfElements = require('./utils/getArrayOfElements');
+
+var _getArrayOfElements2 = _interopRequireDefault(_getArrayOfElements);
+
+var _polyfillVirtualReferenceProps = require('./utils/polyfillVirtualReferenceProps');
+
+var _polyfillVirtualReferenceProps2 = _interopRequireDefault(_polyfillVirtualReferenceProps);
+
+var _createTooltips = require('./core/createTooltips');
+
+var _createTooltips2 = _interopRequireDefault(_createTooltips);
+
+var _bindEventListeners = require('./core/bindEventListeners');
+
+var _bindEventListeners2 = _interopRequireDefault(_bindEventListeners);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var eventListenersBound = false;
 
@@ -4183,22 +4765,22 @@ var eventListenersBound = false;
  * @param {Object} options
  * @return {Object}
  */
-function tippy$1(selector, options) {
-  if (browser.supported && !eventListenersBound) {
-    bindEventListeners();
+function tippy(selector, options) {
+  if (_globals.browser.supported && !eventListenersBound) {
+    (0, _bindEventListeners2.default)();
     eventListenersBound = true;
   }
 
-  if (isObjectLiteral(selector)) {
-    polyfillVirtualReferenceProps(selector);
+  if ((0, _isObjectLiteral2.default)(selector)) {
+    (0, _polyfillVirtualReferenceProps2.default)(selector);
   }
 
-  options = _extends({}, defaults, options);
+  options = _extends({}, _defaults2.default, options);
 
   return {
     selector: selector,
     options: options,
-    tooltips: browser.supported ? createTooltips(getArrayOfElements(selector), options) : [],
+    tooltips: _globals.browser.supported ? (0, _createTooltips2.default)((0, _getArrayOfElements2.default)(selector), options) : [],
     destroyAll: function destroyAll() {
       this.tooltips.forEach(function (tooltip) {
         return tooltip.destroy();
@@ -4208,17 +4790,265 @@ function tippy$1(selector, options) {
   };
 }
 
-tippy$1.version = version;
-tippy$1.browser = browser;
-tippy$1.defaults = defaults;
-tippy$1.one = function (selector, options) {
-  return tippy$1(selector, options).tooltips[0];
+tippy.version = _package.version;
+tippy.browser = _globals.browser;
+tippy.defaults = _defaults2.default;
+tippy.one = function (selector, options) {
+  return tippy(selector, options).tooltips[0];
 };
-tippy$1.disableAnimations = function () {
-  defaults.updateDuration = defaults.duration = 0;
-  defaults.animateFill = false;
+tippy.disableAnimations = function () {
+  _defaults2.default.updateDuration = _defaults2.default.duration = 0;
+  _defaults2.default.animateFill = false;
 };
 
-return tippy$1;
+exports.default = tippy;
+},{"../../package.json":6,"./core/globals":7,"./core/defaults":8,"./utils/isObjectLiteral":9,"./utils/getArrayOfElements":10,"./utils/polyfillVirtualReferenceProps":11,"./core/createTooltips":13,"./core/bindEventListeners":12}],14:[function(require,module,exports) {
+var bundleURL = null;
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
 
-})));
+  return bundleURL;
+}
+
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],5:[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+  newLink.onload = function () {
+    link.remove();
+  };
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+
+var cssTimeout = null;
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+
+    cssTimeout = null;
+  }, 50);
+}
+
+module.exports = reloadCSS;
+},{"./bundle-url":14}],4:[function(require,module,exports) {
+
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
+},{"_css_loader":5}],2:[function(require,module,exports) {
+'use strict';
+
+var _tippy = require('../src/js/tippy.js');
+
+var _tippy2 = _interopRequireDefault(_tippy);
+
+require('../src/scss/tippy.scss');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(0, _tippy2.default)('[title]');
+},{"../src/js/tippy.js":3,"../src/scss/tippy.scss":4}],41:[function(require,module,exports) {
+
+var OVERLAY_ID = '__parcel__error__overlay__';
+
+var global = (1, eval)('this');
+var OldModule = module.bundle.Module;
+
+function Module(moduleName) {
+  OldModule.call(this, moduleName);
+  this.hot = {
+    data: module.bundle.hotData,
+    _acceptCallbacks: [],
+    _disposeCallbacks: [],
+    accept: function (fn) {
+      this._acceptCallbacks.push(fn || function () {});
+    },
+    dispose: function (fn) {
+      this._disposeCallbacks.push(fn);
+    }
+  };
+
+  module.bundle.hotData = null;
+}
+
+module.bundle.Module = Module;
+
+var parent = module.bundle.parent;
+if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
+  var hostname = '' || location.hostname;
+  var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '54209' + '/');
+  ws.onmessage = function (event) {
+    var data = JSON.parse(event.data);
+
+    if (data.type === 'update') {
+      data.assets.forEach(function (asset) {
+        hmrApply(global.parcelRequire, asset);
+      });
+
+      data.assets.forEach(function (asset) {
+        if (!asset.isNew) {
+          hmrAccept(global.parcelRequire, asset.id);
+        }
+      });
+    }
+
+    if (data.type === 'reload') {
+      ws.close();
+      ws.onclose = function () {
+        location.reload();
+      };
+    }
+
+    if (data.type === 'error-resolved') {
+      console.log('[parcel] ✨ Error resolved');
+
+      removeErrorOverlay();
+    }
+
+    if (data.type === 'error') {
+      console.error('[parcel] 🚨  ' + data.error.message + '\n' + data.error.stack);
+
+      removeErrorOverlay();
+
+      var overlay = createErrorOverlay(data);
+      document.body.appendChild(overlay);
+    }
+  };
+}
+
+function removeErrorOverlay() {
+  var overlay = document.getElementById(OVERLAY_ID);
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+function createErrorOverlay(data) {
+  var overlay = document.createElement('div');
+  overlay.id = OVERLAY_ID;
+
+  // html encode message and stack trace
+  var message = document.createElement('div');
+  var stackTrace = document.createElement('pre');
+  message.innerText = data.error.message;
+  stackTrace.innerText = data.error.stack;
+
+  overlay.innerHTML = '<div style="background: black; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; opacity: 0.85; font-family: Menlo, Consolas, monospace; z-index: 9999;">' + '<span style="background: red; padding: 2px 4px; border-radius: 2px;">ERROR</span>' + '<span style="top: 2px; margin-left: 5px; position: relative;">🚨</span>' + '<div style="font-size: 18px; font-weight: bold; margin-top: 20px;">' + message.innerHTML + '</div>' + '<pre>' + stackTrace.innerHTML + '</pre>' + '</div>';
+
+  return overlay;
+}
+
+function getParents(bundle, id) {
+  var modules = bundle.modules;
+  if (!modules) {
+    return [];
+  }
+
+  var parents = [];
+  var k, d, dep;
+
+  for (k in modules) {
+    for (d in modules[k][1]) {
+      dep = modules[k][1][d];
+      if (dep === id || Array.isArray(dep) && dep[dep.length - 1] === id) {
+        parents.push(+k);
+      }
+    }
+  }
+
+  if (bundle.parent) {
+    parents = parents.concat(getParents(bundle.parent, id));
+  }
+
+  return parents;
+}
+
+function hmrApply(bundle, asset) {
+  var modules = bundle.modules;
+  if (!modules) {
+    return;
+  }
+
+  if (modules[asset.id] || !bundle.parent) {
+    var fn = new Function('require', 'module', 'exports', asset.generated.js);
+    asset.isNew = !modules[asset.id];
+    modules[asset.id] = [fn, asset.deps];
+  } else if (bundle.parent) {
+    hmrApply(bundle.parent, asset);
+  }
+}
+
+function hmrAccept(bundle, id) {
+  var modules = bundle.modules;
+  if (!modules) {
+    return;
+  }
+
+  if (!modules[id] && bundle.parent) {
+    return hmrAccept(bundle.parent, id);
+  }
+
+  var cached = bundle.cache[id];
+  bundle.hotData = {};
+  if (cached) {
+    cached.hot.data = bundle.hotData;
+  }
+
+  if (cached && cached.hot && cached.hot._disposeCallbacks.length) {
+    cached.hot._disposeCallbacks.forEach(function (cb) {
+      cb(bundle.hotData);
+    });
+  }
+
+  delete bundle.cache[id];
+  bundle(id);
+
+  cached = bundle.cache[id];
+  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+    cached.hot._acceptCallbacks.forEach(function (cb) {
+      cb();
+    });
+    return true;
+  }
+
+  return getParents(global.parcelRequire, id).some(function (id) {
+    return hmrAccept(global.parcelRequire, id);
+  });
+}
+},{}]},{},[41,2])
+//# sourceMappingURL=/tests.302696f0.map

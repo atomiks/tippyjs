@@ -97,3 +97,9 @@ test('tippy.disableAnimations() sets all animation/transition-related defaults t
   defaults.updateDuration = clone.updateDuration
   defaults.animateFill = clone.animateFill
 })
+
+test('tippy.one returns the instance directly', () => {
+  const el = createReferenceElement()
+  const instance = tippy.one(el)
+  expect(instance.id).toBeDefined()
+})
