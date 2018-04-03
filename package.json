@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "2.4.1",
+  "version": "3.0.0-alpha.0",
   "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.all.js",
   "repository": {
@@ -16,16 +16,23 @@
     "prettier": "prettier --write \"./**/*{js,scss}\""
   },
   "jest": {
-    "setupFiles": ["./tests/polyfills/createRange.js", "./tests/polyfills/MutationObserver.js"]
+    "setupFiles": [
+      "./tests/polyfills/createRange.js",
+      "./tests/polyfills/MutationObserver.js"
+    ]
   },
   "prettier": {
-    "printWidth": 100,
+    "printWidth": 80,
     "semi": false,
     "singleQuote": true
   },
   "author": "atomiks",
   "license": "MIT",
-  "keywords": ["tooltip", "tippy", "tippy.js"],
+  "keywords": [
+    "tooltip",
+    "tippy",
+    "tippy.js"
+  ],
   "devDependencies": {
     "animejs": "^2.2.0",
     "autoprefixer": "^6.7.7",
@@ -47,6 +54,7 @@
     "jest": "^22.4.2",
     "jsdom": "^11.6.2",
     "mutation-observer": "^1.0.3",
+    "node-sass": "^4.8.3",
     "normalize.css": "^8.0.0",
     "parcel-bundler": "^1.7.0",
     "postcss": "^5.2.18",
@@ -65,6 +73,6 @@
     "rollup-plugin-sass": "^0.4.10"
   },
   "dependencies": {
-    "popper.js": "^1.14.1"
+    "popper.js": "^1.14.2"
   }
 }

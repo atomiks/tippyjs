@@ -17,17 +17,32 @@ const styles = {
 export default () => (state, { header }) => (
   <header class="header">
     <div class="container">
-      <img class="header__logo" src={logo} oncreate={header.animateLogo} style={styles.logo} />
+      <img
+        class="header__logo"
+        src={logo}
+        oncreate={header.animateLogo}
+        style={styles.logo}
+      />
       <div class="header__heading-wrapper">
         <h1 class="header__heading">
           Tippy.js
-          <span oncreate={header.animateVersion} class="header__version" style={styles.version}>
+          <span
+            oncreate={header.animateVersion}
+            class="header__version"
+            style={styles.version}
+          >
             v{version}
           </span>
         </h1>
       </div>
-      <h2 class="header__slogan">A highly customizable vanilla JS tooltip & popover library</h2>
-      <div oncreate={header.animateItems} class="header__items" style={styles.items}>
+      <h2 class="header__slogan">
+        A highly customizable vanilla JS tooltip & popover library
+      </h2>
+      <div
+        oncreate={header.animateItems}
+        class="header__items"
+        style={styles.items}
+      >
         <div class="header__item">
           <p>
             <i class="header__icon is-code" data-feather="code" />
@@ -48,7 +63,10 @@ export default () => (state, { header }) => (
             data-tippy-sticky="true"
             data-tippy-updateDuration="250"
           >
-            <i class="icon header__icon is-power" data-feather="cloud-lightning" />
+            <i
+              class="icon header__icon is-power"
+              data-feather="cloud-lightning"
+            />
             Powered by Popper.js
           </a>
         </div>
@@ -67,7 +85,10 @@ export default () => (state, { header }) => (
         </div>
         <div class="header__item">
           <p class="header__docs-wrapper">
-            <a class="header__docs" href="https://atomiks.github.io/tippyjs/v1/index.html">
+            <a
+              class="header__docs"
+              href="https://atomiks.github.io/tippyjs/v1/index.html"
+            >
               v1 docs
             </a>
           </p>

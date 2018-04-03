@@ -1,24 +1,21 @@
-import { browser, selectors } from './globals'
-
-import hideAllPoppers from '../utils/hideAllPoppers'
-import closest from '../utils/closest'
-import matches from '../utils/matches'
-import toArray from '../utils/toArray'
+import browser from './browser'
+import selectors from './selectors'
+import { hideAllPoppers, closest, matches, toArray } from './utils'
 
 /**
- * Adds the needed event listeners
+ * Adds the needed global event listeners
  */
 export default function bindEventListeners() {
   const onDocumentTouch = () => {
-    if (browser.usingTouch) return
+    if (browser.isUsingTouch) return
 
-    browser.usingTouch = true
+    browser.isUsingTouch = true
 
-    if (browser.iOS) {
+    if (browser.isIOS) {
       document.body.classList.add('tippy-touch')
     }
 
-    if (browser.dynamicInputDetection && window.performance) {
+    if (browser.userInputDetectionEnabled && window.performance) {
       document.addEventListener('mousemove', onDocumentMouseMove)
     }
 
@@ -33,9 +30,9 @@ export default function bindEventListeners() {
 
       // Chrome 60+ is 1 mousemove per animation frame, use 20ms time difference
       if (now - time < 20) {
-        browser.usingTouch = false
+        browser.isUsingTouch = false
         document.removeEventListener('mousemove', onDocumentMouseMove)
-        if (!browser.iOS) {
+        if (!browser.isIOS) {
           document.body.classList.remove('tippy-touch')
         }
         browser.onUserInputChange('mouse')
@@ -54,7 +51,7 @@ export default function bindEventListeners() {
     const reference = closest(event.target, selectors.REFERENCE)
     const popper = closest(event.target, selectors.POPPER)
 
-    if (popper && popper._reference._tippy.options.interactive) return
+    if (popper && popper._tippy.options.interactive) return
 
     if (reference) {
       const { options } = reference._tippy
@@ -63,13 +60,14 @@ export default function bindEventListeners() {
       // `multiple` is false AND they are a touch user, OR
       // `multiple` is false AND it's triggered by a click
       if (
-        (!options.multiple && browser.usingTouch) ||
+        (!options.multiple && browser.isUsingTouch) ||
         (!options.multiple && options.trigger.indexOf('click') > -1)
       ) {
         return hideAllPoppers(reference._tippy)
       }
 
-      if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1) return
+      if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1)
+        return
     }
 
     hideAllPoppers()
@@ -96,7 +94,10 @@ export default function bindEventListeners() {
   window.addEventListener('blur', onWindowBlur)
   window.addEventListener('resize', onWindowResize)
 
-  if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
+  if (
+    !browser.supportsTouch &&
+    (navigator.maxTouchPoints || navigator.msMaxTouchPoints)
+  ) {
     document.addEventListener('pointerdown', onDocumentTouch)
   }
 }

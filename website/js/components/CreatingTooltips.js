@@ -11,7 +11,8 @@ export default () => (state, actions) => (
     </div>
 
     <h3>
-      1. Add your tooltip content <span class="section__emoji" innerHTML={emoji('✍️')} />
+      1. Add your tooltip content{' '}
+      <span class="section__emoji" innerHTML={emoji('✍️')} />
     </h3>
 
     <p>
@@ -29,8 +30,8 @@ export default () => (state, actions) => (
     </div>
 
     <p>
-      If you hover over the button, you'll notice the browser's default tooltip (usually the native
-      OS tooltip) appears after a delay.
+      If you hover over the button, you'll notice the browser's default tooltip
+      (usually the native OS tooltip) appears after a delay.
     </p>
 
     <h3>
@@ -38,8 +39,8 @@ export default () => (state, actions) => (
     </h3>
 
     <p>
-      To give the elements a tippy, you'll need to add in some JavaScript inside <code>script</code>{' '}
-      tags on your HTML page{' '}
+      To give the elements a tippy, you'll need to add in some JavaScript inside{' '}
+      <code>script</code> tags on your HTML page{' '}
       <span
         tabindex="0"
         class="tippy"
@@ -69,8 +70,9 @@ tippy('.btn')
     </div>
 
     <p>
-      When the <code>tippy()</code> function is invoked and given a CSS selector string, it will
-      find all the elements which match it, check if they have a non-empty <code>title</code>
+      When the <code>tippy()</code> function is invoked and given a CSS selector
+      string, it will find all the elements which match it, check if they have a
+      non-empty <code>title</code>
       attribute, and then apply its magic to give them a cool tooltip.
     </p>
 
@@ -78,7 +80,9 @@ tippy('.btn')
       Mutations <span class="section__emoji" innerHTML={emoji('🛠')} />
     </h3>
 
-    <p>The reference element(s) get modified by Tippy in the following manner:</p>
+    <p>
+      The reference element(s) get modified by Tippy in the following manner:
+    </p>
 
     <div class="code-wrapper" data-lang="html">
       <pre>
@@ -100,20 +104,22 @@ tippy('.btn')
         <code>data-tippy</code> attribute is added
       </li>
       <li>
-        <code>data-original-title</code> attribute is added containing the <code>title</code> string
+        <code>data-original-title</code> attribute is added containing the{' '}
+        <code>title</code> string
       </li>
     </ul>
 
     <p>
-      Additionally, once the tooltip has fully transitioned in, an <code>aria-describedby</code>{' '}
-      attribute is added for{' '}
+      Additionally, once the tooltip has fully transitioned in, an{' '}
+      <code>aria-describedby</code> attribute is added for{' '}
       <span tabindex="0" class="tippy" title="Short for accessibility">
         a11y
       </span>.
     </p>
 
     <h3>
-      Additional input types <span class="section__emoji" innerHTML={emoji('🎛')} />
+      Additional input types{' '}
+      <span class="section__emoji" innerHTML={emoji('🎛')} />
     </h3>
     <p>
       A single{' '}
@@ -142,7 +148,8 @@ tippy('.btn')
     </div>
 
     <h3>
-      Tippify all titled elements <span class="section__emoji" innerHTML={emoji('🍭')} />
+      Tippify all titled elements{' '}
+      <span class="section__emoji" innerHTML={emoji('🍭')} />
     </h3>
     <p>
       Use this{' '}
@@ -164,7 +171,10 @@ tippy('.btn')
     <h3>
       Advanced <span class="section__emoji" innerHTML={emoji('🤯')} />
     </h3>
-    <p>You can use a virtual element as the positioning reference instead of a real element:</p>
+    <p>
+      You can use a virtual element as the positioning reference instead of a
+      real element:
+    </p>
     <div class="code-wrapper" data-lang="js">
       <pre>
         <code class="lang-js">
@@ -189,7 +199,10 @@ tippy('.btn')
 tippy(virtualReference)`}
         </code>
       </pre>
-      <p>Popper.js uses these properties to determine the position of the tooltip.</p>
+      <p>
+        Popper.js uses these properties to determine the position of the
+        tooltip.
+      </p>
     </div>
   </section>
 )

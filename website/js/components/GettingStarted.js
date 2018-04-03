@@ -27,11 +27,13 @@ export default () => (state, actions) => (
       in your HTML document before your own scripts:
     </p>
     <Code lang="html">
-      {`<script src="https://unpkg.com/tippy.js@${pkg.version}/dist/tippy.all.min.js"></script>`}
+      {`<script src="https://unpkg.com/tippy.js@${
+        pkg.version
+      }/dist/tippy.all.min.js"></script>`}
     </Code>
     <p>
-      Once it's loaded, you'll have access to the <code>tippy</code> module which will allow you to
-      create awesome tooltips!
+      Once it's loaded, you'll have access to the <code>tippy</code> module
+      which will allow you to create awesome tooltips!
     </p>
 
     <h3 class="section__subheading">
@@ -59,22 +61,23 @@ import tippy from 'tippy.js'
     <p>Tippy builds a bunch of different files that can be used:</p>
     <ul>
       <li>
-        <code>tippy.all.js</code> is all dependencies (Tippy + Popper + CSS) in a single file. The
-        CSS is injected into the document head.
+        <code>tippy.all.js</code> is all dependencies (Tippy + Popper + CSS) in
+        a single file. The CSS is injected into the document head.
       </li>
       <li>
         <code>tippy.js</code> is Tippy + Popper together, without the CSS.
       </li>
       <li>
-        <code>tippy.standalone.js</code> is Tippy by itself, without Popper or the CSS.
+        <code>tippy.standalone.js</code> is Tippy by itself, without Popper or
+        the CSS.
       </li>
       <li>
         <code>tippy.css</code> is Tippy's CSS stylesheet by itself.
       </li>
     </ul>
     <p>
-      There are also <code>.min</code> versions of the above, which means the file is minified for
-      production use.
+      There are also <code>.min</code> versions of the above, which means the
+      file is minified for production use.
     </p>
   </section>
 )

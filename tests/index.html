@@ -21,6 +21,9 @@
       font-size: 16px;
       margin: 8px;
       padding: 8px;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
     }
   </style>
 </head>
@@ -31,104 +34,112 @@
 
     <div id="title">
       <h2>title length</h2>
-      <button title="go">Short: no arrow</button>
-      <button title="go" data-tippy-arrow="true">Short w/ arrow</button>
-      <button title="go" data-tippy-placement="left">Short left</button>
-      <button title="go" data-tippy-placement="right">Short right</button>
-      <button title="go" data-tippy-placement="bottom">Short bottom</button>
-      <button title="Average title length">Medium length</button>
-      <button title="A long title, lorem ipsum dolor">Long length</button>
-      <button title="A long title, lorem ipsum dolor, lorem ipsum dolor, lorem ipsum dolor">Very long length</button>
+      <button data-tippy-title="go">Short: no arrow</button>
+      <button data-tippy-title="go" data-tippy-arrow="true">Short w/ arrow</button>
+      <button data-tippy-title="go" data-tippy-placement="left">Short left</button>
+      <button data-tippy-title="go" data-tippy-placement="right">Short right</button>
+      <button data-tippy-title="go" data-tippy-placement="bottom">Short bottom</button>
+      <button data-tippy-title="Average title length">Medium length</button>
+      <button data-tippy-title="A long title, lorem ipsum dolor">Long length</button>
+      <button data-tippy-title="A long title, lorem ipsum dolor, lorem ipsum dolor, lorem ipsum dolor">Very long length</button>
     </div>
 
     <div id="placement">
       <h2>placement</h2>
-      <button title="Hello" data-tippy-placement="top">Top</button>
-      <button title="Hello" data-tippy-placement="left">Left</button>
-      <button title="Hello" data-tippy-placement="bottom">Bottom</button>
-      <button title="Hello" data-tippy-placement="right">Right</button>
-      <button title="Hello" data-tippy-placement="top" data-tippy-arrow="true">Top w/ arrow</button>
-      <button title="Hello" data-tippy-placement="left" data-tippy-arrow="true">Left w/ arrow</button>
-      <button title="Hello" data-tippy-placement="bottom" data-tippy-arrow="true">Bottom w/ arrow</button>
-      <button title="Hello" data-tippy-placement="right" data-tippy-arrow="true">Right w/ arrow</button>
-      <button title="Hello" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-arrowType="round">Top w/ round arrow</button>
-      <button title="Hello" data-tippy-placement="left" data-tippy-arrow="true" data-tippy-arrowType="round">Left w/ round arrow</button>
-      <button title="Hello" data-tippy-placement="bottom" data-tippy-arrow="true" data-tippy-arrowType="round">Bottom w/ round arrow</button>
-      <button title="Hello" data-tippy-placement="right" data-tippy-arrow="true" data-tippy-arrowType="round">Right w/ round arrow</button>
+      <button data-tippy-title="Hello" data-tippy-placement="top">Top</button>
+      <button data-tippy-title="Hello" data-tippy-placement="left">Left</button>
+      <button data-tippy-title="Hello" data-tippy-placement="bottom">Bottom</button>
+      <button data-tippy-title="Hello" data-tippy-placement="right">Right</button>
+      <button data-tippy-title="Hello" data-tippy-placement="top" data-tippy-arrow="true">Top w/ arrow</button>
+      <button data-tippy-title="Hello" data-tippy-placement="left" data-tippy-arrow="true">Left w/ arrow</button>
+      <button data-tippy-title="Hello" data-tippy-placement="bottom" data-tippy-arrow="true">Bottom w/ arrow</button>
+      <button data-tippy-title="Hello" data-tippy-placement="right" data-tippy-arrow="true">Right w/ arrow</button>
+      <button data-tippy-title="Hello" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-arrowType="round">Top w/ round arrow</button>
+      <button data-tippy-title="Hello" data-tippy-placement="left" data-tippy-arrow="true" data-tippy-arrowType="round">Left w/ round arrow</button>
+      <button data-tippy-title="Hello" data-tippy-placement="bottom" data-tippy-arrow="true" data-tippy-arrowType="round">Bottom w/ round arrow</button>
+      <button data-tippy-title="Hello" data-tippy-placement="right" data-tippy-arrow="true" data-tippy-arrowType="round">Right w/ round arrow</button>
     </div>
 
     <div id="arrow">
       <h2>arrow</h2>
-      <button title="Hello" data-tippy-arrow="true">True</button>
-      <button title="Hello" data-tippy-arrow="false">False</button>
-      <button title="Hello" data-tippy-arrow="true" data-tippy-arrowType="round">Round</button>
-      <button title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scale(2)">scale(2)</button>
-      <button title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scale(0.5)">scale(0.5)</button>
-      <button title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scaleX(0.5)">scaleX(0.5)</button>
-      <button title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scaleX(2)">scaleX(2)</button>
-      <button title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scaleY(2)">scaleY(2)</button>
-      <button title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scaleY(0.5)">scaleY(0.5)</button>
-      <button title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="translateY(5px)">translateY(5px)</button>
-      <button title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="translateX(-5px)">translateX(-5px)</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="true">True</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="false">False</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="true" data-tippy-arrowType="round">Round</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scale(2)">scale(2)</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scale(0.5)">scale(0.5)</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scaleX(0.5)">scaleX(0.5)</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scaleX(2)">scaleX(2)</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scaleY(2)">scaleY(2)</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="scaleY(0.5)">scaleY(0.5)</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="translateY(5px)">translateY(5px)</button>
+      <button data-tippy-title="Hello" data-tippy-arrow="true" data-tippy-arrowTransform="translateX(-5px)">translateX(-5px)</button>
     </div>
 
     <div id="animation">
       <h2>animation</h2>
-      <button title="Hello" data-tippy-animateFill="false">No animateFill</button>
-      <button title="Hello" data-tippy-animation="shift-toward">Shift-toward</button>
-      <button title="Hello" data-tippy-animation="shift-away">Shift-away</button>
-      <button title="Hello" data-tippy-animation="perspective">Perspective</button>
-      <button title="Hello" data-tippy-animation="fade">Fade</button>
-      <button title="Hello" data-tippy-animation="scale">Scale</button>
-      <button title="Hello" data-tippy-inertia="true">Inertia</button>
+      <button data-tippy-title="Hello" data-tippy-animateFill="false">No animateFill</button>
+      <button data-tippy-title="Hello" data-tippy-animation="shift-toward">Shift-toward</button>
+      <button data-tippy-title="Hello" data-tippy-animation="shift-away">Shift-away</button>
+      <button data-tippy-title="Hello" data-tippy-animation="perspective">Perspective</button>
+      <button data-tippy-title="Hello" data-tippy-animation="fade">Fade</button>
+      <button data-tippy-title="Hello" data-tippy-animation="scale">Scale</button>
+      <button data-tippy-title="Hello" data-tippy-inertia="true">Inertia</button>
     </div>
 
     <div id="interactivity">
       <h2>interactive</h2>
-      <button title="Hello" data-tippy-interactive="true">True</button>
-      <button title="Hello" data-tippy-interactive="false">False</button>
-      <button title="Hello" data-tippy-interactive="true" data-tippy-delay="500">True + Delay</button>
+      <button data-tippy-title="Hello" data-tippy-interactive="true">True</button>
+      <button data-tippy-title="Hello" data-tippy-interactive="false">False</button>
+      <button data-tippy-title="Hello" data-tippy-interactive="true" data-tippy-delay="500">True + Delay</button>
     </div>
 
     <div id="triggers">
       <h2>trigger</h2>
-      <button title="Hello" data-tippy-trigger="click">Click</button>
-      <button title="Hello" data-tippy-trigger="mouseenter">Mouseenter</button>
-      <button title="Hello" data-tippy-trigger="focus">Focus</button>
+      <button data-tippy-title="Hello" data-tippy-trigger="click">Click</button>
+      <button data-tippy-title="Hello" data-tippy-trigger="mouseenter">Mouseenter</button>
+      <button data-tippy-title="Hello" data-tippy-trigger="focus">Focus</button>
     </div>
 
     <div id="event-delegation">
       <h2>Event delegation</h2>
-      <div title="Shared title" data-tippy-target="button">
+      <div data-tippy-title="Shared title" data-tippy-target="button">
         <button>Shared title</button>
-        <button title="Custom title">Custom title</button>
+        <button data-tippy-title="Custom title">Custom title</button>
         <button data-tippy-placement="right">Custom options</button>
       </div>
     </div>
 
     <div id="hide-on-click">
       <h2>hideOnClick</h2>
-      <button title="Hello" data-tippy-hideOnClick="true">True</button>
-      <button title="Hello" data-tippy-hideOnClick="false">False</button>
+      <button data-tippy-title="Hello" data-tippy-hideOnClick="true">True</button>
+      <button data-tippy-title="Hello" data-tippy-hideOnClick="false">False</button>
     </div>
 
     <div id="duration">
       <h2>duration</h2>
-      <button title="Hello" data-tippy-duration="0">0</button>
-      <button title="Hello" data-tippy-duration="1000">1000</button>
-      <button title="Hello" data-tippy-duration="5000">5000</button>
-      <button title="Hello" data-tippy-duration="[0, 1000]">[0, 1000]</button>
-      <button title="Hello" data-tippy-duration="[1000, 200]">[1000, 200]</button>
+      <button data-tippy-title="Hello" data-tippy-duration="0">0</button>
+      <button data-tippy-title="Hello" data-tippy-duration="1000">1000</button>
+      <button data-tippy-title="Hello" data-tippy-duration="5000">5000</button>
+      <button data-tippy-title="Hello" data-tippy-duration="[0, 1000]">[0, 1000]</button>
+      <button data-tippy-title="Hello" data-tippy-duration="[1000, 200]">[1000, 200]</button>
+    </div>
+
+    <div id="followCursor">
+      <h2>followCursor</h2>
+      <button data-tippy-title="Hello" data-tippy-followCursor="true">true</button>
+      <button data-tippy-title="Hello" data-tippy-followCursor="true" data-tippy-delay="500">w/ delay</button>
     </div>
 
     <div id="delay">
       <h2>delay</h2>
-      <button title="Hello" data-tippy-delay="0">0</button>
-      <button title="Hello" data-tippy-delay="1000">1000</button>
-      <button title="Hello" data-tippy-delay="[0, 1000]">[0, 1000]</button>
-      <button title="Hello" data-tippy-delay="[1000, 200]">[1000, 200]</button>
+      <button data-tippy-title="Hello" data-tippy-delay="0">0</button>
+      <button data-tippy-title="Hello" data-tippy-delay="1000">1000</button>
+      <button data-tippy-title="Hello" data-tippy-delay="[0, 1000]">[0, 1000]</button>
+      <button data-tippy-title="Hello" data-tippy-delay="[1000, 200]">[1000, 200]</button>
     </div>
   </div>
+
+  <script>document.querySelectorAll('button').forEach(b => b.innerHTML = "")</script>
 </body>
 
 </html>

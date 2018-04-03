@@ -21,7 +21,12 @@ test('createPopperInstanceOnInit', () => {
 
 test('placement', () => {
   const placements = ['top', 'bottom', 'left', 'right'].reduce(
-    (acc, placement) => [...acc, placement, `${placement}-start`, `${placement}-end`],
+    (acc, placement) => [
+      ...acc,
+      placement,
+      `${placement}-start`,
+      `${placement}-end`
+    ],
     []
   )
   placements.forEach(placement => {
@@ -62,9 +67,13 @@ test('allowTitleHTML', () => {
   el.title = '<strong>tooltip</strong>'
 
   tippy(el, { allowTitleHTML: false })
-  expect(el._tippy.popper.querySelector(selectors.CONTENT).querySelector('strong')).toBeNull()
+  expect(
+    el._tippy.popper.querySelector(selectors.CONTENT).querySelector('strong')
+  ).toBeNull()
   el._tippy.destroy()
 
   tippy(el, { allowTitleHTML: true })
-  expect(el._tippy.popper.querySelector(selectors.CONTENT).querySelector('strong')).not.toBeNull()
+  expect(
+    el._tippy.popper.querySelector(selectors.CONTENT).querySelector('strong')
+  ).not.toBeNull()
 })

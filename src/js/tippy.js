@@ -1,70 +1,53 @@
 import { version } from '../../package.json'
-
-import { browser } from './core/globals'
-import defaults from './core/defaults'
-
-import isObjectLiteral from './utils/isObjectLiteral'
-import getArrayOfElements from './utils/getArrayOfElements'
-
-import createTooltips from './core/createTooltips'
-import bindEventListeners from './core/bindEventListeners'
+import defaults from './defaults'
+import browser from './browser'
+import createTippy from './createTippy'
+import bindGlobalEventListeners from './bindGlobalEventListeners'
+import {
+  isVirtualReference,
+  polyfillVirtualReferenceProps,
+  getArrayOfElements
+} from './utils'
 
 let eventListenersBound = false
 
-/**
- * Exported module
- * @param {String|Element|Element[]|NodeList|Object} selector
- * @param {Object} options
- * @return {Object}
- */
-function tippy(selector, options) {
-  if (browser.supported && !eventListenersBound) {
-    bindEventListeners()
+export default function tippy(targets, opts) {
+  if (!eventListenersBound) {
+    bindGlobalEventListeners()
     eventListenersBound = true
   }
 
-  if (isObjectLiteral(selector)) {
-    selector.refObj = true
-    selector.attributes = selector.attributes || {}
-    selector.setAttribute = (key, val) => {
-      selector.attributes[key] = val
-    }
-    selector.getAttribute = key => selector.attributes[key]
-    selector.removeAttribute = key => {
-      delete selector.attributes[key]
-    }
-    selector.addEventListener = () => {}
-    selector.removeEventListener = () => {}
-    selector.classList = {
-      classNames: {},
-      add: key => (selector.classList.classNames[key] = true),
-      remove: key => {
-        delete selector.classList.classNames[key]
-        return true
-      },
-      contains: key => !!selector.classList.classNames[key]
-    }
+  const options = { ...defaults, ...opts }
+
+  // If they are specifying a virtual positioning reference, we need to polyfill
+  // some native DOM props
+  if (isVirtualReference(targets)) {
+    targets = polyfillVirtualReferenceProps(targets)
   }
 
-  options = { ...defaults, ...options }
+  const references = getArrayOfElements(targets)
+  const instances = references.map(reference => createTippy(reference, options))
 
   return {
-    selector,
+    targets,
     options,
-    tooltips: browser.supported ? createTooltips(getArrayOfElements(selector), options) : [],
+    references,
+    instances,
     destroyAll() {
-      this.tooltips.forEach(tooltip => tooltip.destroy())
-      this.tooltips = []
+      this.instances.forEach(tippy => {
+        tippy.destroy()
+      })
+      this.instances = []
     }
   }
 }
 
 tippy.version = version
-tippy.browser = browser
 tippy.defaults = defaults
+tippy.browser = browser
+
+tippy.one = (targets, options) => tippy(targets, options).instances[0]
 tippy.disableAnimations = () => {
-  defaults.updateDuration = defaults.duration = 0
+  defaults.duration = defaults.updateDuration = 0
   defaults.animateFill = false
 }
-
-export default tippy

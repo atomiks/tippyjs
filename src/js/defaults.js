@@ -1,6 +1,5 @@
-import { browser } from './globals'
-
-const defaults = {
+export default {
+  title: '',
   placement: 'top',
   livePlacement: true,
   trigger: 'mouseenter focus',
@@ -16,13 +15,13 @@ const defaults = {
   size: 'regular',
   distance: 10,
   offset: 0,
-  hideOnClick: true,
+  hideOnClick: false,
   multiple: false,
   followCursor: false,
   inertia: false,
   updateDuration: 350,
   sticky: false,
-  appendTo: () => document.body,
+  appendTo: reference => reference.parentNode,
   zIndex: 9999,
   touchHold: false,
   performance: false,
@@ -41,11 +40,3 @@ const defaults = {
   onHide() {},
   onHidden() {}
 }
-
-export default defaults
-
-/**
- * The keys of the defaults object for reducing down into a new object
- * Used in `getIndividualOptions()`
- */
-export const defaultsKeys = browser.supported && Object.keys(defaults)

@@ -11,13 +11,14 @@ export default () => (state, actions) => (
       </a>
     </div>
     <p>
-      It's important to distinguish between the object returned from calling <code>tippy()</code>{' '}
-      and a Tippy instance. When you call <code>tippy()</code>, it can create multiple tooltips
-      (Tippy instances) at once.
+      It's important to distinguish between the object returned from calling{' '}
+      <code>tippy()</code> and a Tippy instance. When you call{' '}
+      <code>tippy()</code>, it can create multiple tooltips (Tippy instances) at
+      once.
     </p>
     <p>
-      Tippy instances refer to individual tooltips, whereas the object returned from{' '}
-      <code>tippy()</code> refers to the collection.
+      Tippy instances refer to individual tooltips, whereas the object returned
+      from <code>tippy()</code> refers to the collection.
     </p>
 
     <h3>
@@ -49,8 +50,8 @@ export default () => (state, actions) => (
 
     <h3>Tippy instances</h3>
     <p>
-      Stored on reference elements via the <code>_tippy</code> property, and inside the{' '}
-      <code>tooltips</code> array of the <code>tippy()</code> object.
+      Stored on reference elements via the <code>_tippy</code> property, and
+      inside the <code>tooltips</code> array of the <code>tippy()</code> object.
     </p>
     <Code lang="js">{`tippy('.btn')
 const btn = document.querySelector('.btn')
