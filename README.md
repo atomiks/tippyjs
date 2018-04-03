@@ -70,6 +70,7 @@ View the [docs](https://atomiks.github.io/tippyjs/) for details on all of the op
 ## API
 
 `tippy(reference [, options]) => collection object`
+
 `tippy.one(reference [, options]) => Tippy instance` (v2.5+)
 
 `reference` can be:
