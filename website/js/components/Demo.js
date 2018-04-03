@@ -112,7 +112,12 @@ export default () => (state, { demo }) => (
       <button class="btn" title="I'm a Tippy tooltip!" data-tippy-trigger="mouseenter">
         Hover or touch
       </button>
-      <button class="btn" title="I'm a Tippy tooltip!" data-tippy-trigger="focus">
+      <button
+        class="btn"
+        title="I'm a Tippy tooltip!"
+        data-tippy-trigger="focus"
+        data-tippy-hideOnClick="false"
+      >
         Focus or touch
       </button>
       <button class="btn" title="I'm a Tippy tooltip!" data-tippy-trigger="click">

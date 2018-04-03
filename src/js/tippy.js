@@ -5,6 +5,7 @@ import defaults from './core/defaults'
 
 import isObjectLiteral from './utils/isObjectLiteral'
 import getArrayOfElements from './utils/getArrayOfElements'
+import polyfillVirtualReferenceProps from './utils/polyfillVirtualReferenceProps'
 
 import createTooltips from './core/createTooltips'
 import bindEventListeners from './core/bindEventListeners'
@@ -24,26 +25,7 @@ function tippy(selector, options) {
   }
 
   if (isObjectLiteral(selector)) {
-    selector.refObj = true
-    selector.attributes = selector.attributes || {}
-    selector.setAttribute = (key, val) => {
-      selector.attributes[key] = val
-    }
-    selector.getAttribute = key => selector.attributes[key]
-    selector.removeAttribute = key => {
-      delete selector.attributes[key]
-    }
-    selector.addEventListener = () => {}
-    selector.removeEventListener = () => {}
-    selector.classList = {
-      classNames: {},
-      add: key => (selector.classList.classNames[key] = true),
-      remove: key => {
-        delete selector.classList.classNames[key]
-        return true
-      },
-      contains: key => !!selector.classList.classNames[key]
-    }
+    polyfillVirtualReferenceProps(selector)
   }
 
   options = { ...defaults, ...options }
@@ -62,6 +44,7 @@ function tippy(selector, options) {
 tippy.version = version
 tippy.browser = browser
 tippy.defaults = defaults
+tippy.one = (selector, options) => tippy(selector, options).tooltips[0]
 tippy.disableAnimations = () => {
   defaults.updateDuration = defaults.duration = 0
   defaults.animateFill = false

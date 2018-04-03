@@ -40,6 +40,12 @@ tippy(btn)`}</Code>
       The Tippy instance is stored on the button element via the <code>_tippy</code> property.
     </p>
 
+    <p>
+      If you are dealing with a single element/tooltip, you can use <code>tippy.one()</code> method
+      to directly return the instance instead of having to use the <code>_tippy</code> property.
+    </p>
+    <Code lang="js">{`const instance = tippy.one('button')`}</Code>
+
     <h3>Show the tooltip</h3>
     <Code lang="js">{`btn._tippy.show()`}</Code>
 

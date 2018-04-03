@@ -1,5 +1,6 @@
 import { h } from 'hyperapp'
 import { emoji } from '../utils'
+import Code from './Code'
 
 export default () => (state, actions) => (
   <section class="section" id="creating-tooltips">
@@ -22,11 +23,7 @@ export default () => (state, actions) => (
       attribute containing your tooltip content.
     </p>
 
-    <div class="code-wrapper" data-lang="html">
-      <pre>
-        <code class="lang-html">{`<button class="btn" title="I'm a tooltip!">Text</button>`}</code>
-      </pre>
-    </div>
+    <Code lang="html">{`<button class="btn" title="I'm a tooltip!">Text</button>`}</Code>
 
     <p>
       If you hover over the button, you'll notice the browser's default tooltip (usually the native
@@ -50,16 +47,12 @@ export default () => (state, actions) => (
       <code>body</code> tag.
     </p>
 
-    <div class="code-wrapper" data-lang="html">
-      <pre>
-        <code class="lang-html">
-          {`<script>
+    <Code lang="html">
+      {`<script>
 tippy('.btn')
 </script>
 `}
-        </code>
-      </pre>
-    </div>
+    </Code>
 
     <div class="section__result">
       <p class="section__result-text">Result:</p>
@@ -80,17 +73,13 @@ tippy('.btn')
 
     <p>The reference element(s) get modified by Tippy in the following manner:</p>
 
-    <div class="code-wrapper" data-lang="html">
-      <pre>
-        <code class="lang-html">
-          {`<!-- Before -->
+    <Code lang="html">
+      {`<!-- Before -->
 <button class="btn" title="I'm a tooltip!">Text</button>
 <!-- After -->
 <button class="btn" data-tippy data-original-title="I'm a tooltip!">Text</button>
 `}
-        </code>
-      </pre>
-    </div>
+    </Code>
 
     <ul>
       <li>
@@ -127,19 +116,18 @@ tippy('.btn')
       <code>Element</code> (or an array of them) will work:
     </p>
 
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">tippy(document.querySelector('.btn'))</code>
-      </pre>
-    </div>
+    <Code lang="js">{`tippy(document.querySelector('.btn'))`}</Code>
     <p>
       As well as a <code>NodeList</code>:
     </p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">tippy(document.querySelectorAll('.btn'))</code>
-      </pre>
-    </div>
+    <Code lang="js">{`tippy(document.querySelectorAll('.btn'))`}</Code>
+
+    <p>
+      <span class="badge">v2.5</span> Use <code>tippy.one()</code> if you are creating a single
+      tooltip. This will return the tooltip instance directly, rather than a collection object
+      (because <code>tippy()</code> can create multiple tooltip instances at once).
+    </p>
+    <Code lang="js">{`tippy.one(document.querySelector('.btn'))`}</Code>
 
     <h3>
       Tippify all titled elements <span class="section__emoji" innerHTML={emoji('🍭')} />
@@ -155,41 +143,33 @@ tippy('.btn')
       </span>:
     </p>
 
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">tippy('[title]')</code>
-      </pre>
-    </div>
+    <Code lang="js">{`tippy('[title]')`}</Code>
 
     <h3>
       Advanced <span class="section__emoji" innerHTML={emoji('🤯')} />
     </h3>
     <p>You can use a virtual element as the positioning reference instead of a real element:</p>
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">
-          {`const virtualReference = {
-  attributes: {
-    title: "I'm a tooltip!"
-  },
-  getBoundingClientRect() {
-    return {
-      width: 100,
-      height: 100,
-      top: 100px,
-      left: 100px,
-      right: 200px,
-      bottom: 200px
-    }
-  },
-  clientHeight: 100,
-  clientWidth: 100
+    <Code lang="js">
+      {`const virtualReference = {
+attributes: {
+title: "I'm a tooltip!"
+},
+getBoundingClientRect() {
+return {
+  width: 100,
+  height: 100,
+  top: 100px,
+  left: 100px,
+  right: 200px,
+  bottom: 200px
+}
+},
+clientHeight: 100,
+clientWidth: 100
 }
 
 tippy(virtualReference)`}
-        </code>
-      </pre>
-      <p>Popper.js uses these properties to determine the position of the tooltip.</p>
-    </div>
+    </Code>
+    <p>Popper.js uses these properties to determine the position of the tooltip.</p>
   </section>
 )
