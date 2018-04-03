@@ -4,7 +4,6 @@ import Popper from 'popper.js'
 
 import tippy from '../tippy'
 
-import resetPopperPosition from '../utils/resetPopperPosition'
 import updatePopperPosition from '../utils/updatePopperPosition'
 import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiveBorder'
 import computeArrowTransform from '../utils/computeArrowTransform'
@@ -552,7 +551,6 @@ export function _mount(callback) {
       this.popperInstance.disableEventListeners()
     }
   } else {
-    resetPopperPosition(this.popper)
     this.popperInstance.scheduleUpdate()
     if (options.livePlacement && !_hasFollowCursorBehavior.call(this)) {
       this.popperInstance.enableEventListeners()
