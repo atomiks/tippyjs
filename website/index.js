@@ -49,4 +49,8 @@ setTimeout(() => {
 
   feather.replace()
   Prism.highlightAll()
+  
+  if (location.hash) {
+    document.querySelector(location.hash).scrollIntoView()
+  }
 })
