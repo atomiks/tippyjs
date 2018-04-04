@@ -41,10 +41,18 @@ tippy(btn)`}</Code>
     </p>
 
     <p>
+      <span class="badge">v2.5</span>
       If you are dealing with a single element/tooltip, you can use <code>tippy.one()</code> method
       to directly return the instance instead of having to use the <code>_tippy</code> property.
     </p>
     <Code lang="js">{`const instance = tippy.one('button')`}</Code>
+
+    <p>
+      <small>
+        Note: <code>tippy.one()</code> is simply a wrapper around <code>tippy()</code> and can still
+        create multiple tooltips. Only pass in one reference element.
+      </small>
+    </p>
 
     <h3>Show the tooltip</h3>
     <Code lang="js">{`btn._tippy.show()`}</Code>
