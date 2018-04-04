@@ -41,9 +41,9 @@ tippy(btn)`}</Code>
     </p>
 
     <p>
-      <span class="badge">v2.5</span>
-      If you are dealing with a single element/tooltip, you can use <code>tippy.one()</code> method
-      to directly return the instance instead of having to use the <code>_tippy</code> property.
+      <span class="badge">v2.5</span> If you are dealing with a single element/tooltip, you can use{' '}
+      <code>tippy.one()</code> method to directly return the instance instead of having to use the{' '}
+      <code>_tippy</code> property.
     </p>
     <Code lang="js">{`const instance = tippy.one('button')`}</Code>
 
