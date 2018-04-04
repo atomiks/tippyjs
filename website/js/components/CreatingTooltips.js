@@ -151,21 +151,21 @@ tippy('.btn')
     <p>You can use a virtual element as the positioning reference instead of a real element:</p>
     <Code lang="js">
       {`const virtualReference = {
-attributes: {
-title: "I'm a tooltip!"
-},
-getBoundingClientRect() {
-return {
-  width: 100,
-  height: 100,
-  top: 100px,
-  left: 100px,
-  right: 200px,
-  bottom: 200px
-}
-},
-clientHeight: 100,
-clientWidth: 100
+  attributes: {
+    title: "I'm a tooltip!"
+  },
+  getBoundingClientRect() {
+    return {
+      width: 100,
+      height: 100,
+      top: 100px,
+      left: 100px,
+      right: 200px,
+      bottom: 200px
+    }
+  },
+  clientHeight: 100,
+  clientWidth: 100
 }
 
 tippy(virtualReference)`}
