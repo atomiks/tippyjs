@@ -37,7 +37,8 @@ export default () => (state, { header }) => (
         <div class="header__item">
           <a
             class="header__button"
-            href="#"
+            href="https://popper.js.org/"
+            target="_blank"
             title="Popper.js is the <strong>positioning engine</strong> behind the tooltips."
             data-tippy-animation="perspective"
             data-tippy-arrow="true"
