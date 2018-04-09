@@ -45,7 +45,6 @@ export default () => (state, { header }) => (
             data-tippy-maxWidth="200px"
             data-tippy-theme="light"
             data-tippy-offset="0, 2"
-            data-tippy-sticky="true"
             data-tippy-updateDuration="250"
           >
             <i class="icon header__icon is-power" data-feather="cloud-lightning" />
