@@ -73,7 +73,10 @@ export class Tippy {
     // to be created with an empty title. Make sure that the tooltip
     // content is not empty before showing it
     if (options.dynamicTitle && !reference.getAttribute('data-original-title')) return
-
+    
+    // Do not show tooltip if reference attribute contains 'disabled'. FF fix for #221
+    if (reference.getAttribute('disabled') !== null) return
+    
     // Destroy tooltip if the reference element is no longer on the DOM
     if (!reference.refObj && !document.documentElement.contains(reference)) {
       this.destroy()
