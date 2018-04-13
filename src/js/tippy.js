@@ -16,9 +16,10 @@ let eventListenersBound = false
  * Exported module
  * @param {String|Element|Element[]|NodeList|Object} selector
  * @param {Object} options
+ * @param {Boolean} isOne - create only a single tooltip?
  * @return {Object}
  */
-function tippy(selector, options) {
+function tippy(selector, options, isOne) {
   if (browser.supported && !eventListenersBound) {
     bindEventListeners()
     eventListenersBound = true
@@ -30,10 +31,14 @@ function tippy(selector, options) {
 
   options = { ...defaults, ...options }
 
+  const references = getArrayOfElements(selector)
+
   return {
     selector,
     options,
-    tooltips: browser.supported ? createTooltips(getArrayOfElements(selector), options) : [],
+    tooltips: browser.supported
+      ? createTooltips(isOne ? [references[0]] : references, options)
+      : [],
     destroyAll() {
       this.tooltips.forEach(tooltip => tooltip.destroy())
       this.tooltips = []
@@ -44,7 +49,7 @@ function tippy(selector, options) {
 tippy.version = version
 tippy.browser = browser
 tippy.defaults = defaults
-tippy.one = (selector, options) => tippy(selector, options).tooltips[0]
+tippy.one = (selector, options) => tippy(selector, options, true).tooltips[0]
 tippy.disableAnimations = () => {
   defaults.updateDuration = defaults.duration = 0
   defaults.animateFill = false

@@ -47,13 +47,6 @@ tippy(btn)`}</Code>
     </p>
     <Code lang="js">{`const instance = tippy.one('button')`}</Code>
 
-    <p>
-      <small>
-        Note: <code>tippy.one()</code> is simply a wrapper around <code>tippy()</code> and can still
-        create multiple tooltips. Only pass in one reference element.
-      </small>
-    </p>
-
     <h3>Show the tooltip</h3>
     <Code lang="js">{`btn._tippy.show()`}</Code>
 
