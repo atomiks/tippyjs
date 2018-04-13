@@ -75,7 +75,7 @@ export class Tippy {
     if (options.dynamicTitle && !reference.getAttribute('data-original-title')) return
     
     // Do not show tooltip if reference attribute contains 'disabled'. FF fix for #221
-    if (reference.hasAttribute("disabled")) return;
+    if (reference.hasAttribute('disabled')) return;
     
     // Destroy tooltip if the reference element is no longer on the DOM
     if (!reference.refObj && !document.documentElement.contains(reference)) {
