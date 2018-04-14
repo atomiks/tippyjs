@@ -6,17 +6,18 @@ export default {
     animateLogo(el) {
       anime({
         targets: el,
-        translateY: 210,
+        translateY: [0, 210],
         duration: 2000,
         elasticity: 250,
-        delay: 400
+        delay: 400,
+        rotate: 0.01
       })
     },
     animateVersion(el) {
       anime({
         targets: el,
-        scale: 1,
-        opacity: 1,
+        scale: [0, 1],
+        opacity: [0, 1],
         duration: 2500,
         delay: 1000
       })
@@ -25,8 +26,9 @@ export default {
       el.style.pointerEvents = 'none'
       anime({
         targets: el,
-        translateY: 0,
-        opacity: 1,
+        translateY: [100, 0],
+        opacity: [0, 1],
+        rotate: 0.01,
         delay: 1500,
         duration: 2000,
         elasticity: 200,
