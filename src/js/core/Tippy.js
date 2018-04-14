@@ -73,10 +73,10 @@ export class Tippy {
     // to be created with an empty title. Make sure that the tooltip
     // content is not empty before showing it
     if (options.dynamicTitle && !reference.getAttribute('data-original-title')) return
-    
+
     // Do not show tooltip if reference contains 'disabled' attribute. FF fix for #221
     if (reference.hasAttribute('disabled')) return
-    
+
     // Destroy tooltip if the reference element is no longer on the DOM
     if (!reference.refObj && !document.documentElement.contains(reference)) {
       this.destroy()
@@ -390,7 +390,11 @@ export function _getEventListeners() {
     this._(key).lastTriggerEvent = event
 
     // Toggle show/hide when clicking click-triggered tooltips
-    if (event.type === 'click' && this.options.hideOnClick !== 'persistent' && this.state.visible) {
+    if (
+      event.type === 'click' &&
+      this.options.hideOnClick !== 'persistent' &&
+      this.state.visible
+    ) {
       _leave.call(this)
     } else {
       _enter.call(this, event)
@@ -480,7 +484,8 @@ export function _createPopperInstance() {
   const { tooltip } = getInnerElements(popper)
   const popperOptions = options.popperOptions
 
-  const arrowSelector = options.arrowType === 'round' ? selectors.ROUND_ARROW : selectors.ARROW
+  const arrowSelector =
+    options.arrowType === 'round' ? selectors.ROUND_ARROW : selectors.ARROW
   const arrow = tooltip.querySelector(arrowSelector)
 
   const config = {
@@ -500,7 +505,9 @@ export function _createPopperInstance() {
       },
       offset: {
         offset: options.offset,
-        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
+        ...(popperOptions && popperOptions.modifiers
+          ? popperOptions.modifiers.offset
+          : {})
       }
     },
     onCreate() {
@@ -629,21 +636,15 @@ export function _makeSticky() {
   }
 
   const updatePosition = () => {
-    if (this.popperInstance) {
-      this.popperInstance.scheduleUpdate()
-    }
-
-    applyTransitionDuration()
-
-    if (this.state.visible) {
-      requestAnimationFrame(updatePosition)
+    if (this.state.visible && this.popperInstance) {
+      updatePopperPosition(this.popperInstance, updatePosition)
+      applyTransitionDuration()
     } else {
       removeTransitionDuration()
     }
   }
 
-  // Wait until the popper's position has been updated initially
-  defer(updatePosition)
+  updatePosition()
 }
 
 /**
