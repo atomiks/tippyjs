@@ -97,7 +97,10 @@ export default function bindEventListeners() {
   window.addEventListener('blur', onWindowBlur)
   window.addEventListener('resize', onWindowResize)
 
-  if (!browser.supportsTouch && (navigator.maxTouchPoints || navigator.msMaxTouchPoints)) {
+  if (
+    !browser.supportsTouch &&
+    (navigator.maxTouchPoints || navigator.msMaxTouchPoints)
+  ) {
     document.addEventListener('pointerdown', onDocumentTouch)
   }
 }

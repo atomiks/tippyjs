@@ -21,8 +21,8 @@ export default () => (state, actions) => (
       </a>.
     </p>
     <p>
-      IE10 is only partially supported unless you polyfill <code>MutationObserver</code>, then it is
-      fully supported. <code>dynamicTitle</code> relies on it.
+      IE10 is only partially supported unless you polyfill <code>MutationObserver</code>,
+      then it is fully supported. <code>dynamicTitle</code> relies on it.
     </p>
   </section>
 )

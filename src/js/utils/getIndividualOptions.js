@@ -8,7 +8,8 @@ import { defaultsKeys } from '../core/defaults'
  */
 export default function getIndividualOptions(reference, instanceOptions) {
   const options = defaultsKeys.reduce((acc, key) => {
-    let val = reference.getAttribute(`data-tippy-${key.toLowerCase()}`) || instanceOptions[key]
+    let val =
+      reference.getAttribute(`data-tippy-${key.toLowerCase()}`) || instanceOptions[key]
 
     // Convert strings to booleans
     if (val === 'false') val = false

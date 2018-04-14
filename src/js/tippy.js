@@ -16,10 +16,10 @@ let eventListenersBound = false
  * Exported module
  * @param {String|Element|Element[]|NodeList|Object} selector
  * @param {Object} options
- * @param {Boolean} isOne - create only a single tooltip?
+ * @param {Boolean} one - create one tooltip
  * @return {Object}
  */
-function tippy(selector, options, isOne) {
+function tippy(selector, options, one) {
   if (browser.supported && !eventListenersBound) {
     bindEventListeners()
     eventListenersBound = true
@@ -32,12 +32,13 @@ function tippy(selector, options, isOne) {
   options = { ...defaults, ...options }
 
   const references = getArrayOfElements(selector)
+  const firstReference = references[0]
 
   return {
     selector,
     options,
     tooltips: browser.supported
-      ? createTooltips(isOne ? [references[0]] : references, options)
+      ? createTooltips(one && firstReference ? [firstReference] : references, options)
       : [],
     destroyAll() {
       this.tooltips.forEach(tooltip => tooltip.destroy())

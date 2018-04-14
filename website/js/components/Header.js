@@ -14,7 +14,9 @@ export default () => (state, { header }) => (
           </span>
         </h1>
       </div>
-      <h2 class="header__slogan">A highly customizable vanilla JS tooltip & popover library</h2>
+      <h2 class="header__slogan">
+        A highly customizable vanilla JS tooltip & popover library
+      </h2>
       <div oncreate={header.animateItems} class="header__items">
         <div class="header__item">
           <p>
@@ -55,7 +57,10 @@ export default () => (state, { header }) => (
         </div>
         <div class="header__item">
           <p class="header__docs-wrapper">
-            <a class="header__docs" href="https://atomiks.github.io/tippyjs/v1/index.html">
+            <a
+              class="header__docs"
+              href="https://atomiks.github.io/tippyjs/v1/index.html"
+            >
               v1 docs
             </a>
           </p>

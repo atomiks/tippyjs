@@ -21,7 +21,8 @@ export default () => (state, { creatingHTMLTemplates }) => (
       Clones the template's <code>innerHTML</code> but does not modify it.
     </p>
     <p>
-      Option: <code>html: '#templateId'</code> selector matching a template on the document
+      Option: <code>html: '#templateId'</code> selector matching a template on the
+      document
     </p>
     <ul>
       <li>Reusable</li>

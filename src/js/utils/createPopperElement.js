@@ -1,4 +1,5 @@
 import prefix from './prefix'
+import div from './div'
 
 /**
  * Creates a popper element then returns it
@@ -8,25 +9,27 @@ import prefix from './prefix'
  * @return {Element} - the popper element
  */
 export default function createPopperElement(id, title, options) {
-  const popper = document.createElement('div')
+  const popper = div()
   popper.setAttribute('class', 'tippy-popper')
   popper.setAttribute('role', 'tooltip')
   popper.setAttribute('id', `tippy-${id}`)
   popper.style.zIndex = options.zIndex
   popper.style.maxWidth = options.maxWidth
 
-  const tooltip = document.createElement('div')
+  const tooltip = div()
   tooltip.setAttribute('class', 'tippy-tooltip')
   tooltip.setAttribute('data-size', options.size)
   tooltip.setAttribute('data-animation', options.animation)
   tooltip.setAttribute('data-state', 'hidden')
-
   options.theme.split(' ').forEach(t => {
     tooltip.classList.add(t + '-theme')
   })
 
+  const content = div()
+  content.setAttribute('class', 'tippy-content')
+
   if (options.arrow) {
-    const arrow = document.createElement('div')
+    const arrow = div()
     arrow.style[prefix('transform')] = options.arrowTransform
 
     if (options.arrowType === 'round') {
@@ -43,10 +46,10 @@ export default function createPopperElement(id, title, options) {
   if (options.animateFill) {
     // Create animateFill circle element for animation
     tooltip.setAttribute('data-animatefill', '')
-    const circle = document.createElement('div')
-    circle.setAttribute('data-state', 'hidden')
-    circle.classList.add('tippy-backdrop')
-    tooltip.appendChild(circle)
+    const backdrop = div()
+    backdrop.classList.add('tippy-backdrop')
+    backdrop.setAttribute('data-state', 'hidden')
+    tooltip.appendChild(backdrop)
   }
 
   if (options.inertia) {
@@ -58,16 +61,13 @@ export default function createPopperElement(id, title, options) {
     tooltip.setAttribute('data-interactive', '')
   }
 
-  const content = document.createElement('div')
-  content.setAttribute('class', 'tippy-content')
-
   const html = options.html
   if (html) {
     let templateId
 
     if (html instanceof Element) {
       content.appendChild(html)
-      templateId = '#' + html.id || 'tippy-html-template'
+      templateId = `#${html.id || 'tippy-html-template'}`
     } else {
       // trick linters: https://github.com/atomiks/tippyjs/issues/197
       content[true && 'innerHTML'] = document.querySelector(html)[true && 'innerHTML']

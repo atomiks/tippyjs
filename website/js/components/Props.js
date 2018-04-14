@@ -11,9 +11,9 @@ export default () => (state, actions) => (
       </a>
     </div>
     <p>
-      It's important to distinguish between the object returned from calling <code>tippy()</code>{' '}
-      and a Tippy instance. When you call <code>tippy()</code>, it can create multiple tooltips
-      (Tippy instances) at once.
+      It's important to distinguish between the object returned from calling{' '}
+      <code>tippy()</code> and a Tippy instance. When you call <code>tippy()</code>, it
+      can create multiple tooltips (Tippy instances) at once.
     </p>
     <p>
       Tippy instances refer to individual tooltips, whereas the object returned from{' '}

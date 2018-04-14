@@ -5,7 +5,12 @@ import evaluateOptions from '../utils/evaluateOptions'
 import getInnerElements from '../utils/getInnerElements'
 import removeTitle from '../utils/removeTitle'
 
-import { Tippy, _getEventListeners, _createPopperInstance, _addMutationObserver } from './Tippy'
+import {
+  Tippy,
+  _getEventListeners,
+  _createPopperInstance,
+  _addMutationObserver
+} from './Tippy'
 
 let idCounter = 1
 
@@ -61,7 +66,8 @@ export default function createTooltips(els, config) {
       .trim()
       .split(' ')
       .reduce(
-        (acc, eventType) => acc.concat(createTrigger(eventType, reference, listeners, options)),
+        (acc, eventType) =>
+          acc.concat(createTrigger(eventType, reference, listeners, options)),
         []
       )
 
@@ -73,7 +79,9 @@ export default function createTooltips(els, config) {
           const { content } = getInnerElements(popper)
           const title = reference.getAttribute('title')
           if (title) {
-            content[options.allowTitleHTML ? 'innerHTML' : 'textContent'] = tippy.title = title
+            content[
+              options.allowTitleHTML ? 'innerHTML' : 'textContent'
+            ] = tippy.title = title
             removeTitle(reference)
           }
         },

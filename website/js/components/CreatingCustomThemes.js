@@ -33,8 +33,8 @@ export default () => (state, actions) => (
       Styling the <code>animateFill</code> backdrop
     </h3>
     <p>
-      By default, tippy tooltips have a cool backdrop filling animation, which is just a circle that
-      expands out. Its class name is <code>tippy-backdrop</code>:
+      By default, tippy tooltips have a cool backdrop filling animation, which is just a
+      circle that expands out. Its class name is <code>tippy-backdrop</code>:
     </p>
     <div class="code-wrapper" data-lang="css">
       <pre>
@@ -46,14 +46,15 @@ export default () => (state, actions) => (
     </div>
 
     <p>
-      If you're using the backdrop animation, avoid styling the tooltip directly – just the
-      backdrop.
+      If you're using the backdrop animation, avoid styling the tooltip directly – just
+      the backdrop.
     </p>
 
     <h3>Styling the arrow</h3>
     <p>
-      There are two arrow selectors: <code>.tippy-arrow</code> and <code>.tippy-roundarrow</code>.
-      The first is the pure CSS triangle shape, while the second is a custom SVG.
+      There are two arrow selectors: <code>.tippy-arrow</code> and{' '}
+      <code>.tippy-roundarrow</code>. The first is the pure CSS triangle shape, while the
+      second is a custom SVG.
     </p>
     <div class="code-wrapper" data-lang="css">
       <pre>
@@ -63,8 +64,8 @@ export default () => (state, actions) => (
       </pre>
     </div>
     <p>
-      You will need to style the arrow for each different popper placement (top, bottom, left,
-      right), which is why the selector is so long.
+      You will need to style the arrow for each different popper placement (top, bottom,
+      left, right), which is why the selector is so long.
     </p>
 
     <h3>Styling the content directly</h3>
@@ -81,7 +82,8 @@ export default () => (state, actions) => (
       Specify a <code>theme</code> option
     </h3>
     <p>
-      To see what your cool theme looks like, specify a <code>theme</code> option for tippy:
+      To see what your cool theme looks like, specify a <code>theme</code> option for
+      tippy:
     </p>
 
     <div class="code-wrapper" data-lang="js">
@@ -95,8 +97,8 @@ export default () => (state, actions) => (
     </div>
 
     <p>
-      <code>.honeybee-theme</code>, <code>.bumblebee-theme</code> and <code>.shadow-theme</code> are
-      the selectors for this theme list.
+      <code>.honeybee-theme</code>, <code>.bumblebee-theme</code> and{' '}
+      <code>.shadow-theme</code> are the selectors for this theme list.
     </p>
 
     <div class="section__result">

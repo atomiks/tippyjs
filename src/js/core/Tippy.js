@@ -183,6 +183,8 @@ export class Tippy {
       focus(reference)
     }
 
+    this.popperInstance.disableEventListeners()
+
     /*
     * This call is deferred because sometimes when the tooltip is still transitioning in but hide()
     * is called before it finishes, the CSS transition won't reverse quickly enough, meaning
@@ -199,8 +201,9 @@ export class Tippy {
         }
 
         reference.removeAttribute('aria-describedby')
-        this.popperInstance.disableEventListeners()
+
         options.appendTo.removeChild(popper)
+
         options.onHidden.call(popper, this)
       })
     })
@@ -636,9 +639,14 @@ export function _makeSticky() {
   }
 
   const updatePosition = () => {
-    if (this.state.visible && this.popperInstance) {
-      updatePopperPosition(this.popperInstance, updatePosition)
-      applyTransitionDuration()
+    if (this.popperInstance) {
+      this.popperInstance.update()
+    }
+
+    applyTransitionDuration()
+
+    if (this.state.visible) {
+      requestAnimationFrame(updatePosition)
     } else {
       removeTransitionDuration()
     }

@@ -8,8 +8,8 @@ export default () => (state, { demo }) => (
     <div class="feature">
       <h3 class="feature__heading">Default</h3>
       <p>
-        The default tippy tooltip looks like this when given no options. It has a nifty backdrop
-        filling animation!
+        The default tippy tooltip looks like this when given no options. It has a nifty
+        backdrop filling animation!
       </p>
       <button class="btn" title="I'm the default tooltip!">
         Try me!
@@ -20,8 +20,8 @@ export default () => (state, { demo }) => (
       <div class="feature__icon" innerHTML={emoji('↕️')} />
       <h3 class="feature__heading">Placement</h3>
       <p>
-        A tooltip can be placed in four different ways in relation to its reference element.
-        Additionally, the tooltip be shifted.
+        A tooltip can be placed in four different ways in relation to its reference
+        element. Additionally, the tooltip be shifted.
       </p>
       <button class="btn" title="I'm a Tippy tooltip!" data-tippy-placement="top">
         Top
@@ -47,8 +47,9 @@ export default () => (state, { demo }) => (
       <div class="feature__icon" innerHTML={emoji('▶️')} />
       <h3 class="feature__heading">Arrows</h3>
       <p>
-        Arrows point toward the reference element. There are two different types of arrows: sharp
-        and round. You can transform the proportion and scale of the arrows any way you like.
+        Arrows point toward the reference element. There are two different types of
+        arrows: sharp and round. You can transform the proportion and scale of the arrows
+        any way you like.
       </p>
       <button
         class="btn"
@@ -129,7 +130,8 @@ export default () => (state, { demo }) => (
       <div class="feature__icon" innerHTML={emoji('✍️')} />
       <h3 class="feature__heading">Interactivity</h3>
       <p>
-        Tooltips can be interactive, meaning they won't hide when you hover over or click on them.
+        Tooltips can be interactive, meaning they won't hide when you hover over or click
+        on them.
       </p>
       <button class="btn" title="I'm a Tippy tooltip!" data-tippy-interactive="true">
         Interactive (hover)
@@ -280,8 +282,8 @@ export default () => (state, { demo }) => (
         Event delegation <span class="badge">v2.1</span>
       </h3>
       <p>
-        Bind a Tippy instance to a parent container and freely add new child elements without
-        needing to create Tippy instances for them.
+        Bind a Tippy instance to a parent container and freely add new child elements
+        without needing to create Tippy instances for them.
       </p>
       <div id="demo__event-delegation" title="Shared title" data-exclude>
         <button class="btn">Shared title</button>
@@ -297,7 +299,9 @@ export default () => (state, { demo }) => (
     <div class="feature">
       <div class="feature__icon" innerHTML={emoji('🖼️')} />
       <h3 class="feature__heading">HTML</h3>
-      <p>Tooltips can contain HTML, allowing you to craft awesome interactive popovers.</p>
+      <p>
+        Tooltips can contain HTML, allowing you to craft awesome interactive popovers.
+      </p>
       <button
         oncreate={demo.htmlTippy}
         class="btn"
@@ -329,11 +333,18 @@ export default () => (state, { demo }) => (
     <div class="feature">
       <div class="feature__icon" innerHTML={emoji('🖌️')} />
       <h3 class="feature__heading">Themes</h3>
-      <p>A tippy can have any kind of theme you want! Creating a custom theme is a breeze.</p>
+      <p>
+        A tippy can have any kind of theme you want! Creating a custom theme is a breeze.
+      </p>
       <button class="btn" title="See-through!" data-tippy-theme="translucent">
         Translucent
       </button>
-      <button class="btn" title="Nice n' light" data-tippy-theme="light" data-tippy-arrow="true">
+      <button
+        class="btn"
+        title="Nice n' light"
+        data-tippy-theme="light"
+        data-tippy-arrow="true"
+      >
         Light
       </button>
       <button class="btn" title="Awesome colors!" data-tippy-theme="gradient">
@@ -380,7 +391,11 @@ export default () => (state, { demo }) => (
       >
         Distance
       </button>
-      <button class="btn" title="10px x-axis, 50px y-axis offset" data-tippy-offset="10, 50">
+      <button
+        class="btn"
+        title="10px x-axis, 50px y-axis offset"
+        data-tippy-offset="10, 50"
+      >
         Offset
       </button>
       <button class="btn" title="I'm a Tippy tooltip!" data-tippy-size="small">

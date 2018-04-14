@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.all.js",
   "repository": {
@@ -22,7 +22,7 @@
     ]
   },
   "prettier": {
-    "printWidth": 100,
+    "printWidth": 90,
     "semi": false,
     "singleQuote": true
   },
@@ -72,6 +72,6 @@
     "rollup-plugin-sass": "^0.4.10"
   },
   "dependencies": {
-    "popper.js": "^1.14.2"
+    "popper.js": "^1.14.3"
   }
 }

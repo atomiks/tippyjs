@@ -39,7 +39,9 @@ test('tippy().options is the merger of the defaults and supplied options', () =>
 })
 
 test('tippy().tooltips is an array of Tippy instances', () => {
-  expect(tippy(createArrayOfReferenceElements()).tooltips.every(t => t instanceof Tippy)).toBe(true)
+  expect(
+    tippy(createArrayOfReferenceElements()).tooltips.every(t => t instanceof Tippy)
+  ).toBe(true)
 })
 
 test('tippy().destroyAll destroys all Tippy instances and frees up memory', () => {

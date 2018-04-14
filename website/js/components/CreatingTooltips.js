@@ -26,8 +26,8 @@ export default () => (state, actions) => (
     <Code lang="html">{`<button class="btn" title="I'm a tooltip!">Text</button>`}</Code>
 
     <p>
-      If you hover over the button, you'll notice the browser's default tooltip (usually the native
-      OS tooltip) appears after a delay.
+      If you hover over the button, you'll notice the browser's default tooltip (usually
+      the native OS tooltip) appears after a delay.
     </p>
 
     <h3>
@@ -35,8 +35,8 @@ export default () => (state, actions) => (
     </h3>
 
     <p>
-      To give the elements a tippy, you'll need to add in some JavaScript inside <code>script</code>{' '}
-      tags on your HTML page{' '}
+      To give the elements a tippy, you'll need to add in some JavaScript inside{' '}
+      <code>script</code> tags on your HTML page{' '}
       <span
         tabindex="0"
         class="tippy"
@@ -62,8 +62,9 @@ tippy('.btn')
     </div>
 
     <p>
-      When the <code>tippy()</code> function is invoked and given a CSS selector string, it will
-      find all the elements which match it, check if they have a non-empty <code>title</code>
+      When the <code>tippy()</code> function is invoked and given a CSS selector string,
+      it will find all the elements which match it, check if they have a non-empty{' '}
+      <code>title</code>
       attribute, and then apply its magic to give them a cool tooltip.
     </p>
 
@@ -89,13 +90,14 @@ tippy('.btn')
         <code>data-tippy</code> attribute is added
       </li>
       <li>
-        <code>data-original-title</code> attribute is added containing the <code>title</code> string
+        <code>data-original-title</code> attribute is added containing the{' '}
+        <code>title</code> string
       </li>
     </ul>
 
     <p>
-      Additionally, once the tooltip has fully transitioned in, an <code>aria-describedby</code>{' '}
-      attribute is added for{' '}
+      Additionally, once the tooltip has fully transitioned in, an{' '}
+      <code>aria-describedby</code> attribute is added for{' '}
       <span tabindex="0" class="tippy" title="Short for accessibility">
         a11y
       </span>.
@@ -123,9 +125,10 @@ tippy('.btn')
     <Code lang="js">{`tippy(document.querySelectorAll('.btn'))`}</Code>
 
     <p>
-      <span class="badge">v2.5</span> Use <code>tippy.one()</code> if you are creating a single
-      tooltip. This will return the tooltip instance directly, rather than a collection object
-      (because <code>tippy()</code> can create multiple tooltip instances at once).
+      <span class="badge">v2.5</span> Use <code>tippy.one()</code> if you are creating a
+      single tooltip. This will return the tooltip instance directly, rather than a
+      collection object (because <code>tippy()</code> can create multiple tooltip
+      instances at once).
     </p>
     <Code lang="js">{`tippy.one(document.querySelector('.btn'))`}</Code>
 
@@ -148,7 +151,10 @@ tippy('.btn')
     <h3>
       Advanced <span class="section__emoji" innerHTML={emoji('🤯')} />
     </h3>
-    <p>You can use a virtual element as the positioning reference instead of a real element:</p>
+    <p>
+      You can use a virtual element as the positioning reference instead of a real
+      element:
+    </p>
     <Code lang="js">
       {`const virtualReference = {
   attributes: {

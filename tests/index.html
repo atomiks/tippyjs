@@ -22,6 +22,20 @@
       margin: 8px;
       padding: 8px;
     }
+
+    @keyframes sticky {
+      from {
+        transform: translate3d(0, 0, 0);
+      }
+
+      to {
+        transform: translate3d(0, 10px, 0);
+      }
+    }
+
+    .sticky {
+      animation: sticky 1s infinite alternate;
+    }
   </style>
 </head>
 
@@ -131,7 +145,7 @@
 
     <div id="sticky">
       <h2>sticky</h2>
-      <button title="sticky" data-tippy-sticky="true">sticky: true</button>
+      <button class="sticky" data-tippy-trigger="click" title="sticky" data-tippy-sticky="true">sticky: true</button>
     </div>
   </div>
 </body>

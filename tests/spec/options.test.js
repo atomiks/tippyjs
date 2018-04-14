@@ -62,9 +62,13 @@ test('allowTitleHTML', () => {
   el.title = '<strong>tooltip</strong>'
 
   tippy(el, { allowTitleHTML: false })
-  expect(el._tippy.popper.querySelector(selectors.CONTENT).querySelector('strong')).toBeNull()
+  expect(
+    el._tippy.popper.querySelector(selectors.CONTENT).querySelector('strong')
+  ).toBeNull()
   el._tippy.destroy()
 
   tippy(el, { allowTitleHTML: true })
-  expect(el._tippy.popper.querySelector(selectors.CONTENT).querySelector('strong')).not.toBeNull()
+  expect(
+    el._tippy.popper.querySelector(selectors.CONTENT).querySelector('strong')
+  ).not.toBeNull()
 })

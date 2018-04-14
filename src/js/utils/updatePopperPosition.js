@@ -8,7 +8,11 @@ import reflow from './reflow'
  * @param {Function} callback: to run once popper's position was updated
  * @param {Boolean} updateAlreadyCalled: was scheduleUpdate() already called?
  */
-export default function updatePopperPosition(popperInstance, callback, updateAlreadyCalled) {
+export default function updatePopperPosition(
+  popperInstance,
+  callback,
+  updateAlreadyCalled
+) {
   const { popper, options } = popperInstance
   const onCreate = options.onCreate
   const onUpdate = options.onUpdate
