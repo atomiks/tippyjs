@@ -1,7 +1,14 @@
 {
   "name": "tippy.js",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "Vanilla JS Tooltip Library",
+  "author": "atomiks",
+  "license": "MIT",
+  "keywords": [
+    "tooltip",
+    "tippy",
+    "tippy.js"
+  ],
   "main": "dist/tippy.all.js",
   "repository": {
     "type": "git",
@@ -26,12 +33,9 @@
     "semi": false,
     "singleQuote": true
   },
-  "author": "atomiks",
-  "license": "MIT",
-  "keywords": [
-    "tooltip",
-    "tippy",
-    "tippy.js"
+  "browserslist": [
+    "> 0.25%",
+    "last 2 versions"
   ],
   "devDependencies": {
     "animejs": "^2.2.0",
