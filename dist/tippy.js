@@ -1,5 +1,5 @@
 /*!
-* Tippy.js v2.5.1
+* Tippy.js v2.5.2
 * (c) 2017-2018 atomiks
 * MIT
 */
@@ -9,7 +9,7 @@
 	(global.tippy = factory());
 }(this, (function () { 'use strict';
 
-var version = "2.5.1";
+var version = "2.5.2";
 
 var isBrowser = typeof window !== 'undefined';
 
@@ -149,6 +149,9 @@ function polyfillVirtualReferenceProps(reference) {
   reference.removeAttribute = function (key) {
     delete reference.attributes[key];
   };
+  reference.hasAttribute = function (key) {
+    return key in reference.attributes;
+  };
   reference.addEventListener = function () {};
   reference.removeEventListener = function () {};
   reference.classList = {
@@ -161,7 +164,7 @@ function polyfillVirtualReferenceProps(reference) {
       return true;
     },
     contains: function contains(key) {
-      return !!reference.classList.classNames[key];
+      return key in reference.classList.classNames;
     }
   };
 }
