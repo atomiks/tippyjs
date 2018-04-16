@@ -23,6 +23,6 @@ export default function polyfillVirtualReferenceProps(reference) {
       delete reference.classList.classNames[key]
       return true
     },
-    contains: key => !!reference.classList.classNames[key]
+    contains: key => key in reference.classList.classNames
   }
 }
