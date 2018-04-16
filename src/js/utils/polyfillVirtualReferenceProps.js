@@ -13,6 +13,7 @@ export default function polyfillVirtualReferenceProps(reference) {
   reference.removeAttribute = key => {
     delete reference.attributes[key]
   }
+  reference.hasAttribute = key => key in reference.attributes
   reference.addEventListener = () => {}
   reference.removeEventListener = () => {}
   reference.classList = {
@@ -22,6 +23,6 @@ export default function polyfillVirtualReferenceProps(reference) {
       delete reference.classList.classNames[key]
       return true
     },
-    contains: key => !!reference.classList.classNames[key]
+    contains: key => key in reference.classList.classNames
   }
 }

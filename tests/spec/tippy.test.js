@@ -89,6 +89,16 @@ test('tippy(Object) modifies the input value as the ref obj selector', () => {
   expect(ref.refObj).toBe(true)
 })
 
+test('tippy(Object) tooltip is shown without errors', () => {
+  tippy
+    .one({
+      attributes: {
+        title: 'TOOLTIP'
+      }
+    })
+    .show()
+})
+
 test('tippy.disableAnimations() sets all animation/transition-related defaults to 0/false', () => {
   const clone = { ...defaults }
   tippy.disableAnimations()
@@ -100,8 +110,7 @@ test('tippy.disableAnimations() sets all animation/transition-related defaults t
   defaults.animateFill = clone.animateFill
 })
 
-test('tippy.one returns the instance directly', () => {
-  const el = createReferenceElement()
-  const instance = tippy.one(el)
+test('tippy.one() returns the instance directly', () => {
+  const instance = tippy.one(createReferenceElement())
   expect(instance.id).toBeDefined()
 })
