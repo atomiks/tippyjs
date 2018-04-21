@@ -1,4 +1,8 @@
+import Selectors from '../src/js/selectors'
+
 export const IDENTIFIER = '__tippy'
+
+export const el = type => document.createElement(type)
 
 export const cleanDocumentBody = () => {
   document.body.innerHTML = ''
@@ -6,11 +10,9 @@ export const cleanDocumentBody = () => {
 
 export const hasTippy = el => el.hasAttribute('data-tippy')
 
-export const createReferenceElement = ({ appendToBody }) => {
+export const createReference = ({ appendToBody } = {}) => {
   const el = document.createElement('div')
   el.className = IDENTIFIER
-  el.title = IDENTIFIER
-  el._selector = `.${IDENTIFIER}`
 
   if (appendToBody) {
     document.body.appendChild(el)
@@ -19,13 +21,14 @@ export const createReferenceElement = ({ appendToBody }) => {
   return el
 }
 
-export const createArrayOfReferenceElements = ({ appendToBody }) => {
+export const createReferenceArray = ({ appendToBody } = {}) => {
   return Array(10)
     .fill()
-    .map(() => createReferenceElement({ appendToBody }))
+    .map(() => createReference({ appendToBody }))
 }
 
-export const withPopperInstanceOnInit = options => ({
+export const withTestOptions = options => ({
   createPopperInstanceOnInit: true,
+  content: 'content',
   ...options
 })

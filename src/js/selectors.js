@@ -1,4 +1,4 @@
-export default {
+export const Selectors = {
   POPPER: '.tippy-popper',
   TOOLTIP: '.tippy-tooltip',
   CONTENT: '.tippy-content',

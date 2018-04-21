@@ -1,5 +1,5 @@
-import browser from './browser'
-import selectors from './selectors'
+import { Browser } from './Browser'
+import { Selectors } from './selectors'
 import { hideAllPoppers, closest, matches, toArray } from './utils'
 
 /**
@@ -7,21 +7,21 @@ import { hideAllPoppers, closest, matches, toArray } from './utils'
  */
 export default function bindEventListeners() {
   const onDocumentTouch = () => {
-    if (browser.isUsingTouch) {
+    if (Browser.isUsingTouch) {
       return
     }
 
-    browser.isUsingTouch = true
+    Browser.isUsingTouch = true
 
-    if (browser.isIOS) {
+    if (Browser.isIOS) {
       document.body.classList.add('tippy-touch')
     }
 
-    if (browser.userInputDetectionEnabled && window.performance) {
+    if (Browser.userInputDetectionEnabled && window.performance) {
       document.addEventListener('mousemove', onDocumentMouseMove)
     }
 
-    browser.onUserInputChange('touch')
+    Browser.onUserInputChange('touch')
   }
 
   const onDocumentMouseMove = (() => {
@@ -32,12 +32,12 @@ export default function bindEventListeners() {
 
       // Chrome 60+ is 1 mousemove per animation frame, use 20ms time difference
       if (now - time < 20) {
-        browser.isUsingTouch = false
+        Browser.isUsingTouch = false
         document.removeEventListener('mousemove', onDocumentMouseMove)
-        if (!browser.isIOS) {
+        if (!Browser.isIOS) {
           document.body.classList.remove('tippy-touch')
         }
-        browser.onUserInputChange('mouse')
+        Browser.onUserInputChange('mouse')
       }
 
       time = now
@@ -50,8 +50,8 @@ export default function bindEventListeners() {
       return hideAllPoppers()
     }
 
-    const reference = closest(event.target, selectors.REFERENCE)
-    const popper = closest(event.target, selectors.POPPER)
+    const reference = closest(event.target, Selectors.REFERENCE)
+    const popper = closest(event.target, Selectors.POPPER)
 
     if (popper && popper._tippy && popper._tippy.options.interactive) {
       return
@@ -63,7 +63,7 @@ export default function bindEventListeners() {
       const isClickTrigger = options.trigger.indexOf('click') > -1
 
       if (
-        (!isMultiple && browser.isUsingTouch) ||
+        (!isMultiple && Browser.isUsingTouch) ||
         (!isMultiple && isClickTrigger)
       ) {
         return hideAllPoppers(reference._tippy)
@@ -79,13 +79,13 @@ export default function bindEventListeners() {
 
   const onWindowBlur = () => {
     const { activeElement: el } = document
-    if (el && el.blur && matches.call(el, selectors.REFERENCE)) {
+    if (el && el.blur && matches.call(el, Selectors.REFERENCE)) {
       el.blur()
     }
   }
 
   const onWindowResize = () => {
-    toArray(document.querySelectorAll(selectors.POPPER)).forEach(popper => {
+    toArray(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
       const tippyInstance = popper._tippy
       if (!tippyInstance.options.livePlacement) {
         tippyInstance.popperInstance.scheduleUpdate()
@@ -99,7 +99,7 @@ export default function bindEventListeners() {
   window.addEventListener('resize', onWindowResize)
 
   if (
-    !browser.supportsTouch &&
+    !Browser.supportsTouch &&
     (navigator.maxTouchPoints || navigator.msMaxTouchPoints)
   ) {
     document.addEventListener('pointerdown', onDocumentTouch)

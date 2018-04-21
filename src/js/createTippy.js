@@ -1,6 +1,6 @@
 import Popper from 'popper.js'
-import Browser from './browser'
-import Selectors from './selectors'
+import { Browser } from './browser'
+import { Selectors } from './selectors'
 import {
   getDataAttributeOptions,
   addEventListeners,
@@ -45,7 +45,7 @@ export default function createTippy(reference, opts) {
   })
 
   // Ensure the reference element can receive focus (and is not a delegate)
-  if (!elementCanReceiveFocus(reference) && options.a11y && !options.target) {
+  if (options.a11y && !options.target && !elementCanReceiveFocus(reference)) {
     reference.setAttribute('tabindex', '0')
   }
 
@@ -59,7 +59,7 @@ export default function createTippy(reference, opts) {
     onDelegateHide
   })
 
-  const popper = createPopperElement(id, reference, options)
+  const popper = createPopperElement(id, options)
 
   const popperChildren = getChildren(popper)
 
@@ -69,12 +69,13 @@ export default function createTippy(reference, opts) {
     isDestroyed: false
   }
 
-  let popperInstance = null
+  const popperInstance = null
 
   const tip = {
     id,
     reference,
     popper,
+    popperInstance,
     options,
     listeners,
     state,
@@ -86,8 +87,8 @@ export default function createTippy(reference, opts) {
   }
 
   if (options.createPopperInstanceOnInit) {
-    createPopperInstance()
-    popperInstance.disableEventListeners()
+    tip.popperInstance = createPopperInstance()
+    tip.popperInstance.disableEventListeners()
   }
 
   if (options.showOnInit) {

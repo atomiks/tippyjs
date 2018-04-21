@@ -4,7 +4,7 @@ export const isBrowser =
 const nav = isBrowser ? navigator : {}
 const win = isBrowser ? window : {}
 
-export default {
+export const Browser = {
   isIE: /MSIE |Trident\//.test(nav.userAgent),
   isIOS: /iPhone|iPad|iPod/.test(nav.platform) && !win.MSStream,
   isSupported: 'MutationObserver' in win,

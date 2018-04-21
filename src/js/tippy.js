@@ -1,10 +1,10 @@
 import { version } from '../../package.json'
-import Defaults, { setDefaults } from './defaults'
-import Browser, { isBrowser } from './browser'
+import { Defaults, setDefaults } from './defaults'
+import { Browser, isBrowser } from './browser'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
 import {
-  isVirtualReference,
+  isPlainObject,
   polyfillVirtualReferenceProps,
   getArrayOfElements,
   toArray
@@ -12,17 +12,23 @@ import {
 
 let eventListenersBound = false
 
-export default function tippy(targets, opts, one) {
+export default function tippy(targets, suppliedOptions, one) {
   if (!eventListenersBound) {
     bindGlobalEventListeners()
     eventListenersBound = true
   }
 
-  const options = { ...tippy.defaults, ...opts }
+  for (const key in suppliedOptions || {}) {
+    if (!(key in Defaults)) {
+      throw new Error(`tippy: ${key} is not a valid option`)
+    }
+  }
+
+  const options = { ...Defaults, ...suppliedOptions }
 
   // If they are specifying a virtual positioning reference, we need to polyfill
   // some native DOM props
-  if (isVirtualReference(targets)) {
+  if (isPlainObject(targets)) {
     targets = polyfillVirtualReferenceProps(targets)
   }
 

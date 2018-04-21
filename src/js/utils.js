@@ -1,6 +1,6 @@
-import Browser, { isBrowser } from './browser'
-import Selectors from './selectors'
-import Defaults from './defaults'
+import { Browser, isBrowser } from './browser'
+import { Selectors } from './selectors'
+import { Defaults } from './defaults'
 
 /**
  * Injects a string of CSS styles to the style node in the document head
@@ -46,7 +46,7 @@ export const elementCanReceiveFocus = el =>
   matches.call(
     el,
     'a[href],area[href],button,details,input,textarea,select,iframe,[tabindex]'
-  )
+  ) && !matches.call(el, '[disabled]')
 
 /**
  * Applies a transition duration to a list of elements
@@ -71,9 +71,9 @@ export const getChildren = popper => {
 }
 
 /**
- * Determines if a value is a virtual reference (aka plain object)
+ * Determines if a value is a plain object
  */
-export const isVirtualReference = value =>
+export const isPlainObject = value =>
   ({}.toString.call(value) === '[object Object]')
 
 /**
@@ -94,7 +94,7 @@ export const setInnerHTML = (el, html) => {
  * Returns an array of elements based on the value
  */
 export const getArrayOfElements = value => {
-  if (value instanceof Element || isVirtualReference(value)) {
+  if (value instanceof Element || isPlainObject(value)) {
     return [value]
   }
   if (value instanceof NodeList) {
@@ -125,7 +125,7 @@ export const getValue = (value, index) =>
 /**
  * Constructs the popper element and returns it
  */
-export const createPopperElement = (id, reference, options) => {
+export const createPopperElement = (id, options) => {
   const popper = div()
   popper.className = 'tippy-popper'
   popper.role = 'tooltip'
@@ -230,19 +230,17 @@ export const addEventListeners = (
   options,
   { onTrigger, onMouseLeave, onBlur, onDelegateShow, onDelegateHide }
 ) => {
-  const listeners = []
-
-  const on = (eventType, handler) => {
-    reference.addEventListener(eventType, handler)
-    listeners.push({ eventType, handler })
-  }
-
   return options.trigger
     .trim()
     .split(' ')
     .reduce((acc, eventType) => {
       if (eventType === 'manual') {
         return acc
+      }
+
+      const on = (eventType, handler) => {
+        reference.addEventListener(eventType, handler)
+        acc.push({ eventType, handler })
       }
 
       if (!options.target) {
@@ -271,7 +269,7 @@ export const addEventListeners = (
         }
       }
 
-      return acc.concat(listeners)
+      return acc
     }, [])
 }
 
@@ -405,9 +403,9 @@ export const transformAxisBasedOnPlacement = (axis, isVertical) => {
   return isVertical
     ? axis
     : {
-        X: 'Y',
-        Y: 'X'
-      }[axis]
+      X: 'Y',
+      Y: 'X'
+    }[axis]
 }
 
 /**
@@ -526,7 +524,7 @@ export const setVisibilityState = (els, type) => {
 }
 
 /**
- * Prefixes a CSS property with the one supported by the Browser
+ * Prefixes a CSS property with the one supported by the browser
  */
 export const prefix = property => {
   const prefixes = ['', 'webkit']

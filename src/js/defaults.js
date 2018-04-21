@@ -5,18 +5,17 @@ let Defaults = {
   livePlacement: true,
   trigger: 'mouseenter focus',
   animation: 'shift-away',
-  html: false,
   animateFill: true,
   arrow: false,
   delay: 0,
-  duration: [350, 250],
+  duration: [325, 275],
   interactive: false,
   interactiveBorder: 2,
   theme: 'dark',
   size: 'regular',
   distance: 10,
   offset: 0,
-  hideOnClick: false,
+  hideOnClick: true,
   multiple: false,
   followCursor: false,
   inertia: false,
@@ -42,8 +41,8 @@ let Defaults = {
   onHidden() {}
 }
 
-export const setDefaults = partialDefaults => {
+const setDefaults = partialDefaults => {
   Defaults = { ...Defaults, ...partialDefaults }
 }
 
-export default Defaults
+export { Defaults, setDefaults }
