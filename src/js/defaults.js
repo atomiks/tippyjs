@@ -1,4 +1,4 @@
-export default {
+let Defaults = {
   a11y: true,
   content: '',
   placement: 'top',
@@ -41,3 +41,9 @@ export default {
   onHide() {},
   onHidden() {}
 }
+
+export const setDefaults = partialDefaults => {
+  Defaults = { ...Defaults, ...partialDefaults }
+}
+
+export default Defaults

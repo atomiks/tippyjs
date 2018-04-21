@@ -280,7 +280,7 @@ export const addEventListeners = (
  */
 export const getDataAttributeOptions = reference =>
   Object.keys(Defaults).reduce((acc, key) => {
-    const valueAsString = reference.getAttribute(key)
+    const valueAsString = reference.getAttribute(`data-tippy-${key}`)
 
     if (!valueAsString) {
       return acc
@@ -405,9 +405,9 @@ export const transformAxisBasedOnPlacement = (axis, isVertical) => {
   return isVertical
     ? axis
     : {
-      X: 'Y',
-      Y: 'X'
-    }[axis]
+        X: 'Y',
+        Y: 'X'
+      }[axis]
 }
 
 /**
