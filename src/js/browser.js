@@ -4,7 +4,7 @@ export const isBrowser =
 const nav = isBrowser ? navigator : {}
 const win = isBrowser ? window : {}
 
-export default {
+let Defaults = {
   isIE: /MSIE |Trident\//.test(nav.userAgent),
   isIOS: /iPhone|iPad|iPod/.test(nav.platform) && !win.MSStream,
   isSupported: 'MutationObserver' in win,
@@ -13,3 +13,9 @@ export default {
   userInputDetectionEnabled: true,
   onUserInputChange: () => {}
 }
+
+export const setDefaults = partialDefaults => {
+  Defaults = { ...Defaults, ...partialDefaults }
+}
+
+export default Defaults

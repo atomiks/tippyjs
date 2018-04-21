@@ -7,7 +7,9 @@ import { hideAllPoppers, closest, matches, toArray } from './utils'
  */
 export default function bindEventListeners() {
   const onDocumentTouch = () => {
-    if (browser.isUsingTouch) return
+    if (browser.isUsingTouch) {
+      return
+    }
 
     browser.isUsingTouch = true
 
@@ -51,23 +53,25 @@ export default function bindEventListeners() {
     const reference = closest(event.target, selectors.REFERENCE)
     const popper = closest(event.target, selectors.POPPER)
 
-    if (popper && popper._tippy.options.interactive) return
+    if (popper && popper._tippy && popper._tippy.options.interactive) {
+      return
+    }
 
-    if (reference) {
+    if (reference && reference._tippy) {
       const { options } = reference._tippy
+      const isMultiple = options.multiple
+      const isClickTrigger = options.trigger.indexOf('click') > -1
 
-      // Hide all poppers except the one belonging to the element that was clicked IF
-      // `multiple` is false AND they are a touch user, OR
-      // `multiple` is false AND it's triggered by a click
       if (
-        (!options.multiple && browser.isUsingTouch) ||
-        (!options.multiple && options.trigger.indexOf('click') > -1)
+        (!isMultiple && browser.isUsingTouch) ||
+        (!isMultiple && isClickTrigger)
       ) {
         return hideAllPoppers(reference._tippy)
       }
 
-      if (options.hideOnClick !== true || options.trigger.indexOf('click') > -1)
+      if (options.hideOnClick !== true || isClickTrigger) {
         return
+      }
     }
 
     hideAllPoppers()

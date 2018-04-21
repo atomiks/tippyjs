@@ -77,15 +77,15 @@
 }
 
 @mixin backdrop-transform-enter($placement) {
-  $scale: 5.5;
+  $scale: 6;
   @if ($placement == 'top') {
     transform: scale($scale) translate(-50%, 25%);
   } @else if ($placement == 'bottom') {
     transform: scale($scale) translate(-50%, -125%);
   } @else if ($placement == 'left') {
-    transform: scale($scale) translate(33%, -50%);
+    transform: scale($scale) translate(40%, -50%);
   } @else if ($placement == 'right') {
-    transform: scale($scale) translate(-133%, -50%);
+    transform: scale($scale) translate(-140%, -50%);
   }
 }
 
@@ -95,9 +95,9 @@
   } @else if ($placement == 'bottom') {
     transform: scale(1) translate(-50%, -125%);
   } @else if ($placement == 'left') {
-    transform: scale(1.5) translate(33%, -50%);
+    transform: scale(1.5) translate(40%, -50%);
   } @else if ($placement == 'right') {
-    transform: scale(1.5) translate(-133%, -50%);
+    transform: scale(1.5) translate(-140%, -50%);
   }
 }
 

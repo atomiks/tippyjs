@@ -1,12 +1,12 @@
-import browser, { isBrowser } from './browser'
-import defaults from './defaults'
-import selectors from './selectors'
+import Browser, { isBrowser } from './browser'
+import Selectors from './selectors'
+import Defaults from './defaults'
 
 /**
  * Injects a string of CSS styles to the style node in the document head
  */
 export const injectCSS = css => {
-  if (isBrowser && browser.isSupported) {
+  if (isBrowser && Browser.isSupported) {
     const head = document.head || document.querySelector('head')
     const style = document.createElement('style')
     style.type = 'text/css'
@@ -36,32 +36,37 @@ export const setAttr = (el, attr, value = '') => {
  * Sets the content of a tooltip
  */
 export const setContent = (content, options) => {
-  content[options.allowTitleHTML ? 'innerHTML' : 'textContent'] = options.title
+  content[options.allowHTML ? 'innerHTML' : 'textContent'] = options.content
 }
+
+/**
+ * Determines if an element can receive focus
+ */
+export const elementCanReceiveFocus = el =>
+  matches.call(
+    el,
+    'a[href],area[href],button,details,input,textarea,select,iframe,[tabindex]'
+  )
 
 /**
  * Applies a transition duration to a list of elements
  */
 export const applyTransitionDuration = (els, value) => {
   els.filter(Boolean).forEach(el => {
-    // A slightly faster backdrop transition looks better...
-    const v = matches.call(el, selectors.BACKDROP)
-      ? Math.round(value / 1.2)
-      : value
-    el.style[prefix('transitionDuration')] = `${v}ms`
+    el.style[prefix('transitionDuration')] = `${value}ms`
   })
 }
 
 /**
- * Returns the inner elements of a popper element
+ * Returns the child elements of a popper element
  */
-export const getInnerElements = popper => {
+export const getChildren = popper => {
   const select = s => popper.querySelector(s)
   return {
-    tooltip: select(selectors.TOOLTIP),
-    backdrop: select(selectors.BACKDROP),
-    content: select(selectors.CONTENT),
-    arrow: select(selectors.ARROW) || select(selectors.ROUND_ARROW)
+    tooltip: select(Selectors.TOOLTIP),
+    backdrop: select(Selectors.BACKDROP),
+    content: select(Selectors.CONTENT),
+    arrow: select(Selectors.ARROW) || select(Selectors.ROUND_ARROW)
   }
 }
 
@@ -89,9 +94,15 @@ export const setInnerHTML = (el, html) => {
  * Returns an array of elements based on the value
  */
 export const getArrayOfElements = value => {
-  if (value instanceof Element || isVirtualReference(value)) return [value]
-  if (value instanceof NodeList) return toArray(value)
-  if (Array.isArray(value)) return value
+  if (value instanceof Element || isVirtualReference(value)) {
+    return [value]
+  }
+  if (value instanceof NodeList) {
+    return toArray(value)
+  }
+  if (Array.isArray(value)) {
+    return value
+  }
 
   try {
     return toArray(document.querySelectorAll(value))
@@ -177,8 +188,7 @@ export const createPopperElement = (id, reference, options) => {
       } catch (e) {}
     }
   } else {
-    content[options.allowTitleHTML ? 'innerHTML' : 'textContent'] =
-      options.title
+    content[options.allowHTML ? 'innerHTML' : 'textContent'] = options.content
   }
 
   if (options.interactive) {
@@ -195,9 +205,11 @@ export const createPopperElement = (id, reference, options) => {
  * Hides all visible poppers on the document
  */
 export const hideAllPoppers = excludeTippy => {
-  toArray(document.querySelectorAll(selectors.POPPER)).forEach(popper => {
+  toArray(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
     const tippy = popper._tippy
-    if (!tippy) return
+    if (!tippy) {
+      return
+    }
 
     const { options } = tippy
 
@@ -225,13 +237,6 @@ export const addEventListeners = (
     listeners.push({ eventType, handler })
   }
 
-  const oppositeEvents = {
-    mouseenter: 'mouseleave',
-    mouseover: 'mouseout',
-    focus: 'blur',
-    focusin: 'focusout'
-  }
-
   return options.trigger
     .trim()
     .split(' ')
@@ -245,19 +250,24 @@ export const addEventListeners = (
         switch (eventType) {
           case 'mouseenter':
             on('mouseleave', onMouseLeave)
+            break
           case 'focus':
-            on(browser.isIE ? 'focusout' : 'blur', onBlur)
+            on(Browser.isIE ? 'focusout' : 'blur', onBlur)
+            break
         }
       } else {
         switch (eventType) {
           case 'mouseenter':
             on('mouseover', onDelegateShow)
             on('mouseout', onDelegateHide)
+            break
           case 'focus':
             on('focusin', onDelegateShow)
             on('focusout', onDelegateHide)
+            break
           case 'click':
             on(eventType, onDelegateShow)
+            break
         }
       }
 
@@ -265,13 +275,12 @@ export const addEventListeners = (
     }, [])
 }
 
-const defaultsKeys = Object.keys(defaults)
 /**
  * Returns an object of options from data-tippy-* attributes
  */
 export const getDataAttributeOptions = reference =>
-  defaultsKeys.reduce((acc, key) => {
-    const valueAsString = reference.getAttribute(`data-tippy-${key}`)
+  Object.keys(Defaults).reduce((acc, key) => {
+    const valueAsString = reference.getAttribute(key)
 
     if (!valueAsString) {
       return acc
@@ -295,33 +304,37 @@ export const getDataAttributeOptions = reference =>
 /**
  * Polyfills the virtual reference (plain object) with needed props
  */
-export const polyfillVirtualReferenceProps = virtualReference => {
-  const reference = {
-    isVirtual: true,
-    attributes: virtualReference.attributes || {},
-    setAttribute: (key, value) => {
-      out.attributes[key] = value
+export const polyfillVirtualReferenceProps = virtualReference => ({
+  ...virtualReference,
+  isVirtual: true,
+  attributes: virtualReference.attributes || {},
+  setAttribute(key, value) {
+    this.attributes[key] = value
+  },
+  getAttribute(key) {
+    return this.attributes[key]
+  },
+  removeAttribute(key) {
+    delete this.attributes[key]
+  },
+  hasAttribute(key) {
+    return key in this.attributes
+  },
+  addEventListener() {},
+  removeEventListener() {},
+  classList: {
+    classNames: {},
+    add(key) {
+      this.classNames[key] = true
     },
-    getAttribute: key => virtualReference.attributes[key],
-    removeAttribute: key => {
-      delete virtualReference.attributes[key]
+    remove(key) {
+      delete this.classNames[key]
     },
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    classList: {
-      classNames: {},
-      add: key => {
-        reference.classList.classNames[key] = true
-      },
-      remove: key => {
-        delete reference.classList.classNames[key]
-      },
-      contains: key => !!reference.classList.classNames[key]
+    contains(key) {
+      return key in this.classNames
     }
   }
-
-  return reference
-}
+})
 
 /**
  * Ponyfill for Element.prototype.matches
@@ -351,7 +364,7 @@ export const matches = (() => {
  * Ponyfill for Element.prototype.closest
  */
 export const closest = (element, parentSelector) => {
-  const fn =
+  return (
     Element.prototype.closest ||
     function(selector) {
       let el = this
@@ -362,8 +375,7 @@ export const closest = (element, parentSelector) => {
         el = el.parentElement
       }
     }
-
-  return fn.call(element, parentSelector)
+  ).call(element, parentSelector)
 }
 
 /**
@@ -377,17 +389,6 @@ export const focus = el => {
 }
 
 /**
- * Resets a popper's position to fix Popper.js#251
- */
-export const resetPopperPosition = popper => {
-  Object.assign(popper.style, {
-    top: '',
-    left: '',
-    [prefix('transform')]: ''
-  })
-}
-
-/**
  * Triggers reflow
  */
 export const reflow = popper => {
@@ -398,13 +399,15 @@ export const reflow = popper => {
  * Transforms the x/y axis ased on the placement
  */
 export const transformAxisBasedOnPlacement = (axis, isVertical) => {
-  if (!axis) return ''
+  if (!axis) {
+    return ''
+  }
   return isVertical
     ? axis
     : {
-        X: 'Y',
-        Y: 'X'
-      }[axis]
+      X: 'Y',
+      Y: 'X'
+    }[axis]
 }
 
 /**
@@ -416,7 +419,9 @@ export const transformNumbersBasedOnPlacement = (
   isVertical,
   isReverse
 ) => {
-  if (!numbers.length) return ''
+  if (!numbers.length) {
+    return ''
+  }
 
   const transforms = {
     scale: (() => {
@@ -521,7 +526,7 @@ export const setVisibilityState = (els, type) => {
 }
 
 /**
- * Prefixes a CSS property with the one supported by the browser
+ * Prefixes a CSS property with the one supported by the Browser
  */
 export const prefix = property => {
   const prefixes = ['', 'webkit']
@@ -578,7 +583,9 @@ export const defer = fn => {
  * region
  */
 export const cursorIsOutsideInteractiveBorder = (event, popper, options) => {
-  if (!popper.getAttribute('x-placement')) return true
+  if (!popper.getAttribute('x-placement')) {
+    return true
+  }
 
   const { clientX: x, clientY: y } = event
   const { interactiveBorder, distance } = options
@@ -617,7 +624,7 @@ export const cursorIsOutsideInteractiveBorder = (event, popper, options) => {
  * the transform: translate() rule in CSS
  */
 export const getOffsetDistanceInPx = distance =>
-  -(distance - defaults.distance) + 'px'
+  -(distance - Defaults.distance) + 'px'
 
 /**
  * Returns the popper's placement, ignoring shifting (top-start, etc)

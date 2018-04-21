@@ -233,7 +233,7 @@ body:not(.tippy-touch) {
       }
       &[data-state='hidden'] {
         .tippy-content {
-          clip-path: ellipse(25% 100% at 0% 50%);
+          clip-path: ellipse(40% 100% at 0% 50%);
         }
       }
     }
@@ -247,7 +247,7 @@ body:not(.tippy-touch) {
       }
       &[data-state='hidden'] {
         .tippy-content {
-          clip-path: ellipse(25% 100% at 100% 50%);
+          clip-path: ellipse(40% 100% at 100% 50%);
         }
       }
     }
