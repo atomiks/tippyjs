@@ -4,7 +4,7 @@ import {
   createReferenceArray,
   hasTippy,
   cleanDocumentBody,
-  withPopperInstanceOnInit,
+  withTestOptions,
   IDENTIFIER
 } from '../utils'
 
@@ -390,7 +390,41 @@ describe('createPopperElement', () => {
   })
 })
 
+describe('transformAxisBasedOnPlacement', () => {
+  it('uses the original axis if the placement is vertical', () => {
+    const isVertical = true
+    expect(Utils.transformAxisBasedOnPlacement('X', isVertical)).toBe('X')
+    expect(Utils.transformAxisBasedOnPlacement('Y', isVertical)).toBe('Y')
+  })
+
+  it('uses the opposite axis if the placement is not vertical', () => {
+    const isVertical = false
+    expect(Utils.transformAxisBasedOnPlacement('X', isVertical)).toBe('Y')
+    expect(Utils.transformAxisBasedOnPlacement('Y', isVertical)).toBe('X')
+  })
+
+  it('returns an empty string for no arguments', () => {
+    expect(Utils.transformAxisBasedOnPlacement()).toBe('')
+  })
+})
+
+describe('transformNumbersBasedOnPlacement', () => {
+  describe('translate', () => {})
+  describe('scale', () => {})
+})
+
 /** ==================== 🔥 Impure sync functions 🔥 ==================== **/
+describe('injectCSS', () => {
+  it('injects a string of css styles into the document `head`', () => {
+    const styles = `body { color: red; }`
+    expect(document.head.querySelector('style')).toBeNull()
+    Utils.injectCSS(styles)
+    const styleNode = document.head.querySelector('style')
+    expect(styleNode).toBeTruthy()
+    expect(styleNode.textContent).toBe(styles)
+  })
+})
+
 describe('setAttr', () => {
   it('sets an attribute with a default value of "" on an element', () => {
     const ref = createReference()

@@ -18,6 +18,7 @@ export default function tippy(targets, suppliedOptions, one) {
     eventListenersBound = true
   }
 
+  // Throw an error if the user supplied an invalid option
   for (const key in suppliedOptions || {}) {
     if (!(key in Defaults)) {
       throw new Error(`tippy: ${key} is not a valid option`)
@@ -34,9 +35,14 @@ export default function tippy(targets, suppliedOptions, one) {
 
   const references = getArrayOfElements(targets)
   const firstReference = references[0]
-  const instances = (one && firstReference ? [firstReference] : references).map(
-    reference => createTippy(reference, options)
-  )
+
+  const instances = (one && firstReference
+    ? [firstReference]
+    : references
+  ).reduce((acc, reference) => {
+    const tip = createTippy(reference, options)
+    return tip ? acc.concat(tip) : acc
+  }, [])
 
   return {
     targets,

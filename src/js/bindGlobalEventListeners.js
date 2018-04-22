@@ -35,7 +35,7 @@ export default function bindEventListeners() {
         Browser.isUsingTouch = false
         document.removeEventListener('mousemove', onDocumentMouseMove)
         if (!Browser.isIOS) {
-          document.body.classList.remove('tippy-touch')
+          document.body.classList.remove('tippy-iOS')
         }
         Browser.onUserInputChange('mouse')
       }

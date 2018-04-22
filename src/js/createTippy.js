@@ -26,31 +26,33 @@ import {
 
 let idCounter = 1
 
-export default function createTippy(reference, opts) {
-  /* ========================= Private props ========================= */
+export default function createTippy(reference, collectionOptions) {
+  // If the reference already has a tippy instance (or it doesn't exist)
+  if (!reference || reference._tippy) {
+    return null
+  }
+
+  /* ========================= 🔒 Private props 🔒 ========================= */
   let mutationObservers = []
   let lastTriggerEvent = {}
   let lastMouseMoveEvent = {}
   let showTimeoutId = 0
   let hideTimeoutId = 0
   let isPreparingToShow = false
-  let transitionendListener = () => {}
+  let transitionEndListener = () => {}
 
-  /* ========================= Public props ========================= */
+  /* ========================= 🔑 Public props 🔑 ========================= */
+  // The id counter is incremented each time a tippy is created
+  // 🚨 NOTE: mutation here
   const id = idCounter++
 
   const options = evaluateOptions(reference, {
-    ...opts,
-    ...(opts.performance ? {} : getDataAttributeOptions(reference))
+    ...collectionOptions,
+    ...(collectionOptions.performance ? {} : getDataAttributeOptions(reference))
   })
 
-  // Ensure the reference element can receive focus (and is not a delegate)
-  if (options.a11y && !options.target && !elementCanReceiveFocus(reference)) {
-    reference.setAttribute('tabindex', '0')
-  }
-
-  setAttr(reference, options.target ? 'data-tippy-delegate' : 'data-tippy')
-
+  // Add listeners to the element based on `options.trigger`
+  // 🚨 NOTE: mutation here
   const listeners = addEventListeners(reference, options, {
     onTrigger,
     onMouseLeave,
@@ -71,10 +73,12 @@ export default function createTippy(reference, opts) {
 
   const popperInstance = null
 
+  // 🌟 tippy instance
   const tip = {
     id,
     reference,
     popper,
+    popperChildren,
     popperInstance,
     options,
     listeners,
@@ -95,13 +99,28 @@ export default function createTippy(reference, opts) {
     enter()
   }
 
+  // Ensure the reference element can receive focus (and is not a delegate)
+  // 🚨 NOTE: mutation here
+  if (options.a11y && !options.target && !elementCanReceiveFocus(reference)) {
+    reference.setAttribute('tabindex', '0')
+  }
+
+  // Highlight the element as having an active tippy instance with a `data` attribute
+  // 🚨 NOTE: mutation here
+  setAttr(
+    reference,
+    options.target ? 'data-tippy-delegate' : 'data-tippy-reference'
+  )
+
   // Install shortcuts
+  // 🚨 NOTE: mutations here
   reference._tippy = tip
   popper._tippy = tip
 
+  // ❤️ Thanks hoisting
   return tip
 
-  /* ========================= Private methods ========================= */
+  /* ========================= 🔒 Private methods 🔒 ========================= */
   function followCursorListener(event) {
     const { clientX, clientY } = (lastMouseMoveEvent = event)
 
@@ -210,7 +229,7 @@ export default function createTippy(reference, opts) {
 
     const shouldStopEvent =
       Browser.supportsTouch &&
-      Browser.usingTouch &&
+      Browser.isUsingTouch &&
       ['mouseenter', 'mouseover', 'focus'].indexOf(event.type) > -1
 
     if (shouldStopEvent && tip.options.touchHold) {
@@ -240,7 +259,7 @@ export default function createTippy(reference, opts) {
     if (
       ['mouseleave', 'mouseout'].indexOf(event.type) > -1 &&
       Browser.supportsTouch &&
-      Browser.usingTouch &&
+      Browser.isUsingTouch &&
       tip.options.touchHold
     ) {
       return
@@ -366,6 +385,10 @@ export default function createTippy(reference, opts) {
       }
     }
 
+    // If content within the popper changes, its dimensions will also change,
+    // thus causing it to be placed incorrectly. It should update BEFORE
+    // the next animation frame (i.e. not `scheduleUpdate`), otherwise there
+    // will be a 1 frame flash where it jumps
     addMutationObserver({
       target: tip.popper,
       callback: () => {
@@ -483,13 +506,13 @@ export default function createTippy(reference, opts) {
       }
     }
 
-    toggleListeners('remove', transitionendListener)
+    toggleListeners('remove', transitionEndListener)
     toggleListeners('add', listener)
 
-    transitionendListener = listener
+    transitionEndListener = listener
   }
 
-  /* ========================= Public methods ========================= */
+  /* ========================= 🔑 Public methods 🔑 ========================= */
   function enable() {
     tip.state.isEnabled = true
   }
@@ -676,7 +699,7 @@ export default function createTippy(reference, opts) {
 
     delete tip.reference._tippy
 
-    const attributes = ['data-tippy', 'data-tippy-delegate']
+    const attributes = ['data-tippy-reference', 'data-tippy-delegate']
     attributes.forEach(attr => {
       tip.reference.removeAttribute(attr)
     })

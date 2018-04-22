@@ -413,36 +413,30 @@ export const transformAxisBasedOnPlacement = (axis, isVertical) => {
  */
 export const transformNumbersBasedOnPlacement = (
   type,
-  numbers,
+  [a, b],
   isVertical,
   isReverse
 ) => {
-  if (!numbers.length) {
+  if (!a && !b) {
     return ''
   }
 
   const transforms = {
     scale: (() => {
-      if (numbers.length === 1) {
-        return `${numbers[0]}`
+      if (!b) {
+        return `${a}`
       } else {
-        return isVertical
-          ? `${numbers[0]}, ${numbers[1]}`
-          : `${numbers[1]}, ${numbers[0]}`
+        return isVertical ? `${a}, ${b}` : `${b}, ${a}`
       }
     })(),
     translate: (() => {
-      if (numbers.length === 1) {
-        return isReverse ? `${-numbers[0]}px` : `${numbers[0]}px`
+      if (!b) {
+        return isReverse ? `${-a}px` : `${a}px`
       } else {
         if (isVertical) {
-          return isReverse
-            ? `${numbers[0]}px, ${-numbers[1]}px`
-            : `${numbers[0]}px, ${numbers[1]}px`
+          return isReverse ? `${a}px, ${-b}px` : `${a}px, ${b}px`
         } else {
-          return isReverse
-            ? `${-numbers[1]}px, ${numbers[0]}px`
-            : `${numbers[1]}px, ${numbers[0]}px`
+          return isReverse ? `${-b}px, ${a}px` : `${b}px, ${a}px`
         }
       }
     })()
