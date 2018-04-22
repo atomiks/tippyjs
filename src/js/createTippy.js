@@ -19,7 +19,6 @@ import {
   setVisibilityState,
   evaluateOptions,
   defer,
-  setContent,
   setAttr,
   toArray
 } from './utils'
@@ -540,8 +539,6 @@ export default function createTippy(reference, collectionOptions) {
     if (tip.reference.hasAttribute('disabled')) {
       return
     }
-
-    setContent(popperChildren.content, tip.options)
 
     tip.options.onShow(tip)
 

@@ -35,8 +35,12 @@ export const setAttr = (el, attr, value = '') => {
 /**
  * Sets the content of a tooltip
  */
-export const setContent = (content, options) => {
-  content[options.allowHTML ? 'innerHTML' : 'textContent'] = options.content
+export const setContent = (contentEl, options) => {
+  if (options.content instanceof Element) {
+    contentEl.appendChild(options.content)
+  } else {
+    contentEl[options.allowHTML ? 'innerHTML' : 'textContent'] = options.content
+  }
 }
 
 /**
@@ -146,6 +150,7 @@ export const createPopperElement = (id, options) => {
   content.className = 'tippy-content'
 
   if (options.interactive) {
+    setAttr(popper, 'tabindex', '-1')
     setAttr(tooltip, 'data-interactive')
   }
 
@@ -153,8 +158,10 @@ export const createPopperElement = (id, options) => {
     const arrow = div()
     if (options.arrowType === 'round') {
       arrow.className = 'tippy-roundarrow'
-      arrow.innerHTML =
+      setInnerHTML(
+        arrow,
         '<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg"><path d="M3 8s2.021-.015 5.253-4.218C9.584 2.051 10.797 1.007 12 1c1.203-.007 2.416 1.035 3.761 2.782C19.012 8.005 21 8 21 8H3z"/></svg>'
+      )
     } else {
       arrow.className = 'tippy-arrow'
     }
@@ -173,27 +180,7 @@ export const createPopperElement = (id, options) => {
     setAttr(tooltip, 'data-inertia')
   }
 
-  if (options.html) {
-    const { html } = options
-    const isTemplateString = typeof html === 'string' && html[0] === '<'
-    const isElement = html instanceof Element
-
-    if (isTemplateString) {
-      setInnerHTML(content, html)
-    } else if (isElement) {
-      content.appendChild(html)
-    } else {
-      try {
-        setInnerHTML(content, document.querySelector(html))
-      } catch (e) {}
-    }
-  } else {
-    content[options.allowHTML ? 'innerHTML' : 'textContent'] = options.content
-  }
-
-  if (options.interactive) {
-    setAttr(popper, 'tabindex', '-1')
-  }
+  setContent(content, options)
 
   tooltip.appendChild(content)
   popper.appendChild(tooltip)
@@ -403,9 +390,9 @@ export const transformAxisBasedOnPlacement = (axis, isVertical) => {
   return isVertical
     ? axis
     : {
-      X: 'Y',
-      Y: 'X'
-    }[axis]
+        X: 'Y',
+        Y: 'X'
+      }[axis]
 }
 
 /**
