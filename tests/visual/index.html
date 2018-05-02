@@ -22,6 +22,17 @@
       margin: 8px;
       padding: 8px;
     }
+    
+    .scroll {
+      width: 300px;
+      height: 300px;
+      overflow-y: scroll;
+      background: gray;
+    }
+    
+    .scroll > div {
+      margin-bottom: 12px;
+    }
   </style>
 </head>
 
@@ -29,9 +40,30 @@
   <div class="container">
     <h1>Tippy visual tests and development</h1>
     
+    <div id="scroll" class="scroll">
+      <h2>scroll</h2>
+      <div>Lorem ipsum</div>
+      <div>Lorem ipsum</div>
+      <div>Lorem ipsum</div>
+      <div>Lorem ipsum</div>
+      <div>Lorem ipsum</div>
+      <div>Lorem ipsum</div>
+      <div>Lorem ipsum</div>
+      <div>Lorem ipsum</div>
+      <div>Lorem ipsum</div>
+      <div>Lorem ipsum</div>
+      <button data-tippy-content="Scrolling tippy" data-tippy-popperOptions="{ modifiers: { preventOverflow: { enabled: false } } }">Auto init</button>
+    </div>
+    
     <div id="auto-init">
       <h2>auto init</h2>
       <button data-tippy="I was auto-initialized">Auto init</button>
+    </div>
+    
+    <div id="show-on-init">
+      <h2>show on init</h2>
+      <button data-tippy-showOnInit="true">Show on init</button>
+      <button data-tippy-showOnInit="true" data-tippy-hideOnClick="persistent" data-tippy-trigger="manual">I never hide</button>
     </div>
 
     <div id="content">
@@ -149,6 +181,8 @@
       <p data-tippy-content="a11y">Inaccessible &lt;p&gt; element.</p>
     </div>
   </div>
+  
+  <script></script>
 </body>
 
 </html>

@@ -3,6 +3,13 @@
   "version": "3.0.0-alpha.0",
   "description": "Vanilla JS Tooltip Library",
   "main": "dist/tippy.all.js",
+  "author": "atomiks",
+  "license": "MIT",
+  "keywords": [
+    "tooltip",
+    "tippy",
+    "tippy.js"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/atomiks/tippyjs.git"
@@ -22,16 +29,11 @@
     ]
   },
   "prettier": {
-    "printWidth": 80,
     "semi": false,
     "singleQuote": true
   },
-  "author": "atomiks",
-  "license": "MIT",
-  "keywords": [
-    "tooltip",
-    "tippy",
-    "tippy.js"
+  "browserslist": [
+    "> 0.5%"
   ],
   "devDependencies": {
     "animejs": "^2.2.0",
@@ -52,7 +54,7 @@
     "focus-visible": "^4.1.3",
     "hyperapp": "^1.2.5",
     "jest": "^22.4.2",
-    "jsdom": "^11.8.0",
+    "jsdom": "^11.9.0",
     "mutation-observer": "^1.0.3",
     "node-sass": "^4.8.3",
     "normalize.css": "^8.0.0",
@@ -73,6 +75,6 @@
     "rollup-plugin-sass": "^0.4.10"
   },
   "dependencies": {
-    "popper.js": "^1.14.2"
+    "popper.js": "^1.14.3"
   }
 }

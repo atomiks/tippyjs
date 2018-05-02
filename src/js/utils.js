@@ -265,7 +265,9 @@ export const addEventListeners = (
  */
 export const getDataAttributeOptions = reference =>
   Object.keys(Defaults).reduce((acc, key) => {
-    const valueAsString = reference.getAttribute(`data-tippy-${key}`)
+    const valueAsString = (
+      reference.getAttribute(`data-tippy-${key}`) || ''
+    ).trim()
 
     if (!valueAsString) {
       return acc
@@ -277,7 +279,7 @@ export const getDataAttributeOptions = reference =>
       acc[key] = false
     } else if (isNumeric(valueAsString)) {
       acc[key] = Number(valueAsString)
-    } else if (key !== 'target' && valueAsString.trim()[0] === '[') {
+    } else if (key !== 'target' && valueAsString[0] === '[') {
       acc[key] = JSON.parse(valueAsString)
     } else {
       acc[key] = valueAsString
@@ -348,8 +350,8 @@ export const matches = (() => {
 /**
  * Ponyfill for Element.prototype.closest
  */
-export const closest = (element, parentSelector) => {
-  return (
+export const closest = (element, parentSelector) =>
+  (
     Element.prototype.closest ||
     function(selector) {
       let el = this
@@ -361,7 +363,6 @@ export const closest = (element, parentSelector) => {
       }
     }
   ).call(element, parentSelector)
-}
 
 /**
  * Focuses an element while preventing a scroll jump if it's not within the viewport
@@ -602,8 +603,8 @@ export const cursorIsOutsideInteractiveBorder = (event, popper, options) => {
  * Returns the distance offset, taking into account the default offset due to
  * the transform: translate() rule in CSS
  */
-export const getOffsetDistanceInPx = distance =>
-  -(distance - Defaults.distance) + 'px'
+export const getOffsetDistanceInPx = (distance, defaultDistance) =>
+  -(distance - defaultDistance) + 'px'
 
 /**
  * Returns the popper's placement, ignoring shifting (top-start, etc)
@@ -625,8 +626,8 @@ export const evaluateOptions = (reference, options) => {
     out.appendTo = options.appendTo(reference)
   }
 
-  if (typeof options.html === 'function') {
-    out.html = options.html(reference)
+  if (typeof options.content === 'function') {
+    out.content = options.content(reference)
   }
 
   return { ...options, ...out }

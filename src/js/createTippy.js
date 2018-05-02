@@ -1,4 +1,5 @@
 import Popper from 'popper.js'
+import { Defaults } from './defaults'
 import { Browser } from './browser'
 import { Selectors } from './selectors'
 import {
@@ -101,7 +102,7 @@ export default function createTippy(reference, collectionOptions) {
   // Ensure the reference element can receive focus (and is not a delegate)
   // 🚨 NOTE: mutation here
   if (options.a11y && !options.target && !elementCanReceiveFocus(reference)) {
-    reference.setAttribute('tabindex', '0')
+    setAttr(reference, 'tabindex', '0')
   }
 
   // Highlight the element as having an active tippy instance with a `data` attribute
@@ -361,7 +362,8 @@ export default function createTippy(reference, collectionOptions) {
       },
       onCreate() {
         tooltip.style[getPopperPlacement(tip.popper)] = getOffsetDistanceInPx(
-          tip.options.distance
+          tip.options.distance,
+          Defaults.distance
         )
 
         if (arrow && options.arrowTransform) {
@@ -375,7 +377,8 @@ export default function createTippy(reference, collectionOptions) {
         styles.left = ''
         styles.right = ''
         styles[getPopperPlacement(tip.popper)] = getOffsetDistanceInPx(
-          tip.options.distance
+          tip.options.distance,
+          Defaults.distance
         )
 
         if (arrow && tip.options.arrowTransform) {
@@ -520,9 +523,7 @@ export default function createTippy(reference, collectionOptions) {
     tip.state.isEnabled = false
   }
 
-  function show(duration) {
-    duration = getValue(duration !== undefined ? duration : options.duration, 0)
-
+  function show(duration = getValue(tip.options.duration, 0)) {
     if (tip.state.isDestroyed || !tip.state.isEnabled) {
       return
     }
@@ -607,16 +608,14 @@ export default function createTippy(reference, collectionOptions) {
           focus(tip.popper)
         }
 
-        tip.reference.setAttribute('aria-describedby', `tippy-${tip.id}`)
+        setAttr(tip.reference, 'aria-describedby', `tippy-${tip.id}`)
 
         tip.options.onShown(tip)
       })
     })
   }
 
-  function hide(duration) {
-    duration = getValue(duration !== undefined ? duration : options.duration, 1)
-
+  function hide(duration = getValue(tip.options.duration, 1)) {
     if (tip.state.isDestroyed || !tip.state.isEnabled) {
       return
     }

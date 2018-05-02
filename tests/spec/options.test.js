@@ -106,3 +106,65 @@ describe('animateFill', () => {
     ).toBe(false)
   })
 })
+
+describe('animation', () => {
+  it('sets the data-animation attribute on the tooltip', () => {
+    const animation = 'scale'
+    const { tooltip } = tippy.one(createReference(), {
+      animation
+    }).popperChildren
+    expect(tooltip.getAttribute('data-animation')).toBe(animation)
+  })
+})
+
+describe('delay', () => {
+  // NOTE: options.trigger dependency here
+  it('number: delays showing the tippy', done => {
+    const delay = 20
+    const ref = createReference({ appendToBody: true })
+    const { state } = tippy.one(ref, {
+      trigger: 'mouseenter',
+      delay
+    })
+    ref.dispatchEvent(new Event('mouseenter'))
+    expect(state.isVisible).toBe(false)
+    setTimeout(() => {
+      expect(state.isVisible).toBe(true)
+      done()
+    }, delay * 2)
+  })
+
+  it('number: delays hiding the tippy', done => {
+    const delay = 20
+    const ref = createReference({ appendToBody: true })
+    const { state } = tippy.one(ref, {
+      trigger: 'mouseenter',
+      delay
+    })
+    ref.dispatchEvent(new Event('mouseenter'))
+
+    setTimeout(() => {
+      ref.dispatchEvent(new Event('mouseleave'))
+      expect(state.isVisible).toBe(true)
+      setTimeout(() => {
+        expect(state.isVisible).toBe(false)
+        done()
+      }, delay * 2)
+    }, delay * 2)
+  })
+
+  it('array: uses the first element as the delay when showing', () => {
+    const delay = [20, 400]
+    const ref = createReference({ appendToBody: true })
+    const { state } = tippy.one(ref, {
+      trigger: 'mouseenter',
+      delay
+    })
+    ref.dispatchEvent(new Event('mouseenter'))
+    expect(state.isVisible).toBe(false)
+    setTimeout(() => {
+      expect(state.isVisible).toBe(true)
+      done()
+    }, delay[0] * 2)
+  })
+})

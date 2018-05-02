@@ -8,7 +8,7 @@ import {
   IDENTIFIER
 } from '../utils'
 
-import { Selectors } from '../../src/js/Selectors'
+import { Selectors } from '../../src/js/selectors'
 import { Defaults } from '../../src/js/defaults'
 import * as Utils from '../../src/js/utils'
 
@@ -413,6 +413,73 @@ describe('transformNumbersBasedOnPlacement', () => {
   describe('scale', () => {})
 })
 
+describe('getOffsetDistanceInPx', () => {
+  const DISTANCE_IN_CSS = 10
+
+  it('returns 0px by default', () => {
+    expect(
+      Utils.getOffsetDistanceInPx(Defaults.distance, DISTANCE_IN_CSS)
+    ).toBe('0px')
+  })
+
+  it('returns -10px if the distance is 20', () => {
+    expect(Utils.getOffsetDistanceInPx(20, DISTANCE_IN_CSS)).toBe('-10px')
+  })
+
+  it('returns 5px if the distance is 5', () => {
+    expect(Utils.getOffsetDistanceInPx(5, DISTANCE_IN_CSS)).toBe('5px')
+  })
+
+  it('returns 18px if the distance is -8', () => {
+    expect(Utils.getOffsetDistanceInPx(-8, DISTANCE_IN_CSS)).toBe('18px')
+  })
+})
+
+describe('getPopperPlacement', () => {
+  it('returns the base value without shifting', () => {
+    const allPlacements = ['top', 'bottom', 'left', 'right'].reduce(
+      (acc, basePlacement) => [
+        ...acc,
+        `${basePlacement}-start`,
+        `${basePlacement}-end`
+      ]
+    )
+
+    allPlacements.forEach(placement => {
+      const popper = el('div')
+      popper.setAttribute('x-placement', placement)
+      expect(Utils.getPopperPlacement(popper).endsWith('-start')).toBe(false)
+      expect(Utils.getPopperPlacement(popper).endsWith('-end')).toBe(false)
+    })
+  })
+})
+
+describe('evaluateOptions', () => {
+  it('sets `animateFill` option to false if `arrow` is true', () => {
+    const options = { animateFill: true, arrow: true }
+    expect(Utils.evaluateOptions(createReference(), options)).toEqual({
+      animateFill: false,
+      arrow: true
+    })
+  })
+
+  it('sets `options.appendTo` to be the return value of calling it if a function', () => {
+    const ref = createReference()
+    const options = {
+      appendTo: reference => reference
+    }
+    expect(Utils.evaluateOptions(ref, options).appendTo).toBe(ref)
+  })
+
+  it('sets `options.content` to be the return value of calling it if a function', () => {
+    const ref = createReference()
+    const options = {
+      content: reference => reference
+    }
+    expect(Utils.evaluateOptions(ref, options).content).toBe(ref)
+  })
+})
+
 /** ==================== 🔥 Impure sync functions 🔥 ==================== **/
 describe('injectCSS', () => {
   it('injects a string of css styles into the document `head`', () => {
@@ -422,6 +489,38 @@ describe('injectCSS', () => {
     const styleNode = document.head.querySelector('style')
     expect(styleNode).toBeTruthy()
     expect(styleNode.textContent).toBe(styles)
+    styleNode.remove()
+  })
+})
+
+describe('prefix', () => {
+  /* JSDOM support is limited here... need to use fallbacks */
+  it('returns the same value if the CSS property is supported', () => {
+    const prefixedTransform = Utils.prefix('transform')
+    expect(
+      prefixedTransform === 'transform' ||
+        prefixedTransform === 'webkitTransform'
+    ).toBe(true)
+
+    const prefixedTransitionDuration = Utils.prefix('transitionDuration')
+    expect(
+      prefixedTransitionDuration === 'transitionDuration' ||
+        prefixedTransitionDuration === 'webkitTransitionDuration'
+    ).toBe(true)
+  })
+})
+
+describe('setVisibilityState', () => {
+  it('sets the `data-state` attribute on a list of elements with the value specified', () => {
+    const els = [createReference(), createReference(), null, createReference()]
+    Utils.setVisibilityState(els, 'visible')
+    expect(els[0].getAttribute('data-state')).toBe('visible')
+    expect(els[1].getAttribute('data-state')).toBe('visible')
+    expect(els[3].getAttribute('data-state')).toBe('visible')
+    Utils.setVisibilityState(els, 'hidden')
+    expect(els[0].getAttribute('data-state')).toBe('hidden')
+    expect(els[1].getAttribute('data-state')).toBe('hidden')
+    expect(els[3].getAttribute('data-state')).toBe('hidden')
   })
 })
 
@@ -465,11 +564,30 @@ describe('setContent', () => {
   })
 })
 
-describe('applyTransitionDuration', () => {})
+describe('applyTransitionDuration', () => {
+  /* JSDOM only supports `webkit-` properties */
+  it('sets the `transition-duration` property on a list of elements with the value specified', () => {
+    const els = [createReference(), createReference(), null, createReference()]
+    Utils.applyTransitionDuration(els, 1298)
+    expect(els[0].style.webkitTransitionDuration).toBe('1298ms')
+    expect(els[1].style.webkitTransitionDuration).toBe('1298ms')
+    expect(els[3].style.webkitTransitionDuration).toBe('1298ms')
+  })
+})
 
-describe('setInnerHTML', () => {})
+describe('setInnerHTML', () => {
+  it('sets the innerHTML of an element', () => {
+    const ref = createReference()
+    Utils.setInnerHTML(ref, '<strong></strong>')
+    expect(ref.querySelector('strong')).not.toBeNull()
+  })
+})
 
 /** ==================== 😱 Async functions or tests 😱 ==================== **/
+describe('updatePopperPosition', () => {
+  /* Difficult to test */
+})
+
 describe('focus', () => {
   /* Cannot be tested by JSDOM */
 })
@@ -589,6 +707,15 @@ describe('addEventListeners', () => {
 })
 
 describe('hideAllPoppers', () => {
-  // NOTE: option.showOnInit dependency here
-  it('hides all poppers on the document', () => {})
+  // NOTE: options.showOnInit dependency here
+  /*
+  it('hides all poppers on the document', () => {
+    // NOTE: side effect here
+    const refs = createReferenceArray({ appendToBody: true })
+    tippy(refs, { showOnInit: true })
+    expect(document.querySelector(Selectors.POPPER)).not.toBeNull()
+    document.body.click()
+    expect(document.querySelector(Selectors.POPPER)).toBeNull()
+  })
+  */
 })
