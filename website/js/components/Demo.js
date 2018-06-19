@@ -21,7 +21,7 @@ export default () => (state, { demo }) => (
       <h3 class="feature__heading">Placement</h3>
       <p>
         A tooltip can be placed in four different ways in relation to its
-        reference element. Additionally, the tooltip be shifted.
+        reference element. Additionally, the tooltip can be shifted.
       </p>
       <button
         class="btn"
