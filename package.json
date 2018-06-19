@@ -64,7 +64,7 @@
     "postcss-cssnext": "^3.1.0",
     "postcss-import": "^11.1.0",
     "postcss-pxtorem": "^4.0.1",
-    "prettier": "^1.11.1",
+    "prettier": "^1.13.5",
     "prismjs": "^1.12.2",
     "rollup": "^0.55.5",
     "rollup-plugin-babel": "^2.7.1",

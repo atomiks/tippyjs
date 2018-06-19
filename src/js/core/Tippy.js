@@ -212,7 +212,9 @@ export class Tippy {
           this._(key).lastMouseMoveEvent = null
         }
 
-        this.popperInstance.disableEventListeners()
+        if (this.popperInstance) {
+          this.popperInstance.disableEventListeners()
+        }
 
         reference.removeAttribute('aria-describedby')
 
