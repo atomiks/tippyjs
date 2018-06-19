@@ -12,7 +12,8 @@ export default () => (state, actions) => (
     </div>
 
     <h3>
-      1. Add your tooltip content <span class="section__emoji" innerHTML={emoji('✍️')} />
+      1. Add your tooltip content{' '}
+      <span class="section__emoji" innerHTML={emoji('✍️')} />
     </h3>
 
     <p>
@@ -26,8 +27,8 @@ export default () => (state, actions) => (
     <Code lang="html">{`<button class="btn" title="I'm a tooltip!">Text</button>`}</Code>
 
     <p>
-      If you hover over the button, you'll notice the browser's default tooltip (usually
-      the native OS tooltip) appears after a delay.
+      If you hover over the button, you'll notice the browser's default tooltip
+      (usually the native OS tooltip) appears after a delay.
     </p>
 
     <h3>
@@ -62,9 +63,9 @@ tippy('.btn')
     </div>
 
     <p>
-      When the <code>tippy()</code> function is invoked and given a CSS selector string,
-      it will find all the elements which match it, check if they have a non-empty{' '}
-      <code>title</code>
+      When the <code>tippy()</code> function is invoked and given a CSS selector
+      string, it will find all the elements which match it, check if they have a
+      non-empty <code>title</code>
       attribute, and then apply its magic to give them a cool tooltip.
     </p>
 
@@ -72,7 +73,9 @@ tippy('.btn')
       Mutations <span class="section__emoji" innerHTML={emoji('🛠')} />
     </h3>
 
-    <p>The reference element(s) get modified by Tippy in the following manner:</p>
+    <p>
+      The reference element(s) get modified by Tippy in the following manner:
+    </p>
 
     <Code lang="html">
       {`<!-- Before -->
@@ -104,7 +107,8 @@ tippy('.btn')
     </p>
 
     <h3>
-      Additional input types <span class="section__emoji" innerHTML={emoji('🎛')} />
+      Additional input types{' '}
+      <span class="section__emoji" innerHTML={emoji('🎛')} />
     </h3>
     <p>
       A single{' '}
@@ -125,15 +129,16 @@ tippy('.btn')
     <Code lang="js">{`tippy(document.querySelectorAll('.btn'))`}</Code>
 
     <p>
-      <span class="badge">v2.5</span> Use <code>tippy.one()</code> if you are creating a
-      single tooltip. This will return the tooltip instance directly, rather than a
-      collection object (because <code>tippy()</code> can create multiple tooltip
-      instances at once).
+      <span class="badge">v2.5</span> Use <code>tippy.one()</code> if you are
+      creating a single tooltip. This will return the tooltip instance directly,
+      rather than a collection object (because <code>tippy()</code> can create
+      multiple tooltip instances at once).
     </p>
     <Code lang="js">{`tippy.one(document.querySelector('.btn'))`}</Code>
 
     <h3>
-      Tippify all titled elements <span class="section__emoji" innerHTML={emoji('🍭')} />
+      Tippify all titled elements{' '}
+      <span class="section__emoji" innerHTML={emoji('🍭')} />
     </h3>
     <p>
       Use this{' '}
@@ -152,8 +157,8 @@ tippy('.btn')
       Advanced <span class="section__emoji" innerHTML={emoji('🤯')} />
     </h3>
     <p>
-      You can use a virtual element as the positioning reference instead of a real
-      element:
+      You can use a virtual element as the positioning reference instead of a
+      real element:
     </p>
     <Code lang="js">
       {`const virtualReference = {
@@ -176,6 +181,8 @@ tippy('.btn')
 
 tippy(virtualReference)`}
     </Code>
-    <p>Popper.js uses these properties to determine the position of the tooltip.</p>
+    <p>
+      Popper.js uses these properties to determine the position of the tooltip.
+    </p>
   </section>
 )

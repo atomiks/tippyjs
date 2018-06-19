@@ -26,7 +26,10 @@
   @each $placement in $placements {
     &[x-placement^='#{$placement}'] {
       .tippy-backdrop {
-        border-radius: nth($backdrop-border-radii, index($placements, $placement));
+        border-radius: nth(
+          $backdrop-border-radii,
+          index($placements, $placement)
+        );
       }
 
       .tippy-roundarrow {
@@ -48,7 +51,10 @@
       }
 
       .tippy-backdrop {
-        transform-origin: nth($backdrop-origins, index($placements, $placement));
+        transform-origin: nth(
+          $backdrop-origins,
+          index($placements, $placement)
+        );
 
         &[data-state='visible'] {
           @include backdrop-transform-enter($placement);

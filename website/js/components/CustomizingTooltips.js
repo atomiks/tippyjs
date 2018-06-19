@@ -12,8 +12,8 @@ export default () => (state, actions) => (
       </a>
     </div>
     <p>
-      <code>tippy()</code> takes an object of options as a second argument for you to
-      customize the tooltips being created. Here's an example:
+      <code>tippy()</code> takes an object of options as a second argument for
+      you to customize the tooltips being created. Here's an example:
     </p>
 
     <Code lang="js">
@@ -48,8 +48,8 @@ export default () => (state, actions) => (
     </h3>
     <p>
       You can also specify options on the reference element itself by adding{' '}
-      <code>data-tippy-*</code> attributes. This will override the options specified in
-      the instance.
+      <code>data-tippy-*</code> attributes. This will override the options
+      specified in the instance.
     </p>
 
     <Code lang="html">

@@ -41,7 +41,10 @@ export default function createTooltips(els, config) {
     }
 
     // Delegates should be highlighted as different
-    reference.setAttribute(options.target ? 'data-tippy-delegate' : 'data-tippy', '')
+    reference.setAttribute(
+      options.target ? 'data-tippy-delegate' : 'data-tippy',
+      ''
+    )
 
     removeTitle(reference)
 

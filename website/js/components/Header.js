@@ -38,7 +38,10 @@ export default () => (state, { header }) => (
             data-tippy-offset="0, 2"
             data-tippy-updateDuration="250"
           >
-            <i class="icon header__icon is-power" data-feather="cloud-lightning" />
+            <i
+              class="icon header__icon is-power"
+              data-feather="cloud-lightning"
+            />
             Powered by Popper.js
           </a>
         </div>

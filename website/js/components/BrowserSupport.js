@@ -11,7 +11,8 @@ export default () => (state, actions) => (
       </a>
     </div>
     <h3 style={{ fontWeight: '400' }}>
-      Current support (tracked): <strong>96% Global</strong>, <strong>99% USA</strong>
+      Current support (tracked): <strong>96% Global</strong>,{' '}
+      <strong>99% USA</strong>
     </h3>
     <p>
       Tippy supports browsers with <code>requestAnimationFrame</code> and{' '}
@@ -21,8 +22,9 @@ export default () => (state, actions) => (
       </a>.
     </p>
     <p>
-      IE10 is only partially supported unless you polyfill <code>MutationObserver</code>,
-      then it is fully supported. <code>dynamicTitle</code> relies on it.
+      IE10 is only partially supported unless you polyfill{' '}
+      <code>MutationObserver</code>, then it is fully supported.{' '}
+      <code>dynamicTitle</code> relies on it.
     </p>
   </section>
 )

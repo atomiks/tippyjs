@@ -91,7 +91,9 @@ export default {
             })
         },
         onHidden(instance) {
-          instance.popper.querySelector('.tippy-content').innerHTML = initialText
+          instance.popper.querySelector(
+            '.tippy-content'
+          ).innerHTML = initialText
         },
         popperOptions: {
           modifiers: {

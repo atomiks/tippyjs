@@ -9,7 +9,8 @@ import { defaultsKeys } from '../core/defaults'
 export default function getIndividualOptions(reference, instanceOptions) {
   const options = defaultsKeys.reduce((acc, key) => {
     let val =
-      reference.getAttribute(`data-tippy-${key.toLowerCase()}`) || instanceOptions[key]
+      reference.getAttribute(`data-tippy-${key.toLowerCase()}`) ||
+      instanceOptions[key]
 
     // Convert strings to booleans
     if (val === 'false') val = false
@@ -21,7 +22,11 @@ export default function getIndividualOptions(reference, instanceOptions) {
     }
 
     // Convert array strings to actual arrays
-    if (key !== 'target' && typeof val === 'string' && val.trim().charAt(0) === '[') {
+    if (
+      key !== 'target' &&
+      typeof val === 'string' &&
+      val.trim().charAt(0) === '['
+    ) {
       val = JSON.parse(val)
     }
 

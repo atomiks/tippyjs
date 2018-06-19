@@ -11,9 +11,9 @@ export default () => (state, { allOptions }) => (
       </a>
     </div>
     <p>
-      Below is a list of all possible options you can supply to <code>tippy()</code>. The
-      values are the default ones used, with the different inputs being listed as a
-      comment next to it.
+      Below is a list of all possible options you can supply to{' '}
+      <code>tippy()</code>. The values are the default ones used, with the
+      different inputs being listed as a comment next to it.
     </p>
     <Code lang="js">
       {`tippy(ref, {
@@ -161,13 +161,14 @@ export default () => (state, { allOptions }) => (
 
     <h3>Modifying the default options</h3>
     <p>
-      You can modify the options by accessing them via <code>tippy.defaults</code>, which
-      will apply to every future instance.
+      You can modify the options by accessing them via{' '}
+      <code>tippy.defaults</code>, which will apply to every future instance.
     </p>
 
     <h3>More control over tooltips</h3>
     <p>
-      Specify a <code>popperOptions</code> property with Popper.js options. View the{' '}
+      Specify a <code>popperOptions</code> property with Popper.js options. View
+      the{' '}
       <a target="_blank" href="https://popper.js.org/popper-documentation.html">
         Popper.js documentation
       </a>{' '}
@@ -178,8 +179,8 @@ export default () => (state, { allOptions }) => (
       Callbacks <span class="section__emoji" innerHTML={emoji('🔊')} />
     </h3>
     <p>
-      If you want things to occur during tooltips' show and hide events, you can specify
-      callback functions in the options object.
+      If you want things to occur during tooltips' show and hide events, you can
+      specify callback functions in the options object.
     </p>
     <Code lang="js">
       {`tippy(ref, {
@@ -205,9 +206,10 @@ export default () => (state, { allOptions }) => (
       AJAX tooltips <span class="section__emoji" innerHTML={emoji('🌐')} />
     </h3>
     <p>
-      Callbacks allow you to do powerful things with tooltips. Here's an example of
-      dynamic content which on show, fetches a new random image from the Unsplash API.
-      Note: this requires a browser which supports the newer fetch API.
+      Callbacks allow you to do powerful things with tooltips. Here's an example
+      of dynamic content which on show, fetches a new random image from the
+      Unsplash API. Note: this requires a browser which supports the newer fetch
+      API.
     </p>
     <div class="section__result">
       <button class="btn" oncreate={allOptions.ajaxTippy} data-local>
@@ -224,9 +226,9 @@ export default () => (state, { allOptions }) => (
       <span class="badge">v2.1</span>
     </h3>
     <p>
-      Event delegation only requires minimal setup. Your setup should look similar to
-      this, with a parent element wrapping the child elements you would like to give
-      tooltips to:
+      Event delegation only requires minimal setup. Your setup should look
+      similar to this, with a parent element wrapping the child elements you
+      would like to give tooltips to:
     </p>
 
     <Code lang="html">
@@ -240,8 +242,8 @@ export default () => (state, { allOptions }) => (
     </Code>
 
     <p>
-      Then, specify a CSS selector as the <code>target</code> that matches child elements
-      which should receive tooltips
+      Then, specify a CSS selector as the <code>target</code> that matches child
+      elements which should receive tooltips
     </p>
     <Code lang="js">
       {`tippy('#parent', {
@@ -252,16 +254,16 @@ export default () => (state, { allOptions }) => (
 
     <h4>Note</h4>
     <p>
-      <span class="section__emoji" innerHTML={emoji('⚠️')} />Avoid binding a Tippy
-      instance to the body, as <code>mouseover / mouseoff</code> events will constantly
-      fire as the cursor moves over the page. Instead, give it to the nearest possible
-      parent element.
+      <span class="section__emoji" innerHTML={emoji('⚠️')} />Avoid binding a
+      Tippy instance to the body, as <code>mouseover / mouseoff</code> events
+      will constantly fire as the cursor moves over the page. Instead, give it
+      to the nearest possible parent element.
     </p>
     <h4>Destroying a delegate instance</h4>
     <p>
-      When you destroy a delegate's Tippy instance, it will destroy all target children's
-      Tippy instances as well. To disable this behavior, pass <code>false</code> into the{' '}
-      <code>destroy()</code> method.
+      When you destroy a delegate's Tippy instance, it will destroy all target
+      children's Tippy instances as well. To disable this behavior, pass{' '}
+      <code>false</code> into the <code>destroy()</code> method.
     </p>
     <Code lang="js">{`const parent = document.querySelector('#parent')
 tippy(parent, { target: '.child' })
@@ -269,9 +271,9 @@ tippy(parent, { target: '.child' })
 parent._tippy.destroy(false)
 `}</Code>
     <p>
-      If the target option is specified, the parent reference(s) become delegates and
-      receive a <code>data-tippy-delegate</code> attribute instead of{' '}
-      <code>data-tippy</code>.
+      If the target option is specified, the parent reference(s) become
+      delegates and receive a <code>data-tippy-delegate</code> attribute instead
+      of <code>data-tippy</code>.
     </p>
     <div class="code-wrapper" data-lang="html">
       <pre>
@@ -281,7 +283,8 @@ parent._tippy.destroy(false)
 
     <h3>Tooltips inside a scrollable container</h3>
     <p>
-      Add the following options to make the tooltip not stay stuck within the viewport.
+      Add the following options to make the tooltip not stay stuck within the
+      viewport.
     </p>
 
     <Code lang="js">{`tippy('.mySelector', {
@@ -301,14 +304,14 @@ parent._tippy.destroy(false)
 
     <h3>Disabling tooltips on touch devices</h3>
     <p>
-      It can be tricky to determine touch devices accurately, especially considering the
-      existence of hybrid devices (a mix of mouse and touch input). Simply detecting the
-      user agent is not enough.
+      It can be tricky to determine touch devices accurately, especially
+      considering the existence of hybrid devices (a mix of mouse and touch
+      input). Simply detecting the user agent is not enough.
     </p>
     <p>
-      A user can switch between either input type at any time which is why dynamic input
-      detection is enabled. You can hook into Tippy's detection of user input changes by
-      defining the following callback function:
+      A user can switch between either input type at any time which is why
+      dynamic input detection is enabled. You can hook into Tippy's detection of
+      user input changes by defining the following callback function:
     </p>
 
     <Code lang="js">{`tippy.browser.onUserInputChange = type => {
@@ -317,9 +320,9 @@ parent._tippy.destroy(false)
 `}</Code>
 
     <p>
-      Whenever the user changes their input method, you can react to it inside the
-      callback function. To disable tooltips for touch input but keep them enabled for
-      mouse input, you can do the following:
+      Whenever the user changes their input method, you can react to it inside
+      the callback function. To disable tooltips for touch input but keep them
+      enabled for mouse input, you can do the following:
     </p>
 
     <Code lang="js">
@@ -336,11 +339,12 @@ tippy.browser.onUserInputChange = type => {
 
     <h3>Hiding tooltips on scroll</h3>
     <p>
-      Due to the way browsers fire <code>mouseleave</code> events, it may be desirable to
-      hide tooltips and immediately disable their event listeners whenever scrolling
-      occurs. This might also help reduce the intrusiveness of a tooltip on small screen
-      touch devices, as it will begin hiding out of the way whenever they scroll, rather
-      than whenever they tap somewhere else.
+      Due to the way browsers fire <code>mouseleave</code> events, it may be
+      desirable to hide tooltips and immediately disable their event listeners
+      whenever scrolling occurs. This might also help reduce the intrusiveness
+      of a tooltip on small screen touch devices, as it will begin hiding out of
+      the way whenever they scroll, rather than whenever they tap somewhere
+      else.
     </p>
 
     <Code lang="js">{`window.addEventListener('scroll', () => {
@@ -357,15 +361,15 @@ tippy.browser.onUserInputChange = type => {
 
     <h3>Get all Tippy instances</h3>
     <p>
-      Getting all (non-destroyed) Tippy instances on the document can be done in one
-      single line:
+      Getting all (non-destroyed) Tippy instances on the document can be done in
+      one single line:
     </p>
 
     <Code lang="js">{`Array.from(document.querySelectorAll('[data-tippy]'), el => el._tippy)`}</Code>
 
     <p>
-      This returns an array holding every current Tippy instance (excluding delegates). To
-      include delegates, use this selector:
+      This returns an array holding every current Tippy instance (excluding
+      delegates). To include delegates, use this selector:
     </p>
 
     <Code lang="js">{`'[data-tippy], [data-tippy-delegate]'`}</Code>

@@ -11,8 +11,8 @@ export default () => (state, actions) => (
       </a>
     </div>
     <p>
-      Tippy instances have 5 methods available which allow you to control the tooltip
-      without the use of UI events. They are:
+      Tippy instances have 5 methods available which allow you to control the
+      tooltip without the use of UI events. They are:
     </p>
     <ul>
       <li>
@@ -37,14 +37,15 @@ export default () => (state, actions) => (
 tippy(btn)`}</Code>
 
     <p>
-      The Tippy instance is stored on the button element via the <code>_tippy</code>{' '}
-      property.
+      The Tippy instance is stored on the button element via the{' '}
+      <code>_tippy</code> property.
     </p>
 
     <p>
-      <span class="badge">v2.5</span> If you are dealing with a single element/tooltip,
-      you can use <code>tippy.one()</code> method to directly return the instance instead
-      of having to use the <code>_tippy</code> property.
+      <span class="badge">v2.5</span> If you are dealing with a single
+      element/tooltip, you can use <code>tippy.one()</code> method to directly
+      return the instance instead of having to use the <code>_tippy</code>{' '}
+      property.
     </p>
     <Code lang="js">{`const instance = tippy.one('button')`}</Code>
 
@@ -68,21 +69,23 @@ btn._tippy.hide(1000) // 1000ms`}</Code>
 
     <h3>Destroy the tooltip</h3>
     <p>
-      To permanently destroy the tooltip and remove all listeners from the reference
-      element:
+      To permanently destroy the tooltip and remove all listeners from the
+      reference element:
     </p>
     <Code lang="js">{`btn._tippy.destroy()`}</Code>
 
     <p>
-      The <code>_tippy</code> property is deleted from the reference element upon
-      destruction.
+      The <code>_tippy</code> property is deleted from the reference element
+      upon destruction.
     </p>
 
     <h3>Update the tooltip</h3>
-    <p>There is no method to update the tooltip content, because it's easy to do!</p>
     <p>
-      Option 1 (recommended): Change the title on the reference element and use the{' '}
-      <code>dynamicTitle</code> option:
+      There is no method to update the tooltip content, because it's easy to do!
+    </p>
+    <p>
+      Option 1 (recommended): Change the title on the reference element and use
+      the <code>dynamicTitle</code> option:
     </p>
     <Code lang="js">{`tippy(btn, { dynamicTitle: true })
 btn.title = 'New tooltip :)'`}</Code>
@@ -91,12 +94,12 @@ btn.title = 'New tooltip :)'`}</Code>
     <Code lang="js">{`btn._tippy.popper.querySelector('.tippy-content').textContent = 'New tooltip :)'`}</Code>
 
     <p>
-      Note: With the above method, <code>_tippy.title</code> won't reflect the new title,
-      you'll need to update it manually.
+      Note: With the above method, <code>_tippy.title</code> won't reflect the
+      new title, you'll need to update it manually.
     </p>
     <p>
-      If you're using an HTML template, save it to a variable reference to modify it
-      later.
+      If you're using an HTML template, save it to a variable reference to
+      modify it later.
     </p>
     <Code lang="js">{`const template = document.querySelector('template')
 tippy(btn, { html: template })

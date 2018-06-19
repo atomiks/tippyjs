@@ -7,7 +7,11 @@ import getPopperPlacement from '../utils/getPopperPlacement'
  * @param {Object} options
  * @return {Boolean}
  */
-export default function cursorIsOutsideInteractiveBorder(event, popper, options) {
+export default function cursorIsOutsideInteractiveBorder(
+  event,
+  popper,
+  options
+) {
   if (!popper.getAttribute('x-placement')) return true
 
   const { clientX: x, clientY: y } = event

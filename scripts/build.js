@@ -27,7 +27,14 @@ const r = (entryFile, plugins = [], excludePopper) =>
     plugins:
       typeof plugins === 'string'
         ? [sassPluginOutput(plugins), cssOnly({ output: plugins })]
-        : [pluginJSON, pluginSCSS, pluginCSS, ...plugins, pluginCJS, pluginResolve],
+        : [
+            pluginJSON,
+            pluginSCSS,
+            pluginCSS,
+            ...plugins,
+            pluginCJS,
+            pluginResolve
+          ],
     external: excludePopper ? ['popper.js'] : []
   })
 const output = type => (fileName, isMinified) => ({

@@ -21,8 +21,8 @@ export default () => (state, { creatingHTMLTemplates }) => (
       Clones the template's <code>innerHTML</code> but does not modify it.
     </p>
     <p>
-      Option: <code>html: '#templateId'</code> selector matching a template on the
-      document
+      Option: <code>html: '#templateId'</code> selector matching a template on
+      the document
     </p>
     <ul>
       <li>Reusable</li>
@@ -34,7 +34,8 @@ export default () => (state, { creatingHTMLTemplates }) => (
     <h3>Option 2: Direct reference</h3>
     <p>Directly appends an element to the tooltip.</p>
     <p>
-      Option: <code>html: document.querySelector('#templateId')</code> HTMLElement
+      Option: <code>html: document.querySelector('#templateId')</code>{' '}
+      HTMLElement
     </p>
     <ul>
       <li>Can only be used once</li>

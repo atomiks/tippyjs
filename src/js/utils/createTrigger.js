@@ -9,7 +9,13 @@ import { browser, isIE } from '../core/globals'
  * @return {Array} - array of listener objects
  */
 export default function createTrigger(eventType, reference, handlers, options) {
-  const { onTrigger, onMouseLeave, onBlur, onDelegateShow, onDelegateHide } = handlers
+  const {
+    onTrigger,
+    onMouseLeave,
+    onBlur,
+    onDelegateShow,
+    onDelegateHide
+  } = handlers
   const listeners = []
 
   if (eventType === 'manual') return listeners

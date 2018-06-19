@@ -29,7 +29,7 @@
     ]
   },
   "prettier": {
-    "printWidth": 90,
+    "printWidth": 80,
     "semi": false,
     "singleQuote": true
   },

@@ -101,7 +101,9 @@ describe('allowTitleHTML', () => {
     const el = createReferenceElement()
     el.title = '<strong>tooltip</strong>'
     const tip = tippy.one(el, { allowTitleHTML: false })
-    expect(tip.popper.querySelector(selectors.CONTENT).querySelector('strong')).toBeNull()
+    expect(
+      tip.popper.querySelector(selectors.CONTENT).querySelector('strong')
+    ).toBeNull()
   })
 })
 
@@ -134,7 +136,9 @@ describe('animateFill', () => {
       animateFill: true
     })
     expect(
-      tip.popper.querySelector(selectors.TOOLTIP).hasAttribute('data-animatefill')
+      tip.popper
+        .querySelector(selectors.TOOLTIP)
+        .hasAttribute('data-animatefill')
     ).toBe(true)
   })
 
@@ -143,7 +147,9 @@ describe('animateFill', () => {
       animateFill: false
     })
     expect(
-      tip.popper.querySelector(selectors.TOOLTIP).hasAttribute('data-animatefill')
+      tip.popper
+        .querySelector(selectors.TOOLTIP)
+        .hasAttribute('data-animatefill')
     ).toBe(false)
   })
 })

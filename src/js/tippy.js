@@ -38,7 +38,10 @@ function tippy(selector, options, one) {
     selector,
     options,
     tooltips: browser.supported
-      ? createTooltips(one && firstReference ? [firstReference] : references, options)
+      ? createTooltips(
+          one && firstReference ? [firstReference] : references,
+          options
+        )
       : [],
     destroyAll() {
       this.tooltips.forEach(tooltip => tooltip.destroy())
