@@ -72,7 +72,12 @@ export class Tippy {
     // If the `dynamicTitle` option is true, the instance is allowed
     // to be created with an empty title. Make sure that the tooltip
     // content is not empty before showing it
-    if (options.dynamicTitle && !reference.getAttribute('data-original-title')) return
+    if (
+      options.dynamicTitle &&
+      !reference.getAttribute('data-original-title')
+    ) {
+      return
+    }
 
     // Do not show tooltip if reference contains 'disabled' attribute. FF fix for #221
     if (reference.hasAttribute('disabled')) return
@@ -116,7 +121,10 @@ export class Tippy {
       }
 
       // Re-apply transition durations
-      applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration)
+      applyTransitionDuration(
+        [tooltip, backdrop, backdrop ? content : null],
+        duration
+      )
 
       if (backdrop) {
         getComputedStyle(backdrop)[prefix('transform')]
@@ -175,15 +183,16 @@ export class Tippy {
     popper.style.visibility = 'hidden'
     this.state.visible = false
 
-    applyTransitionDuration([tooltip, backdrop, backdrop ? content : null], duration)
+    applyTransitionDuration(
+      [tooltip, backdrop, backdrop ? content : null],
+      duration
+    )
 
     setVisibilityState([tooltip, backdrop], 'hidden')
 
     if (options.interactive && options.trigger.indexOf('click') > -1) {
       focus(reference)
     }
-
-    this.popperInstance.disableEventListeners()
 
     /*
     * This call is deferred because sometimes when the tooltip is still transitioning in but hide()
@@ -196,9 +205,14 @@ export class Tippy {
         if (this.state.visible || !options.appendTo.contains(popper)) return
 
         if (!this._(key).isPreparingToShow) {
-          document.removeEventListener('mousemove', this._(key).followCursorListener)
+          document.removeEventListener(
+            'mousemove',
+            this._(key).followCursorListener
+          )
           this._(key).lastMouseMoveEvent = null
         }
+
+        this.popperInstance.disableEventListeners()
 
         reference.removeAttribute('aria-describedby')
 
@@ -234,7 +248,11 @@ export class Tippy {
 
     delete this.reference._tippy
 
-    const attributes = ['data-original-title', 'data-tippy', 'data-tippy-delegate']
+    const attributes = [
+      'data-original-title',
+      'data-tippy',
+      'data-tippy-delegate'
+    ]
     attributes.forEach(attr => {
       this.reference.removeAttribute(attr)
     })
@@ -402,11 +420,6 @@ export function _getEventListeners() {
     } else {
       _enter.call(this, event)
     }
-
-    // iOS prevents click events from firing
-    if (shouldStopEvent && browser.iOS && this.reference.click) {
-      this.reference.click()
-    }
   }
 
   const onMouseLeave = event => {
@@ -423,12 +436,15 @@ export function _getEventListeners() {
 
       const onMouseMove = event => {
         const referenceCursorIsOver = closest(event.target, selectors.REFERENCE)
-        const cursorIsOverPopper = closest(event.target, selectors.POPPER) === this.popper
+        const cursorIsOverPopper =
+          closest(event.target, selectors.POPPER) === this.popper
         const cursorIsOverReference = referenceCursorIsOver === this.reference
 
         if (cursorIsOverPopper || cursorIsOverReference) return
 
-        if (cursorIsOutsideInteractiveBorder(event, this.popper, this.options)) {
+        if (
+          cursorIsOutsideInteractiveBorder(event, this.popper, this.options)
+        ) {
           document.body.removeEventListener('mouseleave', hide)
           document.removeEventListener('mousemove', onMouseMove)
 
@@ -498,13 +514,17 @@ export function _createPopperInstance() {
       ...(popperOptions ? popperOptions.modifiers : {}),
       arrow: {
         element: arrowSelector,
-        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {})
+        ...(popperOptions && popperOptions.modifiers
+          ? popperOptions.modifiers.arrow
+          : {})
       },
       flip: {
         enabled: options.flip,
         padding: options.distance + 5 /* 5px from viewport boundary */,
         behavior: options.flipBehavior,
-        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {})
+        ...(popperOptions && popperOptions.modifiers
+          ? popperOptions.modifiers.flip
+          : {})
       },
       offset: {
         offset: options.offset,
@@ -514,7 +534,9 @@ export function _createPopperInstance() {
       }
     },
     onCreate() {
-      tooltip.style[getPopperPlacement(popper)] = getOffsetDistanceInPx(options.distance)
+      tooltip.style[getPopperPlacement(popper)] = getOffsetDistanceInPx(
+        options.distance
+      )
 
       if (arrow && options.arrowTransform) {
         computeArrowTransform(popper, arrow, options.arrowTransform)
@@ -526,7 +548,9 @@ export function _createPopperInstance() {
       styles.bottom = ''
       styles.left = ''
       styles.right = ''
-      styles[getPopperPlacement(popper)] = getOffsetDistanceInPx(options.distance)
+      styles[getPopperPlacement(popper)] = getOffsetDistanceInPx(
+        options.distance
+      )
 
       if (arrow && options.arrowTransform) {
         computeArrowTransform(popper, arrow, options.arrowTransform)
@@ -631,7 +655,9 @@ export function _setFollowCursorListener() {
  */
 export function _makeSticky() {
   const applyTransitionDuration = () => {
-    this.popper.style[prefix('transitionDuration')] = `${this.options.updateDuration}ms`
+    this.popper.style[prefix('transitionDuration')] = `${
+      this.options.updateDuration
+    }ms`
   }
 
   const removeTransitionDuration = () => {
