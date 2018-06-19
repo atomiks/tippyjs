@@ -117,7 +117,6 @@ export default function createTippy(reference, collectionOptions) {
   reference._tippy = tip
   popper._tippy = tip
 
-  // ❤️ Thanks hoisting
   return tip
 
   /* ========================= 🔒 Private methods 🔒 ========================= */

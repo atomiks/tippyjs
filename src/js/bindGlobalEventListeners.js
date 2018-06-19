@@ -14,7 +14,7 @@ export default function bindEventListeners() {
     Browser.isUsingTouch = true
 
     if (Browser.isIOS) {
-      document.body.classList.add('tippy-touch')
+      document.body.classList.add('tippy-iOS')
     }
 
     if (Browser.userInputDetectionEnabled && window.performance) {

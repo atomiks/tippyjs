@@ -391,9 +391,9 @@ export const transformAxisBasedOnPlacement = (axis, isVertical) => {
   return isVertical
     ? axis
     : {
-        X: 'Y',
-        Y: 'X'
-      }[axis]
+      X: 'Y',
+      Y: 'X'
+    }[axis]
 }
 
 /**
