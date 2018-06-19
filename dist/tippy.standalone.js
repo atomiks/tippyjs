@@ -1,5 +1,5 @@
 /*!
-* Tippy.js v2.5.2
+* Tippy.js v2.5.3
 * (c) 2017-2018 atomiks
 * MIT
 */
@@ -11,7 +11,7 @@
 
 Popper = Popper && Popper.hasOwnProperty('default') ? Popper['default'] : Popper;
 
-var version = "2.5.2";
+var version = "2.5.3";
 
 var isBrowser = typeof window !== 'undefined';
 
@@ -834,7 +834,9 @@ var Tippy = function () {
       // content is not empty before showing it
 
 
-      if (options.dynamicTitle && !reference.getAttribute('data-original-title')) return;
+      if (options.dynamicTitle && !reference.getAttribute('data-original-title')) {
+        return;
+      }
 
       // Do not show tooltip if reference contains 'disabled' attribute. FF fix for #221
       if (reference.hasAttribute('disabled')) return;
@@ -952,8 +954,6 @@ var Tippy = function () {
         focus(reference);
       }
 
-      this.popperInstance.disableEventListeners();
-
       /*
       * This call is deferred because sometimes when the tooltip is still transitioning in but hide()
       * is called before it finishes, the CSS transition won't reverse quickly enough, meaning
@@ -967,6 +967,10 @@ var Tippy = function () {
           if (!_this2._(key).isPreparingToShow) {
             document.removeEventListener('mousemove', _this2._(key).followCursorListener);
             _this2._(key).lastMouseMoveEvent = null;
+          }
+
+          if (_this2.popperInstance) {
+            _this2.popperInstance.disableEventListeners();
           }
 
           reference.removeAttribute('aria-describedby');
@@ -1177,11 +1181,6 @@ function _getEventListeners() {
       _leave.call(_this6);
     } else {
       _enter.call(_this6, event);
-    }
-
-    // iOS prevents click events from firing
-    if (shouldStopEvent && browser.iOS && _this6.reference.click) {
-      _this6.reference.click();
     }
   };
 
