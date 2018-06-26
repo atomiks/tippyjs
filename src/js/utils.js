@@ -549,13 +549,10 @@ export const updatePopperPosition = (
 }
 
 /**
- * Defers a function's execution until the next animation frame and until
- * the call stack has cleared
+ * Defers a function's execution until the call stack has cleared
  */
 export const defer = fn => {
-  requestAnimationFrame(() => {
-    setTimeout(fn, 1)
-  })
+  setTimeout(fn, 1)
 }
 
 /**
@@ -615,20 +612,23 @@ export const getPopperPlacement = popper =>
 /**
  * Evaluates an object of options
  */
-export const evaluateOptions = (reference, options) => {
-  const out = {}
+export const evaluateOptions = (reference, collectionOptions) => {
+  const out = {
+    ...collectionOptions,
+    ...(collectionOptions.performance ? {} : getDataAttributeOptions(reference))
+  }
 
-  if (options.arrow) {
+  if (collectionOptions.arrow) {
     out.animateFill = false
   }
 
-  if (typeof options.appendTo === 'function') {
-    out.appendTo = options.appendTo(reference)
+  if (typeof collectionOptions.appendTo === 'function') {
+    out.appendTo = collectionOptions.appendTo(reference)
   }
 
-  if (typeof options.content === 'function') {
-    out.content = options.content(reference)
+  if (typeof collectionOptions.content === 'function') {
+    out.content = collectionOptions.content(reference)
   }
 
-  return { ...options, ...out }
+  return { ...collectionOptions, ...out }
 }

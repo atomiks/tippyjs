@@ -3,7 +3,6 @@ import { Defaults } from './defaults'
 import { Browser } from './browser'
 import { Selectors } from './selectors'
 import {
-  getDataAttributeOptions,
   addEventListeners,
   createPopperElement,
   elementCanReceiveFocus,
@@ -46,10 +45,7 @@ export default function createTippy(reference, collectionOptions) {
   // 🚨 NOTE: mutation here
   const id = idCounter++
 
-  const options = evaluateOptions(reference, {
-    ...collectionOptions,
-    ...(collectionOptions.performance ? {} : getDataAttributeOptions(reference))
-  })
+  const options = evaluateOptions(reference, collectionOptions)
 
   // Add listeners to the element based on `options.trigger`
   // 🚨 NOTE: mutation here
@@ -83,6 +79,7 @@ export default function createTippy(reference, collectionOptions) {
     options,
     listeners,
     state,
+    set,
     show,
     hide,
     enable,
@@ -221,6 +218,28 @@ export default function createTippy(reference, collectionOptions) {
     }
   }
 
+  function set(partialOptions) {
+    const newOptions = evaluateOptions(tip.reference, {
+      ...tip.options,
+      ...partialOptions
+    })
+
+    const { isVisible } = tip.state
+
+    if (isVisible && tip.options.appendTo.contains(tip.popper)) {
+      tip.options.appendTo.removeChild(tip.popper)
+    }
+
+    tip.popper = createPopperElement(tip.id, newOptions)
+    tip.popperChildren = getChildren(tip.popper)
+    tip.popperInstance && (tip.popperInstance.popper = tip.popper)
+    tip.options = newOptions
+
+    if (isVisible) {
+      show(0)
+    }
+  }
+
   function onTrigger(event) {
     if (!tip.state.isEnabled) {
       return
@@ -246,11 +265,6 @@ export default function createTippy(reference, collectionOptions) {
       leave()
     } else {
       enter(event)
-    }
-
-    // iOS prevents click events from firing
-    if (shouldStopEvent && Browser.isIOS && reference.click) {
-      reference.click()
     }
   }
 
@@ -326,7 +340,7 @@ export default function createTippy(reference, collectionOptions) {
   }
 
   function createPopperInstance() {
-    const { tooltip } = popperChildren
+    const { tooltip } = tip.popperChildren
     const { popperOptions } = tip.options
 
     const arrowSelector =
@@ -421,8 +435,8 @@ export default function createTippy(reference, collectionOptions) {
     // If the instance previously had followCursor behavior, it will be positioned incorrectly
     // if triggered by `focus` afterwards - update the reference back to the real DOM element
     if (hasFollowCursorBehavior()) {
-      if (popperChildren.arrow) {
-        popperChildren.arrow.style.margin = ''
+      if (tip.popperChildren.arrow) {
+        tip.popperChildren.arrow.style.margin = ''
       }
       tip.popperInstance.reference = tip.reference
     }
@@ -488,7 +502,7 @@ export default function createTippy(reference, collectionOptions) {
       return callback()
     }
 
-    const { tooltip } = popperChildren
+    const { tooltip } = tip.popperChildren
 
     const toggleListeners = (action, listener) => {
       if (!listener) {
@@ -547,7 +561,7 @@ export default function createTippy(reference, collectionOptions) {
 
     // Prevent a transition if the popper is at the opposite placement
     applyTransitionDuration(
-      [tip.popper, popperChildren.tooltip, popperChildren.backdrop],
+      [tip.popper, tip.popperChildren.tooltip, tip.popperChildren.backdrop],
       0
     )
 
@@ -574,15 +588,15 @@ export default function createTippy(reference, collectionOptions) {
 
       applyTransitionDuration(
         [
-          popperChildren.tooltip,
-          popperChildren.backdrop,
-          popperChildren.backdrop ? popperChildren.content : null
+          tip.popperChildren.tooltip,
+          tip.popperChildren.backdrop,
+          tip.popperChildren.backdrop ? tip.popperChildren.content : null
         ],
         duration
       )
 
-      if (popperChildren.backdrop) {
-        getComputedStyle(popperChildren.backdrop)[prefix('transform')]
+      if (tip.popperChildren.backdrop) {
+        getComputedStyle(tip.popperChildren.backdrop)[prefix('transform')]
       }
 
       if (tip.options.interactive) {
@@ -594,13 +608,13 @@ export default function createTippy(reference, collectionOptions) {
       }
 
       setVisibilityState(
-        [popperChildren.tooltip, popperChildren.backdrop],
+        [tip.popperChildren.tooltip, tip.popperChildren.backdrop],
         'visible'
       )
 
       onTransitionEnd(duration, () => {
         if (!tip.options.updateDuration) {
-          popperChildren.tooltip.classList.add('tippy-notransition')
+          tip.popperChildren.tooltip.classList.add('tippy-notransition')
         }
 
         if (tip.options.interactive) {
@@ -622,7 +636,7 @@ export default function createTippy(reference, collectionOptions) {
     tip.options.onHide(tip)
 
     if (!tip.options.updateDuration) {
-      popperChildren.tooltip.classList.remove('tippy-notransition')
+      tip.popperChildren.tooltip.classList.remove('tippy-notransition')
     }
 
     if (tip.options.interactive) {
@@ -634,15 +648,15 @@ export default function createTippy(reference, collectionOptions) {
 
     applyTransitionDuration(
       [
-        popperChildren.tooltip,
-        popperChildren.backdrop,
-        popperChildren.backdrop ? popperChildren.content : null
+        tip.popperChildren.tooltip,
+        tip.popperChildren.backdrop,
+        tip.popperChildren.backdrop ? tip.popperChildren.content : null
       ],
       duration
     )
 
     setVisibilityState(
-      [popperChildren.tooltip, popperChildren.backdrop],
+      [tip.popperChildren.tooltip, tip.popperChildren.backdrop],
       'hidden'
     )
 
