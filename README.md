@@ -75,11 +75,11 @@ View the [docs](https://atomiks.github.io/tippyjs/) for details on all of the op
 
 `reference` can be:
 
-* CSS selector string
-* DOM element (`HTMLElement`, `SVGElement`)
-* Array of DOM elements
-* `NodeList`
-* `Object` (virtual reference)
+- CSS selector string
+- DOM element (`HTMLElement`, `SVGElement`)
+- Array of DOM elements
+- `NodeList`
+- `Object` (virtual reference)
 
 ### Options
 
@@ -233,8 +233,13 @@ tippy(reference, {
 const instance = tippy.one(reference)
 ```
 
-* `instance.show([duration])` - show the tippy, optional duration argument in ms
-* `instance.hide([duration])` - hide the tippy, optional duration argument in ms
-* `instance.enable()` - enable the tippy to allow it to show or hide
-* `instance.disable()` - disable the tippy to prevent it from showing or hiding
-* `instance.destroy()` - destroy the tippy, remove listeners and restore title attribute
+- `instance.show([duration])` - show the tippy, optional duration argument in ms
+- `instance.hide([duration])` - hide the tippy, optional duration argument in ms
+- `instance.enable()` - enable the tippy to allow it to show or hide
+- `instance.disable()` - disable the tippy to prevent it from showing or hiding
+- `instance.destroy()` - destroy the tippy, remove listeners and restore title attribute
+
+### Component / Library Wrappers
+
+- [Hyperapp Component](https://gist.github.com/atomiks/47a8f4e7c0a3823282974eb2de80ebec)
+- [React Component](https://gist.github.com/atomiks/25ba93a551fc1e8a1ef18aa7669c6699)
