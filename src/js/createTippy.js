@@ -13,7 +13,7 @@ import {
   getOffsetDistanceInPx,
   getValue,
   closest,
-  cursorIsOutsideInteractiveBorder,
+  isCursorOutsideInteractiveBorder,
   applyTransitionDuration,
   prefix,
   setVisibilityState,
@@ -42,13 +42,11 @@ export default function createTippy(reference, collectionOptions) {
 
   /* ========================= 🔑 Public props 🔑 ========================= */
   // The id counter is incremented each time a tippy is created
-  // 🚨 NOTE: mutation here
   const id = idCounter++
 
   const options = evaluateOptions(reference, collectionOptions)
 
   // Add listeners to the element based on `options.trigger`
-  // 🚨 NOTE: mutation here
   const listeners = addEventListeners(reference, options, {
     onTrigger,
     onMouseLeave,
@@ -97,20 +95,17 @@ export default function createTippy(reference, collectionOptions) {
   }
 
   // Ensure the reference element can receive focus (and is not a delegate)
-  // 🚨 NOTE: mutation here
   if (options.a11y && !options.target && !elementCanReceiveFocus(reference)) {
     setAttr(reference, 'tabindex', '0')
   }
 
   // Highlight the element as having an active tippy instance with a `data` attribute
-  // 🚨 NOTE: mutation here
   setAttr(
     reference,
     options.target ? 'data-tippy-delegate' : 'data-tippy-reference'
   )
 
   // Install shortcuts
-  // 🚨 NOTE: mutations here
   reference._tippy = tip
   popper._tippy = tip
 
@@ -231,6 +226,7 @@ export default function createTippy(reference, collectionOptions) {
     }
 
     tip.popper = createPopperElement(tip.id, newOptions)
+    tip.popper._tippy = tip
     tip.popperChildren = getChildren(tip.popper)
     tip.popperInstance && (tip.popperInstance.popper = tip.popper)
     tip.options = newOptions
@@ -289,7 +285,14 @@ export default function createTippy(reference, collectionOptions) {
           return
         }
 
-        if (cursorIsOutsideInteractiveBorder(event, tip.popper, tip.options)) {
+        if (
+          isCursorOutsideInteractiveBorder(
+            getPopperPlacement(tip.popper),
+            tip.popper.getBoundingClientRect(),
+            event,
+            tip.options
+          )
+        ) {
           document.body.removeEventListener('mouseleave', leave)
           document.removeEventListener('mousemove', onMouseMove)
 
@@ -380,7 +383,7 @@ export default function createTippy(reference, collectionOptions) {
         )
 
         if (arrow && options.arrowTransform) {
-          computeArrowTransform(tip.popper, arrow, tip.options.arrowTransform)
+          computeArrowTransform(arrow, tip.options.arrowTransform)
         }
       },
       onUpdate() {
@@ -395,7 +398,7 @@ export default function createTippy(reference, collectionOptions) {
         )
 
         if (arrow && tip.options.arrowTransform) {
-          computeArrowTransform(tip.popper, arrow, tip.options.arrowTransform)
+          computeArrowTransform(arrow, tip.options.arrowTransform)
         }
       }
     }

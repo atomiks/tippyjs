@@ -22,14 +22,14 @@
       margin: 8px;
       padding: 8px;
     }
-    
+
     .scroll {
       width: 300px;
       height: 300px;
       overflow-y: scroll;
       background: gray;
     }
-    
+
     .scroll > div {
       margin-bottom: 12px;
     }
@@ -39,7 +39,7 @@
 <body>
   <div class="container">
     <h1>Tippy visual tests and development</h1>
-    
+
     <div id="scroll" class="scroll">
       <h2>scroll</h2>
       <div>Lorem ipsum</div>
@@ -54,12 +54,12 @@
       <div>Lorem ipsum</div>
       <button data-tippy-content="Scrolling tippy" data-tippy-popperOptions="{ modifiers: { preventOverflow: { enabled: false } } }">Auto init</button>
     </div>
-    
+
     <div id="auto-init">
       <h2>auto init</h2>
       <button data-tippy="I was auto-initialized">Auto init</button>
     </div>
-    
+
     <div id="show-on-init">
       <h2>show on init</h2>
       <button data-tippy-showOnInit="true">Show on init</button>
@@ -109,6 +109,10 @@
       <button data-tippy-arrow="true" data-tippy-arrowTransform="scaleY(0.5)">scaleY(0.5)</button>
       <button data-tippy-arrow="true" data-tippy-arrowTransform="translateY(5px)">translateY(5px)</button>
       <button data-tippy-arrow="true" data-tippy-arrowTransform="translateX(-5px)">translateX(-5px)</button>
+      <button data-tippy-arrow="true" data-tippy-arrowTransform="scale(5, 10)">scale(5, 10)</button>
+      <button data-tippy-arrow="true" data-tippy-arrowTransform="scale(5, 10)" data-tippy-placement="bottom">scale(5, 10)</button>
+      <button data-tippy-arrow="true" data-tippy-arrowTransform="scale(5, 10)" data-tippy-placement="left">scale(5, 10)</button>
+      <button data-tippy-arrow="true" data-tippy-arrowTransform="scale(5, 10)" data-tippy-placement="right">scale(5, 10)</button>
       <button data-tippy-placement="left" data-tippy-arrow="true" data-tippy-arrowTransform="translateY(5px)">translateY(5px)</button>
       <button data-tippy-placement="right" data-tippy-arrow="true" data-tippy-arrowTransform="translateX(-5px)">translateX(-5px)</button>
     </div>
@@ -175,13 +179,13 @@
       <button data-tippy-delay="[0, 1000]">[0, 1000]</button>
       <button data-tippy-delay="[1000, 200]">[1000, 200]</button>
     </div>
-    
+
     <div id="a11y">
       <h2>a11y</h2>
       <p data-tippy-content="a11y">Inaccessible &lt;p&gt; element.</p>
     </div>
   </div>
-  
+
   <script></script>
 </body>
 

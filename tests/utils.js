@@ -1,4 +1,6 @@
-import Selectors from '../src/js/selectors'
+import { Browser } from '../src/js/browser'
+
+const BrowserClone = { ...Browser }
 
 export const IDENTIFIER = '__tippy'
 
@@ -8,7 +10,7 @@ export const cleanDocumentBody = () => {
   document.body.innerHTML = ''
 }
 
-export const hasTippy = el => el.hasAttribute('data-tippy')
+export const hasTippy = el => !!el._tippy
 
 export const createReference = ({ appendToBody } = {}) => {
   const el = document.createElement('div')
@@ -22,9 +24,7 @@ export const createReference = ({ appendToBody } = {}) => {
 }
 
 export const createReferenceArray = ({ appendToBody } = {}) => {
-  return Array(10)
-    .fill()
-    .map(() => createReference({ appendToBody }))
+  return [...Array(10)].map(() => createReference({ appendToBody }))
 }
 
 export const withTestOptions = options => ({
@@ -32,3 +32,9 @@ export const withTestOptions = options => ({
   content: 'content',
   ...options
 })
+
+export const resetBrowser = () => {
+  for (const key in Browser) {
+    Browser[key] = BrowserClone[key]
+  }
+}

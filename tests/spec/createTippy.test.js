@@ -9,6 +9,7 @@ import {
 import { Defaults } from '../../src/js/defaults'
 import { Selectors } from '../../src/js/selectors'
 import createTippy from '../../src/js/createTippy'
+import * as Utils from '../../src/js/utils'
 
 afterEach(cleanDocumentBody)
 
@@ -83,6 +84,25 @@ describe('instance.destroy', () => {
     instance.destroy()
     expect(ref.hasAttribute('data-tippy-reference')).toBe(false)
   })
+
+  it('does nothing if the instance is already destroyed', () => {
+    const ref = createReference()
+    const instance = createTippy(ref, Defaults)
+    instance.state.isDestroyed = true
+    instance.destroy()
+    expect(ref.hasAttribute('data-tippy-reference')).toBe(true)
+  })
+
+  it('destroys target instances if `true` is passed as an argument', () => {
+    const ref = createReference({ appendToBody: true })
+    const p = document.createElement('p')
+    ref.append(p)
+    const instance = createTippy(ref, { ...Defaults, target: 'p' })
+    p._tippy = createTippy(p, Defaults)
+    expect(p._tippy).toBeDefined()
+    ref._tippy.destroy(true)
+    expect(p._tippy).toBeUndefined()
+  })
 })
 
 describe('instance.show', () => {
@@ -119,6 +139,26 @@ describe('instance.show', () => {
       instance.destroy()
       done()
     }, 20)
+  })
+
+  it('adds .tippy-active class if interactive', done => {
+    const instance = createTippy(createReference({ appendToBody: true }), {
+      ...Defaults,
+      interactive: true
+    })
+    instance.show()
+    setTimeout(() => {
+      expect(instance.reference.classList.contains('tippy-active')).toBe(true)
+      done()
+    })
+  })
+
+  it('does not show tooltip if the reference has a `disabled` attribute', () => {
+    const ref = createReference({ appendToBody: true })
+    ref.setAttribute('disabled', 'disabled')
+    const instance = createTippy(ref, Defaults)
+    instance.show()
+    expect(instance.state.isVisible).toBe(false)
   })
 })
 
@@ -204,5 +244,45 @@ describe('instance.disable', () => {
     instance.show()
     expect(instance.state.isVisible).toBe(false)
     instance.destroy()
+  })
+})
+
+describe('instance.set', () => {
+  it('sets the new options by merging them with the current instance', () => {
+    const instance = createTippy(createReference(), Defaults)
+    expect(instance.options.arrow).toBe(Defaults.arrow)
+    expect(instance.options.duration).toBe(Defaults.duration)
+    instance.set({ arrow: !Defaults.arrow, duration: 82 })
+    expect(instance.options.arrow).toBe(!Defaults.arrow)
+    expect(instance.options.duration).toBe(82)
+  })
+
+  it('redraws the tooltip by creating a new popper element', () => {
+    const instance = createTippy(createReference(), Defaults)
+    expect(instance.popper.querySelector('.tippy-arrow')).toBeNull()
+    instance.set({ arrow: true })
+    expect(instance.popper.querySelector('.tippy-arrow')).not.toBeNull()
+  })
+
+  it('popperChildren property is updated to reflect the new popper element', () => {
+    const instance = createTippy(createReference(), Defaults)
+    expect(instance.popperChildren.arrow).toBeNull()
+    instance.set({ arrow: true })
+    expect(instance.popperChildren.arrow).not.toBeNull()
+  })
+
+  it('popperInstance popper is updated to the new popper', () => {
+    const instance = createTippy(createReference(), {
+      ...Defaults,
+      createPopperInstanceOnInit: true
+    })
+    instance.set({ arrow: true })
+    expect(instance.popperInstance.popper).toBe(instance.popper)
+  })
+
+  it('popper._tippy is defined with the correct instance', () => {
+    const instance = createTippy(createReference(), Defaults)
+    instance.set({ arrow: true })
+    expect(instance.popper._tippy).toBe(instance)
   })
 })

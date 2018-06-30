@@ -2,13 +2,12 @@ import {
   createReference,
   createReferenceArray,
   hasTippy,
-  cleanDocumentBody,
-  withTestOptions
+  cleanDocumentBody
 } from '../utils'
 
 import { Defaults } from '../../src/js/defaults'
 import { Selectors } from '../../src/js/selectors'
-import tippy from '../../src/js/tippy'
+import tippy, { autoInit } from '../../src/js/tippy'
 
 afterEach(cleanDocumentBody)
 
@@ -71,9 +70,31 @@ describe('tippy', () => {
     expect(tipCollection.instances).toEqual([])
     expect(instance.state.isDestroyed).toBe(true)
   })
+
+  it('polyfills a plain object as the virtual positioning reference', () => {
+    const ref = tippy({}).references[0]
+    expect(ref.isVirtual).toBe(true)
+    expect(ref.classList).toBeDefined()
+    expect(ref.attributes).toBeDefined()
+    expect(typeof ref.addEventListener).toBe('function')
+    expect(typeof ref.removeEventListener).toBe('function')
+    expect(typeof ref.setAttribute).toBe('function')
+    expect(typeof ref.removeAttribute).toBe('function')
+    expect(typeof ref.getAttribute).toBe('function')
+    expect(typeof ref.hasAttribute).toBe('function')
+    expect(typeof ref.classList.add).toBe('function')
+    expect(typeof ref.classList.remove).toBe('function')
+    expect(typeof ref.classList.contains).toBe('function')
+  })
+
+  it('does not add duplicate tooltips', () => {
+    const ref = createReference()
+    tippy(ref)
+    expect(tippy(ref).instances.length).toBe(0)
+  })
 })
 
-describe('tippy.one', () => {
+describe('tippy.one()', () => {
   it('returns the instance directly', () => {
     expect(tippy.one(createReference()).id).toBeDefined()
   })
@@ -86,12 +107,40 @@ describe('tippy.one', () => {
   })
 })
 
-describe('tippy.setDefaults', () => {
+describe('tippy.setDefaults()', () => {
   it('changes the default options applied to instances but does not mutate the original', () => {
     const ogDefaults = Defaults
     const newPlacement = 'bottom-end'
     tippy.setDefaults({ placement: newPlacement })
     expect(Defaults.placement).toBe(newPlacement)
     expect(ogDefaults.placement).not.toBe(newPlacement)
+  })
+})
+
+describe('tippy.disableAnimations()', () => {
+  it('disables animation-related props', () => {
+    const ogDefaults = Defaults
+    tippy.disableAnimations()
+    expect(Defaults.animateFill).toBe(false)
+    expect(Defaults.updateDuration).toBe(0)
+    expect(Defaults.duration).toBe(0)
+  })
+})
+
+describe('auto-init', () => {
+  it('adds a tooltip if "data-tippy" attribute is truthy', () => {
+    const reference = document.createElement('div')
+    reference.setAttribute('data-tippy', 'tooltip')
+    document.body.append(reference)
+    autoInit()
+    expect(hasTippy(reference)).toBe(true)
+  })
+
+  it('does not add tooltip if "data-tippy" attribute is falsy', () => {
+    const reference = document.createElement('div')
+    reference.setAttribute('data-tippy', '')
+    document.body.append(reference)
+    autoInit()
+    expect(hasTippy(reference)).toBe(false)
   })
 })

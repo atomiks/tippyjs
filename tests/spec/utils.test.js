@@ -4,10 +4,10 @@ import {
   createReferenceArray,
   hasTippy,
   cleanDocumentBody,
-  withTestOptions,
   IDENTIFIER
 } from '../utils'
 
+import tippy from '../../src/js/tippy'
 import { Selectors } from '../../src/js/selectors'
 import { Defaults } from '../../src/js/defaults'
 import * as Utils from '../../src/js/utils'
@@ -45,7 +45,6 @@ describe('isPlainObject', () => {
 
 describe('toArray', () => {
   it('converts a NodeList to an array', () => {
-    // NOTE: side effect here
     createReferenceArray({ appendToBody: true })
     const arr = Utils.toArray(document.querySelectorAll(IDENTIFIER))
     expect(Array.isArray(arr)).toBe(true)
@@ -70,7 +69,6 @@ describe('getArrayOfElements', () => {
   })
 
   it('returns an array of elements when given a valid selector string', () => {
-    // NOTE: side effect here
     createReferenceArray({ appendToBody: true })
     const allAreElements = Utils.getArrayOfElements(IDENTIFIER).every(
       value => value instanceof Element
@@ -139,14 +137,19 @@ describe('elementCanReceiveFocus', () => {
   })
 
   it('returns false for [disabled]', () => {
-    const disabled = el('div')
-    el.disabled = ''
-    expect(Utils.elementCanReceiveFocus(disabled)).toBe(false)
+    const ref = el('div')
+    ref.setAttribute('disabled', 'disabled')
+    expect(Utils.elementCanReceiveFocus(ref)).toBe(false)
   })
 
   it('returns false for other elements', () => {
     const other = el('span')
     expect(Utils.elementCanReceiveFocus(other)).toBe(false)
+  })
+
+  it('does not throw an error if given a virtual reference', () => {
+    const ref = {}
+    expect(Utils.elementCanReceiveFocus(ref)).toBe(true)
   })
 })
 
@@ -409,8 +412,140 @@ describe('transformAxisBasedOnPlacement', () => {
 })
 
 describe('transformNumbersBasedOnPlacement', () => {
-  describe('translate', () => {})
-  describe('scale', () => {})
+  const fn = Utils.transformNumbersBasedOnPlacement
+  const TOP = [true, false]
+  const BOTTOM = [true, true]
+  const LEFT = [false, false]
+  const RIGHT = [false, true]
+
+  describe('translate', () => {
+    // multi axis
+    it('multi axis: placement = top', () => {
+      expect(fn('translate', [9, 3], ...TOP)).toEqual('9px, 3px')
+    })
+
+    it('multi axis: placement = bottom', () => {
+      expect(fn('translate', [9, 3], ...BOTTOM)).toEqual('9px, -3px')
+    })
+
+    it('multi axis: placement = left', () => {
+      expect(fn('translate', [9, 3], ...LEFT)).toEqual('3px, 9px')
+    })
+
+    it('multi axis: placement = right', () => {
+      expect(fn('translate', [9, 3], ...RIGHT)).toEqual('-3px, 9px')
+    })
+
+    // single axis
+    it('single axis: placement = top', () => {
+      expect(fn('translate', [9], ...TOP)).toEqual('9px')
+    })
+
+    it('single axis: placement = bottom', () => {
+      expect(fn('translate', [9], ...BOTTOM)).toEqual('-9px')
+    })
+
+    it('single axis: placement = left', () => {
+      expect(fn('translate', [9], ...LEFT)).toEqual('9px')
+    })
+
+    it('single axis: placement = right', () => {
+      expect(fn('translate', [9], ...RIGHT)).toEqual('-9px')
+    })
+  })
+
+  describe('scale', () => {
+    // multi axis
+    it('multi axis: placement = top', () => {
+      expect(fn('scale', [9, 3], ...TOP)).toEqual('9, 3')
+    })
+
+    it('multi axis: placement = bottom', () => {
+      expect(fn('scale', [9, 3], ...BOTTOM)).toEqual('9, 3')
+    })
+
+    it('multi axis: placement = left', () => {
+      expect(fn('scale', [9, 3], ...LEFT)).toEqual('3, 9')
+    })
+
+    it('multi axis: placement = right', () => {
+      expect(fn('scale', [9, 3], ...RIGHT)).toEqual('3, 9')
+    })
+
+    // single axis
+    it('single axis: placement = top', () => {
+      expect(fn('scale', [9], ...TOP)).toEqual('9')
+    })
+
+    it('single axis: placement = bottom', () => {
+      expect(fn('scale', [9], ...BOTTOM)).toEqual('9')
+    })
+
+    it('single axis: placement = left', () => {
+      expect(fn('scale', [9], ...LEFT)).toEqual('9')
+    })
+
+    it('single axis: placement = right', () => {
+      expect(fn('scale', [9], ...RIGHT)).toEqual('9')
+    })
+  })
+})
+
+describe('getTransformAxis', () => {
+  const fn = Utils.getTransformAxis
+
+  it('returns the X axis correctly for translate', () => {
+    expect(fn('translateX(2px)', 'translate')).toBe('X')
+    expect(fn('translateX(2px) scaleY(5)', 'translate')).toBe('X')
+    expect(fn('scaleY(5) translateX(2px)', 'translate')).toBe('X')
+  })
+
+  it('returns the X axis correctly for scale', () => {
+    expect(fn('scaleX(2)', 'scale')).toBe('X')
+    expect(fn('scaleX(2) translateY(2px)', 'scale')).toBe('X')
+    expect(fn('translateY(2px) scaleX(2)', 'scale')).toBe('X')
+  })
+
+  it('returns the Y axis correctly for translate', () => {
+    expect(fn('translateY(2px)', 'translate')).toBe('Y')
+    expect(fn('scaleX(2) translateY(2px)', 'translate')).toBe('Y')
+    expect(fn('translateY(2px) scaleX(2)', 'translate')).toBe('Y')
+  })
+
+  it('returns the Y axis correctly for scale', () => {
+    expect(fn('scaleY(2)', 'scale')).toBe('Y')
+    expect(fn('translateX(2px) scaleY(2)', 'scale')).toBe('Y')
+    expect(fn('scaleY(2) translateX(2px)', 'scale')).toBe('Y')
+  })
+})
+
+describe('getTransformNumbers', () => {
+  const fn = Utils.getTransformNumbers
+  const RE = Utils.TRANSFORM_NUMBER_RE
+
+  it('returns the correct numbers for translate: single axis (X)', () => {
+    expect(fn('translateX(-5px)', RE.translate)).toEqual([-5])
+  })
+
+  it('returns the correct numbers for translate: single axis (Y)', () => {
+    expect(fn('translateY(84px)', RE.translate)).toEqual([84])
+  })
+
+  it('returns the correct numbers for translate: multi axis', () => {
+    expect(fn('translate(24px, 82px)', RE.translate)).toEqual([24, 82])
+  })
+
+  it('returns the correct numbers for scale: single axis (X)', () => {
+    expect(fn('scaleX(-2)', RE.scale)).toEqual([-2])
+  })
+
+  it('returns the correct numbers for scale: single axis (Y)', () => {
+    expect(fn('scaleY(3)', RE.scale)).toEqual([3])
+  })
+
+  it('returns the correct numbers for scale: multi axis', () => {
+    expect(fn('scale(2, 5)', RE.scale)).toEqual([2, 5])
+  })
 })
 
 describe('getOffsetDistanceInPx', () => {
@@ -490,6 +625,40 @@ describe('injectCSS', () => {
     expect(styleNode).toBeTruthy()
     expect(styleNode.textContent).toBe(styles)
     styleNode.remove()
+  })
+})
+
+describe('computeArrowTransform', () => {
+  it('placement = top', () => {
+    const popper = Utils.createPopperElement(1, { ...Defaults, arrow: true })
+    popper.setAttribute('x-placement', 'top')
+    const { arrow } = Utils.getChildren(popper)
+    Utils.computeArrowTransform(arrow, 'scale(5, 10)')
+    expect(arrow.style.transform).toBe('scale(5, 10)')
+  })
+
+  it('placement = bottom', () => {
+    const popper = Utils.createPopperElement(1, { ...Defaults, arrow: true })
+    popper.setAttribute('x-placement', 'bottom')
+    const { arrow } = Utils.getChildren(popper)
+    Utils.computeArrowTransform(arrow, 'scale(5, 10)')
+    expect(arrow.style.transform).toBe('scale(5, 10)')
+  })
+
+  it('placement = left', () => {
+    const popper = Utils.createPopperElement(1, { ...Defaults, arrow: true })
+    popper.setAttribute('x-placement', 'bottom')
+    const { arrow } = Utils.getChildren(popper)
+    Utils.computeArrowTransform(arrow, 'scale(5, 10)')
+    expect(arrow.style.transform).toBe('scale(5, 10)')
+  })
+
+  it('placement = right', () => {
+    const popper = Utils.createPopperElement(1, { ...Defaults, arrow: true })
+    popper.setAttribute('x-placement', 'bottom')
+    const { arrow } = Utils.getChildren(popper)
+    Utils.computeArrowTransform(arrow, 'scale(5, 10)')
+    expect(arrow.style.transform).toBe('scale(5, 10)')
   })
 })
 
@@ -583,13 +752,198 @@ describe('setInnerHTML', () => {
   })
 })
 
+describe('isCursorOutsideInteractiveBorder', () => {
+  const options = { interactiveBorder: 5, distance: 10 }
+  const popperRect = { top: 100, left: 100, right: 110, bottom: 110 }
+
+  // TOP: bounded by x(95, 115) and y(95, 115)
+  it('PLACEMENT=top: inside', () => {
+    const mockEvents = [
+      { clientX: 95, clientY: 95 },
+      { clientX: 115, clientY: 115 },
+      { clientX: 115, clientY: 95 },
+      { clientX: 95, clientY: 115 }
+    ]
+
+    mockEvents.forEach(coords => {
+      expect(
+        Utils.isCursorOutsideInteractiveBorder(
+          'top',
+          popperRect,
+          coords,
+          options
+        )
+      ).toBe(false)
+    })
+  })
+
+  // TOP: bounded by x(95, 115) and y(95, 115)
+  it('PLACEMENT=top: outside', () => {
+    const mockEvents = [
+      { clientX: 94, clientY: 84 },
+      { clientX: 94, clientY: 126 },
+      { clientX: 100, clientY: 84 },
+      { clientX: 100, clientY: 126 },
+      { clientX: 94, clientY: 100 },
+      { clientX: 116, clientY: 100 }
+    ]
+
+    mockEvents.forEach(coords => {
+      expect(
+        Utils.isCursorOutsideInteractiveBorder(
+          'top',
+          popperRect,
+          coords,
+          options
+        )
+      ).toBe(true)
+    })
+  })
+
+  // BOTTOM: bounded by x(95, 115) and y(95, 125])
+  it('PLACEMENT=bottom: inside', () => {
+    const mockEvents = [
+      { clientX: 95, clientY: 95 },
+      { clientX: 115, clientY: 125 },
+      { clientX: 115, clientY: 125 },
+      { clientX: 95, clientY: 125 }
+    ]
+
+    mockEvents.forEach(coords => {
+      expect(
+        Utils.isCursorOutsideInteractiveBorder(
+          'bottom',
+          popperRect,
+          coords,
+          options
+        )
+      ).toBe(false)
+    })
+  })
+
+  // BOTTOM: bounded by x(95, 115) and y(95, 125)
+  it('PLACEMENT=bottom: outside', () => {
+    const mockEvents = [
+      { clientX: 94, clientY: 94 },
+      { clientX: 94, clientY: 126 },
+      { clientX: 100, clientY: 94 },
+      { clientX: 100, clientY: 126 },
+      { clientX: 94, clientY: 100 },
+      { clientX: 116, clientY: 100 }
+    ]
+
+    mockEvents.forEach(coords => {
+      expect(
+        Utils.isCursorOutsideInteractiveBorder(
+          'bottom',
+          popperRect,
+          coords,
+          options
+        )
+      ).toBe(true)
+    })
+  })
+
+  // LEFT: bounded by x(85, 115) and y(95, 115)
+  it('PLACEMENT=left: inside', () => {
+    const mockEvents = [
+      { clientX: 85, clientY: 95 },
+      { clientX: 115, clientY: 95 },
+      { clientX: 85, clientY: 115 },
+      { clientX: 115, clientY: 115 }
+    ]
+
+    mockEvents.forEach(coords => {
+      expect(
+        Utils.isCursorOutsideInteractiveBorder(
+          'left',
+          popperRect,
+          coords,
+          options
+        )
+      ).toBe(false)
+    })
+  })
+
+  // LEFT: bounded by x(85, 115) and y(95, 115)
+  it('PLACEMENT=left: outside', () => {
+    const mockEvents = [
+      { clientX: 84, clientY: 94 },
+      { clientX: 84, clientY: 116 },
+      { clientX: 100, clientY: 94 },
+      { clientX: 100, clientY: 116 },
+      { clientX: 84, clientY: 100 },
+      { clientX: 116, clientY: 100 }
+    ]
+
+    mockEvents.forEach(coords => {
+      expect(
+        Utils.isCursorOutsideInteractiveBorder(
+          'left',
+          popperRect,
+          coords,
+          options
+        )
+      ).toBe(true)
+    })
+  })
+
+  // RIGHT: bounded by x(95, 125) and y(95, 115)
+  it('PLACEMENT=right: inside', () => {
+    const mockEvents = [
+      { clientX: 95, clientY: 95 },
+      { clientX: 125, clientY: 95 },
+      { clientX: 95, clientY: 115 },
+      { clientX: 125, clientY: 115 }
+    ]
+
+    mockEvents.forEach(coords => {
+      expect(
+        Utils.isCursorOutsideInteractiveBorder(
+          'right',
+          popperRect,
+          coords,
+          options
+        )
+      ).toBe(false)
+    })
+  })
+
+  // RIGHT: bounded by x(95, 125) and y(95, 115)
+  it('PLACEMENT=right: outside', () => {
+    const mockEvents = [
+      { clientX: 94, clientY: 94 },
+      { clientX: 94, clientY: 126 },
+      { clientX: 100, clientY: 94 },
+      { clientX: 100, clientY: 126 },
+      { clientX: 94, clientY: 100 },
+      { clientX: 126, clientY: 100 }
+    ]
+
+    mockEvents.forEach(coords => {
+      expect(
+        Utils.isCursorOutsideInteractiveBorder(
+          'right',
+          popperRect,
+          coords,
+          options
+        )
+      ).toBe(true)
+    })
+  })
+})
+
 /** ==================== 😱 Async functions or tests 😱 ==================== **/
 describe('updatePopperPosition', () => {
   /* Difficult to test */
 })
 
 describe('focus', () => {
-  /* Cannot be tested by JSDOM */
+  it('focuses an element', () => {
+    const el = document.createElement('button') // can receive focus
+    Utils.focus(el)
+    expect(el).toBe(document.activeElement)
+  })
 })
 
 describe('addEventListeners', () => {
@@ -707,15 +1061,18 @@ describe('addEventListeners', () => {
 })
 
 describe('hideAllPoppers', () => {
-  // NOTE: options.showOnInit dependency here
-  /*
-  it('hides all poppers on the document', () => {
-    // NOTE: side effect here
-    const refs = createReferenceArray({ appendToBody: true })
-    tippy(refs, { showOnInit: true })
-    expect(document.querySelector(Selectors.POPPER)).not.toBeNull()
-    document.body.click()
-    expect(document.querySelector(Selectors.POPPER)).toBeNull()
+  it('hides all poppers on the document', done => {
+    tippy(createReferenceArray({ appendToBody: true }), {
+      showOnInit: true,
+      duration: 0
+    })
+    expect(document.querySelectorAll(Selectors.POPPER).length > 0).toBe(true)
+    Utils.hideAllPoppers()
+    setTimeout(() => {
+      expect(document.querySelectorAll(Selectors.POPPER).length === 0).toBe(
+        true
+      )
+      done()
+    })
   })
-  */
 })

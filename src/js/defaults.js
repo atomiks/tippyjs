@@ -1,4 +1,4 @@
-let Defaults = {
+export let Defaults = {
   a11y: true,
   content: '',
   placement: 'top',
@@ -30,7 +30,6 @@ let Defaults = {
   flipBehavior: 'flip',
   arrowType: 'sharp',
   arrowTransform: '',
-  maxWidth: '',
   target: null,
   allowHTML: true,
   showOnInit: false,
@@ -42,8 +41,6 @@ let Defaults = {
   onHidden() {}
 }
 
-const setDefaults = partialDefaults => {
+export const setDefaults = partialDefaults => {
   Defaults = { ...Defaults, ...partialDefaults }
 }
-
-export { Defaults, setDefaults }

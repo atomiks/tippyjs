@@ -47,10 +47,12 @@ export const setContent = (contentEl, options) => {
  * Determines if an element can receive focus
  */
 export const elementCanReceiveFocus = el =>
-  matches.call(
-    el,
-    'a[href],area[href],button,details,input,textarea,select,iframe,[tabindex]'
-  ) && !matches.call(el, '[disabled]')
+  el instanceof Element
+    ? matches.call(
+        el,
+        'a[href],area[href],button,details,input,textarea,select,iframe,[tabindex]'
+      ) && !el.hasAttribute('disabled')
+    : true
 
 /**
  * Applies a transition duration to a list of elements
@@ -135,7 +137,6 @@ export const createPopperElement = (id, options) => {
   popper.role = 'tooltip'
   popper.id = `tippy-${id}`
   popper.style.zIndex = options.zIndex
-  popper.style.maxWidth = options.maxWidth
 
   const tooltip = div()
   tooltip.className = 'tippy-tooltip'
@@ -391,9 +392,9 @@ export const transformAxisBasedOnPlacement = (axis, isVertical) => {
   return isVertical
     ? axis
     : {
-      X: 'Y',
-      Y: 'X'
-    }[axis]
+        X: 'Y',
+        Y: 'X'
+      }[axis]
 }
 
 /**
@@ -434,42 +435,51 @@ export const transformNumbersBasedOnPlacement = (
 }
 
 /**
+ * Returns the axis for a CSS function (translate or scale)
+ */
+export const getTransformAxis = (str, cssFunction) => {
+  const match = str.match(new RegExp(cssFunction + '([XY])'))
+  return match ? match[1] : ''
+}
+
+/**
+ * Returns the numbers given to the CSS function
+ */
+export const getTransformNumbers = (str, regex) => {
+  const match = str.match(regex)
+  return match ? match[1].split(',').map(parseFloat) : []
+}
+
+export const TRANSFORM_NUMBER_RE = {
+  translate: /translateX?Y?\(([^)]+)\)/,
+  scale: /scaleX?Y?\(([^)]+)\)/
+}
+
+/**
  * Computes the arrow's transform so that it is correct for any placement
  */
-export const computeArrowTransform = (popper, arrow, arrowTransform) => {
-  const placement = getPopperPlacement(popper)
+export const computeArrowTransform = (arrow, arrowTransform) => {
+  const placement = getPopperPlacement(closest(arrow, Selectors.POPPER))
   const isVertical = placement === 'top' || placement === 'bottom'
   const isReverse = placement === 'right' || placement === 'bottom'
 
-  const getAxis = re => {
-    const match = arrowTransform.match(re)
-    return match ? match[1] : ''
-  }
-
-  const getNumbers = re => {
-    const match = arrowTransform.match(re)
-    return match ? match[1].split(',').map(parseFloat) : []
-  }
-
-  const re = {
-    translate: /translateX?Y?\(([^)]+)\)/,
-    scale: /scaleX?Y?\(([^)]+)\)/
-  }
-
   const matches = {
     translate: {
-      axis: getAxis(/translate([XY])/),
-      numbers: getNumbers(re.translate)
+      axis: getTransformAxis(arrowTransform, 'translate'),
+      numbers: getTransformNumbers(
+        arrowTransform,
+        TRANSFORM_NUMBER_RE.translate
+      )
     },
     scale: {
-      axis: getAxis(/scale([XY])/),
-      numbers: getNumbers(re.scale)
+      axis: getTransformAxis(arrowTransform, 'scale'),
+      numbers: getTransformNumbers(arrowTransform, TRANSFORM_NUMBER_RE.scale)
     }
   }
 
   const computedTransform = arrowTransform
     .replace(
-      re.translate,
+      TRANSFORM_NUMBER_RE.translate,
       `translate${transformAxisBasedOnPlacement(
         matches.translate.axis,
         isVertical
@@ -481,7 +491,7 @@ export const computeArrowTransform = (popper, arrow, arrowTransform) => {
       )})`
     )
     .replace(
-      re.scale,
+      TRANSFORM_NUMBER_RE.scale,
       `scale${transformAxisBasedOnPlacement(
         matches.scale.axis,
         isVertical
@@ -559,41 +569,40 @@ export const defer = fn => {
  * Determines if the mouse cursor is outside of the popper's interactive border
  * region
  */
-export const cursorIsOutsideInteractiveBorder = (event, popper, options) => {
-  if (!popper.getAttribute('x-placement')) {
-    return true
-  }
-
+export const isCursorOutsideInteractiveBorder = (
+  popperPlacement,
+  popperRect,
+  event,
+  options
+) => {
   const { clientX: x, clientY: y } = event
-  const { interactiveBorder, distance } = options
+  let { interactiveBorder, distance } = options
 
-  const rect = popper.getBoundingClientRect()
-  const placement = getPopperPlacement(popper)
-  const borderWithDistance = interactiveBorder + distance
+  const exceedsTop =
+    popperRect.top - y >
+    (popperPlacement === 'top'
+      ? interactiveBorder + distance
+      : interactiveBorder)
 
-  const exceeds = {
-    top: rect.top - y > interactiveBorder,
-    bottom: y - rect.bottom > interactiveBorder,
-    left: rect.left - x > interactiveBorder,
-    right: x - rect.right > interactiveBorder
-  }
+  const exceedsBottom =
+    y - popperRect.bottom >
+    (popperPlacement === 'bottom'
+      ? interactiveBorder + distance
+      : interactiveBorder)
 
-  switch (placement) {
-    case 'top':
-      exceeds.top = rect.top - y > borderWithDistance
-      break
-    case 'bottom':
-      exceeds.bottom = y - rect.bottom > borderWithDistance
-      break
-    case 'left':
-      exceeds.left = rect.left - x > borderWithDistance
-      break
-    case 'right':
-      exceeds.right = x - rect.right > borderWithDistance
-      break
-  }
+  const exceedsLeft =
+    popperRect.left - x >
+    (popperPlacement === 'left'
+      ? interactiveBorder + distance
+      : interactiveBorder)
 
-  return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right
+  const exceedsRight =
+    x - popperRect.right >
+    (popperPlacement === 'right'
+      ? interactiveBorder + distance
+      : interactiveBorder)
+
+  return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight
 }
 
 /**
@@ -618,17 +627,17 @@ export const evaluateOptions = (reference, collectionOptions) => {
     ...(collectionOptions.performance ? {} : getDataAttributeOptions(reference))
   }
 
-  if (collectionOptions.arrow) {
+  if (out.arrow) {
     out.animateFill = false
   }
 
-  if (typeof collectionOptions.appendTo === 'function') {
+  if (typeof out.appendTo === 'function') {
     out.appendTo = collectionOptions.appendTo(reference)
   }
 
-  if (typeof collectionOptions.content === 'function') {
+  if (typeof out.content === 'function') {
     out.content = collectionOptions.content(reference)
   }
 
-  return { ...collectionOptions, ...out }
+  return out
 }

@@ -10,6 +10,11 @@ import {
 import tippy from '../../src/js/tippy'
 import * as Utils from '../../src/js/utils'
 
+/**
+ * NOTE! If an element is not on the DOM, calling show() will destroy the tooltip.
+ * Use { appendToBody: true } as the argument to createReference().
+ */
+
 afterEach(cleanDocumentBody)
 
 describe('a11y', () => {
@@ -141,6 +146,7 @@ describe('delay', () => {
       trigger: 'mouseenter',
       delay
     })
+
     ref.dispatchEvent(new Event('mouseenter'))
 
     setTimeout(() => {
@@ -154,17 +160,203 @@ describe('delay', () => {
   })
 
   it('array: uses the first element as the delay when showing', () => {
-    const delay = [20, 400]
+    const delay = [20, 100]
     const ref = createReference({ appendToBody: true })
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
       delay
     })
+
     ref.dispatchEvent(new Event('mouseenter'))
+
     expect(state.isVisible).toBe(false)
+
     setTimeout(() => {
       expect(state.isVisible).toBe(true)
       done()
     }, delay[0] * 2)
+  })
+
+  it('array: uses the second element as the delay when hiding', () => {
+    const delay = [100, 20]
+    const ref = createReference({ appendToBody: true })
+    const { state } = tippy.one(ref, {
+      trigger: 'mouseenter',
+      delay
+    })
+
+    ref.dispatchEvent(new Event('mouseenter'))
+
+    expect(state.isVisible).toBe(false)
+
+    setTimeout(() => {
+      expect(state.isVisible).toBe(true)
+      setTimeout(() => {
+        expect(state.isVisible).toBe(false)
+        done()
+      }, delay[1] * 2)
+    }, delay[0] * 2)
+  })
+})
+
+describe('content', () => {
+  it('works with plain string', () => {
+    const { content } = tippy.one(createReference(), {
+      content: 'tooltip'
+    }).popperChildren
+    expect(content.textContent).toBe('tooltip')
+  })
+
+  it('works with HTML string', () => {
+    const { content } = tippy.one(createReference(), {
+      content: '<strong>tooltip</strong>'
+    }).popperChildren
+    expect(content.querySelector('strong')).not.toBeNull()
+  })
+
+  it('works with an HTML element', () => {
+    const el = document.createElement('div')
+    const { content } = tippy.one(createReference(), {
+      content: el
+    }).popperChildren
+    expect(content.firstElementChild).toBe(el)
+  })
+})
+
+describe('trigger', () => {
+  it('default: many triggers', () => {
+    const ref = createReference({ appendToBody: true })
+    const { state } = tippy.one(ref)
+    ref.dispatchEvent(new Event('mouseenter'))
+    expect(state.isVisible).toBe(true)
+    ref.dispatchEvent(new Event('mouseleave'))
+    expect(state.isVisible).toBe(false)
+    ref.dispatchEvent(new Event('focus'))
+    expect(state.isVisible).toBe(true)
+    ref.dispatchEvent(new Event('blur'))
+    expect(state.isVisible).toBe(false)
+  })
+
+  it('mouseenter', () => {
+    const ref = createReference({ appendToBody: true })
+    const { state } = tippy.one(ref, { trigger: 'mouseenter' })
+    ref.dispatchEvent(new Event('mouseenter'))
+    expect(state.isVisible).toBe(true)
+    ref.dispatchEvent(new Event('mouseleave'))
+    expect(state.isVisible).toBe(false)
+    ref.dispatchEvent(new Event('focus'))
+    expect(state.isVisible).toBe(false)
+  })
+
+  it('focus', () => {
+    const ref = createReference({ appendToBody: true })
+    const { state } = tippy.one(ref, { trigger: 'focus' })
+    ref.dispatchEvent(new Event('focus'))
+    expect(state.isVisible).toBe(true)
+    ref.dispatchEvent(new Event('blur'))
+    expect(state.isVisible).toBe(false)
+    ref.dispatchEvent(new Event('mouseenter'))
+    expect(state.isVisible).toBe(false)
+  })
+
+  it('click', () => {
+    const ref = createReference({ appendToBody: true })
+    const { state } = tippy.one(ref, { trigger: 'click' })
+    ref.dispatchEvent(new Event('click'))
+    expect(state.isVisible).toBe(true)
+    ref.dispatchEvent(new Event('click'))
+    expect(state.isVisible).toBe(false)
+  })
+})
+
+describe('interactive', () => {
+  it('true: prevents a tippy from hiding when clicked', () => {
+    const tip = tippy.one(createReference({ appendToBody: true }), {
+      interactive: true
+    })
+    tip.show()
+    tip.popperChildren.tooltip.dispatchEvent(new Event('click'))
+    expect(tip.state.isVisible).toBe(true)
+  })
+
+  it('false: tippy is hidden when clicked', () => {
+    const tip = tippy.one(createReference({ appendToBody: true }), {
+      interactive: true
+    })
+    tip.show()
+    tip.popperChildren.tooltip.dispatchEvent(new Event('click'))
+    setTimeout(() => {
+      expect(tip.state.isVisible).toBe(false)
+    })
+  })
+})
+
+describe('arrowType', () => {
+  it('sharp: is CSS triangle', () => {
+    const { popperChildren } = tippy.one(createReference(), {
+      arrow: true,
+      arrowType: 'sharp'
+    })
+    expect(popperChildren.arrow.matches('.tippy-arrow')).toBe(true)
+  })
+
+  it('round: is an SVG', () => {
+    const { popperChildren } = tippy.one(createReference(), {
+      arrow: true,
+      arrowType: 'round'
+    })
+    expect(popperChildren.arrow.matches('.tippy-roundarrow')).toBe(true)
+  })
+})
+
+describe('theme', () => {
+  it('adds themes to the tooltip class list', () => {
+    const {
+      popperChildren: { tooltip }
+    } = tippy.one(createReference(), {
+      theme: 'this is a test'
+    })
+    expect(tooltip.classList.contains('this-theme')).toBe(true)
+    expect(tooltip.classList.contains('is-theme')).toBe(true)
+    expect(tooltip.classList.contains('a-theme')).toBe(true)
+    expect(tooltip.classList.contains('test-theme')).toBe(true)
+  })
+})
+
+describe('flip', () => {
+  it('true: sets flip to enabled in the popperInstance', () => {
+    const { popperInstance } = tippy.one(
+      createReference(),
+      withTestOptions({ flip: true })
+    )
+    expect(popperInstance.modifiers.find(m => m.name === 'flip').enabled).toBe(
+      true
+    )
+  })
+
+  it('false: sets flip to disabled in the popperInstance', () => {
+    const { popperInstance } = tippy.one(
+      createReference(),
+      withTestOptions({ flip: false })
+    )
+    expect(popperInstance.modifiers.find(m => m.name === 'flip').enabled).toBe(
+      false
+    )
+  })
+})
+
+describe('inertia', () => {
+  it('true: adds a [data-inertia] attribute to the tooltip', () => {
+    const {
+      popperChildren: { tooltip }
+    } = tippy.one(createReference(), { inertia: true })
+    expect(tooltip.hasAttribute('data-inertia')).toBe(true)
+  })
+
+  it('false: does not add a [data-inertia] attribute to the tooltip', () => {
+    const {
+      popperChildren: { tooltip }
+    } = tippy.one(createReference(), { inertia: false })
+    expect(tooltip.hasAttribute('data-inertia')).toBe(false)
   })
 })

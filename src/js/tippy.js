@@ -81,11 +81,14 @@ tippy.disableAnimations = () => {
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
  */
-if (isBrowser) {
+export const autoInit = () => {
   toArray(document.querySelectorAll('[data-tippy]')).forEach(el => {
     const content = el.getAttribute('data-tippy')
     if (content) {
       tippy(el, { content })
     }
   })
+}
+if (isBrowser) {
+  autoInit()
 }

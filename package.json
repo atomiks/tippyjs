@@ -19,13 +19,17 @@
     "build:docs": "parcel build website/index.html -d docs/ --public-url ./",
     "dev": "parcel tests/visual/index.html -d tests/visual/dist --open",
     "build": "node ./scripts/build.js && npm run prettier && npm run build:docs",
-    "test": "eslint \"src/**/*.js\" --fix && jest --coverage",
+    "test": "eslint \"src/**/*.js\" && jest --coverage",
     "prettier": "prettier --write \"./**/*{js,scss}\""
   },
   "jest": {
     "setupFiles": [
       "./tests/polyfills/createRange.js",
-      "./tests/polyfills/MutationObserver.js"
+      "./tests/polyfills/MutationObserver.js",
+      "./tests/polyfills/window.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "tests"
     ]
   },
   "prettier": {
