@@ -1,4 +1,5 @@
 .DS_Store
-/node_modules
-dist/tests
-.cache/
+node_modules
+.cache
+.coverage
+tests/visual/dist
