@@ -12,20 +12,20 @@ import {
 
 let eventListenersBound = false
 
-export default function tippy(targets, suppliedOptions, one) {
+export default function tippy(targets, options, one) {
   if (!eventListenersBound) {
     bindGlobalEventListeners()
     eventListenersBound = true
   }
 
   // Throw an error if the user supplied an invalid option
-  for (const key in suppliedOptions || {}) {
+  for (const key in options || {}) {
     if (!(key in Defaults)) {
-      throw new Error(`[tippy]: ${key} is not a valid option`)
+      throw Error(`[tippy]: ${key} is not a valid option`)
     }
   }
 
-  const options = { ...Defaults, ...suppliedOptions }
+  const props = { ...Defaults, ...options }
 
   // If they are specifying a virtual positioning reference, we need to polyfill
   // some native DOM props
@@ -40,13 +40,13 @@ export default function tippy(targets, suppliedOptions, one) {
     ? [firstReference]
     : references
   ).reduce((acc, reference) => {
-    const tip = createTippy(reference, options)
+    const tip = createTippy(reference, props)
     return tip ? acc.concat(tip) : acc
   }, [])
 
   return {
     targets,
-    options,
+    props,
     references,
     instances,
     destroyAll() {

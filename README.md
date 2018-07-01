@@ -51,16 +51,12 @@ Use the full version link! Visit the link in `src` below to get the latest versi
 <html>
 <head><title>Tippy Example</title></head>
 <body>
-  <!-- Elements with `title` attributes -->
-  <button title="Tooltip">Text</button>
-  <button title="Another tooltip">Text</button>
+  <!-- Add tooltips with the `data-tippy` attribute -->
+  <button data-tippy="Tooltip">Text</button>
+  <button data-tippy="Another tooltip">Text</button>
 
   <!-- Include Tippy -->
   <script src="https://unpkg.com/tippy.js/dist/tippy.all.min.js"></script>
-  <!-- Initialize tooltips by calling the `tippy` function with a CSS selector -->
-  <script>
-    tippy('button')
-  </script>
 </body>
 </html>
 ```

@@ -3,7 +3,7 @@ import {
   createReferenceArray,
   hasTippy,
   cleanDocumentBody,
-  withTestOptions
+  withTestprops
 } from '../utils'
 
 import { Defaults } from '../../src/js/defaults'
@@ -14,8 +14,8 @@ import * as Utils from '../../src/js/utils'
 afterEach(cleanDocumentBody)
 
 describe('createTippy', () => {
-  it('returns `null` if the reference is falsy', () => {
-    expect(createTippy(false, Defaults)).toBe(null)
+  it('throws if the reference is falsy', () => {
+    expect(() => createTippy(false, Defaults)).toThrow()
   })
 
   it('returns `null` if the reference already has a tippy instance', () => {
@@ -126,7 +126,7 @@ describe('instance.show', () => {
     instance.destroy()
   })
 
-  it('overrides instance.options.duration if supplied an argument', done => {
+  it('overrides instance.props.duration if supplied an argument', done => {
     const instance = createTippy(createReference({ appendToBody: true }), {
       ...Defaults,
       duration: 100
@@ -187,7 +187,7 @@ describe('instance.hide', () => {
     }, 20)
   })
 
-  it('overrides instance.options.duration if supplied an argument', () => {
+  it('overrides instance.props.duration if supplied an argument', () => {
     const instance = createTippy(createReference({ appendToBody: true }), {
       ...Defaults,
       duration: 100
@@ -248,13 +248,13 @@ describe('instance.disable', () => {
 })
 
 describe('instance.set', () => {
-  it('sets the new options by merging them with the current instance', () => {
+  it('sets the new props by merging them with the current instance', () => {
     const instance = createTippy(createReference(), Defaults)
-    expect(instance.options.arrow).toBe(Defaults.arrow)
-    expect(instance.options.duration).toBe(Defaults.duration)
+    expect(instance.props.arrow).toBe(Defaults.arrow)
+    expect(instance.props.duration).toBe(Defaults.duration)
     instance.set({ arrow: !Defaults.arrow, duration: 82 })
-    expect(instance.options.arrow).toBe(!Defaults.arrow)
-    expect(instance.options.duration).toBe(82)
+    expect(instance.props.arrow).toBe(!Defaults.arrow)
+    expect(instance.props.duration).toBe(82)
   })
 
   it('redraws the tooltip by creating a new popper element', () => {

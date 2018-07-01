@@ -83,8 +83,8 @@ describe('arrow', () => {
 
   it('true: disables `animateFill` option', () => {
     const ref = createReference()
-    const { options } = tippy.one(ref, { arrow: true })
-    expect(options.animateFill).toBe(false)
+    const { props } = tippy.one(ref, { arrow: true })
+    expect(props.animateFill).toBe(false)
   })
 
   it('false: does not create an arrow element child of the popper', () => {
@@ -123,7 +123,7 @@ describe('animation', () => {
 })
 
 describe('delay', () => {
-  // NOTE: options.trigger dependency here
+  // NOTE: props.trigger dependency here
   it('number: delays showing the tippy', done => {
     const delay = 20
     const ref = createReference({ appendToBody: true })

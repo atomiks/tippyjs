@@ -109,9 +109,7 @@ describe('onWindowResize', () => {
   it('updates poppers with `livePlacement: false`', () => {
     const instance = tippy.one(
       createReference({ appendToBody: true }),
-      withTestOptions({
-        livePlacement: false
-      })
+      withTestOptions({ livePlacement: false })
     )
     instance.show()
     const { scheduleUpdate } = instance.popperInstance

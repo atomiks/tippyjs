@@ -156,7 +156,7 @@ describe('elementCanReceiveFocus', () => {
 describe('getChildren', () => {
   // NOTE: Utils.createPopperElement() dependency
 
-  it('returns the children of the popper element, default options', () => {
+  it('returns the children of the popper element, default props', () => {
     const popper = Utils.createPopperElement(1, Defaults)
     const children = Utils.getChildren(popper)
     expect(children.tooltip).toBeDefined()
@@ -327,17 +327,17 @@ describe('createPopperElement', () => {
     expect(popper.matches(Selectors.POPPER)).toBe(true)
   })
 
-  it('does not create an arrow element if options.arrow is false', () => {
+  it('does not create an arrow element if props.arrow is false', () => {
     const popper = Utils.createPopperElement(1, { ...Defaults, arrow: false })
     expect(popper.querySelector(Selectors.ARROW)).toBeNull()
   })
 
-  it('creates an arrow element if options.arrow is true', () => {
+  it('creates an arrow element if props.arrow is true', () => {
     const popper = Utils.createPopperElement(1, { ...Defaults, arrow: true })
     expect(popper.querySelector(Selectors.ARROW)).not.toBeNull()
   })
 
-  it('does not create a backdrop element if options.animateFill is false', () => {
+  it('does not create a backdrop element if props.animateFill is false', () => {
     const popper = Utils.createPopperElement(1, {
       ...Defaults,
       animateFill: false
@@ -345,7 +345,7 @@ describe('createPopperElement', () => {
     expect(popper.querySelector(Selectors.BACKDROP)).toBeNull()
   })
 
-  it('sets `[data-animatefill]` on the tooltip element if options.animateFill is true', () => {
+  it('sets `[data-animatefill]` on the tooltip element if props.animateFill is true', () => {
     const popper = Utils.createPopperElement(1, {
       ...Defaults,
       animateFill: true
@@ -355,7 +355,7 @@ describe('createPopperElement', () => {
     ).toBe(true)
   })
 
-  it('sets `[data-interactive]` on the tooltip if options.interactive is true', () => {
+  it('sets `[data-interactive]` on the tooltip if props.interactive is true', () => {
     const popper = Utils.createPopperElement(1, {
       ...Defaults,
       interactive: true
@@ -365,7 +365,7 @@ describe('createPopperElement', () => {
     ).toBe(true)
   })
 
-  it('sets the correct data-* attributes on the tooltip based on options', () => {
+  it('sets the correct data-* attributes on the tooltip based on props', () => {
     const popper = Utils.createPopperElement(1, {
       ...Defaults,
       size: 'large',
@@ -379,7 +379,7 @@ describe('createPopperElement', () => {
     ).toBe('scale')
   })
 
-  it('sets the correct theme class names on the tooltip based on options', () => {
+  it('sets the correct theme class names on the tooltip based on props', () => {
     const popper = Utils.createPopperElement(1, {
       ...Defaults,
       theme: 'red firetruck'
@@ -589,29 +589,29 @@ describe('getPopperPlacement', () => {
   })
 })
 
-describe('evaluateOptions', () => {
+describe('evaluateProps', () => {
   it('sets `animateFill` option to false if `arrow` is true', () => {
-    const options = { animateFill: true, arrow: true }
-    expect(Utils.evaluateOptions(createReference(), options)).toEqual({
+    const props = { animateFill: true, arrow: true }
+    expect(Utils.evaluateProps(createReference(), props)).toEqual({
       animateFill: false,
       arrow: true
     })
   })
 
-  it('sets `options.appendTo` to be the return value of calling it if a function', () => {
+  it('sets `props.appendTo` to be the return value of calling it if a function', () => {
     const ref = createReference()
-    const options = {
+    const props = {
       appendTo: reference => reference
     }
-    expect(Utils.evaluateOptions(ref, options).appendTo).toBe(ref)
+    expect(Utils.evaluateProps(ref, props).appendTo).toBe(ref)
   })
 
-  it('sets `options.content` to be the return value of calling it if a function', () => {
+  it('sets `props.content` to be the return value of calling it if a function', () => {
     const ref = createReference()
-    const options = {
+    const props = {
       content: reference => reference
     }
-    expect(Utils.evaluateOptions(ref, options).content).toBe(ref)
+    expect(Utils.evaluateProps(ref, props).content).toBe(ref)
   })
 })
 
@@ -711,7 +711,7 @@ describe('setAttr', () => {
 })
 
 describe('setContent', () => {
-  it('sets textContent of an element if `options.allowHTML` is `false`', () => {
+  it('sets textContent of an element if `props.allowHTML` is `false`', () => {
     const ref = createReference()
     const content = 'some content'
     Utils.setContent(ref, {
@@ -722,7 +722,7 @@ describe('setContent', () => {
     expect(ref.querySelector('strong')).toBeNull()
   })
 
-  it('sets innerHTML of an element if `options.allowHTML` is `true`', () => {
+  it('sets innerHTML of an element if `props.allowHTML` is `true`', () => {
     const ref = createReference()
     const content = '<strong>some content</strong>'
     Utils.setContent(ref, {
@@ -1046,7 +1046,7 @@ describe('addEventListeners', () => {
     expect(trigger).toBe('mouseenter')
   })
 
-  it('returns an empty array and adds no listeners if options.trigger is `manual`', () => {
+  it('returns an empty array and adds no listeners if props.trigger is `manual`', () => {
     const ref = createReference()
     Utils.addEventListeners(
       ref,

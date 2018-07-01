@@ -20,7 +20,7 @@ describe('tippy', () => {
     const tip1 = tippy('__invalidSelector__')
     expect(tip1).toEqual({
       targets: '__invalidSelector__',
-      options: Defaults,
+      props: Defaults,
       references: [],
       instances: [],
       destroyAll: tip1.destroyAll
@@ -30,18 +30,18 @@ describe('tippy', () => {
     const tip2 = tippy(ref)
     expect(tip2).toEqual({
       targets: ref,
-      options: Defaults,
+      props: Defaults,
       references: [ref],
       instances: tip2.instances,
       destroyAll: tip2.destroyAll
     })
   })
 
-  it('merges the default options with the supplied options', () => {
+  it('merges the default props with the supplied options', () => {
     expect(
       tippy(createReference(), {
         placement: 'bottom-end'
-      }).options
+      }).props
     ).toEqual({
       ...Defaults,
       placement: 'bottom-end'
@@ -108,7 +108,7 @@ describe('tippy.one()', () => {
 })
 
 describe('tippy.setDefaults()', () => {
-  it('changes the default options applied to instances but does not mutate the original', () => {
+  it('changes the default props applied to instances but does not mutate the original', () => {
     const ogDefaults = Defaults
     const newPlacement = 'bottom-end'
     tippy.setDefaults({ placement: newPlacement })

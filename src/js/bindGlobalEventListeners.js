@@ -48,14 +48,17 @@ export const onDocumentClick = event => {
   const reference = closest(event.target, Selectors.REFERENCE)
   const popper = closest(event.target, Selectors.POPPER)
 
-  if (popper && popper._tippy && popper._tippy.options.interactive) {
+  // Clicked on interactive popper
+  if (popper && popper._tippy && popper._tippy.props.interactive) {
     return
   }
 
+  // Clicked on reference
   if (reference && reference._tippy) {
-    const { options } = reference._tippy
-    const isMultiple = options.multiple
-    const isClickTrigger = options.trigger.indexOf('click') > -1
+    const { props } = reference._tippy
+    // TODO: props.multiple needs changing here.
+    const isMultiple = props.multiple
+    const isClickTrigger = props.trigger.indexOf('click') > -1
 
     if (
       (!isMultiple && Browser.isUsingTouch) ||
@@ -64,7 +67,7 @@ export const onDocumentClick = event => {
       return hideAllPoppers(reference._tippy)
     }
 
-    if (options.hideOnClick !== true || isClickTrigger) {
+    if (props.hideOnClick !== true || isClickTrigger) {
       return
     }
   }
@@ -82,7 +85,7 @@ export const onWindowBlur = () => {
 export const onWindowResize = () => {
   toArray(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
     const tippyInstance = popper._tippy
-    if (!tippyInstance.options.livePlacement) {
+    if (!tippyInstance.props.livePlacement) {
       tippyInstance.popperInstance.scheduleUpdate()
     }
   })

@@ -35,11 +35,11 @@ export const setAttr = (el, attr, value = '') => {
 /**
  * Sets the content of a tooltip
  */
-export const setContent = (contentEl, options) => {
-  if (options.content instanceof Element) {
-    contentEl.appendChild(options.content)
+export const setContent = (contentEl, props) => {
+  if (props.content instanceof Element) {
+    contentEl.appendChild(props.content)
   } else {
-    contentEl[options.allowHTML ? 'innerHTML' : 'textContent'] = options.content
+    contentEl[props.allowHTML ? 'innerHTML' : 'textContent'] = props.content
   }
 }
 
@@ -131,33 +131,33 @@ export const getValue = (value, index) =>
 /**
  * Constructs the popper element and returns it
  */
-export const createPopperElement = (id, options) => {
+export const createPopperElement = (id, props) => {
   const popper = div()
   popper.className = 'tippy-popper'
   popper.role = 'tooltip'
   popper.id = `tippy-${id}`
-  popper.style.zIndex = options.zIndex
+  popper.style.zIndex = props.zIndex
 
   const tooltip = div()
   tooltip.className = 'tippy-tooltip'
-  setAttr(tooltip, 'data-size', options.size)
-  setAttr(tooltip, 'data-animation', options.animation)
+  setAttr(tooltip, 'data-size', props.size)
+  setAttr(tooltip, 'data-animation', props.animation)
   setAttr(tooltip, 'data-state', 'hidden')
-  options.theme.split(' ').forEach(t => {
+  props.theme.split(' ').forEach(t => {
     tooltip.classList.add(t + '-theme')
   })
 
   const content = div()
   content.className = 'tippy-content'
 
-  if (options.interactive) {
+  if (props.interactive) {
     setAttr(popper, 'tabindex', '-1')
     setAttr(tooltip, 'data-interactive')
   }
 
-  if (options.arrow) {
+  if (props.arrow) {
     const arrow = div()
-    if (options.arrowType === 'round') {
+    if (props.arrowType === 'round') {
       arrow.className = 'tippy-roundarrow'
       setInnerHTML(
         arrow,
@@ -169,7 +169,7 @@ export const createPopperElement = (id, options) => {
     tooltip.appendChild(arrow)
   }
 
-  if (options.animateFill) {
+  if (props.animateFill) {
     const backdrop = div()
     backdrop.className = 'tippy-backdrop'
     setAttr(backdrop, 'data-state', 'hidden')
@@ -177,11 +177,11 @@ export const createPopperElement = (id, options) => {
     tooltip.appendChild(backdrop)
   }
 
-  if (options.inertia) {
+  if (props.inertia) {
     setAttr(tooltip, 'data-inertia')
   }
 
-  setContent(content, options)
+  setContent(content, props)
 
   tooltip.appendChild(content)
   popper.appendChild(tooltip)
@@ -199,10 +199,10 @@ export const hideAllPoppers = excludeTippy => {
       return
     }
 
-    const { options } = tippy
+    const { props } = tippy
 
     if (
-      (options.hideOnClick === true || options.trigger.indexOf('focus') > -1) &&
+      (props.hideOnClick === true || props.trigger.indexOf('focus') > -1) &&
       (!excludeTippy || popper !== excludeTippy.popper)
     ) {
       tippy.hide()
@@ -215,10 +215,10 @@ export const hideAllPoppers = excludeTippy => {
  */
 export const addEventListeners = (
   reference,
-  options,
+  props,
   { onTrigger, onMouseLeave, onBlur, onDelegateShow, onDelegateHide }
 ) => {
-  return options.trigger
+  return props.trigger
     .trim()
     .split(' ')
     .reduce((acc, eventType) => {
@@ -231,7 +231,7 @@ export const addEventListeners = (
         acc.push({ eventType, handler })
       }
 
-      if (!options.target) {
+      if (!props.target) {
         on(eventType, onTrigger)
         switch (eventType) {
           case 'mouseenter':
@@ -262,7 +262,7 @@ export const addEventListeners = (
 }
 
 /**
- * Returns an object of options from data-tippy-* attributes
+ * Returns an object of optional props from data-tippy-* attributes
  */
 export const getDataAttributeOptions = reference =>
   Object.keys(Defaults).reduce((acc, key) => {
@@ -573,10 +573,10 @@ export const isCursorOutsideInteractiveBorder = (
   popperPlacement,
   popperRect,
   event,
-  options
+  props
 ) => {
   const { clientX: x, clientY: y } = event
-  let { interactiveBorder, distance } = options
+  const { interactiveBorder, distance } = props
 
   const exceedsTop =
     popperRect.top - y >
@@ -619,12 +619,12 @@ export const getPopperPlacement = popper =>
   popper.getAttribute('x-placement').split('-')[0]
 
 /**
- * Evaluates an object of options
+ * Evaluates props
  */
-export const evaluateOptions = (reference, collectionOptions) => {
+export const evaluateProps = (reference, props) => {
   const out = {
-    ...collectionOptions,
-    ...(collectionOptions.performance ? {} : getDataAttributeOptions(reference))
+    ...props,
+    ...(props.performance ? {} : getDataAttributeOptions(reference))
   }
 
   if (out.arrow) {
@@ -632,11 +632,11 @@ export const evaluateOptions = (reference, collectionOptions) => {
   }
 
   if (typeof out.appendTo === 'function') {
-    out.appendTo = collectionOptions.appendTo(reference)
+    out.appendTo = props.appendTo(reference)
   }
 
   if (typeof out.content === 'function') {
-    out.content = collectionOptions.content(reference)
+    out.content = props.content(reference)
   }
 
   return out

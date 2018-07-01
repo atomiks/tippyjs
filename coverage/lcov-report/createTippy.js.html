@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">66.04% </span>
+        <span class="strong">66.29% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>175/265</span>
+        <span class='fraction'>177/267</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">57.14% </span>
+        <span class="strong">56.62% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>124/217</span>
+        <span class='fraction'>124/219</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">66.67% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>28/42</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">66.04% </span>
+        <span class="strong">66.29% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>175/265</span>
+        <span class='fraction'>177/267</span>
       </div>
     </div>
     <p class="quiet">
@@ -777,11 +777,7 @@
 <a name='L729'></a><a href='#L729'>729</a>
 <a name='L730'></a><a href='#L730'>730</a>
 <a name='L731'></a><a href='#L731'>731</a>
-<a name='L732'></a><a href='#L732'>732</a>
-<a name='L733'></a><a href='#L733'>733</a>
-<a name='L734'></a><a href='#L734'>734</a>
-<a name='L735'></a><a href='#L735'>735</a>
-<a name='L736'></a><a href='#L736'>736</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L732'></a><a href='#L732'>732</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -809,26 +805,28 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">87x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
+<span class="cline-any cline-yes">86x</span>
+<span class="cline-any cline-yes">86x</span>
+<span class="cline-any cline-yes">86x</span>
+<span class="cline-any cline-yes">86x</span>
+<span class="cline-any cline-yes">86x</span>
+<span class="cline-any cline-yes">86x</span>
+<span class="cline-any cline-yes">86x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">86x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">86x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1134,12 +1132,6 @@
 <span class="cline-any cline-yes">35x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">35x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1535,7 +1527,7 @@ import {
   applyTransitionDuration,
   prefix,
   setVisibilityState,
-  evaluateOptions,
+  evaluateProps,
   defer,
   setAttr,
   toArray
@@ -1543,10 +1535,9 @@ import {
 &nbsp;
 let idCounter = 1
 &nbsp;
-export default function createTippy(reference, collectionOptions) {
-  // If the reference already has a tippy instance (or it doesn't exist)
-  if (!reference || reference._tippy) {
-    return null
+export default function createTippy(reference, collectionProps) {
+  if (!reference) {
+    throw Error('[tippy]: reference does not exist')
   }
 &nbsp;
   /* ========================= 🔒 Private props 🔒 ========================= */
@@ -1559,13 +1550,16 @@ export default function createTippy(reference, collectionOptions) {
   let transitionEndListener = <span class="fstat-no" title="function not covered" >()</span> =&gt; {}
 &nbsp;
   /* ========================= 🔑 Public props 🔑 ========================= */
-  // The id counter is incremented each time a tippy is created
+  const props = evaluateProps(reference, collectionProps)
+&nbsp;
+  // If the reference shouldn't have multiple tippys, return null early
+  if (!props.multiple &amp;&amp; reference._tippy) {
+    return null
+  }
+&nbsp;
   const id = idCounter++
 &nbsp;
-  const options = evaluateOptions(reference, collectionOptions)
-&nbsp;
-  // Add listeners to the element based on `options.trigger`
-  const listeners = addEventListeners(reference, options, {
+  const listeners = addEventListeners(reference, props, {
     onTrigger,
     onMouseLeave,
     onBlur,
@@ -1573,7 +1567,7 @@ export default function createTippy(reference, collectionOptions) {
     onDelegateHide
   })
 &nbsp;
-  const popper = createPopperElement(id, options)
+  const popper = createPopperElement(id, props)
 &nbsp;
   const popperChildren = getChildren(popper)
 &nbsp;
@@ -1592,7 +1586,7 @@ export default function createTippy(reference, collectionOptions) {
     popper,
     popperChildren,
     popperInstance,
-    options,
+    props,
     listeners,
     state,
     set,
@@ -1603,24 +1597,24 @@ export default function createTippy(reference, collectionOptions) {
     destroy
   }
 &nbsp;
-  if (options.createPopperInstanceOnInit) {
+  if (props.createPopperInstanceOnInit) {
     tip.popperInstance = createPopperInstance()
     tip.popperInstance.disableEventListeners()
   }
 &nbsp;
-  if (options.showOnInit) {
+  if (props.showOnInit) {
     enter()
   }
 &nbsp;
   // Ensure the reference element can receive focus (and is not a delegate)
-  if (options.a11y &amp;&amp; !options.target &amp;&amp; !elementCanReceiveFocus(reference)) {
+  if (props.a11y &amp;&amp; !props.target &amp;&amp; !elementCanReceiveFocus(reference)) {
     setAttr(reference, 'tabindex', '0')
   }
 &nbsp;
   // Highlight the element as having an active tippy instance with a `data` attribute
   setAttr(
     reference,
-    options.target ? 'data-tippy-delegate' : 'data-tippy-reference'
+    props.target ? 'data-tippy-delegate' : 'data-tippy-reference'
   )
 &nbsp;
   // Install shortcuts
@@ -1654,14 +1648,14 @@ export default function createTippy(reference, collectionOptions) {
   }
 &nbsp;
   function <span class="fstat-no" title="function not covered" >createDelegateChildTippy(</span>event) {
-    const targetEl = <span class="cstat-no" title="statement not covered" >closest(event.target, options.target)</span>
+    const targetEl = <span class="cstat-no" title="statement not covered" >closest(event.target, tip.props.target)</span>
 <span class="cstat-no" title="statement not covered" >    if (targetEl &amp;&amp; !targetEl._tippy) {</span>
-      const content = <span class="cstat-no" title="statement not covered" >tip.options.content</span>
+      const content = <span class="cstat-no" title="statement not covered" >tip.props.content</span>
 <span class="cstat-no" title="statement not covered" >      if (content) {</span>
 <span class="cstat-no" title="statement not covered" >        createTippy(targetEl, {</span>
-          ...tip.options,
+          ...tip.props,
           content,
-          target: null,
+          target: '',
           showOnInit: true
         })
 <span class="cstat-no" title="statement not covered" >        enter(event)</span>
@@ -1677,15 +1671,15 @@ export default function createTippy(reference, collectionOptions) {
     }
 &nbsp;
     // Is a delegate, create an instance for the child target
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.options.target) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.props.target) {
 <span class="cstat-no" title="statement not covered" >      createDelegateChildTippy(event)</span>
 <span class="cstat-no" title="statement not covered" >      return</span>
     }
 &nbsp;
     isPreparingToShow = true
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.options.wait) {
-<span class="cstat-no" title="statement not covered" >      tip.options.wait(show, event)</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.props.wait) {
+<span class="cstat-no" title="statement not covered" >      tip.props.wait(show, event)</span>
 <span class="cstat-no" title="statement not covered" >      return</span>
     }
 &nbsp;
@@ -1698,7 +1692,7 @@ export default function createTippy(reference, collectionOptions) {
 <span class="cstat-no" title="statement not covered" >      document.addEventListener('mousemove', followCursorListener)</span>
     }
 &nbsp;
-    const delay = getValue(tip.options.delay, 0)
+    const delay = getValue(tip.props.delay, 0)
 &nbsp;
     if (delay) {
       showTimeoutId = setTimeout(() =&gt; {
@@ -1718,7 +1712,7 @@ export default function createTippy(reference, collectionOptions) {
 &nbsp;
     isPreparingToShow = false
 &nbsp;
-    const delay = getValue(tip.options.delay, 1)
+    const delay = getValue(tip.props.delay, 1)
 &nbsp;
     if (delay) {
       hideTimeoutId = setTimeout(() =&gt; {
@@ -1731,23 +1725,23 @@ export default function createTippy(reference, collectionOptions) {
     }
   }
 &nbsp;
-  function set(partialOptions) {
-    const newOptions = evaluateOptions(tip.reference, {
-      ...tip.options,
-      ...partialOptions
+  function set(partialprops) {
+    const newprops = evaluateProps(tip.reference, {
+      ...tip.props,
+      ...partialprops
     })
 &nbsp;
     const { isVisible } = tip.state
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (isVisible &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >tip.options.appendTo.contains(tip.popper))</span> {
-<span class="cstat-no" title="statement not covered" >      tip.options.appendTo.removeChild(tip.popper)</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (isVisible &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >tip.props.appendTo.contains(tip.popper))</span> {
+<span class="cstat-no" title="statement not covered" >      tip.props.appendTo.removeChild(tip.popper)</span>
     }
 &nbsp;
-    tip.popper = createPopperElement(tip.id, newOptions)
+    tip.popper = createPopperElement(tip.id, newprops)
     tip.popper._tippy = tip
     tip.popperChildren = getChildren(tip.popper)
     tip.popperInstance &amp;&amp; (tip.popperInstance.popper = tip.popper)
-    tip.options = newOptions
+    tip.props = newprops
 &nbsp;
     <span class="missing-if-branch" title="if path not taken" >I</span>if (isVisible) {
 <span class="cstat-no" title="statement not covered" >      show(0)</span>
@@ -1764,7 +1758,7 @@ export default function createTippy(reference, collectionOptions) {
 <span class="branch-1 cbranch-no" title="branch not covered" >      Browser.isUsingTouch </span>&amp;&amp;
 <span class="branch-2 cbranch-no" title="branch not covered" >      ['mouseenter', 'mouseover', 'focus'].indexOf(event.type) &gt; -1</span>
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (shouldStopEvent &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >tip.options.touchHold)</span> {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (shouldStopEvent &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >tip.props.touchHold)</span> {
 <span class="cstat-no" title="statement not covered" >      return</span>
     }
 &nbsp;
@@ -1773,7 +1767,7 @@ export default function createTippy(reference, collectionOptions) {
     // Toggle show/hide when clicking click-triggered tooltips
     if (
       event.type === 'click' &amp;&amp;
-      tip.options.hideOnClick !== 'persistent' &amp;&amp;
+      tip.props.hideOnClick !== 'persistent' &amp;&amp;
       tip.state.isVisible
     ) {
       leave()
@@ -1787,12 +1781,12 @@ export default function createTippy(reference, collectionOptions) {
       ['mouseleave', 'mouseout'].indexOf(event.type) &gt; -1 &amp;&amp;
       Browser.supportsTouch &amp;&amp;
 <span class="branch-2 cbranch-no" title="branch not covered" >      Browser.isUsingTouch </span>&amp;&amp;
-<span class="branch-3 cbranch-no" title="branch not covered" >      tip.options.touchHold</span>
+<span class="branch-3 cbranch-no" title="branch not covered" >      tip.props.touchHold</span>
     ) {
 <span class="cstat-no" title="statement not covered" >      return</span>
     }
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.options.interactive) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.props.interactive) {
       const onMouseMove = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >ev</span>ent =&gt; {</span>
         const referenceCursorIsOver = <span class="cstat-no" title="statement not covered" >closest(event.target, Selectors.REFERENCE)</span>
         const cursorIsOverPopper =
@@ -1808,7 +1802,7 @@ export default function createTippy(reference, collectionOptions) {
             getPopperPlacement(tip.popper),
             tip.popper.getBoundingClientRect(),
             event,
-            tip.options
+            tip.props
           )
         ) {
 <span class="cstat-no" title="statement not covered" >          document.body.removeEventListener('mouseleave', leave)</span>
@@ -1831,7 +1825,7 @@ export default function createTippy(reference, collectionOptions) {
 <span class="cstat-no" title="statement not covered" >      return</span>
     }
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.options.interactive) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.props.interactive) {
 <span class="cstat-no" title="statement not covered" >      if (!event.relatedTarget) {</span>
 <span class="cstat-no" title="statement not covered" >        return</span>
       }
@@ -1844,13 +1838,13 @@ export default function createTippy(reference, collectionOptions) {
   }
 &nbsp;
   function <span class="fstat-no" title="function not covered" >onDelegateShow(</span>event) {
-<span class="cstat-no" title="statement not covered" >    if (closest(event.target, options.target)) {</span>
+<span class="cstat-no" title="statement not covered" >    if (closest(event.target, tip.props.target)) {</span>
 <span class="cstat-no" title="statement not covered" >      enter(event)</span>
     }
   }
 &nbsp;
   function <span class="fstat-no" title="function not covered" >onDelegateHide(</span>event) {
-<span class="cstat-no" title="statement not covered" >    if (closest(event.target, options.target)) {</span>
+<span class="cstat-no" title="statement not covered" >    if (closest(event.target, tip.props.target)) {</span>
 <span class="cstat-no" title="statement not covered" >      leave()</span>
     }
   }
@@ -1862,46 +1856,40 @@ export default function createTippy(reference, collectionOptions) {
 &nbsp;
   function createPopperInstance() {
     const { tooltip } = tip.popperChildren
-    const { popperOptions } = tip.options
+    const { props } = tip.props
 &nbsp;
     const arrowSelector =
-      Selectors[tip.options.arrowType === 'round' ? <span class="branch-0 cbranch-no" title="branch not covered" >'ROUND_ARROW' </span>: 'ARROW']
+      Selectors[tip.props.arrowType === 'round' ? <span class="branch-0 cbranch-no" title="branch not covered" >'ROUND_ARROW' </span>: 'ARROW']
     const arrow = tooltip.querySelector(arrowSelector)
 &nbsp;
     const config = {
-      placement: options.placement,
-      ...(popperOptions || <span class="branch-1 cbranch-no" title="branch not covered" >{})</span>,
+      placement: tip.props.placement,
+      ...(props || {}),
       modifiers: {
-        ...(popperOptions ? popperOptions.modifiers : <span class="branch-1 cbranch-no" title="branch not covered" >{})</span>,
+        ...(props ? <span class="branch-0 cbranch-no" title="branch not covered" >props.modifiers </span>: {}),
         arrow: {
           element: arrowSelector,
-          ...(popperOptions &amp;&amp; popperOptions.modifiers
-            ? <span class="branch-0 cbranch-no" title="branch not covered" >popperOptions.modifiers.arrow</span>
-            : {})
+          ...(props &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >props.modifiers </span>? <span class="branch-0 cbranch-no" title="branch not covered" >props.modifiers.arrow </span>: {})
         },
         flip: {
-          enabled: options.flip,
-          padding: options.distance + 5 /* 5px from viewport boundary */,
-          behavior: options.flipBehavior,
-          ...(popperOptions &amp;&amp; popperOptions.modifiers
-            ? <span class="branch-0 cbranch-no" title="branch not covered" >popperOptions.modifiers.flip</span>
-            : {})
+          enabled: tip.props.flip,
+          padding: tip.props.distance + 5 /* 5px from viewport boundary */,
+          behavior: tip.props.flipBehavior,
+          ...(props &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >props.modifiers </span>? <span class="branch-0 cbranch-no" title="branch not covered" >props.modifiers.flip </span>: {})
         },
         offset: {
-          offset: options.offset,
-          ...(popperOptions &amp;&amp; popperOptions.modifiers
-            ? <span class="branch-0 cbranch-no" title="branch not covered" >popperOptions.modifiers.offset</span>
-            : {})
+          offset: tip.props.offset,
+          ...(props &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >props.modifiers </span>? <span class="branch-0 cbranch-no" title="branch not covered" >props.modifiers.offset </span>: {})
         }
       },
       onCreate() {
         tooltip.style[getPopperPlacement(tip.popper)] = getOffsetDistanceInPx(
-          tip.options.distance,
+          tip.props.distance,
           Defaults.distance
         )
 &nbsp;
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (arrow &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >options.arrowTransform)</span> {
-<span class="cstat-no" title="statement not covered" >          computeArrowTransform(arrow, tip.options.arrowTransform)</span>
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (arrow &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >tip.props.arrowTransform)</span> {
+<span class="cstat-no" title="statement not covered" >          computeArrowTransform(arrow, tip.props.arrowTransform)</span>
         }
       },
       onUpdate() {
@@ -1911,12 +1899,12 @@ export default function createTippy(reference, collectionOptions) {
         styles.left = ''
         styles.right = ''
         styles[getPopperPlacement(tip.popper)] = getOffsetDistanceInPx(
-          tip.options.distance,
+          tip.props.distance,
           Defaults.distance
         )
 &nbsp;
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (arrow &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >tip.options.arrowTransform)</span> {
-<span class="cstat-no" title="statement not covered" >          computeArrowTransform(arrow, tip.options.arrowTransform)</span>
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (arrow &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >tip.props.arrowTransform)</span> {
+<span class="cstat-no" title="statement not covered" >          computeArrowTransform(arrow, tip.props.arrowTransform)</span>
         }
       }
     }
@@ -1930,7 +1918,7 @@ export default function createTippy(reference, collectionOptions) {
       callback: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >        tip.popperInstance.update()</span>
       },
-      options: {
+      props: {
         childList: true,
         subtree: true,
         characterData: true
@@ -1943,12 +1931,12 @@ export default function createTippy(reference, collectionOptions) {
   function mount(onceUpdated) {
     if (!tip.popperInstance) {
       tip.popperInstance = createPopperInstance()
-      <span class="missing-if-branch" title="if path not taken" >I</span>if (!tip.options.livePlacement) {
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (!tip.props.livePlacement) {
 <span class="cstat-no" title="statement not covered" >        tip.popperInstance.disableEventListeners()</span>
       }
     } else {
       tip.popperInstance.scheduleUpdate()
-      if (tip.options.livePlacement &amp;&amp; !hasFollowCursorBehavior()) {
+      if (tip.props.livePlacement &amp;&amp; !hasFollowCursorBehavior()) {
         tip.popperInstance.enableEventListeners()
       }
     }
@@ -1964,27 +1952,27 @@ export default function createTippy(reference, collectionOptions) {
 &nbsp;
     updatePopperPosition(tip.popperInstance, onceUpdated, true)
 &nbsp;
-    if (!tip.options.appendTo.contains(tip.popper)) {
-      tip.options.appendTo.appendChild(tip.popper)
+    if (!tip.props.appendTo.contains(tip.popper)) {
+      tip.props.appendTo.appendChild(tip.popper)
     }
   }
 &nbsp;
   function hasFollowCursorBehavior() {
     return (
-      tip.options.followCursor &amp;&amp;
+      tip.props.followCursor &amp;&amp;
 <span class="branch-1 cbranch-no" title="branch not covered" >      !Browser.isUsingTouch </span>&amp;&amp;
 <span class="branch-2 cbranch-no" title="branch not covered" >      lastTriggerEvent </span>&amp;&amp;
 <span class="branch-3 cbranch-no" title="branch not covered" >      lastTriggerEvent.type !== 'focus'</span>
     )
   }
 &nbsp;
-  function addMutationObserver({ target, callback, options }) {
+  function addMutationObserver({ target, callback, props }) {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!window.MutationObserver) {
 <span class="cstat-no" title="statement not covered" >      return</span>
     }
 &nbsp;
     const observer = new MutationObserver(callback)
-    observer.observe(target, options)
+    observer.observe(target, props)
 &nbsp;
     mutationObservers.push(observer)
   }
@@ -1992,7 +1980,7 @@ export default function createTippy(reference, collectionOptions) {
   function <span class="fstat-no" title="function not covered" >makeSticky(</span>) {
     const applyTransitionDuration = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      tip.popper.style[prefix('transitionDuration')] = `${</span>
-        tip.options.updateDuration
+        tip.props.updateDuration
       }ms`
     }
 &nbsp;
@@ -2057,7 +2045,7 @@ export default function createTippy(reference, collectionOptions) {
     tip.state.isEnabled = false
   }
 &nbsp;
-  function show(duration = getValue(tip.options.duration, 0)) {
+  function show(duration = getValue(tip.props.duration, 0)) {
     if (tip.state.isDestroyed || !tip.state.isEnabled) {
       return
     }
@@ -2075,7 +2063,7 @@ export default function createTippy(reference, collectionOptions) {
       return
     }
 &nbsp;
-    tip.options.onShow(tip)
+    tip.props.onShow(tip)
 &nbsp;
     tip.popper.style.visibility = 'visible'
     tip.state.isVisible = true
@@ -2099,7 +2087,7 @@ export default function createTippy(reference, collectionOptions) {
       // Set initial position near the cursor
       <span class="missing-if-branch" title="if path not taken" >I</span>if (hasFollowCursorBehavior()) {
 <span class="cstat-no" title="statement not covered" >        tip.popperInstance.disableEventListeners()</span>
-        const delay = <span class="cstat-no" title="statement not covered" >getValue(tip.options.delay, 0)</span>
+        const delay = <span class="cstat-no" title="statement not covered" >getValue(tip.props.delay, 0)</span>
 <span class="cstat-no" title="statement not covered" >        if (lastTriggerEvent) {</span>
 <span class="cstat-no" title="statement not covered" >          followCursorListener(</span>
             delay &amp;&amp; lastMouseMoveEvent ? lastMouseMoveEvent : lastTriggerEvent
@@ -2120,11 +2108,11 @@ export default function createTippy(reference, collectionOptions) {
         getComputedStyle(tip.popperChildren.backdrop)[prefix('transform')]
       }
 &nbsp;
-      if (tip.options.interactive) {
+      if (tip.props.interactive) {
         tip.reference.classList.add('tippy-active')
       }
 &nbsp;
-      <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.options.sticky) {
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.props.sticky) {
 <span class="cstat-no" title="statement not covered" >        makeSticky()</span>
       }
 &nbsp;
@@ -2134,33 +2122,33 @@ export default function createTippy(reference, collectionOptions) {
       )
 &nbsp;
       onTransitionEnd(duration, <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >        if (!tip.options.updateDuration) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!tip.props.updateDuration) {</span>
 <span class="cstat-no" title="statement not covered" >          tip.popperChildren.tooltip.classList.add('tippy-notransition')</span>
         }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (tip.options.interactive) {</span>
+<span class="cstat-no" title="statement not covered" >        if (tip.props.interactive) {</span>
 <span class="cstat-no" title="statement not covered" >          focus(tip.popper)</span>
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        setAttr(tip.reference, 'aria-describedby', `tippy-${tip.id}`)</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        tip.options.onShown(tip)</span>
+<span class="cstat-no" title="statement not covered" >        tip.props.onShown(tip)</span>
       })
     })
   }
 &nbsp;
-  function hide(duration = getValue(tip.options.duration, 1)) {
+  function hide(duration = getValue(tip.props.duration, 1)) {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.state.isDestroyed || !tip.state.isEnabled) {
 <span class="cstat-no" title="statement not covered" >      return</span>
     }
 &nbsp;
-    tip.options.onHide(tip)
+    tip.props.onHide(tip)
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!tip.options.updateDuration) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!tip.props.updateDuration) {
 <span class="cstat-no" title="statement not covered" >      tip.popperChildren.tooltip.classList.remove('tippy-notransition')</span>
     }
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.options.interactive) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.props.interactive) {
 <span class="cstat-no" title="statement not covered" >      tip.reference.classList.remove('tippy-active')</span>
     }
 &nbsp;
@@ -2181,7 +2169,7 @@ export default function createTippy(reference, collectionOptions) {
       'hidden'
     )
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.options.interactive &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >tip.options.trigger.indexOf('click') &gt; -1)</span> {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (tip.props.interactive &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >tip.props.trigger.indexOf('click') &gt; -1)</span> {
 <span class="cstat-no" title="statement not covered" >      focus(tip.reference)</span>
     }
 &nbsp;
@@ -2193,7 +2181,7 @@ export default function createTippy(reference, collectionOptions) {
     */
     defer(() =&gt; {
       onTransitionEnd(duration, () =&gt; {
-        if (tip.state.isVisible || !tip.options.appendTo.contains(tip.popper)) {
+        if (tip.state.isVisible || !tip.props.appendTo.contains(tip.popper)) {
           return
         }
 &nbsp;
@@ -2206,9 +2194,9 @@ export default function createTippy(reference, collectionOptions) {
 &nbsp;
         tip.popperInstance.disableEventListeners()
 &nbsp;
-        tip.options.appendTo.removeChild(tip.popper)
+        tip.props.appendTo.removeChild(tip.popper)
 &nbsp;
-        tip.options.onHidden(tip)
+        tip.props.onHidden(tip)
       })
     })
   }
@@ -2234,8 +2222,8 @@ export default function createTippy(reference, collectionOptions) {
       tip.reference.removeAttribute(attr)
     })
 &nbsp;
-    if (tip.options.target &amp;&amp; destroyTargetInstances) {
-      toArray(tip.reference.querySelectorAll(tip.options.target)).forEach(
+    if (tip.props.target &amp;&amp; destroyTargetInstances) {
+      toArray(tip.reference.querySelectorAll(tip.props.target)).forEach(
         child =&gt; child._tippy &amp;&amp; child._tippy.destroy()
       )
     }
@@ -2257,7 +2245,7 @@ export default function createTippy(reference, collectionOptions) {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Jun 30 2018 23:03:10 GMT+1000 (AEST)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Jul 01 2018 09:58:01 GMT+1000 (AEST)
 </div>
 </div>
 <script src="prettify.js"></script>

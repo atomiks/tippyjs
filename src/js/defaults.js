@@ -30,7 +30,7 @@ export let Defaults = {
   flipBehavior: 'flip',
   arrowType: 'sharp',
   arrowTransform: '',
-  target: null,
+  target: '',
   allowHTML: true,
   showOnInit: false,
   popperOptions: {},
