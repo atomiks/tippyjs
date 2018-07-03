@@ -6,14 +6,14 @@ import Code from './Code'
 
 export default () => (state, actions) => (
   <section class="section" id="getting-started">
-    <div class="section__icon-wrapper" innerHTML={emoji('📦')} />
+    <div class="section__icon-wrapper" oncreate={emoji('📦')} />
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#getting-started">
         Getting started
       </a>
     </div>
     <h3 class="section__subheading">
-      Option 1 <span class="section__emoji" innerHTML={emoji('🐝')} />
+      Option 1 <span class="section__emoji" oncreate={emoji('🐝')} />
     </h3>
     <p>
       Include this script from the{' '}
@@ -37,7 +37,7 @@ export default () => (state, actions) => (
     </p>
 
     <h3 class="section__subheading">
-      Option 2 <span class="section__emoji" innerHTML={emoji('📦')} />
+      Option 2 <span class="section__emoji" oncreate={emoji('📦')} />
     </h3>
     <p>Install using either npm or yarn:</p>
 
@@ -56,7 +56,7 @@ import tippy from 'tippy.js'
     </Code>
 
     <h3 class="section__subheading">
-      Files <span class="section__emoji" innerHTML={emoji('📁')} />
+      Files <span class="section__emoji" oncreate={emoji('📁')} />
     </h3>
     <p>Tippy builds a bunch of different files that can be used:</p>
     <ul>

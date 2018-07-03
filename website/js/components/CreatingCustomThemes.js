@@ -3,7 +3,7 @@ import { emoji } from '../utils'
 
 export default () => (state, actions) => (
   <section class="section" id="creating-custom-themes">
-    <div class="section__icon-wrapper" innerHTML={emoji('🖌')} />
+    <div class="section__icon-wrapper" oncreate={emoji('🖌')} />
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#creating-custom-themes">
         Creating Custom Themes

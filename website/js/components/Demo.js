@@ -17,7 +17,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('↕️')} />
+      <div class="feature__icon" oncreate={emoji('↕️')} />
       <h3 class="feature__heading">Placement</h3>
       <p>
         A tooltip can be placed in four different ways in relation to its
@@ -68,7 +68,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('▶️')} />
+      <div class="feature__icon" oncreate={emoji('▶️')} />
       <h3 class="feature__heading">Arrows</h3>
       <p>
         Arrows point toward the reference element. There are two different types
@@ -131,7 +131,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('👏')} />
+      <div class="feature__icon" oncreate={emoji('👏')} />
       <h3 class="feature__heading">Triggers</h3>
       <p>Triggers define the types of events that cause a tooltip to show.</p>
       <button
@@ -159,7 +159,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('✍️')} />
+      <div class="feature__icon" oncreate={emoji('✍️')} />
       <h3 class="feature__heading">Interactivity</h3>
       <p>
         Tooltips can be interactive, meaning they won't hide when you hover over
@@ -183,7 +183,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('💫')} />
+      <div class="feature__icon" oncreate={emoji('💫')} />
       <h3 class="feature__heading">Animations</h3>
       <p>Tooltips can have different types of animations.</p>
       <button
@@ -269,7 +269,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('⏱️')} />
+      <div class="feature__icon" oncreate={emoji('⏱️')} />
       <h3 class="feature__heading">Duration</h3>
       <p>A tippy can have different transition durations.</p>
       <button class="btn" title="I'm a Tippy tooltip!" data-tippy-duration="0">
@@ -299,7 +299,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('⏳')} />
+      <div class="feature__icon" oncreate={emoji('⏳')} />
       <h3 class="feature__heading">Delay</h3>
 
       <p>
@@ -329,7 +329,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('📡')} />
+      <div class="feature__icon" oncreate={emoji('📡')} />
       <h3 class="feature__heading">
         Event delegation <span class="badge">v2.1</span>
       </h3>
@@ -349,7 +349,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('🖼️')} />
+      <div class="feature__icon" oncreate={emoji('🖼️')} />
       <h3 class="feature__heading">HTML</h3>
       <p>
         Tooltips can contain HTML, allowing you to craft awesome interactive
@@ -384,7 +384,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('🖌️')} />
+      <div class="feature__icon" oncreate={emoji('🖌️')} />
       <h3 class="feature__heading">Themes</h3>
       <p>
         A tippy can have any kind of theme you want! Creating a custom theme is
@@ -407,7 +407,7 @@ export default () => (state, { demo }) => (
     </div>
 
     <div class="feature">
-      <div class="feature__icon" innerHTML={emoji('😍')} />
+      <div class="feature__icon" oncreate={emoji('😍')} />
       <h3 class="feature__heading">Misc</h3>
       <p>
         Tippy has a ton of{' '}

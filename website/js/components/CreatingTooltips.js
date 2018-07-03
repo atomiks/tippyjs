@@ -4,7 +4,7 @@ import Code from './Code'
 
 export default () => (state, actions) => (
   <section class="section" id="creating-tooltips">
-    <div class="section__icon-wrapper" innerHTML={emoji('🔧')} />
+    <div class="section__icon-wrapper" oncreate={emoji('🔧')} />
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#creating-tooltips">
         Creating tooltips
@@ -13,7 +13,7 @@ export default () => (state, actions) => (
 
     <h3>
       1. Add your tooltip content{' '}
-      <span class="section__emoji" innerHTML={emoji('✍️')} />
+      <span class="section__emoji" oncreate={emoji('✍️')} />
     </h3>
 
     <p>
@@ -32,7 +32,7 @@ export default () => (state, actions) => (
     </p>
 
     <h3>
-      2. Create a tippy <span class="section__emoji" innerHTML={emoji('🌟')} />
+      2. Create a tippy <span class="section__emoji" oncreate={emoji('🌟')} />
     </h3>
 
     <p>
@@ -70,7 +70,7 @@ tippy('.btn')
     </p>
 
     <h3>
-      Mutations <span class="section__emoji" innerHTML={emoji('🛠')} />
+      Mutations <span class="section__emoji" oncreate={emoji('🛠')} />
     </h3>
 
     <p>
@@ -108,7 +108,7 @@ tippy('.btn')
 
     <h3>
       Additional input types{' '}
-      <span class="section__emoji" innerHTML={emoji('🎛')} />
+      <span class="section__emoji" oncreate={emoji('🎛')} />
     </h3>
     <p>
       A single{' '}
@@ -138,7 +138,7 @@ tippy('.btn')
 
     <h3>
       Tippify all titled elements{' '}
-      <span class="section__emoji" innerHTML={emoji('🍭')} />
+      <span class="section__emoji" oncreate={emoji('🍭')} />
     </h3>
     <p>
       Use this{' '}
@@ -154,7 +154,7 @@ tippy('.btn')
     <Code lang="js">{`tippy('[title]')`}</Code>
 
     <h3>
-      Advanced <span class="section__emoji" innerHTML={emoji('🤯')} />
+      Advanced <span class="section__emoji" oncreate={emoji('🤯')} />
     </h3>
     <p>
       You can use a virtual element as the positioning reference instead of a
@@ -169,10 +169,10 @@ tippy('.btn')
     return {
       width: 100,
       height: 100,
-      top: 100px,
-      left: 100px,
-      right: 200px,
-      bottom: 200px
+      top: 100,
+      left: 100,
+      right: 200,
+      bottom: 200
     }
   },
   clientHeight: 100,

@@ -4,7 +4,7 @@ import Code from './Code'
 
 export default () => (state, { allOptions }) => (
   <section class="section" id="all-options">
-    <div class="section__icon-wrapper" innerHTML={emoji('🔮')} />
+    <div class="section__icon-wrapper" oncreate={emoji('🔮')} />
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#all-options">
         All options
@@ -38,20 +38,20 @@ export default () => (state, { allOptions }) => (
   // The type of arrow. 'sharp' is a triangle and 'round' is an SVG shape
   arrowType: 'sharp', // 'round'
 
-  // The tooltip's Popper instance is not created until it is shown for the first 
+  // The tooltip's Popper instance is not created until it is shown for the first
   // time by default to increase performance
   createPopperInstanceOnInit: false,
 
   // Delays showing/hiding a tooltip after a trigger event was fired, in ms
   delay: 0, // Number or Array [show, hide] e.g. [100, 500]
 
-  // How far the tooltip is from its reference element in pixels 
+  // How far the tooltip is from its reference element in pixels
   distance: 10,
 
   // The transition duration
   duration: [350, 300], // Number or Array [show, hide]
 
-  // If true, whenever the title attribute on the reference changes, the tooltip 
+  // If true, whenever the title attribute on the reference changes, the tooltip
   // will automatically be updated
   dynamicTitle: false,
 
@@ -91,7 +91,7 @@ export default () => (state, { allOptions }) => (
   // from closing from clumsy mouse movements
   interactiveBorder: 2,
 
-  // Available v2.2+ - If false, the tooltip won't update its position (or flip) 
+  // Available v2.2+ - If false, the tooltip won't update its position (or flip)
   // when scrolling
   livePlacement: true,
 
@@ -107,7 +107,7 @@ export default () => (state, { allOptions }) => (
   offset: 0, // '50, 20' = 50px x-axis offset, 20px y-axis offset
 
   // Callback invoked when the tooltip fully transitions out
-  onHidden(instance) {}, 
+  onHidden(instance) {},
 
   // Callback invoked when the tooltip begins to transition out
   onHide(instance) {},
@@ -125,7 +125,7 @@ export default () => (state, { allOptions }) => (
   placement: 'top', // 'bottom', 'left', 'right', 'top-start', 'top-end', etc.
 
   // Popper.js options. Allows more control over tooltip positioning and behavior
-  popperOptions: {}, 
+  popperOptions: {},
 
   // The size of the tooltip
   size: 'regular', // 'small', 'large'
@@ -176,7 +176,7 @@ export default () => (state, { allOptions }) => (
     </p>
 
     <h3>
-      Callbacks <span class="section__emoji" innerHTML={emoji('🔊')} />
+      Callbacks <span class="section__emoji" oncreate={emoji('🔊')} />
     </h3>
     <p>
       If you want things to occur during tooltips' show and hide events, you can
@@ -203,7 +203,7 @@ export default () => (state, { allOptions }) => (
     </Code>
 
     <h3>
-      AJAX tooltips <span class="section__emoji" innerHTML={emoji('🌐')} />
+      AJAX tooltips <span class="section__emoji" oncreate={emoji('🌐')} />
     </h3>
     <p>
       Callbacks allow you to do powerful things with tooltips. Here's an example
@@ -222,7 +222,7 @@ export default () => (state, { allOptions }) => (
     </a>
 
     <h3>
-      Event delegation <span class="section__emoji" innerHTML={emoji('📡')} />
+      Event delegation <span class="section__emoji" oncreate={emoji('📡')} />
       <span class="badge">v2.1</span>
     </h3>
     <p>
@@ -254,7 +254,7 @@ export default () => (state, { allOptions }) => (
 
     <h4>Note</h4>
     <p>
-      <span class="section__emoji" innerHTML={emoji('⚠️')} />Avoid binding a
+      <span class="section__emoji" oncreate={emoji('⚠️')} />Avoid binding a
       Tippy instance to the body, as <code>mouseover / mouseoff</code> events
       will constantly fire as the cursor moves over the page. Instead, give it
       to the nearest possible parent element.
@@ -375,7 +375,7 @@ tippy.browser.onUserInputChange = type => {
     <Code lang="js">{`'[data-tippy], [data-tippy-delegate]'`}</Code>
 
     <p>
-      <span class="section__emoji" innerHTML={emoji('⚠️')} />
+      <span class="section__emoji" oncreate={emoji('⚠️')} />
       <code>Array.from</code> needs a polyfill for older browsers.
     </p>
   </section>

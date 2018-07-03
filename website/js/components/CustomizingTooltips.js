@@ -5,7 +5,7 @@ import Code from './Code'
 
 export default () => (state, actions) => (
   <section class="section" id="customizing-tooltips">
-    <div class="section__icon-wrapper" innerHTML={emoji('⚙️')} />
+    <div class="section__icon-wrapper" oncreate={emoji('⚙️')} />
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#customizing-tooltips">
         Customizing tooltips
@@ -44,7 +44,7 @@ export default () => (state, actions) => (
     </div>
 
     <h3>
-      Data attributes <span class="section__emoji" innerHTML={emoji('🏷')} />
+      Data attributes <span class="section__emoji" oncreate={emoji('🏷')} />
     </h3>
     <p>
       You can also specify options on the reference element itself by adding{' '}

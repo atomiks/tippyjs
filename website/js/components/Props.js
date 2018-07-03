@@ -4,7 +4,7 @@ import Code from './Code'
 
 export default () => (state, actions) => (
   <section class="section" id="props">
-    <div class="section__icon-wrapper" innerHTML={emoji('🏷️')} />
+    <div class="section__icon-wrapper" oncreate={emoji('🏷️')} />
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#props">
         Props
@@ -35,13 +35,13 @@ export default () => (state, actions) => (
     <Code lang="js">
       {`{
   // selector that was supplied to tippy()
-  selector: '.btn', 
+  selector: '.btn',
 
   // default + instance options merged together
-  options: { ... }, 
+  options: { ... },
 
   // Array of all Tippy instances that were created
-  tooltips: [Tippy, Tippy, Tippy, ...], 
+  tooltips: [Tippy, Tippy, Tippy, ...],
 
   // Method to destroy all the tooltips that were created
   destroyAll() { }

@@ -4,7 +4,7 @@ import { emoji } from '../utils'
 
 export default () => (state, actions) => (
   <section class="section" id="performance">
-    <div class="section__icon-wrapper" innerHTML={emoji('⚡️')} />
+    <div class="section__icon-wrapper" oncreate={emoji('⚡️')} />
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#performance">
         Performance

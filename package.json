@@ -16,7 +16,7 @@
   },
   "scripts": {
     "dev:docs": "parcel website/index.html -d docs/",
-    "build:docs": "parcel build website/index.html -d docs/ --public-url ./",
+    "build:docs": "parcel build website/index.html -d docs/ --public-url ./ && node website/build.js",
     "dev": "parcel tests/index.html -d tests/dist/",
     "build": "node ./scripts/build.js && npm run prettier && npm run build:docs",
     "test": "eslint \"src/**/*.js\" && jest --verbose",
@@ -38,6 +38,7 @@
     "last 2 versions"
   ],
   "devDependencies": {
+    "@hyperapp/render": "^2.0.0",
     "animejs": "^2.2.0",
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.26.0",
@@ -54,7 +55,7 @@
     "eslint": "^4.18.2",
     "feather-icons": "^4.7.0",
     "focus-visible": "^4.1.1",
-    "hyperapp": "^1.2.5",
+    "hyperapp": "^1.2.6",
     "jest": "^22.4.2",
     "jsdom": "^11.6.2",
     "mutation-observer": "^1.0.3",
@@ -73,7 +74,8 @@
     "rollup-plugin-css-only": "^0.2.0",
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-node-resolve": "^3.2.0",
-    "rollup-plugin-sass": "^0.4.10"
+    "rollup-plugin-sass": "^0.4.10",
+    "twemoji": "^11.0.0"
   },
   "dependencies": {
     "popper.js": "^1.14.3"

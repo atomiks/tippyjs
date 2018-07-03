@@ -4,7 +4,7 @@ import Code from './Code'
 
 export default () => (state, actions) => (
   <section class="section" id="methods">
-    <div class="section__icon-wrapper" innerHTML={emoji('🕹')} />
+    <div class="section__icon-wrapper" oncreate={emoji('🕹')} />
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#methods">
         Methods
