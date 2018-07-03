@@ -15,8 +15,8 @@
     "url": "git+https://github.com/atomiks/tippyjs.git"
   },
   "scripts": {
-    "dev:docs": "parcel website/index.html -d docs/ --open",
-    "build:docs": "parcel build website/index.html -d docs/ --public-url ./",
+    "dev:docs": "parcel website/index.html -d docs/ --no-cache --open",
+    "build:docs": "parcel build website/index.html -d docs/ --public-url ./ && node website/build.js",
     "dev": "parcel tests/visual/index.html -d tests/visual/dist --open",
     "build": "node ./scripts/build.js && npm run prettier && npm run build:docs",
     "test": "eslint \"src/**/*.js\" && jest --coverage",
@@ -40,13 +40,13 @@
     "> 0.5%"
   ],
   "devDependencies": {
+    "@hyperapp/render": "^2.0.0",
     "animejs": "^2.2.0",
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.26.3",
     "babel-jest": "^22.4.4",
     "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-object-assign": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015-rollup": "^3.0.0",
@@ -76,7 +76,8 @@
     "rollup-plugin-css-only": "^0.2.0",
     "rollup-plugin-json": "^2.3.1",
     "rollup-plugin-node-resolve": "^3.2.0",
-    "rollup-plugin-sass": "^0.4.10"
+    "rollup-plugin-sass": "^0.4.10",
+    "rollup-plugin-strip": "^1.1.1"
   },
   "dependencies": {
     "popper.js": "^1.14.3"

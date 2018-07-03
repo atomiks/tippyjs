@@ -1,6 +1,6 @@
 import { Browser } from './Browser'
 import { Selectors } from './selectors'
-import { hideAllPoppers, closest, matches, toArray } from './utils'
+import { hideAllPoppers, closest, closestCallback, toArray } from './utils'
 
 export { Browser }
 
@@ -45,7 +45,7 @@ export const onDocumentClick = event => {
     return hideAllPoppers()
   }
 
-  const reference = closest(event.target, Selectors.REFERENCE)
+  const reference = closestCallback(event.target, node => node._tippy)
   const popper = closest(event.target, Selectors.POPPER)
 
   // Clicked on interactive popper
@@ -55,21 +55,18 @@ export const onDocumentClick = event => {
 
   // Clicked on reference
   if (reference && reference._tippy) {
-    const { props } = reference._tippy
-    // TODO: props.multiple needs changing here.
-    const isMultiple = props.multiple
-    const isClickTrigger = props.trigger.indexOf('click') > -1
+    const tip = reference._tippy
+    const isClickTrigger = tip.props.trigger.indexOf('click') > -1
 
-    if (
-      (!isMultiple && Browser.isUsingTouch) ||
-      (!isMultiple && isClickTrigger)
-    ) {
-      return hideAllPoppers(reference._tippy)
+    if (Browser.isUsingTouch || isClickTrigger) {
+      return hideAllPoppers(tip)
     }
 
-    if (props.hideOnClick !== true || isClickTrigger) {
+    if (tip.props.hideOnClick !== true || isClickTrigger) {
       return
     }
+
+    tip.clearDelayTimeouts()
   }
 
   hideAllPoppers()
@@ -77,7 +74,7 @@ export const onDocumentClick = event => {
 
 export const onWindowBlur = () => {
   const { activeElement: el } = document
-  if (el && el.blur && matches.call(el, Selectors.REFERENCE)) {
+  if (el && el.blur && el._tippy) {
     el.blur()
   }
 }

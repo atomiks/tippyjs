@@ -1,100 +1,83 @@
 import { h } from 'hyperapp'
-import { emoji } from '../utils'
+import Emoji from './Emoji'
 import Code from './Code'
+import Heading from './Heading'
+const Subheading = Heading('Methods')
 
-export default () => (state, actions) => (
-  <section class="section" id="methods">
-    <div class="section__icon-wrapper" innerHTML={emoji('🕹')} />
-    <div class="section__heading-wrapper">
-      <a class="section__heading" href="#methods">
-        Methods
-      </a>
-    </div>
+const ELEMENT = `
+<button data-tippy="Hello">Text</button>
+`
+const UPDATE = `
+tip.set({
+  content: 'New content',
+  arrow: true,
+  duration: 1000,
+  animation: 'perspective'
+})
+`
+
+export default () => (
+  <section class="section">
+    <Emoji class="section__icon-wrapper">🕹</Emoji>
+
+    <Heading>Methods</Heading>
     <p>
-      Tippy instances have 5 methods available which allow you to control the
-      tooltip without the use of UI events. They are:
+      Tippy instances have 7 methods available which allow you to control the
+      tooltip without the use of UI events.
     </p>
-    <ul>
-      <li>
-        <code>Tippy.prototype.show()</code>
-      </li>
-      <li>
-        <code>Tippy.prototype.hide()</code>
-      </li>
-      <li>
-        <code>Tippy.prototype.enable()</code>
-      </li>
-      <li>
-        <code>Tippy.prototype.disable()</code>
-      </li>
-      <li>
-        <code>Tippy.prototype.destroy()</code>
-      </li>
-    </ul>
-    <p>Given the following element with a tooltip:</p>
-    <Code lang="html">{`<button title="Hello!">Text</button>`}</Code>
-    <Code lang="js">{`const btn = document.querySelector('button')
-tippy(btn)`}</Code>
+
+    <Code lang="html">{ELEMENT}</Code>
+    <Code lang="js">const btn = document.querySelector('button')</Code>
 
     <p>
       The Tippy instance is stored on the button element via the{' '}
-      <code>_tippy</code> property.
+      <code>_tippy</code> property.{' '}
     </p>
+    <Code lang="js">const tip = btn._tippy</Code>
+    <blockquote class="blockquote">
+      <strong>Why is it prefixed with an underscore?</strong> Since we're
+      attaching a non-standard property to an <code>Element</code>, we prefix it
+      with an underscore. In the future, there may exist a real{' '}
+      <code>tippy</code> property of elements that would get overwritten by the
+      library, and real DOM properties are never prefixed with an underscore.
+    </blockquote>
 
-    <h3>Show the tooltip</h3>
-    <Code lang="js">{`btn._tippy.show()`}</Code>
+    <Subheading>Show the tooltip</Subheading>
+    <Code lang="js">tip.show()</Code>
 
-    <h3>Hide the tooltip</h3>
-    <Code lang="js">{`btn._tippy.hide()`}</Code>
+    <Subheading>Hide the tooltip</Subheading>
+    <Code lang="js">tip.hide()</Code>
 
-    <h3>Custom transition duration</h3>
+    <Subheading>Custom transition duration</Subheading>
     <p>Pass a number in as an argument to override the instance option:</p>
-    <Code lang="js">{`btn._tippy.show(200) // 200ms
-btn._tippy.hide(1000) // 1000ms`}</Code>
+    <Code lang="js">tip.show(200)</Code>
 
-    <h3>Disable the tooltip</h3>
+    <Subheading>Disable the tooltip</Subheading>
     <p>The tooltip can be temporarily disabled from showing/hiding:</p>
-    <Code lang="js">{`btn._tippy.disable()`}</Code>
+    <Code lang="js">tip.disable()</Code>
 
     <p>To re-enable:</p>
-    <Code lang="js">{`btn._tippy.enable()`}</Code>
+    <Code lang="js">tip.enable()</Code>
 
-    <h3>Destroy the tooltip</h3>
+    <Subheading>Destroy the tooltip</Subheading>
     <p>
       To permanently destroy the tooltip and remove all listeners from the
       reference element:
     </p>
-    <Code lang="js">{`btn._tippy.destroy()`}</Code>
+    <Code lang="js">tip.destroy()</Code>
 
     <p>
       The <code>_tippy</code> property is deleted from the reference element
       upon destruction.
     </p>
 
-    <h3>Update the tooltip</h3>
+    <Subheading>Update the tooltip</Subheading>
     <p>
-      There is no method to update the tooltip content, because it's easy to do!
+      Pass an object of new props to the <code>set()</code> method to update the
+      tip. The tooltip element will be redrawn to reflect the change (this
+      involves creating a new popper element, so the old reference is thrown
+      away).
     </p>
-    <p>
-      Option 1 (recommended): Change the title on the reference element and use
-      the <code>dynamicTitle</code> option:
-    </p>
-    <Code lang="js">{`tippy(btn, { dynamicTitle: true })
-btn.title = 'New tooltip :)'`}</Code>
-
-    <p>Option 2: Manually update the tooltip:</p>
-    <Code lang="js">{`btn._tippy.popper.querySelector('.tippy-content').textContent = 'New tooltip :)'`}</Code>
-
-    <p>
-      Note: With the above method, <code>_tippy.title</code> won't reflect the
-      new title, you'll need to update it manually.
-    </p>
-    <p>
-      If you're using an HTML template, save it to a variable reference to
-      modify it later.
-    </p>
-    <Code lang="js">{`const template = document.querySelector('template')
-tippy(btn, { html: template })
-template.textContent = 'New tooltip :)'`}</Code>
+    <Code lang="js">{UPDATE}</Code>
   </section>
 )

@@ -1,6 +1,9 @@
 {
   "presets": [["env", { "modules": false }], "stage-2"],
-  "plugins": [["transform-react-jsx", { "pragma": "h" }]],
+  "plugins": [
+    "transform-class-properties",
+    ["transform-react-jsx", { "pragma": "h" }]
+  ],
   "env": {
     "test": {
       "presets": [

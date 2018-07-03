@@ -1,91 +1,75 @@
 import { h } from 'hyperapp'
-import { emoji } from '../utils'
-
+import Emoji from './Emoji'
 import Code from './Code'
+import Heading from './Heading'
+import ResultBox from './ResultBox'
+import Tippy from './Tippy'
+const Subheading = Heading('CreatingHTMLTemplates')
 
-export default () => (state, { creatingHTMLTemplates }) => (
-  <section class="section" id="creating-html-templates">
-    <div class="section__icon-wrapper" innerHTML={emoji('🖼️')} />
-    <div class="section__heading-wrapper">
-      <a class="section__heading" href="#creating-html-templates">
-        Creating HTML Templates
-      </a>
-    </div>
-    <p>
-      There are two ways to create an HTML template: <strong>cloning</strong> or{' '}
-      <strong>direct reference</strong>.
-    </p>
+const HTML_ELEMENT = `
+<button class="btn">Text</button>
+<div id="myTemplate">
+  My tooltip <strong style="color:pink">HTML</strong> content
+</div>
+`
 
-    <h3>Option 1: Cloning</h3>
-    <p>
-      Clones the template's <code>innerHTML</code> but does not modify it.
-    </p>
-    <p>
-      Option: <code>html: '#templateId'</code> selector matching a template on
-      the document
-    </p>
-    <ul>
-      <li>Reusable</li>
-      <li>Stays on the page</li>
-      <li>Does not save event listeners attached to it</li>
-      <li>Not directly modifiable</li>
-    </ul>
+const HTML_ELEMENT_JS = `
+tippy('.btn', {
+  content: document.querySelector('#myTemplate')
+})
+`
 
-    <h3>Option 2: Direct reference</h3>
-    <p>Directly appends an element to the tooltip.</p>
-    <p>
-      Option: <code>html: document.querySelector('#templateId')</code>{' '}
-      HTMLElement
-    </p>
-    <ul>
-      <li>Can only be used once</li>
-      <li>Removed from the page and appended to the tooltip element</li>
-      <li>Saves event listeners attached to it</li>
-      <li>Directly modifiable</li>
-    </ul>
+const HTML_ELEMENT_CLONE = `
+const clone = document.querySelector('#myTemplate').cloneNode(true)
+`
 
-    <p>On the document or in JavaScript somewhere, make a template.</p>
-
-    <h4>Cloning</h4>
-
-    <Code lang="html">
-      {`<div id="myTemplate" style="display: none;">
-  <h3>Cool <span style="color: pink;">HTML</span> inside here!</h3>
-</div>`}
-    </Code>
-
-    <h4>Direct element reference</h4>
-    <Code lang="html">
-      {`<div id="myTemplate">
-  <h3>Cool <span style="color: pink;">HTML</span> inside here!</h3>
-</div>`}
-    </Code>
-
-    <h4>Dynamic element with JS</h4>
-    <Code lang="js">
-      {`const myTemplate = document.createElement('div')
-myTemplate.innerHTML = '<h3>Cool <span style="color: pink;">HTML</span> inside here!</h3>'`}
-    </Code>
+export default () => (
+  <section class="section">
+    <Emoji class="section__icon-wrapper">🖼️</Emoji>
+    <Heading>Creating HTML Templates</Heading>
 
     <p>
-      Then specify a <code>html</code> option, choosing one of the choices.
+      Provide an <code>HTMLElement</code> for the <code>content</code> prop.
     </p>
 
-    <Code lang="js">
-      {`tippy('selector', {
-  html: '#myTemplate',
-  // ...or...
-  html: document.querySelector('#myTemplate'),
-  // ...or you can clone a direct element too...
-  html: document.querySelector('#myTemplate').cloneNode(true)
-})`}
-    </Code>
+    <Code lang="html">{HTML_ELEMENT}</Code>
+    <Code lang="js">{HTML_ELEMENT_JS}</Code>
+    <ResultBox>
+      <Tippy
+        content={
+          <div>
+            My tooltip <strong style={{ color: 'pink' }}>HTML</strong> content
+          </div>
+        }
+      >
+        <button class="btn">I have an HTML template!</button>
+      </Tippy>
+    </ResultBox>
 
-    <div class="section__result">
-      <p class="section__result-text">Result:</p>
-      <button oncreate={creatingHTMLTemplates.htmlTippy} class="btn" data-local>
-        I have an HTML template!
-      </button>
-    </div>
+    <p>
+      Tippy will append the DOM element directly to the tooltip, so it will be
+      removed from the page.
+    </p>
+
+    <p>
+      What if you want to reuse it multiple times? There's a DOM method for
+      deep-cloning a node.
+    </p>
+
+    <Code lang="js">{HTML_ELEMENT_CLONE}</Code>
+
+    <Subheading>Integration with SPA frameworks</Subheading>
+
+    <p>
+      Modern SPA frameworks like React, Hyperapp, Vue, etc. use plain objects to
+      describe the real DOM, called a VDOM. So if you want to use JSX inside the{' '}
+      <code>content</code> prop, you need to render the virtual nodes into a
+      real HTML element.
+    </p>
+
+    <p>
+      React does this with <code>ReactDOM.render()</code>, Hyperapp does it with{' '}
+      <code>app()</code>.
+    </p>
   </section>
 )

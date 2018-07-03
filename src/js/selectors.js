@@ -4,6 +4,5 @@ export const Selectors = {
   CONTENT: '.tippy-content',
   BACKDROP: '.tippy-backdrop',
   ARROW: '.tippy-arrow',
-  ROUND_ARROW: '.tippy-roundarrow',
-  REFERENCE: '[data-tippy-reference]'
+  ROUND_ARROW: '.tippy-roundarrow'
 }

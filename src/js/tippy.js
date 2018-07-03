@@ -27,8 +27,10 @@ export default function tippy(targets, options, one) {
 
   const props = { ...Defaults, ...options }
 
-  // If they are specifying a virtual positioning reference, we need to polyfill
-  // some native DOM props
+  /**
+   * If they are specifying a virtual positioning reference, we need to polyfill
+   * some native DOM props
+   */
   if (isPlainObject(targets)) {
     targets = polyfillVirtualReferenceProps(targets)
   }
@@ -40,14 +42,13 @@ export default function tippy(targets, options, one) {
     ? [firstReference]
     : references
   ).reduce((acc, reference) => {
-    const tip = createTippy(reference, props)
+    const tip = reference ? createTippy(reference, props) : null
     return tip ? acc.concat(tip) : acc
   }, [])
 
   return {
     targets,
     props,
-    references,
     instances,
     destroyAll() {
       this.instances.forEach(instance => {

@@ -1,9 +1,9 @@
 import { h } from 'hyperapp'
-import { emoji } from '../utils'
+import Emoji from './Emoji'
 
 export default () => (state, actions) => (
   <section class="section" id="creating-custom-themes">
-    <div class="section__icon-wrapper" innerHTML={emoji('🖌')} />
+    <Emoji class="section__icon-wrapper">🖌️</Emoji>
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#creating-custom-themes">
         Creating Custom Themes

@@ -1,43 +1,43 @@
 import { h } from 'hyperapp'
 import pkg from '../../../package.json'
-import { emoji } from '../utils'
-
+import Emoji from './Emoji'
 import Code from './Code'
 
-export default () => (state, actions) => (
+const PKG_LINK = `
+<script src="https://unpkg.com/tippy.js@${
+  pkg.version
+}/dist/tippy.all.min.js"></script>
+`
+const NODE_ENVIRONMENT = `
+// Node environment
+const tippy = require('tippy.js')
+// With a module bundler (webpack/rollup/parcel)
+import tippy from 'tippy.js'
+`
+
+export default () => (
   <section class="section" id="getting-started">
-    <div class="section__icon-wrapper" innerHTML={emoji('📦')} />
+    <Emoji class="section__icon-wrapper">📦</Emoji>
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#getting-started">
         Getting started
       </a>
     </div>
     <h3 class="section__subheading">
-      Option 1 <span class="section__emoji" innerHTML={emoji('🐝')} />
+      Option 1 <Emoji class="section__emoji">🐝</Emoji>
     </h3>
     <p>
-      Include this script from the{' '}
-      <span
-        class="tippy"
-        title="unpkg.com is a <strong>C</strong>ontent <strong>D</strong>elivery <strong>N</strong>etwork that hosts npm packages."
-        tabindex="0"
-      >
-        unpkg CDN
-      </span>{' '}
-      in your HTML document before your own scripts:
+      Include this script from the unpkg CDN in your HTML document before your
+      own scripts:
     </p>
-    <Code lang="html">
-      {`<script src="https://unpkg.com/tippy.js@${
-        pkg.version
-      }/dist/tippy.all.min.js"></script>`}
-    </Code>
+    <Code lang="html">{PKG_LINK}</Code>
     <p>
       Once it's loaded, you'll have access to the <code>tippy</code> module
       which will allow you to create awesome tooltips!
     </p>
 
     <h3 class="section__subheading">
-      Option 2 <span class="section__emoji" innerHTML={emoji('📦')} />
+      Option 2 <Emoji class="section__emoji">📦</Emoji>
     </h3>
     <p>Install using either npm or yarn:</p>
 
@@ -47,16 +47,10 @@ export default () => (state, actions) => (
     <p>
       Then you can import the <code>tippy</code> module:
     </p>
-    <Code lang="js">
-      {`// Node environment
-const tippy = require('tippy.js')
-// With a module bundler (webpack/rollup/parcel)
-import tippy from 'tippy.js'
-`}
-    </Code>
+    <Code lang="js">{NODE_ENVIRONMENT}</Code>
 
     <h3 class="section__subheading">
-      Files <span class="section__emoji" innerHTML={emoji('📁')} />
+      Files <Emoji class="section__emoji">📁</Emoji>
     </h3>
     <p>Tippy builds a bunch of different files that can be used:</p>
     <ul>

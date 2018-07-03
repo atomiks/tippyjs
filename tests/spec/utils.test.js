@@ -1,11 +1,4 @@
-import {
-  el,
-  createReference,
-  createReferenceArray,
-  hasTippy,
-  cleanDocumentBody,
-  IDENTIFIER
-} from '../utils'
+import { h, hasTippy, cleanDocumentBody, IDENTIFIER } from '../utils'
 
 import tippy from '../../src/js/tippy'
 import { Selectors } from '../../src/js/selectors'
@@ -30,7 +23,7 @@ describe('isPlainObject', () => {
   it('returns false for other object types', () => {
     expect(Utils.isPlainObject([])).toBe(false)
     expect(Utils.isPlainObject(function() {})).toBe(false)
-    expect(Utils.isPlainObject(el('div')))
+    expect(Utils.isPlainObject(h('div')))
   })
 
   it('returns false for primitive values', () => {
@@ -45,7 +38,7 @@ describe('isPlainObject', () => {
 
 describe('toArray', () => {
   it('converts a NodeList to an array', () => {
-    createReferenceArray({ appendToBody: true })
+    ;[...Array(10)].map(() => h())
     const arr = Utils.toArray(document.querySelectorAll(IDENTIFIER))
     expect(Array.isArray(arr)).toBe(true)
   })
@@ -69,7 +62,7 @@ describe('getArrayOfElements', () => {
   })
 
   it('returns an array of elements when given a valid selector string', () => {
-    createReferenceArray({ appendToBody: true })
+    ;[...Array(10)].map(() => h())
     const allAreElements = Utils.getArrayOfElements(IDENTIFIER).every(
       value => value instanceof Element
     )
@@ -83,7 +76,7 @@ describe('getArrayOfElements', () => {
   })
 
   it('returns an array of length 1 if the value is a DOM element', () => {
-    const ref = createReference()
+    const ref = h()
     const arr = Utils.getArrayOfElements(ref)
     expect(arr[0]).toBe(ref)
     expect(arr.length).toBe(1)
@@ -99,51 +92,51 @@ describe('getArrayOfElements', () => {
 
 describe('elementCanReceiveFocus', () => {
   it('returns true for a[href]', () => {
-    const a = el('a')
+    const a = h('a')
     a.href = '#'
     expect(Utils.elementCanReceiveFocus(a)).toBe(true)
   })
 
   it('returns true for area[href]', () => {
-    const area = el('area')
+    const area = h('area')
     area.href = '#'
     expect(Utils.elementCanReceiveFocus(area)).toBe(true)
   })
 
   it('returns true for input', () => {
-    const input = el('input')
+    const input = h('input')
     expect(Utils.elementCanReceiveFocus(input)).toBe(true)
   })
 
   it('returns true for textarea', () => {
-    const textarea = el('textarea')
+    const textarea = h('textarea')
     expect(Utils.elementCanReceiveFocus(textarea)).toBe(true)
   })
 
   it('returns true for select', () => {
-    const select = el('select')
+    const select = h('select')
     expect(Utils.elementCanReceiveFocus(select)).toBe(true)
   })
 
   it('returns true for iframe', () => {
-    const iframe = el('iframe')
+    const iframe = h('iframe')
     expect(Utils.elementCanReceiveFocus(iframe)).toBe(true)
   })
 
   it('returns true for [tabindex]', () => {
-    const div = el('div')
+    const div = h('div')
     div.tabIndex = '0'
     expect(Utils.elementCanReceiveFocus(div)).toBe(true)
   })
 
   it('returns false for [disabled]', () => {
-    const ref = el('div')
+    const ref = h('div')
     ref.setAttribute('disabled', 'disabled')
     expect(Utils.elementCanReceiveFocus(ref)).toBe(false)
   })
 
   it('returns false for other elements', () => {
-    const other = el('span')
+    const other = h('span')
     expect(Utils.elementCanReceiveFocus(other)).toBe(false)
   })
 
@@ -219,11 +212,22 @@ describe('getValue', () => {
     expect(Utils.getValue(['x', 'y'], 0)).toBe('x')
     expect(Utils.getValue(['x', 'y'], 1)).toBe('y')
   })
+
+  it('uses the default duration if the value is null', () => {
+    expect(Utils.getValue([null, 5], 0, Defaults.duration[0])).toBe(
+      Defaults.duration[0]
+    )
+    expect(Utils.getValue([5, null], 1, Defaults.duration[1])).toBe(
+      Defaults.duration[1]
+    )
+    expect(Utils.getValue([null, 5], 0, Defaults.delay)).toBe(Defaults.delay)
+    expect(Utils.getValue([5, null], 1, Defaults.delay)).toBe(Defaults.delay)
+  })
 })
 
 describe('getDataAttributeOptions', () => {
   it('returns the attribute options', () => {
-    const ref = createReference()
+    const ref = h()
     ref.setAttribute('data-tippy-arrowType', 'round')
     expect(Utils.getDataAttributeOptions(ref)).toEqual({
       arrowType: 'round'
@@ -231,7 +235,7 @@ describe('getDataAttributeOptions', () => {
   })
 
   it('correctly parses true & false strings', () => {
-    const ref = createReference()
+    const ref = h()
     ref.setAttribute('data-tippy-interactive', 'true')
     ref.setAttribute('data-tippy-animateFill', 'false')
 
@@ -242,7 +246,7 @@ describe('getDataAttributeOptions', () => {
   })
 
   it('correctly parses number strings', () => {
-    const ref = createReference()
+    const ref = h()
     ref.setAttribute('data-tippy-delay', '129')
     ref.setAttribute('data-tippy-duration', '111')
 
@@ -253,7 +257,7 @@ describe('getDataAttributeOptions', () => {
   })
 
   it('correctly parses arrays', () => {
-    const ref = createReference()
+    const ref = h()
     ref.setAttribute('data-tippy-delay', '[100, 255]')
     ref.setAttribute('data-tippy-duration', '[0, 999]')
 
@@ -284,19 +288,44 @@ describe('polyfillVirtualReferenceProps', () => {
 
 describe('matches', () => {
   it('works like Element.prototype.matches', () => {
-    const ref = createReference()
-    expect(Utils.matches.call(el('table'), 'table')).toBe(true)
-    expect(Utils.matches.call(ref, `.${ref.className}`)).toBe(true)
+    const ref = h('div', { class: 'test' })
+    expect(Utils.matches.call(h('table'), 'table')).toBe(true)
+    expect(Utils.matches.call(ref, '.test')).toBe(true)
   })
 })
 
 describe('closest', () => {
   it('works like Element.prototype.closest', () => {
-    const ref = createReference()
-    const child = el('div')
+    const ref = h('div', { class: 'parent' })
+    const child = h('div', { class: 'child' })
     ref.appendChild(child)
-    expect(Utils.closest(ref, `.${ref.className}`)).toBe(ref)
-    expect(Utils.closest(child, `.${ref.className}`)).toBe(ref)
+    expect(Utils.closest(ref, '.parent')).toBe(ref)
+    expect(Utils.closest(child, '.parent')).toBe(ref)
+  })
+
+  it('works when Element.prototype.closest is undefined', () => {
+    const cache = Element.prototype.closest
+    Element.prototype.closest = undefined
+    const ref = h('div', { class: 'parent' })
+    const child = h('div', { class: 'child' })
+    ref.append(child)
+    expect(Utils.closest(ref, '.parent')).toBe(ref)
+    expect(Utils.closest(child, '.parent')).toBe(ref)
+    Element.prototype.closest = cache
+  })
+})
+
+describe('closestCallback', () => {
+  it('works like Element.prototype.closest but uses a callback instead', () => {
+    const ref = h('div', { class: 'parent' })
+    const child = h('div', { class: 'child' })
+    ref.append(child)
+    expect(
+      Utils.closestCallback(ref, node => node.className === 'parent')
+    ).toBe(ref)
+    expect(
+      Utils.closestCallback(child, node => node.className === 'parent')
+    ).toBe(ref)
   })
 })
 
@@ -581,7 +610,7 @@ describe('getPopperPlacement', () => {
     )
 
     allPlacements.forEach(placement => {
-      const popper = el('div')
+      const popper = h('div')
       popper.setAttribute('x-placement', placement)
       expect(Utils.getPopperPlacement(popper).endsWith('-start')).toBe(false)
       expect(Utils.getPopperPlacement(popper).endsWith('-end')).toBe(false)
@@ -592,14 +621,14 @@ describe('getPopperPlacement', () => {
 describe('evaluateProps', () => {
   it('sets `animateFill` option to false if `arrow` is true', () => {
     const props = { animateFill: true, arrow: true }
-    expect(Utils.evaluateProps(createReference(), props)).toEqual({
+    expect(Utils.evaluateProps(h(), props)).toEqual({
       animateFill: false,
       arrow: true
     })
   })
 
   it('sets `props.appendTo` to be the return value of calling it if a function', () => {
-    const ref = createReference()
+    const ref = h()
     const props = {
       appendTo: reference => reference
     }
@@ -607,7 +636,7 @@ describe('evaluateProps', () => {
   })
 
   it('sets `props.content` to be the return value of calling it if a function', () => {
-    const ref = createReference()
+    const ref = h()
     const props = {
       content: reference => reference
     }
@@ -681,7 +710,7 @@ describe('prefix', () => {
 
 describe('setVisibilityState', () => {
   it('sets the `data-state` attribute on a list of elements with the value specified', () => {
-    const els = [createReference(), createReference(), null, createReference()]
+    const els = [h(), h(), null, h()]
     Utils.setVisibilityState(els, 'visible')
     expect(els[0].getAttribute('data-state')).toBe('visible')
     expect(els[1].getAttribute('data-state')).toBe('visible')
@@ -695,14 +724,14 @@ describe('setVisibilityState', () => {
 
 describe('setAttr', () => {
   it('sets an attribute with a default value of "" on an element', () => {
-    const ref = createReference()
+    const ref = h()
     const attr = 'data-some-attribute'
     Utils.setAttr(ref, attr)
     expect(ref.getAttribute(attr)).toBe('')
   })
 
   it('sets an attribute with a value if supplied on an element', () => {
-    const ref = createReference()
+    const ref = h()
     const attr = 'data-some-attribute'
     const value = 'some value'
     Utils.setAttr(ref, attr, value)
@@ -712,7 +741,7 @@ describe('setAttr', () => {
 
 describe('setContent', () => {
   it('sets textContent of an element if `props.allowHTML` is `false`', () => {
-    const ref = createReference()
+    const ref = h()
     const content = 'some content'
     Utils.setContent(ref, {
       allowHTML: false,
@@ -723,7 +752,7 @@ describe('setContent', () => {
   })
 
   it('sets innerHTML of an element if `props.allowHTML` is `true`', () => {
-    const ref = createReference()
+    const ref = h()
     const content = '<strong>some content</strong>'
     Utils.setContent(ref, {
       allowHTML: true,
@@ -736,7 +765,7 @@ describe('setContent', () => {
 describe('applyTransitionDuration', () => {
   /* JSDOM only supports `webkit-` properties */
   it('sets the `transition-duration` property on a list of elements with the value specified', () => {
-    const els = [createReference(), createReference(), null, createReference()]
+    const els = [h(), h(), null, h()]
     Utils.applyTransitionDuration(els, 1298)
     expect(els[0].style.webkitTransitionDuration).toBe('1298ms')
     expect(els[1].style.webkitTransitionDuration).toBe('1298ms')
@@ -746,7 +775,7 @@ describe('applyTransitionDuration', () => {
 
 describe('setInnerHTML', () => {
   it('sets the innerHTML of an element', () => {
-    const ref = createReference()
+    const ref = h()
     Utils.setInnerHTML(ref, '<strong></strong>')
     expect(ref.querySelector('strong')).not.toBeNull()
   })
@@ -946,132 +975,16 @@ describe('focus', () => {
   })
 })
 
-describe('addEventListeners', () => {
-  // NOTE: options.trigger dependency here
-
-  let trigger = ''
-
-  beforeEach(() => {
-    trigger = ''
-  })
-
-  const mockHandlers = {
-    onTrigger(event) {
-      trigger = event.type
-    },
-    onMouseLeave() {
-      trigger = 'mouseleave'
-    },
-    onBlur() {
-      trigger = 'blur'
-    },
-    onDelegateShow() {},
-    onDelegateHide() {}
-  }
-
-  it('returns a listeners array', () => {
-    const ref = createReference()
-    const listeners = Utils.addEventListeners(ref, Defaults, mockHandlers)
-    expect(Array.isArray(listeners)).toBe(true)
-    expect(listeners[0].eventType).toBeDefined()
-    expect(listeners[0].handler).toBeDefined()
-  })
-
-  it('returns the correct listeners array given the `trigger` option', () => {
-    const ref = createReference()
-    const listeners = Utils.addEventListeners(
-      ref,
-      { ...Defaults, trigger: 'mouseenter focus' },
-      mockHandlers
-    )
-    expect(listeners[0].eventType).toBe('mouseenter')
-    expect(listeners[0].handler).toBe(mockHandlers.onTrigger)
-    expect(listeners[1].eventType).toBe('mouseleave')
-    expect(listeners[1].handler).toBe(mockHandlers.onMouseLeave)
-    expect(listeners[2].eventType).toBe('focus')
-    expect(listeners[2].handler).toBe(mockHandlers.onTrigger)
-    expect(listeners[3].eventType).toBe('blur')
-    expect(listeners[3].handler).toBe(mockHandlers.onBlur)
-  })
-
-  it('adds correct `mouseenter` trigger events', () => {
-    const ref = createReference()
-    Utils.addEventListeners(
-      ref,
-      { ...Defaults, trigger: 'mouseenter' },
-      mockHandlers
-    )
-    ref.dispatchEvent(new Event('mouseenter'))
-    expect(trigger).toBe('mouseenter')
-    ref.dispatchEvent(new Event('mouseleave'))
-    expect(trigger).toBe('mouseleave')
-  })
-
-  it('adds correct `focus` trigger events', () => {
-    const ref = createReference()
-    Utils.addEventListeners(
-      ref,
-      { ...Defaults, trigger: 'focus' },
-      mockHandlers
-    )
-    ref.dispatchEvent(new Event('focus'))
-    expect(trigger).toBe('focus')
-    ref.dispatchEvent(new Event('blur'))
-    expect(trigger).toBe('blur')
-  })
-
-  it('adds correct `click` trigger events', () => {
-    const ref = createReference()
-    Utils.addEventListeners(
-      ref,
-      { ...Defaults, trigger: 'click' },
-      mockHandlers
-    )
-    ref.dispatchEvent(new Event('click'))
-    expect(trigger).toBe('click')
-  })
-
-  it('adds correct all trigger events when each is separated by string', () => {
-    const ref = createReference()
-    Utils.addEventListeners(
-      ref,
-      { ...Defaults, trigger: 'mouseenter focus click' },
-      mockHandlers
-    )
-    ref.dispatchEvent(new Event('click'))
-    expect(trigger).toBe('click')
-    ref.dispatchEvent(new Event('focus'))
-    expect(trigger).toBe('focus')
-    ref.dispatchEvent(new Event('mouseenter'))
-    expect(trigger).toBe('mouseenter')
-  })
-
-  it('returns an empty array and adds no listeners if props.trigger is `manual`', () => {
-    const ref = createReference()
-    Utils.addEventListeners(
-      ref,
-      { ...Defaults, trigger: 'manual' },
-      mockHandlers
-    )
-    ref.dispatchEvent(new Event('mouseenter'))
-    ref.dispatchEvent(new Event('focus'))
-    ref.dispatchEvent(new Event('click'))
-    expect(trigger).toBe('')
-  })
-})
-
 describe('hideAllPoppers', () => {
   it('hides all poppers on the document', done => {
-    tippy(createReferenceArray({ appendToBody: true }), {
-      showOnInit: true,
+    const tip = tippy([...Array(10)].map(() => h()), {
       duration: 0
     })
+    tip.instances.forEach(i => i.show(0))
     expect(document.querySelectorAll(Selectors.POPPER).length > 0).toBe(true)
     Utils.hideAllPoppers()
     setTimeout(() => {
-      expect(document.querySelectorAll(Selectors.POPPER).length === 0).toBe(
-        true
-      )
+      expect(document.querySelectorAll(Selectors.POPPER).length).toBe(0)
       done()
     })
   })

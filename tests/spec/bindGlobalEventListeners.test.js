@@ -1,11 +1,4 @@
-import {
-  createReference,
-  createReferenceArray,
-  hasTippy,
-  cleanDocumentBody,
-  withTestOptions,
-  resetBrowser
-} from '../utils'
+import { h, hasTippy, cleanDocumentBody, withTestOptions } from '../utils'
 
 import tippy from '../../src/js/tippy'
 import { Defaults } from '../../src/js/defaults'
@@ -53,7 +46,7 @@ describe('onDocumentTouch', () => {
 
 describe('onDocumentClick', () => {
   it('hides all poppers if neither a popper or reference was clicked', done => {
-    const instance = tippy.one(createReference({ appendToBody: true }))
+    const instance = tippy.one(h())
     expect(instance.state.isVisible).toBe(false)
     instance.show()
     Listeners.onDocumentClick({ target: document.createElement('div') })
@@ -64,7 +57,7 @@ describe('onDocumentClick', () => {
   })
 
   it('does not hide poppers if an interactive popper was clicked', done => {
-    const instance = tippy.one(createReference({ appendToBody: true }), {
+    const instance = tippy.one(h(), {
       interactive: true
     })
     expect(instance.state.isVisible).toBe(false)
@@ -77,7 +70,7 @@ describe('onDocumentClick', () => {
   })
 
   it('hides poppers if a non-interactive popper was clicked', done => {
-    const instance = tippy.one(createReference({ appendToBody: true }), {
+    const instance = tippy.one(h(), {
       interactive: false
     })
     expect(instance.state.isVisible).toBe(false)
@@ -107,10 +100,7 @@ describe('onWindowBlur', () => {
 
 describe('onWindowResize', () => {
   it('updates poppers with `livePlacement: false`', () => {
-    const instance = tippy.one(
-      createReference({ appendToBody: true }),
-      withTestOptions({ livePlacement: false })
-    )
+    const instance = tippy.one(h(), withTestOptions({ livePlacement: false }))
     instance.show()
     const { scheduleUpdate } = instance.popperInstance
     instance.popperInstance.scheduleUpdate = jest.fn()

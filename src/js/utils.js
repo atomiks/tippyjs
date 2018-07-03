@@ -2,6 +2,10 @@ import { Browser, isBrowser } from './browser'
 import { Selectors } from './selectors'
 import { Defaults } from './defaults'
 
+// Firefox extensions doesn't allow 'innerHTML' to be set but we can trick it
+// + aid for minifiers not to remove the trick
+const FF_EXTENSION_TRICK = { x: true }
+
 /**
  * Injects a string of CSS styles to the style node in the document head
  */
@@ -88,12 +92,11 @@ export const isPlainObject = value =>
 export const div = () => document.createElement('div')
 
 /**
- * Sets the innerHTML of an element while tricking linters & minifiers (for FF extensions)
+ * Sets the innerHTML of an element while tricking linters & minifiers
  */
 export const setInnerHTML = (el, html) => {
-  const o = { x: true }
-  el[o.x && 'innerHTML'] =
-    html instanceof Element ? html[o.x && 'innerHTML'] : html
+  el[FF_EXTENSION_TRICK.x && 'innerHTML'] =
+    html instanceof Element ? html[FF_EXTENSION_TRICK.x && 'innerHTML'] : html
 }
 
 /**
@@ -125,8 +128,13 @@ export const isNumeric = value => !isNaN(value) && !isNaN(parseFloat(value))
 /**
  * Returns a value at a given index depending on if it's an array or number
  */
-export const getValue = (value, index) =>
-  Array.isArray(value) ? value[index] : value
+export const getValue = (value, index, defaultValue) => {
+  if (Array.isArray(value)) {
+    const v = value[index]
+    return v === null ? defaultValue : v
+  }
+  return value
+}
 
 /**
  * Constructs the popper element and returns it
@@ -211,57 +219,6 @@ export const hideAllPoppers = excludeTippy => {
 }
 
 /**
- * Adds event listeners to the reference based on the trigger option
- */
-export const addEventListeners = (
-  reference,
-  props,
-  { onTrigger, onMouseLeave, onBlur, onDelegateShow, onDelegateHide }
-) => {
-  return props.trigger
-    .trim()
-    .split(' ')
-    .reduce((acc, eventType) => {
-      if (eventType === 'manual') {
-        return acc
-      }
-
-      const on = (eventType, handler) => {
-        reference.addEventListener(eventType, handler)
-        acc.push({ eventType, handler })
-      }
-
-      if (!props.target) {
-        on(eventType, onTrigger)
-        switch (eventType) {
-          case 'mouseenter':
-            on('mouseleave', onMouseLeave)
-            break
-          case 'focus':
-            on(Browser.isIE ? 'focusout' : 'blur', onBlur)
-            break
-        }
-      } else {
-        switch (eventType) {
-          case 'mouseenter':
-            on('mouseover', onDelegateShow)
-            on('mouseout', onDelegateHide)
-            break
-          case 'focus':
-            on('focusin', onDelegateShow)
-            on('focusout', onDelegateHide)
-            break
-          case 'click':
-            on(eventType, onDelegateShow)
-            break
-        }
-      }
-
-      return acc
-    }, [])
-}
-
-/**
  * Returns an object of optional props from data-tippy-* attributes
  */
 export const getDataAttributeOptions = reference =>
@@ -335,15 +292,7 @@ export const matches = (() => {
       e.matchesSelector ||
       e.webkitMatchesSelector ||
       e.mozMatchesSelector ||
-      e.msMatchesSelector ||
-      function(s) {
-        const matches = (this.document || this.ownerDocument).querySelectorAll(
-          s
-        )
-        let i = matches.length
-        while (--i >= 0 && matches.item(i) !== this) {} // eslint-disable-line no-empty
-        return i > -1
-      }
+      e.msMatchesSelector
     )
   }
 })()
@@ -357,13 +306,21 @@ export const closest = (element, parentSelector) =>
     function(selector) {
       let el = this
       while (el) {
-        if (matches.call(el, selector)) {
-          return el
-        }
+        if (matches.call(el, selector)) return el
         el = el.parentElement
       }
     }
   ).call(element, parentSelector)
+
+/**
+ * Works like Element.prototype.closest, but uses a callback instead
+ */
+export const closestCallback = (element, callback) => {
+  while (element) {
+    if (callback(element)) return element
+    element = element.parentElement
+  }
+}
 
 /**
  * Focuses an element while preventing a scroll jump if it's not within the viewport
@@ -402,10 +359,17 @@ export const transformAxisBasedOnPlacement = (axis, isVertical) => {
  */
 export const transformNumbersBasedOnPlacement = (
   type,
-  [a, b],
+  numbers,
   isVertical,
   isReverse
 ) => {
+  /**
+   * Avoid destructuring because a large boilerplate function is generated
+   * by Babel
+   */
+  const a = numbers[0]
+  const b = numbers[1]
+
   if (!a && !b) {
     return ''
   }
@@ -575,6 +539,10 @@ export const isCursorOutsideInteractiveBorder = (
   event,
   props
 ) => {
+  if (!popperPlacement) {
+    return true
+  }
+
   const { clientX: x, clientY: y } = event
   const { interactiveBorder, distance } = props
 
@@ -615,8 +583,10 @@ export const getOffsetDistanceInPx = (distance, defaultDistance) =>
 /**
  * Returns the popper's placement, ignoring shifting (top-start, etc)
  */
-export const getPopperPlacement = popper =>
-  popper.getAttribute('x-placement').split('-')[0]
+export const getPopperPlacement = popper => {
+  const fullPlacement = popper.getAttribute('x-placement')
+  return fullPlacement ? fullPlacement.split('-')[0] : ''
+}
 
 /**
  * Evaluates props

@@ -3,7 +3,6 @@ import { Defaults } from './defaults'
 import { Browser } from './browser'
 import { Selectors } from './selectors'
 import {
-  addEventListeners,
   createPopperElement,
   elementCanReceiveFocus,
   getChildren,
@@ -20,26 +19,13 @@ import {
   evaluateProps,
   defer,
   setAttr,
-  toArray
+  toArray,
+  focus
 } from './utils'
 
 let idCounter = 1
 
 export default function createTippy(reference, collectionProps) {
-  if (!reference) {
-    throw Error('[tippy]: reference does not exist')
-  }
-
-  /* ========================= 🔒 Private members 🔒 ========================= */
-  let mutationObservers = []
-  let lastTriggerEvent = {}
-  let lastMouseMoveEvent = {}
-  let showTimeoutId = 0
-  let hideTimeoutId = 0
-  let isPreparingToShow = false
-  let transitionEndListener = () => {}
-
-  /* ========================= 🔑 Public members 🔑 ========================= */
   const props = evaluateProps(reference, collectionProps)
 
   // If the reference shouldn't have multiple tippys, return null early
@@ -47,15 +33,19 @@ export default function createTippy(reference, collectionProps) {
     return null
   }
 
-  const id = idCounter++
+  /* ======================= 🔒 Private members 🔒 ======================= */
+  let popperMutationObserver = null
+  let lastTriggerEvent = {}
+  let lastMouseMoveEvent = {}
+  let showTimeoutId = 0
+  let hideTimeoutId = 0
+  let isPreparingToShow = false
+  let transitionEndListener = () => {}
+  let listeners = []
+  let referenceJustProgrammaticallyFocused = false
 
-  const listeners = addEventListeners(reference, props, {
-    onTrigger,
-    onMouseLeave,
-    onBlur,
-    onDelegateShow,
-    onDelegateHide
-  })
+  /* ======================= 🔑 Public members 🔑 ======================= */
+  const id = idCounter++
 
   const popper = createPopperElement(id, props)
 
@@ -71,14 +61,16 @@ export default function createTippy(reference, collectionProps) {
 
   // 🌟 tippy instance
   const tip = {
+    // properties
     id,
     reference,
     popper,
     popperChildren,
     popperInstance,
     props,
-    listeners,
     state,
+    // methods
+    clearDelayTimeouts,
     set,
     show,
     hide,
@@ -87,13 +79,20 @@ export default function createTippy(reference, collectionProps) {
     destroy
   }
 
-  if (props.createPopperInstanceOnInit) {
+  addEventListeners()
+
+  if (!props.lazy) {
     tip.popperInstance = createPopperInstance()
     tip.popperInstance.disableEventListeners()
   }
 
   if (props.showOnInit) {
-    enter()
+    /**
+     * Firefox has a bug where the tooltip will be placed incorrectly due to
+     * strange layout on load, `setTimeout` gives the layout time to adjust
+     * properly
+     */
+    setTimeout(prepareShow, 20)
   }
 
   // Ensure the reference element can receive focus (and is not a delegate)
@@ -101,19 +100,16 @@ export default function createTippy(reference, collectionProps) {
     setAttr(reference, 'tabindex', '0')
   }
 
-  // Highlight the element as having an active tippy instance with a `data` attribute
-  setAttr(
-    reference,
-    props.target ? 'data-tippy-delegate' : 'data-tippy-reference'
-  )
-
   // Install shortcuts
   reference._tippy = tip
   popper._tippy = tip
 
   return tip
 
-  /* ========================= 🔒 Private methods 🔒 ========================= */
+  /* ======================= 🔒 Private methods 🔒 ======================= */
+  /**
+   * Listener for the `followCursor` prop
+   */
   function followCursorListener(event) {
     const { clientX, clientY } = (lastMouseMoveEvent = event)
 
@@ -137,6 +133,9 @@ export default function createTippy(reference, collectionProps) {
     tip.popperInstance.scheduleUpdate()
   }
 
+  /**
+   * Creates the tippy instance for a delegate when it's been triggered
+   */
   function createDelegateChildTippy(event) {
     const targetEl = closest(event.target, tip.props.target)
     if (targetEl && !targetEl._tippy) {
@@ -148,12 +147,15 @@ export default function createTippy(reference, collectionProps) {
           target: '',
           showOnInit: true
         })
-        enter(event)
+        prepareShow(event)
       }
     }
   }
 
-  function enter(event) {
+  /**
+   * Setup before show() is invoked (delays, etc.)
+   */
+  function prepareShow(event) {
     clearDelayTimeouts()
 
     if (tip.state.isVisible) {
@@ -173,8 +175,11 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    // If the tooltip has a delay, we need to be listening to the mousemove as soon as the trigger
-    // event is fired so that it's in the correct position upon mount.
+    /**
+     * If the tooltip has a delay, we need to be listening to the mousemove as
+     * soon as the trigger event is fired so that it's in the correct position
+     * upon mount
+     */
     if (hasFollowCursorBehavior()) {
       if (popperChildren.arrow) {
         popperChildren.arrow.style.margin = '0'
@@ -182,7 +187,7 @@ export default function createTippy(reference, collectionProps) {
       document.addEventListener('mousemove', followCursorListener)
     }
 
-    const delay = getValue(tip.props.delay, 0)
+    const delay = getValue(tip.props.delay, 0, Defaults.delay)
 
     if (delay) {
       showTimeoutId = setTimeout(() => {
@@ -193,7 +198,10 @@ export default function createTippy(reference, collectionProps) {
     }
   }
 
-  function leave() {
+  /**
+   * Setup before hide() is invoked (delays, etc.)
+   */
+  function prepareHide() {
     clearDelayTimeouts()
 
     if (!tip.state.isVisible) {
@@ -202,7 +210,7 @@ export default function createTippy(reference, collectionProps) {
 
     isPreparingToShow = false
 
-    const delay = getValue(tip.props.delay, 1)
+    const delay = getValue(tip.props.delay, 1, Defaults.delay)
 
     if (delay) {
       hideTimeoutId = setTimeout(() => {
@@ -215,29 +223,9 @@ export default function createTippy(reference, collectionProps) {
     }
   }
 
-  function set(partialprops) {
-    const newprops = evaluateProps(tip.reference, {
-      ...tip.props,
-      ...partialprops
-    })
-
-    const { isVisible } = tip.state
-
-    if (isVisible && tip.props.appendTo.contains(tip.popper)) {
-      tip.props.appendTo.removeChild(tip.popper)
-    }
-
-    tip.popper = createPopperElement(tip.id, newprops)
-    tip.popper._tippy = tip
-    tip.popperChildren = getChildren(tip.popper)
-    tip.popperInstance && (tip.popperInstance.popper = tip.popper)
-    tip.props = newprops
-
-    if (isVisible) {
-      show(0)
-    }
-  }
-
+  /**
+   * Event listener invoked upon trigger
+   */
   function onTrigger(event) {
     if (!tip.state.isEnabled) {
       return
@@ -257,15 +245,47 @@ export default function createTippy(reference, collectionProps) {
     // Toggle show/hide when clicking click-triggered tooltips
     if (
       event.type === 'click' &&
-      tip.props.hideOnClick !== 'persistent' &&
+      tip.props.hideOnClick !== false &&
       tip.state.isVisible
     ) {
-      leave()
+      prepareHide()
     } else {
-      enter(event)
+      prepareShow(event)
     }
   }
 
+  /**
+   * Event listener used for interactive tooltips to detect when they should hide
+   */
+  function onMouseMove(event) {
+    const referenceTheCursorIsOver = closest(event.target, Selectors.REFERENCE)
+
+    const isCursorOverPopper =
+      closest(event.target, Selectors.POPPER) === tip.popper
+    const isCursorOverReference = referenceTheCursorIsOver === tip.reference
+
+    if (isCursorOverPopper || isCursorOverReference) {
+      return
+    }
+
+    if (
+      isCursorOutsideInteractiveBorder(
+        getPopperPlacement(tip.popper),
+        tip.popper.getBoundingClientRect(),
+        event,
+        tip.props
+      )
+    ) {
+      document.body.removeEventListener('mouseleave', prepareHide)
+      document.removeEventListener('mousemove', onMouseMove)
+
+      prepareHide()
+    }
+  }
+
+  /**
+   * Event listener invoked upon mouseleave
+   */
   function onMouseLeave(event) {
     if (
       ['mouseleave', 'mouseout'].indexOf(event.type) > -1 &&
@@ -277,39 +297,17 @@ export default function createTippy(reference, collectionProps) {
     }
 
     if (tip.props.interactive) {
-      const onMouseMove = event => {
-        const referenceCursorIsOver = closest(event.target, Selectors.REFERENCE)
-        const cursorIsOverPopper =
-          closest(event.target, Selectors.POPPER) === tip.popper
-        const cursorIsOverReference = referenceCursorIsOver === tip.reference
-
-        if (cursorIsOverPopper || cursorIsOverReference) {
-          return
-        }
-
-        if (
-          isCursorOutsideInteractiveBorder(
-            getPopperPlacement(tip.popper),
-            tip.popper.getBoundingClientRect(),
-            event,
-            tip.props
-          )
-        ) {
-          document.body.removeEventListener('mouseleave', leave)
-          document.removeEventListener('mousemove', onMouseMove)
-
-          leave()
-        }
-      }
-
-      document.body.addEventListener('mouseleave', tip.hide)
+      document.body.addEventListener('mouseleave', prepareHide)
       document.addEventListener('mousemove', onMouseMove)
       return
     }
 
-    leave()
+    prepareHide()
   }
 
+  /**
+   * Event listener invoked upon blur
+   */
   function onBlur(event) {
     if (event.target !== tip.reference || Browser.isUsingTouch) {
       return
@@ -324,26 +322,30 @@ export default function createTippy(reference, collectionProps) {
       }
     }
 
-    leave()
+    prepareHide()
   }
 
+  /**
+   * Event listener invoked when a child target is triggered
+   */
   function onDelegateShow(event) {
     if (closest(event.target, tip.props.target)) {
-      enter(event)
+      prepareShow(event)
     }
   }
 
+  /**
+   * Event listener invoked when a child target should hide
+   */
   function onDelegateHide(event) {
     if (closest(event.target, tip.props.target)) {
-      leave()
+      prepareHide()
     }
   }
 
-  function clearDelayTimeouts() {
-    clearTimeout(showTimeoutId)
-    clearTimeout(hideTimeoutId)
-  }
-
+  /**
+   * Creates the popper instance for the tip
+   */
   function createPopperInstance() {
     const { tooltip } = tip.popperChildren
     const { props } = tip.props
@@ -399,25 +401,26 @@ export default function createTippy(reference, collectionProps) {
       }
     }
 
-    // If content within the popper changes, its dimensions will also change,
-    // thus causing it to be placed incorrectly. It should update BEFORE
-    // the next animation frame (i.e. not `scheduleUpdate`), otherwise there
-    // will be a 1 frame flash where it jumps
-    addMutationObserver({
-      target: tip.popper,
-      callback: () => {
-        tip.popperInstance.update()
-      },
-      props: {
-        childList: true,
-        subtree: true,
-        characterData: true
-      }
+    /**
+     * Ensure the popper's position stays correct if its dimensions change.
+     * Use .update() over .scheduleUpdate() so there is no 1 frame flash
+     * due to async update.
+     */
+    const observer = new MutationObserver(() => {
+      tip.popperInstance.update()
     })
+    observer.observe(tip.popper, { childList: true, subtree: true })
+    if (popperMutationObserver) {
+      popperMutationObserver.disconnect()
+    }
+    popperMutationObserver = observer
 
     return new Popper(tip.reference, tip.popper, config)
   }
 
+  /**
+   * Mounts the tooltip to the DOM
+   */
   function mount(onceUpdated) {
     if (!tip.popperInstance) {
       tip.popperInstance = createPopperInstance()
@@ -431,13 +434,16 @@ export default function createTippy(reference, collectionProps) {
       }
     }
 
-    // If the instance previously had followCursor behavior, it will be positioned incorrectly
-    // if triggered by `focus` afterwards - update the reference back to the real DOM element
+    /**
+     * If the instance previously had followCursor behavior, it will be
+     * positioned incorrectly if triggered by `focus` afterwards.
+     * Update the reference back to the real DOM element
+     */
+    tip.popperInstance.reference = tip.reference
     if (hasFollowCursorBehavior()) {
       if (tip.popperChildren.arrow) {
         tip.popperChildren.arrow.style.margin = ''
       }
-      tip.popperInstance.reference = tip.reference
     }
 
     updatePopperPosition(tip.popperInstance, onceUpdated, true)
@@ -447,26 +453,20 @@ export default function createTippy(reference, collectionProps) {
     }
   }
 
+  /**
+   * Determines if the instance is in `followCursor` mode
+   */
   function hasFollowCursorBehavior() {
     return (
       tip.props.followCursor &&
       !Browser.isUsingTouch &&
-      lastTriggerEvent &&
       lastTriggerEvent.type !== 'focus'
     )
   }
 
-  function addMutationObserver({ target, callback, props }) {
-    if (!window.MutationObserver) {
-      return
-    }
-
-    const observer = new MutationObserver(callback)
-    observer.observe(target, props)
-
-    mutationObservers.push(observer)
-  }
-
+  /**
+   * Updates the tooltip's position on each animation frame + timeout
+   */
   function makeSticky() {
     const applyTransitionDuration = () => {
       tip.popper.style[prefix('transitionDuration')] = `${
@@ -486,7 +486,7 @@ export default function createTippy(reference, collectionProps) {
       applyTransitionDuration()
 
       if (tip.state.isVisible) {
-        requestAnimationFrame(updatePosition)
+        defer(updatePosition)
       } else {
         removeTransitionDuration()
       }
@@ -495,6 +495,9 @@ export default function createTippy(reference, collectionProps) {
     updatePosition()
   }
 
+  /**
+   * Invokes a callback once the tooltip's CSS transition ends
+   */
   function onTransitionEnd(duration, callback) {
     // Make callback synchronous if duration is 0
     if (!duration) {
@@ -504,9 +507,6 @@ export default function createTippy(reference, collectionProps) {
     const { tooltip } = tip.popperChildren
 
     const toggleListeners = (action, listener) => {
-      if (!listener) {
-        return
-      }
       tooltip[action + 'EventListener'](
         'ontransitionend' in window ? 'transitionend' : 'webkitTransitionEnd',
         listener
@@ -526,16 +526,125 @@ export default function createTippy(reference, collectionProps) {
     transitionEndListener = listener
   }
 
-  /* ========================= 🔑 Public methods 🔑 ========================= */
+  /**
+   * Adds event listeners to the reference based on the `trigger` prop
+   */
+  function addEventListeners() {
+    const on = (eventType, handler, acc) => {
+      tip.reference.addEventListener(eventType, handler)
+      acc.push({ eventType, handler })
+    }
+
+    return tip.props.trigger
+      .trim()
+      .split(' ')
+      .reduce((acc, eventType) => {
+        if (eventType === 'manual') {
+          return acc
+        }
+
+        if (!props.target) {
+          on(eventType, onTrigger, acc)
+          switch (eventType) {
+            case 'mouseenter':
+              on('mouseleave', onMouseLeave, acc)
+              break
+            case 'focus':
+              on(Browser.isIE ? 'focusout' : 'blur', onBlur, acc)
+              break
+          }
+        } else {
+          switch (eventType) {
+            case 'mouseenter':
+              on('mouseover', onDelegateShow, acc)
+              on('mouseout', onDelegateHide, acc)
+              break
+            case 'focus':
+              on('focusin', onDelegateShow, acc)
+              on('focusout', onDelegateHide, acc)
+              break
+            case 'click':
+              on(eventType, onDelegateShow, acc)
+              break
+          }
+        }
+
+        return acc
+      }, [])
+  }
+
+  /**
+   * Removes event listeners from the reference
+   */
+  function removeEventListeners() {
+    listeners.forEach(({ eventType, handler }) => {
+      tip.reference.removeEventListener(eventType, handler)
+    })
+  }
+
+  /* ======================= 🔑 Public methods 🔑 ======================= */
+  /**
+   * Enables the instance to allow it to show or hide
+   */
   function enable() {
     tip.state.isEnabled = true
   }
 
+  /**
+   * Disables the instance to disallow it to show or hide
+   */
   function disable() {
     tip.state.isEnabled = false
   }
 
-  function show(duration = getValue(tip.props.duration, 0)) {
+  /**
+   * Clears pending timeouts related to the `delay` prop if any
+   */
+  function clearDelayTimeouts() {
+    clearTimeout(showTimeoutId)
+    clearTimeout(hideTimeoutId)
+  }
+
+  /**
+   * Sets new props for the instance and redraws the tooltip
+   */
+  function set(props) {
+    // Use `performance: true` to ignore data-tippy-* attributes
+    const cachedPerformance = tip.props.performance
+    tip.props = evaluateProps(tip.reference, {
+      ...tip.props,
+      ...props,
+      performance: true
+    })
+    tip.props.performance = cachedPerformance
+
+    // Update listeners if `trigger` option changed
+    if (props.trigger) {
+      removeEventListeners()
+      listeners = addEventListeners()
+    }
+
+    // Redraw the tippy
+    const { isVisible } = tip.state
+    if (isVisible && tip.props.appendTo.contains(tip.popper)) {
+      tip.props.appendTo.removeChild(tip.popper)
+    }
+    tip.popper = createPopperElement(tip.id, tip.props)
+    tip.popper._tippy = tip
+    tip.popperChildren = getChildren(tip.popper)
+    tip.popperInstance && (tip.popperInstance = createPopperInstance())
+
+    if (isVisible) {
+      show(0)
+    }
+  }
+
+  /**
+   * Shows the tooltip
+   */
+  function show(
+    duration = getValue(tip.props.duration, 0, Defaults.duration[0])
+  ) {
     if (tip.state.isDestroyed || !tip.state.isEnabled) {
       return
     }
@@ -550,6 +659,12 @@ export default function createTippy(reference, collectionProps) {
 
     // Do not show tooltip if the reference element has a `disabled` attribute
     if (tip.reference.hasAttribute('disabled')) {
+      return
+    }
+
+    // If the reference was just programmatically focused for accessibility reasons
+    if (referenceJustProgrammaticallyFocused) {
+      referenceJustProgrammaticallyFocused = false
       return
     }
 
@@ -570,14 +685,14 @@ export default function createTippy(reference, collectionProps) {
       }
 
       if (!hasFollowCursorBehavior()) {
-        // FIX: Arrow will sometimes not be positioned correctly. Force another update.
+        // Arrow will sometimes not be positioned correctly. Force another update.
         tip.popperInstance.scheduleUpdate()
       }
 
       // Set initial position near the cursor
       if (hasFollowCursorBehavior()) {
         tip.popperInstance.disableEventListeners()
-        const delay = getValue(tip.props.delay, 0)
+        const delay = getValue(tip.props.delay, 0, Defaults.delay)
         if (lastTriggerEvent) {
           followCursorListener(
             delay && lastMouseMoveEvent ? lastMouseMoveEvent : lastTriggerEvent
@@ -627,7 +742,12 @@ export default function createTippy(reference, collectionProps) {
     })
   }
 
-  function hide(duration = getValue(tip.props.duration, 1)) {
+  /**
+   * Hides the tooltip
+   */
+  function hide(
+    duration = getValue(tip.props.duration, 1, Defaults.duration[1])
+  ) {
     if (tip.state.isDestroyed || !tip.state.isEnabled) {
       return
     }
@@ -659,16 +779,11 @@ export default function createTippy(reference, collectionProps) {
       'hidden'
     )
 
-    if (tip.props.interactive && tip.props.trigger.indexOf('click') > -1) {
+    if (tip.props.interactive && !referenceJustProgrammaticallyFocused) {
+      referenceJustProgrammaticallyFocused = true
       focus(tip.reference)
     }
 
-    /*
-    * This call is deferred because sometimes when the tooltip is still transitioning in but hide()
-    * is called before it finishes, the CSS transition won't reverse quickly enough, meaning
-    * the CSS transition will finish 1-2 frames later, and onHidden() will run since the JS set it
-    * more quickly. It should actually be onShown(). Seems to be something Chrome does, not Safari
-    */
     defer(() => {
       onTransitionEnd(duration, () => {
         if (tip.state.isVisible || !tip.props.appendTo.contains(tip.popper)) {
@@ -691,6 +806,9 @@ export default function createTippy(reference, collectionProps) {
     })
   }
 
+  /**
+   * Destroys the tooltip
+   */
   function destroy(destroyTargetInstances) {
     if (tip.state.isDestroyed) {
       return
@@ -701,16 +819,9 @@ export default function createTippy(reference, collectionProps) {
       hide(0)
     }
 
-    tip.listeners.forEach(({ eventType, handler }) => {
-      tip.reference.removeEventListener(eventType, handler)
-    })
+    removeEventListeners()
 
     delete tip.reference._tippy
-
-    const attributes = ['data-tippy-reference', 'data-tippy-delegate']
-    attributes.forEach(attr => {
-      tip.reference.removeAttribute(attr)
-    })
 
     if (tip.props.target && destroyTargetInstances) {
       toArray(tip.reference.querySelectorAll(tip.props.target)).forEach(
@@ -722,9 +833,9 @@ export default function createTippy(reference, collectionProps) {
       tip.popperInstance.destroy()
     }
 
-    mutationObservers.forEach(observer => {
-      observer.disconnect()
-    })
+    if (popperMutationObserver) {
+      popperMutationObserver.disconnect()
+    }
 
     tip.state.isDestroyed = true
   }

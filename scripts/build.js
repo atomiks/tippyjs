@@ -11,6 +11,7 @@ const resolve = require('rollup-plugin-node-resolve')
 const commonjs = require('rollup-plugin-commonjs')
 const cssOnly = require('rollup-plugin-css-only')
 const json = require('rollup-plugin-json')
+const strip = require('rollup-plugin-strip')
 
 // wrapper utils
 const sassPluginOutput = name =>
@@ -64,6 +65,7 @@ const pluginMinify = minify({ comments: false })
 const pluginJSON = json()
 const pluginSCSS = sassPluginOutput('./dist/tippy.css')
 const pluginCSS = cssOnly({ output: false })
+const pluginStrip = strip({ functions: ['Error', 'classCallCheck'] })
 const pluginCJS = commonjs({
   namedExports: { 'node_modules/popper.js/dist/popper.js': ['Popper'] }
 })
@@ -83,12 +85,16 @@ const esm = output('es')
 
   // Tippy
   const standalone = await r('bundle.js', [pluginES5], true)
-  const standaloneMin = await r('bundle.js', [pluginES5, pluginMinify], true)
+  const standaloneMin = await r(
+    'bundle.js',
+    [pluginES5, pluginStrip, pluginMinify],
+    true
+  )
   const standaloneES2017 = await r('bundle.js', [pluginES2017])
 
   // Tippy + Popper + CSS
   const all = await r('main.js', [pluginES5])
-  const allMin = await r('main.js', [pluginES5, pluginMinify])
+  const allMin = await r('main.js', [pluginES5, pluginStrip, pluginMinify])
   const allES2017 = await r('main.js', [pluginES2017])
 
   bundleMin.write(umd('tippy.min.js', true))

@@ -5,8 +5,8 @@ import Demo from './Demo'
 import GettingStarted from './GettingStarted'
 import CreatingTooltips from './CreatingTooltips'
 import CustomizingTooltips from './CustomizingTooltips'
-import AllOptions from './AllOptions'
-import Props from './Props'
+import AllProps from './AllProps'
+import Objects from './Objects'
 import Methods from './Methods'
 import CreatingHTMLTemplates from './CreatingHTMLTemplates'
 import CreatingCustomThemes from './CreatingCustomThemes'
@@ -20,8 +20,8 @@ export default () => (state, actions) => (
       <GettingStarted />
       <CreatingTooltips />
       <CustomizingTooltips />
-      <AllOptions />
-      <Props />
+      <AllProps />
+      <Objects />
       <Methods />
       <CreatingHTMLTemplates />
       <CreatingCustomThemes />

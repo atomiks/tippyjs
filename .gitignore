@@ -1,5 +1,5 @@
 .DS_Store
 node_modules
 .cache
-.coverage
+coverage
 tests/visual/dist

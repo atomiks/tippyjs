@@ -1,37 +1,25 @@
-import {
-  createReference,
-  createReferenceArray,
-  hasTippy,
-  cleanDocumentBody,
-  withTestOptions,
-  el
-} from '../utils'
+import { h, hasTippy, cleanDocumentBody, withTestOptions } from '../utils'
 
 import tippy from '../../src/js/tippy'
 import * as Utils from '../../src/js/utils'
-
-/**
- * NOTE! If an element is not on the DOM, calling show() will destroy the tooltip.
- * Use { appendToBody: true } as the argument to createReference().
- */
 
 afterEach(cleanDocumentBody)
 
 describe('a11y', () => {
   it('false: it does not add `tabindex` attribute if ref is not focusable', () => {
-    const ref = createReference()
+    const ref = h()
     tippy(ref, { a11y: false })
     expect(ref.hasAttribute('tabindex')).toBe(false)
   })
 
   it('true: it does add `tabindex` attribute if ref is not focusable', () => {
-    const ref = createReference()
+    const ref = h()
     tippy(ref, { a11y: true })
     expect(ref.getAttribute('tabindex')).toBe('0')
   })
 
   it('true: it does not add `tabindex` attribute to already-focusable elements', () => {
-    const a = el('a')
+    const a = h('a')
     a.href = '#'
     tippy(a, { a11y: true })
     expect(a.hasAttribute('tabindex')).toBe(false)
@@ -40,7 +28,7 @@ describe('a11y', () => {
 
 describe('allowHTML', () => {
   it('false: it does not allow html content inside tooltip', () => {
-    const ref = createReference()
+    const ref = h()
     const { popper } = tippy.one(ref, {
       content: '<strong>content</strong>',
       allowHTML: false
@@ -49,7 +37,7 @@ describe('allowHTML', () => {
   })
 
   it('true: it allows html content inside tooltip', () => {
-    const ref = createReference()
+    const ref = h()
     const { popper } = tippy.one(
       ref,
       withTestOptions({
@@ -65,7 +53,7 @@ describe('allowHTML', () => {
 
 describe('placement', () => {
   it('is within popper config correctly', () => {
-    const ref = createReference()
+    const ref = h()
     const { popperInstance } = tippy.one(
       ref,
       withTestOptions({ placement: 'left-end' })
@@ -76,27 +64,43 @@ describe('placement', () => {
 
 describe('arrow', () => {
   it('true: creates an arrow element child of the popper', () => {
-    const ref = createReference()
+    const ref = h()
     const { popper } = tippy.one(ref, { arrow: true })
     expect(Utils.getChildren(popper).arrow).not.toBeNull()
   })
 
   it('true: disables `animateFill` option', () => {
-    const ref = createReference()
+    const ref = h()
     const { props } = tippy.one(ref, { arrow: true })
     expect(props.animateFill).toBe(false)
   })
 
   it('false: does not create an arrow element child of the popper', () => {
-    const ref = createReference()
+    const ref = h()
     const { popper } = tippy.one(ref, { arrow: false })
     expect(Utils.getChildren(popper).arrow).toBeNull()
   })
 })
 
+describe('arrowTransform', () => {
+  it('sets the transform property on the arrow element', () => {
+    const {
+      popperChildren: { arrow },
+      popperInstance
+    } = tippy.one(h(), {
+      lazy: false,
+      arrow: true,
+      arrowTransform: 'translateX(5px) scale(2)'
+    })
+
+    popperInstance.options.onCreate()
+    expect(arrow.style.transform).toBe('translateX(5px) scale(2)')
+  })
+})
+
 describe('animateFill', () => {
   it('true: sets `data-animatefill` attribute on tooltip', () => {
-    const ref = createReference()
+    const ref = h()
     const { popper } = tippy.one(ref, { animateFill: true })
     expect(
       Utils.getChildren(popper).tooltip.hasAttribute('data-animatefill')
@@ -104,7 +108,7 @@ describe('animateFill', () => {
   })
 
   it('false: does not set `data-animatefill` attribute on tooltip', () => {
-    const ref = createReference()
+    const ref = h()
     const { popper } = tippy.one(ref, { animateFill: false })
     expect(
       Utils.getChildren(popper).tooltip.hasAttribute('data-animatefill')
@@ -115,7 +119,7 @@ describe('animateFill', () => {
 describe('animation', () => {
   it('sets the data-animation attribute on the tooltip', () => {
     const animation = 'scale'
-    const { tooltip } = tippy.one(createReference(), {
+    const { tooltip } = tippy.one(h(), {
       animation
     }).popperChildren
     expect(tooltip.getAttribute('data-animation')).toBe(animation)
@@ -126,7 +130,7 @@ describe('delay', () => {
   // NOTE: props.trigger dependency here
   it('number: delays showing the tippy', done => {
     const delay = 20
-    const ref = createReference({ appendToBody: true })
+    const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
       delay
@@ -141,7 +145,7 @@ describe('delay', () => {
 
   it('number: delays hiding the tippy', done => {
     const delay = 20
-    const ref = createReference({ appendToBody: true })
+    const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
       delay
@@ -161,7 +165,7 @@ describe('delay', () => {
 
   it('array: uses the first element as the delay when showing', () => {
     const delay = [20, 100]
-    const ref = createReference({ appendToBody: true })
+    const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
       delay
@@ -179,7 +183,7 @@ describe('delay', () => {
 
   it('array: uses the second element as the delay when hiding', () => {
     const delay = [100, 20]
-    const ref = createReference({ appendToBody: true })
+    const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
       delay
@@ -201,14 +205,14 @@ describe('delay', () => {
 
 describe('content', () => {
   it('works with plain string', () => {
-    const { content } = tippy.one(createReference(), {
+    const { content } = tippy.one(h(), {
       content: 'tooltip'
     }).popperChildren
     expect(content.textContent).toBe('tooltip')
   })
 
   it('works with HTML string', () => {
-    const { content } = tippy.one(createReference(), {
+    const { content } = tippy.one(h(), {
       content: '<strong>tooltip</strong>'
     }).popperChildren
     expect(content.querySelector('strong')).not.toBeNull()
@@ -216,7 +220,7 @@ describe('content', () => {
 
   it('works with an HTML element', () => {
     const el = document.createElement('div')
-    const { content } = tippy.one(createReference(), {
+    const { content } = tippy.one(h(), {
       content: el
     }).popperChildren
     expect(content.firstElementChild).toBe(el)
@@ -225,7 +229,7 @@ describe('content', () => {
 
 describe('trigger', () => {
   it('default: many triggers', () => {
-    const ref = createReference({ appendToBody: true })
+    const ref = h()
     const { state } = tippy.one(ref)
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(true)
@@ -238,7 +242,7 @@ describe('trigger', () => {
   })
 
   it('mouseenter', () => {
-    const ref = createReference({ appendToBody: true })
+    const ref = h()
     const { state } = tippy.one(ref, { trigger: 'mouseenter' })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(true)
@@ -249,7 +253,7 @@ describe('trigger', () => {
   })
 
   it('focus', () => {
-    const ref = createReference({ appendToBody: true })
+    const ref = h()
     const { state } = tippy.one(ref, { trigger: 'focus' })
     ref.dispatchEvent(new Event('focus'))
     expect(state.isVisible).toBe(true)
@@ -260,7 +264,7 @@ describe('trigger', () => {
   })
 
   it('click', () => {
-    const ref = createReference({ appendToBody: true })
+    const ref = h()
     const { state } = tippy.one(ref, { trigger: 'click' })
     ref.dispatchEvent(new Event('click'))
     expect(state.isVisible).toBe(true)
@@ -271,7 +275,7 @@ describe('trigger', () => {
 
 describe('interactive', () => {
   it('true: prevents a tippy from hiding when clicked', () => {
-    const tip = tippy.one(createReference({ appendToBody: true }), {
+    const tip = tippy.one(h(), {
       interactive: true
     })
     tip.show()
@@ -280,7 +284,7 @@ describe('interactive', () => {
   })
 
   it('false: tippy is hidden when clicked', () => {
-    const tip = tippy.one(createReference({ appendToBody: true }), {
+    const tip = tippy.one(h(), {
       interactive: true
     })
     tip.show()
@@ -293,7 +297,7 @@ describe('interactive', () => {
 
 describe('arrowType', () => {
   it('sharp: is CSS triangle', () => {
-    const { popperChildren } = tippy.one(createReference(), {
+    const { popperChildren } = tippy.one(h(), {
       arrow: true,
       arrowType: 'sharp'
     })
@@ -301,7 +305,7 @@ describe('arrowType', () => {
   })
 
   it('round: is an SVG', () => {
-    const { popperChildren } = tippy.one(createReference(), {
+    const { popperChildren } = tippy.one(h(), {
       arrow: true,
       arrowType: 'round'
     })
@@ -313,7 +317,7 @@ describe('theme', () => {
   it('adds themes to the tooltip class list', () => {
     const {
       popperChildren: { tooltip }
-    } = tippy.one(createReference(), {
+    } = tippy.one(h(), {
       theme: 'this is a test'
     })
     expect(tooltip.classList.contains('this-theme')).toBe(true)
@@ -325,23 +329,45 @@ describe('theme', () => {
 
 describe('flip', () => {
   it('true: sets flip to enabled in the popperInstance', () => {
-    const { popperInstance } = tippy.one(
-      createReference(),
-      withTestOptions({ flip: true })
-    )
+    const { popperInstance } = tippy.one(h(), withTestOptions({ flip: true }))
     expect(popperInstance.modifiers.find(m => m.name === 'flip').enabled).toBe(
       true
     )
   })
 
   it('false: sets flip to disabled in the popperInstance', () => {
-    const { popperInstance } = tippy.one(
-      createReference(),
-      withTestOptions({ flip: false })
-    )
+    const { popperInstance } = tippy.one(h(), withTestOptions({ flip: false }))
     expect(popperInstance.modifiers.find(m => m.name === 'flip').enabled).toBe(
       false
     )
+  })
+})
+
+describe('flipBehavior', () => {
+  it('sets the value in the popperInstance', () => {
+    const { popperInstance } = tippy.one(
+      h(),
+      withTestOptions({ flipBehavior: ['top', 'bottom', 'left'] })
+    )
+    expect(
+      popperInstance.modifiers.find(m => m.name === 'flip').behavior
+    ).toEqual(['top', 'bottom', 'left'])
+  })
+})
+
+describe('performance', () => {
+  it('false: looks at data-tippy-* options', () => {
+    const { props } = tippy.one(h('div', { 'data-tippy-arrow': true }), {
+      performance: false
+    })
+    expect(props.arrow).toBe(true)
+  })
+
+  it('true: ignores data-tippy-* options', () => {
+    const { props } = tippy.one(h('div', { 'data-tippy-arrow': true }), {
+      performance: true
+    })
+    expect(props.arrow).toBe(false)
   })
 })
 
@@ -349,14 +375,90 @@ describe('inertia', () => {
   it('true: adds a [data-inertia] attribute to the tooltip', () => {
     const {
       popperChildren: { tooltip }
-    } = tippy.one(createReference(), { inertia: true })
+    } = tippy.one(h(), { inertia: true })
     expect(tooltip.hasAttribute('data-inertia')).toBe(true)
   })
 
   it('false: does not add a [data-inertia] attribute to the tooltip', () => {
     const {
       popperChildren: { tooltip }
-    } = tippy.one(createReference(), { inertia: false })
+    } = tippy.one(h(), { inertia: false })
     expect(tooltip.hasAttribute('data-inertia')).toBe(false)
+  })
+})
+
+describe('multiple', () => {
+  it('true: allows multiple tippys to be created on a single reference', () => {
+    const ref = h()
+    expect(
+      [...Array(5)]
+        .map(() => tippy.one(ref, { multiple: true }))
+        .filter(Boolean).length
+    ).toBe(5)
+  })
+
+  it('false: does not allow multiple tippys to be created on a single reference', () => {
+    const ref = h()
+    expect(
+      [...Array(5)]
+        .map(() => tippy.one(ref, { multiple: false }))
+        .filter(Boolean).length
+    ).toBe(1)
+  })
+})
+
+describe('zIndex', () => {
+  it('sets the z-index CSS property on the popper', () => {
+    const { popper } = tippy.one(h(), { zIndex: 82190 })
+    expect(popper.style.zIndex).toBe('82190')
+  })
+})
+
+describe('followCursor', () => {
+  it('follows the mouse cursor', () => {
+    const instance = tippy.one(h(), { followCursor: true })
+    instance.show(0)
+    document.dispatchEvent(
+      new Event('mousemove', {
+        clientX: 55,
+        clientY: 55
+      })
+    )
+  })
+})
+
+describe('target', () => {
+  // !
+})
+
+describe('onShow', () => {
+  it('is called on show, passed the instance as an argument', () => {
+    const fn = jest.fn()
+    const instance = tippy.one(h(), { onShow: fn })
+    instance.show()
+    expect(fn.mock.calls.length).toBe(1)
+    expect(fn.mock.calls[0][0]).toBe(instance)
+  })
+})
+
+describe('onShown', () => {
+  it('is called on transition end of show, passed the instance as an argument', () => {
+    // ?!
+  })
+})
+
+describe('onHide', () => {
+  it('is called on hide, passed the instance as an argument', () => {
+    const fn = jest.fn()
+    const instance = tippy.one(h(), { onHide: fn })
+    instance.hide()
+    expect(fn.mock.calls.length).toBe(1)
+    expect(fn.mock.calls[0][0]).toBe(instance)
+  })
+})
+
+describe('onHidden', () => {
+  it('is called on transition end of hide, passed the instance as an argument', () => {
+    // ?!
   })
 })

@@ -1,82 +1,119 @@
 import { h } from 'hyperapp'
-import { emoji } from '../utils'
-
+import Emoji from './Emoji'
 import Code from './Code'
+import Tippy from './Tippy'
+import ResultBox from './ResultBox'
+import Heading from './Heading'
+const Subheading = Heading('Customizing Tooltips')
 
-export default () => (state, actions) => (
-  <section class="section" id="customizing-tooltips">
-    <div class="section__icon-wrapper" innerHTML={emoji('⚙️')} />
-    <div class="section__heading-wrapper">
-      <a class="section__heading" href="#customizing-tooltips">
-        Customizing tooltips
-      </a>
-    </div>
-    <p>
-      <code>tippy()</code> takes an object of options as a second argument for
-      you to customize the tooltips being created. Here's an example:
-    </p>
-
-    <Code lang="js">
-      {`tippy('.btn', {
+const HTML_BUTTON = `<button class="btn">Text</button>`
+const OBJECT_OF_PROPS = `
+tippy('.btn', {
+  content: "I'm a tooltip!",
   delay: 100,
   arrow: true,
   arrowType: 'round',
   size: 'large',
   duration: 500
   animation: 'scale'
-})`}
-    </Code>
+})
+`
+const DATA_ATTRIBUTES = `
+<button
+  class="btn"
+  data-tippy="I'm a Tippy tooltip!"
+  data-tippy-delay="50"
+  data-tippy-arrow="true"
+  data-tippy-animation="shift-toward"
+>
+  Text
+</button>
+`
+const MULTIPLE_CONTENT = `
+<button class="btn" data-tippy-content="Tooltip A">Text</button>
+<button class="btn" data-tippy-content="Tooltip B">Text</button>
+<button class="btn" data-tippy-content="Tooltip C">Text</button>
+`
+const MULTIPLE_CONTENT_CONFIG = `
+tippy('.btn', {
+  animation: 'shift-toward',
+  arrow: true,
+  delay: 50
+})
+`
+const SET_DEFAULTS = `
+tippy.setDefaults({
+  arrow: true,
+  arrowType: 'round',
+  duration: 0
+})
+`
 
-    <div class="section__result">
-      <p class="section__result-text">Result:</p>
-      <button
-        class="btn"
-        title="I'm a Tippy tooltip!"
-        data-tippy-delay="100"
-        data-tippy-arrow="true"
-        data-tippy-arrowType="round"
-        data-tippy-size="large"
-        data-tippy-duration="500"
-        data-tippy-animation="scale"
+export default () => (
+  <section class="section" id="customizing-tooltips">
+    <Emoji class="section__icon-wrapper">⚙️</Emoji>
+    <Heading>Customizing Tooltips</Heading>
+
+    <p>
+      <code>tippy()</code> takes an object of props as a second argument for you
+      to configure the tooltips being created. Here's an example:
+    </p>
+
+    <Code lang="html">{HTML_BUTTON}</Code>
+    <Code lang="js">{OBJECT_OF_PROPS}</Code>
+
+    <ResultBox>
+      <Tippy
+        content="I'm a tooltip!"
+        delay={100}
+        arrow={true}
+        arrowType="round"
+        size="large"
+        duration={500}
+        animation="scale"
       >
-        Text
-      </button>
-    </div>
+        <button class="btn">Text</button>
+      </Tippy>
+    </ResultBox>
 
-    <h3>
-      Data attributes <span class="section__emoji" innerHTML={emoji('🏷')} />
-    </h3>
+    <Subheading>
+      Data attributes <Emoji class="section__emoji">🏷</Emoji>
+    </Subheading>
     <p>
       You can also specify options on the reference element itself by adding{' '}
       <code>data-tippy-*</code> attributes. This will override the options
       specified in the instance.
     </p>
 
-    <Code lang="html">
-      {`<button
-  class="btn"
-  title="I'm a Tippy tooltip!"
-  data-tippy-delay="0"
-  data-tippy-arrow="false"
-  data-tippy-size="small"
-  data-tippy-animation="shift-toward"
->
-  Text
-</button>`}
-    </Code>
+    <p>
+      Used in conjunction with the auto-tippy method, you can give elements
+      custom tooltips without ever touching JavaScript.
+    </p>
 
-    <div class="section__result">
-      <p class="section__result-text">Result:</p>
-      <button
-        class="btn"
-        title="I'm a Tippy tooltip!"
-        data-tippy-delay="0"
-        data-tippy-arrow="false"
-        data-tippy-size="small"
-        data-tippy-animation="shift-toward"
-      >
-        Overridden
-      </button>
-    </div>
+    <Code lang="html">{DATA_ATTRIBUTES}</Code>
+
+    <ResultBox>
+      <Tippy delay={50} arrow={true} animation="shift-toward">
+        <button class="btn">Text</button>
+      </Tippy>
+    </ResultBox>
+
+    <p>
+      Using <code>data-tippy-content</code> therefore allows you to use the
+      function for common custom configuration while giving each tooltip
+      different content.
+    </p>
+
+    <Code lang="html">{MULTIPLE_CONTENT}</Code>
+    <Code lang="js">{MULTIPLE_CONTENT_CONFIG}</Code>
+
+    <Subheading>Default config</Subheading>
+    <p>
+      Use the <code>tippy.setDefaults()</code> method to change the default
+      configuration for tippys. It will apply these settings to every future
+      instance.
+    </p>
+
+    <Code lang="js">{SET_DEFAULTS}</Code>
   </section>
 )

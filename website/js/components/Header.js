@@ -1,35 +1,22 @@
 import { h } from 'hyperapp'
 import logo from '../../assets/img/logo.svg'
 import { version } from '../../../package.json'
-
-const styles = {
-  logo: {},
-  version: {
-    opacity: 0,
-    transform: 'scale(0.8)'
-  },
-  items: {
-    opacity: 0,
-    transform: 'translateY(50px)'
-  }
-}
+import { animateLogo, animateVersion, animateItems } from '../utils'
 
 export default () => (state, { header }) => (
   <header class="header">
     <div class="container">
-      <img
-        class="header__logo"
-        src={logo}
-        oncreate={header.animateLogo}
-        style={styles.logo}
-      />
+      <img class="header__logo" src={logo} oncreate={animateLogo} />
       <div class="header__heading-wrapper">
         <h1 class="header__heading">
           Tippy.js
           <span
-            oncreate={header.animateVersion}
+            oncreate={animateVersion}
             class="header__version"
-            style={styles.version}
+            style={{
+              opacity: 0,
+              transform: 'scale(0.8)'
+            }}
           >
             v{version}
           </span>
@@ -39,9 +26,12 @@ export default () => (state, { header }) => (
         A highly customizable vanilla JS tooltip & popover library
       </h2>
       <div
-        oncreate={header.animateItems}
+        oncreate={animateItems}
         class="header__items"
-        style={styles.items}
+        style={{
+          opacity: 0,
+          transform: 'translateY(50px)'
+        }}
       >
         <div class="header__item">
           <p>

@@ -39,6 +39,7 @@ a {
 
   &:hover {
     color: color(#115ed8 tint(25%) s(150%));
+    text-decoration: underline;
   }
 
   &.is-white {
@@ -60,6 +61,42 @@ a {
   max-width: 1170px;
   padding: 0 4%;
   margin: 0 auto;
+}
+
+.table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  text-align: left;
+  border-collapse: collapse;
+
+  tr:nth-child(even) {
+    background-color: #fbfbfd;
+  }
+
+  td,
+  th {
+    border: 1px solid #dfe6ff;
+    padding: 10px;
+  }
+
+  td:nth-child(3) {
+    min-width: 175px;
+  }
+
+  td:last-child {
+    min-width: 250px;
+  }
+}
+
+.blockquote {
+  margin-left: 0;
+  padding-left: 10px;
+  border-left: 5px solid #eee;
+  opacity: 0.7;
+  font-size: 90%;
 }
 
 .feather {

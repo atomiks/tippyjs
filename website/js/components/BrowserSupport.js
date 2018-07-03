@@ -1,10 +1,10 @@
 import { h } from 'hyperapp'
 import pkg from '../../../package.json'
-import { emoji } from '../utils'
+import Emoji from './Emoji'
 
 export default () => (state, actions) => (
   <section class="section" id="browser-support">
-    <div class="section__icon-wrapper" innerHTML={emoji('💻')} />
+    <Emoji class="feature__icon">💻</Emoji>
     <div class="section__heading-wrapper">
       <a class="section__heading" href="#browser-support">
         Browser support

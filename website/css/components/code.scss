@@ -1,7 +1,6 @@
 code,
 pre {
-  font-family: Monaco, Menlo, 'SFMono-Regular', Consolas, 'Liberation Mono',
-    Courier, monospace;
+  font-family: 'SF Mono', Menlo, Consolas, 'Liberation Mono', Courier, monospace;
 }
 
 .code-wrapper {
@@ -52,6 +51,19 @@ code:not([class*='language-']) {
   padding: 4px 8px;
   font-size: 0.8em;
   color: #4760f0;
+  border: 1px solid #c5dcff;
+}
+
+code.prop {
+  background: none;
+  border: none;
+  color: inherit;
+  font-weight: bold;
+  font-size: 16px;
+
+  a {
+    color: inherit;
+  }
 }
 
 code[class*='language-'],
@@ -121,7 +133,7 @@ pre[class*='language-'] {
 }
 
 .token.punctuation {
-  color: #93a0c7;
+  color: #2596aa;
 }
 
 .namespace {

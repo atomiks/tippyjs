@@ -63,7 +63,6 @@
     <div id="show-on-init">
       <h2>show on init</h2>
       <button data-tippy-showOnInit="true">Show on init</button>
-      <button data-tippy-showOnInit="true" data-tippy-hideOnClick="persistent" data-tippy-trigger="manual">I never hide</button>
     </div>
 
     <div id="content">
@@ -155,6 +154,8 @@
       <h2>hideOnClick</h2>
       <button data-tippy-hideOnClick="true">True</button>
       <button data-tippy-hideOnClick="false">False</button>
+      <button data-tippy-hideOnClick="false" data-tippy-trigger="click">click + false</button>
+      <button data-tippy-hideOnClick="allowToggle" data-tippy-trigger="click">click + "toggle"</button>
     </div>
 
     <div id="duration">
@@ -183,6 +184,11 @@
     <div id="a11y">
       <h2>a11y</h2>
       <p data-tippy-content="a11y">Inaccessible &lt;p&gt; element.</p>
+    </div>
+
+    <div id="sticky">
+      <h2>sticky</h2>
+      <button data-tippy-content="hewwo" data-tippy-sticky="true">sticky option</button>
     </div>
   </div>
 
