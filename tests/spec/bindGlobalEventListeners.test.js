@@ -6,41 +6,12 @@ import { Selectors } from '../../src/js/selectors'
 import createTippy from '../../src/js/createTippy'
 import bindEventListeners, * as Listeners from '../../src/js/bindGlobalEventListeners'
 
-const Browser = { ...Listeners.Browser }
-
 afterEach(cleanDocumentBody)
-afterEach(() => {
-  // Reset Browser to default config
-  for (const key in Browser) {
-    Listeners.Browser[key] = Browser[key]
-  }
-})
 
 describe('onDocumentTouch', () => {
-  it('sets Browser.isUsingTouch to `true`', () => {
+  it('sets isUsingTouch to `true`', () => {
     Listeners.onDocumentTouch()
-    expect(Listeners.Browser.isUsingTouch).toBe(true)
-  })
-
-  it('adds `tippy-iOS` class to <body> if Browser.isIOS is `true`', () => {
-    expect(document.body.classList.contains('tippy-iOS')).toBe(false)
-    Listeners.Browser.isIOS = true
-    Listeners.onDocumentTouch()
-    expect(document.body.classList.contains('tippy-iOS')).toBe(true)
-  })
-
-  it('calls Browser.onUserInputChange() with "touch" as an argument', () => {
-    Listeners.Browser.onUserInputChange = jest.fn()
-    Listeners.onDocumentTouch()
-    expect(Listeners.Browser.onUserInputChange.mock.calls.length).toBe(1)
-    expect(Listeners.Browser.onUserInputChange.mock.calls[0][0]).toBe('touch')
-  })
-
-  it('does nothing if `Browser.isUsingTouch` is already true', () => {
-    Listeners.Browser.onUserInputChange = jest.fn()
-    Listeners.Browser.isUsingTouch = true
-    Listeners.onDocumentTouch()
-    expect(Listeners.Browser.onUserInputChange.mock.calls.length).toBe(0)
+    expect(Listeners.isUsingTouch).toBe(true)
   })
 })
 
@@ -81,6 +52,19 @@ describe('onDocumentClick', () => {
       done()
     })
   })
+
+  it('does not hide poppers if `hideOnClick: false` & clicked trigger-clicked reference', done => {
+    const instance = tippy.one(h(), {
+      trigger: 'click',
+      hideOnClick: false
+    })
+    instance.show()
+    Listeners.onDocumentClick({ target: instance.reference })
+    setTimeout(() => {
+      expect(instance.state.isVisible).toBe(true)
+      done()
+    })
+  })
 })
 
 describe('onWindowBlur', () => {
@@ -111,7 +95,7 @@ describe('onWindowResize', () => {
 
 describe('bindEventListeners', () => {
   it('onDocumentTouch falls back to `pointerdown`', () => {
-    Listeners.Browser.supportsTouch = false
+    Listeners.supportsTouch = false
     navigator.maxTouchPoints = 1
     bindEventListeners()
   })

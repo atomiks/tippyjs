@@ -1,26 +1,31 @@
-import { Browser, isBrowser } from './browser'
 import { Selectors } from './selectors'
 import { Defaults } from './defaults'
 
-// Firefox extensions doesn't allow 'innerHTML' to be set but we can trick it
-// + aid for minifiers not to remove the trick
+/**
+ * Firefox extensions doesn't allow 'innerHTML' to be set but we can trick it
+ * + aid for minifiers not to remove the trick
+ */
 const FF_EXTENSION_TRICK = { x: true }
+
+/**
+ * Determines if the runtime is a browser
+ */
+export const isBrowser = typeof window !== 'undefined'
+
+/**
+ * Determines if the browser is supported
+ */
+export const isBrowserSupported = isBrowser && 'MutationObserver' in window
 
 /**
  * Injects a string of CSS styles to the style node in the document head
  */
 export const injectCSS = css => {
-  if (isBrowser && Browser.isSupported) {
-    const head = document.head || document.querySelector('head')
+  if (isBrowserSupported) {
     const style = document.createElement('style')
     style.type = 'text/css'
-    head.insertBefore(style, head.firstChild)
-
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css
-    } else {
-      style.appendChild(document.createTextNode(css))
-    }
+    style.innerHTML = css
+    document.head.insertBefore(style, document.head.firstChild)
   }
 }
 
@@ -30,17 +35,11 @@ export const injectCSS = css => {
 export const toArray = value => [].slice.call(value)
 
 /**
- * Sets an attribute on an element; aids in minification
- */
-export const setAttr = (el, attr, value = '') => {
-  el.setAttribute(attr, value)
-}
-
-/**
  * Sets the content of a tooltip
  */
 export const setContent = (contentEl, props) => {
   if (props.content instanceof Element) {
+    setInnerHTML(contentEl, '')
     contentEl.appendChild(props.content)
   } else {
     contentEl[props.allowHTML ? 'innerHTML' : 'textContent'] = props.content
@@ -131,9 +130,66 @@ export const isNumeric = value => !isNaN(value) && !isNaN(parseFloat(value))
 export const getValue = (value, index, defaultValue) => {
   if (Array.isArray(value)) {
     const v = value[index]
-    return v === null ? defaultValue : v
+    return v == null ? defaultValue : v
   }
   return value
+}
+
+/**
+ * Creates an arrow element and returns it
+ */
+export const createArrowElement = arrowType => {
+  const arrow = div()
+  if (arrowType === 'round') {
+    arrow.className = 'tippy-roundarrow'
+    setInnerHTML(
+      arrow,
+      '<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg"><path d="M3 8s2.021-.015 5.253-4.218C9.584 2.051 10.797 1.007 12 1c1.203-.007 2.416 1.035 3.761 2.782C19.012 8.005 21 8 21 8H3z"/></svg>'
+    )
+  } else {
+    arrow.className = 'tippy-arrow'
+  }
+  return arrow
+}
+
+/**
+ * Creates a backdrop element and returns it
+ */
+export const createBackdropElement = () => {
+  const backdrop = div()
+  backdrop.className = 'tippy-backdrop'
+  backdrop.setAttribute('data-state', 'hidden')
+  return backdrop
+}
+
+/**
+ * Adds interactive attributes
+ */
+export const addInteractive = (popper, tooltip) => {
+  popper.setAttribute('tabindex', '-1')
+  tooltip.setAttribute('data-interactive', '')
+}
+
+/**
+ * Removes interactive attributes
+ */
+export const removeInteractive = (popper, tooltip) => {
+  popper.removeAttribute('tabindex')
+  tooltip.removeAttribute('data-interactive')
+}
+
+/**
+ * Adds inertia attribute
+ */
+export const addInertia = tooltip => {
+  tooltip.setAttribute('data-inertia', '')
+}
+
+/**
+ * Removes inertia attribute
+ */
+export const removeInertia = tooltip => {
+  tooltip.removeAttribute('data-inertia')
 }
 
 /**
@@ -148,9 +204,9 @@ export const createPopperElement = (id, props) => {
 
   const tooltip = div()
   tooltip.className = 'tippy-tooltip'
-  setAttr(tooltip, 'data-size', props.size)
-  setAttr(tooltip, 'data-animation', props.animation)
-  setAttr(tooltip, 'data-state', 'hidden')
+  tooltip.setAttribute('data-size', props.size)
+  tooltip.setAttribute('data-animation', props.animation)
+  tooltip.setAttribute('data-state', 'hidden')
   props.theme.split(' ').forEach(t => {
     tooltip.classList.add(t + '-theme')
   })
@@ -159,34 +215,20 @@ export const createPopperElement = (id, props) => {
   content.className = 'tippy-content'
 
   if (props.interactive) {
-    setAttr(popper, 'tabindex', '-1')
-    setAttr(tooltip, 'data-interactive')
+    addInteractive(popper, tooltip)
   }
 
   if (props.arrow) {
-    const arrow = div()
-    if (props.arrowType === 'round') {
-      arrow.className = 'tippy-roundarrow'
-      setInnerHTML(
-        arrow,
-        '<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg"><path d="M3 8s2.021-.015 5.253-4.218C9.584 2.051 10.797 1.007 12 1c1.203-.007 2.416 1.035 3.761 2.782C19.012 8.005 21 8 21 8H3z"/></svg>'
-      )
-    } else {
-      arrow.className = 'tippy-arrow'
-    }
-    tooltip.appendChild(arrow)
+    tooltip.appendChild(createArrowElement(props.arrowType))
   }
 
   if (props.animateFill) {
-    const backdrop = div()
-    backdrop.className = 'tippy-backdrop'
-    setAttr(backdrop, 'data-state', 'hidden')
-    setAttr(tooltip, 'data-animatefill')
-    tooltip.appendChild(backdrop)
+    tooltip.appendChild(createBackdropElement())
+    tooltip.setAttribute('data-animatefill', '')
   }
 
   if (props.inertia) {
-    setAttr(tooltip, 'data-inertia')
+    tooltip.setAttribute('data-inertia', '')
   }
 
   setContent(content, props)
@@ -194,7 +236,77 @@ export const createPopperElement = (id, props) => {
   tooltip.appendChild(content)
   popper.appendChild(tooltip)
 
+  popper.addEventListener('focusout', e => {
+    if (
+      e.relatedTarget &&
+      popper._tippy &&
+      !closestCallback(e.relatedTarget, el => el === popper)
+    ) {
+      popper._tippy.hide()
+    }
+  })
+
   return popper
+}
+
+/**
+ * Updates the popper element based on the new props
+ */
+export const updatePopperElement = (popper, oldProps, newProps) => {
+  const { tooltip, content, backdrop, arrow } = getChildren(popper)
+
+  // Ensure the tooltip doesn't transition
+  applyTransitionDuration([tooltip], 0)
+
+  popper.style.zIndex = newProps.zIndex
+  tooltip.setAttribute('data-size', newProps.size)
+  tooltip.setAttribute('data-animation', newProps.animation)
+  setContent(content, newProps)
+
+  // animateFill
+  if (!oldProps.animateFill && newProps.animateFill) {
+    tooltip.appendChild(createBackdropElement())
+    tooltip.setAttribute('data-animatefill', '')
+  } else if (oldProps.animateFill && !newProps.animateFill) {
+    tooltip.removeChild(backdrop)
+    tooltip.removeAttribute('data-animatefill')
+  }
+
+  // arrow
+  if (!oldProps.arrow && newProps.arrow) {
+    tooltip.appendChild(createArrowElement(newProps.arrowType))
+  } else if (oldProps.arrow && !newProps.arrow) {
+    tooltip.removeChild(arrow)
+  }
+
+  // arrowType
+  if (oldProps.arrow && oldProps.arrowType !== newProps.arrowType) {
+    tooltip.replaceChild(createArrowElement(newProps.arrowType), arrow)
+  }
+
+  // interactive
+  if (!oldProps.interactive && newProps.interactive) {
+    addInteractive(popper, tooltip)
+  } else if (oldProps.interactive && !newProps.interactive) {
+    removeInteractive(popper, tooltip)
+  }
+
+  // inertia
+  if (!oldProps.inertia && newProps.inertia) {
+    addInertia(tooltip)
+  } else if (oldProps.inertia && !newProps.inertia) {
+    removeInertia(tooltip)
+  }
+
+  // theme
+  if (oldProps.theme !== newProps.theme) {
+    oldProps.theme.split(' ').forEach(theme => {
+      tooltip.classList.remove(theme + '-theme')
+    })
+    newProps.theme.split(' ').forEach(theme => {
+      tooltip.classList.add(theme + '-theme')
+    })
+  }
 }
 
 /**
@@ -202,18 +314,13 @@ export const createPopperElement = (id, props) => {
  */
 export const hideAllPoppers = excludeTippy => {
   toArray(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
-    const tippy = popper._tippy
-    if (!tippy) {
-      return
-    }
-
-    const { props } = tippy
-
+    const tip = popper._tippy
     if (
-      (props.hideOnClick === true || props.trigger.indexOf('focus') > -1) &&
+      tip &&
+      tip.props.hideOnClick === true &&
       (!excludeTippy || popper !== excludeTippy.popper)
     ) {
-      tippy.hide()
+      tip.hide()
     }
   })
 }
@@ -342,17 +449,13 @@ export const reflow = popper => {
 /**
  * Transforms the x/y axis ased on the placement
  */
-export const transformAxisBasedOnPlacement = (axis, isVertical) => {
-  if (!axis) {
-    return ''
-  }
-  return isVertical
+export const transformAxisBasedOnPlacement = (axis, isVertical) =>
+  (isVertical
     ? axis
     : {
         X: 'Y',
         Y: 'X'
-      }[axis]
-}
+      }[axis]) || ''
 
 /**
  * Transforms the scale/translate numbers based on the placement

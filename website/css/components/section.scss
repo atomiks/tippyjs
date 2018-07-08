@@ -1,11 +1,19 @@
 .section {
   margin: 0 5%;
   font-size: 18px;
-  margin-bottom: 24px;
   padding-bottom: 24px;
+
+  @media (min-width: 768px) {
+    margin: 0;
+  }
+
+  @media (min-width: 992px) {
+    margin: 0 25px;
+  }
 
   &:not(:last-child) {
     border-bottom: 1px solid #e9ebf5;
+    margin-bottom: 24px;
   }
 
   &__heading {
@@ -14,6 +22,7 @@
     margin-bottom: 12px;
     font-size: 36px;
     font-weight: 600;
+    line-height: 1.2;
     color: var(--purple);
     background: -webkit-linear-gradient(45deg, #5884ff, #49b3ff);
     -webkit-background-clip: text;

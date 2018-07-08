@@ -123,7 +123,7 @@
       <button data-tippy-animation="shift-away">Shift-away</button>
       <button data-tippy-animation="perspective">Perspective</button>
       <button data-tippy-animation="fade">Fade</button>
-      <button data-tippy-animation="scale">Scale</button>
+      <button data-tippy-trigger="click">Scale</button>
       <button data-tippy-inertia="true">Inertia</button>
     </div>
 
@@ -132,6 +132,7 @@
       <button data-tippy-interactive="true">True</button>
       <button data-tippy-interactive="false">False</button>
       <button data-tippy-interactive="true" data-tippy-delay="500">True + Delay</button>
+      <button data-tippy-trigger="click">Click + false</button>
     </div>
 
     <div id="triggers">
@@ -188,7 +189,13 @@
 
     <div id="sticky">
       <h2>sticky</h2>
-      <button data-tippy-content="hewwo" data-tippy-sticky="true">sticky option</button>
+      <button data-tippy-content="sticky" data-tippy-sticky="true">sticky option</button>
+    </div>
+
+    <div id="touch">
+      <h2>touch</h2>
+      <button data-tippy="I was auto-initialized" data-tippy-touch="true">true</button>
+      <button data-tippy="I was auto-initialized" data-tippy-touch="false">false</button>
     </div>
   </div>
 

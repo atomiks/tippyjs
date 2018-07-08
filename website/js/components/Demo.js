@@ -3,7 +3,6 @@ import logo from '../../assets/img/logo.svg'
 import Tippy from './Tippy'
 import Emoji from './Emoji'
 
-const PLACEMENTS = ['top', 'bottom', 'left', 'right', 'top-start', 'top-end']
 const ANIMATIONS = [
   'shift-away',
   'shift-toward',
@@ -11,6 +10,9 @@ const ANIMATIONS = [
   'fade',
   'scale'
 ]
+
+const printValue = value =>
+  Array.isArray(value) ? `[${value.join(', ')}]` : value
 
 export default () => (
   <section class="section" id="demo">
@@ -21,7 +23,7 @@ export default () => (
         The default tippy tooltip looks like this when given no options. It has
         a nifty backdrop filling animation!
       </p>
-      <Tippy key="a" content="I'm the default tooltip!">
+      <Tippy content="I'm the default tooltip!">
         <button class="btn">Try me!</button>
       </Tippy>
     </div>
@@ -33,8 +35,8 @@ export default () => (
         A tooltip can be placed in four different ways in relation to its
         reference element. Additionally, the tooltip be shifted.
       </p>
-      {PLACEMENTS.map(placement => (
-        <Tippy key={placement} placement={placement}>
+      {['top', 'bottom', 'left', 'right'].map(placement => (
+        <Tippy placement={placement}>
           <button class="btn">
             {placement[0].toUpperCase() + placement.slice(1)}
           </button>
@@ -50,42 +52,22 @@ export default () => (
         of arrows: sharp and round. You can transform the proportion and scale
         of the arrows any way you like.
       </p>
-      <Tippy key="default" arrow={true} animation="fade">
+      <Tippy arrow={true} animation="fade">
         <button class="btn">Default</button>
       </Tippy>
-      <Tippy key="round" arrow={true} arrowType="round" animation="fade">
+      <Tippy arrow={true} arrowType="round" animation="fade">
         <button class="btn">Round</button>
       </Tippy>
-      <Tippy
-        key="wide"
-        arrow={true}
-        arrowTransform="scaleX(1.5)"
-        animation="fade"
-      >
+      <Tippy arrow={true} arrowTransform="scaleX(1.5)" animation="fade">
         <button class="btn">Wide</button>
       </Tippy>
-      <Tippy
-        key="skinny"
-        arrow={true}
-        arrowTransform="scaleX(0.75)"
-        animation="fade"
-      >
+      <Tippy arrow={true} arrowTransform="scaleX(0.75)" animation="fade">
         <button class="btn">Skinny</button>
       </Tippy>
-      <Tippy
-        key="small"
-        arrow={true}
-        arrowTransform="scale(0.75)"
-        animation="fade"
-      >
+      <Tippy arrow={true} arrowTransform="scale(0.75)" animation="fade">
         <button class="btn">Small</button>
       </Tippy>
-      <Tippy
-        key="large"
-        arrow={true}
-        arrowTransform="scale(1.35)"
-        animation="fade"
-      >
+      <Tippy arrow={true} arrowTransform="scale(1.35)" animation="fade">
         <button class="btn">Large</button>
       </Tippy>
     </div>
@@ -94,10 +76,10 @@ export default () => (
       <Emoji class="feature__icon">👏</Emoji>
       <h3 class="feature__heading">Triggers</h3>
       <p>Triggers define the types of events that cause a tooltip to show.</p>
-      <Tippy key="mouseenter" trigger="mouseenter">
+      <Tippy trigger="mouseenter">
         <button class="btn">Hover or touch</button>
       </Tippy>
-      <Tippy key="focus" trigger="focus">
+      <Tippy trigger="focus">
         <button class="btn">Focus or touch</button>
       </Tippy>
       <Tippy trigger="click">
@@ -149,27 +131,16 @@ export default () => (
       <Emoji class="feature__icon">⏱️</Emoji>
       <h3 class="feature__heading">Duration</h3>
       <p>A tippy can have different transition durations.</p>
-      <Tippy duration={0}>
-        <button class="btn">0ms</button>
-      </Tippy>
-      <Tippy duration={200}>
-        <button class="btn">200ms</button>
-      </Tippy>
-      <Tippy duration={1000}>
-        <button class="btn">1000ms</button>
-      </Tippy>
-      <Tippy duration={1000}>
-        <button class="btn">1000ms</button>
-      </Tippy>
-      <Tippy duration={[250, 1000]}>
-        <button class="btn">[250ms, 1000ms]</button>
-      </Tippy>
+      {[0, 200, 1000, [250, 1000], [1000, 500]].map(duration => (
+        <Tippy duration={duration}>
+          <button class="btn">{printValue(duration)}</button>
+        </Tippy>
+      ))}
     </div>
 
     <div class="feature">
       <Emoji class="feature__icon">⏳</Emoji>
       <h3 class="feature__heading">Delay</h3>
-
       <p>
         Tooltips can delay showing or{' '}
         <Tippy.secondary content="*Hide delay is always 0 on touch devices for UX reasons">
@@ -179,44 +150,11 @@ export default () => (
         </Tippy.secondary>{' '}
         after a trigger.
       </p>
-
-      <Tippy>
-        <button class="btn">0ms</button>
-      </Tippy>
-      <Tippy delay={200}>
-        <button class="btn">200ms</button>
-      </Tippy>
-      <Tippy delay={800}>
-        <button class="btn">800ms</button>
-      </Tippy>
-      <Tippy delay={[800, 0]}>
-        <button class="btn">[800ms, 0ms]</button>
-      </Tippy>
-      <Tippy delay={[200, 800]}>
-        <button class="btn">[200ms, 800ms]</button>
-      </Tippy>
-    </div>
-
-    <div class="feature">
-      <Emoji class="feature__icon">📡</Emoji>
-      <h3 class="feature__heading">
-        Event delegation <span class="badge">v2.1</span>
-      </h3>
-      <p>
-        Bind a Tippy instance to a parent container and freely add new child
-        elements without needing to create Tippy instances for them.
-      </p>
-      <Tippy target=".btn" content="I'm a Tippy tooltip!">
-        <div>
-          <button class="btn">Shared title</button>
-          <button class="btn" data-tippy-content="Custom content">
-            Custom content
-          </button>
-          <button class="btn" data-tippy-placement="right">
-            Custom options
-          </button>
-        </div>
-      </Tippy>
+      {[0, 200, 800, [800, 0], [200, 800]].map(delay => (
+        <Tippy delay={delay}>
+          <button class="btn">{printValue(delay)}</button>
+        </Tippy>
+      ))}
     </div>
 
     <div class="feature">

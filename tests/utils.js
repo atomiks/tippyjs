@@ -1,7 +1,3 @@
-import { Browser } from '../src/js/browser'
-
-const BrowserClone = { ...Browser }
-
 export const IDENTIFIER = '__tippy'
 
 export const el = type => document.createElement(type)
@@ -30,9 +26,3 @@ export const withTestOptions = options => ({
   content: 'content',
   ...options
 })
-
-export const resetBrowser = () => {
-  for (const key in Browser) {
-    Browser[key] = BrowserClone[key]
-  }
-}

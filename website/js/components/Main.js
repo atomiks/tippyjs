@@ -5,10 +5,10 @@ import Demo from './Demo'
 import GettingStarted from './GettingStarted'
 import CreatingTooltips from './CreatingTooltips'
 import CustomizingTooltips from './CustomizingTooltips'
-import AllProps from './AllProps'
+import AllOptions from './AllOptions'
 import Objects from './Objects'
 import Methods from './Methods'
-import CreatingHTMLTemplates from './CreatingHTMLTemplates'
+import HTMLContent from './HTMLContent'
 import CreatingCustomThemes from './CreatingCustomThemes'
 import BrowserSupport from './BrowserSupport'
 import Performance from './Performance'
@@ -20,10 +20,10 @@ export default () => (state, actions) => (
       <GettingStarted />
       <CreatingTooltips />
       <CustomizingTooltips />
-      <AllProps />
+      <AllOptions />
       <Objects />
       <Methods />
-      <CreatingHTMLTemplates />
+      <HTMLContent />
       <CreatingCustomThemes />
       <BrowserSupport />
       <Performance />

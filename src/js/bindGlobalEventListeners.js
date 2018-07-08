@@ -1,64 +1,73 @@
-import { Browser } from './Browser'
 import { Selectors } from './selectors'
-import { hideAllPoppers, closest, closestCallback, toArray } from './utils'
+import {
+  isBrowser,
+  hideAllPoppers,
+  closest,
+  closestCallback,
+  toArray
+} from './utils'
 
-export { Browser }
+const nav = isBrowser ? navigator : {}
+const win = isBrowser ? window : {}
+export let isIE = /MSIE |Trident\//.test(nav.userAgent)
+export let isIOS = /iPhone|iPad|iPod/.test(nav.platform) && !win.MSStream
+export let supportsTouch = 'ontouchstart' in win
+export let isUsingTouch = false
 
 export const onDocumentTouch = () => {
-  if (Browser.isUsingTouch) {
+  if (isUsingTouch) {
     return
   }
 
-  Browser.isUsingTouch = true
+  isUsingTouch = true
 
-  if (Browser.isIOS) {
+  if (isIOS) {
     document.body.classList.add('tippy-iOS')
   }
 
-  if (Browser.userInputDetectionEnabled && window.performance) {
+  if (window.performance) {
     document.addEventListener('mousemove', onDocumentMouseMove)
   }
-
-  Browser.onUserInputChange('touch')
 }
 
-let lastMouseMovetime = 0
+let lastMouseMoveTime = 0
 export const onDocumentMouseMove = () => {
   const now = performance.now()
 
   // Chrome 60+ is 1 mousemove per animation frame, use 20ms time difference
-  if (now - lastMouseMovetime < 20) {
-    Browser.isUsingTouch = false
+  if (now - lastMouseMoveTime < 20) {
+    isUsingTouch = false
     document.removeEventListener('mousemove', onDocumentMouseMove)
-    if (!Browser.isIOS) {
+    if (!isIOS) {
       document.body.classList.remove('tippy-iOS')
     }
-    Browser.onUserInputChange('mouse')
   }
 
-  lastMouseMovetime = now
+  lastMouseMoveTime = now
 }
 
-export const onDocumentClick = event => {
+export const onDocumentClick = ({ target }) => {
   // Simulated events dispatched on the document
-  if (!(event.target instanceof Element)) {
+  if (!(target instanceof Element)) {
     return hideAllPoppers()
   }
 
-  const reference = closestCallback(event.target, node => node._tippy)
-  const popper = closest(event.target, Selectors.POPPER)
-
-  // Clicked on interactive popper
+  // Clicked on an interactive popper
+  const popper = closest(target, Selectors.POPPER)
   if (popper && popper._tippy && popper._tippy.props.interactive) {
     return
   }
 
-  // Clicked on reference
-  if (reference && reference._tippy) {
+  // Clicked on a reference
+  const reference = closestCallback(
+    target,
+    el => el._tippy && el._tippy.reference === el
+  )
+  if (reference) {
     const tip = reference._tippy
     const isClickTrigger = tip.props.trigger.indexOf('click') > -1
 
-    if (Browser.isUsingTouch || isClickTrigger) {
+    if (isUsingTouch || isClickTrigger) {
       return hideAllPoppers(tip)
     }
 
@@ -73,9 +82,9 @@ export const onDocumentClick = event => {
 }
 
 export const onWindowBlur = () => {
-  const { activeElement: el } = document
-  if (el && el.blur && el._tippy) {
-    el.blur()
+  const { activeElement } = document
+  if (activeElement && activeElement.blur && activeElement._tippy) {
+    activeElement.blur()
   }
 }
 
@@ -98,7 +107,7 @@ export default function bindEventListeners() {
   window.addEventListener('resize', onWindowResize)
 
   if (
-    !Browser.supportsTouch &&
+    !supportsTouch &&
     (navigator.maxTouchPoints || navigator.msMaxTouchPoints)
   ) {
     document.addEventListener('pointerdown', onDocumentTouch)

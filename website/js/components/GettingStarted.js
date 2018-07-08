@@ -1,53 +1,43 @@
 import { h } from 'hyperapp'
-import pkg from '../../../package.json'
+import { version } from '../../../package.json'
 import Emoji from './Emoji'
 import Code from './Code'
-
-const PKG_LINK = `
-<script src="https://unpkg.com/tippy.js@${
-  pkg.version
-}/dist/tippy.all.min.js"></script>
-`
-const NODE_ENVIRONMENT = `
-// Node environment
-const tippy = require('tippy.js')
-// With a module bundler (webpack/rollup/parcel)
-import tippy from 'tippy.js'
-`
+import Heading from './Heading'
+const Subheading = Heading('GettingStarted')
 
 export default () => (
   <section class="section" id="getting-started">
     <Emoji class="section__icon-wrapper">📦</Emoji>
-    <div class="section__heading-wrapper">
-      <a class="section__heading" href="#getting-started">
-        Getting started
-      </a>
-    </div>
-    <h3 class="section__subheading">
-      Option 1 <Emoji class="section__emoji">🐝</Emoji>
-    </h3>
+    <Heading>Getting started</Heading>
+
+    <Subheading>
+      Option 1: CDN <Emoji class="section__emoji">🔗</Emoji>
+    </Subheading>
     <p>
       Include this script from the unpkg CDN in your HTML document before your
       own scripts:
     </p>
-    <Code lang="html">{PKG_LINK}</Code>
+    <Code
+      lang="html"
+      content={`<script src="https://unpkg.com/tippy.js@${version}/dist/tippy.all.min.js"></script>`}
+    />
     <p>
       Once it's loaded, you'll have access to the <code>tippy</code> module
       which will allow you to create awesome tooltips!
     </p>
 
-    <h3 class="section__subheading">
-      Option 2 <Emoji class="section__emoji">📦</Emoji>
-    </h3>
+    <Subheading>
+      Option 2: Package Manager <Emoji class="section__emoji">📦</Emoji>
+    </Subheading>
     <p>Install using either npm or yarn:</p>
 
-    <Code lang="shell">{`npm install tippy.js`}</Code>
-    <Code lang="shell">{`yarn add tippy.js`}</Code>
+    <Code lang="shell" content="npm i tippy.js" />
+    <Code lang="shell" content="yarn add tippy.js" />
 
     <p>
       Then you can import the <code>tippy</code> module:
     </p>
-    <Code lang="js">{NODE_ENVIRONMENT}</Code>
+    <Code content="import tippy from 'tippy.js'" />
 
     <h3 class="section__subheading">
       Files <Emoji class="section__emoji">📁</Emoji>

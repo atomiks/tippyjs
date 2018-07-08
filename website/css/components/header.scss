@@ -42,7 +42,11 @@
   &__slogan {
     font-weight: 300;
     font-size: 24px;
-    margin-bottom: 48px;
+    margin-bottom: 32px;
+
+    @media (min-width: 768px) {
+      margin-bottom: 48px;
+    }
   }
 
   &__items {
@@ -137,7 +141,6 @@
     &__item {
       &.has-github-button {
         position: relative;
-        top: 4px;
         margin: 0 16px 24px;
       }
     }

@@ -2,23 +2,28 @@ import anime from 'animejs'
 
 export const isBrowser = typeof window !== 'undefined'
 
+export const DIR = './website/snippets/'
+
 export const prerender = (main, tag) => {
   const output = './docs/index.html'
-  if (!isBrowser) {
+  if (!isBrowser && typeof __prerenderRequire !== 'undefined') {
     const fs = __prerenderRequire('fs')
     const html = fs.readFileSync(output, 'utf8')
     fs.writeFileSync(output, html.replace(tag, tag + main))
   }
 }
 
+export const snippet = name => `./website/snippets/${name}`
+
 export const getEmojiSrc = char => {
-  return
-  const wrapper = document.createElement('div')
-  wrapper.innerHTML = twemoji.parse(char, {
-    folder: 'svg',
-    ext: '.svg'
-  })
-  return wrapper.firstElementChild.src
+  if (isBrowser) {
+    const wrapper = document.createElement('div')
+    wrapper.innerHTML = twemoji.parse(char, {
+      folder: 'svg',
+      ext: '.svg'
+    })
+    return wrapper.firstElementChild.src
+  }
 }
 
 export const toKebabCase = str =>

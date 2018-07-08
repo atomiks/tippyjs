@@ -8,8 +8,6 @@ const Tippy = (realProps, [reference]) => {
     content: realProps.content || "I'm a Tippy tooltip"
   }
 
-  delete props.key
-
   if (props.content.constructor === Object && !props.target) {
     const container = isBrowser && document.createElement('div')
     app({}, {}, props.content, container)
@@ -17,12 +15,7 @@ const Tippy = (realProps, [reference]) => {
   }
 
   const update = element => {
-    const { content } = element._tippy.popperChildren
-    if (typeof props.content !== 'string') {
-      content.replaceChild(props.content, content.firstElementChild)
-    } else {
-      content[props.allowHTML ? 'innerHTML' : 'textContent'] = props.content
-    }
+    element._tippy.set(props)
   }
 
   return (

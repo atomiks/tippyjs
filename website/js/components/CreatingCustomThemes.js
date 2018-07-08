@@ -1,117 +1,92 @@
 import { h } from 'hyperapp'
 import Emoji from './Emoji'
+import Code from './Code'
+import ResultBox from './ResultBox'
+import Tippy from './Tippy'
+import Heading from './Heading'
+const Subheading = Heading('CreatingCustomThemes')
+import THEME_CSS from '../../snippets/theme-css'
+import THEME_JS from '../../snippets/theme-js'
+import TIPPY_ELEMENT from '../../snippets/tippy-element'
+import TIPPY_ELEMENT_ARROW from '../../snippets/tippy-element-arrow'
+import CSS_ARROW from '../../snippets/css-arrow'
 
-export default () => (state, actions) => (
-  <section class="section" id="creating-custom-themes">
+export default () => (
+  <section class="section">
     <Emoji class="section__icon-wrapper">🖌️</Emoji>
-    <div class="section__heading-wrapper">
-      <a class="section__heading" href="#creating-custom-themes">
-        Creating Custom Themes
-      </a>
-    </div>
+    <Heading>Creating Custom Themes</Heading>
+
+    <Subheading>Tippy element structure</Subheading>
     <p>
-      Creating a theme for your tooltips is easy! If you wanted to make a theme
-      called <code>honeybee</code>, then your CSS would look like:
+      To know what selectors to use, it's helpful to understand the structure of
+      a tippy element.
     </p>
-    <div class="code-wrapper" data-lang="css">
-      <pre>
-        <code class="lang-css">{`.tippy-tooltip.honeybee-theme {
-  /* Your styling here. Example: */
-  background-color: yellow;
-  border: 2px solid orange;
-  font-weight: bold;
-  color: #333;
-}`}</code>
-      </pre>
-    </div>
+    <Code content={TIPPY_ELEMENT} />
+
+    <p>
+      A tippy is essentially three nested <code>div</code>s.
+    </p>
+
+    <ul>
+      <li>
+        <code>tippy-popper</code> is what Popper.js uses to position the tippy.
+        You shouldn't apply any styles directly to this element, but you will
+        need it when targeting a specific placement (<code>x-placement</code>).
+      </li>
+      <li>
+        <code>tippy-tooltip</code> is the actual tooltip. Use this to style the
+        tooltip when <code>animateFill: false</code>.
+      </li>
+      <li>
+        <code>tippy-backdrop</code> is the background fill of the tooltip. Use
+        this when <code>animateFill: true</code>.
+      </li>
+      <li>
+        <code>tippy-content</code> is anything inside the tooltip.
+      </li>
+    </ul>
+
+    <p>
+      However, depending on the options you supply, additional elements may
+      exist inside it, such as an arrow or backdrop (default) element.
+    </p>
+
+    <Code content={TIPPY_ELEMENT_ARROW} />
+
+    <Subheading>Creating a theme</Subheading>
+
+    <p>
+      If you wanted to make a theme called <code>honeybee</code>, then your CSS
+      would look like:
+    </p>
+    <Code content={THEME_CSS} />
 
     <p>
       The <code>-theme</code> suffix is required.
     </p>
 
-    <h3>
-      Styling the <code>animateFill</code> backdrop
-    </h3>
     <p>
-      By default, tippy tooltips have a cool backdrop filling animation, which
-      is just a circle that expands out. Its class name is{' '}
-      <code>tippy-backdrop</code>:
+      To apply the theme to the tooltip, specify a <code>theme</code> option{' '}
+      <em>without</em> the <code>-theme</code> suffix:
     </p>
-    <div class="code-wrapper" data-lang="css">
-      <pre>
-        <code class="lang-css">{`.tippy-tooltip.honeybee-theme .tippy-backdrop {
-  /* Your styling here. Example: */
-  background-color: yellow;
-}`}</code>
-      </pre>
-    </div>
+    <Code content={THEME_JS} />
 
-    <p>
-      If you're using the backdrop animation, avoid styling the tooltip directly
-      – just the backdrop.
-    </p>
+    <ResultBox>
+      <Tippy theme="honeybee" animateFill={false}>
+        <button class="btn">Custom theme</button>
+      </Tippy>
+    </ResultBox>
 
-    <h3>Styling the arrow</h3>
+    <Subheading>Styling the arrow</Subheading>
     <p>
       There are two arrow selectors: <code>.tippy-arrow</code> and{' '}
       <code>.tippy-roundarrow</code>. The first is the pure CSS triangle shape,
       while the second is a custom SVG.
     </p>
-    <div class="code-wrapper" data-lang="css">
-      <pre>
-        <code class="lang-css">{`.tippy-popper[x-placement^=top] .tippy-tooltip.honeybee-theme .tippy-arrow {
-  /* Your styling here. */
-}`}</code>
-      </pre>
-    </div>
+    <Code content={CSS_ARROW} />
     <p>
       You will need to style the arrow for each different popper placement (top,
       bottom, left, right), which is why the selector is so long.
     </p>
-
-    <h3>Styling the content directly</h3>
-    <div class="code-wrapper" data-lang="css">
-      <pre>
-        <code class="lang-css">{`.tippy-tooltip.honeybee-theme .tippy-content {
-  /* Your styling here. Example: */
-  color: #333;
-}`}</code>
-      </pre>
-    </div>
-
-    <h3>
-      Specify a <code>theme</code> option
-    </h3>
-    <p>
-      To see what your cool theme looks like, specify a <code>theme</code>{' '}
-      option for tippy:
-    </p>
-
-    <div class="code-wrapper" data-lang="js">
-      <pre>
-        <code class="lang-js">{`tippy('.btn', {
-  theme: 'honeybee',
-  // ...or add multiple themes by separating each by a space...
-  theme: 'honeybee bumblebee shadow'
-})`}</code>
-      </pre>
-    </div>
-
-    <p>
-      <code>.honeybee-theme</code>, <code>.bumblebee-theme</code> and{' '}
-      <code>.shadow-theme</code> are the selectors for this theme list.
-    </p>
-
-    <div class="section__result">
-      <p class="section__result-text">Result:</p>
-      <button
-        class="btn"
-        title="I'm a Tippy tooltip!"
-        data-tippy-theme="honeybee"
-        data-tippy-animateFill="false"
-      >
-        Custom theme
-      </button>
-    </div>
   </section>
 )

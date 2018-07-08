@@ -3,18 +3,7 @@ import Emoji from './Emoji'
 import Code from './Code'
 import Heading from './Heading'
 const Subheading = Heading('Methods')
-
-const ELEMENT = `
-<button data-tippy="Hello">Text</button>
-`
-const UPDATE = `
-tip.set({
-  content: 'New content',
-  arrow: true,
-  duration: 1000,
-  animation: 'perspective'
-})
-`
+import SET_METHOD from '../../snippets/set-method'
 
 export default () => (
   <section class="section">
@@ -26,14 +15,17 @@ export default () => (
       tooltip without the use of UI events.
     </p>
 
-    <Code lang="html">{ELEMENT}</Code>
-    <Code lang="js">const btn = document.querySelector('button')</Code>
+    <Code
+      lang="html"
+      content="<button data-tippy=&quot;Hello&quot;>Text</button>"
+    />
+    <Code content="const btn = document.querySelector('button')" />
 
     <p>
       The Tippy instance is stored on the button element via the{' '}
       <code>_tippy</code> property.{' '}
     </p>
-    <Code lang="js">const tip = btn._tippy</Code>
+    <Code content="const tip = btn._tippy" />
     <blockquote class="blockquote">
       <strong>Why is it prefixed with an underscore?</strong> Since we're
       attaching a non-standard property to an <code>Element</code>, we prefix it
@@ -43,28 +35,28 @@ export default () => (
     </blockquote>
 
     <Subheading>Show the tooltip</Subheading>
-    <Code lang="js">tip.show()</Code>
+    <Code content="tip.show()" />
 
     <Subheading>Hide the tooltip</Subheading>
-    <Code lang="js">tip.hide()</Code>
+    <Code content="tip.hide()" />
 
     <Subheading>Custom transition duration</Subheading>
     <p>Pass a number in as an argument to override the instance option:</p>
-    <Code lang="js">tip.show(200)</Code>
+    <Code content="tip.show(200)" />
 
     <Subheading>Disable the tooltip</Subheading>
     <p>The tooltip can be temporarily disabled from showing/hiding:</p>
-    <Code lang="js">tip.disable()</Code>
+    <Code content="tip.disable()" />
 
     <p>To re-enable:</p>
-    <Code lang="js">tip.enable()</Code>
+    <Code content="tip.enable()" />
 
     <Subheading>Destroy the tooltip</Subheading>
     <p>
       To permanently destroy the tooltip and remove all listeners from the
       reference element:
     </p>
-    <Code lang="js">tip.destroy()</Code>
+    <Code content="tip.destroy()" />
 
     <p>
       The <code>_tippy</code> property is deleted from the reference element
@@ -78,6 +70,6 @@ export default () => (
       involves creating a new popper element, so the old reference is thrown
       away).
     </p>
-    <Code lang="js">{UPDATE}</Code>
+    <Code content={SET_METHOD} />
   </section>
 )

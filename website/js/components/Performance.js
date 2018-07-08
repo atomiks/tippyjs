@@ -5,30 +5,30 @@ import Tippy from './Tippy'
 import Heading from './Heading'
 
 export default () => (state, actions) => (
-  <section class="section" id="performance">
+  <section class="section">
     <Emoji class="section__icon-wrapper">⚡️</Emoji>
     <Heading>Performance</Heading>
-    <form>
-      <input
-        placeholder="Enter number of elements"
-        oninput={actions.performance.setInputValue}
-      />
-      <button type="button" onclick={actions.performance.test}>
-        Test
-      </button>
-    </form>
+
+    <p>Tested with 2.6 GHz Skylake MacBook Pro using Chrome 67:</p>
     <ul>
-      {[...Array(state.performance.numberOfElements)].map((_, i) => (
-        <button class="btn">{i + 1}</button>
-      ))}
       <li>
-        <strong>Performance mode off:</strong> 13 ms per 100 elements
+        <strong>
+          <code>tippy.all.min.js</code> evaluation time:
+        </strong>{' '}
+        5ms
       </li>
       <li>
-        <strong>Performance mode on:</strong> 6 ms per 100 elements
+        <strong>Performance mode off (default):</strong> 1.3ms per 10 elements
       </li>
       <li>
-        <strong>Event delegation:</strong> &lt;1 ms for 1 element!
+        <strong>Performance mode on:</strong> 1ms per 10 elements
+      </li>
+      <li>
+        <strong>Lazy mode off:</strong> 3ms per 10 elements
+      </li>
+      <li>
+        <strong>Event delegation:</strong> &lt;1ms for any number of child
+        elements
       </li>
     </ul>
   </section>

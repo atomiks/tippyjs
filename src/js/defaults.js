@@ -35,6 +35,7 @@ export let Defaults = {
   showOnInit: false,
   popperOptions: {},
   lazy: true,
+  touch: true,
   onShow() {},
   onShown() {},
   onHide() {},

@@ -2,8 +2,9 @@ import { h } from 'hyperapp'
 import logo from '../../assets/img/logo.svg'
 import { version } from '../../../package.json'
 import { animateLogo, animateVersion, animateItems } from '../utils'
+import Emoji from './Emoji'
 
-export default () => (state, { header }) => (
+export default () => (
   <header class="header">
     <div class="container">
       <img class="header__logo" src={logo} oncreate={animateLogo} />
@@ -35,8 +36,7 @@ export default () => (state, { header }) => (
       >
         <div class="header__item">
           <p>
-            <i class="header__icon is-code" data-feather="code" />
-            14 kB gzipped
+            <Emoji small>💎</Emoji>14 kB
           </p>
         </div>
         <div class="header__item">
@@ -53,10 +53,7 @@ export default () => (state, { header }) => (
             data-tippy-sticky="true"
             data-tippy-updateDuration="250"
           >
-            <i
-              class="icon header__icon is-power"
-              data-feather="cloud-lightning"
-            />
+            <Emoji small>⚡</Emoji>
             Powered by Popper.js
           </a>
         </div>

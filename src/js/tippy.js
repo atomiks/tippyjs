@@ -1,13 +1,13 @@
 import { version } from '../../package.json'
 import { Defaults, setDefaults } from './defaults'
-import { Browser, isBrowser } from './browser'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
 import {
   isPlainObject,
   polyfillVirtualReferenceProps,
   getArrayOfElements,
-  toArray
+  toArray,
+  isBrowser
 } from './utils'
 
 let eventListenersBound = false
@@ -64,7 +64,6 @@ export default function tippy(targets, options, one) {
  */
 tippy.version = version
 tippy.defaults = Defaults
-tippy.browser = Browser
 
 /**
  * Static methods

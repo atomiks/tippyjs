@@ -223,6 +223,17 @@ describe('getValue', () => {
     expect(Utils.getValue([null, 5], 0, Defaults.delay)).toBe(Defaults.delay)
     expect(Utils.getValue([5, null], 1, Defaults.delay)).toBe(Defaults.delay)
   })
+
+  it('uses the default duration if the value is undefined', () => {
+    expect(Utils.getValue([, 5], 0, Defaults.duration[0])).toBe(
+      Defaults.duration[0]
+    )
+    expect(Utils.getValue([5], 1, Defaults.duration[1])).toBe(
+      Defaults.duration[1]
+    )
+    expect(Utils.getValue([, 5], 0, Defaults.delay)).toBe(Defaults.delay)
+    expect(Utils.getValue([5], 1, Defaults.delay)).toBe(Defaults.delay)
+  })
 })
 
 describe('getDataAttributeOptions', () => {
@@ -329,6 +340,26 @@ describe('closestCallback', () => {
   })
 })
 
+describe('createArrowElement', () => {
+  it('returns a sharp arrow by default', () => {
+    const arrow = Utils.createArrowElement()
+    expect(arrow.matches(Selectors.ARROW)).toBe(true)
+  })
+
+  it('returns a round arrow if "round" is passed as argument', () => {
+    const roundArrow = Utils.createArrowElement('round')
+    expect(roundArrow.matches(Selectors.ROUND_ARROW)).toBe(true)
+  })
+})
+
+describe('createBackdropElement', () => {
+  it('returns a backdrop element', () => {
+    const arrow = Utils.createBackdropElement()
+    expect(arrow.matches(Selectors.BACKDROP)).toBe(true)
+    expect(arrow.getAttribute('data-state')).toBe('hidden')
+  })
+})
+
 describe('createPopperElement', () => {
   // NOTE: Selectors dependency here
   it('returns an element', () => {
@@ -337,7 +368,7 @@ describe('createPopperElement', () => {
 
   it('always creates a tooltip element child', () => {
     const popper = Utils.createPopperElement(1, Defaults)
-    expect(Utils.getChildren(popper).tooltip).not.toBeNull()
+    expect(Utils.getChildren(popper).tooltip).not.toBe(null)
   })
 
   it('sets the `id` property correctly', () => {
@@ -358,12 +389,12 @@ describe('createPopperElement', () => {
 
   it('does not create an arrow element if props.arrow is false', () => {
     const popper = Utils.createPopperElement(1, { ...Defaults, arrow: false })
-    expect(popper.querySelector(Selectors.ARROW)).toBeNull()
+    expect(popper.querySelector(Selectors.ARROW)).toBe(null)
   })
 
   it('creates an arrow element if props.arrow is true', () => {
     const popper = Utils.createPopperElement(1, { ...Defaults, arrow: true })
-    expect(popper.querySelector(Selectors.ARROW)).not.toBeNull()
+    expect(popper.querySelector(Selectors.ARROW)).not.toBe(null)
   })
 
   it('does not create a backdrop element if props.animateFill is false', () => {
@@ -371,7 +402,7 @@ describe('createPopperElement', () => {
       ...Defaults,
       animateFill: false
     })
-    expect(popper.querySelector(Selectors.BACKDROP)).toBeNull()
+    expect(popper.querySelector(Selectors.BACKDROP)).toBe(null)
   })
 
   it('sets `[data-animatefill]` on the tooltip element if props.animateFill is true', () => {
@@ -645,10 +676,234 @@ describe('evaluateProps', () => {
 })
 
 /** ==================== 🔥 Impure sync functions 🔥 ==================== **/
+describe('addInteractive', () => {
+  it('adds interactive attributes', () => {
+    const popper = Utils.div()
+    const tooltip = Utils.div()
+    Utils.addInteractive(popper, tooltip)
+    expect(popper.getAttribute('tabindex')).toBe('-1')
+    expect(tooltip.hasAttribute('data-interactive')).toBe(true)
+  })
+})
+
+describe('removeInteractive', () => {
+  it('removes interactive attributes', () => {
+    const popper = Utils.div()
+    const tooltip = Utils.div()
+    Utils.addInteractive(popper, tooltip)
+    Utils.removeInteractive(popper, tooltip)
+    expect(popper.getAttribute('tabindex')).toBe(null)
+    expect(tooltip.hasAttribute('data-interactive')).toBe(false)
+  })
+})
+
+describe('addInertia', () => {
+  it('adds inertia attribute', () => {
+    const tooltip = Utils.div()
+    Utils.addInertia(tooltip)
+    expect(tooltip.hasAttribute('data-inertia')).toBe(true)
+  })
+})
+
+describe('removeInertia', () => {
+  it('removes inertia attribute', () => {
+    const tooltip = Utils.div()
+    Utils.addInertia(tooltip)
+    Utils.removeInertia(tooltip)
+    expect(tooltip.hasAttribute('data-ineria')).toBe(false)
+  })
+})
+
+describe('updatePopperElement', () => {
+  it('sets new zIndex', () => {
+    const popper = Utils.createPopperElement(1, Defaults)
+    Utils.updatePopperElement(popper, Defaults, {
+      ...Defaults,
+      zIndex: 213
+    })
+    expect(popper.style.zIndex).toBe('213')
+  })
+
+  it('updates size and animation attributes', () => {
+    const popper = Utils.createPopperElement(1, Defaults)
+    Utils.updatePopperElement(popper, Defaults, {
+      ...Defaults,
+      size: 'large',
+      animation: 'scale'
+    })
+    expect(Utils.getChildren(popper).tooltip.getAttribute('data-size')).toBe(
+      'large'
+    )
+    expect(
+      Utils.getChildren(popper).tooltip.getAttribute('data-animation')
+    ).toBe('scale')
+  })
+
+  it('sets new content', () => {
+    const popper = Utils.createPopperElement(1, Defaults)
+    Utils.updatePopperElement(popper, Defaults, {
+      ...Defaults,
+      content: 'hello'
+    })
+    expect(Utils.getChildren(popper).content.textContent).toBe('hello')
+    Utils.updatePopperElement(popper, Defaults, {
+      ...Defaults,
+      content: '<strong>hello</strong>'
+    })
+    expect(Utils.getChildren(popper).content.querySelector('strong')).not.toBe(
+      null
+    )
+  })
+
+  it('sets new backdrop element', () => {
+    const popper = Utils.createPopperElement(1, Defaults)
+    Utils.updatePopperElement(popper, Defaults, {
+      ...Defaults,
+      animateFill: false
+    })
+    expect(popper.querySelector(Selectors.BACKDROP)).toBe(null)
+    expect(
+      Utils.getChildren(popper).tooltip.hasAttribute('data-animatefill')
+    ).toBe(false)
+    Utils.updatePopperElement(
+      popper,
+      { ...Defaults, animateFill: false },
+      {
+        ...Defaults,
+        animateFill: true
+      }
+    )
+    expect(popper.querySelector(Selectors.BACKDROP)).not.toBe(null)
+    expect(
+      Utils.getChildren(popper).tooltip.hasAttribute('data-animatefill')
+    ).toBe(true)
+  })
+
+  it('sets new arrow element', () => {
+    {
+      const popper = Utils.createPopperElement(1, Defaults)
+      Utils.updatePopperElement(popper, Defaults, {
+        ...Defaults,
+        arrow: true
+      })
+      expect(popper.querySelector(Selectors.ARROW)).not.toBe(null)
+    }
+
+    {
+      const props = { ...Defaults, arrow: true }
+      const popper = Utils.createPopperElement(1, props)
+      Utils.updatePopperElement(popper, props, {
+        ...Defaults,
+        arrow: false
+      })
+      expect(popper.querySelector(Selectors.ARROW)).toBe(null)
+    }
+  })
+
+  it('sets new arrow element type', () => {
+    {
+      const popper = Utils.createPopperElement(1, Defaults)
+      Utils.updatePopperElement(popper, Defaults, {
+        ...Defaults,
+        arrow: true,
+        arrowType: 'round'
+      })
+      expect(popper.querySelector(Selectors.ARROW)).toBe(null)
+      expect(popper.querySelector(Selectors.ROUND_ARROW)).not.toBe(null)
+    }
+
+    {
+      const props = { ...Defaults, arrowType: 'round', arrow: true }
+      const popper = Utils.createPopperElement(1, props)
+      const newProps = { ...Defaults, arrowType: 'sharp', arrow: true }
+      Utils.updatePopperElement(popper, props, newProps)
+      expect(popper.querySelector(Selectors.ARROW)).not.toBe(null)
+      expect(popper.querySelector(Selectors.ROUND_ARROW)).toBe(null)
+      Utils.updatePopperElement(popper, newProps, Defaults)
+      expect(popper.querySelector(Selectors.ARROW)).toBe(null)
+      expect(popper.querySelector(Selectors.ROUND_ARROW)).toBe(null)
+    }
+  })
+
+  it('sets interactive attribute', () => {
+    const popper = Utils.createPopperElement(1, Defaults)
+    const newProps = {
+      ...Defaults,
+      interactive: true
+    }
+    Utils.updatePopperElement(popper, Defaults, newProps)
+    expect(popper.getAttribute('tabindex')).toBe('-1')
+    expect(
+      Utils.getChildren(popper).tooltip.hasAttribute('data-interactive')
+    ).toBe(true)
+    Utils.updatePopperElement(popper, newProps, {
+      ...newProps,
+      interactive: false
+    })
+    expect(popper.getAttribute('tabindex')).toBe(null)
+    expect(
+      Utils.getChildren(popper).tooltip.hasAttribute('data-interactive')
+    ).toBe(false)
+  })
+
+  it('sets inertia attribute', () => {
+    const popper = Utils.createPopperElement(1, Defaults)
+    const newProps = {
+      ...Defaults,
+      inertia: true
+    }
+    Utils.updatePopperElement(popper, Defaults, newProps)
+    expect(Utils.getChildren(popper).tooltip.hasAttribute('data-inertia')).toBe(
+      true
+    )
+    Utils.updatePopperElement(popper, newProps, {
+      ...newProps,
+      inertia: false
+    })
+    expect(Utils.getChildren(popper).tooltip.hasAttribute('data-inertia')).toBe(
+      false
+    )
+  })
+
+  it('sets new theme', () => {
+    const popper = Utils.createPopperElement(1, Defaults)
+    const newProps = {
+      ...Defaults,
+      theme: 'my custom themes'
+    }
+    Utils.updatePopperElement(popper, Defaults, newProps)
+    expect(
+      Utils.getChildren(popper).tooltip.classList.contains('my-theme')
+    ).toBe(true)
+    expect(
+      Utils.getChildren(popper).tooltip.classList.contains('custom-theme')
+    ).toBe(true)
+    expect(
+      Utils.getChildren(popper).tooltip.classList.contains('themes-theme')
+    ).toBe(true)
+    Utils.updatePopperElement(popper, newProps, {
+      ...newProps,
+      theme: 'other'
+    })
+    expect(
+      Utils.getChildren(popper).tooltip.classList.contains('my-theme')
+    ).toBe(false)
+    expect(
+      Utils.getChildren(popper).tooltip.classList.contains('custom-theme')
+    ).toBe(false)
+    expect(
+      Utils.getChildren(popper).tooltip.classList.contains('themes-theme')
+    ).toBe(false)
+    expect(
+      Utils.getChildren(popper).tooltip.classList.contains('other-theme')
+    ).toBe(true)
+  })
+})
+
 describe('injectCSS', () => {
   it('injects a string of css styles into the document `head`', () => {
     const styles = `body { color: red; }`
-    expect(document.head.querySelector('style')).toBeNull()
+    expect(document.head.querySelector('style')).toBe(null)
     Utils.injectCSS(styles)
     const styleNode = document.head.querySelector('style')
     expect(styleNode).toBeTruthy()
@@ -722,23 +977,6 @@ describe('setVisibilityState', () => {
   })
 })
 
-describe('setAttr', () => {
-  it('sets an attribute with a default value of "" on an element', () => {
-    const ref = h()
-    const attr = 'data-some-attribute'
-    Utils.setAttr(ref, attr)
-    expect(ref.getAttribute(attr)).toBe('')
-  })
-
-  it('sets an attribute with a value if supplied on an element', () => {
-    const ref = h()
-    const attr = 'data-some-attribute'
-    const value = 'some value'
-    Utils.setAttr(ref, attr, value)
-    expect(ref.getAttribute(attr)).toBe(value)
-  })
-})
-
 describe('setContent', () => {
   it('sets textContent of an element if `props.allowHTML` is `false`', () => {
     const ref = h()
@@ -748,7 +986,7 @@ describe('setContent', () => {
       content
     })
     expect(ref.textContent).toBe(content)
-    expect(ref.querySelector('strong')).toBeNull()
+    expect(ref.querySelector('strong')).toBe(null)
   })
 
   it('sets innerHTML of an element if `props.allowHTML` is `true`', () => {
@@ -758,7 +996,7 @@ describe('setContent', () => {
       allowHTML: true,
       content
     })
-    expect(ref.querySelector('strong')).not.toBeNull()
+    expect(ref.querySelector('strong')).not.toBe(null)
   })
 })
 
@@ -777,7 +1015,7 @@ describe('setInnerHTML', () => {
   it('sets the innerHTML of an element', () => {
     const ref = h()
     Utils.setInnerHTML(ref, '<strong></strong>')
-    expect(ref.querySelector('strong')).not.toBeNull()
+    expect(ref.querySelector('strong')).not.toBe(null)
   })
 })
 
@@ -963,8 +1201,45 @@ describe('isCursorOutsideInteractiveBorder', () => {
 })
 
 /** ==================== 😱 Async functions or tests 😱 ==================== **/
+describe('defer', () => {
+  it('waits until call stack has cleared', done => {
+    const fn = jest.fn()
+    Utils.defer(fn)
+    expect(fn.mock.calls.length).toBe(0)
+    setTimeout(() => {
+      expect(fn.mock.calls.length).toBe(1)
+      done()
+    }, 1)
+  })
+})
+
 describe('updatePopperPosition', () => {
-  /* Difficult to test */
+  it('is called by popper if not already updated', done => {
+    const tip = tippy.one(h(), { lazy: false })
+    // popper calls scheduleUpdate() on init
+    setTimeout(() => {
+      const fn = jest.fn()
+      Utils.updatePopperPosition(tip.popperInstance, fn)
+      setTimeout(() => {
+        expect(fn.mock.calls.length).toBe(1)
+        done()
+      }, 20)
+    }, 20)
+  })
+
+  it('is not called by popper if already updated', done => {
+    const tip = tippy.one(h(), { lazy: false })
+    const fn = jest.fn()
+    // popper calls scheduleUpdate() on init
+    setTimeout(() => {
+      const fn = jest.fn()
+      Utils.updatePopperPosition(tip.popperInstance, fn, true)
+      setTimeout(() => {
+        expect(fn.mock.calls.length).toBe(0)
+        done()
+      }, 20)
+    }, 20)
+  })
 })
 
 describe('focus', () => {

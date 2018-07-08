@@ -2,6 +2,7 @@ class ajax {
   imageSrc = ''
   isLoading = false
   error = false
+  canFetch = true
 }
 
 class performance {

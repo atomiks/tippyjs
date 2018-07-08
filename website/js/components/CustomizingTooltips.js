@@ -5,62 +5,25 @@ import Tippy from './Tippy'
 import ResultBox from './ResultBox'
 import Heading from './Heading'
 const Subheading = Heading('Customizing Tooltips')
-
-const HTML_BUTTON = `<button class="btn">Text</button>`
-const OBJECT_OF_PROPS = `
-tippy('.btn', {
-  content: "I'm a tooltip!",
-  delay: 100,
-  arrow: true,
-  arrowType: 'round',
-  size: 'large',
-  duration: 500
-  animation: 'scale'
-})
-`
-const DATA_ATTRIBUTES = `
-<button
-  class="btn"
-  data-tippy="I'm a Tippy tooltip!"
-  data-tippy-delay="50"
-  data-tippy-arrow="true"
-  data-tippy-animation="shift-toward"
->
-  Text
-</button>
-`
-const MULTIPLE_CONTENT = `
-<button class="btn" data-tippy-content="Tooltip A">Text</button>
-<button class="btn" data-tippy-content="Tooltip B">Text</button>
-<button class="btn" data-tippy-content="Tooltip C">Text</button>
-`
-const MULTIPLE_CONTENT_CONFIG = `
-tippy('.btn', {
-  animation: 'shift-toward',
-  arrow: true,
-  delay: 50
-})
-`
-const SET_DEFAULTS = `
-tippy.setDefaults({
-  arrow: true,
-  arrowType: 'round',
-  duration: 0
-})
-`
+import HTML_BUTTON from '../../snippets/html-button.md'
+import OPTIONS_OBJECT from '../../snippets/options-object.md'
+import DATA_ATTRIBUTES from '../../snippets/data-attributes.md'
+import MULTIPLE_CONTENT_HTML from '../../snippets/multiple-content-html.md'
+import MULTIPLE_CONTENT_JS from '../../snippets/multiple-content-js.md'
+import SET_DEFAULTS from '../../snippets/set-defaults.md'
 
 export default () => (
-  <section class="section" id="customizing-tooltips">
+  <section class="section">
     <Emoji class="section__icon-wrapper">⚙️</Emoji>
     <Heading>Customizing Tooltips</Heading>
 
     <p>
-      <code>tippy()</code> takes an object of props as a second argument for you
-      to configure the tooltips being created. Here's an example:
+      <code>tippy()</code> takes an object of options as a second argument for
+      you to configure the tooltips being created. Here's an example:
     </p>
 
-    <Code lang="html">{HTML_BUTTON}</Code>
-    <Code lang="js">{OBJECT_OF_PROPS}</Code>
+    <Code content={HTML_BUTTON} />
+    <Code content={OPTIONS_OBJECT} />
 
     <ResultBox>
       <Tippy
@@ -90,7 +53,7 @@ export default () => (
       custom tooltips without ever touching JavaScript.
     </p>
 
-    <Code lang="html">{DATA_ATTRIBUTES}</Code>
+    <Code content={DATA_ATTRIBUTES} />
 
     <ResultBox>
       <Tippy delay={50} arrow={true} animation="shift-toward">
@@ -104,8 +67,8 @@ export default () => (
       different content.
     </p>
 
-    <Code lang="html">{MULTIPLE_CONTENT}</Code>
-    <Code lang="js">{MULTIPLE_CONTENT_CONFIG}</Code>
+    <Code content={MULTIPLE_CONTENT_HTML} />
+    <Code content={MULTIPLE_CONTENT_JS} />
 
     <Subheading>Default config</Subheading>
     <p>
@@ -114,6 +77,6 @@ export default () => (
       instance.
     </p>
 
-    <Code lang="js">{SET_DEFAULTS}</Code>
+    <Code content={SET_DEFAULTS} />
   </section>
 )
