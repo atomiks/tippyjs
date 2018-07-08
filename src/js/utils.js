@@ -280,7 +280,11 @@ export const updatePopperElement = (popper, oldProps, newProps) => {
   }
 
   // arrowType
-  if (oldProps.arrow && oldProps.arrowType !== newProps.arrowType) {
+  if (
+    oldProps.arrow &&
+    newProps.arrow &&
+    oldProps.arrowType !== newProps.arrowType
+  ) {
     tooltip.replaceChild(createArrowElement(newProps.arrowType), arrow)
   }
 
