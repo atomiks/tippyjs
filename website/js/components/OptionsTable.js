@@ -135,11 +135,6 @@ export default () => (
           "bottom" is unavailable. By default, it chooses the opposite axis,
           i.e. "top".
         </Prop>
-        <Prop name="flipTransition" default="true" value="Boolean">
-          Flips are transitioned by default due to the tooltip element's
-          transition duration. Setting this to false will disable transitions
-          when it's fully shown.
-        </Prop>
         <Prop name="followCursor" default="false" value="Boolean">
           Determines if the tippy follows the user's mouse cursor while showing.
         </Prop>
@@ -255,6 +250,11 @@ export default () => (
         >
           The events (each separated by a space) which cause a tooltip to show.
           Use manual to only trigger the tooltip programmatically.
+        </Prop>
+        <Prop name="updateDuration" default="200" value="Number">
+          The transition duration between position updates for the{' '}
+          <code>sticky</code> option. Set to <code>0</code> to prevent flips
+          from transitioning.
         </Prop>
         <Prop name="zIndex" default="9999" value="Number">
           The <code>z-index</code> of the popper element.

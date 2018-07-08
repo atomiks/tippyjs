@@ -46,7 +46,7 @@ var Defaults = {
   multiple: false,
   followCursor: false,
   inertia: false,
-  updateDuration: 350,
+  updateDuration: 200,
   sticky: false,
   appendTo: function appendTo() {
     return document.body;

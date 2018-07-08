@@ -19,7 +19,7 @@ export let Defaults = {
   multiple: false,
   followCursor: false,
   inertia: false,
-  updateDuration: 350,
+  updateDuration: 200,
   sticky: false,
   appendTo: () => document.body,
   zIndex: 9999,
