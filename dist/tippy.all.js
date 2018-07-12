@@ -3779,7 +3779,8 @@ function _createPopperInstance() {
   var arrow = tooltip.querySelector(arrowSelector);
 
   var config = _extends({
-    placement: options.placement
+    placement: options.placement,
+    removeOnDestroy: options.removeOnDestroy
   }, popperOptions || {}, {
     modifiers: _extends({}, popperOptions ? popperOptions.modifiers : {}, {
       arrow: _extends({
