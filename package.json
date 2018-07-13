@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "description": "Vanilla JS Tooltip Library",
   "author": "atomiks",
   "license": "MIT",
@@ -59,8 +59,9 @@
     "jest": "^22.4.2",
     "jsdom": "^11.6.2",
     "mutation-observer": "^1.0.3",
+    "node-sass": "^4.9.2",
     "normalize.css": "^8.0.0",
-    "parcel-bundler": "^1.7.0",
+    "parcel-bundler": "^1.9.6",
     "postcss": "^5.2.18",
     "postcss-cssnext": "^3.1.0",
     "postcss-import": "^11.1.0",

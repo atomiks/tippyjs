@@ -3985,7 +3985,7 @@ function _onTransitionEnd(duration, callback) {
 
   var toggleListeners = function toggleListeners(action, listener) {
     if (!listener) return;
-    tooltip[action + 'EventListener']('ontransitionend' in window ? 'transitionend' : 'webkitTransitionEnd', listener);
+    tooltip[action + 'EventListener']('transition' in document.body.style ? 'transitionend' : 'webkitTransitionEnd', listener);
   };
 
   var listener = function listener(e) {
