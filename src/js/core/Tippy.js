@@ -716,7 +716,9 @@ export function _onTransitionEnd(duration, callback) {
   const toggleListeners = (action, listener) => {
     if (!listener) return
     tooltip[action + 'EventListener'](
-      'ontransitionend' in window ? 'transitionend' : 'webkitTransitionEnd',
+      'transition' in document.body.style
+        ? 'transitionend'
+        : 'webkitTransitionEnd',
       listener
     )
   }
