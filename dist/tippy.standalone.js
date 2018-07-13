@@ -1,5 +1,5 @@
 /*!
-* Tippy.js v2.5.3
+* Tippy.js v2.5.4
 * (c) 2017-2018 atomiks
 * MIT
 */
@@ -11,7 +11,7 @@
 
 Popper = Popper && Popper.hasOwnProperty('default') ? Popper['default'] : Popper;
 
-var version = "2.5.3";
+var version = "2.5.4";
 
 var isBrowser = typeof window !== 'undefined';
 
