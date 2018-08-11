@@ -18,11 +18,6 @@
   pointer-events: none;
   line-height: 1.4;
 
-  &[data-html] {
-    max-width: 96%;
-    max-width: calc(100% - 20px);
-  }
-
   @each $placement in $placements {
     &[x-placement^='#{$placement}'] {
       .tippy-backdrop {
