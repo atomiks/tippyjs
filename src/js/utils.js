@@ -252,62 +252,62 @@ export const createPopperElement = (id, props) => {
 /**
  * Updates the popper element based on the new props
  */
-export const updatePopperElement = (popper, oldProps, newProps) => {
+export const updatePopperElement = (popper, prevProps, nextProps) => {
   const { tooltip, content, backdrop, arrow } = getChildren(popper)
 
   // Ensure the tooltip doesn't transition
   applyTransitionDuration([tooltip], 0)
 
-  popper.style.zIndex = newProps.zIndex
-  tooltip.setAttribute('data-size', newProps.size)
-  tooltip.setAttribute('data-animation', newProps.animation)
-  setContent(content, newProps)
+  popper.style.zIndex = nextProps.zIndex
+  tooltip.setAttribute('data-size', nextProps.size)
+  tooltip.setAttribute('data-animation', nextProps.animation)
+  setContent(content, nextProps)
 
   // animateFill
-  if (!oldProps.animateFill && newProps.animateFill) {
+  if (!prevProps.animateFill && nextProps.animateFill) {
     tooltip.appendChild(createBackdropElement())
     tooltip.setAttribute('data-animatefill', '')
-  } else if (oldProps.animateFill && !newProps.animateFill) {
+  } else if (prevProps.animateFill && !nextProps.animateFill) {
     tooltip.removeChild(backdrop)
     tooltip.removeAttribute('data-animatefill')
   }
 
   // arrow
-  if (!oldProps.arrow && newProps.arrow) {
-    tooltip.appendChild(createArrowElement(newProps.arrowType))
-  } else if (oldProps.arrow && !newProps.arrow) {
+  if (!prevProps.arrow && nextProps.arrow) {
+    tooltip.appendChild(createArrowElement(nextProps.arrowType))
+  } else if (prevProps.arrow && !nextProps.arrow) {
     tooltip.removeChild(arrow)
   }
 
   // arrowType
   if (
-    oldProps.arrow &&
-    newProps.arrow &&
-    oldProps.arrowType !== newProps.arrowType
+    prevProps.arrow &&
+    nextProps.arrow &&
+    prevProps.arrowType !== nextProps.arrowType
   ) {
-    tooltip.replaceChild(createArrowElement(newProps.arrowType), arrow)
+    tooltip.replaceChild(createArrowElement(nextProps.arrowType), arrow)
   }
 
   // interactive
-  if (!oldProps.interactive && newProps.interactive) {
+  if (!prevProps.interactive && nextProps.interactive) {
     addInteractive(popper, tooltip)
-  } else if (oldProps.interactive && !newProps.interactive) {
+  } else if (prevProps.interactive && !nextProps.interactive) {
     removeInteractive(popper, tooltip)
   }
 
   // inertia
-  if (!oldProps.inertia && newProps.inertia) {
+  if (!prevProps.inertia && nextProps.inertia) {
     addInertia(tooltip)
-  } else if (oldProps.inertia && !newProps.inertia) {
+  } else if (prevProps.inertia && !nextProps.inertia) {
     removeInertia(tooltip)
   }
 
   // theme
-  if (oldProps.theme !== newProps.theme) {
-    oldProps.theme.split(' ').forEach(theme => {
+  if (prevProps.theme !== nextProps.theme) {
+    prevProps.theme.split(' ').forEach(theme => {
       tooltip.classList.remove(theme + '-theme')
     })
-    newProps.theme.split(' ').forEach(theme => {
+    nextProps.theme.split(' ').forEach(theme => {
       tooltip.classList.add(theme + '-theme')
     })
   }
@@ -359,38 +359,46 @@ export const getDataAttributeOptions = reference =>
 
 /**
  * Polyfills the virtual reference (plain object) with needed props
+ * Mutating because DOM elements are mutated, adds _tippy property
  */
-export const polyfillVirtualReferenceProps = virtualReference => ({
-  ...virtualReference,
-  isVirtual: true,
-  attributes: virtualReference.attributes || {},
-  setAttribute(key, value) {
-    this.attributes[key] = value
-  },
-  getAttribute(key) {
-    return this.attributes[key]
-  },
-  removeAttribute(key) {
-    delete this.attributes[key]
-  },
-  hasAttribute(key) {
-    return key in this.attributes
-  },
-  addEventListener() {},
-  removeEventListener() {},
-  classList: {
-    classNames: {},
-    add(key) {
-      this.classNames[key] = true
+export const polyfillVirtualReferenceProps = virtualReference => {
+  const polyfills = {
+    isVirtual: true,
+    attributes: virtualReference.attributes || {},
+    setAttribute(key, value) {
+      virtualReference.attributes[key] = value
     },
-    remove(key) {
-      delete this.classNames[key]
+    getAttribute(key) {
+      return virtualReference.attributes[key]
     },
-    contains(key) {
-      return key in this.classNames
+    removeAttribute(key) {
+      delete virtualReference.attributes[key]
+    },
+    hasAttribute(key) {
+      return key in virtualReference.attributes
+    },
+    addEventListener() {},
+    removeEventListener() {},
+    classList: {
+      classNames: {},
+      add(key) {
+        virtualReference.classList.classNames[key] = true
+      },
+      remove(key) {
+        delete virtualReference.classList.classNames[key]
+      },
+      contains(key) {
+        return key in virtualReference.classList.classNames
+      }
     }
   }
-})
+
+  for (const key in polyfills) {
+    virtualReference[key] = polyfills[key]
+  }
+
+  return virtualReference
+}
 
 /**
  * Ponyfill for Element.prototype.matches
@@ -717,4 +725,12 @@ export const evaluateProps = (reference, props) => {
   }
 
   return out
+}
+
+const transitionEvent =
+  isBrowser && 'transition' in document.body.style
+    ? 'transitionend'
+    : 'webkitTransitionEnd'
+export const toggleListener = (tooltip, action, listener) => {
+  tooltip[action + 'EventListener'](transitionEvent, listener)
 }

@@ -21,7 +21,8 @@ import {
   evaluateProps,
   defer,
   toArray,
-  focus
+  focus,
+  toggleListener
 } from './utils'
 
 let idCounter = 1
@@ -500,45 +501,59 @@ export default function createTippy(reference, collectionProps) {
   }
 
   /**
+   * Invokes a callback once the tooltip has fully transitioned out
+   */
+  function onTransitionedOut(duration, callback) {
+    onTransitionEnd(false, duration, () => {
+      if (!tip.state.isVisible && tip.props.appendTo.contains(tip.popper)) {
+        callback()
+      }
+    })
+  }
+
+  /**
+   * Invokes a callback once the tooltip has fully transitioned in
+   */
+  function onTransitionedIn(duration, callback) {
+    onTransitionEnd(true, duration, callback)
+  }
+
+  /**
    * Invokes a callback once the tooltip's CSS transition ends
    */
-  function onTransitionEnd(duration, callback) {
+  function onTransitionEnd(isInDirection, duration, callback) {
     // Make callback synchronous if duration is 0
-    if (!duration) {
+    if (duration === 0) {
       return callback()
     }
 
     const { tooltip } = tip.popperChildren
 
-    const toggleListeners = (action, listener) => {
-      tooltip[action + 'EventListener'](
-        'ontransitionend' in window ? 'transitionend' : 'webkitTransitionEnd',
-        listener
-      )
-    }
-
     const listener = e => {
-      if (e.target === tooltip && e.propertyName !== 'clip-path') {
-        toggleListeners('remove', listener)
+      if (
+        e.target === tooltip &&
+        getComputedStyle(tooltip).opacity === (isInDirection ? '1' : '0')
+      ) {
+        toggleListener(tooltip, 'remove', listener)
         callback()
       }
     }
 
-    toggleListeners('remove', transitionEndListener)
-    toggleListeners('add', listener)
+    toggleListener(tooltip, 'remove', transitionEndListener)
+    toggleListener(tooltip, 'add', listener)
 
     transitionEndListener = listener
+  }
+
+  function on(eventType, handler, acc) {
+    tip.reference.addEventListener(eventType, handler)
+    acc.push({ eventType, handler })
   }
 
   /**
    * Adds event listeners to the reference based on the `trigger` prop
    */
   function addEventListeners() {
-    const on = (eventType, handler, acc) => {
-      tip.reference.addEventListener(eventType, handler)
-      acc.push({ eventType, handler })
-    }
-
     listeners = tip.props.trigger
       .trim()
       .split(' ')
@@ -613,14 +628,14 @@ export default function createTippy(reference, collectionProps) {
    * Sets new props for the instance and redraws the tooltip
    */
   function set(options) {
-    const oldProps = tip.props
-    const newProps = evaluateProps(tip.reference, {
+    const prevProps = tip.props
+    const nextProps = evaluateProps(tip.reference, {
       ...tip.props,
       ...options,
       performance: true
     })
-    newProps.performance = options.performance || oldProps.performance
-    tip.props = newProps
+    nextProps.performance = options.performance || prevProps.performance
+    tip.props = nextProps
 
     // Update listeners if `trigger` option changed
     if (options.trigger) {
@@ -629,7 +644,7 @@ export default function createTippy(reference, collectionProps) {
     }
 
     // Redraw
-    updatePopperElement(tip.popper, oldProps, newProps)
+    updatePopperElement(tip.popper, prevProps, nextProps)
     tip.popperChildren = getChildren(tip.popper)
     tip.popperInstance && (tip.popperInstance = createPopperInstance())
   }
@@ -721,7 +736,7 @@ export default function createTippy(reference, collectionProps) {
         'visible'
       )
 
-      onTransitionEnd(duration, () => {
+      onTransitionedIn(duration, () => {
         if (!tip.props.updateDuration) {
           tip.popperChildren.tooltip.classList.add('tippy-notransition')
         }
@@ -730,7 +745,7 @@ export default function createTippy(reference, collectionProps) {
           focus(tip.popper)
         }
 
-        tip.reference.setAttribute('aria-describedby', `tippy-${tip.id}`)
+        tip.reference.setAttribute('aria-describedby', tip.popper.id)
 
         tip.props.onShown(tip)
       })
@@ -749,7 +764,7 @@ export default function createTippy(reference, collectionProps) {
 
     tip.props.onHide(tip)
 
-    if (!tip.props.updateDuration) {
+    if (tip.props.updateDuration === 0) {
       tip.popperChildren.tooltip.classList.remove('tippy-notransition')
     }
 
@@ -783,15 +798,7 @@ export default function createTippy(reference, collectionProps) {
       focus(tip.reference)
     }
 
-    onTransitionEnd(duration, () => {
-      if (
-        tip.state.isVisible ||
-        !tip.props.appendTo.contains(tip.popper) ||
-        getComputedStyle(tip.popperChildren.tooltip).opacity === '1'
-      ) {
-        return
-      }
-
+    onTransitionedOut(duration, () => {
       if (!isPreparingToShow) {
         document.removeEventListener('mousemove', followCursorListener)
         lastMouseMoveEvent = null

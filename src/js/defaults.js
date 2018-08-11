@@ -25,7 +25,6 @@ export let Defaults = {
   zIndex: 9999,
   touchHold: false,
   performance: false,
-  dynamicTitle: false,
   flip: true,
   flipBehavior: 'flip',
   arrowType: 'sharp',

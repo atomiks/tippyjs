@@ -32,7 +32,7 @@ export default function tippy(targets, options, one) {
    * some native DOM props
    */
   if (isPlainObject(targets)) {
-    targets = polyfillVirtualReferenceProps(targets)
+    polyfillVirtualReferenceProps(targets)
   }
 
   const references = getArrayOfElements(targets)
