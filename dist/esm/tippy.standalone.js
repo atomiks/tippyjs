@@ -3,13 +3,7 @@
 * (c) 2017-2018 atomiks
 * MIT
 */
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('popper.js')) :
-	typeof define === 'function' && define.amd ? define(['popper.js'], factory) :
-	(global.tippy = factory(global.Popper));
-}(this, (function (Popper) { 'use strict';
-
-Popper = Popper && Popper.hasOwnProperty('default') ? Popper['default'] : Popper;
+import Popper from 'popper.js';
 
 var version = "3.0.0-alpha.1";
 
@@ -1681,6 +1675,4 @@ if (isBrowser) {
   autoInit();
 }
 
-return tippy$1;
-
-})));
+export default tippy$1;

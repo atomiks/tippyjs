@@ -40,7 +40,7 @@ const r = (entryFile, plugins = [], excludePopper) =>
 const output = type => (fileName, isMinified) => ({
   name: 'tippy',
   format: type,
-  file: `./dist/${fileName}`,
+  file: `./dist/${type === 'es' ? 'esm/' : ''}${fileName}`,
   globals: { 'popper.js': 'Popper' },
   banner: isMinified
     ? false
@@ -80,6 +80,7 @@ const esm = output('es')
   const bundleES2017 = await r('bundle.js', [pluginES2017])
   // "all" is reliant on the existence of compiled css
   await bundle.write(umd('tippy.js'))
+  await bundle.write(esm('tippy.js'))
 
   // Tippy
   const standalone = await r('bundle.js', [pluginES5], true)
@@ -91,11 +92,14 @@ const esm = output('es')
   const allMin = await r('main.js', [pluginES5, pluginMinify])
   const allES2017 = await r('main.js', [pluginES2017])
 
-  bundleMin.write(umd('tippy.min.js', true))
   all.write(umd('tippy.all.js'))
   allMin.write(umd('tippy.all.min.js', true))
+  bundleMin.write(umd('tippy.min.js', true))
+  bundleMin.write(esm('tippy.min.js', true))
   standalone.write(umd('tippy.standalone.js'))
+  standalone.write(esm('tippy.standalone.js'))
   standaloneMin.write(umd('tippy.standalone.min.js', true))
+  standaloneMin.write(esm('tippy.standalone.min.js', true))
 
   for (let theme of fs.readdirSync('./src/scss/themes')) {
     theme = theme.replace('.scss', '')

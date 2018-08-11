@@ -88,6 +88,21 @@ describe('getArrayOfElements', () => {
     expect(arr[0]).toBe(ref)
     expect(arr.length).toBe(1)
   })
+
+  it('returns an array if given a NodeList', () => {
+    const ref = h()
+    const arr = Utils.getArrayOfElements(
+      document.querySelectorAll(`.${IDENTIFIER}`)
+    )
+    expect(arr[0]).toBe(ref)
+    expect(Array.isArray(arr)).toBe(true)
+  })
+
+  it('returns an empty array for an invalid selector', () => {
+    const arr = Utils.getArrayOfElements('+')
+    expect(Array.isArray(arr)).toBe(true)
+    expect(arr.length).toBe(0)
+  })
 })
 
 describe('elementCanReceiveFocus', () => {
@@ -298,7 +313,7 @@ describe('polyfillVirtualReferenceProps', () => {
 })
 
 describe('matches', () => {
-  it('works like Element.prototype.matches', () => {
+  it('works like Element.prototype.matches: default', () => {
     const ref = h('div', { class: 'test' })
     expect(Utils.matches.call(h('table'), 'table')).toBe(true)
     expect(Utils.matches.call(ref, '.test')).toBe(true)
@@ -450,6 +465,18 @@ describe('createPopperElement', () => {
     expect(
       Utils.getChildren(popper).tooltip.classList.contains('firetruck-theme')
     ).toBe(true)
+  })
+
+  it('adds a `focusout` listener to hide the popper when the relatedTarget is outside', () => {
+    const randEl = document.createElement('button')
+    document.body.append(randEl)
+    const instance = tippy.one(h())
+    instance.show(0)
+    expect(instance.state.isVisible).toBe(true)
+    instance.popper.dispatchEvent(
+      new FocusEvent('focusout', { relatedTarget: randEl })
+    )
+    expect(instance.state.isVisible).toBe(false)
   })
 })
 
@@ -646,6 +673,11 @@ describe('getPopperPlacement', () => {
       expect(Utils.getPopperPlacement(popper).endsWith('-start')).toBe(false)
       expect(Utils.getPopperPlacement(popper).endsWith('-end')).toBe(false)
     })
+  })
+
+  it('returns an empty string if there is no placement', () => {
+    const popper = h('div')
+    expect(Utils.getPopperPlacement(popper)).toBe('')
   })
 })
 
@@ -961,6 +993,10 @@ describe('prefix', () => {
         prefixedTransitionDuration === 'webkitTransitionDuration'
     ).toBe(true)
   })
+
+  it('returns null if could not be prefixed', () => {
+    expect(Utils.prefix('_null')).toBe(null)
+  })
 })
 
 describe('setVisibilityState', () => {
@@ -1012,9 +1048,17 @@ describe('applyTransitionDuration', () => {
 })
 
 describe('setInnerHTML', () => {
-  it('sets the innerHTML of an element', () => {
+  it('sets the innerHTML of an element with a string', () => {
     const ref = h()
     Utils.setInnerHTML(ref, '<strong></strong>')
+    expect(ref.querySelector('strong')).not.toBe(null)
+  })
+
+  it('sets the innerHTML of an element with an element', () => {
+    const ref = h()
+    const div = document.createElement('div')
+    div.innerHTML = '<strong></strong>'
+    Utils.setInnerHTML(ref, div)
     expect(ref.querySelector('strong')).not.toBe(null)
   })
 })
@@ -1022,6 +1066,10 @@ describe('setInnerHTML', () => {
 describe('isCursorOutsideInteractiveBorder', () => {
   const options = { interactiveBorder: 5, distance: 10 }
   const popperRect = { top: 100, left: 100, right: 110, bottom: 110 }
+
+  it('no popper placement returns true', () => {
+    expect(Utils.isCursorOutsideInteractiveBorder(null, {}, {}, {})).toBe(true)
+  })
 
   // TOP: bounded by x(95, 115) and y(95, 115)
   it('PLACEMENT=top: inside', () => {
