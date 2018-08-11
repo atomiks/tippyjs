@@ -57,19 +57,5 @@ export default () => (
       To ensure the the state of the tooltip stays in sync with the state of the
       app, you can use lifecycle methods to update the tooltip instance.
     </p>
-
-    <p>Check out the component wrappers.</p>
-    <ul>
-      <li>
-        <a href="#" target="_blank">
-          React
-        </a>
-      </li>
-      <li>
-        <a href="#" target="_blank">
-          Hyperapp
-        </a>
-      </li>
-    </ul>
   </section>
 )

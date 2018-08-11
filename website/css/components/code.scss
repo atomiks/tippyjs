@@ -115,7 +115,7 @@ pre.is-option {
 
 :not(pre) > code[class*='language-'],
 pre[class*='language-'] {
-  background: radial-gradient(circle at 85% 15%, #343a56, #1f2540);
+  background: #272c48;
 }
 
 /* Inline code */
@@ -132,10 +132,13 @@ pre[class*='language-'] {
   color: #868ed6;
 }
 
-.token.attr-name,
 .token.selector,
 .token.constant {
   color: #ffdaa1;
+}
+
+.token.attr-name {
+  color: #ffc6a1;
 }
 
 .token.boolean {
@@ -151,7 +154,7 @@ pre[class*='language-'] {
 }
 
 .token.tag {
-  color: #ff75ac;
+  color: #ff8dbb;
 }
 
 .token.property {
@@ -171,7 +174,7 @@ pre[class*='language-'] {
 .token.char,
 .token.builtin,
 .token.inserted {
-  color: #5aeec0;
+  color: #4ef2d0;
 }
 
 .token.operator,

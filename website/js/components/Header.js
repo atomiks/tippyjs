@@ -3,6 +3,7 @@ import logo from '../../assets/img/logo.svg'
 import { version } from '../../../package.json'
 import { animateLogo, animateVersion, animateItems } from '../utils'
 import Emoji from './Emoji'
+import Tippy from './Tippy'
 
 export default () => (
   <header class="header">
@@ -40,22 +41,24 @@ export default () => (
           </p>
         </div>
         <div class="header__item">
-          <a
-            class="header__button"
-            href="#"
-            title="Popper.js is the <strong>positioning engine</strong> behind the tooltips."
-            data-tippy-animation="perspective"
-            data-tippy-arrow="true"
-            data-tippy-arrowType="round"
-            data-tippy-maxWidth="200px"
-            data-tippy-theme="light"
-            data-tippy-offset="0, 2"
-            data-tippy-sticky="true"
-            data-tippy-updateDuration="250"
+          <Tippy
+            content="Popper.js is the <strong>positioning engine</strong> behind the tooltips."
+            arrow={true}
+            theme="light"
+            offset="0, 2"
+            sticky="true"
+            updateDuration="250"
+            arrowType="round"
           >
-            <Emoji small>⚡</Emoji>
-            Powered by Popper.js
-          </a>
+            <a
+              class="header__button"
+              href="https://popper.js.org/"
+              target="_blank"
+            >
+              <Emoji small>⚡</Emoji>
+              Powered by Popper.js
+            </a>
+          </Tippy>
         </div>
         <div class="header__item has-github-button">
           <a

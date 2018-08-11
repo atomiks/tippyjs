@@ -1,7 +1,7 @@
 import { h } from 'hyperapp'
 import { getEmojiSrc } from '../utils'
 
-export default ({ smal, ...props }, [char]) => (
+export default ({ small, ...props }, [char]) => (
   <span {...props}>
     <img
       class="emoji"
@@ -9,7 +9,7 @@ export default ({ smal, ...props }, [char]) => (
       alt={char}
       src={getEmojiSrc(char)}
       style={{
-        width: props.small && '25px'
+        width: small && '25px'
       }}
     />
   </span>

@@ -66,9 +66,7 @@ export default () => (
     <Subheading>Update the tooltip</Subheading>
     <p>
       Pass an object of new props to the <code>set()</code> method to update the
-      tip. The tooltip element will be redrawn to reflect the change (this
-      involves creating a new popper element, so the old reference is thrown
-      away).
+      tip. The tooltip element will be redrawn to reflect the change.
     </p>
     <Code content={SET_METHOD} />
   </section>
