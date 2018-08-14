@@ -25,6 +25,7 @@ describe('createTippy', () => {
     expect(tip.state).toBeDefined()
     expect(tip.clearDelayTimeouts).toBeDefined()
     expect(tip.set).toBeDefined()
+    expect(tip.setContent).toBeDefined()
     expect(tip.show).toBeDefined()
     expect(tip.hide).toBeDefined()
     expect(tip.enable).toBeDefined()
@@ -129,9 +130,9 @@ describe('instance.show', () => {
     })
     instance.show(10)
     setTimeout(() => {
-      expect(
-        instance.popperChildren.tooltip.style.webkitTransitionDuration
-      ).toBe('10ms')
+      expect(instance.popperChildren.tooltip.style.transitionDuration).toBe(
+        '10ms'
+      )
       instance.destroy()
       done()
     }, 20)
@@ -187,9 +188,7 @@ describe('instance.hide', () => {
     })
     instance.show(0)
     instance.hide(9)
-    expect(instance.popperChildren.tooltip.style.webkitTransitionDuration).toBe(
-      '9ms'
-    )
+    expect(instance.popperChildren.tooltip.style.transitionDuration).toBe('9ms')
     instance.destroy()
   })
 })
@@ -265,5 +264,14 @@ describe('instance.set', () => {
     const instance = createTippy(h(), Defaults)
     instance.set({ arrow: true })
     expect(instance.popper._tippy).toBe(instance)
+  })
+})
+
+describe('instance.setContent', () => {
+  it('works like set({ content: newContent })', () => {
+    const instance = createTippy(h(), Defaults)
+    const content = 'Hello!'
+    instance.setContent(content)
+    expect(instance.props.content).toBe(content)
   })
 })

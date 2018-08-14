@@ -462,3 +462,73 @@ describe('onHidden', () => {
     // ?!
   })
 })
+
+describe('popperOptions', () => {
+  it('top level', () => {
+    const { popperInstance } = tippy.one(h(), {
+      lazy: false,
+      popperOptions: {
+        anything: true
+      }
+    })
+    expect(popperInstance.options.anything).toBe(true)
+  })
+
+  it('modifiers', () => {
+    const { popperInstance } = tippy.one(h(), {
+      lazy: false,
+      popperOptions: {
+        modifiers: {
+          preventOverflow: {
+            escapeWithReference: true
+          }
+        }
+      }
+    })
+    expect(
+      popperInstance.options.modifiers.preventOverflow.escapeWithReference
+    ).toBe(true)
+  })
+
+  it('modifiers.arrow', () => {
+    const { popperInstance } = tippy.one(h(), {
+      lazy: false,
+      popperOptions: {
+        modifiers: {
+          arrow: {
+            test: true
+          }
+        }
+      }
+    })
+    expect(popperInstance.options.modifiers.arrow.test).toBe(true)
+  })
+
+  it('modifiers.flip', () => {
+    const { popperInstance } = tippy.one(h(), {
+      lazy: false,
+      popperOptions: {
+        modifiers: {
+          flip: {
+            test: true
+          }
+        }
+      }
+    })
+    expect(popperInstance.options.modifiers.flip.test).toBe(true)
+  })
+
+  it('modifiers.offset', () => {
+    const { popperInstance } = tippy.one(h(), {
+      lazy: false,
+      popperOptions: {
+        modifiers: {
+          offset: {
+            test: true
+          }
+        }
+      }
+    })
+    expect(popperInstance.options.modifiers.offset.test).toBe(true)
+  })
+})

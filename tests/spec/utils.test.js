@@ -981,17 +981,8 @@ describe('computeArrowTransform', () => {
 describe('prefix', () => {
   /* JSDOM support is limited here... need to use fallbacks */
   it('returns the same value if the CSS property is supported', () => {
-    const prefixedTransform = Utils.prefix('transform')
-    expect(
-      prefixedTransform === 'transform' ||
-        prefixedTransform === 'webkitTransform'
-    ).toBe(true)
-
-    const prefixedTransitionDuration = Utils.prefix('transitionDuration')
-    expect(
-      prefixedTransitionDuration === 'transitionDuration' ||
-        prefixedTransitionDuration === 'webkitTransitionDuration'
-    ).toBe(true)
+    const res = Utils.prefix('transform')
+    expect(res === 'transform' || res === 'webkitTransform').toBe(true)
   })
 
   it('returns null if could not be prefixed', () => {
@@ -1037,13 +1028,12 @@ describe('setContent', () => {
 })
 
 describe('applyTransitionDuration', () => {
-  /* JSDOM only supports `webkit-` properties */
   it('sets the `transition-duration` property on a list of elements with the value specified', () => {
     const els = [h(), h(), null, h()]
     Utils.applyTransitionDuration(els, 1298)
-    expect(els[0].style.webkitTransitionDuration).toBe('1298ms')
-    expect(els[1].style.webkitTransitionDuration).toBe('1298ms')
-    expect(els[3].style.webkitTransitionDuration).toBe('1298ms')
+    expect(els[0].style.transitionDuration).toBe('1298ms')
+    expect(els[1].style.transitionDuration).toBe('1298ms')
+    expect(els[3].style.transitionDuration).toBe('1298ms')
   })
 })
 
