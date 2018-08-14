@@ -1,3 +1,5 @@
+import tippy from './tippy'
+
 export let Defaults = {
   a11y: true,
   content: '',
@@ -43,4 +45,5 @@ export let Defaults = {
 
 export const setDefaults = partialDefaults => {
   Defaults = { ...Defaults, ...partialDefaults }
+  tippy.defaults = Defaults
 }
