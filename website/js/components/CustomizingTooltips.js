@@ -78,5 +78,11 @@ export default () => (
     </p>
 
     <Code content={SET_DEFAULTS} />
+
+    <p>
+      Note that the auto-initializing function is deferred with{' '}
+      <code>setTimeout()</code>, which means you can change the default config
+      before the tooltips are automatically created.
+    </p>
   </section>
 )

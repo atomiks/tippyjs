@@ -15,14 +15,16 @@ const Tippy = (realProps, [reference]) => {
   }
 
   const update = element => {
-    element._tippy.set(props)
+    setTimeout(() => {
+      element._tippy.set(props)
+    }, 1)
   }
 
   return (
     <reference.nodeName
       {...reference.attributes}
       oncreate={element => !element._tippy && tippy(element, props)}
-      onupdate={element => element._tippy && setTimeout(update, 1, element)}
+      onupdate={element => element._tippy && update(element)}
       ondestroy={element => element._tippy && element._tippy.destroy()}
     >
       {reference.children}

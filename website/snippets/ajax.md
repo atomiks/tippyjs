@@ -18,16 +18,18 @@ tippy('#ajax-tippy', {
       const response = await fetch('https://unsplash.it/200/?random')
       const blob = await response.blob()
       const url = URL.createObjectURL(blob)
-      tip.set({ content: `<img width="200" height="200" src="${url}" />` })
+      if (tip.state.isVisible) {
+        tip.setContent(`<img width="200" height="200" src="${url}" />`)
+      }
     } catch (e) {
-      tip.set({ content: `Fetch failed. ${e}` })
+      tip.setContent(`Fetch failed. ${e}`)
     } finally {
       state.isFetching = false
     }
   },
   onHidden(tip) {
     state.canFetch = true
-    tip.set({ content: INITIAL_CONTENT })
+    tip.setContent(INITIAL_CONTENT)
   }
 })
 ```

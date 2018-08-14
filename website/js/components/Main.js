@@ -1,7 +1,7 @@
 import { h } from 'hyperapp'
-import pkg from '../../../package.json'
 
 import Demo from './Demo'
+import Why from './Why'
 import GettingStarted from './GettingStarted'
 import CreatingTooltips from './CreatingTooltips'
 import CustomizingTooltips from './CustomizingTooltips'
@@ -13,10 +13,11 @@ import CreatingCustomThemes from './CreatingCustomThemes'
 import BrowserSupport from './BrowserSupport'
 import Performance from './Performance'
 
-export default () => (state, actions) => (
+export default () => (
   <main class="main">
     <div class="container main__body">
       <Demo />
+      <Why />
       <GettingStarted />
       <CreatingTooltips />
       <CustomizingTooltips />

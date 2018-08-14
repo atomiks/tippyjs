@@ -5,9 +5,7 @@ export default {
 
       fetch('https://unsplash.it/200/?random')
         .then(response => response.blob())
-        .then(blob => {
-          actions.setImageSrc(URL.createObjectURL(blob))
-        })
+        .then(actions.onDataReceived)
         .catch(actions.errored)
 
       return {
@@ -17,16 +15,20 @@ export default {
       }
     },
 
-    onHidden: () => ({
+    onDataReceived: blob => state => {
+      if (state.isFetching) {
+        return { imageSrc: URL.createObjectURL(blob) }
+      }
+    },
+
+    onHidden: () => state => ({
       error: false,
       imageSrc: '',
       isFetching: false,
       canFetch: true
     }),
 
-    errored: () => ({ error: true, imageSrc: '' }),
-
-    setImageSrc: imageSrc => ({ imageSrc })
+    errored: () => ({ error: true, imageSrc: '' })
   },
 
   performance: {

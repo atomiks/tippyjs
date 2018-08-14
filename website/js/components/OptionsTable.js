@@ -95,6 +95,13 @@ export default () => (
           transform that you would normally give to a <code>"top"</code>{' '}
           placement, even if the placement is different.
         </Prop>
+        <Prop
+          name="content"
+          default="&quot;&quot;"
+          value={['String', 'Element']}
+        >
+          The content of the tooltip.
+        </Prop>
         <Prop name="delay" default="0" value={['Number', '[show, hide]']}>
           Delay in ms once a trigger event is fired before a tippy shows or
           hides. Use an array of numbers such as <code>[100, 500]</code> to

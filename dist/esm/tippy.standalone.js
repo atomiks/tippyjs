@@ -1,11 +1,11 @@
 /*!
-* Tippy.js v3.0.0-alpha.1
+* Tippy.js v3.0.0-alpha.2
 * (c) 2017-2018 atomiks
 * MIT
 */
 import Popper from 'popper.js';
 
-var version = "3.0.0-alpha.1";
+var version = "3.0.0-alpha.2";
 
 var _extends = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
@@ -131,7 +131,7 @@ var elementCanReceiveFocus = function elementCanReceiveFocus(el) {
  */
 var applyTransitionDuration = function applyTransitionDuration(els, value) {
   els.filter(Boolean).forEach(function (el) {
-    el.style[prefix('transitionDuration')] = value + 'ms';
+    el.style.transitionDuration = value + 'ms';
   });
 };
 
@@ -332,6 +332,7 @@ var updatePopperElement = function updatePopperElement(popper, prevProps, nextPr
   // Ensure the tooltip doesn't transition
 
 
+  var currTransitionDuration = parseFloat(tooltip.style.transitionDuration);
   applyTransitionDuration([tooltip], 0);
 
   popper.style.zIndex = nextProps.zIndex;
@@ -383,6 +384,10 @@ var updatePopperElement = function updatePopperElement(popper, prevProps, nextPr
       tooltip.classList.add(theme + '-theme');
     });
   }
+
+  defer(function () {
+    applyTransitionDuration([tooltip], currTransitionDuration);
+  });
 };
 
 /**
@@ -731,9 +736,8 @@ var evaluateProps = function evaluateProps(reference, props) {
   return out;
 };
 
-var transitionEvent = isBrowser && 'transition' in document.body.style ? 'transitionend' : 'webkitTransitionEnd';
-var toggleListener = function toggleListener(tooltip, action, listener) {
-  tooltip[action + 'EventListener'](transitionEvent, listener);
+var toggleTransitionEndListener = function toggleTransitionEndListener(tooltip, action, listener) {
+  tooltip[action + 'EventListener']('transitionend', listener);
 };
 
 var nav = isBrowser ? navigator : {};
@@ -855,6 +859,7 @@ function createTippy(reference, collectionProps) {
 
   /* ======================= 🔒 Private members 🔒 ======================= */
   var popperMutationObserver = null;
+  var popperHasEventListeners = false;
   var lastTriggerEvent = {};
   var lastMouseMoveEvent = {};
   var showTimeoutId = 0;
@@ -892,6 +897,7 @@ function createTippy(reference, collectionProps) {
     // methods
     clearDelayTimeouts: clearDelayTimeouts,
     set: set$$1,
+    setContent: setContent$$1,
     show: show,
     hide: hide,
     enable: enable,
@@ -899,7 +905,7 @@ function createTippy(reference, collectionProps) {
     destroy: destroy
   };
 
-  addEventListeners();
+  addEventListenersToReference();
 
   if (!props.lazy) {
     tip.popperInstance = createPopperInstance();
@@ -1153,7 +1159,7 @@ function createTippy(reference, collectionProps) {
    */
   function createPopperInstance() {
     var tooltip = tip.popperChildren.tooltip;
-    var props = tip.props.props;
+    var popperOptions = tip.props.popperOptions;
 
 
     var arrowSelector = Selectors[tip.props.arrowType === 'round' ? 'ROUND_ARROW' : 'ARROW'];
@@ -1161,19 +1167,19 @@ function createTippy(reference, collectionProps) {
 
     var config = _extends({
       placement: tip.props.placement
-    }, props || {}, {
-      modifiers: _extends({}, props ? props.modifiers : {}, {
+    }, popperOptions || {}, {
+      modifiers: _extends({}, popperOptions ? popperOptions.modifiers : {}, {
         arrow: _extends({
           element: arrowSelector
-        }, props && props.modifiers ? props.modifiers.arrow : {}),
+        }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.arrow : {}),
         flip: _extends({
           enabled: tip.props.flip,
           padding: tip.props.distance + 5 /* 5px from viewport boundary */
           , behavior: tip.props.flipBehavior
-        }, props && props.modifiers ? props.modifiers.flip : {}),
+        }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {}),
         offset: _extends({
           offset: tip.props.offset
-        }, props && props.modifiers ? props.modifiers.offset : {})
+        }, popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
       }),
       onCreate: function onCreate() {
         tooltip.style[getPopperPlacement(tip.popper)] = getOffsetDistanceInPx(tip.props.distance, Defaults.distance);
@@ -1209,6 +1215,13 @@ function createTippy(reference, collectionProps) {
       popperMutationObserver.disconnect();
     }
     popperMutationObserver = observer;
+
+    // fixes https://github.com/atomiks/tippyjs/issues/193
+    if (!popperHasEventListeners) {
+      tip.popper.addEventListener('mouseenter', prepareShow);
+      tip.popper.addEventListener('mouseleave', prepareHide);
+      popperHasEventListeners = true;
+    }
 
     return new Popper(tip.reference, tip.popper, config);
   }
@@ -1259,25 +1272,19 @@ function createTippy(reference, collectionProps) {
    * Updates the tooltip's position on each animation frame + timeout
    */
   function makeSticky() {
-    var applyTransitionDuration$$1 = function applyTransitionDuration$$1() {
-      tip.popper.style[prefix('transitionDuration')] = tip.props.updateDuration + 'ms';
-    };
-
-    var removeTransitionDuration = function removeTransitionDuration() {
-      tip.popper.style[prefix('transitionDuration')] = '';
-    };
-
     var updatePosition = function updatePosition() {
+      applyTransitionDuration([tip.popper], tip.props.updateDuration);
+
       if (tip.popperInstance) {
         tip.popperInstance.scheduleUpdate();
       }
 
-      applyTransitionDuration$$1();
-
       if (tip.state.isVisible) {
-        defer(updatePosition);
+        requestAnimationFrame(function () {
+          defer(updatePosition);
+        });
       } else {
-        removeTransitionDuration();
+        applyTransitionDuration([tip.popper], 0);
       }
     };
 
@@ -1316,17 +1323,20 @@ function createTippy(reference, collectionProps) {
 
     var listener = function listener(e) {
       if (e.target === tooltip && getComputedStyle(tooltip).opacity === (isInDirection ? '1' : '0')) {
-        toggleListener(tooltip, 'remove', listener);
+        toggleTransitionEndListener(tooltip, 'remove', listener);
         callback();
       }
     };
 
-    toggleListener(tooltip, 'remove', transitionEndListener);
-    toggleListener(tooltip, 'add', listener);
+    toggleTransitionEndListener(tooltip, 'remove', transitionEndListener);
+    toggleTransitionEndListener(tooltip, 'add', listener);
 
     transitionEndListener = listener;
   }
 
+  /**
+   * Adds an event listener to the reference
+   */
   function on(eventType, handler, acc) {
     tip.reference.addEventListener(eventType, handler);
     acc.push({ eventType: eventType, handler: handler });
@@ -1335,7 +1345,7 @@ function createTippy(reference, collectionProps) {
   /**
    * Adds event listeners to the reference based on the `trigger` prop
    */
-  function addEventListeners() {
+  function addEventListenersToReference() {
     listeners = tip.props.trigger.trim().split(' ').reduce(function (acc, eventType) {
       if (eventType === 'manual') {
         return acc;
@@ -1374,7 +1384,7 @@ function createTippy(reference, collectionProps) {
   /**
    * Removes event listeners from the reference
    */
-  function removeEventListeners() {
+  function removeEventListenersFromReference() {
     listeners.forEach(function (_ref) {
       var eventType = _ref.eventType,
           handler = _ref.handler;
@@ -1419,14 +1429,21 @@ function createTippy(reference, collectionProps) {
 
     // Update listeners if `trigger` option changed
     if (options.trigger) {
-      removeEventListeners();
-      addEventListeners();
+      removeEventListenersFromReference();
+      addEventListenersToReference();
     }
 
     // Redraw
     updatePopperElement(tip.popper, prevProps, nextProps);
     tip.popperChildren = getChildren(tip.popper);
     tip.popperInstance && (tip.popperInstance = createPopperInstance());
+  }
+
+  /**
+   * Shortcut for .set({ content: newContent })
+   */
+  function setContent$$1(content) {
+    set$$1({ content: content });
   }
 
   /**
@@ -1495,7 +1512,7 @@ function createTippy(reference, collectionProps) {
       setVisibilityState([tip.popperChildren.tooltip, tip.popperChildren.backdrop], 'visible');
 
       onTransitionedIn(duration, function () {
-        if (!tip.props.updateDuration) {
+        if (tip.props.updateDuration === 0) {
           tip.popperChildren.tooltip.classList.add('tippy-notransition');
         }
 
@@ -1571,7 +1588,7 @@ function createTippy(reference, collectionProps) {
       hide(0);
     }
 
-    removeEventListeners();
+    removeEventListenersFromReference();
 
     delete tip.reference._tippy;
 
@@ -1672,7 +1689,7 @@ var autoInit = function autoInit() {
   });
 };
 if (isBrowser) {
-  autoInit();
+  setTimeout(autoInit);
 }
 
 export default tippy$1;
