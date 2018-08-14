@@ -90,5 +90,5 @@ export const autoInit = () => {
   })
 }
 if (isBrowser) {
-  autoInit()
+  setTimeout(autoInit)
 }

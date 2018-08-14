@@ -62,7 +62,7 @@ export const elementCanReceiveFocus = el =>
  */
 export const applyTransitionDuration = (els, value) => {
   els.filter(Boolean).forEach(el => {
-    el.style[prefix('transitionDuration')] = `${value}ms`
+    el.style.transitionDuration = `${value}ms`
   })
 }
 
@@ -256,6 +256,7 @@ export const updatePopperElement = (popper, prevProps, nextProps) => {
   const { tooltip, content, backdrop, arrow } = getChildren(popper)
 
   // Ensure the tooltip doesn't transition
+  const currTransitionDuration = parseFloat(tooltip.style.transitionDuration)
   applyTransitionDuration([tooltip], 0)
 
   popper.style.zIndex = nextProps.zIndex
@@ -311,6 +312,10 @@ export const updatePopperElement = (popper, prevProps, nextProps) => {
       tooltip.classList.add(theme + '-theme')
     })
   }
+
+  defer(() => {
+    applyTransitionDuration([tooltip], currTransitionDuration)
+  })
 }
 
 /**
@@ -727,10 +732,6 @@ export const evaluateProps = (reference, props) => {
   return out
 }
 
-const transitionEvent =
-  isBrowser && 'transition' in document.body.style
-    ? 'transitionend'
-    : 'webkitTransitionEnd'
-export const toggleListener = (tooltip, action, listener) => {
-  tooltip[action + 'EventListener'](transitionEvent, listener)
+export const toggleTransitionEndListener = (tooltip, action, listener) => {
+  tooltip[action + 'EventListener']('transitionend', listener)
 }
