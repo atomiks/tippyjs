@@ -4202,12 +4202,15 @@ tippy.defaults = Defaults;
 /**
  * Static methods
  */
-tippy.setDefaults = setDefaults;
 tippy.one = function (targets, options) {
   return tippy(targets, options, true).instances[0];
 };
+tippy.setDefaults = function (partialDefaults) {
+  setDefaults(partialDefaults);
+  tippy.defaults = Defaults;
+};
 tippy.disableAnimations = function () {
-  setDefaults({
+  tippy.setDefaults({
     duration: 0,
     updateDuration: 0,
     animateFill: false
