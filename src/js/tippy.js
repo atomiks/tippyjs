@@ -68,10 +68,13 @@ tippy.defaults = Defaults
 /**
  * Static methods
  */
-tippy.setDefaults = setDefaults
 tippy.one = (targets, options) => tippy(targets, options, true).instances[0]
+tippy.setDefaults = partialDefaults => {
+  setDefaults(partialDefaults)
+  tippy.defaults = Defaults
+}
 tippy.disableAnimations = () => {
-  setDefaults({
+  tippy.setDefaults({
     duration: 0,
     updateDuration: 0,
     animateFill: false
