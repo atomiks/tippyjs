@@ -60,7 +60,7 @@
     "eslint": "^4.18.2",
     "focus-visible": "^4.1.4",
     "hyperapp": "^1.2.6",
-    "jest": "^22.4.4",
+    "jest": "^23.5.0",
     "jsdom": "^11.11.0",
     "mutation-observer": "^1.0.3",
     "node-sass": "^4.9.0",
