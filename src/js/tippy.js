@@ -7,6 +7,7 @@ import {
   polyfillVirtualReferenceProps,
   getArrayOfElements,
   toArray,
+  hideAllPoppers,
   isBrowser
 } from './utils'
 
@@ -80,6 +81,7 @@ tippy.disableAnimations = () => {
     animateFill: false
   })
 }
+tippy.hideAllPoppers = hideAllPoppers
 
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
