@@ -255,10 +255,6 @@ export const createPopperElement = (id, props) => {
 export const updatePopperElement = (popper, prevProps, nextProps) => {
   const { tooltip, content, backdrop, arrow } = getChildren(popper)
 
-  // Ensure the tooltip doesn't transition
-  const currTransitionDuration = parseFloat(tooltip.style.transitionDuration)
-  applyTransitionDuration([tooltip], 0)
-
   popper.style.zIndex = nextProps.zIndex
   tooltip.setAttribute('data-size', nextProps.size)
   tooltip.setAttribute('data-animation', nextProps.animation)
@@ -312,10 +308,6 @@ export const updatePopperElement = (popper, prevProps, nextProps) => {
       tooltip.classList.add(theme + '-theme')
     })
   }
-
-  defer(() => {
-    applyTransitionDuration([tooltip], currTransitionDuration)
-  })
 }
 
 /**
@@ -734,4 +726,12 @@ export const evaluateProps = (reference, props) => {
 
 export const toggleTransitionEndListener = (tooltip, action, listener) => {
   tooltip[action + 'EventListener']('transitionend', listener)
+}
+
+export const debounce = (fn, ms) => {
+  let timeoutId
+  return function() {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn.apply(this, arguments), ms)
+  }
 }

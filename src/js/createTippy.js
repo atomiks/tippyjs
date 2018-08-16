@@ -21,7 +21,8 @@ import {
   defer,
   toArray,
   focus,
-  toggleTransitionEndListener
+  toggleTransitionEndListener,
+  debounce
 } from './utils'
 
 let idCounter = 1
@@ -36,7 +37,6 @@ export default function createTippy(reference, collectionProps) {
 
   /* ======================= 🔒 Private members 🔒 ======================= */
   let popperMutationObserver = null
-  let popperHasEventListeners = false
   let lastTriggerEvent = {}
   let lastMouseMoveEvent = {}
   let showTimeoutId = 0
@@ -45,6 +45,10 @@ export default function createTippy(reference, collectionProps) {
   let transitionEndListener = () => {}
   let listeners = []
   let referenceJustProgrammaticallyFocused = false
+  let debouncedOnMouseMove =
+    props.interactiveDebounce > 0
+      ? debounce(onMouseMove, props.interactiveDebounce)
+      : onMouseMove
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   const id = idCounter++
@@ -82,7 +86,9 @@ export default function createTippy(reference, collectionProps) {
     destroy
   }
 
-  addEventListenersToReference()
+  addTriggersToReference()
+
+  reference.addEventListener('click', onReferenceClick)
 
   if (!props.lazy) {
     tip.popperInstance = createPopperInstance()
@@ -110,6 +116,15 @@ export default function createTippy(reference, collectionProps) {
   return tip
 
   /* ======================= 🔒 Private methods 🔒 ======================= */
+  /**
+   * If the reference was clicked, it also receives focus
+   */
+  function onReferenceClick() {
+    defer(() => {
+      referenceJustProgrammaticallyFocused = false
+    })
+  }
+
   /**
    * Listener for the `followCursor` prop
    */
@@ -227,6 +242,14 @@ export default function createTippy(reference, collectionProps) {
   }
 
   /**
+   * Cleans up old listeners
+   */
+  function cleanupOldMouseMoveListeners() {
+    document.body.removeEventListener('mouseleave', prepareHide)
+    document.removeEventListener('mousemove', debouncedOnMouseMove)
+  }
+
+  /**
    * Event listener invoked upon trigger
    */
   function onTrigger(event) {
@@ -282,9 +305,7 @@ export default function createTippy(reference, collectionProps) {
         tip.props
       )
     ) {
-      document.body.removeEventListener('mouseleave', prepareHide)
-      document.removeEventListener('mousemove', onMouseMove)
-
+      cleanupOldMouseMoveListeners()
       prepareHide()
     }
   }
@@ -304,7 +325,7 @@ export default function createTippy(reference, collectionProps) {
 
     if (tip.props.interactive) {
       document.body.addEventListener('mouseleave', prepareHide)
-      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mousemove', debouncedOnMouseMove)
       return
     }
 
@@ -428,11 +449,25 @@ export default function createTippy(reference, collectionProps) {
     popperMutationObserver = observer
 
     // fixes https://github.com/atomiks/tippyjs/issues/193
-    if (!popperHasEventListeners) {
-      tip.popper.addEventListener('mouseenter', prepareShow)
-      tip.popper.addEventListener('mouseleave', prepareHide)
-      popperHasEventListeners = true
-    }
+    tip.popper.addEventListener('mouseenter', event => {
+      if (tip.state.isVisible && lastTriggerEvent.type === 'mouseenter') {
+        prepareShow(event)
+      }
+    })
+    tip.popper.addEventListener('mouseleave', event => {
+      if (
+        lastTriggerEvent.type === 'mouseenter' &&
+        tip.props.interactiveDebounce === 0 &&
+        isCursorOutsideInteractiveBorder(
+          getPopperPlacement(tip.popper),
+          tip.popper.getBoundingClientRect(),
+          event,
+          tip.props
+        )
+      ) {
+        prepareHide()
+      }
+    })
 
     return new Popper(tip.reference, tip.popper, config)
   }
@@ -538,6 +573,12 @@ export default function createTippy(reference, collectionProps) {
     const listener = e => {
       if (
         e.target === tooltip &&
+        /**
+         * Hack: If the user is mousing in-and-out very quickly the tooltip
+         * will fire the **wrong** callback (onHidden instead of onShown)
+         * causing somewhat glitchy behavior
+         * TODO: Find a better solution?
+         */
         getComputedStyle(tooltip).opacity === (isInDirection ? '1' : '0')
       ) {
         toggleTransitionEndListener(tooltip, 'remove', listener)
@@ -562,7 +603,7 @@ export default function createTippy(reference, collectionProps) {
   /**
    * Adds event listeners to the reference based on the `trigger` prop
    */
-  function addEventListenersToReference() {
+  function addTriggersToReference() {
     listeners = tip.props.trigger
       .trim()
       .split(' ')
@@ -604,7 +645,7 @@ export default function createTippy(reference, collectionProps) {
   /**
    * Removes event listeners from the reference
    */
-  function removeEventListenersFromReference() {
+  function removeTriggersFromReference() {
     listeners.forEach(({ eventType, handler }) => {
       tip.reference.removeEventListener(eventType, handler)
     })
@@ -646,16 +687,18 @@ export default function createTippy(reference, collectionProps) {
     nextProps.performance = options.performance || prevProps.performance
     tip.props = nextProps
 
-    // Update listeners if `trigger` option changed
-    if (options.trigger) {
-      removeEventListenersFromReference()
-      addEventListenersToReference()
+    if ('trigger' in options) {
+      removeTriggersFromReference()
+      addTriggersToReference()
     }
 
-    // Redraw
+    if ('interactiveDebounce' in options) {
+      cleanupOldMouseMoveListeners()
+      debouncedOnMouseMove = debounce(onMouseMove, options.interactiveDebounce)
+    }
+
     updatePopperElement(tip.popper, prevProps, nextProps)
     tip.popperChildren = getChildren(tip.popper)
-    tip.popperInstance && (tip.popperInstance = createPopperInstance())
   }
 
   /**
@@ -723,7 +766,7 @@ export default function createTippy(reference, collectionProps) {
       if (hasFollowCursorBehavior()) {
         tip.popperInstance.disableEventListeners()
         const delay = getValue(tip.props.delay, 0, Defaults.delay)
-        if (lastTriggerEvent) {
+        if (lastTriggerEvent.type) {
           followCursorListener(
             delay && lastMouseMoveEvent ? lastMouseMoveEvent : lastTriggerEvent
           )
@@ -843,7 +886,9 @@ export default function createTippy(reference, collectionProps) {
       hide(0)
     }
 
-    removeEventListenersFromReference()
+    removeTriggersFromReference()
+
+    tip.reference.removeEventListener('click', onReferenceClick)
 
     delete tip.reference._tippy
 

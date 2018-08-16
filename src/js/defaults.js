@@ -12,6 +12,7 @@ export let Defaults = {
   duration: [325, 275],
   interactive: false,
   interactiveBorder: 2,
+  interactiveDebounce: 0,
   theme: 'dark',
   size: 'regular',
   distance: 10,
