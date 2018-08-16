@@ -205,7 +205,7 @@
 }
 
 /* iOS Safari does not like clip path transition */
-body:not(.tippy-touch) {
+body:not(.tippy-iOS) {
   .tippy-tooltip[data-animatefill] {
     &[data-state='visible'] {
       .tippy-content {
