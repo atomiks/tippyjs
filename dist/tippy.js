@@ -1,5 +1,5 @@
 /*!
-* Tippy.js v3.0.0-alpha.2
+* Tippy.js v3.0.0-alpha.3
 * (c) 2017-2018 atomiks
 * MIT
 */
@@ -9,7 +9,7 @@
 	(global.tippy = factory());
 }(this, (function () { 'use strict';
 
-var version = "3.0.0-alpha.2";
+var version = "3.0.0-alpha.3";
 
 var _extends = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
@@ -39,6 +39,7 @@ var Defaults = {
   duration: [325, 275],
   interactive: false,
   interactiveBorder: 2,
+  interactiveDebounce: 0,
   theme: 'dark',
   size: 'regular',
   distance: 10,
@@ -2857,12 +2858,6 @@ var updatePopperElement = function updatePopperElement(popper, prevProps, nextPr
       backdrop = _getChildren.backdrop,
       arrow = _getChildren.arrow;
 
-  // Ensure the tooltip doesn't transition
-
-
-  var currTransitionDuration = parseFloat(tooltip.style.transitionDuration);
-  applyTransitionDuration([tooltip], 0);
-
   popper.style.zIndex = nextProps.zIndex;
   tooltip.setAttribute('data-size', nextProps.size);
   tooltip.setAttribute('data-animation', nextProps.animation);
@@ -2912,10 +2907,6 @@ var updatePopperElement = function updatePopperElement(popper, prevProps, nextPr
       tooltip.classList.add(theme + '-theme');
     });
   }
-
-  defer(function () {
-    applyTransitionDuration([tooltip], currTransitionDuration);
-  });
 };
 
 /**
@@ -3268,6 +3259,19 @@ var toggleTransitionEndListener = function toggleTransitionEndListener(tooltip, 
   tooltip[action + 'EventListener']('transitionend', listener);
 };
 
+var debounce$1 = function debounce(fn, ms) {
+  var timeoutId = void 0;
+  return function () {
+    var _this = this,
+        _arguments = arguments;
+
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(function () {
+      return fn.apply(_this, _arguments);
+    }, ms);
+  };
+};
+
 var nav = isBrowser$1 ? navigator : {};
 var win = isBrowser$1 ? window : {};
 var isIE$1 = /MSIE |Trident\//.test(nav.userAgent);
@@ -3387,7 +3391,6 @@ function createTippy(reference, collectionProps) {
 
   /* ======================= 🔒 Private members 🔒 ======================= */
   var popperMutationObserver = null;
-  var popperHasEventListeners = false;
   var lastTriggerEvent = {};
   var lastMouseMoveEvent = {};
   var showTimeoutId = 0;
@@ -3396,6 +3399,7 @@ function createTippy(reference, collectionProps) {
   var transitionEndListener = function transitionEndListener() {};
   var listeners = [];
   var referenceJustProgrammaticallyFocused = false;
+  var debouncedOnMouseMove = props.interactiveDebounce > 0 ? debounce$1(onMouseMove, props.interactiveDebounce) : onMouseMove;
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   var id = idCounter++;
@@ -3433,7 +3437,9 @@ function createTippy(reference, collectionProps) {
     destroy: destroy
   };
 
-  addEventListenersToReference();
+  addTriggersToReference();
+
+  reference.addEventListener('click', onReferenceClick);
 
   if (!props.lazy) {
     tip.popperInstance = createPopperInstance();
@@ -3461,6 +3467,15 @@ function createTippy(reference, collectionProps) {
   return tip;
 
   /* ======================= 🔒 Private methods 🔒 ======================= */
+  /**
+   * If the reference was clicked, it also receives focus
+   */
+  function onReferenceClick() {
+    defer(function () {
+      referenceJustProgrammaticallyFocused = false;
+    });
+  }
+
   /**
    * Listener for the `followCursor` prop
    */
@@ -3581,6 +3596,14 @@ function createTippy(reference, collectionProps) {
   }
 
   /**
+   * Cleans up old listeners
+   */
+  function cleanupOldMouseMoveListeners() {
+    document.body.removeEventListener('mouseleave', prepareHide);
+    document.removeEventListener('mousemove', debouncedOnMouseMove);
+  }
+
+  /**
    * Event listener invoked upon trigger
    */
   function onTrigger(event) {
@@ -3620,9 +3643,7 @@ function createTippy(reference, collectionProps) {
     }
 
     if (isCursorOutsideInteractiveBorder(getPopperPlacement(tip.popper), tip.popper.getBoundingClientRect(), event, tip.props)) {
-      document.body.removeEventListener('mouseleave', prepareHide);
-      document.removeEventListener('mousemove', onMouseMove);
-
+      cleanupOldMouseMoveListeners();
       prepareHide();
     }
   }
@@ -3637,7 +3658,7 @@ function createTippy(reference, collectionProps) {
 
     if (tip.props.interactive) {
       document.body.addEventListener('mouseleave', prepareHide);
-      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mousemove', debouncedOnMouseMove);
       return;
     }
 
@@ -3745,11 +3766,16 @@ function createTippy(reference, collectionProps) {
     popperMutationObserver = observer;
 
     // fixes https://github.com/atomiks/tippyjs/issues/193
-    if (!popperHasEventListeners) {
-      tip.popper.addEventListener('mouseenter', prepareShow);
-      tip.popper.addEventListener('mouseleave', prepareHide);
-      popperHasEventListeners = true;
-    }
+    tip.popper.addEventListener('mouseenter', function (event) {
+      if (tip.state.isVisible && lastTriggerEvent.type === 'mouseenter') {
+        prepareShow(event);
+      }
+    });
+    tip.popper.addEventListener('mouseleave', function (event) {
+      if (lastTriggerEvent.type === 'mouseenter' && tip.props.interactiveDebounce === 0 && isCursorOutsideInteractiveBorder(getPopperPlacement(tip.popper), tip.popper.getBoundingClientRect(), event, tip.props)) {
+        prepareHide();
+      }
+    });
 
     return new Popper(tip.reference, tip.popper, config);
   }
@@ -3850,7 +3876,14 @@ function createTippy(reference, collectionProps) {
 
 
     var listener = function listener(e) {
-      if (e.target === tooltip && getComputedStyle(tooltip).opacity === (isInDirection ? '1' : '0')) {
+      if (e.target === tooltip &&
+      /**
+       * Hack: If the user is mousing in-and-out very quickly the tooltip
+       * will fire the **wrong** callback (onHidden instead of onShown)
+       * causing somewhat glitchy behavior
+       * TODO: Find a better solution?
+       */
+      getComputedStyle(tooltip).opacity === (isInDirection ? '1' : '0')) {
         toggleTransitionEndListener(tooltip, 'remove', listener);
         callback();
       }
@@ -3873,7 +3906,7 @@ function createTippy(reference, collectionProps) {
   /**
    * Adds event listeners to the reference based on the `trigger` prop
    */
-  function addEventListenersToReference() {
+  function addTriggersToReference() {
     listeners = tip.props.trigger.trim().split(' ').reduce(function (acc, eventType) {
       if (eventType === 'manual') {
         return acc;
@@ -3912,7 +3945,7 @@ function createTippy(reference, collectionProps) {
   /**
    * Removes event listeners from the reference
    */
-  function removeEventListenersFromReference() {
+  function removeTriggersFromReference() {
     listeners.forEach(function (_ref) {
       var eventType = _ref.eventType,
           handler = _ref.handler;
@@ -3955,16 +3988,18 @@ function createTippy(reference, collectionProps) {
     nextProps.performance = options.performance || prevProps.performance;
     tip.props = nextProps;
 
-    // Update listeners if `trigger` option changed
-    if (options.trigger) {
-      removeEventListenersFromReference();
-      addEventListenersToReference();
+    if ('trigger' in options) {
+      removeTriggersFromReference();
+      addTriggersToReference();
     }
 
-    // Redraw
+    if ('interactiveDebounce' in options) {
+      cleanupOldMouseMoveListeners();
+      debouncedOnMouseMove = debounce$1(onMouseMove, options.interactiveDebounce);
+    }
+
     updatePopperElement(tip.popper, prevProps, nextProps);
     tip.popperChildren = getChildren(tip.popper);
-    tip.popperInstance && (tip.popperInstance = createPopperInstance());
   }
 
   /**
@@ -4022,7 +4057,7 @@ function createTippy(reference, collectionProps) {
       if (hasFollowCursorBehavior()) {
         tip.popperInstance.disableEventListeners();
         var delay = getValue(tip.props.delay, 0, Defaults.delay);
-        if (lastTriggerEvent) {
+        if (lastTriggerEvent.type) {
           followCursorListener(delay && lastMouseMoveEvent ? lastMouseMoveEvent : lastTriggerEvent);
         }
       }
@@ -4116,7 +4151,9 @@ function createTippy(reference, collectionProps) {
       hide(0);
     }
 
-    removeEventListenersFromReference();
+    removeTriggersFromReference();
+
+    tip.reference.removeEventListener('click', onReferenceClick);
 
     delete tip.reference._tippy;
 
@@ -4207,6 +4244,7 @@ tippy$1.disableAnimations = function () {
     animateFill: false
   });
 };
+tippy$1.hideAllPoppers = hideAllPoppers;
 
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
@@ -4226,3 +4264,4 @@ if (isBrowser$1) {
 return tippy$1;
 
 })));
+//# sourceMappingURL=tippy.js.map

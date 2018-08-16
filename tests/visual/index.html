@@ -129,10 +129,12 @@
 
     <div id="interactivity">
       <h2>interactive</h2>
-      <button data-tippy-interactive="true">True</button>
+      <button data-tippy-interactive="true" data-tippy-interactiveBorder="16">True</button>
       <button data-tippy-interactive="false">False</button>
       <button data-tippy-interactive="true" data-tippy-delay="500">True + Delay</button>
-      <button data-tippy-trigger="click">Click + false</button>
+      <button data-tippy-interactive="true" data-tippy-trigger="click">Click</button>
+      <button data-tippy-interactive="true" data-tippy-interactiveBorder="100">interactiveBorder = 100</button>
+      <button data-tippy-interactive="true" data-tippy-interactiveDebounceMs="50">debounce</button>
     </div>
 
     <div id="triggers">
@@ -187,6 +189,12 @@
       <p data-tippy-content="a11y">Inaccessible &lt;p&gt; element.</p>
     </div>
 
+    <div id="multiple">
+      <h2>multiple</h2>
+      <button class="multiple" data-tippy-multiple="true" data-exclude>true</button>
+      <button class="multiple" data-tippy-multiple="false" data-exclude>false</button>
+    </div>
+
     <div id="sticky">
       <h2>sticky</h2>
       <button data-tippy-content="sticky" data-tippy-sticky="true">sticky option</button>
@@ -198,8 +206,6 @@
       <button data-tippy="I was auto-initialized" data-tippy-touch="false">false</button>
     </div>
   </div>
-
-  <script></script>
 </body>
 
 </html>

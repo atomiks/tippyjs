@@ -1251,6 +1251,26 @@ describe('defer', () => {
   })
 })
 
+describe('debounce', () => {
+  it('works as expected', done => {
+    const fn = jest.fn()
+    const debouncedFn = Utils.debounce(fn, 50)
+    debouncedFn()
+    expect(fn.mock.calls.length).toBe(0)
+    setTimeout(() => {
+      expect(fn.mock.calls.length).toBe(0)
+      debouncedFn()
+      setTimeout(() => {
+        expect(fn.mock.calls.length).toBe(0)
+        setTimeout(() => {
+          expect(fn.mock.calls.length).toBe(1)
+          done()
+        }, 51)
+      }, 20)
+    }, 40)
+  })
+})
+
 describe('updatePopperPosition', () => {
   it('is called by popper if not already updated', done => {
     const tip = tippy.one(h(), { lazy: false })

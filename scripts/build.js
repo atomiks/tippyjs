@@ -37,12 +37,13 @@ const r = (entryFile, plugins = [], excludePopper) =>
           ],
     external: excludePopper ? ['popper.js'] : []
   })
-const output = type => (fileName, isMinified) => ({
+const output = type => (fileName, { min, sourcemap = true } = {}) => ({
   name: 'tippy',
   format: type,
   file: `./dist/${type === 'es' ? 'esm/' : ''}${fileName}`,
   globals: { 'popper.js': 'Popper' },
-  banner: isMinified
+  sourcemap,
+  banner: min
     ? false
     : `/*!
 * Tippy.js v${pkg.version}
@@ -52,10 +53,6 @@ const output = type => (fileName, isMinified) => ({
 })
 
 // plugins
-const pluginES2017 = babel({
-  presets: ['stage-2'],
-  plugins: ['external-helpers']
-})
 const pluginES5 = babel({
   presets: [['env', { modules: false }], 'stage-2'],
   plugins: ['external-helpers']
@@ -64,9 +61,7 @@ const pluginMinify = minify({ comments: false })
 const pluginJSON = json()
 const pluginSCSS = sassPluginOutput('./dist/tippy.css')
 const pluginCSS = cssOnly({ output: false })
-const pluginCJS = commonjs({
-  namedExports: { 'node_modules/popper.js/dist/popper.js': ['Popper'] }
-})
+const pluginCJS = commonjs()
 const pluginResolve = resolve({ browser: true })
 
 const umd = output('umd')
@@ -76,35 +71,32 @@ const esm = output('es')
 ;(async () => {
   // Tippy + Popper
   const bundle = await r('bundle.js', [pluginES5])
-  const bundleMin = await r('bundle.js', [pluginES5, pluginMinify])
-  const bundleES2017 = await r('bundle.js', [pluginES2017])
   // "all" is reliant on the existence of compiled css
   await bundle.write(umd('tippy.js'))
-  await bundle.write(esm('tippy.js'))
+  const bundleMin = await r('bundle.js', [pluginES5, pluginMinify])
 
   // Tippy
   const standalone = await r('bundle.js', [pluginES5], true)
   const standaloneMin = await r('bundle.js', [pluginES5, pluginMinify], true)
-  const standaloneES2017 = await r('bundle.js', [pluginES2017])
 
   // Tippy + Popper + CSS
   const all = await r('main.js', [pluginES5])
   const allMin = await r('main.js', [pluginES5, pluginMinify])
-  const allES2017 = await r('main.js', [pluginES2017])
 
   all.write(umd('tippy.all.js'))
-  allMin.write(umd('tippy.all.min.js', true))
-  bundleMin.write(umd('tippy.min.js', true))
-  bundleMin.write(esm('tippy.min.js', true))
+  allMin.write(umd('tippy.all.min.js', { min: true }))
+  bundle.write(esm('tippy.js'))
+  bundleMin.write(umd('tippy.min.js', { min: true }))
+  bundleMin.write(esm('tippy.min.js', { min: true }))
   standalone.write(umd('tippy.standalone.js'))
   standalone.write(esm('tippy.standalone.js'))
-  standaloneMin.write(umd('tippy.standalone.min.js', true))
-  standaloneMin.write(esm('tippy.standalone.min.js', true))
+  standaloneMin.write(umd('tippy.standalone.min.js', { min: true }))
+  standaloneMin.write(esm('tippy.standalone.min.js', { min: true }))
 
   for (let theme of fs.readdirSync('./src/scss/themes')) {
     theme = theme.replace('.scss', '')
     const t = await r(`themes/${theme}.js`, `./dist/themes/${theme}.css`)
-    await t.write(umd(`tippy.${theme}.js`))
+    await t.write(umd(`tippy.${theme}.js`, { sourcemap: false }))
     fs.unlinkSync(`./dist/tippy.${theme}.js`)
   }
 })()
