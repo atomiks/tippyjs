@@ -4,3 +4,4 @@ node_modules
 coverage
 dist
 tests/visual/dist
+package-lock.json
