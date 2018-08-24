@@ -43,7 +43,7 @@ export default function tippy(targets, options, one) {
     ? [firstReference]
     : references
   ).reduce((acc, reference) => {
-    const tip = reference ? createTippy(reference, props) : null
+    const tip = reference && createTippy(reference, props)
     return tip ? acc.concat(tip) : acc
   }, [])
 

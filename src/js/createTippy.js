@@ -38,7 +38,7 @@ export default function createTippy(reference, collectionProps) {
   /* ======================= 🔒 Private members 🔒 ======================= */
   let popperMutationObserver = null
   let lastTriggerEvent = {}
-  let lastMouseMoveEvent = {}
+  let lastMouseMoveEvent = null
   let showTimeoutId = 0
   let hideTimeoutId = 0
   let isPreparingToShow = false
@@ -182,15 +182,13 @@ export default function createTippy(reference, collectionProps) {
 
     // Is a delegate, create an instance for the child target
     if (tip.props.target) {
-      createDelegateChildTippy(event)
-      return
+      return createDelegateChildTippy(event)
     }
 
     isPreparingToShow = true
 
     if (tip.props.wait) {
-      tip.props.wait(show, event)
-      return
+      return tip.props.wait(tip, event)
     }
 
     /**
