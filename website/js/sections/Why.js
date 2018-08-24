@@ -1,6 +1,6 @@
 import { h } from 'hyperapp'
-import Emoji from './Emoji'
-import Heading from './Heading'
+import Emoji from '../components/Emoji'
+import Heading from '../components/Heading'
 const Subheading = Heading('Why')
 
 export default () => (

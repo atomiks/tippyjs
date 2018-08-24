@@ -2,8 +2,8 @@ import { h } from 'hyperapp'
 import logo from '../../assets/img/logo.svg'
 import { version } from '../../../package.json'
 import { animateLogo, animateVersion, animateItems } from '../utils'
-import Emoji from './Emoji'
-import Tippy from './Tippy'
+import Emoji from '../components/Emoji'
+import Tippy from '../components/Tippy'
 
 export default () => (
   <header class="header">

@@ -1,7 +1,7 @@
 import { h } from 'hyperapp'
 import logo from '../../assets/img/logo.svg'
-import Tippy from './Tippy'
-import Emoji from './Emoji'
+import Tippy from '../components/Tippy'
+import Emoji from '../components/Emoji'
 
 const ANIMATIONS = [
   'shift-away',

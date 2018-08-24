@@ -1,7 +1,7 @@
 import { h } from 'hyperapp'
-import Emoji from './Emoji'
-import Code from './Code'
-import Heading from './Heading'
+import Emoji from '../components/Emoji'
+import Code from '../components/Code'
+import Heading from '../components/Heading'
 const Subheading = Heading('Objects')
 import TIP_COLLECTION from '../../snippets/tip-collection'
 import TIP_INSTANCE from '../../snippets/tip-instance'

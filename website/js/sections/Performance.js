@@ -1,8 +1,8 @@
 import { h } from 'hyperapp'
 import pkg from '../../../package.json'
-import Emoji from './Emoji'
-import Tippy from './Tippy'
-import Heading from './Heading'
+import Emoji from '../components/Emoji'
+import Tippy from '../components/Tippy'
+import Heading from '../components/Heading'
 
 export default () => (state, actions) => (
   <section class="section">
