@@ -463,6 +463,19 @@ describe('onHidden', () => {
   })
 })
 
+describe('wait', () => {
+  it('waits until the user manually shows the tooltip', done => {
+    const ref = h()
+    const wait = jest.fn()
+    const tip = tippy.one(ref, { wait })
+    ref.dispatchEvent(new MouseEvent('mouseenter'))
+    expect(typeof wait.mock.calls[0][0].show).toBe('function')
+    expect(typeof wait.mock.calls[0][1].type).toBe('string')
+    expect(tip.state.isVisible).toBe(false)
+    done()
+  })
+})
+
 describe('popperOptions', () => {
   it('top level', () => {
     const { popperInstance } = tippy.one(h(), {
