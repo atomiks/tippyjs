@@ -258,7 +258,10 @@ export const updatePopperElement = (popper, prevProps, nextProps) => {
   popper.style.zIndex = nextProps.zIndex
   tooltip.setAttribute('data-size', nextProps.size)
   tooltip.setAttribute('data-animation', nextProps.animation)
-  setContent(content, nextProps)
+
+  if (prevProps.content !== nextProps.content) {
+    setContent(content, nextProps)
+  }
 
   // animateFill
   if (!prevProps.animateFill && nextProps.animateFill) {
