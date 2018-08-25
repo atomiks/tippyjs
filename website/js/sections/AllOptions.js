@@ -1,21 +1,25 @@
 import { h } from 'hyperapp'
-import Emoji from '../components/Emoji'
-import Code from '../components/Code'
-import Heading from '../components/Heading'
-const Subheading = Heading('AllOptions')
-import ResultBox from '../components/ResultBox'
-import OptionsTable from '../components/OptionsTable'
-import Tippy from '../components/Tippy'
+
 import AJAX from '../../snippets/ajax.md'
 import EVENT_DELEGATION_HTML from '../../snippets/event-delegation-html'
 import EVENT_DELEGATION_JS from '../../snippets/event-delegation-js'
 import SCROLLABLE_CONTAINER from '../../snippets/scrollable-container'
 import DISABLE_TOUCH from '../../snippets/disable-touch'
+import ON_IMAGE_DIMENSIONS_KNOWN from '../../snippets/on-image-dimensions-known'
+
+import Section from '../components/Section'
+import Emoji from '../components/Emoji'
+import Code from '../components/Code'
+import Heading from '../components/Heading'
+import ResultBox from '../components/ResultBox'
+import OptionsTable from '../components/OptionsTable'
+import Tippy from '../components/Tippy'
+
+const TITLE = 'All Options'
+const Subheading = Heading(TITLE)
 
 export default () => (state, actions) => (
-  <section class="section" id="all-options">
-    <Emoji class="section__icon-wrapper">🔮</Emoji>
-    <Heading>All Options</Heading>
+  <Section title={TITLE} emoji="🔮">
     <p>Below is a list of all possible options you can pass to tippy.</p>
 
     <OptionsTable />
@@ -53,6 +57,27 @@ export default () => (state, actions) => (
 
     <Code content={AJAX} />
 
+    <p>
+      Note that if you don't specify the dimensions of the image (
+      <code>width</code> and <code>height</code>
+      ), the tooltip will be positioned incorrectly once it loads. This is
+      because the position of the tooltip is updated before the image's
+      dimensions become known by the browser.
+    </p>
+
+    <p>
+      To ensure the tooltip is positioned correctly, the following utility
+      function will fire the callback function as soon as the image's dimensions
+      become known by the browser (before it's fully loaded).
+    </p>
+
+    <Code content={ON_IMAGE_DIMENSIONS_KNOWN} />
+
+    <p>
+      If you want the image to be <em>fully</em> loaded, then you can specify{' '}
+      <code>img.onload</code> as the callback before setting <code>src</code>.
+    </p>
+
     <Subheading>Event delegation</Subheading>
     <p>
       Event delegation only requires minimal setup. Your setup should look
@@ -69,7 +94,7 @@ export default () => (state, actions) => (
     <Code content={EVENT_DELEGATION_JS} />
 
     <p>
-      <Emoji small>⚠️</Emoji>
+      <Emoji size="small">⚠️</Emoji>
       Avoid binding a Tippy instance to the body, as{' '}
       <code>mouseover / mouseoff</code> events will constantly fire as the
       cursor moves over the page. Instead, give it to the nearest possible
@@ -82,5 +107,5 @@ export default () => (state, actions) => (
       viewport.
     </p>
     <Code content={SCROLLABLE_CONTAINER} />
-  </section>
+  </Section>
 )

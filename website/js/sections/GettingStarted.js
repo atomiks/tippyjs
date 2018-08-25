@@ -1,15 +1,15 @@
 import { h } from 'hyperapp'
 import { version } from '../../../package.json'
+import Section from '../components/Section'
+import Heading from '../components/Heading'
 import Emoji from '../components/Emoji'
 import Code from '../components/Code'
-import Heading from '../components/Heading'
-const Subheading = Heading('GettingStarted')
+
+const TITLE = 'Getting Started'
+const Subheading = Heading(TITLE)
 
 export default () => (
-  <section class="section" id="getting-started">
-    <Emoji class="section__icon-wrapper">📦</Emoji>
-    <Heading>Getting started</Heading>
-
+  <Section title={TITLE} emoji="📦">
     <Subheading>
       Option 1: CDN <Emoji class="section__emoji">🔗</Emoji>
     </Subheading>
@@ -63,5 +63,5 @@ export default () => (
       There are also <code>.min</code> versions of the above, which means the
       file is minified for production use.
     </p>
-  </section>
+  </Section>
 )

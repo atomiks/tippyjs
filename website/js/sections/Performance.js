@@ -1,14 +1,10 @@
 import { h } from 'hyperapp'
-import pkg from '../../../package.json'
-import Emoji from '../components/Emoji'
-import Tippy from '../components/Tippy'
-import Heading from '../components/Heading'
+import Section from '../components/Section'
+
+const TITLE = 'Performance'
 
 export default () => (state, actions) => (
-  <section class="section">
-    <Emoji class="section__icon-wrapper">⚡️</Emoji>
-    <Heading>Performance</Heading>
-
+  <Section title={TITLE} emoji="⚡️">
     <p>Tested with 2.6 GHz Skylake MacBook Pro using Chrome 67:</p>
     <ul>
       <li>
@@ -31,5 +27,5 @@ export default () => (state, actions) => (
         elements
       </li>
     </ul>
-  </section>
+  </Section>
 )

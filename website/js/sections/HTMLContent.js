@@ -1,18 +1,20 @@
 import { h } from 'hyperapp'
-import Emoji from '../components/Emoji'
-import Code from '../components/Code'
-import Heading from '../components/Heading'
-import ResultBox from '../components/ResultBox'
-import Tippy from '../components/Tippy'
-const Subheading = Heading('HTMLContent')
+
 import HTML_ELEMENT from '../../snippets/html-element'
 import HTML_ELEMENT_JS from '../../snippets/html-element-js'
 
-export default () => (
-  <section class="section">
-    <Emoji class="section__icon-wrapper">🖼️</Emoji>
-    <Heading>HTML Content</Heading>
+import Section from '../components/Section'
+import Heading from '../components/Heading'
+import Emoji from '../components/Emoji'
+import Code from '../components/Code'
+import ResultBox from '../components/ResultBox'
+import Tippy from '../components/Tippy'
 
+const TITLE = 'HTML Content'
+const Subheading = Heading(TITLE)
+
+export default () => (
+  <Section title={TITLE} emoji="🖼️">
     <p>
       Along with using a string of HTML content, you can provide an{' '}
       <code>HTMLElement</code> for the <code>content</code> option.
@@ -43,19 +45,5 @@ export default () => (
     </p>
 
     <Code content="const clone = document.querySelector('#myTemplate').cloneNode(true)" />
-
-    <Subheading>Integration with SPA frameworks</Subheading>
-
-    <p>
-      Modern SPA frameworks like React, Hyperapp, Vue, etc. use plain objects to
-      describe the real DOM, called a Virtual DOM (VDOM). So if you want to use
-      JSX inside the <code>content</code> prop, you need to render the virtual
-      nodes into a real HTML element.
-    </p>
-
-    <p>
-      To ensure the the state of the tooltip stays in sync with the state of the
-      app, you can use lifecycle methods to update the tooltip instance.
-    </p>
-  </section>
+  </Section>
 )

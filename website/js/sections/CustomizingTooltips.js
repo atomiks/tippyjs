@@ -1,10 +1,5 @@
 import { h } from 'hyperapp'
-import Emoji from '../components/Emoji'
-import Code from '../components/Code'
-import Tippy from '../components/Tippy'
-import ResultBox from '../components/ResultBox'
-import Heading from '../components/Heading'
-const Subheading = Heading('Customizing Tooltips')
+
 import HTML_BUTTON from '../../snippets/html-button.md'
 import OPTIONS_OBJECT from '../../snippets/options-object.md'
 import DATA_ATTRIBUTES from '../../snippets/data-attributes.md'
@@ -12,11 +7,18 @@ import MULTIPLE_CONTENT_HTML from '../../snippets/multiple-content-html.md'
 import MULTIPLE_CONTENT_JS from '../../snippets/multiple-content-js.md'
 import SET_DEFAULTS from '../../snippets/set-defaults.md'
 
-export default () => (
-  <section class="section">
-    <Emoji class="section__icon-wrapper">⚙️</Emoji>
-    <Heading>Customizing Tooltips</Heading>
+import Section from '../components/Section'
+import Emoji from '../components/Emoji'
+import Code from '../components/Code'
+import Tippy from '../components/Tippy'
+import ResultBox from '../components/ResultBox'
+import Heading from '../components/Heading'
 
+const TITLE = 'Customizing Tooltips'
+const Subheading = Heading(TITLE)
+
+export default () => (
+  <Section title={TITLE} emoji="⚙️">
     <p>
       <code>tippy()</code> takes an object of options as a second argument for
       you to configure the tooltips being created. Here's an example:
@@ -84,5 +86,5 @@ export default () => (
       <code>setTimeout()</code>, which means you can change the default config
       before the tooltips are automatically created.
     </p>
-  </section>
+  </Section>
 )

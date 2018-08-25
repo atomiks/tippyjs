@@ -1,13 +1,10 @@
 import { h } from 'hyperapp'
-import Emoji from '../components/Emoji'
-import Heading from '../components/Heading'
-const Subheading = Heading('Why')
+import Section from '../components/Section'
+
+const TITLE = 'Why use Tippy.js?'
 
 export default () => (
-  <section class="section" id="getting-started">
-    <Emoji class="section__icon-wrapper">🤔</Emoji>
-    <Heading>Why use Tippy.js?</Heading>
-
+  <Section title={TITLE} emoji="🤔">
     <p>
       You might be wondering why you should use a 14 kB JS library for tooltips
       and popovers instead of a CSS solution. Pure CSS tooltips are great for
@@ -32,5 +29,5 @@ export default () => (
       properly manage the position of these "poppers" (elements that exist
       outside the normal flow of the document).
     </p>
-  </section>
+  </Section>
 )

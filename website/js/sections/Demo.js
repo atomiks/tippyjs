@@ -29,7 +29,9 @@ export default () => (
     </div>
 
     <div class="feature">
-      <Emoji class="feature__icon">↕️</Emoji>
+      <Emoji size="medium" class="feature__icon">
+        ↕️
+      </Emoji>
       <h3 class="feature__heading">Placement</h3>
       <p>
         A tooltip can be placed in four different ways in relation to its
@@ -45,7 +47,9 @@ export default () => (
     </div>
 
     <div class="feature">
-      <Emoji class="feature__icon">▶️</Emoji>
+      <Emoji size="medium" class="feature__icon">
+        ▶️
+      </Emoji>
       <h3 class="feature__heading">Arrows</h3>
       <p>
         Arrows point toward the reference element. There are two different types
@@ -73,7 +77,9 @@ export default () => (
     </div>
 
     <div class="feature">
-      <Emoji class="feature__icon">👏</Emoji>
+      <Emoji size="medium" class="feature__icon">
+        👏
+      </Emoji>
       <h3 class="feature__heading">Triggers</h3>
       <p>Triggers define the types of events that cause a tooltip to show.</p>
       <Tippy trigger="mouseenter">
@@ -88,7 +94,9 @@ export default () => (
     </div>
 
     <div class="feature">
-      <Emoji class="feature__icon">✍️</Emoji>
+      <Emoji size="medium" class="feature__icon">
+        ✍️
+      </Emoji>
       <h3 class="feature__heading">Interactivity</h3>
       <p>
         Tooltips can be interactive, meaning they won't hide when you hover over
@@ -103,7 +111,9 @@ export default () => (
     </div>
 
     <div class="feature">
-      <Emoji class="feature__icon">💫</Emoji>
+      <Emoji size="medium" class="feature__icon">
+        💫
+      </Emoji>
       <h3 class="feature__heading">Animations</h3>
       <p>Tooltips can have different types of animations.</p>
       {ANIMATIONS.map(animation => (
@@ -128,7 +138,9 @@ export default () => (
     </div>
 
     <div class="feature">
-      <Emoji class="feature__icon">⏱️</Emoji>
+      <Emoji size="medium" class="feature__icon">
+        ⏱️
+      </Emoji>
       <h3 class="feature__heading">Duration</h3>
       <p>A tippy can have different transition durations.</p>
       {[0, 200, 1000, [250, 1000], [1000, 500]].map(duration => (
@@ -139,7 +151,9 @@ export default () => (
     </div>
 
     <div class="feature">
-      <Emoji class="feature__icon">⏳</Emoji>
+      <Emoji size="medium" class="feature__icon">
+        ⏳
+      </Emoji>
       <h3 class="feature__heading">Delay</h3>
       <p>
         Tooltips can delay showing or{' '}
@@ -158,7 +172,9 @@ export default () => (
     </div>
 
     <div class="feature">
-      <Emoji class="feature__icon">🖼️</Emoji>
+      <Emoji size="medium" class="feature__icon">
+        🖼️
+      </Emoji>
       <h3 class="feature__heading">HTML</h3>
       <p>
         Tooltips can contain HTML, allowing you to craft awesome interactive
@@ -193,7 +209,9 @@ export default () => (
     </div>
 
     <div class="feature">
-      <Emoji class="feature__icon">🖌️</Emoji>
+      <Emoji size="medium" class="feature__icon">
+        🖌️
+      </Emoji>
       <h3 class="feature__heading">Themes</h3>
       <p>
         A tippy can have any kind of theme you want! Creating a custom theme is
@@ -211,7 +229,9 @@ export default () => (
     </div>
 
     <div class="feature">
-      <Emoji class="feature__icon">😍</Emoji>
+      <Emoji size="medium" class="feature__icon">
+        😍
+      </Emoji>
       <h3 class="feature__heading">Misc</h3>
       <p>
         Tippy has a ton of{' '}
@@ -234,7 +254,8 @@ export default () => (
           <span class="tippy" tabindex="0">
             features
           </span>
-        </Tippy.secondary>, and it's constantly improving.
+        </Tippy.secondary>
+        , and it's constantly improving.
       </p>
       <Tippy
         content="How cool's this?!"
@@ -250,13 +271,19 @@ export default () => (
       >
         <button class="btn">Touch &amp; Hold</button>
       </Tippy>
-      <Tippy content="I'm hugging the tooltip!" distance={0} animation="fade">
+      <Tippy
+        content="I'm hugging the tooltip!"
+        distance={0}
+        animation="fade"
+        animateFill={false}
+      >
         <button class="btn">Distance</button>
       </Tippy>
       <Tippy
-        content="I'm hugging the tooltip!"
+        content="I'm offset by 10px on the x-axis, and 50px on the y-axis"
         offset="10, 50"
         animation="fade"
+        animateFill={false}
       >
         <button class="btn">Offset</button>
       </Tippy>

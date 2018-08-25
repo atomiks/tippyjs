@@ -1,21 +1,23 @@
 import { h } from 'hyperapp'
-import Emoji from '../components/Emoji'
-import Code from '../components/Code'
-import ResultBox from '../components/ResultBox'
-import Tippy from '../components/Tippy'
-import Heading from '../components/Heading'
-const Subheading = Heading('CreatingCustomThemes')
+
 import THEME_CSS from '../../snippets/theme-css'
 import THEME_JS from '../../snippets/theme-js'
 import TIPPY_ELEMENT from '../../snippets/tippy-element'
 import TIPPY_ELEMENT_ARROW from '../../snippets/tippy-element-arrow'
 import CSS_ARROW from '../../snippets/css-arrow'
 
-export default () => (
-  <section class="section">
-    <Emoji class="section__icon-wrapper">🖌️</Emoji>
-    <Heading>Creating Custom Themes</Heading>
+import Section from '../components/Section'
+import Emoji from '../components/Emoji'
+import Code from '../components/Code'
+import ResultBox from '../components/ResultBox'
+import Tippy from '../components/Tippy'
+import Heading from '../components/Heading'
 
+const TITLE = 'Creating Custom Themes'
+const Subheading = Heading(TITLE)
+
+export default () => (
+  <Section title={TITLE} emoji="🖌️">
     <Subheading>Tippy element structure</Subheading>
     <p>
       To know what selectors to use, it's helpful to understand the structure of
@@ -24,14 +26,16 @@ export default () => (
     <Code content={TIPPY_ELEMENT} />
 
     <p>
-      A tippy is essentially three nested <code>div</code>s.
+      A tippy is essentially three nested <code>div</code>
+      s.
     </p>
 
     <ul>
       <li>
         <code>tippy-popper</code> is what Popper.js uses to position the tippy.
         You shouldn't apply any styles directly to this element, but you will
-        need it when targeting a specific placement (<code>x-placement</code>).
+        need it when targeting a specific placement (<code>x-placement</code>
+        ).
       </li>
       <li>
         <code>tippy-tooltip</code> is the actual tooltip. Use this to style the
@@ -88,5 +92,5 @@ export default () => (
       You will need to style the arrow for each different popper placement (top,
       bottom, left, right), which is why the selector is so long.
     </p>
-  </section>
+  </Section>
 )

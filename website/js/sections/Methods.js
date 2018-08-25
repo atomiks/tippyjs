@@ -1,15 +1,19 @@
 import { h } from 'hyperapp'
-import Emoji from '../components/Emoji'
-import Code from '../components/Code'
-import Heading from '../components/Heading'
-const Subheading = Heading('Methods')
+
 import SET_METHOD from '../../snippets/set-method'
 
-export default () => (
-  <section class="section">
-    <Emoji class="section__icon-wrapper">🕹</Emoji>
+import Section from '../components/Section'
+import Heading from '../components/Heading'
+import Emoji from '../components/Emoji'
+import Code from '../components/Code'
+import ResultBox from '../components/ResultBox'
+import Tippy from '../components/Tippy'
 
-    <Heading>Methods</Heading>
+const TITLE = 'Methods'
+const Subheading = Heading(TITLE)
+
+export default () => (
+  <Section title={TITLE} emoji="🕹">
     <p>
       Tippy instances have 7 methods available which allow you to control the
       tooltip without the use of UI events.
@@ -69,5 +73,5 @@ export default () => (
       tip. The tooltip element will be redrawn to reflect the change.
     </p>
     <Code content={SET_METHOD} />
-  </section>
+  </Section>
 )

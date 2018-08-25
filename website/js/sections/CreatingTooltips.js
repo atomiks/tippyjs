@@ -1,20 +1,22 @@
 import { h } from 'hyperapp'
-import Code from '../components/Code'
-import Emoji from '../components/Emoji'
-import Tippy from '../components/Tippy'
-import ResultBox from '../components/ResultBox'
-import Heading from '../components/Heading'
-const Subheading = Heading('CreatingTootips')
+
 import VIRTUAL_REFERENCE from '../../snippets/virtual-reference'
 import AUTO_TIPPY_BUTTON from '../../snippets/auto-tippy-button'
 import FUNCTION_BUTTON from '../../snippets/function-button'
 import FUNCTION_CALL from '../../snippets/function-call'
 
-export default () => (
-  <section class="section" id="creating-tooltips">
-    <Emoji class="section__icon-wrapper">🔧</Emoji>
-    <Heading>Creating Tooltips</Heading>
+import Section from '../components/Section'
+import Code from '../components/Code'
+import Emoji from '../components/Emoji'
+import Tippy from '../components/Tippy'
+import ResultBox from '../components/ResultBox'
+import Heading from '../components/Heading'
 
+const TITLE = 'Creating Tooltips'
+const Subheading = Heading(TITLE)
+
+export default () => (
+  <Section title={TITLE} emoji="🔧">
     <Subheading>Method 1: Auto</Subheading>
     <p>
       Give your reference element a <code>data-tippy</code> attribute containing
@@ -46,9 +48,11 @@ export default () => (
       <Tippy.secondary
         content={
           <div>
-            <strong>D</strong>ocument <strong>O</strong>bject <strong>M</strong>odel
-            - the tree structure of the HTML document where each node (such as a
-            DIV tag) is represented by an object
+            <strong>D</strong>
+            ocument <strong>O</strong>
+            bject <strong>M</strong>
+            odel - the tree structure of the HTML document where each node (such
+            as a DIV tag) is represented by an object
           </div>
         }
       >
@@ -77,5 +81,5 @@ export default () => (
     <p>
       Popper.js uses these properties to determine the position of the tooltip.
     </p>
-  </section>
+  </Section>
 )

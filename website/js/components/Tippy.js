@@ -38,6 +38,7 @@ Tippy.secondary = (props, children) => (
     arrow={true}
     animation="fade"
     appendTo={ref => ref.parentNode}
+    theme="secondary"
   >
     {children}
   </Tippy>

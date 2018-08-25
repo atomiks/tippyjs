@@ -76,7 +76,7 @@ a {
 
 .emoji {
   position: relative;
-  vertical-align: middle;
+  vertical-align: -17%;
   width: 40px;
   margin-right: 4px;
 }
@@ -163,6 +163,10 @@ a {
   border: 2px solid orange;
   color: #333;
   font-weight: bold;
+}
+
+.tippy-tooltip.secondary-theme {
+  max-width: 250px;
 }
 
 @media (min-width: 768px) {

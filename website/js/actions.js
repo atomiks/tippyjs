@@ -16,12 +16,12 @@ export default {
     },
 
     onDataReceived: blob => state => {
-      if (state.isFetching) {
+      if (state.imageSrc === '') {
         return { imageSrc: URL.createObjectURL(blob) }
       }
     },
 
-    onHidden: () => state => ({
+    onHidden: () => ({
       error: false,
       imageSrc: '',
       isFetching: false,

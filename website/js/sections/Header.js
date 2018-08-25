@@ -37,7 +37,8 @@ export default () => (
       >
         <div class="header__item">
           <p>
-            <Emoji small>💎</Emoji>14 kB
+            <Emoji size="small">💎</Emoji>
+            14 kB
           </p>
         </div>
         <div class="header__item">
@@ -55,7 +56,7 @@ export default () => (
               href="https://popper.js.org/"
               target="_blank"
             >
-              <Emoji small>⚡</Emoji>
+              <Emoji size="small">⚡</Emoji>
               Powered by Popper.js
             </a>
           </Tippy>

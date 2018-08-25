@@ -1,17 +1,20 @@
 import { h } from 'hyperapp'
-import Emoji from '../components/Emoji'
-import Code from '../components/Code'
-import Heading from '../components/Heading'
-const Subheading = Heading('Objects')
+
 import TIP_COLLECTION from '../../snippets/tip-collection'
 import TIP_INSTANCE from '../../snippets/tip-instance'
 import ACCESS_TIPPY_INSTANCE from '../../snippets/access-tippy-instance'
 import SHORTCUTS from '../../snippets/shortcuts'
 
+import Section from '../components/Section'
+import Emoji from '../components/Emoji'
+import Code from '../components/Code'
+import Heading from '../components/Heading'
+
+const TITLE = 'Objects'
+const Subheading = Heading(TITLE)
+
 export default () => (
-  <section class="section">
-    <Emoji class="section__icon-wrapper">🏷️</Emoji>
-    <Heading>Objects</Heading>
+  <Section title={TITLE} emoji="🏷️">
     <p>
       When using Tippy.js, there are two types of objects to think about:
       collections and instances.
@@ -49,5 +52,5 @@ export default () => (
     <Subheading>Shortcuts</Subheading>
     <p>There are a couple of shortcuts available for accessing the instance.</p>
     <Code content={SHORTCUTS} />
-  </section>
+  </Section>
 )

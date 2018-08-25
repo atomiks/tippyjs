@@ -4,7 +4,7 @@ import Code from './Code'
 import APPEND_TO from '../../snippets/append-to'
 
 const Prop = (props, children) => {
-  const id = toKebabCase(props.name)
+  const id = toKebabCase(props.name) + '-option'
   return (
     <tr id={id}>
       <td>
@@ -125,7 +125,8 @@ export default () => (
           see{' '}
           <a class="link" href="#offset">
             offset
-          </a>.
+          </a>
+          .
         </Prop>
         <Prop name="flip" default="true" value="Boolean">
           Determines if the tooltip flips so that it is placed within the

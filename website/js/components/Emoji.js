@@ -1,16 +1,20 @@
 import { h } from 'hyperapp'
 import { getEmojiSrc } from '../utils'
 
-export default ({ small, ...props }, [char]) => (
+const SIZES = {
+  large: '75px',
+  medium: '40px',
+  small: '25px'
+}
+
+export default ({ size, ...props }, [char]) => (
   <span {...props}>
     <img
       class="emoji"
       draggable={0}
       alt={char}
       src={getEmojiSrc(char)}
-      style={{
-        width: small && '25px'
-      }}
+      style={{ width: SIZES[size] }}
     />
   </span>
 )

@@ -1,11 +1,13 @@
 import { h } from 'hyperapp'
+
+import Section from '../components/Section'
 import Emoji from '../components/Emoji'
 import Heading from '../components/Heading'
 
+const TITLE = 'Browser Support'
+
 export default () => (state, actions) => (
-  <section class="section" id="browser-support">
-    <Emoji class="section__icon-wrapper">💻</Emoji>
-    <Heading>Browser support</Heading>
+  <Section title={TITLE} emoji="💻">
     <p>
       Tippy supports browsers with <code>requestAnimationFrame</code> and{' '}
       <code>MutationObserver</code> support: See{' '}
@@ -15,11 +17,12 @@ export default () => (state, actions) => (
         rel="noopener"
       >
         caniuse data
-      </a>.
+      </a>
+      .
     </p>
     <p>
       IE10 is only partially supported unless you polyfill{' '}
       <code>MutationObserver</code>, then it is fully supported.
     </p>
-  </section>
+  </Section>
 )

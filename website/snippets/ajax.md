@@ -19,7 +19,11 @@ tippy('#ajax-tippy', {
       const blob = await response.blob()
       const url = URL.createObjectURL(blob)
       if (tip.state.isVisible) {
-        tip.setContent(`<img width="200" height="200" src="${url}" />`)
+        const img = new Image()
+        img.width = 200
+        img.height = 200
+        img.src = url
+        tip.setContent(img)
       }
     } catch (e) {
       tip.setContent(`Fetch failed. ${e}`)
