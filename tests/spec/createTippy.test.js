@@ -1,4 +1,4 @@
-import { h, hasTippy, cleanDocumentBody } from '../utils'
+import { h, hasTippy, cleanDocumentBody, wait } from '../utils'
 
 import { Defaults } from '../../src/js/defaults'
 import { Selectors } from '../../src/js/selectors'
@@ -43,7 +43,9 @@ describe('createTippy', () => {
     expect(tips[1].id).toBe(tips[2].id - 1)
   })
 
-  it('adds correct listeners to the reference element based on `trigger`', () => {
+  it('adds correct listeners to the reference element based on `trigger`', async done => {
+    // Note that hide delay is 20ms by default
+    const HIDE_DELAY = 21
     const instance = createTippy(h(), {
       ...Defaults,
       trigger: 'mouseenter focus click'
@@ -51,17 +53,22 @@ describe('createTippy', () => {
     instance.reference.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(true)
     instance.reference.dispatchEvent(new Event('mouseleave'))
+    await wait(HIDE_DELAY)
     expect(instance.state.isVisible).toBe(false)
 
     instance.reference.dispatchEvent(new Event('focus'))
     expect(instance.state.isVisible).toBe(true)
     instance.reference.dispatchEvent(new Event('blur'))
+    await wait(HIDE_DELAY)
     expect(instance.state.isVisible).toBe(false)
 
     instance.reference.dispatchEvent(new Event('click'))
     expect(instance.state.isVisible).toBe(true)
     instance.reference.dispatchEvent(new Event('click'))
+    await wait(HIDE_DELAY)
     expect(instance.state.isVisible).toBe(false)
+
+    done()
   })
 })
 

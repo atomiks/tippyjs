@@ -26,3 +26,5 @@ export const withTestOptions = options => ({
   content: 'content',
   ...options
 })
+
+export const wait = ms => new Promise(res => setTimeout(res, ms))
