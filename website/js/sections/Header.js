@@ -78,9 +78,9 @@ export default () => (
           <p class="header__docs-wrapper">
             <a
               class="header__docs"
-              href="https://atomiks.github.io/tippyjs/v1/index.html"
+              href="https://atomiks.github.io/tippyjs/v2/index.html"
             >
-              v1 docs
+              v2 docs
             </a>
           </p>
         </div>

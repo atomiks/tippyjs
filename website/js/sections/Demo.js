@@ -85,7 +85,7 @@ export default () => (
       <Tippy trigger="mouseenter">
         <button class="btn">Hover or touch</button>
       </Tippy>
-      <Tippy trigger="focus">
+      <Tippy trigger="focus" hideOnClick={false}>
         <button class="btn">Focus or touch</button>
       </Tippy>
       <Tippy trigger="click">
