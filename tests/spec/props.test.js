@@ -128,7 +128,7 @@ describe('animation', () => {
 
 describe('delay', () => {
   // NOTE: props.trigger dependency here
-  it('number: delays showing the tippy', done => {
+  it('number: delays showing the tippy', async () => {
     const delay = 20
     const ref = h()
     const { state } = tippy.one(ref, {
@@ -137,69 +137,52 @@ describe('delay', () => {
     })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(false)
-    setTimeout(() => {
-      expect(state.isVisible).toBe(true)
-      done()
-    }, delay * 2)
+    await wait(delay * 2)
+    expect(state.isVisible).toBe(true)
   })
 
-  it('number: delays hiding the tippy', done => {
+  it('number: delays hiding the tippy', async () => {
     const delay = 20
     const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
       delay
     })
-
     ref.dispatchEvent(new Event('mouseenter'))
-
-    setTimeout(() => {
-      ref.dispatchEvent(new Event('mouseleave'))
-      expect(state.isVisible).toBe(true)
-      setTimeout(() => {
-        expect(state.isVisible).toBe(false)
-        done()
-      }, delay * 2)
-    }, delay * 2)
+    await wait(delay * 2)
+    ref.dispatchEvent(new Event('mouseleave'))
+    expect(state.isVisible).toBe(true)
+    await wait(delay * 2)
+    expect(state.isVisible).toBe(false)
   })
 
-  it('array: uses the first element as the delay when showing', () => {
+  it('array: uses the first element as the delay when showing', async () => {
     const delay = [20, 100]
     const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
       delay
     })
-
     ref.dispatchEvent(new Event('mouseenter'))
-
     expect(state.isVisible).toBe(false)
-
-    setTimeout(() => {
-      expect(state.isVisible).toBe(true)
-      done()
-    }, delay[0] * 2)
+    await wait(delay[0] * 2)
+    expect(state.isVisible).toBe(true)
   })
 
-  it('array: uses the second element as the delay when hiding', () => {
+  it('array: uses the second element as the delay when hiding', async () => {
     const delay = [100, 20]
     const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
       delay
     })
-
     ref.dispatchEvent(new Event('mouseenter'))
-
     expect(state.isVisible).toBe(false)
-
-    setTimeout(() => {
-      expect(state.isVisible).toBe(true)
-      setTimeout(() => {
-        expect(state.isVisible).toBe(false)
-        done()
-      }, delay[1] * 2)
-    }, delay[0] * 2)
+    await wait(delay[0] * 2)
+    expect(state.isVisible).toBe(true)
+    ref.dispatchEvent(new Event('mouseleave'))
+    await wait(delay[1] * 2)
+    expect(state.isVisible).toBe(false)
   })
 })
 
@@ -228,8 +211,6 @@ describe('content', () => {
 })
 
 describe('trigger', () => {
-  // Jest seems to have a bug if more than one of these it() tests has
-  // await wait(...)
   const HIDE_DELAY = 21
 
   it('default: many triggers', async () => {
@@ -242,6 +223,9 @@ describe('trigger', () => {
     expect(state.isVisible).toBe(false)
     ref.dispatchEvent(new Event('focus'))
     expect(state.isVisible).toBe(true)
+    ref.dispatchEvent(new Event('blur'))
+    await wait(HIDE_DELAY)
+    expect(state.isVisible).toBe(false)
   })
 
   it('mouseenter', async () => {
@@ -249,23 +233,29 @@ describe('trigger', () => {
     const { state } = tippy.one(ref, { trigger: 'mouseenter' })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(true)
-    // test hide
+    ref.dispatchEvent(new Event('mouseleave'))
+    await wait(HIDE_DELAY)
+    expect(state.isVisible).toBe(false)
   })
 
-  it('focus', () => {
+  it('focus', async () => {
     const ref = h()
     const { state } = tippy.one(ref, { trigger: 'focus' })
     ref.dispatchEvent(new Event('focus'))
     expect(state.isVisible).toBe(true)
-    // test hide
+    ref.dispatchEvent(new Event('blur'))
+    await wait(HIDE_DELAY)
+    expect(state.isVisible).toBe(false)
   })
 
-  it('click', () => {
+  it('click', async () => {
     const ref = h()
     const { state } = tippy.one(ref, { trigger: 'click' })
     ref.dispatchEvent(new Event('click'))
     expect(state.isVisible).toBe(true)
-    // test hide
+    ref.dispatchEvent(new Event('click'))
+    await wait(HIDE_DELAY)
+    expect(state.isVisible).toBe(false)
   })
 })
 
