@@ -569,16 +569,7 @@ export default function createTippy(reference, collectionProps) {
     const { tooltip } = tip.popperChildren
 
     const listener = e => {
-      if (
-        e.target === tooltip &&
-        /**
-         * Hack: If the user is mousing in-and-out very quickly the tooltip
-         * will fire the **wrong** callback (onHidden instead of onShown)
-         * causing somewhat glitchy behavior
-         * TODO: Find a better solution?
-         */
-        getComputedStyle(tooltip).opacity === (isInDirection ? '1' : '0')
-      ) {
+      if (e.target === tooltip) {
         toggleTransitionEndListener(tooltip, 'remove', listener)
         callback()
       }

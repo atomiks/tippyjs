@@ -8,7 +8,7 @@ export let Defaults = {
   animation: 'shift-away',
   animateFill: true,
   arrow: false,
-  delay: 0,
+  delay: [0, 20],
   duration: [325, 275],
   interactive: false,
   interactiveBorder: 2,
