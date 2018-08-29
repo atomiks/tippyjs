@@ -102,12 +102,11 @@ export default () => (
         >
           The content of the tooltip.
         </Prop>
-        <Prop name="delay" default="0" value={['Number', '[show, hide]']}>
+        <Prop name="delay" default="[0, 20]" value={['Number', '[show, hide]']}>
           Delay in ms once a trigger event is fired before a tippy shows or
           hides. Use an array of numbers such as <code>[100, 500]</code> to
-          specify a different value for show and hide. Use{' '}
-          <code>undefined</code> in the array to use the default value, e.g.{' '}
-          <code>[, 50]</code>.
+          specify a different value for show and hide. Use <code>null</code> in
+          the array to use the default value, e.g. <code>[null, 50]</code>.
         </Prop>
         <Prop
           name="duration"
@@ -116,8 +115,8 @@ export default () => (
         >
           Duration of the CSS transition animation in ms. Use an array of
           numbers such as <code>[100, 500]</code> to specify a different value
-          for show and hide. Add <code>undefined</code> in the array to use the
-          default value, e.g. <code>[, 50]</code>.
+          for show and hide. Add <code>null</code> in the array to use the
+          default value, e.g. <code>[null, 50]</code>.
         </Prop>
         <Prop name="distance" default="10" value="Number">
           How far in pixels the tooltip element is from the reference element.
@@ -167,6 +166,10 @@ export default () => (
           prevent it from hiding (only relevant for the hover trigger). Useful
           to prevent the tooltip from accidentally hiding from clumsy cursor
           movements.
+        </Prop>
+        <Prop name="interactiveDebounce" default="0" value="Number">
+          A number in ms that debounces the <code>onMouseMove</code> handler
+          which determines when the tippy should hide.
         </Prop>
         <Prop name="lazy" default="true" value="Boolean">
           By default, the <code>popperInstance</code> (the positioning engine
