@@ -1,4 +1,5 @@
 import anime from 'animejs'
+import twemoji from 'twemoji'
 
 export const isBrowser = typeof window !== 'undefined'
 
