@@ -38,7 +38,7 @@ describe('isPlainObject', () => {
 
 describe('toArray', () => {
   it('converts a NodeList to an array', () => {
-    ;[...Array(10)].map(() => h())
+    [...Array(10)].map(() => h())
     const arr = Utils.toArray(document.querySelectorAll(IDENTIFIER))
     expect(Array.isArray(arr)).toBe(true)
   })
@@ -62,7 +62,7 @@ describe('getArrayOfElements', () => {
   })
 
   it('returns an array of elements when given a valid selector string', () => {
-    ;[...Array(10)].map(() => h())
+    [...Array(10)].map(() => h())
     const allAreElements = Utils.getArrayOfElements(IDENTIFIER).every(
       value => value instanceof Element
     )
@@ -392,9 +392,9 @@ describe('createPopperElement', () => {
     expect(popper.id).toBe(`tippy-${id}`)
   })
 
-  it('sets the `role` property correctly', () => {
+  it('sets the `role` attribute correctly', () => {
     const popper = Utils.createPopperElement(1, Defaults)
-    expect(popper.role).toBe('tooltip')
+    expect(popper.getAttribute('role')).toBe('tooltip')
   })
 
   it('sets the className property correctly', () => {
@@ -934,7 +934,7 @@ describe('updatePopperElement', () => {
 
 describe('injectCSS', () => {
   it('injects a string of css styles into the document `head`', () => {
-    const styles = `body { color: red; }`
+    const styles = 'body { color: red; }'
     expect(document.head.querySelector('style')).toBe(null)
     Utils.injectCSS(styles)
     const styleNode = document.head.querySelector('style')

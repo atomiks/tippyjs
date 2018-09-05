@@ -5,6 +5,8 @@ import * as Utils from '../../src/js/utils'
 
 afterEach(cleanDocumentBody)
 
+const HIDE_DELAY = 21
+
 describe('a11y', () => {
   it('false: it does not add `tabindex` attribute if ref is not focusable', () => {
     const ref = h()
@@ -211,8 +213,6 @@ describe('content', () => {
 })
 
 describe('trigger', () => {
-  const HIDE_DELAY = 21
-
   it('default: many triggers', async () => {
     const ref = h()
     const { state } = tippy.one(ref)
@@ -269,15 +269,16 @@ describe('interactive', () => {
     expect(tip.state.isVisible).toBe(true)
   })
 
-  it('false: tippy is hidden when clicked', () => {
+  it('false: tippy is hidden when clicked', async () => {
     const tip = tippy.one(h(), {
-      interactive: true
+      interactive: false
     })
     tip.show()
-    tip.popperChildren.tooltip.dispatchEvent(new Event('click'))
-    setTimeout(() => {
-      expect(tip.state.isVisible).toBe(false)
-    })
+    tip.popperChildren.tooltip.dispatchEvent(
+      new Event('click', { bubbles: true })
+    )
+    await wait(HIDE_DELAY)
+    expect(tip.state.isVisible).toBe(false)
   })
 })
 
@@ -419,38 +420,49 @@ describe('target', () => {
 
 describe('onShow', () => {
   it('is called on show, passed the instance as an argument', () => {
-    const fn = jest.fn()
-    const instance = tippy.one(h(), { onShow: fn })
+    const spy = jest.fn()
+    const instance = tippy.one(h(), { onShow: spy })
     instance.show()
-    expect(fn.mock.calls.length).toBe(1)
-    expect(fn).toBeCalledWith(instance)
+    expect(spy.mock.calls.length).toBe(1)
+    expect(spy).toBeCalledWith(instance)
   })
 })
 
 describe('onShown', () => {
-  it('is called on transition end of show, passed the instance as an argument', () => {
-    // ?!
+  it('is called on transition end of show, passed the instance as an argument', async () => {
+    const spy = jest.fn()
+    const instance = tippy.one(h(), { onShown: spy, duration: 0 })
+    instance.show()
+    await wait(1)
+    expect(spy.mock.calls.length).toBe(1)
+    expect(spy).toBeCalledWith(instance)
   })
 })
 
 describe('onHide', () => {
   it('is called on hide, passed the instance as an argument', () => {
-    const fn = jest.fn()
-    const instance = tippy.one(h(), { onHide: fn })
+    const spy = jest.fn()
+    const instance = tippy.one(h(), { onHide: spy })
     instance.hide()
-    expect(fn.mock.calls.length).toBe(1)
-    expect(fn).toBeCalledWith(instance)
+    expect(spy.mock.calls.length).toBe(1)
+    expect(spy).toBeCalledWith(instance)
   })
 })
 
 describe('onHidden', () => {
-  it('is called on transition end of hide, passed the instance as an argument', () => {
-    // ?!
+  it('is called on transition end of hide, passed the instance as an argument', async () => {
+    const spy = jest.fn()
+    const instance = tippy.one(h(), { onHidden: spy, duration: 0 })
+    instance.show()
+    instance.hide()
+    await wait(1)
+    expect(spy.mock.calls.length).toBe(1)
+    expect(spy).toBeCalledWith(instance)
   })
 })
 
 describe('wait', () => {
-  it('waits until the user manually shows the tooltip', done => {
+  it('waits until the user manually shows the tooltip', () => {
     const ref = h()
     const wait = jest.fn()
     const tip = tippy.one(ref, { wait })
@@ -458,7 +470,6 @@ describe('wait', () => {
     expect(typeof wait.mock.calls[0][0].show).toBe('function')
     expect(typeof wait.mock.calls[0][1].type).toBe('string')
     expect(tip.state.isVisible).toBe(false)
-    done()
   })
 })
 
