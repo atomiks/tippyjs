@@ -37,6 +37,7 @@ export let Defaults = {
   lazy: true,
   touch: true,
   wait: null,
+  shouldPopperHideOnBlur: () => true,
   onShow() {},
   onShown() {},
   onHide() {},

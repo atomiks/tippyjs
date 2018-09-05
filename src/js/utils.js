@@ -198,7 +198,7 @@ export const removeInertia = tooltip => {
 export const createPopperElement = (id, props) => {
   const popper = div()
   popper.className = 'tippy-popper'
-  popper.role = 'tooltip'
+  popper.setAttribute('role', 'tooltip')
   popper.id = `tippy-${id}`
   popper.style.zIndex = props.zIndex
 
@@ -240,7 +240,8 @@ export const createPopperElement = (id, props) => {
     if (
       e.relatedTarget &&
       popper._tippy &&
-      !closestCallback(e.relatedTarget, el => el === popper)
+      !closestCallback(e.relatedTarget, el => el === popper) &&
+      popper._tippy.props.shouldPopperHideOnBlur(e)
     ) {
       popper._tippy.hide()
     }
@@ -727,10 +728,16 @@ export const evaluateProps = (reference, props) => {
   return out
 }
 
+/**
+ * Add/remove transitionend listener from tooltip
+ */
 export const toggleTransitionEndListener = (tooltip, action, listener) => {
   tooltip[action + 'EventListener']('transitionend', listener)
 }
 
+/**
+ * Debounce utility
+ */
 export const debounce = (fn, ms) => {
   let timeoutId
   return function() {
