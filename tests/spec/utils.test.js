@@ -38,7 +38,7 @@ describe('isPlainObject', () => {
 
 describe('toArray', () => {
   it('converts a NodeList to an array', () => {
-    [...Array(10)].map(() => h())
+    ;[...Array(10)].map(() => h())
     const arr = Utils.toArray(document.querySelectorAll(IDENTIFIER))
     expect(Array.isArray(arr)).toBe(true)
   })
@@ -62,7 +62,7 @@ describe('getArrayOfElements', () => {
   })
 
   it('returns an array of elements when given a valid selector string', () => {
-    [...Array(10)].map(() => h())
+    ;[...Array(10)].map(() => h())
     const allAreElements = Utils.getArrayOfElements(IDENTIFIER).every(
       value => value instanceof Element
     )

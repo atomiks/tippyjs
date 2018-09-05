@@ -5,3 +5,4 @@ coverage
 dist
 tests/visual/dist
 package-lock.json
+.devserver

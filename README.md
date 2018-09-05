@@ -5,21 +5,21 @@
 ![gzip Size](http://img.badgesize.io/https://unpkg.com/tippy.js/dist/tippy.all.min.js?compression=gzip&label=gzip%20size)
 [![CDNJS](https://img.shields.io/cdnjs/v/tippy.js.svg)](https://cdnjs.com/libraries/tippy.js)
 
-Tippy.js is a highly customizable vanilla JS tooltip/popover library powered by Popper.js.
+Tippy.js is a highly customizable vanilla JS tooltip and popover library powered by Popper.js.
 
-## Demo and documentation
+## Demo and Documentation
 
 https://atomiks.github.io/tippyjs/
 
 ## Installation
 
 ```
-npm install tippy.js
+npm i tippy.js
 ```
 
 CDN: https://unpkg.com/tippy.js/dist/
 
-## Basic usage
+## Basic Usage
 
 #### 1. Give elements a `data-tippy` attribute containing the tooltip content.
 
@@ -28,20 +28,10 @@ CDN: https://unpkg.com/tippy.js/dist/
 <button data-tippy="Another tooltip">Text</button>
 ```
 
-#### 2. Include the `tippy.all.min.js` script in your document, which automatically injects Tippy's CSS into `head`.
-
-Use the full version link! Visit the link in `src` below to get the latest version.
+#### 2. Include the `tippy.all.min.js` script in your document, which automatically injects Tippy's CSS into `<head>`.
 
 ```html
-<script src="https://unpkg.com/tippy.js/dist/tippy.all.min.js"></script>
-```
-
-#### 3. Now call `tippy()` with a CSS selector to give them a nice tooltip!
-
-```html
-<script>
-  tippy('button')
-</script>
+<script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>
 ```
 
 #### Basic example
@@ -51,14 +41,18 @@ Use the full version link! Visit the link in `src` below to get the latest versi
 <html>
 <head><title>Tippy Example</title></head>
 <body>
-  <!-- Elements with the `data-tippy` attribute -->
+  <!-- Elements with a `data-tippy` attribute -->
   <button data-tippy="Tooltip">Text</button>
   <button data-tippy="Another tooltip">Text</button>
 
   <!-- Include Tippy -->
-  <script src="https://unpkg.com/tippy.js@next/dist/tippy.all.min.js"></script>
+  <script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>
 </body>
 </html>
 ```
 
 View the [docs](https://atomiks.github.io/tippyjs/) for details on all of the options you can supply to customize tooltips to suit your needs.
+
+## Component wrappers
+
+- [React component](https://github.com/atomiks/tippy.js-react)
