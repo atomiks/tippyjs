@@ -24,9 +24,9 @@ export default () => (
     </p>
     <Code content={AUTO_TIPPY_BUTTON} />
     <p>
-      When tippy is loaded in the document, it will search for elements with the
-      attribute and give them a tooltip automatically. This means you won't have
-      to touch JavaScript at all.
+      When Tippy.js is loaded in the document, it will search for elements with
+      the attribute and give them a tooltip automatically. This means you won't
+      have to touch JavaScript at all.
     </p>
     <Subheading>Method 2: Function</Subheading>
     <p>
@@ -35,7 +35,7 @@ export default () => (
     <Code content={FUNCTION_BUTTON} />
     <Code content={FUNCTION_CALL} />
     <ResultBox>
-      <Tippy>
+      <Tippy content="I'm a tooltip!">
         <button class="btn">Text</button>
       </Tippy>
     </ResultBox>

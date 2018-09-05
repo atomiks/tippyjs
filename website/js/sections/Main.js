@@ -12,7 +12,6 @@ import HTMLContent from './HTMLContent'
 import CreatingCustomThemes from './CreatingCustomThemes'
 import BrowserSupport from './BrowserSupport'
 import Performance from './Performance'
-import ViewLibraryWrappers from './ViewLibraryWrappers'
 
 export default () => (
   <main class="main">
@@ -27,7 +26,6 @@ export default () => (
       <Methods />
       <HTMLContent />
       <CreatingCustomThemes />
-      <ViewLibraryWrappers />
       <BrowserSupport />
       <Performance />
     </div>

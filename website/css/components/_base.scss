@@ -66,11 +66,16 @@ a {
 .table-wrapper {
   position: relative;
   overflow-x: auto;
-  margin-right: -5.5%;
+  margin: 0 -5.5%;
   -webkit-overflow-scrolling: touch;
 
   @media (min-width: 768px) {
     max-width: 100%;
+    margin: 0;
+  }
+
+  @media (min-width: 1050px) {
+    overflow-x: visible;
   }
 }
 
@@ -84,24 +89,30 @@ a {
 .table {
   text-align: left;
   border-collapse: collapse;
-  border-radius: 6px;
-  overflow: hidden;
+  max-width: calc(100% - 1px);
 
   tr:nth-child(even) {
-    background-color: #fbfbfd;
+    background-color: #f9fafb;
   }
 
   th {
-    background: #535d77;
-    color: #d9dbee;
-    padding: 10px;
-    border: 1px solid lighten(#535d77, 10);
+    position: sticky;
+    top: 0;
+    background: #787f96;
+    color: white;
+    padding: 8px 15px;
+    font-size: 90%;
+    border: none;
+    z-index: 10;
+  }
+
+  tbody {
+    border: 1px solid #e6e9f5;
     border-top: none;
   }
 
   td {
-    border: 1px solid #dfe6ff;
-    padding: 10px;
+    padding: 8px 15px;
   }
 
   td:nth-child(3) {
@@ -119,15 +130,6 @@ a {
   border-left: 5px solid #eee;
   opacity: 0.7;
   font-size: 90%;
-}
-
-.feather {
-  position: relative;
-  top: -2px;
-  vertical-align: middle;
-  width: 1em;
-  height: 1em;
-  stroke: currentColor;
 }
 
 .tippy {

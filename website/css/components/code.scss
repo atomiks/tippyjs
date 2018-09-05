@@ -59,6 +59,7 @@ code.prop {
   color: inherit;
   font-weight: bold;
   font-size: 16px;
+  padding-left: 0;
 
   a {
     color: inherit;
@@ -115,7 +116,7 @@ pre.is-option {
 
 :not(pre) > code[class*='language-'],
 pre[class*='language-'] {
-  background: #272c48;
+  background: #1c2640;
 }
 
 /* Inline code */
@@ -187,7 +188,7 @@ pre[class*='language-'] {
 .token.important,
 .token.atrule,
 .token.keyword {
-  color: #b899ff;
+  color: #aca9ff;
 }
 
 .token.function {

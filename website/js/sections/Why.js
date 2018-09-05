@@ -22,12 +22,16 @@ export default () => (
       <li>
         Difficult to work with self-closing elements like <code>img</code>
       </li>
+      <li>JavaScript is required for dynamic HTML content</li>
+      <li>JavaScript is required to perform side effects (e.g. AJAX)</li>
     </ul>
 
     <p>
-      These are the reasons behind Tippy.js. JavaScript logic is required to
-      properly manage the position of these "poppers" (elements that exist
-      outside the normal flow of the document).
+      In addition, Tippy automatically handles many use cases available
+      declaratively in a simple option API. Options like{' '}
+      <code>followCursor</code>, <code>interactive</code>, <code>touch</code>,{' '}
+      <code>arrow</code>, and the <code>on*</code> lifecycle functions make
+      dealing with tooltips & popovers a breeze.
     </p>
   </Section>
 )

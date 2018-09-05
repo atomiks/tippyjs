@@ -10,15 +10,7 @@ export default () => (state, actions) => (
   <Section title={TITLE} emoji="💻">
     <p>
       Tippy supports browsers with <code>requestAnimationFrame</code> and{' '}
-      <code>MutationObserver</code> support: See{' '}
-      <a
-        href="https://caniuse.com/#feat=mutationobserver"
-        target="_blank"
-        rel="noopener"
-      >
-        caniuse data
-      </a>
-      .
+      <code>MutationObserver</code> support.
     </p>
     <p>
       IE10 is only partially supported unless you polyfill{' '}

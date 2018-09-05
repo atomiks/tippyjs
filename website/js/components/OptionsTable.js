@@ -1,7 +1,9 @@
 import { h } from 'hyperapp'
 import { toKebabCase } from '../utils'
 import Code from './Code'
+
 import APPEND_TO from '../../snippets/append-to'
+import WAIT from '../../snippets/wait'
 
 const Prop = (props, children) => {
   const id = toKebabCase(props.name) + '-option'
@@ -33,7 +35,7 @@ const Prop = (props, children) => {
 
 export default () => (
   <div class="table-wrapper">
-    <table class="table">
+    <table class="table" cellspacing="0">
       <thead>
         <tr>
           <th>Prop</th>
@@ -100,7 +102,7 @@ export default () => (
           default="&quot;&quot;"
           value={['String', 'Element']}
         >
-          The content of the tooltip.
+          The content of the tippy.
         </Prop>
         <Prop name="delay" default="[0, 20]" value={['Number', '[show, hide]']}>
           Delay in ms once a trigger event is fired before a tippy shows or
@@ -119,7 +121,7 @@ export default () => (
           default value, e.g. <code>[null, 50]</code>.
         </Prop>
         <Prop name="distance" default="10" value="Number">
-          How far in pixels the tooltip element is from the reference element.
+          How far in pixels the tippy element is from the reference element.
           Only applies to a single axis and not to the parent popper element,
           see{' '}
           <a class="link" href="#offset">
@@ -128,8 +130,8 @@ export default () => (
           .
         </Prop>
         <Prop name="flip" default="true" value="Boolean">
-          Determines if the tooltip flips so that it is placed within the
-          viewport as best it can be if there is not enough room.
+          Determines if the tippy flips so that it is placed within the viewport
+          as best it can be if there is not enough room.
         </Prop>
         <Prop
           name="flipBehavior"
@@ -146,9 +148,9 @@ export default () => (
           Determines if the tippy follows the user's mouse cursor while showing.
         </Prop>
         <Prop name="hideOnClick" default="true" value={['Boolean', '"toggle"']}>
-          Determines if the tooltip should hide if its reference element was
-          clicked. For click-triggered tooltips, using <code>false</code> will
-          prevent the tooltip from ever hiding once it is showing. To prevent
+          Determines if the tippy should hide if its reference element was
+          clicked. For click-triggered tippys, using <code>false</code> will
+          prevent the tippy from ever hiding once it is showing. To prevent
           clicks outside of the tippy from hiding it but still allow it to be
           toggled, use the string <code>"toggle"</code>.
         </Prop>
@@ -158,13 +160,13 @@ export default () => (
           animation.
         </Prop>
         <Prop name="interactive" default="false" value="Boolean">
-          Determines if a tooltip should be interactive, i.e. able to be hovered
+          Determines if a tippy should be interactive, i.e. able to be hovered
           over or clicked without hiding.
         </Prop>
         <Prop name="interactiveBorder" default="false" value="Boolean">
           Determines the size of the invisible border around a tippy that will
           prevent it from hiding (only relevant for the hover trigger). Useful
-          to prevent the tooltip from accidentally hiding from clumsy cursor
+          to prevent the tippy from accidentally hiding from clumsy cursor
           movements.
         </Prop>
         <Prop name="interactiveDebounce" default="0" value="Number">
@@ -176,7 +178,7 @@ export default () => (
           for the tippy) is lazily created. That is, it's only created when
           necessary (i.e. triggering the tippy for the first time). Setting this
           prop to false allows you to access the instance synchronously without
-          needing to show the tooltip.
+          needing to show the tippy.
         </Prop>
         <Prop name="livePlacement" default="true" value="Boolean">
           Determines if the popper instance should listen to scroll events. This
@@ -214,7 +216,10 @@ export default () => (
           value={['"top"', '"bottom"', '"left"', '"right"']}
           type="string"
         >
-          Positions the tippy relative to its reference element.
+          Positions the tippy relative to its reference element. Use the suffix{' '}
+          <code>-start</code> or <code>-end</code> to shift the tippy to the
+          start or end of the reference element, instead of centering it. For
+          example, <code>top-start</code> or <code>left-end</code>.
         </Prop>
         <Prop name="popperOptions" default="{}" value="Object">
           Specify custom Popper.js options. See the{' '}
@@ -225,6 +230,18 @@ export default () => (
             Popper.js documentation
           </a>{' '}
           for more.
+        </Prop>
+        <Prop
+          name="shouldPopperHideOnBlur"
+          default="(FocusOutEvent) => true"
+          value="Function"
+        >
+          A function that returns a boolean to determine if the popper element
+          should hide if it's blurred (applies only if interactive).{' '}
+          <span style={{ display: 'block', marginBottom: '10px' }} />
+          If the popper element is blurred (i.e. no elements within it are in
+          focus), the popper is hidden. However, there are cases in which you
+          may need to keep it visible even when not in focus.
         </Prop>
         <Prop
           name="size"
@@ -246,7 +263,7 @@ export default () => (
           <code>"dark-theme"</code>.
         </Prop>
         <Prop name="touch" default="true" value="Boolean">
-          Determines if the tooltip displays on touch devices.
+          Determines if the tippy displays on touch devices.
         </Prop>
         <Prop name="touchHold" default="false" value="Boolean">
           Determines trigger behavior on touch devices. If true, instead of a
@@ -259,13 +276,19 @@ export default () => (
           default="&quot;mouseenter focus&quot;"
           value={['"mouseenter"', '"focus"', '"click"', '"manual"']}
         >
-          The events (each separated by a space) which cause a tooltip to show.
-          Use manual to only trigger the tooltip programmatically.
+          The events (each separated by a space) which cause a tippy to show.
+          Use manual to only trigger the tippy programmatically.
         </Prop>
         <Prop name="updateDuration" default="200" value="Number">
           The transition duration between position updates for the{' '}
           <code>sticky</code> option. Set to <code>0</code> to prevent flips
           from transitioning.
+        </Prop>
+        <Prop name="wait" default="null" value="Function">
+          A function that, when defined, will wait until you manually invoke{' '}
+          <code>show()</code> when a tippy is triggered. It takes the tippy
+          instance and the trigger event as arguments.
+          <Code content={WAIT} />
         </Prop>
         <Prop name="zIndex" default="9999" value="Number">
           The <code>z-index</code> of the popper element.

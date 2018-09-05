@@ -51,8 +51,8 @@ export default () => (
     </p>
 
     <p>
-      Used in conjunction with the auto-tippy method, you can give elements
-      custom tooltips without ever touching JavaScript.
+      Used in conjunction with the Auto Method, you can give elements custom
+      tooltips without ever touching JavaScript.
     </p>
 
     <Code content={DATA_ATTRIBUTES} />

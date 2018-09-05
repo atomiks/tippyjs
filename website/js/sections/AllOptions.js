@@ -96,15 +96,15 @@ export default () => (state, actions) => (
     <p>
       <Emoji size="small">⚠️</Emoji>
       Avoid binding a Tippy instance to the body, as{' '}
-      <code>mouseover / mouseoff</code> events will constantly fire as the
+      <code>mouseover / mouseout</code> events will constantly fire as the
       cursor moves over the page. Instead, give it to the nearest possible
       parent element.
     </p>
 
     <Subheading>Tooltips inside a scrollable container</Subheading>
     <p>
-      Add the following options to make the tooltip not stay stuck within the
-      viewport.
+      Add the following options to prevent the tippy from staying stuck within
+      the viewport.
     </p>
     <Code content={SCROLLABLE_CONTAINER} />
   </Section>
