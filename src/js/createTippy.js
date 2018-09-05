@@ -264,7 +264,9 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    lastTriggerEvent = event
+    if (!tip.state.isVisible) {
+      lastTriggerEvent = event
+    }
 
     // Toggle show/hide when clicking click-triggered tooltips
     if (
@@ -543,7 +545,7 @@ export default function createTippy(reference, collectionProps) {
    * Invokes a callback once the tooltip has fully transitioned out
    */
   function onTransitionedOut(duration, callback) {
-    onTransitionEnd(false, duration, () => {
+    onTransitionEnd(duration, () => {
       if (!tip.state.isVisible && tip.props.appendTo.contains(tip.popper)) {
         callback()
       }
@@ -554,13 +556,13 @@ export default function createTippy(reference, collectionProps) {
    * Invokes a callback once the tooltip has fully transitioned in
    */
   function onTransitionedIn(duration, callback) {
-    onTransitionEnd(true, duration, callback)
+    onTransitionEnd(duration, callback)
   }
 
   /**
    * Invokes a callback once the tooltip's CSS transition ends
    */
-  function onTransitionEnd(isInDirection, duration, callback) {
+  function onTransitionEnd(duration, callback) {
     // Make callback synchronous if duration is 0
     if (duration === 0) {
       return callback()
