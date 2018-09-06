@@ -419,7 +419,8 @@ export default () => (state, { demo }) => (
           data-tippy-size="large"
         >
           features
-        </span>, and it's constantly improving.
+        </span>
+        , and it's constantly improving.
       </p>
       <button
         class="btn"

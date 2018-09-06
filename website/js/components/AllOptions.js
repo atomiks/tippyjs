@@ -254,10 +254,11 @@ export default () => (state, { allOptions }) => (
 
     <h4>Note</h4>
     <p>
-      <span class="section__emoji" oncreate={emoji('⚠️')} />Avoid binding a
-      Tippy instance to the body, as <code>mouseover / mouseoff</code> events
-      will constantly fire as the cursor moves over the page. Instead, give it
-      to the nearest possible parent element.
+      <span class="section__emoji" oncreate={emoji('⚠️')} />
+      Avoid binding a Tippy instance to the body, as{' '}
+      <code>mouseover / mouseoff</code> events will constantly fire as the
+      cursor moves over the page. Instead, give it to the nearest possible
+      parent element.
     </p>
     <h4>Destroying a delegate instance</h4>
     <p>

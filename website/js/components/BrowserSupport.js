@@ -19,7 +19,8 @@ export default () => (state, actions) => (
       <code>MutationObserver</code> support: See{' '}
       <a href="https://caniuse.com/#feat=mutationobserver" target="_blank">
         caniuse data
-      </a>.
+      </a>
+      .
     </p>
     <p>
       IE10 is only partially supported unless you polyfill{' '}

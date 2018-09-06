@@ -103,7 +103,8 @@ tippy('.btn')
       <code>aria-describedby</code> attribute is added for{' '}
       <span tabindex="0" class="tippy" title="Short for accessibility">
         a11y
-      </span>.
+      </span>
+      .
     </p>
 
     <h3>
@@ -148,7 +149,8 @@ tippy('.btn')
         title="Elements can be selected based on the existence of an attribute by wrapping the attribute inside square brackets. You can do any attribute, such as [class] and [id]."
       >
         selector
-      </span>:
+      </span>
+      :
     </p>
 
     <Code lang="js">{`tippy('[title]')`}</Code>
