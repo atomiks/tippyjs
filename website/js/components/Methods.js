@@ -81,22 +81,12 @@ btn._tippy.hide(1000) // 1000ms`}</Code>
 
     <h3>Update the tooltip</h3>
     <p>
-      There is no method to update the tooltip content, because it's easy to do!
-    </p>
-    <p>
-      Option 1 (recommended): Change the title on the reference element and use
-      the <code>dynamicTitle</code> option:
+      Change the title on the reference element and use the{' '}
+      <code>dynamicTitle</code> option:
     </p>
     <Code lang="js">{`tippy(btn, { dynamicTitle: true })
 btn.title = 'New tooltip :)'`}</Code>
 
-    <p>Option 2: Manually update the tooltip:</p>
-    <Code lang="js">{`btn._tippy.popper.querySelector('.tippy-content').textContent = 'New tooltip :)'`}</Code>
-
-    <p>
-      Note: With the above method, <code>_tippy.title</code> won't reflect the
-      new title, you'll need to update it manually.
-    </p>
     <p>
       If you're using an HTML template, save it to a variable reference to
       modify it later.

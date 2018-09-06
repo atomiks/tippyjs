@@ -30,10 +30,8 @@ CDN: https://unpkg.com/tippy.js/dist/
 
 #### 2. Include the `tippy.all.min.js` script in your document, which automatically injects Tippy's CSS into `head`.
 
-Use the full version link! Visit the link in `src` below to get the latest version.
-
 ```html
-<script src="https://unpkg.com/tippy.js/dist/tippy.all.min.js"></script>
+<script src="https://unpkg.com/tippy.js@2/dist/tippy.all.min.js"></script>
 ```
 
 #### 3. Now call `tippy()` with a CSS selector to give them a nice tooltip!
@@ -56,7 +54,7 @@ Use the full version link! Visit the link in `src` below to get the latest versi
   <button title="Another tooltip">Text</button>
 
   <!-- Include Tippy -->
-  <script src="https://unpkg.com/tippy.js/dist/tippy.all.min.js"></script>
+  <script src="https://unpkg.com/tippy.js@2/dist/tippy.all.min.js"></script>
   <!-- Initialize tooltips by calling the `tippy` function with a CSS selector -->
   <script>
     tippy('button')

@@ -1,5 +1,4 @@
 import { h } from 'hyperapp'
-import pkg from '../../../package.json'
 import { emoji } from '../utils'
 
 import Code from './Code'
@@ -27,9 +26,7 @@ export default () => (state, actions) => (
       in your HTML document before your own scripts:
     </p>
     <Code lang="html">
-      {`<script src="https://unpkg.com/tippy.js@${
-        pkg.version
-      }/dist/tippy.all.min.js"></script>`}
+      {`<script src="https://unpkg.com/tippy.js@2/dist/tippy.all.min.js"></script>`}
     </Code>
     <p>
       Once it's loaded, you'll have access to the <code>tippy</code> module
