@@ -56,7 +56,7 @@
     "feather-icons": "^4.7.0",
     "focus-visible": "^4.1.1",
     "hyperapp": "^1.2.6",
-    "jest": "^22.4.2",
+    "jest": "^23.5.0",
     "jsdom": "^11.6.2",
     "mutation-observer": "^1.0.3",
     "node-sass": "^4.9.2",
