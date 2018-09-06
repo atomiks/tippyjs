@@ -11,7 +11,6 @@ import getInnerElements from '../utils/getInnerElements'
 import getPopperPlacement from '../utils/getPopperPlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 import prefix from '../utils/prefix'
-import defer from '../utils/defer'
 import closest from '../utils/closest'
 import getValue from '../utils/getValue'
 import setVisibilityState from '../utils/setVisibilityState'
@@ -194,34 +193,26 @@ export class Tippy {
       focus(reference)
     }
 
-    /*
-    * This call is deferred because sometimes when the tooltip is still transitioning in but hide()
-    * is called before it finishes, the CSS transition won't reverse quickly enough, meaning
-    * the CSS transition will finish 1-2 frames later, and onHidden() will run since the JS set it
-    * more quickly. It should actually be onShown(). Seems to be something Chrome does, not Safari
-    */
-    defer(() => {
-      _onTransitionEnd.call(this, duration, () => {
-        if (this.state.visible || !options.appendTo.contains(popper)) return
+    _onTransitionEnd.call(this, duration, () => {
+      if (this.state.visible || !options.appendTo.contains(popper)) return
 
-        if (!this._(key).isPreparingToShow) {
-          document.removeEventListener(
-            'mousemove',
-            this._(key).followCursorListener
-          )
-          this._(key).lastMouseMoveEvent = null
-        }
+      if (!this._(key).isPreparingToShow) {
+        document.removeEventListener(
+          'mousemove',
+          this._(key).followCursorListener
+        )
+        this._(key).lastMouseMoveEvent = null
+      }
 
-        if (this.popperInstance) {
-          this.popperInstance.disableEventListeners()
-        }
+      if (this.popperInstance) {
+        this.popperInstance.disableEventListeners()
+      }
 
-        reference.removeAttribute('aria-describedby')
+      reference.removeAttribute('aria-describedby')
 
-        options.appendTo.removeChild(popper)
+      options.appendTo.removeChild(popper)
 
-        options.onHidden.call(popper, this)
-      })
+      options.onHidden.call(popper, this)
     })
   }
 

@@ -11,6 +11,8 @@ const o = options => ({ createPopperInstanceOnInit: true, ...options })
 
 afterEach(cleanDocument)
 
+const HIDE_DELAY = 21
+
 describe('createPopperInstanceOnInit', () => {
   test('creates the popper instance on init if `true`', () => {
     const tip = tippy.one(createReferenceElement(), {
@@ -44,7 +46,7 @@ describe('placement', () => {
 })
 
 describe('trigger', () => {
-  test('mouseenter', () => {
+  test('mouseenter', done => {
     const tip = tippy.one(
       createReferenceElement(true),
       o({
@@ -54,11 +56,13 @@ describe('trigger', () => {
     tip.reference.dispatchEvent(new Event('mouseenter'))
     expect(tip.state.visible).toBe(true)
     tip.reference.dispatchEvent(new Event('mouseleave'))
-    expect(tip.state.visible).toBe(false)
-    cleanDocument()
+    setTimeout(() => {
+      expect(tip.state.visible).toBe(false)
+      done()
+    }, HIDE_DELAY)
   })
 
-  test('focus', () => {
+  test('focus', done => {
     const tip = tippy.one(
       createReferenceElement(true),
       o({
@@ -68,11 +72,13 @@ describe('trigger', () => {
     tip.reference.dispatchEvent(new Event('focus'))
     expect(tip.state.visible).toBe(true)
     tip.reference.dispatchEvent(new Event('blur'))
-    expect(tip.state.visible).toBe(false)
-    cleanDocument()
+    setTimeout(() => {
+      expect(tip.state.visible).toBe(false)
+      done()
+    }, HIDE_DELAY)
   })
 
-  test('click', () => {
+  test('click', done => {
     const tip = tippy.one(
       createReferenceElement(true),
       o({
@@ -82,8 +88,10 @@ describe('trigger', () => {
     tip.reference.dispatchEvent(new Event('click'))
     expect(tip.state.visible).toBe(true)
     tip.reference.dispatchEvent(new Event('click'))
-    expect(tip.state.visible).toBe(false)
-    cleanDocument()
+    setTimeout(() => {
+      expect(tip.state.visible).toBe(false)
+      done()
+    }, HIDE_DELAY)
   })
 })
 

@@ -8,7 +8,7 @@ const defaults = {
   html: false,
   animateFill: true,
   arrow: false,
-  delay: 0,
+  delay: [0, 20],
   duration: [350, 300],
   interactive: false,
   interactiveBorder: 2,
