@@ -1,4 +1,7 @@
 .DS_Store
 /node_modules
-dist/tests
+dist
+coverage
 .cache/
+package-lock.json
+.devserver

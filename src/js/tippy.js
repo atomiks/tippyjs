@@ -11,6 +11,7 @@ import createTooltips from './core/createTooltips'
 import bindEventListeners from './core/bindEventListeners'
 
 let eventListenersBound = false
+let useCapture = false
 
 /**
  * Exported module
@@ -21,7 +22,7 @@ let eventListenersBound = false
  */
 function tippy(selector, options, one) {
   if (browser.supported && !eventListenersBound) {
-    bindEventListeners()
+    bindEventListeners(useCapture)
     eventListenersBound = true
   }
 
@@ -57,6 +58,9 @@ tippy.one = (selector, options) => tippy(selector, options, true).tooltips[0]
 tippy.disableAnimations = () => {
   defaults.updateDuration = defaults.duration = 0
   defaults.animateFill = false
+}
+tippy.useCapture = () => {
+  useCapture = true
 }
 
 export default tippy
