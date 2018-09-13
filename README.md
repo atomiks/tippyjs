@@ -28,7 +28,7 @@ CDN: https://unpkg.com/tippy.js/dist/
 <button data-tippy="Another tooltip">Text</button>
 ```
 
-#### 2. Include the `tippy.all.min.js` script in your document, which automatically injects Tippy's CSS into `<head>`.
+#### 2. Include the `tippy.all.min.js` script in your document.
 
 ```html
 <script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>
@@ -39,20 +39,32 @@ CDN: https://unpkg.com/tippy.js/dist/
 ```html
 <!DOCTYPE html>
 <html>
-<head><title>Tippy Example</title></head>
-<body>
-  <!-- Elements with a `data-tippy` attribute -->
-  <button data-tippy="Tooltip">Text</button>
-  <button data-tippy="Another tooltip">Text</button>
+  <head>
+    <title>Tippy Example</title>
+  </head>
+  <body>
+    <!-- Elements with a `data-tippy` attribute -->
+    <button data-tippy="Tooltip">Text</button>
+    <button data-tippy="Another tooltip">Text</button>
+    <!-- Specify option via attribute -->
+    <button data-tippy="Another tooltip" data-tippy-delay="500">Delayed</button>
 
-  <!-- Include Tippy -->
-  <script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>
-</body>
+    <!-- Include Tippy -->
+    <script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>
+    <!-- OPTIONAL: Set the defaults for the auto-initialized tooltips -->
+    <script>
+      tippy.setDefaults({
+        arrow: true,
+        delay: 40,
+        theme: 'my-tippy'
+      })
+    </script>
+  </body>
 </html>
 ```
 
 View the [docs](https://atomiks.github.io/tippyjs/) for details on all of the options you can supply to customize tooltips to suit your needs.
 
-## Component wrappers
+## Component Wrappers
 
 - [React component](https://github.com/atomiks/tippy.js-react)
