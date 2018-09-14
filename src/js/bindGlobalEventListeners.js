@@ -100,8 +100,8 @@ export const onWindowResize = () => {
 /**
  * Adds the needed global event listeners
  */
-export default function bindEventListeners() {
-  document.addEventListener('click', onDocumentClick)
+export default function bindEventListeners(useCapture) {
+  document.addEventListener('click', onDocumentClick, useCapture)
   document.addEventListener('touchstart', onDocumentTouch)
   window.addEventListener('blur', onWindowBlur)
   window.addEventListener('resize', onWindowResize)

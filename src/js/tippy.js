@@ -12,10 +12,11 @@ import {
 } from './utils'
 
 let eventListenersBound = false
+let useCapture = false
 
 export default function tippy(targets, options, one) {
   if (!eventListenersBound) {
-    bindGlobalEventListeners()
+    bindGlobalEventListeners(useCapture)
     eventListenersBound = true
   }
 
@@ -82,6 +83,9 @@ tippy.disableAnimations = () => {
   })
 }
 tippy.hideAllPoppers = hideAllPoppers
+tippy.useCapture = () => {
+  useCapture = true
+}
 
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute

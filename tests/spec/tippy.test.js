@@ -121,7 +121,12 @@ describe('tippy.disableAnimations()', () => {
     expect(Defaults.animateFill).toBe(false)
     expect(Defaults.updateDuration).toBe(0)
     expect(Defaults.duration).toBe(0)
+    tippy.setDefaults(ogDefaults)
   })
+})
+
+describe('tippy.useCapture()', () => {
+  it('uses capturing phase before bubbling', () => {})
 })
 
 describe('auto-init', () => {
