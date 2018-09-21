@@ -742,7 +742,9 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    tip.props.onShow(tip)
+    if (tip.props.onShow(tip) === false) {
+      return
+    }
 
     tip.popper.style.visibility = 'visible'
     tip.state.isVisible = true
@@ -822,7 +824,9 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    tip.props.onHide(tip)
+    if (tip.props.onHide(tip) === false) {
+      return
+    }
 
     if (tip.props.updateDuration === 0) {
       tip.popperChildren.tooltip.classList.remove('tippy-notransition')

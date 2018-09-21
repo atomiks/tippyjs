@@ -426,6 +426,12 @@ describe('onShow', () => {
     expect(spy.mock.calls.length).toBe(1)
     expect(spy).toBeCalledWith(instance)
   })
+
+  it('prevents the the tooltip from showing if it returns `false`', () => {
+    const instance = tippy.one(h(), { onShow: () => false })
+    instance.show()
+    expect(instance.state.isVisible).toBe(false)
+  })
 })
 
 describe('onShown', () => {
@@ -446,6 +452,13 @@ describe('onHide', () => {
     instance.hide()
     expect(spy.mock.calls.length).toBe(1)
     expect(spy).toBeCalledWith(instance)
+  })
+
+  it('prevents the the tooltip from hiding if it returns `false`', () => {
+    const instance = tippy.one(h(), { onHide: () => false })
+    instance.show()
+    instance.hide()
+    expect(instance.state.isVisible).toBe(true)
   })
 })
 
