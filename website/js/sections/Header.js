@@ -80,7 +80,7 @@ export default () => (
               class="header__docs"
               href="https://atomiks.github.io/tippyjs/v2/index.html"
             >
-              v2 docs
+              Go to v2 docs
             </a>
           </p>
         </div>
