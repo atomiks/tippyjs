@@ -23,7 +23,7 @@ export default function tippy(targets, options, one) {
   // Throw an error if the user supplied an invalid option
   for (const key in options || {}) {
     if (!(key in Defaults)) {
-      throw Error(`[tippy]: ${key} is not a valid option`)
+      throw Error(`[tippy]: \`${key}\` is not a valid option`)
     }
   }
 
