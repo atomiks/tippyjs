@@ -65,7 +65,7 @@
     margin: 0 16px 24px;
     font-size: 20px;
 
-    &:first-child {
+    &:first-child p {
       background: var(--text-gradient);
       -webkit-text-fill-color: transparent;
       -webkit-background-clip: text;

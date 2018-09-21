@@ -5,7 +5,7 @@ tippy('.btn', {
   arrow: true,
   arrowType: 'round',
   size: 'large',
-  duration: 500
+  duration: 500,
   animation: 'scale'
 })
 ```
