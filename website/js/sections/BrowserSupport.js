@@ -13,8 +13,8 @@ export default () => (state, actions) => (
       <code>MutationObserver</code> support.
     </p>
     <p>
-      IE10 is only partially supported unless you polyfill{' '}
-      <code>MutationObserver</code>, then it is fully supported.
+      <Emoji size="small">⚠️</Emoji> IE11 requires a <code>classList</code>{' '}
+      polyfill if using an SVG element as the reference.
     </p>
   </Section>
 )

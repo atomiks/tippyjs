@@ -5,7 +5,7 @@ import EVENT_DELEGATION_HTML from '../../snippets/event-delegation-html'
 import EVENT_DELEGATION_JS from '../../snippets/event-delegation-js'
 import SCROLLABLE_CONTAINER from '../../snippets/scrollable-container'
 import DISABLE_TOUCH from '../../snippets/disable-touch'
-import ON_IMAGE_DIMENSIONS_KNOWN from '../../snippets/on-image-dimensions-known'
+import HIDE_TOOLTIPS_ON_SCROLL from '../../snippets/hide-tooltips-on-scroll'
 
 import Section from '../components/Section'
 import Emoji from '../components/Emoji'
@@ -65,19 +65,6 @@ export default () => (state, actions) => (
       dimensions become known by the browser.
     </p>
 
-    <p>
-      To ensure the tooltip is positioned correctly, the following utility
-      function will fire the callback function as soon as the image's dimensions
-      become known by the browser (before it's fully loaded).
-    </p>
-
-    <Code content={ON_IMAGE_DIMENSIONS_KNOWN} />
-
-    <p>
-      If you want the image to be <em>fully</em> loaded, then you can specify{' '}
-      <code>img.onload</code> as the callback before setting <code>src</code>.
-    </p>
-
     <Subheading>Event delegation</Subheading>
     <p>
       Event delegation only requires minimal setup. Your setup should look
@@ -107,5 +94,12 @@ export default () => (state, actions) => (
       the viewport.
     </p>
     <Code content={SCROLLABLE_CONTAINER} />
+
+    <Subheading>Hiding tooltips on scroll</Subheading>
+    <p>
+      In some cases it may be desirable to hide tooltips when scrolling (for
+      example, on touch devices).
+    </p>
+    <Code content={HIDE_TOOLTIPS_ON_SCROLL} />
   </Section>
 )
