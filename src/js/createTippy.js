@@ -136,14 +136,19 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
+    const rect = tip.reference.getBoundingClientRect()
+    const { followCursor } = tip.props
+    const isHorizontal = followCursor === 'horizontal'
+    const isVertical = followCursor === 'vertical'
+
     tip.popperInstance.reference = {
       getBoundingClientRect: () => ({
         width: 0,
         height: 0,
-        top: clientY,
-        left: clientX,
-        right: clientX,
-        bottom: clientY
+        top: isHorizontal ? rect.top : clientY,
+        bottom: isHorizontal ? rect.bottom : clientY,
+        left: isVertical ? rect.left : clientX,
+        right: isVertical ? rect.right : clientX
       }),
       clientWidth: 0,
       clientHeight: 0
