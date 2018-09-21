@@ -39,7 +39,7 @@
       }
 
       .tippy-arrow {
-        @include arrow($placement, 7px, #333);
+        @include arrow($placement, 8px, #333);
         @include arrow-position($placement, 7px, false);
         @include arrow-margin($placement);
         @include arrow-transform-origin($placement);
