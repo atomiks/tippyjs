@@ -127,9 +127,9 @@ export default function createTippy(reference, collectionProps) {
   }
 
   /**
-   * Listener for the `followCursor` prop
+   * Positions the virtual reference near the mouse cursor
    */
-  function followCursorListener(event) {
+  function positionVirtualReferenceNearCursor(event) {
     const { clientX, clientY } = (lastMouseMoveEvent = event)
 
     if (!tip.popperInstance) {
@@ -201,7 +201,7 @@ export default function createTippy(reference, collectionProps) {
       if (popperChildren.arrow) {
         popperChildren.arrow.style.margin = '0'
       }
-      document.addEventListener('mousemove', followCursorListener)
+      document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
     const delay = getValue(tip.props.delay, 0, Defaults.delay)
@@ -763,7 +763,7 @@ export default function createTippy(reference, collectionProps) {
         tip.popperInstance.disableEventListeners()
         const delay = getValue(tip.props.delay, 0, Defaults.delay)
         if (lastTriggerEvent.type) {
-          followCursorListener(
+          positionVirtualReferenceNearCursor(
             delay && lastMouseMoveEvent ? lastMouseMoveEvent : lastTriggerEvent
           )
         }
@@ -855,7 +855,10 @@ export default function createTippy(reference, collectionProps) {
 
     onTransitionedOut(duration, () => {
       if (!isPreparingToShow) {
-        document.removeEventListener('mousemove', followCursorListener)
+        document.removeEventListener(
+          'mousemove',
+          positionVirtualReferenceNearCursor
+        )
         lastMouseMoveEvent = null
       }
 
