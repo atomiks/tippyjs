@@ -6,6 +6,7 @@ import EVENT_DELEGATION_JS from '../../snippets/event-delegation-js'
 import SCROLLABLE_CONTAINER from '../../snippets/scrollable-container'
 import DISABLE_TOUCH from '../../snippets/disable-touch'
 import HIDE_TOOLTIPS_ON_SCROLL from '../../snippets/hide-tooltips-on-scroll'
+import CANCEL_LIFECYCLE_FUNCTION from '../../snippets/cancel-lifecycle-function'
 
 import Section from '../components/Section'
 import Emoji from '../components/Emoji'
@@ -54,7 +55,6 @@ export default () => (state, actions) => (
         <button class="btn">Hover for a new image</button>
       </Tippy>
     </ResultBox>
-
     <Code content={AJAX} />
 
     <p>
@@ -71,7 +71,6 @@ export default () => (state, actions) => (
       similar to this, with a parent element wrapping the child elements you
       would like to give tooltips to:
     </p>
-
     <Code content={EVENT_DELEGATION_HTML} />
 
     <p>
@@ -79,7 +78,6 @@ export default () => (state, actions) => (
       elements which should receive tooltips
     </p>
     <Code content={EVENT_DELEGATION_JS} />
-
     <p>
       <Emoji size="small">⚠️</Emoji>
       Avoid binding a Tippy instance to the body, as{' '}
@@ -101,5 +99,14 @@ export default () => (state, actions) => (
       example, on touch devices).
     </p>
     <Code content={HIDE_TOOLTIPS_ON_SCROLL} />
+
+    <Subheading>Cancel tooltips from showing or hiding</Subheading>
+    <p>
+      If you return <code>false</code> in the <code>onShow</code> or{' '}
+      <code>onHide</code>
+      lifecycle function, it will cancel the operation. Note that this is
+      synchronous, so it won't wait for an AJAX request, etc.
+    </p>
+    <Code content={CANCEL_LIFECYCLE_FUNCTION} />
   </Section>
 )
