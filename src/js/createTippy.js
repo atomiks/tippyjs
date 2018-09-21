@@ -226,6 +226,11 @@ export default function createTippy(reference, collectionProps) {
   function prepareHide() {
     clearDelayTimeouts()
 
+    document.removeEventListener(
+      'mousemove',
+      positionVirtualReferenceNearCursor
+    )
+
     if (!tip.state.isVisible) {
       return
     }
