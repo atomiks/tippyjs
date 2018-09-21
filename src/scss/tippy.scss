@@ -10,7 +10,6 @@
 }
 
 .tippy-popper {
-  max-width: 350px;
   perspective: 700px;
   z-index: 9999;
   outline: 0;
@@ -128,6 +127,7 @@
   border-radius: 4px;
   font-size: 0.9rem;
   padding: 0.3rem 0.6rem;
+  max-width: 350px;
   text-align: center;
   will-change: transform;
   -webkit-font-smoothing: antialiased;
