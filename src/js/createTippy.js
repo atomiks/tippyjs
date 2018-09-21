@@ -45,6 +45,7 @@ export default function createTippy(reference, collectionProps) {
   let transitionEndListener = () => {}
   let listeners = []
   let referenceJustProgrammaticallyFocused = false
+  let firstPopperInstanceInit = false
   let debouncedOnMouseMove =
     props.interactiveDebounce > 0
       ? debounce(onMouseMove, props.interactiveDebounce)
@@ -449,25 +450,28 @@ export default function createTippy(reference, collectionProps) {
     popperMutationObserver = observer
 
     // fixes https://github.com/atomiks/tippyjs/issues/193
-    tip.popper.addEventListener('mouseenter', event => {
-      if (tip.state.isVisible && lastTriggerEvent.type === 'mouseenter') {
-        prepareShow(event)
-      }
-    })
-    tip.popper.addEventListener('mouseleave', event => {
-      if (
-        lastTriggerEvent.type === 'mouseenter' &&
-        tip.props.interactiveDebounce === 0 &&
-        isCursorOutsideInteractiveBorder(
-          getPopperPlacement(tip.popper),
-          tip.popper.getBoundingClientRect(),
-          event,
-          tip.props
-        )
-      ) {
-        prepareHide()
-      }
-    })
+    if (!firstPopperInstanceInit) {
+      tip.popper.addEventListener('mouseenter', event => {
+        if (tip.state.isVisible && lastTriggerEvent.type === 'mouseenter') {
+          prepareShow(event)
+        }
+      })
+      tip.popper.addEventListener('mouseleave', event => {
+        if (
+          lastTriggerEvent.type === 'mouseenter' &&
+          tip.props.interactiveDebounce === 0 &&
+          isCursorOutsideInteractiveBorder(
+            getPopperPlacement(tip.popper),
+            tip.popper.getBoundingClientRect(),
+            event,
+            tip.props
+          )
+        ) {
+          prepareHide()
+        }
+      })
+      firstPopperInstanceInit = true
+    }
 
     return new Popper(tip.reference, tip.popper, config)
   }
@@ -690,6 +694,7 @@ export default function createTippy(reference, collectionProps) {
 
     updatePopperElement(tip.popper, prevProps, nextProps)
     tip.popperChildren = getChildren(tip.popper)
+    tip.popperInstance = createPopperInstance()
   }
 
   /**
