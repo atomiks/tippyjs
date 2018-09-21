@@ -103,9 +103,8 @@ export default () => (state, actions) => (
     <Subheading>Cancel tooltips from showing or hiding</Subheading>
     <p>
       If you return <code>false</code> in the <code>onShow</code> or{' '}
-      <code>onHide</code>
-      lifecycle function, it will cancel the operation. Note that this is
-      synchronous, so it won't wait for an AJAX request, etc.
+      <code>onHide</code> lifecycle function, it will cancel the operation. Note
+      that this is synchronous, so it won't wait for an AJAX request, etc.
     </p>
     <Code content={CANCEL_LIFECYCLE_FUNCTION} />
   </Section>
