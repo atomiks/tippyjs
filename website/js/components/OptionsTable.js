@@ -144,8 +144,14 @@ export default () => (
           "bottom" is unavailable. By default, it chooses the opposite axis,
           i.e. "top".
         </Prop>
-        <Prop name="followCursor" default="false" value="Boolean">
+        <Prop
+          name="followCursor"
+          default="false"
+          value={['Boolean', '"vertical"', '"horizontal"']}
+        >
           Determines if the tippy follows the user's mouse cursor while showing.
+          Use the strings <code>"vertical"</code> or <code>"horizontal"</code>
+          to only follow the cursor on a single axis.
         </Prop>
         <Prop name="hideOnClick" default="true" value={['Boolean', '"toggle"']}>
           Determines if the tippy should hide if its reference element was
