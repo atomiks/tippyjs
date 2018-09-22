@@ -6,7 +6,7 @@
     &[x-placement^='#{$placement}'] {
       .tippy-tooltip.light-theme {
         .tippy-arrow {
-          @include arrow($placement, 7px, white);
+          @include arrow($placement, 8px, white);
         }
       }
     }
