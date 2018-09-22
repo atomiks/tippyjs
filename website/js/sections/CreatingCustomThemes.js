@@ -4,7 +4,7 @@ import THEME_CSS from '../../snippets/theme-css'
 import THEME_JS from '../../snippets/theme-js'
 import TIPPY_ELEMENT from '../../snippets/tippy-element'
 import TIPPY_ELEMENT_ARROW from '../../snippets/tippy-element-arrow'
-import CSS_ARROW from '../../snippets/css-arrow'
+import CSS_ARROW_STYLES from '../../snippets/css-arrow-styles'
 
 import Section from '../components/Section'
 import Emoji from '../components/Emoji'
@@ -87,10 +87,10 @@ export default () => (
       <code>.tippy-roundarrow</code>. The first is the pure CSS triangle shape,
       while the second is a custom SVG.
     </p>
-    <Code content={CSS_ARROW} />
     <p>
-      You will need to style the arrow for each different popper placement (top,
-      bottom, left, right), which is why the selector is so long.
+      You will need to style the arrow for each different popper placement if
+      using the default (sharp) arrow: top, bottom, left, right.
     </p>
+    <Code content={CSS_ARROW_STYLES} />
   </Section>
 )

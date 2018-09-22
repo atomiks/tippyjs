@@ -70,8 +70,31 @@ export default () => (
     <Subheading>Update the tooltip</Subheading>
     <p>
       Pass an object of new props to the <code>set()</code> method to update the
-      tip. The tooltip element will be redrawn to reflect the change.
+      tooltip. The tooltip element will be redrawn to reflect the change.
     </p>
     <Code content={SET_METHOD} />
+
+    <Subheading>Update the tooltip content</Subheading>
+    <p>There is a shortcut for directly updating the tooltip content.</p>
+    <Code content="tip.setContent('New content')" />
+
+    <Subheading>Static methods</Subheading>
+    <p>
+      There are a few static methods on the <code>tippy</code> function itself.
+      These methods are global and do not affect a single instance.
+    </p>
+    <p>
+      To use capture phase instead of bubbling for the global click listener,
+      call this method before any calls to <code>tippy()</code>:
+    </p>
+    <Code content="tippy.useCapture()" />
+    <p>Hide all visible poppers on the page:</p>
+    <Code content="tippy.hideAllPoppers()" />
+    <p>Disable animation-related default props:</p>
+    <Code content="tippy.disableAnimations()" />
+    <p>Set the default props for each new tippy instance:</p>
+    <Code content="tippy.setDefaults(props)" />
+    <p>Create a single tooltip and return the instance directly:</p>
+    <Code content="tippy.one(reference, options)" />
   </Section>
 )
