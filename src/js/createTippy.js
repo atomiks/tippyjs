@@ -226,13 +226,8 @@ export default function createTippy(reference, collectionProps) {
   function prepareHide() {
     clearDelayTimeouts()
 
-    document.removeEventListener(
-      'mousemove',
-      positionVirtualReferenceNearCursor
-    )
-
     if (!tip.state.isVisible) {
-      return
+      return removeFollowCursorListener()
     }
 
     isPreparingToShow = false
@@ -248,6 +243,17 @@ export default function createTippy(reference, collectionProps) {
     } else {
       hide()
     }
+  }
+
+  /**
+   * Removes the follow cursor listener
+   */
+  function removeFollowCursorListener() {
+    document.removeEventListener(
+      'mousemove',
+      positionVirtualReferenceNearCursor
+    )
+    lastMouseMoveEvent = null
   }
 
   /**
@@ -868,13 +874,7 @@ export default function createTippy(reference, collectionProps) {
     }
 
     onTransitionedOut(duration, () => {
-      if (!isPreparingToShow) {
-        document.removeEventListener(
-          'mousemove',
-          positionVirtualReferenceNearCursor
-        )
-        lastMouseMoveEvent = null
-      }
+      removeFollowCursorListener()
 
       tip.reference.removeAttribute('aria-describedby')
 
