@@ -1,16 +1,19 @@
 import anime from 'animejs'
 import twemoji from 'twemoji'
 
-export const isBrowser = typeof window !== 'undefined'
+export const isBrowser =
+  typeof window !== 'undefined' && typeof document !== 'undefined'
 
 export const DIR = './website/snippets/'
 
 export const prerender = (main, tag) => {
   const output = './docs/index.html'
-  if (!isBrowser && typeof __prerenderRequire !== 'undefined') {
-    const fs = __prerenderRequire('fs')
-    const html = fs.readFileSync(output, 'utf8')
-    fs.writeFileSync(output, html.replace(tag, tag + main))
+  if (!isBrowser && typeof nodeRequire !== 'undefined') {
+    try {
+      const fs = nodeRequire('fs')
+      const html = fs.readFileSync(output, 'utf8')
+      fs.writeFileSync(output, html.replace(tag, tag + main))
+    } catch (e) {}
   }
 }
 

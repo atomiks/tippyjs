@@ -9,7 +9,7 @@ const jsBundlePath = `${docsPath}/${fs
 
 fs.writeFileSync(
   jsBundlePath,
-  `__prerenderRequire=typeof require!=="undefined"&&require;${fs.readFileSync(
+  `nodeRequire=typeof require!=="undefined"&&require;${fs.readFileSync(
     jsBundlePath,
     'utf8'
   )}`
