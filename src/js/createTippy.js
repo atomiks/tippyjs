@@ -874,7 +874,9 @@ export default function createTippy(reference, collectionProps) {
     }
 
     onTransitionedOut(duration, () => {
-      removeFollowCursorListener()
+      if (!isPreparingToShow) {
+        removeFollowCursorListener()
+      }
 
       tip.reference.removeAttribute('aria-describedby')
 
