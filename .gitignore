@@ -1,8 +1,8 @@
 .DS_Store
-node_modules
 .cache
 coverage
+.devserver
+node_modules
 dist
 tests/visual/dist
 package-lock.json
-.devserver
