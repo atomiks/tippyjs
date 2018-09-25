@@ -11,6 +11,9 @@ const resolve = require('rollup-plugin-node-resolve')
 const commonjs = require('rollup-plugin-commonjs')
 const cssOnly = require('rollup-plugin-css-only')
 const json = require('rollup-plugin-json')
+const filesize = require('filesize')
+const gzipsize = require('gzip-size')
+const { magenta, red, green, blue, bold, yellow } = require('colorette')
 
 // wrapper utils
 const sassPluginOutput = name =>
@@ -67,8 +70,9 @@ const pluginResolve = resolve({ browser: true })
 const umd = output('umd')
 const esm = output('es')
 
-// build
-;(async () => {
+const build = async () => {
+  console.log(blue('⏳ Building UMD and ESM bundles...'))
+
   // Tippy + Popper
   const bundle = await r('bundle.js', [pluginES5])
   // "all" is reliant on the existence of compiled css
@@ -85,18 +89,70 @@ const esm = output('es')
 
   all.write(umd('tippy.all.js'))
   allMin.write(umd('tippy.all.min.js', { min: true }))
+  console.log(green('✓ All'))
+
   bundle.write(esm('tippy.js'))
   bundleMin.write(umd('tippy.min.js', { min: true }))
   bundleMin.write(esm('tippy.min.js', { min: true }))
+  console.log(green('✓ Bundle'))
+
   standalone.write(umd('tippy.standalone.js'))
   standalone.write(esm('tippy.standalone.js'))
   standaloneMin.write(umd('tippy.standalone.min.js', { min: true }))
   standaloneMin.write(esm('tippy.standalone.min.js', { min: true }))
+  console.log(green('✓ Standalone'))
 
+  console.log(blue('\n⏳ Building CSS themes...'))
   for (let theme of fs.readdirSync('./src/scss/themes')) {
     theme = theme.replace('.scss', '')
     const t = await r(`themes/${theme}.js`, `./dist/themes/${theme}.css`)
     await t.write(umd(`tippy.${theme}.js`, { sourcemap: false }))
     fs.unlinkSync(`./dist/tippy.${theme}.js`)
   }
-})()
+  console.log(green('✓ Themes\n'))
+
+  logFileSizes()
+}
+
+const logFileSizes = () => {
+  const files = [
+    {
+      type: 'All',
+      filename: 'tippy.all.min.js'
+    },
+    {
+      type: 'Bundle',
+      filename: 'tippy.min.js'
+    },
+    {
+      type: 'Standalone',
+      filename: 'tippy.standalone.min.js'
+    },
+    {
+      type: 'CSS',
+      filename: 'tippy.css'
+    }
+  ]
+  const longestTypeLength = files.reduce(
+    (longest, file) =>
+      file.type.length > longest ? file.type.length : longest,
+    0
+  )
+  const filesWithPaddedTypes = files.map(file => ({
+    ...file,
+    type: file.type.padEnd(longestTypeLength, ' ')
+  }))
+
+  filesWithPaddedTypes.forEach(file => {
+    const fileType = yellow(file.type)
+    const size = bold(
+      magenta(filesize(fs.statSync(`./dist/${file.filename}`).size))
+    )
+    const gzipSize = red(
+      `(${filesize(gzipsize.fileSync(`./dist/${file.filename}`))} gz)`
+    )
+    console.log(`${fileType} ${size} ${gzipSize}`)
+  })
+}
+
+build()
