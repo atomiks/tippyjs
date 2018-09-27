@@ -21,7 +21,8 @@
     "dev": "parcel tests/visual/index.html -d tests/visual/dist --open",
     "build": "node ./scripts/build.js && npm run build:docs",
     "test": "eslint \"src/**/*.js\" && jest --coverage",
-    "prettier": "prettier --write \"./**/*{js,scss}\""
+    "prettier": "prettier --write \"./**/*{js,scss}\"",
+    "release": "npm test && npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push origin master && git push --tags && npm publish"
   },
   "jest": {
     "setupFiles": [
