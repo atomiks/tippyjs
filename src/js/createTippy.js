@@ -467,13 +467,19 @@ export default function createTippy(reference, collectionProps) {
 
     // fixes https://github.com/atomiks/tippyjs/issues/193
     if (!firstPopperInstanceInit) {
+      firstPopperInstanceInit = true
       tip.popper.addEventListener('mouseenter', event => {
-        if (tip.state.isVisible && lastTriggerEvent.type === 'mouseenter') {
+        if (
+          tip.props.interactive &&
+          tip.state.isVisible &&
+          lastTriggerEvent.type === 'mouseenter'
+        ) {
           prepareShow(event)
         }
       })
       tip.popper.addEventListener('mouseleave', event => {
         if (
+          tip.props.interactive &&
           lastTriggerEvent.type === 'mouseenter' &&
           tip.props.interactiveDebounce === 0 &&
           isCursorOutsideInteractiveBorder(
@@ -486,7 +492,6 @@ export default function createTippy(reference, collectionProps) {
           prepareHide()
         }
       })
-      firstPopperInstanceInit = true
     }
 
     return new Popper(tip.reference, tip.popper, config)
