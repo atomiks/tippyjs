@@ -78,7 +78,7 @@ export default () => (
           The element to append the tippy to. Use a function that returns an
           element to dynamically append the tippy relative to the reference
           element.
-          <Code content={APPEND_TO} />
+          <Code content={APPEND_TO} style={{ marginTop: '5px' }} />
         </Prop>
         <Prop name="arrow" default="false" value="Boolean">
           Determines if an arrow should be added to the tippy pointing toward
@@ -303,7 +303,7 @@ export default () => (
           A function that, when defined, will wait until you manually invoke{' '}
           <code>show()</code> when a tippy is triggered. It takes the tippy
           instance and the trigger event as arguments.
-          <Code content={WAIT} />
+          <Code content={WAIT} style={{ marginTop: '5px' }} />
         </Prop>
         <Prop name="zIndex" default="9999" value="Number">
           The <code>z-index</code> of the popper element.
