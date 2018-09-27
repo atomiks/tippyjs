@@ -64,6 +64,10 @@ CDN: https://unpkg.com/tippy.js/dist/
 
 View the [docs](https://atomiks.github.io/tippyjs/) for details on all of the options you can supply to customize tooltips to suit your needs.
 
+## Browser Support
+
+IE11+: browsers that support `MutationObserver` and `requestAnimationFrame`.
+
 ## Component Wrappers
 
 - [React component](https://github.com/atomiks/tippy.js-react)
