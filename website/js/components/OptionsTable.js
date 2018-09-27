@@ -45,6 +45,11 @@ export default () => (
         </tr>
       </thead>
       <tbody>
+        <Prop name="a11y" default="true" value="Boolean">
+          If <code>true</code>, ensures the reference element can receive focus
+          by adding <code>tabindex="0"</code> if the element is not natively
+          focusable like a <code>button</code>.
+        </Prop>
         <Prop name="allowHTML" default="true" value="Boolean">
           Determines if HTML can be rendered in the tippy.
         </Prop>
@@ -248,6 +253,10 @@ export default () => (
           If the popper element is blurred (i.e. no elements within it are in
           focus), the popper is hidden. However, there are cases in which you
           may need to keep it visible even when not in focus.
+        </Prop>
+        <Prop name="showOnInit" default="false" value="Boolean">
+          If <code>true</code>, the tooltip will be shown immediately once the
+          instance is created.
         </Prop>
         <Prop
           name="size"
