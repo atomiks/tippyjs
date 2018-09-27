@@ -800,7 +800,7 @@ export default function createTippy(reference, collectionProps) {
         duration
       )
       if (tip.popperChildren.backdrop) {
-        applyTransitionDuration([tip.popperChildren.content], duration * 1.1)
+        applyTransitionDuration([tip.popperChildren.content], duration * 1.05)
       }
 
       if (tip.props.interactive) {
@@ -866,7 +866,7 @@ export default function createTippy(reference, collectionProps) {
       duration
     )
     if (tip.popperChildren.backdrop) {
-      applyTransitionDuration([tip.popperChildren.content], duration * 1.1)
+      applyTransitionDuration([tip.popperChildren.content], duration * 1.05)
     }
 
     setVisibilityState(

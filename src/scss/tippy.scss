@@ -200,7 +200,7 @@
   }
 }
 
-.tippy-content {
+.tippy-backdrop + .tippy-content {
   transition-property: opacity;
   &[data-state='visible'] {
     opacity: 1;
