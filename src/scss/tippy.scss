@@ -147,10 +147,6 @@
   &[data-animatefill] {
     overflow: hidden;
     background-color: transparent;
-
-    .tippy-content {
-      transition: clip-path cubic-bezier(0.46, 0.1, 0.52, 0.98);
-    }
   }
 
   &[data-interactive] {
@@ -204,48 +200,13 @@
   }
 }
 
-/* iOS Safari does not like clip path transition */
-body:not(.tippy-iOS) {
-  .tippy-tooltip[data-animatefill] {
-    &[data-state='visible'] {
-      .tippy-content {
-        clip-path: ellipse(100% 100% at 50% 50%);
-      }
-    }
-    &[data-state='hidden'] {
-      .tippy-content {
-        clip-path: ellipse(5% 50% at 50% 50%);
-      }
-    }
+.tippy-content {
+  transition-property: opacity;
+  &[data-state='visible'] {
+    opacity: 1;
   }
-
-  .tippy-popper[x-placement='right'] {
-    .tippy-tooltip[data-animatefill] {
-      &[data-state='visible'] {
-        .tippy-content {
-          clip-path: ellipse(135% 100% at 0% 50%);
-        }
-      }
-      &[data-state='hidden'] {
-        .tippy-content {
-          clip-path: ellipse(40% 100% at 0% 50%);
-        }
-      }
-    }
-  }
-  .tippy-popper[x-placement='left'] {
-    .tippy-tooltip[data-animatefill] {
-      &[data-state='visible'] {
-        .tippy-content {
-          clip-path: ellipse(135% 100% at 100% 50%);
-        }
-      }
-      &[data-state='hidden'] {
-        .tippy-content {
-          clip-path: ellipse(40% 100% at 100% 50%);
-        }
-      }
-    }
+  &[data-state='hidden'] {
+    opacity: 0;
   }
 }
 

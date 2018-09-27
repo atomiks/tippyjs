@@ -213,6 +213,7 @@ export const createPopperElement = (id, props) => {
 
   const content = div()
   content.className = 'tippy-content'
+  content.setAttribute('data-state', 'hidden')
 
   if (props.interactive) {
     addInteractive(popper, tooltip)

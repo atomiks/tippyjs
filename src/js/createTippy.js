@@ -791,13 +791,12 @@ export default function createTippy(reference, collectionProps) {
       }
 
       applyTransitionDuration(
-        [
-          tip.popperChildren.tooltip,
-          tip.popperChildren.backdrop,
-          tip.popperChildren.backdrop ? tip.popperChildren.content : null
-        ],
+        [tip.popperChildren.tooltip, tip.popperChildren.backdrop],
         duration
       )
+      if (tip.popperChildren.backdrop) {
+        applyTransitionDuration([tip.popperChildren.content], duration * 1.1)
+      }
 
       if (tip.props.interactive) {
         tip.reference.classList.add('tippy-active')
@@ -808,7 +807,11 @@ export default function createTippy(reference, collectionProps) {
       }
 
       setVisibilityState(
-        [tip.popperChildren.tooltip, tip.popperChildren.backdrop],
+        [
+          tip.popperChildren.tooltip,
+          tip.popperChildren.backdrop,
+          tip.popperChildren.content
+        ],
         'visible'
       )
 
@@ -854,16 +857,19 @@ export default function createTippy(reference, collectionProps) {
     tip.state.isVisible = false
 
     applyTransitionDuration(
+      [tip.popperChildren.tooltip, tip.popperChildren.backdrop],
+      duration
+    )
+    if (tip.popperChildren.backdrop) {
+      applyTransitionDuration([tip.popperChildren.content], duration * 1.1)
+    }
+
+    setVisibilityState(
       [
         tip.popperChildren.tooltip,
         tip.popperChildren.backdrop,
-        tip.popperChildren.backdrop ? tip.popperChildren.content : null
+        tip.popperChildren.content
       ],
-      duration
-    )
-
-    setVisibilityState(
-      [tip.popperChildren.tooltip, tip.popperChildren.backdrop],
       'hidden'
     )
 
