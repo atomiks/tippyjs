@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Vanilla JS Tooltip & Popover Library",
   "main": "dist/tippy.all.js",
   "module": "dist/esm/tippy.standalone.js",
@@ -8,6 +8,7 @@
   "license": "MIT",
   "keywords": [
     "tooltip",
+    "popover",
     "tippy",
     "tippy.js"
   ],
