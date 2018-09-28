@@ -254,7 +254,10 @@ export default () => (
         </Prop>
         <Prop name="showOnInit" default="false" value="Boolean">
           If <code>true</code>, the tooltip will be shown immediately once the
-          instance is created.
+          instance is created. If using on page load, use{' '}
+          <code>sticky: true</code> because the reference element can move
+          around while the layout gets built by the browser after initialization
+          (unless the layout is guaranteed to be static).
         </Prop>
         <Prop
           name="size"
