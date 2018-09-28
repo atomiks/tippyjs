@@ -1,26 +1,23 @@
 import { h } from 'hyperapp'
 import logo from '../../assets/img/logo.svg'
 import { version } from '../../../package.json'
-import { animateLogo, animateVersion, animateItems } from '../utils'
 import Emoji from '../components/Emoji'
 import Tippy from '../components/Tippy'
 
 export default () => (
   <header class="header">
     <div class="container">
-      <img class="header__logo" src={logo} oncreate={animateLogo} />
+      <img class="header__logo" src={logo} />
       <div class="header__heading-wrapper">
         <h1 class="header__heading">
           Tippy.js
-          <span oncreate={animateVersion} class="header__version">
-            v{version}
-          </span>
+          <span class="header__version">v{version}</span>
         </h1>
       </div>
       <h2 class="header__slogan">
         A highly customizable vanilla JS tooltip & popover library
       </h2>
-      <div oncreate={animateItems} class="header__items">
+      <div class="header__items">
         <div class="header__item">
           <p>
             <Emoji size="small">💎</Emoji>
@@ -33,8 +30,8 @@ export default () => (
             arrow={true}
             theme="light"
             offset="0, 2"
-            sticky="true"
-            updateDuration="250"
+            sticky={true}
+            updateDuration={250}
             arrowType="round"
           >
             <a
