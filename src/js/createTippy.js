@@ -547,11 +547,11 @@ export default function createTippy(reference, collectionProps) {
    * Updates the tooltip's position on each animation frame + timeout
    */
   function makeSticky() {
-    const updatePosition = () => {
-      applyTransitionDuration([tip.popper], tip.props.updateDuration)
+    applyTransitionDuration([tip.popper], isIE ? 0 : tip.props.updateDuration)
 
+    const updatePosition = () => {
       if (tip.popperInstance) {
-        tip.popperInstance.scheduleUpdate()
+        tip.popperInstance.update()
       }
 
       if (tip.state.isVisible) {
