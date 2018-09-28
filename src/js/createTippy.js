@@ -353,7 +353,7 @@ export default function createTippy(reference, collectionProps) {
    * Event listener invoked upon blur
    */
   function onBlur(event) {
-    if (event.target !== tip.reference || isUsingTouch) {
+    if (event.target !== tip.reference) {
       return
     }
 
@@ -828,7 +828,10 @@ export default function createTippy(reference, collectionProps) {
           tip.popperChildren.tooltip.classList.add('tippy-notransition')
         }
 
-        if (tip.props.interactive && lastTriggerEvent.type === 'focus') {
+        if (
+          tip.props.interactive &&
+          ['focus', 'click'].indexOf(lastTriggerEvent.type) > -1
+        ) {
           focus(tip.popper)
         }
 
@@ -884,9 +887,11 @@ export default function createTippy(reference, collectionProps) {
     if (
       tip.props.interactive &&
       !referenceJustProgrammaticallyFocused &&
-      lastTriggerEvent.type === 'focus'
+      ['focus', 'click'].indexOf(lastTriggerEvent.type) > -1
     ) {
-      referenceJustProgrammaticallyFocused = true
+      if (lastTriggerEvent.type === 'focus') {
+        referenceJustProgrammaticallyFocused = true
+      }
       focus(tip.reference)
     }
 
