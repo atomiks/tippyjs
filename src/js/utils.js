@@ -242,6 +242,7 @@ export const createPopperElement = (id, props) => {
       e.relatedTarget &&
       popper._tippy &&
       !closestCallback(e.relatedTarget, el => el === popper) &&
+      e.relatedTarget !== popper._tippy.reference &&
       popper._tippy.props.shouldPopperHideOnBlur(e)
     ) {
       popper._tippy.hide()
