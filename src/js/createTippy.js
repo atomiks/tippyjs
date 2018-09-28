@@ -551,7 +551,7 @@ export default function createTippy(reference, collectionProps) {
 
     const updatePosition = () => {
       if (tip.popperInstance) {
-        tip.popperInstance.update()
+        tip.popperInstance.scheduleUpdate()
       }
 
       if (tip.state.isVisible) {
