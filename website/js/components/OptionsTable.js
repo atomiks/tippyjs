@@ -1,6 +1,7 @@
 import { h } from 'hyperapp'
 import { toKebabCase } from '../utils'
 import Code from './Code'
+import ExternalLink from './ExternalLink'
 
 import APPEND_TO from '../../snippets/append-to'
 import WAIT from '../../snippets/wait'
@@ -129,7 +130,7 @@ export default () => (
           How far in pixels the tippy element is from the reference element.
           Only applies to a single axis and not to the parent popper element,
           see{' '}
-          <a class="link" href="#offset">
+          <a class="link" href="#offset-option">
             offset
           </a>
           .
@@ -188,14 +189,14 @@ export default () => (
           By default, the <code>popperInstance</code> (the positioning engine
           for the tippy) is lazily created. That is, it's only created when
           necessary (i.e. triggering the tippy for the first time). Setting this
-          prop to false allows you to access the instance synchronously without
-          needing to show the tippy.
+          prop to <code>false</code> allows you to access the instance
+          synchronously without needing to show the tippy first.
         </Prop>
         <Prop name="livePlacement" default="true" value="Boolean">
           Determines if the popper instance should listen to scroll events. This
           means it will update the position on scroll. If you don't want the
           tippy to flip around when scrolling, and the tippy's reference is not
-          in a scrollable container, you can set this to false.
+          in a scrollable container, you can set this to <code>false</code>.
         </Prop>
         <Prop name="multiple" default="false" value="Boolean">
           Determines if the reference can have multiple tippy instances.
@@ -234,12 +235,9 @@ export default () => (
         </Prop>
         <Prop name="popperOptions" default="{}" value="Object">
           Specify custom Popper.js options. See the{' '}
-          <a
-            target="_blank"
-            href="https://popper.js.org/popper-documentation.html"
-          >
+          <ExternalLink to="https://popper.js.org/popper-documentation.html">
             Popper.js documentation
-          </a>{' '}
+          </ExternalLink>{' '}
           for more.
         </Prop>
         <Prop
