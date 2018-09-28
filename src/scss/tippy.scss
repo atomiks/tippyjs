@@ -186,7 +186,7 @@
   will-change: transform;
   background-color: #333;
   border-radius: 50%;
-  width: 26%;
+  width: calc(110% + 2rem);
   left: 50%;
   top: 50%;
   z-index: -1;
