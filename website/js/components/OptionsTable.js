@@ -204,7 +204,7 @@ export default () => (
         <Prop name="offset" default="false" value="Boolean">
           An offset that Popper.js uses to offset the popper element. Can work
           with both the x and y axis, distinct from{' '}
-          <a href="#distance">distance</a>.
+          <a href="#distance-option">distance</a>.
         </Prop>
         <Prop name="onHidden" default="noop" value="Function">
           Lifecycle function invoked when a tippy has fully transitioned out.
