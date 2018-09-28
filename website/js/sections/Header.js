@@ -12,14 +12,7 @@ export default () => (
       <div class="header__heading-wrapper">
         <h1 class="header__heading">
           Tippy.js
-          <span
-            oncreate={animateVersion}
-            class="header__version"
-            style={{
-              opacity: 0,
-              transform: 'scale(0.8)'
-            }}
-          >
+          <span oncreate={animateVersion} class="header__version">
             v{version}
           </span>
         </h1>
@@ -27,14 +20,7 @@ export default () => (
       <h2 class="header__slogan">
         A highly customizable vanilla JS tooltip & popover library
       </h2>
-      <div
-        oncreate={animateItems}
-        class="header__items"
-        style={{
-          opacity: 0,
-          transform: 'translateY(50px)'
-        }}
-      >
+      <div oncreate={animateItems} class="header__items">
         <div class="header__item">
           <p>
             <Emoji size="small">💎</Emoji>

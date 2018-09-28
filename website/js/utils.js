@@ -40,7 +40,7 @@ export const toKebabCase = str =>
 export const animateLogo = el => {
   anime({
     targets: el,
-    translateY: 210,
+    translateY: [-210, 0],
     duration: 2000,
     elasticity: 250,
     delay: 400
@@ -50,8 +50,8 @@ export const animateLogo = el => {
 export const animateVersion = el => {
   anime({
     targets: el,
-    scale: 1,
-    opacity: 1,
+    scale: [0.8, 1],
+    opacity: [0, 1],
     duration: 2500,
     delay: 1000
   })
@@ -61,8 +61,8 @@ export const animateItems = el => {
   el.style.pointerEvents = 'none'
   anime({
     targets: el,
-    translateY: 0,
-    opacity: 1,
+    translateY: [50, 0],
+    opacity: [0, 1],
     delay: 1500,
     duration: 2000,
     elasticity: 200,
