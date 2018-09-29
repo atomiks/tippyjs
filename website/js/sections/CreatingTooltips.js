@@ -4,6 +4,8 @@ import VIRTUAL_REFERENCE from '../../snippets/virtual-reference'
 import AUTO_TIPPY_BUTTON from '../../snippets/auto-tippy-button'
 import FUNCTION_BUTTON from '../../snippets/function-button'
 import FUNCTION_CALL from '../../snippets/function-call'
+import MULTIPLE_CONTENT_HTML from '../../snippets/multiple-content-html.md'
+import MULTIPLE_CONTENT_JS from '../../snippets/multiple-content-js.md'
 
 import Section from '../components/Section'
 import Code from '../components/Code'
@@ -11,6 +13,7 @@ import Emoji from '../components/Emoji'
 import Tippy from '../components/Tippy'
 import ResultBox from '../components/ResultBox'
 import Heading from '../components/Heading'
+import ExternalLink from '../components/ExternalLink'
 
 const TITLE = 'Creating Tooltips'
 const Subheading = Heading(TITLE)
@@ -28,6 +31,16 @@ export default () => (
       the attribute and give them a tooltip automatically. This means you won't
       have to touch JavaScript at all.
     </p>
+    <blockquote class="blockquote">
+      This technique only works on page load and is designed to be used on
+      simple web pages. If you have dynamically generated elements or are using
+      a view library/framework (
+      <ExternalLink to="https://github.com/atomiks/tippy.js-react">
+        React
+      </ExternalLink>
+      , Vue, Angular), use Method 2 below.
+    </blockquote>
+
     <Subheading>Method 2: Function</Subheading>
     <p>
       Use the <code>tippy</code> function.
@@ -39,6 +52,14 @@ export default () => (
         <button class="btn">Text</button>
       </Tippy>
     </ResultBox>
+
+    <p>
+      Using <code>data-tippy-content</code> allows you to use the function for
+      common custom configuration while giving each tooltip different content.
+    </p>
+
+    <Code content={MULTIPLE_CONTENT_HTML} />
+    <Code content={MULTIPLE_CONTENT_JS} />
 
     <Subheading>
       Accepted inputs <Emoji class="section__emoji">🎛</Emoji>

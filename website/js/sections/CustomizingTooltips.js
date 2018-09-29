@@ -3,8 +3,6 @@ import { h } from 'hyperapp'
 import HTML_BUTTON from '../../snippets/html-button.md'
 import OPTIONS_OBJECT from '../../snippets/options-object.md'
 import DATA_ATTRIBUTES from '../../snippets/data-attributes.md'
-import MULTIPLE_CONTENT_HTML from '../../snippets/multiple-content-html.md'
-import MULTIPLE_CONTENT_JS from '../../snippets/multiple-content-js.md'
 import SET_DEFAULTS from '../../snippets/set-defaults.md'
 
 import Section from '../components/Section'
@@ -62,15 +60,6 @@ export default () => (
         <button class="btn">Text</button>
       </Tippy>
     </ResultBox>
-
-    <p>
-      Using <code>data-tippy-content</code> therefore allows you to use the
-      function for common custom configuration while giving each tooltip
-      different content.
-    </p>
-
-    <Code content={MULTIPLE_CONTENT_HTML} />
-    <Code content={MULTIPLE_CONTENT_JS} />
 
     <Subheading>Default config</Subheading>
     <p>
