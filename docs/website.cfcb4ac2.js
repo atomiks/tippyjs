@@ -57,7 +57,7 @@ module.exports = "```js\ntippy('button', { content: \"I'm a tooltip!\" })\n```\n
 },{}],"1cyl":[function(require,module,exports) {
 module.exports = "```html\n<button class=\"btn\" data-tippy-content=\"Tooltip A\">Text</button>\n<button class=\"btn\" data-tippy-content=\"Tooltip B\">Text</button>\n<button class=\"btn\" data-tippy-content=\"Tooltip C\">Text</button>\n```\n"
 },{}],"zWiH":[function(require,module,exports) {
-module.exports = "```js\ntippy('.btn', {\n  animation: 'shift-toward',\n  arrow: true,\n  delay: 50\n})\n```\n"
+module.exports = "```js\ntippy('.btn')\n```\n"
 },{}],"s9J6":[function(require,module,exports) {
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("hyperapp");exports.default=function(t,s){return(0,e.h)("div",{class:"section__result"},(0,e.h)("p",{class:"section__result-text"},"Result:"),s)};
 },{"hyperapp":"/xJO"}],"rRgD":[function(require,module,exports) {
