@@ -35,15 +35,18 @@ export default () => (
       <h3 class="feature__heading">Placement</h3>
       <p>
         A tooltip can be placed in four different ways in relation to its
-        reference element. Additionally, the tooltip be shifted.
+        reference element. Additionally, the tooltip can be shifted using the
+        suffix <code>-start</code> or <code>-end</code>.
       </p>
-      {['top', 'bottom', 'left', 'right'].map(placement => (
-        <Tippy placement={placement}>
-          <button class="btn">
-            {placement[0].toUpperCase() + placement.slice(1)}
-          </button>
-        </Tippy>
-      ))}
+      {['top', 'bottom', 'left', 'right', 'top-start', 'top-end'].map(
+        placement => (
+          <Tippy placement={placement}>
+            <button class="btn">
+              {placement[0].toUpperCase() + placement.slice(1)}
+            </button>
+          </Tippy>
+        )
+      )}
     </div>
 
     <div class="feature">
@@ -217,7 +220,7 @@ export default () => (
         A tippy can have any kind of theme you want! Creating a custom theme is
         a breeze.
       </p>
-      <Tippy content="See-though!" theme="translucent">
+      <Tippy content="See-through!" theme="translucent">
         <button class="btn">Translucent</button>
       </Tippy>
       <Tippy content="Nice n' light" theme="light" arrow={true}>
