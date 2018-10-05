@@ -220,14 +220,43 @@ export default () => (
         A tippy can have any kind of theme you want! Creating a custom theme is
         a breeze.
       </p>
-      <Tippy content="See-through!" theme="translucent">
+      <Tippy
+        content="Included in dist/themes/translucent.css"
+        theme="translucent"
+      >
         <button class="btn">Translucent</button>
       </Tippy>
-      <Tippy content="Nice n' light" theme="light" arrow={true}>
+      <Tippy
+        content="Included in dist/themes/light.css"
+        theme="light"
+        animation="fade"
+        arrow={true}
+      >
         <button class="btn">Light</button>
       </Tippy>
-      <Tippy content="Awesome colors!" theme="gradient">
+      <Tippy
+        content="Custom made for this demo. But I will probably include it soon!"
+        theme="light-border"
+        animateFill={false}
+        animation="fade"
+        arrow={true}
+      >
+        <button class="btn">Light-border</button>
+      </Tippy>
+      <Tippy
+        content="Awesome colors! Custom made for this demo."
+        theme="gradient"
+      >
         <button class="btn">Gradient</button>
+      </Tippy>
+      <Tippy
+        content="The style used in Gmail. Custom made for this demo."
+        theme="google"
+        animateFill={false}
+        animation="fade"
+        duration={200}
+      >
+        <button class="btn">Google</button>
       </Tippy>
     </div>
 

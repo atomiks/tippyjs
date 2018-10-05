@@ -171,6 +171,39 @@ a {
   max-width: 250px;
 }
 
+.tippy-tooltip.google-theme {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.4rem;
+  background-color: #505355;
+  font-weight: 600;
+}
+
+.tippy-tooltip.light-border-theme {
+  background: white;
+  border: 1px solid rgba(0, 8, 16, 0.18);
+  color: #333;
+}
+
+.tippy-popper[x-placement^='top']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow {
+  border-top: 8px solid #fff;
+  border-right: 8px solid transparent;
+  border-left: 8px solid transparent;
+  transform-style: preserve-3d;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: -8px;
+    border-top: 8px solid rgba(0, 8, 16, 0.25);
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+    transform: translateZ(-1px);
+  }
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 1em;
