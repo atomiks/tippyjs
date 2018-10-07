@@ -10,6 +10,8 @@
   transition: all 0.2s;
   outline: 0;
   will-change: opacity;
+  user-select: none;
+  -webkit-touch-callout: none;
 
   &:hover,
   &.tippy-active {

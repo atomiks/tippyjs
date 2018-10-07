@@ -301,7 +301,14 @@ export default () => (
         content="You'll need a touch device for this one."
         touchHold={true}
       >
-        <button class="btn">Touch &amp; Hold</button>
+        <button
+          class="btn"
+          oncontextmenu={event => {
+            event.preventDefault()
+          }}
+        >
+          Touch &amp; Hold
+        </button>
       </Tippy>
       <Tippy
         content="I'm hugging the tooltip!"
