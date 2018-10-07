@@ -717,12 +717,13 @@ export default function createTippy(reference, collectionProps) {
 
     updatePopperElement(tip.popper, prevProps, nextProps)
     tip.popperChildren = getChildren(tip.popper)
+
     if (tip.popperInstance) {
       tip.popperInstance.destroy()
-    }
-    tip.popperInstance = createPopperInstance()
-    if (!tip.state.isVisible) {
-      tip.popperInstance.disableEventListeners()
+      tip.popperInstance = createPopperInstance()
+      if (!tip.state.isVisible) {
+        tip.popperInstance.disableEventListeners()
+      }
     }
   }
 
