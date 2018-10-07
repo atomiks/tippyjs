@@ -747,3 +747,14 @@ export const debounce = (fn, ms) => {
     timeoutId = setTimeout(() => fn.apply(this, arguments), ms)
   }
 }
+
+/**
+ * Validates an object of options with the valid default props object
+ */
+export const validateOptions = (options, props) => {
+  for (const option in options || {}) {
+    if (!(option in props)) {
+      throw Error(`[tippy]: \`${option}\` is not a valid option`)
+    }
+  }
+}

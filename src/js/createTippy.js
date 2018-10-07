@@ -22,7 +22,8 @@ import {
   toArray,
   focus,
   toggleTransitionEndListener,
-  debounce
+  debounce,
+  validateOptions
 } from './utils'
 
 let idCounter = 1
@@ -698,6 +699,8 @@ export default function createTippy(reference, collectionProps) {
    * Sets new props for the instance and redraws the tooltip
    */
   function set(options) {
+    validateOptions(options, Defaults)
+
     const prevProps = tip.props
     const nextProps = evaluateProps(tip.reference, {
       ...tip.props,

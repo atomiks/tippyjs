@@ -8,23 +8,19 @@ import {
   getArrayOfElements,
   toArray,
   hideAllPoppers,
-  isBrowser
+  isBrowser,
+  validateOptions
 } from './utils'
 
 let eventListenersBound = false
 let useCapture = false
 
 export default function tippy(targets, options, one) {
+  validateOptions(options, Defaults)
+
   if (!eventListenersBound) {
     bindGlobalEventListeners(useCapture)
     eventListenersBound = true
-  }
-
-  // Throw an error if the user supplied an invalid option
-  for (const key in options || {}) {
-    if (!(key in Defaults)) {
-      throw Error(`[tippy]: \`${key}\` is not a valid option`)
-    }
   }
 
   const props = { ...Defaults, ...options }

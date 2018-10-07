@@ -38,7 +38,7 @@ describe('isPlainObject', () => {
 
 describe('toArray', () => {
   it('converts a NodeList to an array', () => {
-    ;[...Array(10)].map(() => h())
+    [...Array(10)].map(() => h())
     const arr = Utils.toArray(document.querySelectorAll(IDENTIFIER))
     expect(Array.isArray(arr)).toBe(true)
   })
@@ -62,7 +62,7 @@ describe('getArrayOfElements', () => {
   })
 
   it('returns an array of elements when given a valid selector string', () => {
-    ;[...Array(10)].map(() => h())
+    [...Array(10)].map(() => h())
     const allAreElements = Utils.getArrayOfElements(IDENTIFIER).every(
       value => value instanceof Element
     )
@@ -291,6 +291,23 @@ describe('getDataAttributeOptions', () => {
       delay: [100, 255],
       duration: [0, 999]
     })
+  })
+})
+
+describe('validateOptions', () => {
+  it('does nothing if valid options were passed', () => {
+    expect(() =>
+      Utils.validateOptions(
+        { arrow: true, arrowType: 'round' },
+        { arrow: false, arrowType: 'sharp' }
+      )
+    ).not.toThrow()
+  })
+
+  it('throws with the correct message if invalid options were passed', () => {
+    expect(() =>
+      Utils.validateOptions({ intractive: true }, { interactive: false })
+    ).toThrow('[tippy]: `intractive` is not a valid option')
   })
 })
 
