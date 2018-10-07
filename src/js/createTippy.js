@@ -553,9 +553,7 @@ export default function createTippy(reference, collectionProps) {
       }
 
       if (tip.state.isVisible) {
-        requestAnimationFrame(() => {
-          defer(updatePosition)
-        })
+        requestAnimationFrame(updatePosition)
       } else {
         applyTransitionDuration([tip.popper], 0)
       }
