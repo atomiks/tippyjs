@@ -268,16 +268,7 @@ export default function createTippy(reference, collectionProps) {
    * Event listener invoked upon trigger
    */
   function onTrigger(event) {
-    if (!tip.state.isEnabled) {
-      return
-    }
-
-    const shouldStopEvent =
-      supportsTouch &&
-      isUsingTouch &&
-      ['mouseenter', 'mouseover', 'focus'].indexOf(event.type) > -1
-
-    if (shouldStopEvent && tip.props.touchHold) {
+    if (!tip.state.isEnabled || isEventListenerStopped(event)) {
       return
     }
 
@@ -331,12 +322,7 @@ export default function createTippy(reference, collectionProps) {
    * Event listener invoked upon mouseleave
    */
   function onMouseLeave(event) {
-    if (
-      ['mouseleave', 'mouseout'].indexOf(event.type) > -1 &&
-      supportsTouch &&
-      isUsingTouch &&
-      tip.props.touchHold
-    ) {
+    if (isEventListenerStopped(event)) {
       return
     }
 
@@ -385,6 +371,18 @@ export default function createTippy(reference, collectionProps) {
     if (closest(event.target, tip.props.target)) {
       prepareHide()
     }
+  }
+
+  /**
+   * Determines if an event listener should stop further execution due to the
+   * `touchHold` option.
+   */
+  function isEventListenerStopped(event) {
+    const isTouchEvent = event.type.indexOf('touch') > -1
+    const caseA =
+      supportsTouch && isUsingTouch && tip.props.touchHold && !isTouchEvent
+    const caseB = isUsingTouch && !tip.props.touchHold && isTouchEvent
+    return caseA || caseB
   }
 
   /**
@@ -628,8 +626,14 @@ export default function createTippy(reference, collectionProps) {
           return acc
         }
 
-        if (!props.target) {
+        if (!tip.props.target) {
           on(eventType, onTrigger, acc)
+
+          if (tip.props.touchHold) {
+            on('touchstart', onTrigger, acc)
+            on('touchend', onMouseLeave, acc)
+          }
+
           switch (eventType) {
             case 'mouseenter':
               on('mouseleave', onMouseLeave, acc)
@@ -703,7 +707,7 @@ export default function createTippy(reference, collectionProps) {
     nextProps.performance = options.performance || prevProps.performance
     tip.props = nextProps
 
-    if ('trigger' in options) {
+    if ('trigger' in options || 'touchHold' in options) {
       removeTriggersFromReference()
       addTriggersToReference()
     }
