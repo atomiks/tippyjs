@@ -240,6 +240,7 @@ export default () => (
         animateFill={false}
         animation="fade"
         arrow={true}
+        flip={false}
       >
         <button class="btn">Light-border</button>
       </Tippy>
