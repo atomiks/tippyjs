@@ -50,6 +50,7 @@ export default function createTippy(reference, collectionProps) {
     props.interactiveDebounce > 0
       ? debounce(onMouseMove, props.interactiveDebounce)
       : onMouseMove
+  let isMounted = false
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   const id = idCounter++
@@ -527,6 +528,7 @@ export default function createTippy(reference, collectionProps) {
 
     if (!tip.props.appendTo.contains(tip.popper)) {
       tip.props.appendTo.appendChild(tip.popper)
+      isMounted = true
     }
   }
 
@@ -552,7 +554,7 @@ export default function createTippy(reference, collectionProps) {
         tip.popperInstance.scheduleUpdate()
       }
 
-      if (tip.state.isVisible) {
+      if (isMounted) {
         requestAnimationFrame(updatePosition)
       } else {
         applyTransitionDuration([tip.popper], 0)
@@ -908,6 +910,7 @@ export default function createTippy(reference, collectionProps) {
       tip.popperInstance.disableEventListeners()
 
       tip.props.appendTo.removeChild(tip.popper)
+      isMounted = false
 
       tip.props.onHidden(tip)
     })
