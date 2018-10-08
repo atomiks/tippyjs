@@ -282,10 +282,13 @@ export default () => (
           Determines if the tippy displays on touch devices.
         </Prop>
         <Prop name="touchHold" default="false" value="Boolean">
-          Determines trigger behavior on touch devices. If true, instead of a
-          tap on the reference and a tap elsewhere to hide the tippy, the
-          reference must be pressed and held for the tippy to show. Letting go
-          from the screen will hide it.
+          Determines trigger behavior on touch devices. Instead of a tap on the
+          reference to show and a tap elsewhere to hide the tippy, the reference
+          must be pressed and held for the tippy to show. Letting go from the
+          screen will hide it. To prevent the mobile context menu from
+          appearing, ensure the element cannot be selected using{' '}
+          <code>user-select: none;</code> and/or prevent the default behavior
+          for the <code>contextmenu</code> event.
         </Prop>
         <Prop
           name="trigger"
