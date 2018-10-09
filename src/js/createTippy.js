@@ -156,7 +156,7 @@ export default function createTippy(reference, collectionProps) {
       clientHeight: 0
     }
 
-    tip.popperInstance.scheduleUpdate()
+    tip.popperInstance.update()
   }
 
   /**
@@ -507,7 +507,7 @@ export default function createTippy(reference, collectionProps) {
         tip.popperInstance.disableEventListeners()
       }
     } else {
-      tip.popperInstance.scheduleUpdate()
+      tip.popperInstance.update()
       if (tip.props.livePlacement && !hasFollowCursorBehavior()) {
         tip.popperInstance.enableEventListeners()
       }
@@ -792,7 +792,7 @@ export default function createTippy(reference, collectionProps) {
 
       if (!hasFollowCursorBehavior()) {
         // Arrow will sometimes not be positioned correctly. Force another update.
-        tip.popperInstance.scheduleUpdate()
+        tip.popperInstance.update()
       }
 
       // Set initial position near the cursor
