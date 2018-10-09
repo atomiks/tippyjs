@@ -1288,17 +1288,15 @@ describe('debounce', () => {
   })
 })
 
-describe('updatePopperPosition', () => {
+describe('afterPopperPositionUpdates', () => {
   it('is called by popper if not already updated', done => {
     const tip = tippy.one(h(), { lazy: false })
     // popper calls scheduleUpdate() on init
+    const fn = jest.fn()
+    Utils.afterPopperPositionUpdates(tip.popperInstance, fn)
     setTimeout(() => {
-      const fn = jest.fn()
-      Utils.updatePopperPosition(tip.popperInstance, fn)
-      setTimeout(() => {
-        expect(fn.mock.calls.length).toBe(1)
-        done()
-      }, 20)
+      expect(fn.mock.calls.length).toBe(1)
+      done()
     }, 20)
   })
 
@@ -1308,7 +1306,7 @@ describe('updatePopperPosition', () => {
     // popper calls scheduleUpdate() on init
     setTimeout(() => {
       const fn = jest.fn()
-      Utils.updatePopperPosition(tip.popperInstance, fn, true)
+      Utils.afterPopperPositionUpdates(tip.popperInstance, fn, true)
       setTimeout(() => {
         expect(fn.mock.calls.length).toBe(0)
         done()

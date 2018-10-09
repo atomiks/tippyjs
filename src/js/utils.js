@@ -616,27 +616,20 @@ export const prefix = property => {
 }
 
 /**
- * Update's a popper's position and runs a callback onUpdate; wrapper for async updates
+ * Runs the callback after the popper's position has been updated
+ * update() is debounced with setTimeout(0) and scheduleUpdate() is
+ * update() wrapped in requestAnimationFrame().
  */
-export const updatePopperPosition = (
-  popperInstance,
-  callback,
-  updateAlreadyCalled
-) => {
+export const afterPopperPositionUpdates = (popperInstance, callback) => {
   const { popper, options } = popperInstance
-  const onCreate = options.onCreate
-  const onUpdate = options.onUpdate
+  const { onCreate, onUpdate } = options
 
   options.onCreate = options.onUpdate = () => {
     reflow(popper)
-    callback && callback()
+    callback()
     onUpdate()
     options.onCreate = onCreate
     options.onUpdate = onUpdate
-  }
-
-  if (!updateAlreadyCalled) {
-    popperInstance.scheduleUpdate()
   }
 }
 
