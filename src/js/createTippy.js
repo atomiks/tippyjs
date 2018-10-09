@@ -508,7 +508,9 @@ export default function createTippy(reference, collectionProps) {
         tip.popperInstance.disableEventListeners()
       }
     } else {
-      tip.popperInstance.scheduleUpdate()
+      if (!hasFollowCursorBehavior()) {
+        tip.popperInstance.scheduleUpdate()
+      }
       if (tip.props.livePlacement && !hasFollowCursorBehavior()) {
         tip.popperInstance.enableEventListeners()
       }
