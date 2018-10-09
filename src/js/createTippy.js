@@ -7,7 +7,7 @@ import {
   elementCanReceiveFocus,
   getChildren,
   computeArrowTransform,
-  updatePopperPosition,
+  afterPopperPositionUpdates,
   getPopperPlacement,
   getOffsetDistanceInPx,
   getValue,
@@ -156,7 +156,7 @@ export default function createTippy(reference, collectionProps) {
       clientHeight: 0
     }
 
-    tip.popperInstance.update()
+    tip.popperInstance.scheduleUpdate()
   }
 
   /**
@@ -498,16 +498,17 @@ export default function createTippy(reference, collectionProps) {
   }
 
   /**
-   * Mounts the tooltip to the DOM
+   * Mounts the tooltip to the DOM, callback to show tooltip is run **after**
+   * popper's position has updated
    */
-  function mount(onceUpdated) {
+  function mount(callback) {
     if (!tip.popperInstance) {
       tip.popperInstance = createPopperInstance()
       if (!tip.props.livePlacement) {
         tip.popperInstance.disableEventListeners()
       }
     } else {
-      tip.popperInstance.update()
+      tip.popperInstance.scheduleUpdate()
       if (tip.props.livePlacement && !hasFollowCursorBehavior()) {
         tip.popperInstance.enableEventListeners()
       }
@@ -523,9 +524,15 @@ export default function createTippy(reference, collectionProps) {
       if (tip.popperChildren.arrow) {
         tip.popperChildren.arrow.style.margin = ''
       }
+      const delay = getValue(tip.props.delay, 0, Defaults.delay)
+      if (lastTriggerEvent.type) {
+        positionVirtualReferenceNearCursor(
+          delay && lastMouseMoveEvent ? lastMouseMoveEvent : lastTriggerEvent
+        )
+      }
     }
 
-    updatePopperPosition(tip.popperInstance, onceUpdated, true)
+    afterPopperPositionUpdates(tip.popperInstance, callback)
 
     if (!tip.props.appendTo.contains(tip.popper)) {
       tip.props.appendTo.appendChild(tip.popper)
@@ -790,20 +797,9 @@ export default function createTippy(reference, collectionProps) {
         return
       }
 
+      // Arrow will sometimes not be positioned correctly. Force another update.
       if (!hasFollowCursorBehavior()) {
-        // Arrow will sometimes not be positioned correctly. Force another update.
         tip.popperInstance.update()
-      }
-
-      // Set initial position near the cursor
-      if (hasFollowCursorBehavior()) {
-        tip.popperInstance.disableEventListeners()
-        const delay = getValue(tip.props.delay, 0, Defaults.delay)
-        if (lastTriggerEvent.type) {
-          positionVirtualReferenceNearCursor(
-            delay && lastMouseMoveEvent ? lastMouseMoveEvent : lastTriggerEvent
-          )
-        }
       }
 
       applyTransitionDuration(
