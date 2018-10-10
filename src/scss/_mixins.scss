@@ -92,9 +92,9 @@
 @mixin backdrop-transform-leave($placement) {
   $scale: 0.2;
   @if ($placement == 'top') {
-    transform: scale($scale) translate(-50%, -55%);
+    transform: scale($scale) translate(-50%, -45%);
   } @else if ($placement == 'bottom') {
-    transform: scale($scale) translate(-50%, 10px);
+    transform: scale($scale) translate(-50%, 0);
   } @else if ($placement == 'left') {
     transform: scale($scale) translate(-75%, -50%);
   } @else if ($placement == 'right') {
