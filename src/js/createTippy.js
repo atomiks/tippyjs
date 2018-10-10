@@ -1,9 +1,8 @@
 import Popper from 'popper.js'
-import { Defaults } from './defaults'
+import { Defaults, POPPER_INSTANCE_RELATED_PROPS } from './defaults'
 import { Selectors } from './selectors'
 import { isUsingTouch, isIE, supportsTouch } from './bindGlobalEventListeners'
 import {
-  POPPER_INSTANCE_RELATED_PROPS,
   createPopperElement,
   elementCanReceiveFocus,
   getChildren,

@@ -47,3 +47,16 @@ export let Defaults = {
 export const setDefaults = partialDefaults => {
   Defaults = { ...Defaults, ...partialDefaults }
 }
+
+/**
+ * If the set() method encounters one of these, the popperInstance must be
+ * recreated
+ */
+export const POPPER_INSTANCE_RELATED_PROPS = [
+  'placement',
+  'popperOptions',
+  'flip',
+  'flipBehavior',
+  'distance',
+  'offset'
+]
