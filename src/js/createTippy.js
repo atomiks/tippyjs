@@ -1,5 +1,5 @@
 import Popper from 'popper.js'
-import { Defaults } from './defaults'
+import { Defaults, POPPER_INSTANCE_RELATED_PROPS } from './defaults'
 import { Selectors } from './selectors'
 import { isUsingTouch, isIE, supportsTouch } from './bindGlobalEventListeners'
 import {
@@ -732,11 +732,17 @@ export default function createTippy(reference, collectionProps) {
     updatePopperElement(tip.popper, prevProps, nextProps)
     tip.popperChildren = getChildren(tip.popper)
 
-    if (tip.popperInstance) {
+    if (
+      tip.popperInstance &&
+      POPPER_INSTANCE_RELATED_PROPS.some(prop => prop in options)
+    ) {
       tip.popperInstance.destroy()
       tip.popperInstance = createPopperInstance()
       if (!tip.state.isVisible) {
         tip.popperInstance.disableEventListeners()
+      }
+      if (tip.props.followCursor && lastMouseMoveEvent) {
+        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
       }
     }
   }

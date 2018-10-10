@@ -995,18 +995,6 @@ describe('computeArrowTransform', () => {
   })
 })
 
-describe('prefix', () => {
-  /* JSDOM support is limited here... need to use fallbacks */
-  it('returns the same value if the CSS property is supported', () => {
-    const res = Utils.prefix('transform')
-    expect(res === 'transform' || res === 'webkitTransform').toBe(true)
-  })
-
-  it('returns null if could not be prefixed', () => {
-    expect(Utils.prefix('_null')).toBe(null)
-  })
-})
-
 describe('setVisibilityState', () => {
   it('sets the `data-state` attribute on a list of elements with the value specified', () => {
     const els = [h(), h(), null, h()]

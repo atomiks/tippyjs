@@ -585,7 +585,11 @@ export const computeArrowTransform = (arrow, arrowTransform) => {
       )})`
     )
 
-  arrow.style[prefix('transform')] = computedTransform
+  arrow.style[
+    typeof document.body.style.transform !== 'undefined'
+      ? 'transform'
+      : 'webkitTransform'
+  ] = computedTransform
 }
 
 /**
@@ -595,24 +599,6 @@ export const setVisibilityState = (els, type) => {
   els.filter(Boolean).forEach(el => {
     el.setAttribute('data-state', type)
   })
-}
-
-/**
- * Prefixes a CSS property with the one supported by the browser
- */
-export const prefix = property => {
-  const prefixes = ['', 'webkit']
-  const upperProp = property[0].toUpperCase() + property.slice(1)
-
-  for (let i = 0; i < prefixes.length; i++) {
-    const prefix = prefixes[i]
-    const prefixedProp = prefix ? prefix + upperProp : property
-    if (typeof document.body.style[prefixedProp] !== 'undefined') {
-      return prefixedProp
-    }
-  }
-
-  return null
 }
 
 /**
