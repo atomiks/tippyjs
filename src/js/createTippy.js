@@ -805,11 +805,16 @@ export default function createTippy(reference, collectionProps) {
       }
 
       applyTransitionDuration(
-        [tip.popperChildren.tooltip, tip.popperChildren.backdrop],
+        [
+          tip.popperChildren.tooltip,
+          tip.popperChildren.backdrop,
+          tip.popperChildren.content
+        ],
         duration
       )
       if (tip.popperChildren.backdrop) {
-        applyTransitionDuration([tip.popperChildren.content], duration * 1.05)
+        tip.popperChildren.content.style.transitionDelay =
+          Math.round(duration / 6) + 'ms'
       }
 
       if (tip.props.interactive) {
@@ -874,12 +879,13 @@ export default function createTippy(reference, collectionProps) {
     tip.state.isVisible = false
 
     applyTransitionDuration(
-      [tip.popperChildren.tooltip, tip.popperChildren.backdrop],
+      [
+        tip.popperChildren.tooltip,
+        tip.popperChildren.backdrop,
+        tip.popperChildren.content
+      ],
       duration
     )
-    if (tip.popperChildren.backdrop) {
-      applyTransitionDuration([tip.popperChildren.content], duration * 1.05)
-    }
 
     setVisibilityState(
       [

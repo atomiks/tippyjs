@@ -4,7 +4,7 @@ import '../../src/scss/tippy.scss'
 window.tippy = tippy
 
 tippy('button:not([data-exclude]), p', {
-  content: 'Tippy tooltip'
+  content: 'I am a Tippy tooltip'
 })
 
 const template = document.createElement('div')
