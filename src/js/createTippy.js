@@ -742,6 +742,9 @@ export default function createTippy(reference, collectionProps) {
       if (!tip.state.isVisible) {
         tip.popperInstance.disableEventListeners()
       }
+      if (tip.props.followCursor && lastMouseMoveEvent) {
+        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+      }
     }
   }
 
