@@ -3,6 +3,7 @@ import { Defaults } from './defaults'
 import { Selectors } from './selectors'
 import { isUsingTouch, isIE, supportsTouch } from './bindGlobalEventListeners'
 import {
+  POPPER_INSTANCE_RELATED_PROPS,
   createPopperElement,
   elementCanReceiveFocus,
   getChildren,
@@ -732,7 +733,10 @@ export default function createTippy(reference, collectionProps) {
     updatePopperElement(tip.popper, prevProps, nextProps)
     tip.popperChildren = getChildren(tip.popper)
 
-    if (tip.popperInstance) {
+    if (
+      tip.popperInstance &&
+      POPPER_INSTANCE_RELATED_PROPS.some(prop => prop in options)
+    ) {
       tip.popperInstance.destroy()
       tip.popperInstance = createPopperInstance()
       if (!tip.state.isVisible) {

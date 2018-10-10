@@ -8,6 +8,18 @@ import { Defaults } from './defaults'
 const FF_EXTENSION_TRICK = { x: true }
 
 /**
+ * If the set() method encounters one of these, the popperInstance must be
+ * recreated
+ */
+export const POPPER_INSTANCE_RELATED_PROPS = [
+  'placement',
+  'popperOptions',
+  'flip',
+  'distance',
+  'offset'
+]
+
+/**
  * Determines if the runtime is a browser
  */
 export const isBrowser = typeof window !== 'undefined'
