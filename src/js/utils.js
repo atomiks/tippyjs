@@ -537,11 +537,6 @@ export const TRANSFORM_NUMBER_RE = {
   scale: /scaleX?Y?\(([^)]+)\)/
 }
 
-const transformProperty =
-  isBrowser && typeof document.body.style.transform !== 'undefined'
-    ? 'transform'
-    : 'webkitTransform'
-
 /**
  * Computes the arrow's transform so that it is correct for any placement
  */
@@ -590,7 +585,11 @@ export const computeArrowTransform = (arrow, arrowTransform) => {
       )})`
     )
 
-  arrow.style[transformProperty] = computedTransform
+  arrow.style[
+    typeof document.body.style.transform !== 'undefined'
+      ? 'transform'
+      : 'webkitTransform'
+  ] = computedTransform
 }
 
 /**
