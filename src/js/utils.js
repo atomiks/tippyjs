@@ -15,6 +15,7 @@ export const POPPER_INSTANCE_RELATED_PROPS = [
   'placement',
   'popperOptions',
   'flip',
+  'flipBehavior',
   'distance',
   'offset'
 ]
