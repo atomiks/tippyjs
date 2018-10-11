@@ -1,12 +1,13 @@
 import { h } from 'hyperapp'
 
-import AJAX from '../../snippets/ajax.md'
+import AJAX from '../../snippets/ajax'
 import EVENT_DELEGATION_HTML from '../../snippets/event-delegation-html'
 import EVENT_DELEGATION_JS from '../../snippets/event-delegation-js'
 import SCROLLABLE_CONTAINER from '../../snippets/scrollable-container'
 import DISABLE_TOUCH from '../../snippets/disable-touch'
 import HIDE_TOOLTIPS_ON_SCROLL from '../../snippets/hide-tooltips-on-scroll'
 import CANCEL_LIFECYCLE_FUNCTION from '../../snippets/cancel-lifecycle-function'
+import BUTTONS_WITH_TOOLTIPS_TOUCH from '../../snippets/buttons-with-tooltips-touch'
 
 import Section from '../components/Section'
 import Emoji from '../components/Emoji'
@@ -111,5 +112,26 @@ export default () => (state, actions) => (
       that this is synchronous, so it won't wait for an AJAX request, etc.
     </p>
     <Code content={CANCEL_LIFECYCLE_FUNCTION} />
+
+    <Subheading>Buttons with tooltips on touch devices</Subheading>
+    <p>
+      A tooltip on a button is generally used to convey information before the
+      user decides to click on it. On touch devices, this isn't possible because
+      a tap is required to show the tooltip, which will fire a click event.
+    </p>
+    <p>
+      On iOS, a tap will show the tooltip but click events won't fire until a
+      second tap. This allows the user to see the tooltip before deciding to
+      click the button. On Android, clicking the button will show the tooltip
+      and also fire a click event.
+    </p>
+    <p>
+      Depending on your use case, one of these will be preferred, so user agent
+      checking may be needed. If neither behavior is preferred, consider using
+      the <code>touchHold: true</code> option which allows the user to see the
+      tooltip while pressing and holding the button, but won't fire a click
+      event unless the click appears to be intentional.
+    </p>
+    <Code content={BUTTONS_WITH_TOOLTIPS_TOUCH} />
   </Section>
 )
