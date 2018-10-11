@@ -24,7 +24,7 @@
     font-weight: 600;
     line-height: 1.2;
     color: var(--purple);
-    background: -webkit-linear-gradient(45deg, #5884ff, #49b3ff);
+    background: var(--text-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

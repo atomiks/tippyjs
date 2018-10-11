@@ -1,6 +1,6 @@
 :root {
-  --background-gradient: linear-gradient(90deg, #5733ea, #4894ff 70%, #a5bcff);
-  --text-gradient: -webkit-linear-gradient(0deg, #a5ffd1, #fff7bf);
+  --background-gradient: linear-gradient(91deg, #f1eefc, #9dc6ff 70%, #a5bcff);
+  --text-gradient: -webkit-linear-gradient(0deg, #6191ff, #e98eff);
 
   --very-light-gray: #eee;
   --purple: #9079ff;
@@ -133,10 +133,9 @@ a {
 }
 
 .tippy {
-  background: rgba(255, 202, 223, 0.5);
+  background: rgba(237, 202, 255, 0.5);
   color: #d22489;
   outline: 0;
-  border-bottom: 1px solid #f27da6;
   padding: 0 4px;
   font-weight: 600;
   cursor: help;

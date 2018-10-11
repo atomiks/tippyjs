@@ -19,10 +19,10 @@ export default () => (
       </h2>
       <div class="header__items">
         <div class="header__item">
-          <p>
-            <Emoji size="small">💎</Emoji>
-            14 kB
-          </p>
+          <span class="header__size">
+            <Emoji size="small">📦</Emoji>
+            14.8 kB
+          </span>
         </div>
         <div class="header__item">
           <Tippy
@@ -44,6 +44,14 @@ export default () => (
             </a>
           </Tippy>
         </div>
+        <div class="header__item">
+          <a
+            class="header__button"
+            href="https://atomiks.github.io/tippyjs/v2/index.html"
+          >
+            Go to v2 docs (old)
+          </a>
+        </div>
         <div class="header__item has-github-button">
           <a
             class="github-button"
@@ -56,16 +64,6 @@ export default () => (
           >
             Star
           </a>
-        </div>
-        <div class="header__item">
-          <p class="header__docs-wrapper">
-            <a
-              class="header__docs"
-              href="https://atomiks.github.io/tippyjs/v2/index.html"
-            >
-              Go to v2 docs (old)
-            </a>
-          </p>
         </div>
       </div>
     </div>
