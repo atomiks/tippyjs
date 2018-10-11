@@ -76,7 +76,7 @@ pre[class*='language-'] {
   word-break: normal;
   word-wrap: normal;
   line-height: 2;
-  font-size: 16px;
+  font-size: 15px;
   margin-top: -8px;
   -webkit-overflow-scrolling: touch;
   -moz-tab-size: 2;
@@ -131,7 +131,7 @@ pre[class*='language-'] {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: #868ed6;
+  color: #9ca1d1;
 }
 
 .token.selector,
@@ -198,7 +198,7 @@ pre[class*='language-'] {
 
 .token.regex,
 .token.variable {
-  color: #00a8d4;
+  color: #ffad92;
 }
 
 .token.bold {

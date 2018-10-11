@@ -1,10 +1,11 @@
 .section {
   margin: 0 5%;
-  font-size: 18px;
+  font-size: 17px;
   padding-bottom: 24px;
 
   @media (min-width: 768px) {
     margin: 0;
+    font-size: 18px;
   }
 
   @media (min-width: 992px) {
