@@ -25,7 +25,9 @@ export default () => (state, actions) => (
 
     <OptionsTable />
 
-    <Subheading>AJAX tooltips</Subheading>
+    <Subheading>
+      <Emoji class="section__emoji">🌐</Emoji> AJAX tooltips
+    </Subheading>
     <p>
       Lifecycle functions allow you to do powerful things with tippys. Here's an
       example of dynamic content which on show, fetches a new random image from
@@ -65,7 +67,9 @@ export default () => (state, actions) => (
       dimensions become known by the browser.
     </p>
 
-    <Subheading>Event delegation</Subheading>
+    <Subheading>
+      <Emoji class="section__emoji">📡</Emoji> Event delegation
+    </Subheading>
     <p>
       Event delegation only requires minimal setup. Your setup should look
       similar to this, with a parent element wrapping the child elements you

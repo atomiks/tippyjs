@@ -62,7 +62,7 @@ export default () => (
     <Code content={MULTIPLE_CONTENT_JS} />
 
     <Subheading>
-      Accepted inputs <Emoji class="section__emoji">🎛</Emoji>
+      <Emoji class="section__emoji">🎛</Emoji> Accepted inputs
     </Subheading>
     <p>
       A single{' '}
@@ -91,7 +91,7 @@ export default () => (
     <Code content="tippy(document.querySelectorAll('.btn'))" />
 
     <Subheading>
-      Advanced <Emoji class="section__emoji">🤯</Emoji>
+      <Emoji class="section__emoji">🤯</Emoji> Advanced
     </Subheading>
     <p>
       You can use a virtual element as the positioning reference instead of a

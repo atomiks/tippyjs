@@ -40,7 +40,7 @@ export default () => (
     </ResultBox>
 
     <Subheading>
-      Data attributes <Emoji class="section__emoji">🏷</Emoji>
+      <Emoji class="section__emoji">🏷</Emoji> Data attributes
     </Subheading>
     <p>
       You can also specify options on the reference element itself by adding{' '}

@@ -11,7 +11,7 @@ const Subheading = Heading(TITLE)
 export default () => (
   <Section title={TITLE} emoji="📦">
     <Subheading>
-      Option 1: CDN <Emoji class="section__emoji">🔗</Emoji>
+      <Emoji class="section__emoji">🔗</Emoji> Option 1: CDN
     </Subheading>
     <p>
       Include this script from the unpkg CDN in your HTML document before your
@@ -27,7 +27,7 @@ export default () => (
     </p>
 
     <Subheading>
-      Option 2: Package Manager <Emoji class="section__emoji">📦</Emoji>
+      <Emoji class="section__emoji">📦</Emoji> Option 2: Package Manager
     </Subheading>
     <p>Install using either npm or yarn:</p>
 
@@ -47,7 +47,7 @@ export default () => (
     <Code content="import 'tippy.js/dist/tippy.css'" />
 
     <Subheading>
-      View Library Components <Emoji class="section__emoji">🎁</Emoji>
+      <Emoji class="section__emoji">🎁</Emoji> View Library Components
     </Subheading>
 
     <p>
@@ -64,7 +64,7 @@ export default () => (
     </ul>
 
     <Subheading>
-      Files <Emoji class="section__emoji">📁</Emoji>
+      <Emoji class="section__emoji">📁</Emoji> Files
     </Subheading>
     <p>Tippy builds a bunch of different files that can be used:</p>
     <ul>
