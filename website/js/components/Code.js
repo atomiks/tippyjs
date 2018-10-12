@@ -8,7 +8,10 @@ export default ({ content, lang, style = {} }) => {
   return (
     <div class="code-wrapper" data-lang={lang}>
       <pre style={style}>
-        <code oncreate={Prism.highlightElement} class={`lang-${lang}`}>
+        <code
+          oncreate={el => Prism.highlightElement(el)}
+          class={`lang-${lang}`}
+        >
           {content.replace(/```(js|html|css|shell)([\s\S]*)```/g, '$2').trim()}
         </code>
       </pre>
