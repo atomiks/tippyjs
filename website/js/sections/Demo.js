@@ -240,7 +240,6 @@ export default () => (
         animateFill={false}
         animation="fade"
         arrow={true}
-        flip={false}
       >
         <button class="btn">Light-border</button>
       </Tippy>
@@ -308,8 +307,58 @@ export default () => (
             event.preventDefault()
           }}
         >
-          Touch &amp; Hold
+          Touch &amp; hold
         </button>
+      </Tippy>
+      <Tippy
+        interactive={true}
+        placement="bottom"
+        arrow={true}
+        theme="light-border"
+        appendTo={ref => ref.parentNode}
+        animation="fade"
+        onHide={tip => {
+          const anchor = tip.popper.querySelector('a')
+          if (anchor && anchor._tippy && anchor._tippy.state.isVisible) {
+            return false
+          }
+        }}
+        trigger="click"
+        content={
+          <ul class="tippy-list">
+            <li>
+              <Tippy
+                interactive={true}
+                placement="right"
+                theme="light-border"
+                animateFill={false}
+                appendTo={ref => ref.parentNode}
+                animation="fade"
+                content={
+                  <ul class="tippy-list">
+                    <li>
+                      <Tippy
+                        content="So many levels deep..."
+                        onShow={tip => {
+                          return tip.reference.closest('.tippy-popper')._tippy
+                            .state.isVisible
+                        }}
+                      >
+                        <button class="btn" style={{ margin: 0 }}>
+                          Action
+                        </button>
+                      </Tippy>
+                    </li>
+                  </ul>
+                }
+              >
+                <a style={{ cursor: 'pointer' }}>Open submenu ></a>
+              </Tippy>
+            </li>
+          </ul>
+        }
+      >
+        <button class="btn">Dropdown nesting (click)</button>
       </Tippy>
       <Tippy
         content="I'm hugging the tooltip!"
@@ -326,12 +375,6 @@ export default () => (
         animateFill={false}
       >
         <button class="btn">Offset</button>
-      </Tippy>
-      <Tippy size="small">
-        <button class="btn">Small</button>
-      </Tippy>
-      <Tippy size="large">
-        <button class="btn">Large</button>
       </Tippy>
     </div>
   </section>
