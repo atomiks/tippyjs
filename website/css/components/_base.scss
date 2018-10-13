@@ -241,6 +241,18 @@ a {
   }
 }
 
+.tippy-tooltip.ajax-theme {
+  width: 200px;
+  padding: 0;
+  overflow: hidden;
+  transform: rotate(0.001deg);
+}
+
+.tippy-tooltip.ajax-theme img {
+  display: block;
+  max-width: 100%;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 1em;

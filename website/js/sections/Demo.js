@@ -14,6 +14,12 @@ const ANIMATIONS = [
 const printValue = value =>
   Array.isArray(value) ? `[${value.join(', ')}]` : value
 
+const NO_GPU_ACCELERATION = {
+  modifiers: {
+    computeStyle: { gpuAcceleration: false }
+  }
+}
+
 export default () => (
   <section class="section" id="demo">
     <h2 class="section__heading">Tippy's features</h2>
@@ -138,6 +144,14 @@ export default () => (
           </button>
         </Tippy>
       ))}
+      <Tippy
+        content="`scale` onShow, `fade` onHide"
+        onShow={tip => tip.set({ animation: 'scale' })}
+        onHide={tip => tip.set({ animation: 'fade' })}
+        arrow={true}
+      >
+        <button class="btn">Dynamic</button>
+      </Tippy>
       <Tippy
         animation="height"
         animateFill={false}
@@ -356,6 +370,7 @@ export default () => (
                 animateFill={false}
                 appendTo={ref => ref.parentNode}
                 animation="fade"
+                popperOptions={NO_GPU_ACCELERATION} // Appears blurry on Safari otherwise
                 content={
                   <ul class="tippy-list">
                     <li>
