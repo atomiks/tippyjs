@@ -16,9 +16,12 @@ import Heading from '../components/Heading'
 import ResultBox from '../components/ResultBox'
 import OptionsTable from '../components/OptionsTable'
 import Tippy from '../components/Tippy'
+import ExternalLink from '../components/ExternalLink'
 
 const TITLE = 'All Options'
 const Subheading = Heading(TITLE)
+
+const INITIAL_AJAX_CONTENT = '<div style="margin:5px 0;">Loading...</div>'
 
 export default () => (state, actions) => (
   <Section title={TITLE} emoji="🔮">
@@ -66,6 +69,102 @@ export default () => (state, actions) => (
       ), the tooltip will be positioned incorrectly once it loads. This is
       because the position of the tooltip is updated before the image's
       dimensions become known by the browser.
+    </p>
+    <p>
+      <strong>Improved animation</strong>
+    </p>
+    <ResultBox>
+      <Tippy
+        placement="bottom"
+        animation="fade"
+        animateFill={false}
+        duration={200}
+        theme="ajax"
+        onShow={tip => {
+          if (tip.state.isFetching === true || tip.state.canFetch === false) {
+            return
+          }
+
+          tip.state.isFetching = true
+          tip.state.canFetch = false
+
+          const { tooltip, content } = tip.popperChildren
+
+          fetch('https://unsplash.it/200/?random')
+            .then(response => response.blob())
+            .then(blob => {
+              tip.state.isFetching = false
+
+              const url = URL.createObjectURL(blob)
+
+              if (!tip.state.isVisible) {
+                return
+              }
+
+              const img = new Image()
+              img.width = 200
+              img.height = 200
+              img.src = url
+
+              if (!tip._transitionEndListener) {
+                tip._transitionEndListener = event => {
+                  if (event.target === event.currentTarget) {
+                    content.style.opacity = '1'
+                    tip.setContent(img)
+                  }
+                }
+              }
+              tooltip.addEventListener(
+                'transitionend',
+                tip._transitionEndListener
+              )
+
+              if (!tip._baseHeight) {
+                tip._baseHeight = tooltip.clientHeight
+              }
+
+              content.style.opacity = '0'
+              tip.setContent(img)
+              const height = tooltip.clientHeight
+              tooltip.style.height = tip._baseHeight + 'px'
+              void tooltip.offsetHeight
+              tooltip.style.height = height + 'px'
+              tip.setContent('')
+
+              function loop() {
+                tip.popperInstance.update()
+                if (tip.state.isVisible) {
+                  requestAnimationFrame(loop)
+                }
+              }
+              loop()
+            })
+            .catch(() => {
+              tip.state.isFetching = false
+            })
+        }}
+        onHidden={tip => {
+          tip.state.canFetch = true
+          tip.setContent(INITIAL_AJAX_CONTENT)
+          const { tooltip } = tip.popperChildren
+          tooltip.style.height = null
+          tooltip.removeEventListener(
+            'transitionend',
+            tip._transitionEndListener
+          )
+          tip._transitionEndListener = null
+        }}
+        content={INITIAL_AJAX_CONTENT}
+      >
+        <button class="btn">Hover for a new image</button>
+      </Tippy>
+    </ResultBox>
+    <p>
+      See the{' '}
+      <ExternalLink to="https://codepen.io/atomiks/pen/LgjMbW">
+        CodePen demo
+      </ExternalLink>
+      .
     </p>
 
     <Subheading>
