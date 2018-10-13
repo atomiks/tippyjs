@@ -134,10 +134,32 @@ export default () => (
           arrow={true}
         >
           <button class="btn">
-            Inertia ({animation[0].toUpperCase() + animation.slice(1)})
+            Inertia ({animation[0] + animation.slice(1)})
           </button>
         </Tippy>
       ))}
+      <Tippy
+        animation="height"
+        animateFill={false}
+        lazy={false}
+        distance={20}
+        flip={false}
+        onShow={tip => {
+          tip.state.isMounted = true
+          function loop() {
+            tip.popperInstance.update()
+            if (tip.state.isMounted) {
+              requestAnimationFrame(loop)
+            }
+          }
+          loop()
+        }}
+        onHidden={tip => {
+          tip.state.isMounted = false
+        }}
+      >
+        <button class="btn">Transition height (custom)</button>
+      </Tippy>
     </div>
 
     <div class="feature">
