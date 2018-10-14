@@ -6,13 +6,43 @@ import ExternalLink from './ExternalLink'
 import APPEND_TO from '../../snippets/append-to'
 import WAIT from '../../snippets/wait'
 
+const scrollTakingIntoAccountStickyHeader = el => {
+  scroll(
+    0,
+    el.closest('tr').getBoundingClientRect().top -
+      document.body.getBoundingClientRect().top -
+      45
+  )
+}
+
 const Prop = (props, children) => {
   const id = toKebabCase(props.name) + '-option'
   return (
     <tr id={id}>
       <td>
         <code class="prop">
-          <a href={'#' + id}>{props.name}</a>
+          <a
+            href={'#' + id}
+            oncreate={el => {
+              setTimeout(() => {
+                if (
+                  window.innerWidth >= 992 &&
+                  location.hash.split('#')[1] === id
+                ) {
+                  scrollTakingIntoAccountStickyHeader(el)
+                }
+              })
+            }}
+            onclick={event => {
+              if (window.innerWidth >= 992) {
+                event.preventDefault()
+                location.hash = id
+                scrollTakingIntoAccountStickyHeader(event.currentTarget)
+              }
+            }}
+          >
+            {props.name}
+          </a>
         </code>
       </td>
       <td>
