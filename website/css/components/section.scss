@@ -59,9 +59,58 @@
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 0;
+    line-height: 1.4;
 
     a {
       color: inherit;
+      position: relative;
+      padding: 5px 0;
+
+      &:hover {
+        text-decoration: none;
+
+        &::after {
+          transform: scaleX(1);
+          transform-origin: left;
+        }
+
+        &::before {
+          opacity: 1;
+        }
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background-size: 100% 1px;
+        background-image: linear-gradient(
+          90deg,
+          currentColor 100%,
+          transparent 100%
+        );
+        transform: scaleX(0);
+        transition: transform 0.3s;
+        transform-origin: right;
+      }
+
+      &::before {
+        display: none;
+        content: '🔗';
+        font-size: 16px;
+        position: absolute;
+        top: 8px;
+        left: -25px;
+        opacity: 0;
+        transition: opacity 0.3s;
+
+        @media (min-width: 768px) {
+          display: block;
+        }
+      }
     }
   }
 

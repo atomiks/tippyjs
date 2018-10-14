@@ -2,11 +2,12 @@ import { h } from 'hyperapp'
 import { toKebabCase } from '../utils'
 
 const Subheading = scope => (props, children) => {
-  const id = toKebabCase(scope + children[0])
-  const link = <a href={'#' + id}>{children}</a>
+  const id = toKebabCase(
+    scope + children.find(child => typeof child === 'string')
+  )
   return (
     <h3 id={id} class="section__subheading">
-      {link}
+      <a href={'#' + id}>{children}</a>
     </h3>
   )
 }
