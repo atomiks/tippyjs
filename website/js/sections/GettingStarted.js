@@ -22,8 +22,9 @@ export default () => (
       content="<script src=&quot;https://unpkg.com/tippy.js@3/dist/tippy.all.min.js&quot;></script>"
     />
     <p>
-      Once it's loaded, you'll have access to the <code>tippy</code> module
-      which will allow you to create awesome tooltips!
+      It's recommended to place this at the bottom of the{' '}
+      <code>&lt;body&gt;</code>, or in the <code>&lt;head&gt;</code> with a{' '}
+      <code>defer</code> attribute.
     </p>
 
     <Subheading>
