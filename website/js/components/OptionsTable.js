@@ -205,7 +205,7 @@ export default () => (
           Determines if a tippy should be interactive, i.e. able to be hovered
           over or clicked without hiding.
         </Prop>
-        <Prop name="interactiveBorder" default="false" value="Boolean">
+        <Prop name="interactiveBorder" default="2" value="Number">
           Determines the size of the invisible border around a tippy that will
           prevent it from hiding (only relevant for the hover trigger). Useful
           to prevent the tippy from accidentally hiding from clumsy cursor
@@ -231,7 +231,7 @@ export default () => (
         <Prop name="multiple" default="false" value="Boolean">
           Determines if the reference can have multiple tippy instances.
         </Prop>
-        <Prop name="offset" default="false" value="Boolean">
+        <Prop name="offset" default="0" value="Number">
           An offset that Popper.js uses to offset the popper element. Can work
           with both the x and y axis, distinct from{' '}
           <a href="#distance-option">distance</a>.
