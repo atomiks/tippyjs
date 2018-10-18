@@ -90,5 +90,33 @@ export default () => (
       There are also <code>.min</code> versions of the above, which means the
       file is minified for production use.
     </p>
+
+    <Subheading>
+      <Emoji class="section__emoji">💻</Emoji> Browser support
+    </Subheading>
+    <p>
+      Tippy is compatible with browsers with <code>requestAnimationFrame</code>{' '}
+      and <code>MutationObserver</code> support (IE11+). This means most
+      browsers from 2013 onwards, about 99% of desktop users and 95% of mobile
+      users globally (mainly due to Opera Mini on mobile not being supported).
+    </p>
+    <p>
+      IE11 requires a <code>classList</code> polyfill if using an SVG element as
+      the reference.
+    </p>
+    <p>
+      If you need to support old browsers too, you can set the native{' '}
+      <code>title</code> attribute on desktop. On unsupported mobile browsers
+      (such as Opera Mini), it's best to inline the content next to the
+      reference element.
+    </p>
+    <p>
+      <Emoji size="small">⚠️</Emoji>
+      The code throughout this documentation is making use of new JavaScript
+      features (ES6+) that old browsers don't support (such as IE11). If you're
+      going to copy code from here, make sure to use{' '}
+      <ExternalLink to="https://babeljs.io">Babel</ExternalLink> to transpile it
+      into ES5.
+    </p>
   </Section>
 )

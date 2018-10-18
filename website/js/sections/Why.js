@@ -1,7 +1,7 @@
 import { h } from 'hyperapp'
 import Section from '../components/Section'
 
-const TITLE = 'Why use Tippy.js?'
+const TITLE = 'Why Use Tippy.js?'
 
 export default () => (
   <Section title={TITLE} emoji="🤔">

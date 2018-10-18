@@ -12,6 +12,10 @@
 html {
   box-sizing: border-box;
   font-size: 0.9375em;
+
+  @media (min-width: 768px) {
+    font-size: 1em;
+  }
 }
 
 *,
@@ -253,8 +257,12 @@ a {
   max-width: 100%;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 1em;
+.table-of-contents {
+  font-size: 19px;
+  list-style-type: none;
+  line-height: 2;
+
+  .emoji {
+    margin-right: 10px;
   }
 }
