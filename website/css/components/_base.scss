@@ -229,32 +229,26 @@ a {
   text-align: left;
 }
 
-.tippy-tooltip[data-animation='height'] {
-  padding: 0;
-  overflow: hidden;
+.tippy-popper[x-placement^='top'] .tippy-tooltip.ajax-theme {
+  top: auto !important;
+  bottom: 0;
+}
 
-  &[data-state='visible'] {
-    height: 30px;
-  }
-  &[data-state='hidden'] {
-    height: 0;
-  }
-
-  .tippy-content {
-    padding: 0.3rem 0.6rem;
-  }
+.tippy-popper[x-placement^='bottom'] .tippy-tooltip.ajax-theme {
+  bottom: auto !important;
+  top: 0;
 }
 
 .tippy-tooltip.ajax-theme {
+  position: absolute;
   width: 200px;
   padding: 0;
   overflow: hidden;
-  transform: rotate(0.001deg);
-}
 
-.tippy-tooltip.ajax-theme img {
-  display: block;
-  max-width: 100%;
+  img {
+    display: block;
+    max-width: 100%;
+  }
 }
 
 .table-of-contents {

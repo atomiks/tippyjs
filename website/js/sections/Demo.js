@@ -152,28 +152,6 @@ export default () => (
       >
         <button class="btn">Dynamic</button>
       </Tippy>
-      <Tippy
-        animation="height"
-        animateFill={false}
-        lazy={false}
-        distance={20}
-        flip={false}
-        onShow={tip => {
-          tip.state.isMounted = true
-          function loop() {
-            tip.popperInstance.update()
-            if (tip.state.isMounted) {
-              requestAnimationFrame(loop)
-            }
-          }
-          loop()
-        }}
-        onHidden={tip => {
-          tip.state.isMounted = false
-        }}
-      >
-        <button class="btn">Transition height (custom)</button>
-      </Tippy>
     </div>
 
     <div class="feature">

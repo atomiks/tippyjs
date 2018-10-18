@@ -72,11 +72,10 @@ export default () => (state, actions) => (
       dimensions become known by the browser.
     </p>
     <p>
-      <strong>Improved animation</strong>
+      <strong>Improved animation with a height transition</strong>
     </p>
     <ResultBox>
       <Tippy
-        placement="bottom"
         animation="fade"
         animateFill={false}
         duration={200}
@@ -89,7 +88,10 @@ export default () => (state, actions) => (
           tip.state.isFetching = true
           tip.state.canFetch = false
 
+          const { popper } = tip
           const { tooltip, content } = tip.popperChildren
+
+          popper.style.width = '200px'
 
           fetch('https://unsplash.it/200/?random')
             .then(response => response.blob())
@@ -127,18 +129,11 @@ export default () => (state, actions) => (
               content.style.opacity = '0'
               tip.setContent(img)
               const height = tooltip.clientHeight
+              popper.style.height = height + 'px'
               tooltip.style.height = tip._baseHeight + 'px'
               void tooltip.offsetHeight
               tooltip.style.height = height + 'px'
               tip.setContent('')
-
-              function loop() {
-                tip.popperInstance.update()
-                if (tip.state.isVisible) {
-                  requestAnimationFrame(loop)
-                }
-              }
-              loop()
             })
             .catch(() => {
               tip.state.isFetching = false
