@@ -9,12 +9,13 @@ import Emoji from '../components/Emoji'
 import Code from '../components/Code'
 import ResultBox from '../components/ResultBox'
 import Tippy from '../components/Tippy'
+import { Emojis } from './TableOfContents'
 
 const TITLE = 'HTML Content'
 const Subheading = Heading(TITLE)
 
 export default () => (
-  <Section title={TITLE} emoji="🖼️">
+  <Section title={TITLE} emoji={Emojis.HTML_CONTENT}>
     <p>
       Along with using a string of HTML content, you can provide an{' '}
       <code>HTMLElement</code> for the <code>content</code> option.

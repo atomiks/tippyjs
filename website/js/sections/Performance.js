@@ -1,10 +1,11 @@
 import { h } from 'hyperapp'
 import Section from '../components/Section'
+import { Emojis } from './TableOfContents'
 
 const TITLE = 'Performance'
 
 export default () => (state, actions) => (
-  <Section title={TITLE} emoji="⚡️">
+  <Section title={TITLE} emoji={Emojis.PERFORMANCE}>
     <p>Tested with 2.6 GHz Skylake MacBook Pro using Chrome 67:</p>
     <ul>
       <li>

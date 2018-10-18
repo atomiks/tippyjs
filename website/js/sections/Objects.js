@@ -9,12 +9,13 @@ import Section from '../components/Section'
 import Emoji from '../components/Emoji'
 import Code from '../components/Code'
 import Heading from '../components/Heading'
+import { Emojis } from './TableOfContents'
 
 const TITLE = 'Objects'
 const Subheading = Heading(TITLE)
 
 export default () => (
-  <Section title={TITLE} emoji="🏷️">
+  <Section title={TITLE} emoji={Emojis.OBJECTS}>
     <p>
       When using Tippy.js, there are two types of objects to think about:
       collections and instances.

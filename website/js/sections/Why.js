@@ -1,10 +1,11 @@
 import { h } from 'hyperapp'
 import Section from '../components/Section'
+import { Emojis } from './TableOfContents'
 
 const TITLE = 'Why Use Tippy.js?'
 
 export default () => (
-  <Section title={TITLE} emoji="🤔">
+  <Section title={TITLE} emoji={Emojis.WHY}>
     <p>
       You might be wondering why you should use a 14 kB JS library for tooltips
       and popovers instead of a CSS solution. Pure CSS tooltips are great for

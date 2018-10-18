@@ -14,12 +14,13 @@ import Tippy from '../components/Tippy'
 import ResultBox from '../components/ResultBox'
 import Heading from '../components/Heading'
 import ExternalLink from '../components/ExternalLink'
+import { Emojis } from './TableOfContents'
 
 const TITLE = 'Creating Tooltips'
 const Subheading = Heading(TITLE)
 
 export default () => (
-  <Section title={TITLE} emoji="🔧">
+  <Section title={TITLE} emoji={Emojis.CREATING_TOOLTIPS}>
     <Subheading>Method 1: Auto</Subheading>
     <p>
       Give your reference element a <code>data-tippy</code> attribute containing

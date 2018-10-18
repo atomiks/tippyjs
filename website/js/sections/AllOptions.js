@@ -17,6 +17,7 @@ import ResultBox from '../components/ResultBox'
 import OptionsTable from '../components/OptionsTable'
 import Tippy from '../components/Tippy'
 import ExternalLink from '../components/ExternalLink'
+import { Emojis } from './TableOfContents'
 
 const TITLE = 'All Options'
 const Subheading = Heading(TITLE)
@@ -24,7 +25,7 @@ const Subheading = Heading(TITLE)
 const INITIAL_AJAX_CONTENT = '<div style="margin:5px 0;">Loading...</div>'
 
 export default () => (state, actions) => (
-  <Section title={TITLE} emoji="🔮">
+  <Section title={TITLE} emoji={Emojis.ALL_OPTIONS}>
     <p>Below is a list of all possible options you can pass to tippy.</p>
 
     <OptionsTable />

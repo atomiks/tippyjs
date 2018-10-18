@@ -12,12 +12,13 @@ import Code from '../components/Code'
 import ResultBox from '../components/ResultBox'
 import Tippy from '../components/Tippy'
 import Heading from '../components/Heading'
+import { Emojis } from './TableOfContents'
 
 const TITLE = 'Creating Custom Themes'
 const Subheading = Heading(TITLE)
 
 export default () => (
-  <Section title={TITLE} emoji="🖌️">
+  <Section title={TITLE} emoji={Emojis.CREATING_CUSTOM_THEMES}>
     <Subheading>Tippy element structure</Subheading>
     <p>
       To know what selectors to use, it's helpful to understand the structure of

@@ -4,12 +4,13 @@ import Heading from '../components/Heading'
 import Emoji from '../components/Emoji'
 import Code from '../components/Code'
 import ExternalLink from '../components/ExternalLink'
+import { Emojis } from './TableOfContents'
 
 const TITLE = 'Getting Started'
 const Subheading = Heading(TITLE)
 
 export default () => (
-  <Section title={TITLE} emoji="📦">
+  <Section title={TITLE} emoji={Emojis.GETTING_STARTED}>
     <Subheading>
       <Emoji class="section__emoji">🔗</Emoji> Option 1: CDN
     </Subheading>

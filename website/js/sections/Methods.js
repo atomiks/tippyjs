@@ -8,12 +8,13 @@ import Emoji from '../components/Emoji'
 import Code from '../components/Code'
 import ResultBox from '../components/ResultBox'
 import Tippy from '../components/Tippy'
+import { Emojis } from './TableOfContents'
 
 const TITLE = 'Methods'
 const Subheading = Heading(TITLE)
 
 export default () => (
-  <Section title={TITLE} emoji="🕹">
+  <Section title={TITLE} emoji={Emojis.METHODS}>
     <p>
       Tippy instances have 7 methods available which allow you to control the
       tooltip without the use of UI events.

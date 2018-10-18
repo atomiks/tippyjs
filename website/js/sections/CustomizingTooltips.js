@@ -11,12 +11,13 @@ import Code from '../components/Code'
 import Tippy from '../components/Tippy'
 import ResultBox from '../components/ResultBox'
 import Heading from '../components/Heading'
+import { Emojis } from './TableOfContents'
 
 const TITLE = 'Customizing Tooltips'
 const Subheading = Heading(TITLE)
 
 export default () => (
-  <Section title={TITLE} emoji="⚙️">
+  <Section title={TITLE} emoji={Emojis.CUSTOMIZING_TOOLTIPS}>
     <p>
       <code>tippy()</code> takes an object of options as a second argument for
       you to configure the tooltips being created. Here's an example:
