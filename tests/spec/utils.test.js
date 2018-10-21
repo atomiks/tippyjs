@@ -282,15 +282,25 @@ describe('getDataAttributeOptions', () => {
     })
   })
 
-  it('correctly parses arrays', () => {
+  it('correctly parses JSON-serializable props', () => {
     const ref = h()
     ref.setAttribute('data-tippy-delay', '[100, 255]')
     ref.setAttribute('data-tippy-duration', '[0, 999]')
+    ref.setAttribute('data-tippy-popperOptions', '{ "placement": "right" }')
 
     expect(Utils.getDataAttributeOptions(ref)).toEqual({
       delay: [100, 255],
-      duration: [0, 999]
+      duration: [0, 999],
+      popperOptions: { placement: 'right' }
     })
+  })
+
+  it('does not break if content begins with [ or {', () => {
+    const ref = h()
+    ref.setAttribute('data-tippy-content', '[')
+    expect(() => Utils.getDataAttributeOptions(ref)).not.toThrow()
+    ref.setAttribute('data-tippy-content', '{')
+    expect(() => Utils.getDataAttributeOptions(ref)).not.toThrow()
   })
 })
 

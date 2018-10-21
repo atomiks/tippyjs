@@ -1,5 +1,5 @@
 import { Selectors } from './selectors'
-import { Defaults } from './defaults'
+import { Defaults, JSON_SERIALIZABLE_PROPS } from './defaults'
 
 /**
  * Firefox extensions doesn't allow 'innerHTML' to be set but we can trick it
@@ -351,7 +351,10 @@ export const getDataAttributeOptions = reference =>
       acc[key] = false
     } else if (isNumeric(valueAsString)) {
       acc[key] = Number(valueAsString)
-    } else if (key !== 'target' && valueAsString[0] === '[') {
+    } else if (
+      (valueAsString[0] === '[' || valueAsString[0] === '{') &&
+      JSON_SERIALIZABLE_PROPS.indexOf(key) > -1
+    ) {
       acc[key] = JSON.parse(valueAsString)
     } else {
       acc[key] = valueAsString
