@@ -98,12 +98,12 @@ export interface Collection {
 }
 
 export interface Tippy {
-  (target: Target, options?: Options): Collection
+  (targets: Target, options?: Options): Collection
   readonly defaults: Options
   readonly version: string
   disableAnimations(): void
   hideAllPoppers(): void
-  one(target: Target, options?: Options): Instance
+  one(targets: Target, options?: Options): Instance
   setDefaults(options: Options): void
   useCapture(): void
 }
