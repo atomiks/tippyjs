@@ -15,9 +15,9 @@ export type Placement =
 
 export type Content = string | Element
 
-export type Target = string | Element | NodeList | Popper.ReferenceObject
+export type Targets = string | Element | NodeList | Popper.ReferenceObject
 
-export interface Options {
+export interface Props {
   a11y?: boolean
   allowHTML?: boolean
   animateFill?: boolean
@@ -78,9 +78,9 @@ export interface Instance {
     tooltip: Element | null
   }
   popperInstance: Popper | null
-  props: Options
+  props: Props
   reference: Element
-  set(options: Options): void
+  set(options: Props): void
   setContent(content: Content): void
   show(duration?: number): void
   state: {
@@ -93,18 +93,18 @@ export interface Instance {
 export interface Collection {
   destroyAll(): void
   instances: Instance[]
-  props: Options
-  targets: Target | Target[]
+  props: Props
+  targets: Targets
 }
 
 export interface Tippy {
-  (targets: Target, options?: Options): Collection
-  readonly defaults: Options
+  (targets: Targets, options?: Props): Collection
+  readonly defaults: Props
   readonly version: string
   disableAnimations(): void
   hideAllPoppers(): void
-  one(targets: Target, options?: Options): Instance
-  setDefaults(options: Options): void
+  one(targets: Targets, options?: Props): Instance
+  setDefaults(options: Props): void
   useCapture(): void
 }
 
