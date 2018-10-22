@@ -15,7 +15,7 @@ export type Placement =
 
 export type Content = string | Element
 
-export type Selector = string | Element | NodeList | Popper.ReferenceObject
+export type Target = string | Element | NodeList | Popper.ReferenceObject
 
 export interface Options {
   a11y?: boolean
@@ -94,16 +94,16 @@ export interface Collection {
   destroyAll(): void
   instances: Instance[]
   props: Options
-  targets: Selector | Selector[]
+  targets: Target | Target[]
 }
 
 export interface Tippy {
-  (selector: Selector, options?: Options): Collection
+  (target: Target, options?: Options): Collection
   readonly defaults: Options
   readonly version: string
   disableAnimations(): void
   hideAllPoppers(): void
-  one(selector: Selector, options?: Options): Instance
+  one(target: Target, options?: Options): Instance
   setDefaults(options: Options): void
   useCapture(): void
 }
