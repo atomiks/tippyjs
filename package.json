@@ -4,6 +4,7 @@
   "description": "Vanilla JS Tooltip & Popover Library",
   "main": "dist/tippy.all.js",
   "module": "dist/esm/tippy.standalone.js",
+  "types": "index.d.ts",
   "author": "atomiks",
   "license": "MIT",
   "keywords": [
