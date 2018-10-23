@@ -15,7 +15,12 @@ export type Placement =
 
 export type Content = string | Element
 
-export type Targets = string | Element | NodeList | Popper.ReferenceObject
+export type Targets =
+  | string
+  | Element
+  | Element[]
+  | NodeList
+  | Popper.ReferenceObject
 
 export interface Props {
   a11y?: boolean
