@@ -1,5 +1,5 @@
 import { Selectors } from './selectors'
-import { Defaults, JSON_SERIALIZABLE_PROPS } from './defaults'
+import { Defaults } from './defaults'
 
 /**
  * Firefox extensions doesn't allow 'innerHTML' to be set but we can trick it
@@ -337,6 +337,10 @@ export const hideAllPoppers = excludeTippy => {
  */
 export const getDataAttributeOptions = reference =>
   Object.keys(Defaults).reduce((acc, key) => {
+    if (key === 'content') {
+      return acc
+    }
+
     const valueAsString = (
       reference.getAttribute(`data-tippy-${key}`) || ''
     ).trim()
@@ -351,10 +355,7 @@ export const getDataAttributeOptions = reference =>
       acc[key] = false
     } else if (isNumeric(valueAsString)) {
       acc[key] = Number(valueAsString)
-    } else if (
-      (valueAsString[0] === '[' || valueAsString[0] === '{') &&
-      JSON_SERIALIZABLE_PROPS.indexOf(key) > -1
-    ) {
+    } else if (valueAsString[0] === '[' || valueAsString[0] === '{') {
       acc[key] = JSON.parse(valueAsString)
     } else {
       acc[key] = valueAsString

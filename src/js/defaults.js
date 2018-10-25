@@ -60,13 +60,3 @@ export const POPPER_INSTANCE_RELATED_PROPS = [
   'distance',
   'offset'
 ]
-
-/**
- * Props that can be parsed as JSON in a data-tippy-* attribute
- */
-export const JSON_SERIALIZABLE_PROPS = [
-  'duration',
-  'delay',
-  'flipBehavior',
-  'popperOptions'
-]
