@@ -1,0 +1,137 @@
+@import '../_mixins.scss';
+@import '../_vars.scss';
+
+$transparentDark: rgba(0, 8, 16, 0.15);
+$transparentDarker: rgba(0, 8, 16, 0.24);
+
+.tippy-tooltip.light-border-theme {
+  background-color: white;
+  background-clip: padding-box;
+  border: 1px solid $transparentDark;
+  color: #26323d;
+  box-shadow: 0 3px 14px -0.5px rgba(0, 8, 16, 0.08);
+
+  .tippy-backdrop {
+    background-color: white;
+  }
+
+  .tippy-arrow,
+  .tippy-roundarrow {
+    transform-style: preserve-3d;
+
+    &::after,
+    &::before {
+      content: '';
+      position: absolute;
+      transform: translateZ(-1px);
+    }
+  }
+
+  .tippy-roundarrow {
+    fill: white;
+  }
+}
+
+.tippy-popper[x-placement^='top']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow,
+.tippy-popper[x-placement^='bottom']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow {
+  &::before,
+  &::after {
+    left: -8px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+  }
+}
+
+.tippy-popper[x-placement^='left']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow,
+.tippy-popper[x-placement^='right']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow {
+  &::before,
+  &::after {
+    top: -8px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+  }
+}
+
+.tippy-popper[x-placement^='top']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow {
+  border-top-color: #fff;
+
+  &::after,
+  &::before {
+    border-top: 8px solid;
+    top: -7px;
+  }
+
+  &::after {
+    border-top-color: $transparentDarker;
+  }
+  &::before {
+    border-top-color: white;
+  }
+}
+
+.tippy-popper[x-placement^='bottom']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow {
+  border-bottom-color: #fff;
+
+  &::after,
+  &::before {
+    border-bottom: 8px solid;
+    bottom: -7px;
+  }
+
+  &::after {
+    border-bottom-color: $transparentDarker;
+  }
+  &::before {
+    border-bottom-color: white;
+  }
+}
+
+.tippy-popper[x-placement^='left']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow {
+  border-left-color: #fff;
+
+  &::after,
+  &::before {
+    border-left: 8px solid;
+    left: -7px;
+  }
+
+  &::after {
+    border-left-color: $transparentDarker;
+  }
+  &::before {
+    border-left-color: white;
+  }
+}
+
+.tippy-popper[x-placement^='right']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow {
+  border-right-color: #fff;
+
+  &::after,
+  &::before {
+    border-right: 8px solid;
+    right: -7px;
+  }
+
+  &::after {
+    border-right-color: $transparentDarker;
+  }
+  &::before {
+    border-right-color: white;
+  }
+}
