@@ -165,16 +165,12 @@ export default function createTippy(reference, collectionProps) {
   function createDelegateChildTippy(event) {
     const targetEl = closest(event.target, tip.props.target)
     if (targetEl && !targetEl._tippy) {
-      const content = tip.props.content
-      if (content) {
-        createTippy(targetEl, {
-          ...tip.props,
-          content,
-          target: '',
-          showOnInit: true
-        })
-        prepareShow(event)
-      }
+      createTippy(targetEl, {
+        ...tip.props,
+        target: '',
+        showOnInit: true
+      })
+      prepareShow(event)
     }
   }
 
