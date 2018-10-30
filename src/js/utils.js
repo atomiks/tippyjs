@@ -337,10 +337,6 @@ export const hideAllPoppers = excludeTippy => {
  */
 export const getDataAttributeOptions = reference =>
   Object.keys(Defaults).reduce((acc, key) => {
-    if (key === 'content') {
-      return acc
-    }
-
     const valueAsString = (
       reference.getAttribute(`data-tippy-${key}`) || ''
     ).trim()
@@ -349,7 +345,9 @@ export const getDataAttributeOptions = reference =>
       return acc
     }
 
-    if (valueAsString === 'true') {
+    if (key === 'content') {
+      acc[key] = valueAsString
+    } else if (valueAsString === 'true') {
       acc[key] = true
     } else if (valueAsString === 'false') {
       acc[key] = false
