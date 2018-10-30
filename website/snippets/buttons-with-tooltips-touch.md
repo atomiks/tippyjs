@@ -19,17 +19,16 @@ tippy(button, {
 /*==================================================
 Make Android behave like iOS (double tap to click)
 ==================================================*/
-let isShown = false
-tippy(button, {
-  onShown() {
-    isShown = true
-  },
-  onHide() {
-    isShown = false
-  }
+// Useful function for dynamically determining the input type:
+// https://github.com/30-seconds/30-seconds-of-code#onuserinputchange
+let isUsingTouch = false
+onUserInputChange(type => {
+  isUsingTouch = type === 'touch'
 })
+
+const tip = tippy.one(button)
 button.addEventListener('click', () => {
-  if (isIOS ? true : isShown) {
+  if (isIOS || !isUsingTouch ? true : tip.state.isShown) {
     // Your logic
   }
 })
