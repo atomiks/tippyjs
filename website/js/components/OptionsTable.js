@@ -237,16 +237,19 @@ export default () => (
           <a href="#distance-option">distance</a>.
         </Prop>
         <Prop name="onHidden" default="noop" value="Function">
-          Lifecycle function invoked when a tippy has fully transitioned out.
+          Lifecycle function invoked when the tippy has fully transitioned out.
         </Prop>
         <Prop name="onHide" default="noop" value="Function">
-          Lifecycle function invoked when a tippy begins to transition out.
+          Lifecycle function invoked when the tippy begins to transition out.
+        </Prop>
+        <Prop name="onMount" default="noop" value="Function">
+          Lifecycle function invoked when the tippy has been mounted to the DOM.
         </Prop>
         <Prop name="onShow" default="noop" value="Function">
-          Lifecycle function invoked when a tippy begins to transition in.
+          Lifecycle function invoked when the tippy begins to transition in.
         </Prop>
         <Prop name="onShown" default="noop" value="Function">
-          Lifecycle function invoked when a tippy has fully transitioned in.
+          Lifecycle function invoked when the tippy has fully transitioned in.
         </Prop>
         <Prop name="performance" default="false" value="Boolean">
           If true, disables <code>data-tippy-*</code> attributes which reduces

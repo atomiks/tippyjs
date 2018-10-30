@@ -26,7 +26,11 @@
     // Is the instance enabled?
     isEnabled: true,
     // Is the tooltip currently visible and not transitioning out?
-    isVisible: false
+    isVisible: false,
+    // Is the tooltip currently mounted to the DOM?
+    isMounted: false,
+    // Is the tooltip currently fully showing and not transitioning out or in?
+    isShown: false
   },
 
   // Also contains methods, which you'll learn in the next section
