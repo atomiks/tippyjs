@@ -249,7 +249,7 @@ export default () => (
         <button class="btn">Light</button>
       </Tippy>
       <Tippy
-        content="Custom made for this demo. But I will probably include it soon!"
+        content="Included in dist/themes/light-border.css"
         theme="light-border"
         animateFill={false}
         animation="fade"
@@ -258,19 +258,19 @@ export default () => (
         <button class="btn">Light-border</button>
       </Tippy>
       <Tippy
-        content="Awesome colors! Custom made for this demo."
-        theme="gradient"
-      >
-        <button class="btn">Gradient</button>
-      </Tippy>
-      <Tippy
-        content="The style used in Gmail. Custom made for this demo."
+        content="Included in dist/themes/google.css"
         theme="google"
         animateFill={false}
         animation="fade"
         duration={200}
       >
         <button class="btn">Google</button>
+      </Tippy>
+      <Tippy
+        content="Awesome colors! Custom made for this demo."
+        theme="gradient"
+      >
+        <button class="btn">Gradient</button>
       </Tippy>
     </div>
 

@@ -1,6 +1,8 @@
 import '../dist/tippy.css'
 import '../dist/themes/light.css'
 import '../dist/themes/translucent.css'
+import '../dist/themes/light-border.css'
+import '../dist/themes/google.css'
 import 'normalize.css'
 import './css/index.scss'
 import 'focus-visible'
