@@ -434,6 +434,20 @@ describe('onShow', () => {
   })
 })
 
+describe('onMount', () => {
+  it('is called once the tooltip is mounted to the DOM', done => {
+    const instance = tippy.one(h(), {
+      onMount: tip => {
+        expect(tip).toBe(instance)
+        expect(document.documentElement.contains(tip.popper)).toBe(true)
+        done()
+      },
+      duration: 0
+    })
+    instance.show()
+  })
+})
+
 describe('onShown', () => {
   it('is called on transition end of show, passed the instance as an argument', async () => {
     const spy = jest.fn()

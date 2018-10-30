@@ -41,7 +41,8 @@ export let Defaults = {
   onShow() {},
   onShown() {},
   onHide() {},
-  onHidden() {}
+  onHidden() {},
+  onMount() {}
 }
 
 export const setDefaults = partialDefaults => {
