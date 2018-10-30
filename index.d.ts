@@ -49,6 +49,7 @@ export interface Props {
   offset?: number | string
   onHidden?(instance: Instance): void
   onHide?(instance: Instance): void
+  onMount?(instance: Instance): void
   onShow?(instance: Instance): void
   onShown?(instance: Instance): void
   performance?: boolean
@@ -92,6 +93,8 @@ export interface Instance {
     isEnabled: boolean
     isVisible: boolean
     isDestroyed: boolean
+    isMounted: boolean
+    isShown: boolean
   }
 }
 
