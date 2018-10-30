@@ -174,55 +174,6 @@ a {
   max-width: 250px;
 }
 
-.tippy-tooltip.google-theme {
-  font-size: 0.85rem;
-  padding: 0.25rem 0.4rem;
-  background-color: #505355;
-  font-weight: 600;
-}
-
-.tippy-tooltip.light-border-theme {
-  background: white;
-  border: 1px solid rgba(0, 8, 16, 0.15);
-  color: #333;
-  box-shadow: 0 3px 14px -0.5px rgba(0, 8, 16, 0.1);
-
-  .tippy-arrow {
-    transform-style: preserve-3d;
-
-    &::after {
-      content: '';
-      position: absolute;
-      left: -8px;
-      transform: translateZ(-1px);
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-    }
-  }
-}
-
-.tippy-popper[x-placement^='top']
-  .tippy-tooltip.light-border-theme
-  .tippy-arrow {
-  border-top-color: #fff;
-
-  &::after {
-    top: -7px;
-    border-top: 8px solid rgba(0, 8, 16, 0.15);
-  }
-}
-
-.tippy-popper[x-placement^='bottom']
-  .tippy-tooltip.light-border-theme
-  .tippy-arrow {
-  border-bottom-color: #fff;
-
-  &::after {
-    bottom: -7px;
-    border-bottom: 8px solid rgba(0, 8, 16, 0.15);
-  }
-}
-
 .tippy-list {
   padding-left: 0;
   list-style-type: none;
