@@ -43,7 +43,8 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
 
 .tippy-popper[x-placement^='top'] .tippy-tooltip.light-border-theme {
   .tippy-roundarrow::after {
-    transform: translateY(1px) rotate(180deg);
+    top: 1px;
+    transform: rotate(180deg);
   }
 
   .tippy-arrow {
@@ -66,7 +67,7 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
 
 .tippy-popper[x-placement^='bottom'] .tippy-tooltip.light-border-theme {
   .tippy-roundarrow::after {
-    transform: translateY(-1px);
+    top: -1px;
   }
 
   .tippy-arrow {
@@ -90,8 +91,8 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
 .tippy-popper[x-placement^='left'] .tippy-tooltip.light-border-theme {
   .tippy-roundarrow::after {
     left: 1px;
-    top: 1px;
-    transform: translateY(-1px) rotate(90deg);
+    top: 0;
+    transform: rotate(90deg);
   }
 
   .tippy-arrow {
@@ -115,8 +116,8 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
 .tippy-popper[x-placement^='right'] .tippy-tooltip.light-border-theme {
   .tippy-roundarrow::after {
     left: -1px;
-    top: -1px;
-    transform: translateY(1px) rotate(-90deg);
+    top: 0;
+    transform: rotate(-90deg);
   }
 
   .tippy-arrow {
