@@ -1,0 +1,167 @@
+@import '../_mixins.scss';
+@import '../_vars.scss';
+
+$transparentLight: rgba(0, 8, 16, 0.08);
+$transparentDark: rgba(0, 8, 16, 0.15);
+$transparentDarker: rgba(0, 8, 16, 0.24);
+
+.tippy-tooltip.light-border-theme {
+  background-color: white;
+  background-clip: padding-box;
+  border: 1px solid $transparentDark;
+  color: #26323d;
+  box-shadow: 0 3px 14px -0.5px $transparentLight;
+
+  .tippy-backdrop {
+    background-color: white;
+  }
+
+  .tippy-arrow,
+  .tippy-roundarrow {
+    &::after,
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+    }
+  }
+
+  .tippy-roundarrow {
+    fill: white;
+
+    &::after {
+      background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj48c3ZnIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAyNCA4IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zOnNlcmlmPSJodHRwOi8vd3d3LnNlcmlmLmNvbS8iIHN0eWxlPSJmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MS40MTQyMTsiPjxwYXRoIGQ9Ik0zLDhjMCwwIDIuMDIxLC0wLjAxNSA1LjI1MywtNC4yMThjMS4zMzEsLTEuNzMxIDIuNTQ0LC0yLjc3NSAzLjc0NywtMi43ODJjMS4yMDMsLTAuMDA3IDIuNDE2LDEuMDM1IDMuNzYxLDIuNzgyYzMuMjUxLDQuMjIzIDUuMjM5LDQuMjE4IDUuMjM5LDQuMjE4bC0xOCwwWiIgc3R5bGU9ImZpbGw6IzAwMDgxNjtmaWxsLW9wYWNpdHk6MC4yMDM5MjI7ZmlsbC1ydWxlOm5vbnplcm87Ii8+PC9zdmc+);
+      background-size: 24px 8px;
+      width: 24px;
+      height: 8px;
+      left: 0;
+      top: 0;
+      fill: $transparentDark;
+    }
+  }
+}
+
+.tippy-popper[x-placement^='top'] .tippy-tooltip.light-border-theme {
+  .tippy-roundarrow::after {
+    top: 1px;
+    transform: rotate(180deg);
+  }
+
+  .tippy-arrow {
+    border-top-color: #fff;
+
+    &::after,
+    &::before {
+      border-top: 8px solid;
+      top: -7px;
+    }
+
+    &::after {
+      border-top-color: $transparentDarker;
+    }
+    &::before {
+      border-top-color: white;
+    }
+  }
+}
+
+.tippy-popper[x-placement^='bottom'] .tippy-tooltip.light-border-theme {
+  .tippy-roundarrow::after {
+    top: -1px;
+  }
+
+  .tippy-arrow {
+    border-bottom-color: #fff;
+
+    &::after,
+    &::before {
+      border-bottom: 8px solid;
+      bottom: -7px;
+    }
+
+    &::after {
+      border-bottom-color: $transparentDarker;
+    }
+    &::before {
+      border-bottom-color: white;
+    }
+  }
+}
+
+.tippy-popper[x-placement^='left'] .tippy-tooltip.light-border-theme {
+  .tippy-roundarrow::after {
+    left: 1px;
+    top: 0;
+    transform: rotate(90deg);
+  }
+
+  .tippy-arrow {
+    border-left-color: #fff;
+
+    &::after,
+    &::before {
+      border-left: 8px solid;
+      left: -7px;
+    }
+
+    &::after {
+      border-left-color: $transparentDarker;
+    }
+    &::before {
+      border-left-color: white;
+    }
+  }
+}
+
+.tippy-popper[x-placement^='right'] .tippy-tooltip.light-border-theme {
+  .tippy-roundarrow::after {
+    left: -1px;
+    top: 0;
+    transform: rotate(-90deg);
+  }
+
+  .tippy-arrow {
+    border-right-color: #fff;
+
+    &::after,
+    &::before {
+      border-right: 8px solid;
+      right: -7px;
+    }
+
+    &::after {
+      border-right-color: $transparentDarker;
+    }
+    &::before {
+      border-right-color: white;
+    }
+  }
+}
+
+.tippy-popper[x-placement^='top']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow,
+.tippy-popper[x-placement^='bottom']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow {
+  &::before,
+  &::after {
+    left: -8px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+  }
+}
+
+.tippy-popper[x-placement^='left']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow,
+.tippy-popper[x-placement^='right']
+  .tippy-tooltip.light-border-theme
+  .tippy-arrow {
+  &::before,
+  &::after {
+    top: -8px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+  }
+}

@@ -1,0 +1,35 @@
+@import '../_mixins.scss';
+@import '../_vars.scss';
+
+$color: #505355;
+
+.tippy-popper {
+  @each $placement in $placements {
+    &[x-placement^='#{$placement}'] {
+      .tippy-tooltip.google-theme {
+        .tippy-arrow {
+          @include arrow($placement, 8px, $color);
+        }
+      }
+    }
+  }
+}
+
+.tippy-tooltip.google-theme {
+  background-color: $color;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  .tippy-backdrop {
+    background-color: $color;
+  }
+
+  .tippy-roundarrow {
+    fill: $color;
+  }
+
+  &[data-animatefill] {
+    background-color: transparent;
+  }
+}
