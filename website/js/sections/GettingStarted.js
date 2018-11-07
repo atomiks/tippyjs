@@ -63,6 +63,11 @@ export default () => (
           React
         </ExternalLink>
       </li>
+      <li>
+        <ExternalLink to="https://github.com/egoist/v-tippy">
+          Vue
+        </ExternalLink>
+      </li>
     </ul>
 
     <Subheading>
