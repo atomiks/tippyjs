@@ -517,15 +517,15 @@ export default function createTippy(reference, collectionProps) {
   function mount(callback) {
     if (!tip.popperInstance) {
       tip.popperInstance = createPopperInstance()
-      if (!tip.props.livePlacement) {
+      if (!tip.props.livePlacement || hasFollowCursorBehavior()) {
         tip.popperInstance.disableEventListeners()
       }
     } else {
       if (!hasFollowCursorBehavior()) {
         tip.popperInstance.scheduleUpdate()
-      }
-      if (tip.props.livePlacement && !hasFollowCursorBehavior()) {
-        tip.popperInstance.enableEventListeners()
+        if (tip.props.livePlacement) {
+          tip.popperInstance.enableEventListeners()
+        }
       }
     }
 
