@@ -258,7 +258,7 @@ export default function createTippy(reference, collectionProps) {
   /**
    * Cleans up old listeners
    */
-  function cleanupOldMouseMoveListeners() {
+  function cleanupOldMouseListeners() {
     document.body.removeEventListener('mouseleave', prepareHide)
     document.removeEventListener('mousemove', debouncedOnMouseMove)
   }
@@ -312,7 +312,7 @@ export default function createTippy(reference, collectionProps) {
         tip.props
       )
     ) {
-      cleanupOldMouseMoveListeners()
+      cleanupOldMouseListeners()
       prepareHide()
     }
   }
@@ -728,7 +728,7 @@ export default function createTippy(reference, collectionProps) {
     }
 
     if (options.hasOwnProperty('interactiveDebounce')) {
-      cleanupOldMouseMoveListeners()
+      cleanupOldMouseListeners()
       debouncedOnMouseMove = debounce(onMouseMove, options.interactiveDebounce)
     }
 
