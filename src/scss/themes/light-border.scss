@@ -3,7 +3,7 @@
 
 $transparentLight: rgba(0, 8, 16, 0.08);
 $transparentDark: rgba(0, 8, 16, 0.15);
-$transparentDarker: rgba(0, 8, 16, 0.24);
+$transparentDarker: rgba(0, 8, 16, 0.2);
 
 .tippy-tooltip.light-border-theme {
   background-color: white;
@@ -18,8 +18,7 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
 
   .tippy-arrow,
   .tippy-roundarrow {
-    &::after,
-    &::before {
+    &::after {
       content: '';
       position: absolute;
       z-index: -1;
@@ -50,17 +49,9 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
   .tippy-arrow {
     border-top-color: #fff;
 
-    &::after,
-    &::before {
-      border-top: 8px solid;
-      top: -7px;
-    }
-
     &::after {
-      border-top-color: $transparentDarker;
-    }
-    &::before {
-      border-top-color: white;
+      border-top: 7px solid $transparentDarker;
+      top: -6px;
     }
   }
 }
@@ -73,17 +64,9 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
   .tippy-arrow {
     border-bottom-color: #fff;
 
-    &::after,
-    &::before {
-      border-bottom: 8px solid;
-      bottom: -7px;
-    }
-
     &::after {
-      border-bottom-color: $transparentDarker;
-    }
-    &::before {
-      border-bottom-color: white;
+      border-bottom: 7px solid $transparentDarker;
+      bottom: -6px;
     }
   }
 }
@@ -98,17 +81,9 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
   .tippy-arrow {
     border-left-color: #fff;
 
-    &::after,
-    &::before {
-      border-left: 8px solid;
-      left: -7px;
-    }
-
     &::after {
-      border-left-color: $transparentDarker;
-    }
-    &::before {
-      border-left-color: white;
+      border-left: 7px solid $transparentDarker;
+      left: -6px;
     }
   }
 }
@@ -123,17 +98,9 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
   .tippy-arrow {
     border-right-color: #fff;
 
-    &::after,
-    &::before {
-      border-right: 8px solid;
-      right: -7px;
-    }
-
     &::after {
-      border-right-color: $transparentDarker;
-    }
-    &::before {
-      border-right-color: white;
+      border-right: 7px solid $transparentDarker;
+      right: -6px;
     }
   }
 }
@@ -146,9 +113,9 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
   .tippy-arrow {
   &::before,
   &::after {
-    left: -8px;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
+    left: -7px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
   }
 }
 
@@ -160,8 +127,8 @@ $transparentDarker: rgba(0, 8, 16, 0.24);
   .tippy-arrow {
   &::before,
   &::after {
-    top: -8px;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
+    top: -7px;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
   }
 }
