@@ -252,6 +252,22 @@ describe('getValue', () => {
 })
 
 describe('getDataAttributeOptions', () => {
+  it('uses data-tippy-content', () => {
+    const ref = h()
+    ref.setAttribute('data-tippy-content', 'test')
+    expect(Utils.getDataAttributeOptions(ref).content).toBe('test')
+  })
+
+  it('does not parse data-tippy-content', () => {
+    const ref = h()
+    ref.setAttribute('data-tippy-content', '[Hello')
+    expect(Utils.getDataAttributeOptions(ref).content).toBe('[Hello')
+    ref.setAttribute('data-tippy-content', '3333333333333333333333333')
+    expect(Utils.getDataAttributeOptions(ref).content).toBe(
+      '3333333333333333333333333'
+    )
+  })
+
   it('returns the attribute options', () => {
     const ref = h()
     ref.setAttribute('data-tippy-arrowType', 'round')

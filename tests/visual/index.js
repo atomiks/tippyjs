@@ -1,5 +1,6 @@
 import tippy from '../../src/js/tippy.js'
 import '../../src/scss/tippy.scss'
+import '../../src/scss/themes/light-border.scss'
 
 window.tippy = tippy
 
