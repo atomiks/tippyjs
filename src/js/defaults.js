@@ -54,6 +54,7 @@ export const setDefaults = partialDefaults => {
  * recreated
  */
 export const POPPER_INSTANCE_RELATED_PROPS = [
+  'arrowType',
   'placement',
   'popperOptions',
   'flip',
