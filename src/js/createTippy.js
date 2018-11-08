@@ -139,6 +139,25 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
+    // Ensure virtual reference is padded by 5px to prevent tooltip from
+    // overflowing. Maybe Popper.js issue?
+    const placement = getPopperPlacement(tip.popper)
+    const padding = tip.popperChildren.arrow ? 20 : 5
+    const isVerticalPlacement = placement === 'top' || placement === 'bottom'
+    const isHorizontalPlacement = placement === 'left' || placement === 'right'
+
+    // Top / left boundary
+    let x = isVerticalPlacement ? Math.max(padding, clientX) : clientX
+    let y = isHorizontalPlacement ? Math.max(padding, clientY) : clientY
+
+    // Bottom / right boundary
+    if (isVerticalPlacement && x > padding) {
+      x = Math.min(clientX, window.innerWidth - padding)
+    }
+    if (isHorizontalPlacement && y > padding) {
+      y = Math.min(clientY, window.innerHeight - padding)
+    }
+
     const rect = tip.reference.getBoundingClientRect()
     const { followCursor } = tip.props
     const isHorizontal = followCursor === 'horizontal'
@@ -148,10 +167,10 @@ export default function createTippy(reference, collectionProps) {
       getBoundingClientRect: () => ({
         width: 0,
         height: 0,
-        top: isHorizontal ? rect.top : clientY,
-        bottom: isHorizontal ? rect.bottom : clientY,
-        left: isVertical ? rect.left : clientX,
-        right: isVertical ? rect.right : clientX
+        top: isHorizontal ? rect.top : y,
+        bottom: isHorizontal ? rect.bottom : y,
+        left: isVertical ? rect.left : x,
+        right: isVertical ? rect.right : x
       }),
       clientWidth: 0,
       clientHeight: 0
@@ -202,9 +221,6 @@ export default function createTippy(reference, collectionProps) {
      * upon mount
      */
     if (hasFollowCursorBehavior()) {
-      if (popperChildren.arrow) {
-        popperChildren.arrow.style.margin = '0'
-      }
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
@@ -519,9 +535,11 @@ export default function createTippy(reference, collectionProps) {
      * Update the reference back to the real DOM element
      */
     tip.popperInstance.reference = tip.reference
+    const { arrow } = tip.popperChildren
+
     if (hasFollowCursorBehavior()) {
-      if (tip.popperChildren.arrow) {
-        tip.popperChildren.arrow.style.margin = ''
+      if (arrow) {
+        arrow.style.margin = '0'
       }
       const delay = getValue(tip.props.delay, 0, Defaults.delay)
       if (lastTriggerEvent.type) {
@@ -529,6 +547,8 @@ export default function createTippy(reference, collectionProps) {
           delay && lastMouseMoveEvent ? lastMouseMoveEvent : lastTriggerEvent
         )
       }
+    } else if (arrow) {
+      arrow.style.margin = ''
     }
 
     afterPopperPositionUpdates(tip.popperInstance, callback)
