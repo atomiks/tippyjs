@@ -705,7 +705,7 @@ export default function createTippy(reference, collectionProps) {
   /**
    * Sets new props for the instance and redraws the tooltip
    */
-  function set(options) {
+  function set(options = {}) {
     validateOptions(options, Defaults)
 
     const prevProps = tip.props
@@ -714,15 +714,20 @@ export default function createTippy(reference, collectionProps) {
       ...options,
       performance: true
     })
-    nextProps.performance = options.performance || prevProps.performance
+    nextProps.performance = options.hasOwnProperty('performance')
+      ? options.performance
+      : prevProps.performance
     tip.props = nextProps
 
-    if ('trigger' in options || 'touchHold' in options) {
+    if (
+      options.hasOwnProperty('trigger') ||
+      options.hasOwnProperty('touchHold')
+    ) {
       removeTriggersFromReference()
       addTriggersToReference()
     }
 
-    if ('interactiveDebounce' in options) {
+    if (options.hasOwnProperty('interactiveDebounce')) {
       cleanupOldMouseMoveListeners()
       debouncedOnMouseMove = debounce(onMouseMove, options.interactiveDebounce)
     }
@@ -732,7 +737,7 @@ export default function createTippy(reference, collectionProps) {
 
     if (
       tip.popperInstance &&
-      POPPER_INSTANCE_RELATED_PROPS.some(prop => prop in options)
+      POPPER_INSTANCE_RELATED_PROPS.some(prop => options.hasOwnProperty(prop))
     ) {
       tip.popperInstance.destroy()
       tip.popperInstance = createPopperInstance()
