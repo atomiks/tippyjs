@@ -101,12 +101,7 @@ export default function createTippy(reference, collectionProps) {
   }
 
   if (props.showOnInit) {
-    /**
-     * Firefox has a bug where the tooltip will be placed incorrectly due to
-     * strange layout on load, `setTimeout` gives the layout time to adjust
-     * properly
-     */
-    setTimeout(prepareShow, 20)
+    prepareShow()
   }
 
   // Ensure the reference element can receive focus (and is not a delegate)
