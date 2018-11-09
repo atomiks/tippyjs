@@ -83,6 +83,33 @@ export default function createTippy(reference, collectionProps) {
   // Popper element reference
   const popper = createPopperElement(id, props)
 
+  // Prevent a tippy with a delay from hiding if the cursor left then returned
+  // before it started hiding
+  popper.addEventListener('mouseenter', event => {
+    if (
+      tip.props.interactive &&
+      tip.state.isVisible &&
+      lastTriggerEvent.type === 'mouseenter'
+    ) {
+      prepareShow(event)
+    }
+  })
+  popper.addEventListener('mouseleave', event => {
+    if (
+      tip.props.interactive &&
+      lastTriggerEvent.type === 'mouseenter' &&
+      tip.props.interactiveDebounce === 0 &&
+      isCursorOutsideInteractiveBorder(
+        getPopperPlacement(popper),
+        popper.getBoundingClientRect(),
+        event,
+        tip.props
+      )
+    ) {
+      prepareHide()
+    }
+  })
+
   // Popper element children: { arrow, backdrop, content, tooltip }
   const popperChildren = getChildren(popper)
 
@@ -155,6 +182,23 @@ export default function createTippy(reference, collectionProps) {
   function onReferenceClick() {
     defer(() => {
       referenceJustProgrammaticallyFocused = false
+    })
+  }
+
+  /**
+   * Ensure the popper's position stays correct if its dimensions change. Use
+   * update() over .scheduleUpdate() so there is no 1 frame flash due to
+   * async update
+   */
+  function addMutationObserver() {
+    popperMutationObserver = new MutationObserver(() => {
+      if (tip.popperInstance) {
+        tip.popperInstance.update()
+      }
+    })
+    popperMutationObserver.observe(popper, {
+      childList: true,
+      subtree: true
     })
   }
 
@@ -492,46 +536,7 @@ export default function createTippy(reference, collectionProps) {
       }
     }
 
-    // Ensure the popper's position stays correct if its dimensions change. Use
-    // update() over .scheduleUpdate() so there is no 1 frame flash due to
-    // async update.
-    const observer = new MutationObserver(() => {
-      tip.popperInstance.update()
-    })
-    observer.observe(tip.popper, { childList: true, subtree: true })
-    if (popperMutationObserver) {
-      popperMutationObserver.disconnect()
-    }
-    popperMutationObserver = observer
-
-    // fixes https://github.com/atomiks/tippyjs/issues/193
-    if (!firstPopperInstanceInit) {
-      firstPopperInstanceInit = true
-      tip.popper.addEventListener('mouseenter', event => {
-        if (
-          tip.props.interactive &&
-          tip.state.isVisible &&
-          lastTriggerEvent.type === 'mouseenter'
-        ) {
-          prepareShow(event)
-        }
-      })
-      tip.popper.addEventListener('mouseleave', event => {
-        if (
-          tip.props.interactive &&
-          lastTriggerEvent.type === 'mouseenter' &&
-          tip.props.interactiveDebounce === 0 &&
-          isCursorOutsideInteractiveBorder(
-            getPopperPlacement(tip.popper),
-            tip.popper.getBoundingClientRect(),
-            event,
-            tip.props
-          )
-        ) {
-          prepareHide()
-        }
-      })
-    }
+    addMutationObserver()
 
     return new Popper(tip.reference, tip.popper, config)
   }
