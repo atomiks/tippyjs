@@ -211,11 +211,9 @@ export default function createTippy(reference, collectionProps) {
       return tip.props.wait(tip, event)
     }
 
-    /**
-     * If the tooltip has a delay, we need to be listening to the mousemove as
-     * soon as the trigger event is fired so that it's in the correct position
-     * upon mount
-     */
+    // If the tooltip has a delay, we need to be listening to the mousemove as
+    // soon as the trigger event is fired, so that it's in the correct position
+    // upon mount
     if (hasFollowCursorBehavior()) {
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
@@ -300,7 +298,8 @@ export default function createTippy(reference, collectionProps) {
   }
 
   /**
-   * Event listener used for interactive tooltips to detect when they should hide
+   * Event listener used for interactive tooltips to detect when they should
+   * hide
    */
   function onMouseMove(event) {
     const referenceTheCursorIsOver = closestCallback(
@@ -386,7 +385,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Determines if an event listener should stop further execution due to the
-   * `touchHold` option.
+   * `touchHold` option
    */
   function isEventListenerStopped(event) {
     const isTouchEvent = event.type.indexOf('touch') > -1
@@ -460,11 +459,9 @@ export default function createTippy(reference, collectionProps) {
       }
     }
 
-    /**
-     * Ensure the popper's position stays correct if its dimensions change.
-     * Use .update() over .scheduleUpdate() so there is no 1 frame flash
-     * due to async update.
-     */
+    // Ensure the popper's position stays correct if its dimensions change. Use
+    // update() over .scheduleUpdate() so there is no 1 frame flash due to
+    // async update.
     const observer = new MutationObserver(() => {
       tip.popperInstance.update()
     })
@@ -525,11 +522,9 @@ export default function createTippy(reference, collectionProps) {
       }
     }
 
-    /**
-     * If the instance previously had followCursor behavior, it will be
-     * positioned incorrectly if triggered by `focus` afterwards.
-     * Update the reference back to the real DOM element
-     */
+    // If the instance previously had followCursor behavior, it will be
+    // positioned incorrectly if triggered by `focus` afterwards.
+    // Update the reference back to the real DOM element
     tip.popperInstance.reference = tip.reference
     const { arrow } = tip.popperChildren
 
@@ -800,7 +795,8 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    // If the reference was just programmatically focused for accessibility reasons
+    // If the reference was just programmatically focused for accessibility
+    // reasons
     if (referenceJustProgrammaticallyFocused) {
       referenceJustProgrammaticallyFocused = false
       return
@@ -824,7 +820,7 @@ export default function createTippy(reference, collectionProps) {
         return
       }
 
-      // Arrow will sometimes not be positioned correctly. Force another update.
+      // Arrow will sometimes not be positioned correctly. Force another update
       if (!hasFollowCursorBehavior()) {
         tip.popperInstance.update()
       }
