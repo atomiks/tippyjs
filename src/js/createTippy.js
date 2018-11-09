@@ -192,9 +192,7 @@ export default function createTippy(reference, collectionProps) {
    */
   function addMutationObserver() {
     popperMutationObserver = new MutationObserver(() => {
-      if (tip.popperInstance) {
-        tip.popperInstance.update()
-      }
+      tip.popperInstance.update()
     })
     popperMutationObserver.observe(popper, {
       childList: true,
