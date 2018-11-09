@@ -1,17 +1,7 @@
 import { Selectors } from './selectors'
-import {
-  isBrowser,
-  hideAllPoppers,
-  closest,
-  closestCallback,
-  toArray
-} from './utils'
+import { supportsTouch, isIOS } from './browser'
+import { hideAllPoppers, closest, closestCallback, toArray } from './utils'
 
-const nav = isBrowser ? navigator : {}
-const win = isBrowser ? window : {}
-export let isIE = /MSIE |Trident\//.test(nav.userAgent)
-export let isIOS = /iPhone|iPad|iPod/.test(nav.platform) && !win.MSStream
-export let supportsTouch = 'ontouchstart' in win
 export let isUsingTouch = false
 
 export const onDocumentTouch = () => {

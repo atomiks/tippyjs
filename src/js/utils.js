@@ -1,21 +1,12 @@
 import { Selectors } from './selectors'
 import { Defaults } from './defaults'
+import { isBrowser, isBrowserSupported } from './browser'
 
 /**
  * Firefox extensions doesn't allow 'innerHTML' to be set but we can trick it
  * + aid for minifiers not to remove the trick
  */
 const FF_EXTENSION_TRICK = { x: true }
-
-/**
- * Determines if the runtime is a browser
- */
-export const isBrowser = typeof window !== 'undefined'
-
-/**
- * Determines if the browser is supported
- */
-export const isBrowserSupported = isBrowser && 'MutationObserver' in window
 
 /**
  * Injects a string of CSS styles to the style node in the document head

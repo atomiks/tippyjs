@@ -1,5 +1,6 @@
 import { version } from '../../package.json'
 import { Defaults, setDefaults } from './defaults'
+import { isBrowser } from './browser'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
 import {
@@ -8,7 +9,6 @@ import {
   getArrayOfElements,
   toArray,
   hideAllPoppers,
-  isBrowser,
   validateOptions
 } from './utils'
 
