@@ -29,6 +29,11 @@ import {
 
 let idCounter = 1
 
+/**
+ * Creates and returns a Tippy object. We're using a closure pattern instead of
+ * a class so that the exposed object API is clean without private members
+ * prefixed with `_`.
+ */
 export default function createTippy(reference, collectionProps) {
   const props = evaluateProps(reference, collectionProps)
 
@@ -38,36 +43,64 @@ export default function createTippy(reference, collectionProps) {
   }
 
   /* ======================= 🔒 Private members 🔒 ======================= */
+  // The popper element's mutation observer
   let popperMutationObserver = null
+
+  // The last trigger event object that caused the tippy to show
   let lastTriggerEvent = {}
+
+  // The last mousemove event object created by the document mousemove event
   let lastMouseMoveEvent = null
+
+  // Timeout created by the show delay
   let showTimeoutId = 0
+
+  // Timeout created by the hide delay
   let hideTimeoutId = 0
+
+  // Flag to determine if the tippy is preparing to show due to the show timeout
   let isPreparingToShow = false
+
+  // The current `transitionend` callback reference
   let transitionEndListener = () => {}
+
+  // Array of event listeners currently attached to the reference element
   let listeners = []
+
+  // Flag to determine if the reference was recently programmatically focused
   let referenceJustProgrammaticallyFocused = false
-  let firstPopperInstanceInit = false
+
+  // Private onMouseMove handler reference, debounced or not
   let debouncedOnMouseMove =
     props.interactiveDebounce > 0
       ? debounce(onMouseMove, props.interactiveDebounce)
       : onMouseMove
 
   /* ======================= 🔑 Public members 🔑 ======================= */
+  // id used for the `aria-describedby` attribute
   const id = idCounter++
 
+  // Popper element reference
   const popper = createPopperElement(id, props)
 
+  // Popper element children: { arrow, backdrop, content, tooltip }
   const popperChildren = getChildren(popper)
 
+  // The state of the tippy
   const state = {
+    // If the tippy is currently enabled
     isEnabled: true,
+    // show() invoked, not currently transitioning out
     isVisible: false,
+    // If the tippy has been destroyed
     isDestroyed: false,
+    // If the tippy is on the DOM (transitioning out or in)
     isMounted: false,
+    // show() transition finished
     isShown: false
   }
 
+  // Popper.js instance for the tippy is lazily created
   const popperInstance = null
 
   // 🌟 tippy instance
