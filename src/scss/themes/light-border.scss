@@ -111,7 +111,6 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
 .tippy-popper[x-placement^='bottom']
   .tippy-tooltip.light-border-theme
   .tippy-arrow {
-  &::before,
   &::after {
     left: -7px;
     border-left: 7px solid transparent;
@@ -125,7 +124,6 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
 .tippy-popper[x-placement^='right']
   .tippy-tooltip.light-border-theme
   .tippy-arrow {
-  &::before,
   &::after {
     top: -7px;
     border-top: 7px solid transparent;
