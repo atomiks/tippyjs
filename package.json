@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Vanilla JS Tooltip & Popover Library",
   "main": "dist/tippy.all.js",
   "module": "dist/esm/tippy.standalone.js",
@@ -88,6 +88,6 @@
     "twemoji": "^11.0.1"
   },
   "dependencies": {
-    "popper.js": "^1.14.4"
+    "popper.js": "^1.14.5"
   }
 }
