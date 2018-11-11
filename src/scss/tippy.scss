@@ -52,7 +52,6 @@
 
         &[data-state='visible'] {
           @include backdrop-transform-enter($placement);
-          opacity: 1;
         }
 
         &[data-state='hidden'] {
@@ -63,7 +62,6 @@
 
       [data-animation='shift-toward'] {
         &[data-state='visible'] {
-          opacity: 1;
           @include enter-transform($placement, 'fade');
         }
         &[data-state='hidden'] {
@@ -76,7 +74,6 @@
         transform-origin: nth($origins, index($placements, $placement));
 
         &[data-state='visible'] {
-          opacity: 1;
           @include enter-transform($placement, 'perspective');
         }
         &[data-state='hidden'] {
@@ -87,7 +84,6 @@
 
       [data-animation='fade'] {
         &[data-state='visible'] {
-          opacity: 1;
           @include enter-transform($placement, 'fade');
         }
         &[data-state='hidden'] {
@@ -98,7 +94,6 @@
 
       [data-animation='shift-away'] {
         &[data-state='visible'] {
-          opacity: 1;
           @include enter-transform($placement, 'fade');
         }
         &[data-state='hidden'] {
@@ -109,7 +104,6 @@
 
       [data-animation='scale'] {
         &[data-state='visible'] {
-          opacity: 1;
           @include enter-transform($placement, 'scale');
         }
         &[data-state='hidden'] {
