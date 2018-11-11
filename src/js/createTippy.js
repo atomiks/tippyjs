@@ -534,7 +534,9 @@ export default function createTippy(reference, collectionProps) {
       }
     }
 
-    addMutationObserver()
+    if (!popperMutationObserver) {
+      addMutationObserver()
+    }
 
     return new Popper(tip.reference, tip.popper, config)
   }
