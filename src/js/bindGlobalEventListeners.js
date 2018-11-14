@@ -90,8 +90,8 @@ export const onWindowResize = () => {
 /**
  * Adds the needed global event listeners
  */
-export default function bindEventListeners(useCapture) {
-  document.addEventListener('click', onDocumentClick, useCapture)
+export default function bindEventListeners() {
+  document.addEventListener('click', onDocumentClick, true)
   // Old browsers will use capture phase but the phase does not matter anyway
   document.addEventListener('touchstart', onDocumentTouch, { passive: true })
   window.addEventListener('blur', onWindowBlur)
