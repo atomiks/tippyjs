@@ -993,8 +993,9 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    // Ensure the popper is hidden
-    if (tip.state.isVisible) {
+    // If the popper is currently mounted to the DOM, we want to ensure it gets
+    // hidden and unmounted instantly upon destruction
+    if (tip.state.isMounted) {
       hide(0)
     }
 
