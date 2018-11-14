@@ -196,7 +196,8 @@ export default function createTippy(reference, collectionProps) {
     })
     popperMutationObserver.observe(popper, {
       childList: true,
-      subtree: true
+      subtree: true,
+      characterData: true
     })
   }
 
