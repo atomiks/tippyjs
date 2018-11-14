@@ -84,11 +84,6 @@ export default () => (
       There are a few static methods on the <code>tippy</code> function itself.
       These methods are global and do not affect a single instance.
     </p>
-    <p>
-      To use capture phase instead of bubbling for the global click listener,
-      call this method before any calls to <code>tippy()</code>:
-    </p>
-    <Code content="tippy.useCapture()" />
     <p>Hide all visible poppers on the page:</p>
     <Code content="tippy.hideAllPoppers()" />
     <p>Disable animation-related default props:</p>
