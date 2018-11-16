@@ -81,7 +81,7 @@ module.exports = "```html\n<div id=\"parent\">\n  <div class=\"child\">Text</div
 },{}],"sj0b":[function(require,module,exports) {
 module.exports = "```js\ntippy('#parent', {\n  content: 'Shared content',\n  target: '.child'\n})\n```\n"
 },{}],"lG2C":[function(require,module,exports) {
-module.exports = "```js\ntippy('.mySelector', {\n  popperOptions: {\n    modifiers: {\n      preventOverflow: { enabled: false },\n      hide: { enabled: false }\n    }\n  }\n})\n```\n"
+module.exports = "```js\ntippy(ref, {\n  popperOptions: {\n    modifiers: {\n      preventOverflow: {\n        boundariesElement: 'window'\n      }\n    }\n  }\n})\n```\n"
 },{}],"GXfW":[function(require,module,exports) {
 module.exports = "```js\n// Disable the tooltip on touch devices\ntip.disableTouch()\n```\n"
 },{}],"uWGE":[function(require,module,exports) {
