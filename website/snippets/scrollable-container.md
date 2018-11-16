@@ -1,9 +1,10 @@
 ```js
-tippy('.mySelector', {
+tippy(ref, {
   popperOptions: {
     modifiers: {
-      preventOverflow: { enabled: false },
-      hide: { enabled: false }
+      preventOverflow: {
+        boundariesElement: 'window'
+      }
     }
   }
 })
