@@ -17,12 +17,12 @@
   pointer-events: none;
   line-height: 1.4;
 
-  @each $placement in $placements {
+  @each $placement in $tippy-placements {
     &[x-placement^='#{$placement}'] {
       .tippy-backdrop {
         border-radius: nth(
-          $backdrop-border-radii,
-          index($placements, $placement)
+          $tippy-backdrop-border-radii,
+          index($tippy-placements, $placement)
         );
       }
 
@@ -46,8 +46,8 @@
 
       .tippy-backdrop {
         transform-origin: nth(
-          $backdrop-origins,
-          index($placements, $placement)
+          $tippy-backdrop-origins,
+          index($tippy-placements, $placement)
         );
 
         &[data-state='visible'] {
@@ -71,7 +71,7 @@
       }
 
       [data-animation='perspective'] {
-        transform-origin: nth($origins, index($placements, $placement));
+        transform-origin: nth($tippy-origins, index($tippy-placements, $placement));
 
         &[data-state='visible'] {
           @include enter-transform($placement, 'perspective');

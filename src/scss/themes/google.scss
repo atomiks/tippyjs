@@ -4,7 +4,7 @@
 $color: #505355;
 
 .tippy-popper {
-  @each $placement in $placements {
+  @each $placement in $tippy-placements {
     &[x-placement^='#{$placement}'] {
       .tippy-tooltip.google-theme {
         .tippy-arrow {

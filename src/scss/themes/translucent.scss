@@ -2,7 +2,7 @@
 @import '../_vars.scss';
 
 .tippy-popper {
-  @each $placement in $placements {
+  @each $placement in $tippy-placements {
     &[x-placement^='#{$placement}'] {
       .tippy-tooltip.translucent-theme {
         .tippy-arrow {
