@@ -2,7 +2,7 @@ docs
 node_modules
 scripts
 tests
-src
+src/js
 build
 .cache
 .github
