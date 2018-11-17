@@ -1,4 +1,4 @@
-$tippy-placements: 'top', 'bottom', 'left', 'right';
-$tippy-origins: bottom, top, right, left;
-$tippy-backdrop-origins: 0% 25%, 0% -50%, 50% 0%, -50% 0%;
-$tippy-backdrop-border-radii: 40% 40% 0 0, 0 0 30% 30%, 50% 0 0 50%, 0 50% 50% 0;
+$tippy-placements: 'top', 'bottom', 'left', 'right' !default;
+$tippy-origins: bottom, top, right, left !default;
+$tippy-backdrop-origins: 0% 25%, 0% -50%, 50% 0%, -50% 0% !default;
+$tippy-backdrop-border-radii: 40% 40% 0 0, 0 0 30% 30%, 50% 0 0 50%, 0 50% 50% 0 !default;
