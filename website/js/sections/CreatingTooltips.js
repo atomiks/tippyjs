@@ -32,15 +32,17 @@ export default () => (
       the attribute and give them a tooltip automatically. This means you won't
       have to touch JavaScript at all.
     </p>
-    <blockquote class="blockquote">
-      This technique only works on page load and is designed to be used on
-      simple web pages. If you have dynamically generated elements or are using
-      a view library/framework (
+
+    <p>
+      <Emoji size="small">⚠️</Emoji> The <code>data-tippy</code> attribute only
+      works on initial page load. If you have dynamically generated elements or
+      are using a view library/framework (
       <ExternalLink to="https://github.com/atomiks/tippy.js-react">
         React
       </ExternalLink>
-      , Vue, Angular), use Method 2 below.
-    </blockquote>
+      , Vue, Angular), use Method 2 below, using <code>data-tippy-content</code>{' '}
+      instead of <code>data-tippy</code>.
+    </p>
 
     <Subheading>Method 2: Function</Subheading>
     <p>
