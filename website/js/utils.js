@@ -19,14 +19,11 @@ export const prerender = (main, tag) => {
 export const snippet = name => `./website/snippets/${name}`
 
 export const getEmojiSrc = char => {
-  if (isBrowser) {
-    const wrapper = document.createElement('div')
-    wrapper.innerHTML = twemoji.parse(char, {
-      folder: 'svg',
-      ext: '.svg'
-    })
-    return wrapper.firstElementChild.src
-  }
+  const result = twemoji.parse(char, {
+    folder: 'svg',
+    ext: '.svg'
+  })
+  return result.match(/src="(.+)"/)[1]
 }
 
 export const toKebabCase = str =>

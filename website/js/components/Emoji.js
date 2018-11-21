@@ -11,7 +11,7 @@ export default ({ size, ...props }, [char]) => (
   <span {...props}>
     <img
       class="emoji"
-      draggable={0}
+      draggable="false"
       alt={char}
       src={getEmojiSrc(char)}
       style={{ width: Sizes[size] }}

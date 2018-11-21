@@ -17,8 +17,7 @@ export const Emojis = {
   OBJECTS: '🏷️',
   METHODS: '🕹',
   HTML_CONTENT: '🖼️',
-  CREATING_CUSTOM_THEMES: '🖌️',
-  PERFORMANCE: '⚡️'
+  CREATING_CUSTOM_THEMES: '🖌️'
 }
 
 export default () => (
@@ -76,12 +75,6 @@ export default () => (
         <a href="#creating-custom-themes">
           <Emoji size="small">{Emojis.CREATING_CUSTOM_THEMES}</Emoji>
           Creating Custom Themes
-        </a>
-      </li>
-      <li>
-        <a href="#performance">
-          <Emoji size="small">{Emojis.PERFORMANCE}</Emoji>
-          Performance
         </a>
       </li>
     </ul>

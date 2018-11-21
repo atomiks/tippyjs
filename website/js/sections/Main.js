@@ -11,7 +11,6 @@ import Objects from './Objects'
 import Methods from './Methods'
 import HTMLContent from './HTMLContent'
 import CreatingCustomThemes from './CreatingCustomThemes'
-import Performance from './Performance'
 
 export default () => (
   <main class="main">
@@ -27,7 +26,6 @@ export default () => (
       <Methods />
       <HTMLContent />
       <CreatingCustomThemes />
-      <Performance />
     </div>
   </main>
 )

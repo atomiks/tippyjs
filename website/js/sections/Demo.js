@@ -208,7 +208,7 @@ export default () => (
         interactiveBorder={20}
         content={
           <div class="template" style={{ padding: '20px' }}>
-            <img width="100" src={logo} />
+            <img width="100" src={logo} alt="Tippy.js logo" />
             <h3>
               Look! The tippy logo is inside a <strong>tippy</strong>.
             </h3>

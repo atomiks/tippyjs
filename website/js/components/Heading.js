@@ -19,7 +19,7 @@ export default (scope, children) => {
   const id = toKebabCase(children[0])
   const link = <a href={'#' + id}>{children}</a>
   return (
-    <div id={id} class="section__heading-wrapper">
+    <div class="section__heading-wrapper">
       <h2 class="section__heading">{link}</h2>
     </div>
   )

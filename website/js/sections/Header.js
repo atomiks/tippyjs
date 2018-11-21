@@ -7,7 +7,7 @@ import Tippy from '../components/Tippy'
 export default () => (
   <header class="header">
     <div class="container">
-      <img class="header__logo" src={logo} />
+      <img class="header__logo" src={logo} alt="Tippy.js logo" />
       <div class="header__heading-wrapper">
         <h1 class="header__heading">
           Tippy.js

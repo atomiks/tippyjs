@@ -54,6 +54,7 @@ export default () => (state, actions) => (
                 width="200"
                 height="200"
                 src={state.ajax.imageSrc}
+                alt="Unsplash image"
               />
             )}
           </div>
