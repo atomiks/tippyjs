@@ -10,7 +10,7 @@
   popper: Element,
 
   // Object that contains the child elements of the popper element
-  popperChildren: { ... }
+  popperChildren: { ... },
 
   // Popper instance is not created until shown for the first time,
   // unless specified otherwise

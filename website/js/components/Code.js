@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import Prism from 'prismjs'
+import Prism from '../prism'
 
 const getLang = str => (str.match(/```(js|html|css|shell)/) || [])[1]
 
