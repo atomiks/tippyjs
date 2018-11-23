@@ -16,6 +16,7 @@
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
   pointer-events: none;
   line-height: 1.4;
+  max-width: calc(100% - 10px);
 
   @each $placement in $placements {
     &[x-placement^='#{$placement}'] {
@@ -201,12 +202,5 @@
   }
   &[data-state='hidden'] {
     opacity: 0;
-  }
-}
-
-@media (max-width: 360px) {
-  .tippy-popper {
-    max-width: 96%;
-    max-width: calc(100% - 20px);
   }
 }

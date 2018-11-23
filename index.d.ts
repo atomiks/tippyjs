@@ -45,6 +45,7 @@ export interface Props {
   interactiveDebounce?: number
   lazy?: boolean
   livePlacement?: boolean
+  maxWidth?: number | string
   multiple?: boolean
   offset?: number | string
   onHidden?(instance: Instance): void

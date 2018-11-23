@@ -195,6 +195,8 @@ export const createPopperElement = (id, props) => {
 
   const tooltip = div()
   tooltip.className = 'tippy-tooltip'
+  tooltip.style.maxWidth =
+    props.maxWidth + (typeof props.maxWidth === 'number' ? 'px' : '')
   tooltip.setAttribute('data-size', props.size)
   tooltip.setAttribute('data-animation', props.animation)
   tooltip.setAttribute('data-state', 'hidden')

@@ -569,3 +569,17 @@ describe('popperOptions', () => {
     expect(popperInstance.options.modifiers.offset.test).toBe(true)
   })
 })
+
+describe('maxWidth', () => {
+  it('adds the value to tooltip.style.maxWidth', () => {
+    const pxTip = tippy.one(h(), { maxWidth: '100px' })
+    expect(pxTip.popperChildren.tooltip.style.maxWidth).toBe('100px')
+    const remTip = tippy.one(h(), { maxWidth: '100rem' })
+    expect(remTip.popperChildren.tooltip.style.maxWidth).toBe('100rem')
+  })
+
+  it('auto-adds "px" to a number', () => {
+    const numTip = tippy.one(h(), { maxWidth: 100 })
+    expect(numTip.popperChildren.tooltip.style.maxWidth).toBe('100px')
+  })
+})
