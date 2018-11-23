@@ -569,3 +569,10 @@ describe('popperOptions', () => {
     expect(popperInstance.options.modifiers.offset.test).toBe(true)
   })
 })
+
+describe('maxWidth', () => {
+  const strTip = tippy.one(h(), { maxWidth: '100px' })
+  expect(strTip.popperChildren.tooltip.style.maxWidth).toBe('100px')
+  const numTip = tippy.one(h(), { maxWidth: 100 })
+  expect(numTip.popperChildren.tooltip.style.maxWidth).toBe('100px')
+})

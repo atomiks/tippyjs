@@ -21,6 +21,7 @@ export let Defaults = {
   interactiveDebounce: 0,
   lazy: true,
   livePlacement: true,
+  maxWidth: '',
   multiple: false,
   offset: 0,
   onHidden() {},
