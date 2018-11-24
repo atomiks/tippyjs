@@ -72,7 +72,9 @@ export default () => (
     <ul>
       <li>
         <code>tippy.all.js</code> is all dependencies (Tippy + Popper + CSS) in
-        a single file. The CSS is injected into the document head.
+        a single file. The CSS is injected into the document head. Note that
+        themes CSS is not included by default, they must be externally imported
+        or linked. They are located under <code>dist/themes/</code>.
       </li>
       <li>
         <code>tippy.js</code> is Tippy + Popper together, without the CSS.

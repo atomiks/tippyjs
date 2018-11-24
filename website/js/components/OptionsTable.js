@@ -306,10 +306,16 @@ export default () => (
         <Prop name="target" default="&quot;&quot;" value="String">
           CSS selector used for event delegation.
         </Prop>
-        <Prop name="theme" default="&quot;dark&quot;" value="String">
+        <Prop
+          name="theme"
+          default="&quot;dark&quot;"
+          value={['String', '"dark"', '"light"', '"light-border"', '"google"']}
+        >
           Themes added as classes (each separated by a space) to the tippy's
           class list, which adds a <code>-theme</code> suffix, i.e.{' '}
-          <code>"dark-theme"</code>.
+          <code>"dark-theme"</code>. Note that the themes apart from the default{' '}
+          <code>"dark"</code> theme are not included in the main CSS by default,
+          they must be imported/linked separately.
         </Prop>
         <Prop name="touch" default="true" value="Boolean">
           Determines if the tippy displays on touch devices.
