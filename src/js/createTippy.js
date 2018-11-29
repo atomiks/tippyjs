@@ -24,7 +24,8 @@ import {
   focus,
   toggleTransitionEndListener,
   debounce,
-  validateOptions
+  validateOptions,
+  hasOwnProperty
 } from './utils'
 
 let idCounter = 1
@@ -764,20 +765,20 @@ export default function createTippy(reference, collectionProps) {
       ...options,
       performance: true
     })
-    nextProps.performance = options.hasOwnProperty('performance')
+    nextProps.performance = hasOwnProperty(options, 'performance')
       ? options.performance
       : prevProps.performance
     tip.props = nextProps
 
     if (
-      options.hasOwnProperty('trigger') ||
-      options.hasOwnProperty('touchHold')
+      hasOwnProperty(options, 'trigger') ||
+      hasOwnProperty(options, 'touchHold')
     ) {
       removeTriggersFromReference()
       addTriggersToReference()
     }
 
-    if (options.hasOwnProperty('interactiveDebounce')) {
+    if (hasOwnProperty(options, 'interactiveDebounce')) {
       cleanupOldMouseListeners()
       debouncedOnMouseMove = debounce(onMouseMove, options.interactiveDebounce)
     }
@@ -787,7 +788,7 @@ export default function createTippy(reference, collectionProps) {
 
     if (
       tip.popperInstance &&
-      POPPER_INSTANCE_RELATED_PROPS.some(prop => options.hasOwnProperty(prop))
+      POPPER_INSTANCE_RELATED_PROPS.some(prop => hasOwnProperty(options, prop))
     ) {
       tip.popperInstance.destroy()
       tip.popperInstance = createPopperInstance()

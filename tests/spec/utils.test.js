@@ -214,6 +214,19 @@ describe('isNumeric', () => {
   })
 })
 
+describe('hasOwnProperty', () => {
+  it('works for plain objects', () => {
+    expect(Utils.hasOwnProperty({ prop: true }, 'prop')).toBe(true)
+    expect(Utils.hasOwnProperty({}, 'toString')).toBe(false)
+  })
+
+  it('works for prototypeless objects', () => {
+    const o = Object.create(null)
+    o.prop = true
+    expect(Utils.hasOwnProperty(o, 'prop')).toBe(true)
+  })
+})
+
 describe('getValue', () => {
   it('returns the value if not an array', () => {
     expect(Utils.getValue('unique', 0)).toBe('unique')

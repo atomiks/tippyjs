@@ -732,3 +732,7 @@ export const validateOptions = (options, props) => {
     }
   }
 }
+
+export const hasOwnProperty = (obj, key) => {
+  return {}.hasOwnProperty.call(obj, key)
+}
