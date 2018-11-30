@@ -32,4 +32,14 @@ $color: #505355;
   &[data-animatefill] {
     background-color: transparent;
   }
+
+  &[data-size='small'] {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  &[data-size='large'] {
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+  }
 }
