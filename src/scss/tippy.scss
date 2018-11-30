@@ -197,6 +197,8 @@
 
 .tippy-backdrop + .tippy-content {
   transition-property: opacity;
+  will-change: opacity;
+
   &[data-state='visible'] {
     opacity: 1;
   }
