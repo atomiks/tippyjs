@@ -228,6 +228,16 @@ export default () => (
           tippy to flip around when scrolling, and the tippy's reference is not
           in a scrollable container, you can set this to <code>false</code>.
         </Prop>
+        <Prop
+          name="maxWidth"
+          default="&quot;&quot;"
+          value={['String', 'Number']}
+        >
+          Specifies the maximum width of the tippy. Specifying a number will
+          automatically append <code>px</code>. If using a string, ensure you
+          add units (such as <code>rem</code>
+          ).
+        </Prop>
         <Prop name="multiple" default="false" value="Boolean">
           Determines if the reference can have multiple tippy instances.
         </Prop>
