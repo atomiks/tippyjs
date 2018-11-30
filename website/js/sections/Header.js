@@ -21,7 +21,7 @@ export default () => (
         <div class="header__item">
           <span class="header__size">
             <Emoji size="small">📦</Emoji>
-            14.8 kB
+            15 kB
           </span>
         </div>
         <div class="header__item">

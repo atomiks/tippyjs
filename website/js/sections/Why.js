@@ -7,7 +7,7 @@ const TITLE = 'Why Use Tippy.js?'
 export default () => (
   <Section title={TITLE} emoji={Emojis.WHY}>
     <p>
-      You might be wondering why you should use a 14 kB JS library for tooltips
+      You might be wondering why you should use a 15 kB JS library for tooltips
       and popovers instead of a CSS solution. Pure CSS tooltips are great for
       simple tooltips when the reference element is positioned in a certain way,
       but they:
