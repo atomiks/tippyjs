@@ -1,8 +1,8 @@
 import { h, hasTippy, cleanDocumentBody } from '../utils'
 
-import { Defaults } from '../../src/js/defaults'
-import { Selectors } from '../../src/js/selectors'
-import tippy, { autoInit } from '../../src/js/tippy'
+import Defaults from '../../src/js/defaults'
+import Selectors from '../../src/js/selectors'
+import tippy, { autoInit } from '../../src/js/index'
 
 afterEach(cleanDocumentBody)
 
@@ -105,12 +105,10 @@ describe('tippy.one()', () => {
 })
 
 describe('tippy.setDefaults()', () => {
-  it('changes the default props applied to instances but does not mutate the original', () => {
-    const ogDefaults = Defaults
+  it('changes the default props applied to instances', () => {
     const newPlacement = 'bottom-end'
     tippy.setDefaults({ placement: newPlacement })
     expect(Defaults.placement).toBe(newPlacement)
-    expect(ogDefaults.placement).not.toBe(newPlacement)
   })
 })
 

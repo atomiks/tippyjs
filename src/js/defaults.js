@@ -1,4 +1,4 @@
-export let Defaults = {
+export default {
   a11y: true,
   allowHTML: true,
   animateFill: true,
@@ -44,10 +44,6 @@ export let Defaults = {
   updateDuration: 200,
   wait: null,
   zIndex: 9999
-}
-
-export const setDefaults = partialDefaults => {
-  Defaults = { ...Defaults, ...partialDefaults }
 }
 
 /**

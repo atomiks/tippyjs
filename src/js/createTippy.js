@@ -1,32 +1,25 @@
 import Popper from 'popper.js'
-import { Defaults, POPPER_INSTANCE_RELATED_PROPS } from './defaults'
-import { Selectors } from './selectors'
-import { isUsingTouch } from './bindGlobalEventListeners'
 import { supportsTouch, isIE } from './browser'
+import { isUsingTouch } from './bindGlobalEventListeners'
+import Defaults, { POPPER_INSTANCE_RELATED_PROPS } from './defaults'
+import Selectors from './selectors'
 import {
   createPopperElement,
-  elementCanReceiveFocus,
-  getChildren,
-  computeArrowTransform,
-  afterPopperPositionUpdates,
-  getPopperPlacement,
-  getOffsetDistanceInPx,
-  getValue,
-  closest,
-  closestCallback,
-  isCursorOutsideInteractiveBorder,
-  applyTransitionDuration,
-  setVisibilityState,
   updatePopperElement,
-  evaluateProps,
-  defer,
-  toArray,
-  focus,
+  afterPopperPositionUpdates,
+  getChildren,
+  getPopperPlacement,
+  applyTransitionDuration,
   toggleTransitionEndListener,
-  debounce,
-  validateOptions,
-  hasOwnProperty
-} from './utils'
+  setVisibilityState,
+  isCursorOutsideInteractiveBorder,
+  getOffsetDistanceInPx
+} from './popper'
+import { canReceiveFocus } from './reference'
+import { validateOptions, evaluateProps } from './props'
+import computeArrowTransform from './deprecated_computeArrowTransform'
+import { closest, closestCallback, arrayFrom } from './ponyfills'
+import { defer, focus, hasOwnProperty, debounce, getValue } from './utils'
 
 let idCounter = 1
 
@@ -166,7 +159,7 @@ export default function createTippy(reference, collectionProps) {
   }
 
   // Ensure the reference element can receive focus (and is not a delegate)
-  if (props.a11y && !props.target && !elementCanReceiveFocus(reference)) {
+  if (props.a11y && !props.target && !canReceiveFocus(reference)) {
     reference.setAttribute('tabindex', '0')
   }
 
@@ -1007,7 +1000,7 @@ export default function createTippy(reference, collectionProps) {
     delete tip.reference._tippy
 
     if (tip.props.target && destroyTargetInstances) {
-      toArray(tip.reference.querySelectorAll(tip.props.target)).forEach(
+      arrayFrom(tip.reference.querySelectorAll(tip.props.target)).forEach(
         child => child._tippy && child._tippy.destroy()
       )
     }
