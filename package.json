@@ -22,7 +22,7 @@
     "build:docs": "node website/clean.js && parcel build website/index.html -d docs/ --public-url ./ && node website/prerender.js",
     "dev": "parcel tests/visual/index.html -d tests/visual/dist --open",
     "build": "node ./scripts/build.js && bundlesize && npm run build:docs",
-    "test": "bundlesize && jest --coverage",
+    "test": "jest --coverage",
     "lint": "eslint \"src/**/*.js\"",
     "prettier": "prettier --write \"./**/*{js,scss}\"",
     "release": "npm test && npm run build && git add . && git commit -am $npm_package_version && git tag v$npm_package_version && git push origin master && git push --tags && npm publish"
