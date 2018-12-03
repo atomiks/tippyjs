@@ -21,8 +21,8 @@
     "dev:docs": "parcel website/index.html -d .devserver --no-cache --open",
     "build:docs": "node website/clean.js && parcel build website/index.html -d docs/ --public-url ./ && node website/prerender.js",
     "dev": "parcel tests/visual/index.html -d tests/visual/dist --open",
-    "build": "node ./scripts/build.js && npm run build:docs",
-    "test": "jest --coverage",
+    "build": "node ./scripts/build.js && bundlesize && npm run build:docs",
+    "test": "bundlesize && jest --coverage",
     "lint": "eslint \"src/**/*.js\"",
     "prettier": "prettier --write \"./**/*{js,scss}\"",
     "release": "npm test && npm run build && git add . && git commit -am $npm_package_version && git tag v$npm_package_version && git push origin master && git push --tags && npm publish"
@@ -42,6 +42,16 @@
   "browserslist": [
     "> 0.5%"
   ],
+  "bundlesize": [
+    {
+      "path": "./dist/tippy.all.min.js",
+      "maxSize": "15 kB"
+    },
+    {
+      "path": "./dist/tippy.css",
+      "maxSize": "2 kB"
+    }
+  ],
   "devDependencies": {
     "@hyperapp/render": "^2.0.0",
     "autoprefixer": "^6.7.7",
@@ -52,13 +62,12 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-stage-2": "^6.24.1",
+    "bundlesize": "^0.17.0",
     "caniuse-lite": "^1.0.30000912",
     "colorette": "^1.0.7",
     "cssnano": "^3.10.0",
     "eslint": "^4.18.2",
-    "filesize": "^3.6.1",
     "focus-visible": "^4.1.4",
-    "gzip-size": "^5.0.0",
     "hyperapp": "^1.2.6",
     "jest": "^23.5.0",
     "jsdom": "^11.11.0",
