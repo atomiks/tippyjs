@@ -9,3 +9,8 @@ global.window.document.createRange = function createRange() {
     commonAncestorContainer: document.createElement('div')
   }
 }
+
+global.window.MutationObserver = require('mutation-observer')
+
+global.window.focus = () => {}
+global.window.scroll = () => {}

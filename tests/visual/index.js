@@ -1,4 +1,4 @@
-import tippy from '../../src/js/tippy.js'
+import tippy from '../../src/js/index'
 import '../../src/scss/tippy.scss'
 import '../../src/scss/themes/light-border.scss'
 

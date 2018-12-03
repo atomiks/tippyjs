@@ -1,20 +1,17 @@
 import { version } from '../../package.json'
-import { Defaults, setDefaults } from './defaults'
 import { isBrowser } from './browser'
+import Defaults from './defaults'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
-import {
-  isPlainObject,
-  polyfillVirtualReferenceProps,
-  getArrayOfElements,
-  toArray,
-  hideAllPoppers,
-  validateOptions
-} from './utils'
+import { polyfillElementPrototypeProperties } from './reference'
+import { validateOptions } from './props'
+import { arrayFrom } from './ponyfills'
+import { hideAllPoppers } from './popper'
+import { isPlainObject, getArrayOfElements } from './utils'
 
 let eventListenersBound = false
 
-export default function tippy(targets, options, one) {
+function tippy(targets, options, one) {
   validateOptions(options, Defaults)
 
   if (!eventListenersBound) {
@@ -29,7 +26,7 @@ export default function tippy(targets, options, one) {
    * some native DOM props
    */
   if (isPlainObject(targets)) {
-    polyfillVirtualReferenceProps(targets)
+    polyfillElementPrototypeProperties(targets)
   }
 
   const references = getArrayOfElements(targets)
@@ -70,8 +67,9 @@ tippy.defaults = Defaults
  */
 tippy.one = (targets, options) => tippy(targets, options, true).instances[0]
 tippy.setDefaults = partialDefaults => {
-  setDefaults(partialDefaults)
-  tippy.defaults = Defaults
+  Object.keys(partialDefaults).forEach(key => {
+    Defaults[key] = partialDefaults[key]
+  })
 }
 tippy.disableAnimations = () => {
   tippy.setDefaults({
@@ -88,7 +86,7 @@ tippy.useCapture = () => {}
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
  */
 export const autoInit = () => {
-  toArray(document.querySelectorAll('[data-tippy]')).forEach(el => {
+  arrayFrom(document.querySelectorAll('[data-tippy]')).forEach(el => {
     const content = el.getAttribute('data-tippy')
     if (content) {
       tippy(el, { content })
@@ -98,3 +96,5 @@ export const autoInit = () => {
 if (isBrowser) {
   setTimeout(autoInit)
 }
+
+export default tippy

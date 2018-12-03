@@ -1,10 +1,11 @@
-import { Selectors } from './selectors'
 import { supportsTouch, isIOS } from './browser'
-import { hideAllPoppers, closest, closestCallback, toArray } from './utils'
+import Selectors from './selectors'
+import { hideAllPoppers } from './popper'
+import { closest, closestCallback, arrayFrom } from './ponyfills'
 
 export let isUsingTouch = false
 
-export const onDocumentTouch = () => {
+export function onDocumentTouch() {
   if (isUsingTouch) {
     return
   }
@@ -21,7 +22,7 @@ export const onDocumentTouch = () => {
 }
 
 let lastMouseMoveTime = 0
-export const onDocumentMouseMove = () => {
+export function onDocumentMouseMove() {
   const now = performance.now()
 
   // Chrome 60+ is 1 mousemove per animation frame, use 20ms time difference
@@ -36,7 +37,7 @@ export const onDocumentMouseMove = () => {
   lastMouseMoveTime = now
 }
 
-export const onDocumentClick = ({ target }) => {
+export function onDocumentClick({ target }) {
   // Simulated events dispatched on the document
   if (!(target instanceof Element)) {
     return hideAllPoppers()
@@ -71,15 +72,15 @@ export const onDocumentClick = ({ target }) => {
   hideAllPoppers()
 }
 
-export const onWindowBlur = () => {
+export function onWindowBlur() {
   const { activeElement } = document
   if (activeElement && activeElement.blur && activeElement._tippy) {
     activeElement.blur()
   }
 }
 
-export const onWindowResize = () => {
-  toArray(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
+export function onWindowResize() {
+  arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
     const tippyInstance = popper._tippy
     if (!tippyInstance.props.livePlacement) {
       tippyInstance.popperInstance.scheduleUpdate()
@@ -90,7 +91,7 @@ export const onWindowResize = () => {
 /**
  * Adds the needed global event listeners
  */
-export default function bindEventListeners() {
+export default function bindGlobalEventListeners() {
   document.addEventListener('click', onDocumentClick, true)
   // Old browsers will use capture phase but the phase does not matter anyway
   document.addEventListener('touchstart', onDocumentTouch, { passive: true })

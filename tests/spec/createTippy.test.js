@@ -1,7 +1,7 @@
 import { h, hasTippy, cleanDocumentBody, wait } from '../utils'
 
-import { Defaults } from '../../src/js/defaults'
-import { Selectors } from '../../src/js/selectors'
+import Defaults from '../../src/js/defaults'
+import Selectors from '../../src/js/selectors'
 import createTippy from '../../src/js/createTippy'
 import * as Utils from '../../src/js/utils'
 

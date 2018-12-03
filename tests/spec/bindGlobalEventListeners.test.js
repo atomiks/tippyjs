@@ -1,8 +1,8 @@
 import { h, hasTippy, cleanDocumentBody, withTestOptions } from '../utils'
 
-import tippy from '../../src/js/tippy'
-import { Defaults } from '../../src/js/defaults'
-import { Selectors } from '../../src/js/selectors'
+import tippy from '../../src/js/index'
+import Defaults from '../../src/js/defaults'
+import Selectors from '../../src/js/selectors'
 import createTippy from '../../src/js/createTippy'
 import bindEventListeners, * as Listeners from '../../src/js/bindGlobalEventListeners'
 
