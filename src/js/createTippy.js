@@ -246,6 +246,10 @@ export default function createTippy(reference, collectionProps) {
     }
 
     tip.popperInstance.scheduleUpdate()
+
+    if (followCursor === 'initial' && tip.state.isVisible) {
+      removeFollowCursorListener()
+    }
   }
 
   /**
