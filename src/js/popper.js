@@ -5,6 +5,7 @@ const FF_EXTENSION_TRICK = { x: true }
 
 /**
  * Returns a new `div` element
+ * @return {HTMLDivElement}
  */
 export function div() {
   return document.createElement('div')

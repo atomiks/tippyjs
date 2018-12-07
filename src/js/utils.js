@@ -2,7 +2,7 @@ import { arrayFrom } from './ponyfills'
 
 /**
  * Determines if a value is a plain object
- * @param {*} value
+ * @param {any} value
  * @return {Boolean}
  */
 export function isPlainObject(value) {
@@ -21,7 +21,7 @@ export function hasOwnProperty(obj, key) {
 
 /**
  * Determines if a value is numeric
- * @param {*} value
+ * @param {any} value
  * @return {Boolean}
  */
 export function isNumeric(value) {
@@ -30,7 +30,7 @@ export function isNumeric(value) {
 
 /**
  * Returns an array of elements based on the value
- * @param {*} value
+ * @param {any} value
  * @return {Array}
  */
 export function getArrayOfElements(value) {
@@ -53,9 +53,9 @@ export function getArrayOfElements(value) {
 
 /**
  * Returns a value at a given index depending on if it's an array or number
- * @param {*} value
+ * @param {any} value
  * @param {Number} index
- * @param {*} defaultValue
+ * @param {any} defaultValue
  */
 export function getValue(value, index, defaultValue) {
   if (Array.isArray(value)) {
@@ -90,7 +90,7 @@ export function defer(fn) {
  * @param {Function} fn
  * @param {Number} ms
  */
-export const debounce = (fn, ms) => {
+export function debounce(fn, ms) {
   let timeoutId
   return function() {
     clearTimeout(timeoutId)

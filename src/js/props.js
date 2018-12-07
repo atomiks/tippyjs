@@ -2,9 +2,9 @@ import { getDataAttributeOptions } from './reference'
 import { hasOwnProperty } from './utils'
 
 /**
- * Evaluates options
+ * Evaluates the props object
  * @param {Element} reference
- * @param {Object} options
+ * @param {Object} props
  * @return {Object}
  */
 export function evaluateProps(reference, props) {

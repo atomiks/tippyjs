@@ -92,6 +92,4 @@ export function polyfillElementPrototypeProperties(virtualReference) {
   for (const key in polyfills) {
     virtualReference[key] = polyfills[key]
   }
-
-  return virtualReference
 }

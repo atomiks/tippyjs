@@ -26,7 +26,7 @@ export function arrayFrom(value) {
  */
 export function closest(element, parentSelector) {
   return (
-    Element.prototype.closest ||
+    elementProto.closest ||
     function(selector) {
       let el = this
       while (el) {

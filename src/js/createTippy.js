@@ -27,6 +27,9 @@ let idCounter = 1
  * Creates and returns a Tippy object. We're using a closure pattern instead of
  * a class so that the exposed object API is clean without private members
  * prefixed with `_`.
+ * @param {Element} reference
+ * @param {Object} collectionProps
+ * @return {Object} instance
  */
 export default function createTippy(reference, collectionProps) {
   const props = evaluateProps(reference, collectionProps)

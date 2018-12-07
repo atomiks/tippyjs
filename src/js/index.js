@@ -9,14 +9,21 @@ import { arrayFrom } from './ponyfills'
 import { hideAllPoppers } from './popper'
 import { isPlainObject, getArrayOfElements } from './utils'
 
-let eventListenersBound = false
+let globalEventListenersBound = false
 
+/**
+ * Exported module
+ * @param {String|Element|Element[]|NodeList|Object} targets
+ * @param {Object} options
+ * @param {Boolean} one
+ * @return {Object}
+ */
 function tippy(targets, options, one) {
   validateOptions(options, Defaults)
 
-  if (!eventListenersBound) {
+  if (!globalEventListenersBound) {
     bindGlobalEventListeners()
-    eventListenersBound = true
+    globalEventListenersBound = true
   }
 
   const props = { ...Defaults, ...options }
