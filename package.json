@@ -13,6 +13,10 @@
     "tippy",
     "tippy.js"
   ],
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/atomiks/tippyjs.git"
