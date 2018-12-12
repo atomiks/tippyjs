@@ -5,42 +5,42 @@ function __addCustomObjectTokens() {
   Prism.languages.insertBefore('javascript', 'keyword', {
     module: {
       pattern: /\b(?:import|as|export|from|default)\b/,
-      alias: 'keyword'
-    }
+      alias: 'keyword',
+    },
   })
   Prism.languages.insertBefore('javascript', 'punctuation', {
     definition: {
       pattern: /[a-z]\w*(?=:)/i,
       lookbehind: true,
-      alias: 'property'
+      alias: 'property',
     },
     access: {
       pattern: /(\.\s*)[a-z_$][\w$]*/i,
       lookbehind: true,
-      alias: 'property'
+      alias: 'property',
     },
     'variable ': {
       pattern: /\b(?:window|document|navigator|performance|localStorage|Element)\b/,
-      alias: 'dom'
+      alias: 'dom',
     },
-    console: /\bconsole\b/
+    console: /\bconsole\b/,
   })
   Prism.languages.insertBefore('javascript', 'operator', {
     spread: {
       pattern: /\.{3}/,
-      alias: 'punctuation'
+      alias: 'punctuation',
     },
     arrow: {
       pattern: /=>/,
-      alias: 'operator'
-    }
+      alias: 'operator',
+    },
   })
   Prism.languages.insertBefore('javascript', 'function', {
     method: {
       pattern: /(\.\s*)[a-z_$][\w$]*(?=(\())/i,
       lookbehind: true,
-      alias: 'function'
-    }
+      alias: 'function',
+    },
   })
 }
 
@@ -49,22 +49,22 @@ function __getParameterTokens() {
     {
       pattern: /(function(?:\s+[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*)?\s*\(\s*)[^\s()][^()]*?(?=\s*\))/,
       lookbehind: true,
-      inside: Prism.languages.javascript
+      inside: Prism.languages.javascript,
     },
     {
       pattern: /[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=\s*=>)/,
-      inside: Prism.languages.javascript
+      inside: Prism.languages.javascript,
     },
     {
       pattern: /(\(\s*)[^\s()][^()]*?(?=\s*\)\s*=>)/,
       lookbehind: true,
-      inside: Prism.languages.javascript
+      inside: Prism.languages.javascript,
     },
     {
       pattern: /((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*\s*)\(\s*)[^\s()][^()]*?(?=\s*\)\s*\{)/,
       lookbehind: true,
-      inside: Prism.languages.javascript
-    }
+      inside: Prism.languages.javascript,
+    },
   ]
 }
 
@@ -77,8 +77,8 @@ var _self =
     ? window // if in browser
     : typeof WorkerGlobalScope !== 'undefined' &&
       self instanceof WorkerGlobalScope
-      ? self // if in worker
-      : {} // if in node js
+    ? self // if in worker
+    : {} // if in node js
 
 /**
  * Prism: Lightweight, robust, elegant syntax highlighting
@@ -101,7 +101,7 @@ var Prism = (function() {
           return new Token(
             tokens.type,
             _.util.encode(tokens.content),
-            tokens.alias
+            tokens.alias,
           )
         } else if (_.util.type(tokens) === 'Array') {
           return tokens.map(_.util.encode)
@@ -160,7 +160,7 @@ var Prism = (function() {
         }
 
         return o
-      }
+      },
     },
 
     languages: {
@@ -247,7 +247,7 @@ var Prism = (function() {
             }
           }
         }
-      }
+      },
     },
     plugins: {},
 
@@ -259,7 +259,7 @@ var Prism = (function() {
       var env = {
         callback: callback,
         selector:
-          'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'
+          'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code',
       }
 
       _.hooks.run('before-highlightall', env)
@@ -310,7 +310,7 @@ var Prism = (function() {
         element: element,
         language: language,
         grammar: grammar,
-        code: code
+        code: code,
       }
 
       _.hooks.run('before-sanity-check', env)
@@ -346,8 +346,8 @@ var Prism = (function() {
           JSON.stringify({
             language: env.language,
             code: env.code,
-            immediateClose: true
-          })
+            immediateClose: true,
+          }),
         )
       } else {
         env.highlightedCode = _.highlight(env.code, env.grammar, env.language)
@@ -367,7 +367,7 @@ var Prism = (function() {
       var env = {
         code: text,
         grammar: grammar,
-        language: language
+        language: language,
       }
       _.hooks.run('before-tokenize', env)
       env.tokens = _.tokenize(env.code, env.grammar)
@@ -382,7 +382,7 @@ var Prism = (function() {
       index,
       startPos,
       oneshot,
-      target
+      target,
     ) {
       var Token = _.Token
 
@@ -504,7 +504,7 @@ var Prism = (function() {
               inside ? _.tokenize(match, inside) : match,
               alias,
               match,
-              greedy
+              greedy,
             )
 
             args.push(wrapped)
@@ -563,8 +563,8 @@ var Prism = (function() {
         for (var i = 0, callback; (callback = callbacks[i++]); ) {
           callback(env)
         }
-      }
-    }
+      },
+    },
   })
 
   var Token = (_.Token = function(type, content, alias, matchedStr, greedy) {
@@ -596,7 +596,7 @@ var Prism = (function() {
       classes: ['token', o.type],
       attributes: {},
       language: language,
-      parent: parent
+      parent: parent,
     }
 
     if (o.alias) {
@@ -653,7 +653,7 @@ var Prism = (function() {
             _self.close()
           }
         },
-        false
+        false,
       )
     }
 
@@ -710,8 +710,8 @@ Prism.languages.markup = {
         pattern: /^<\/?[^\s>\/]+/i,
         inside: {
           punctuation: /^<\/?/,
-          namespace: /^[^\s>\/:]+:/
-        }
+          namespace: /^[^\s>\/:]+:/,
+        },
       },
       'attr-value': {
         pattern: /=(?:("|')(?:\\[\s\S]|(?!\1)[^\\])*\1|[^\s'">=]+)/i,
@@ -720,21 +720,21 @@ Prism.languages.markup = {
             /^=/,
             {
               pattern: /(^|[^\\])["']/,
-              lookbehind: true
-            }
-          ]
-        }
+              lookbehind: true,
+            },
+          ],
+        },
       },
       punctuation: /\/?>/,
       'attr-name': {
         pattern: /[^\s>\/]+/,
         inside: {
-          namespace: /^[^\s>\/:]+:/
-        }
-      }
-    }
+          namespace: /^[^\s>\/:]+:/,
+        },
+      },
+    },
   },
-  entity: /&#?[\da-z]{1,8};/i
+  entity: /&#?[\da-z]{1,8};/i,
 }
 
 Prism.languages.markup['tag'].inside['attr-value'].inside['entity'] =
@@ -761,20 +761,20 @@ Prism.languages.css = {
   atrule: {
     pattern: /@[\w-]+?.*?(?:;|(?=\s*\{))/i,
     inside: {
-      rule: /@[\w-]+/
+      rule: /@[\w-]+/,
       // See rest below
-    }
+    },
   },
   url: /url\((?:(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1|.*?)\)/i,
   selector: /[^{}\s][^{};]*?(?=\s*\{)/,
   string: {
     pattern: /("|')(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
-    greedy: true
+    greedy: true,
   },
   property: /[-_a-z\xA0-\uFFFF][-\w\xA0-\uFFFF]*(?=\s*:)/i,
   important: /\B!important\b/i,
   function: /[-a-z0-9]+(?=\()/i,
-  punctuation: /[(){};:]/
+  punctuation: /[(){};:]/,
 }
 
 Prism.languages.css['atrule'].inside.rest = Prism.languages.css
@@ -786,8 +786,8 @@ if (Prism.languages.markup) {
       lookbehind: true,
       inside: Prism.languages.css,
       alias: 'language-css',
-      greedy: true
-    }
+      greedy: true,
+    },
   })
 
   Prism.languages.insertBefore(
@@ -799,18 +799,18 @@ if (Prism.languages.markup) {
         inside: {
           'attr-name': {
             pattern: /^\s*style/i,
-            inside: Prism.languages.markup.tag.inside
+            inside: Prism.languages.markup.tag.inside,
           },
           punctuation: /^\s*=\s*['"]|['"]\s*$/,
           'attr-value': {
             pattern: /.+/i,
-            inside: Prism.languages.css
-          }
+            inside: Prism.languages.css,
+          },
         },
-        alias: 'language-css'
-      }
+        alias: 'language-css',
+      },
     },
-    Prism.languages.markup.tag
+    Prism.languages.markup.tag,
   )
 }
 
@@ -822,31 +822,31 @@ Prism.languages.clike = {
   comment: [
     {
       pattern: /(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,
-      lookbehind: true
+      lookbehind: true,
     },
     {
       pattern: /(^|[^\\:])\/\/.*/,
       lookbehind: true,
-      greedy: true
-    }
+      greedy: true,
+    },
   ],
   string: {
     pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
-    greedy: true
+    greedy: true,
   },
   'class-name': {
     pattern: /((?:\b(?:class|interface|extends|implements|trait|instanceof|new)\s+)|(?:catch\s+\())[\w.\\]+/i,
     lookbehind: true,
     inside: {
-      punctuation: /[.\\]/
-    }
+      punctuation: /[.\\]/,
+    },
   },
   keyword: /\b(?:if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue)\b/,
   boolean: /\b(?:true|false)\b/,
   function: /[a-z0-9_]+(?=\()/i,
   number: /\b0x[\da-f]+\b|(?:\b\d+\.?\d*|\B\.\d+)(?:e[+-]?\d+)?/i,
   operator: /--?|\+\+?|!=?=?|<=?|>=?|==?=?|&&?|\|\|?|\?|\*|\/|~|\^|%/,
-  punctuation: /[{}[\];(),.:]/
+  punctuation: /[{}[\];(),.:]/,
 }
 
 /* **********************************************
@@ -858,22 +858,22 @@ Prism.languages.javascript = Prism.languages.extend('clike', {
   number: /\b(?:0[xX][\dA-Fa-f]+|0[bB][01]+|0[oO][0-7]+|NaN|Infinity)\b|(?:\b\d+\.?\d*|\B\.\d+)(?:[Ee][+-]?\d+)?/,
   // Allow for all non-ASCII characters (See http://stackoverflow.com/a/2008444)
   function: /[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=\s*\()/i,
-  operator: /-[-=]?|\+[+=]?|!=?=?|<<?=?|>>?>?=?|=(?:==?|>)?|&[&=]?|\|[|=]?|\*\*?=?|\/=?|~|\^=?|%=?|\?|\.{3}/
+  operator: /-[-=]?|\+[+=]?|!=?=?|<<?=?|>>?>?=?|=(?:==?|>)?|&[&=]?|\|[|=]?|\*\*?=?|\/=?|~|\^=?|%=?|\?|\.{3}/,
 })
 
 Prism.languages.insertBefore('javascript', 'keyword', {
   regex: {
     pattern: /((?:^|[^$\w\xA0-\uFFFF."'\])\s])\s*)\/(\[[^\]\r\n]+]|\\.|[^/\\\[\r\n])+\/[gimyu]{0,5}(?=\s*($|[\r\n,.;})\]]))/,
     lookbehind: true,
-    greedy: true
+    greedy: true,
   },
   // This must be declared before keyword because we use "function" inside the look-forward
   'function-variable': {
     pattern: /[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=\s*=\s*(?:function\b|(?:\([^()]*\)|[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*)\s*=>))/i,
-    alias: 'function'
+    alias: 'function',
   },
   parameter: __getParameterTokens(),
-  constant: /\b[A-Z][A-Z\d_]*\b/
+  constant: /\b[A-Z][A-Z\d_]*\b/,
 })
 
 __addCustomObjectTokens()
@@ -888,14 +888,14 @@ Prism.languages.insertBefore('javascript', 'string', {
         inside: {
           'interpolation-punctuation': {
             pattern: /^\${|}$/,
-            alias: 'punctuation'
+            alias: 'punctuation',
           },
-          rest: null // See below
-        }
+          rest: null, // See below
+        },
       },
-      string: /[\s\S]+/
-    }
-  }
+      string: /[\s\S]+/,
+    },
+  },
 })
 Prism.languages.javascript['template-string'].inside[
   'interpolation'
@@ -908,8 +908,8 @@ if (Prism.languages.markup) {
       lookbehind: true,
       inside: Prism.languages.javascript,
       alias: 'language-javascript',
-      greedy: true
-    }
+      greedy: true,
+    },
   })
 }
 
@@ -938,7 +938,7 @@ Prism.languages.js = Prism.languages.javascript
       sh: 'bash',
       bat: 'batch',
       h: 'c',
-      tex: 'latex'
+      tex: 'latex',
     }
 
     Array.prototype.slice

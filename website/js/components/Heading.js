@@ -3,7 +3,7 @@ import { toKebabCase } from '../utils'
 
 const Subheading = scope => (props, children) => {
   const id = toKebabCase(
-    scope + children.find(child => typeof child === 'string')
+    scope + children.find(child => typeof child === 'string'),
   )
   return (
     <h3 id={id} class="section__subheading">

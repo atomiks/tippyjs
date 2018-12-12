@@ -17,7 +17,7 @@ export const Emojis = {
   OBJECTS: '🏷️',
   METHODS: '🕹',
   HTML_CONTENT: '🖼️',
-  CREATING_CUSTOM_THEMES: '🖌️'
+  CREATING_CUSTOM_THEMES: '🖌️',
 }
 
 export default () => (

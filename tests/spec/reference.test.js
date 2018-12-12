@@ -2,7 +2,7 @@ import { h } from '../utils'
 import {
   canReceiveFocus,
   getDataAttributeOptions,
-  polyfillElementPrototypeProperties
+  polyfillElementPrototypeProperties,
 } from '../../src/js/reference'
 
 describe('canReceiveFocus', () => {
@@ -74,7 +74,7 @@ describe('getDataAttributeOptions', () => {
     expect(getDataAttributeOptions(ref).content).toBe('[Hello')
     ref.setAttribute('data-tippy-content', '3333333333333333333333333')
     expect(getDataAttributeOptions(ref).content).toBe(
-      '3333333333333333333333333'
+      '3333333333333333333333333',
     )
   })
 
@@ -82,7 +82,7 @@ describe('getDataAttributeOptions', () => {
     const ref = h()
     ref.setAttribute('data-tippy-arrowType', 'round')
     expect(getDataAttributeOptions(ref)).toEqual({
-      arrowType: 'round'
+      arrowType: 'round',
     })
   })
 
@@ -93,7 +93,7 @@ describe('getDataAttributeOptions', () => {
 
     expect(getDataAttributeOptions(ref)).toEqual({
       interactive: true,
-      animateFill: false
+      animateFill: false,
     })
   })
 
@@ -104,7 +104,7 @@ describe('getDataAttributeOptions', () => {
 
     expect(getDataAttributeOptions(ref)).toEqual({
       delay: 129,
-      duration: 111
+      duration: 111,
     })
   })
 
@@ -117,7 +117,7 @@ describe('getDataAttributeOptions', () => {
     expect(getDataAttributeOptions(ref)).toEqual({
       delay: [100, 255],
       duration: [0, 999],
-      popperOptions: { placement: 'right' }
+      popperOptions: { placement: 'right' },
     })
   })
 

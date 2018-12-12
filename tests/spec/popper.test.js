@@ -21,7 +21,7 @@ import {
   isCursorOutsideInteractiveBorder,
   getOffsetDistanceInPx,
   getPopperPlacement,
-  div
+  div,
 } from '../../src/js/popper'
 
 afterEach(cleanDocumentBody)
@@ -29,7 +29,7 @@ afterEach(cleanDocumentBody)
 describe('hideAllPoppers', () => {
   it('hides all poppers on the document', done => {
     const tip = tippy([...Array(10)].map(() => h()), {
-      duration: 0
+      duration: 0,
     })
     tip.instances.forEach(i => i.show(0))
     expect(document.querySelectorAll(Selectors.POPPER).length > 0).toBe(true)
@@ -80,7 +80,7 @@ describe('createPopperElement', () => {
   it('does not create a backdrop element if props.animateFill is false', () => {
     const popper = createPopperElement(1, {
       ...Defaults,
-      animateFill: false
+      animateFill: false,
     })
     expect(popper.querySelector(Selectors.BACKDROP)).toBe(null)
   })
@@ -88,20 +88,20 @@ describe('createPopperElement', () => {
   it('sets `[data-animatefill]` on the tooltip element if props.animateFill is true', () => {
     const popper = createPopperElement(1, {
       ...Defaults,
-      animateFill: true
+      animateFill: true,
     })
     expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-      true
+      true,
     )
   })
 
   it('sets `[data-interactive]` on the tooltip if props.interactive is true', () => {
     const popper = createPopperElement(1, {
       ...Defaults,
-      interactive: true
+      interactive: true,
     })
     expect(getChildren(popper).tooltip.hasAttribute('data-interactive')).toBe(
-      true
+      true,
     )
   })
 
@@ -109,24 +109,24 @@ describe('createPopperElement', () => {
     const popper = createPopperElement(1, {
       ...Defaults,
       size: 'large',
-      animation: 'scale'
+      animation: 'scale',
     })
     expect(getChildren(popper).tooltip.getAttribute('data-size')).toBe('large')
     expect(getChildren(popper).tooltip.getAttribute('data-animation')).toBe(
-      'scale'
+      'scale',
     )
   })
 
   it('sets the correct theme class names on the tooltip based on props', () => {
     const popper = createPopperElement(1, {
       ...Defaults,
-      theme: 'red firetruck'
+      theme: 'red firetruck',
     })
     expect(getChildren(popper).tooltip.classList.contains('red-theme')).toBe(
-      true
+      true,
     )
     expect(
-      getChildren(popper).tooltip.classList.contains('firetruck-theme')
+      getChildren(popper).tooltip.classList.contains('firetruck-theme'),
     ).toBe(true)
   })
 
@@ -137,7 +137,7 @@ describe('createPopperElement', () => {
     instance.show(0)
     expect(instance.state.isVisible).toBe(true)
     instance.popper.dispatchEvent(
-      new FocusEvent('focusout', { relatedTarget: randEl })
+      new FocusEvent('focusout', { relatedTarget: randEl }),
     )
     expect(instance.state.isVisible).toBe(false)
   })
@@ -148,7 +148,7 @@ describe('updatePopperElement', () => {
     const popper = createPopperElement(1, Defaults)
     updatePopperElement(popper, Defaults, {
       ...Defaults,
-      zIndex: 213
+      zIndex: 213,
     })
     expect(popper.style.zIndex).toBe('213')
   })
@@ -158,11 +158,11 @@ describe('updatePopperElement', () => {
     updatePopperElement(popper, Defaults, {
       ...Defaults,
       size: 'large',
-      animation: 'scale'
+      animation: 'scale',
     })
     expect(getChildren(popper).tooltip.getAttribute('data-size')).toBe('large')
     expect(getChildren(popper).tooltip.getAttribute('data-animation')).toBe(
-      'scale'
+      'scale',
     )
   })
 
@@ -170,12 +170,12 @@ describe('updatePopperElement', () => {
     const popper = createPopperElement(1, Defaults)
     updatePopperElement(popper, Defaults, {
       ...Defaults,
-      content: 'hello'
+      content: 'hello',
     })
     expect(getChildren(popper).content.textContent).toBe('hello')
     updatePopperElement(popper, Defaults, {
       ...Defaults,
-      content: '<strong>hello</strong>'
+      content: '<strong>hello</strong>',
     })
     expect(getChildren(popper).content.querySelector('strong')).not.toBe(null)
   })
@@ -184,23 +184,23 @@ describe('updatePopperElement', () => {
     const popper = createPopperElement(1, Defaults)
     updatePopperElement(popper, Defaults, {
       ...Defaults,
-      animateFill: false
+      animateFill: false,
     })
     expect(popper.querySelector(Selectors.BACKDROP)).toBe(null)
     expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-      false
+      false,
     )
     updatePopperElement(
       popper,
       { ...Defaults, animateFill: false },
       {
         ...Defaults,
-        animateFill: true
-      }
+        animateFill: true,
+      },
     )
     expect(popper.querySelector(Selectors.BACKDROP)).not.toBe(null)
     expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-      true
+      true,
     )
   })
 
@@ -209,7 +209,7 @@ describe('updatePopperElement', () => {
       const popper = createPopperElement(1, Defaults)
       updatePopperElement(popper, Defaults, {
         ...Defaults,
-        arrow: true
+        arrow: true,
       })
       expect(popper.querySelector(Selectors.ARROW)).not.toBe(null)
     }
@@ -219,7 +219,7 @@ describe('updatePopperElement', () => {
       const popper = createPopperElement(1, props)
       updatePopperElement(popper, props, {
         ...Defaults,
-        arrow: false
+        arrow: false,
       })
       expect(popper.querySelector(Selectors.ARROW)).toBe(null)
     }
@@ -231,7 +231,7 @@ describe('updatePopperElement', () => {
       updatePopperElement(popper, Defaults, {
         ...Defaults,
         arrow: true,
-        arrowType: 'round'
+        arrowType: 'round',
       })
       expect(popper.querySelector(Selectors.ARROW)).toBe(null)
       expect(popper.querySelector(Selectors.ROUND_ARROW)).not.toBe(null)
@@ -254,20 +254,20 @@ describe('updatePopperElement', () => {
     const popper = createPopperElement(1, Defaults)
     const newProps = {
       ...Defaults,
-      interactive: true
+      interactive: true,
     }
     updatePopperElement(popper, Defaults, newProps)
     expect(popper.getAttribute('tabindex')).toBe('-1')
     expect(getChildren(popper).tooltip.hasAttribute('data-interactive')).toBe(
-      true
+      true,
     )
     updatePopperElement(popper, newProps, {
       ...newProps,
-      interactive: false
+      interactive: false,
     })
     expect(popper.getAttribute('tabindex')).toBe(null)
     expect(getChildren(popper).tooltip.hasAttribute('data-interactive')).toBe(
-      false
+      false,
     )
   })
 
@@ -275,13 +275,13 @@ describe('updatePopperElement', () => {
     const popper = createPopperElement(1, Defaults)
     const newProps = {
       ...Defaults,
-      inertia: true
+      inertia: true,
     }
     updatePopperElement(popper, Defaults, newProps)
     expect(getChildren(popper).tooltip.hasAttribute('data-inertia')).toBe(true)
     updatePopperElement(popper, newProps, {
       ...newProps,
-      inertia: false
+      inertia: false,
     })
     expect(getChildren(popper).tooltip.hasAttribute('data-inertia')).toBe(false)
   })
@@ -290,33 +290,33 @@ describe('updatePopperElement', () => {
     const popper = createPopperElement(1, Defaults)
     const newProps = {
       ...Defaults,
-      theme: 'my custom themes'
+      theme: 'my custom themes',
     }
     updatePopperElement(popper, Defaults, newProps)
     expect(getChildren(popper).tooltip.classList.contains('my-theme')).toBe(
-      true
+      true,
     )
     expect(getChildren(popper).tooltip.classList.contains('custom-theme')).toBe(
-      true
+      true,
     )
     expect(getChildren(popper).tooltip.classList.contains('themes-theme')).toBe(
-      true
+      true,
     )
     updatePopperElement(popper, newProps, {
       ...newProps,
-      theme: 'other'
+      theme: 'other',
     })
     expect(getChildren(popper).tooltip.classList.contains('my-theme')).toBe(
-      false
+      false,
     )
     expect(getChildren(popper).tooltip.classList.contains('custom-theme')).toBe(
-      false
+      false,
     )
     expect(getChildren(popper).tooltip.classList.contains('themes-theme')).toBe(
-      false
+      false,
     )
     expect(getChildren(popper).tooltip.classList.contains('other-theme')).toBe(
-      true
+      true,
     )
   })
 })
@@ -407,7 +407,7 @@ describe('getChildren', () => {
     const popper = createPopperElement(1, {
       ...Defaults,
       arrow: true,
-      arrowType: 'round'
+      arrowType: 'round',
     })
     const children = getChildren(popper)
     expect(children.tooltip).toBeDefined()
@@ -456,7 +456,7 @@ describe('setContent', () => {
     const content = 'some content'
     setContent(ref, {
       allowHTML: false,
-      content
+      content,
     })
     expect(ref.textContent).toBe(content)
     expect(ref.querySelector('strong')).toBe(null)
@@ -467,7 +467,7 @@ describe('setContent', () => {
     const content = '<strong>some content</strong>'
     setContent(ref, {
       allowHTML: true,
-      content
+      content,
     })
     expect(ref.querySelector('strong')).not.toBe(null)
   })
@@ -513,12 +513,12 @@ describe('isCursorOutsideInteractiveBorder', () => {
       { clientX: 95, clientY: 95 },
       { clientX: 115, clientY: 115 },
       { clientX: 115, clientY: 95 },
-      { clientX: 95, clientY: 115 }
+      { clientX: 95, clientY: 115 },
     ]
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('top', popperRect, coords, options)
+        isCursorOutsideInteractiveBorder('top', popperRect, coords, options),
       ).toBe(false)
     })
   })
@@ -531,12 +531,12 @@ describe('isCursorOutsideInteractiveBorder', () => {
       { clientX: 100, clientY: 84 },
       { clientX: 100, clientY: 126 },
       { clientX: 94, clientY: 100 },
-      { clientX: 116, clientY: 100 }
+      { clientX: 116, clientY: 100 },
     ]
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('top', popperRect, coords, options)
+        isCursorOutsideInteractiveBorder('top', popperRect, coords, options),
       ).toBe(true)
     })
   })
@@ -547,12 +547,12 @@ describe('isCursorOutsideInteractiveBorder', () => {
       { clientX: 95, clientY: 95 },
       { clientX: 115, clientY: 125 },
       { clientX: 115, clientY: 125 },
-      { clientX: 95, clientY: 125 }
+      { clientX: 95, clientY: 125 },
     ]
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('bottom', popperRect, coords, options)
+        isCursorOutsideInteractiveBorder('bottom', popperRect, coords, options),
       ).toBe(false)
     })
   })
@@ -565,12 +565,12 @@ describe('isCursorOutsideInteractiveBorder', () => {
       { clientX: 100, clientY: 94 },
       { clientX: 100, clientY: 126 },
       { clientX: 94, clientY: 100 },
-      { clientX: 116, clientY: 100 }
+      { clientX: 116, clientY: 100 },
     ]
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('bottom', popperRect, coords, options)
+        isCursorOutsideInteractiveBorder('bottom', popperRect, coords, options),
       ).toBe(true)
     })
   })
@@ -581,12 +581,12 @@ describe('isCursorOutsideInteractiveBorder', () => {
       { clientX: 85, clientY: 95 },
       { clientX: 115, clientY: 95 },
       { clientX: 85, clientY: 115 },
-      { clientX: 115, clientY: 115 }
+      { clientX: 115, clientY: 115 },
     ]
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('left', popperRect, coords, options)
+        isCursorOutsideInteractiveBorder('left', popperRect, coords, options),
       ).toBe(false)
     })
   })
@@ -599,12 +599,12 @@ describe('isCursorOutsideInteractiveBorder', () => {
       { clientX: 100, clientY: 94 },
       { clientX: 100, clientY: 116 },
       { clientX: 84, clientY: 100 },
-      { clientX: 116, clientY: 100 }
+      { clientX: 116, clientY: 100 },
     ]
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('left', popperRect, coords, options)
+        isCursorOutsideInteractiveBorder('left', popperRect, coords, options),
       ).toBe(true)
     })
   })
@@ -615,12 +615,12 @@ describe('isCursorOutsideInteractiveBorder', () => {
       { clientX: 95, clientY: 95 },
       { clientX: 125, clientY: 95 },
       { clientX: 95, clientY: 115 },
-      { clientX: 125, clientY: 115 }
+      { clientX: 125, clientY: 115 },
     ]
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('right', popperRect, coords, options)
+        isCursorOutsideInteractiveBorder('right', popperRect, coords, options),
       ).toBe(false)
     })
   })
@@ -633,12 +633,12 @@ describe('isCursorOutsideInteractiveBorder', () => {
       { clientX: 100, clientY: 94 },
       { clientX: 100, clientY: 126 },
       { clientX: 94, clientY: 100 },
-      { clientX: 126, clientY: 100 }
+      { clientX: 126, clientY: 100 },
     ]
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('right', popperRect, coords, options)
+        isCursorOutsideInteractiveBorder('right', popperRect, coords, options),
       ).toBe(true)
     })
   })
@@ -649,7 +649,7 @@ describe('getOffsetDistanceInPx', () => {
 
   it('returns 0px by default', () => {
     expect(getOffsetDistanceInPx(Defaults.distance, DISTANCE_IN_CSS)).toBe(
-      '0px'
+      '0px',
     )
   })
 
@@ -672,8 +672,8 @@ describe('getPopperPlacement', () => {
       (acc, basePlacement) => [
         ...acc,
         `${basePlacement}-start`,
-        `${basePlacement}-end`
-      ]
+        `${basePlacement}-end`,
+      ],
     )
 
     allPlacements.forEach(placement => {

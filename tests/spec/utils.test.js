@@ -39,9 +39,9 @@ describe('getArrayOfElements', () => {
   })
 
   it('returns an array of elements when given a valid selector string', () => {
-    [...Array(10)].map(() => h())
+    ;[...Array(10)].map(() => h())
     const allAreElements = Utils.getArrayOfElements(IDENTIFIER).every(
-      value => value instanceof Element
+      value => value instanceof Element,
     )
     expect(allAreElements).toBe(true)
   })
@@ -69,7 +69,7 @@ describe('getArrayOfElements', () => {
   it('returns an array if given a NodeList', () => {
     const ref = h()
     const arr = Utils.getArrayOfElements(
-      document.querySelectorAll(`.${IDENTIFIER}`)
+      document.querySelectorAll(`.${IDENTIFIER}`),
     )
     expect(arr[0]).toBe(ref)
     expect(Array.isArray(arr)).toBe(true)
@@ -132,10 +132,10 @@ describe('getValue', () => {
 
   it('uses the default duration if the value is null', () => {
     expect(Utils.getValue([null, 5], 0, Defaults.duration[0])).toBe(
-      Defaults.duration[0]
+      Defaults.duration[0],
     )
     expect(Utils.getValue([5, null], 1, Defaults.duration[1])).toBe(
-      Defaults.duration[1]
+      Defaults.duration[1],
     )
     expect(Utils.getValue([null, 5], 0, Defaults.delay)).toBe(Defaults.delay)
     expect(Utils.getValue([5, null], 1, Defaults.delay)).toBe(Defaults.delay)
@@ -143,10 +143,10 @@ describe('getValue', () => {
 
   it('uses the default duration if the value is undefined', () => {
     expect(Utils.getValue([, 5], 0, Defaults.duration[0])).toBe(
-      Defaults.duration[0]
+      Defaults.duration[0],
     )
     expect(Utils.getValue([5], 1, Defaults.duration[1])).toBe(
-      Defaults.duration[1]
+      Defaults.duration[1],
     )
     expect(Utils.getValue([, 5], 0, Defaults.delay)).toBe(Defaults.delay)
     expect(Utils.getValue([5], 1, Defaults.delay)).toBe(Defaults.delay)

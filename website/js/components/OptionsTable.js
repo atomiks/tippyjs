@@ -11,7 +11,7 @@ const scrollTakingIntoAccountStickyHeader = el => {
     0,
     el.closest('tr').getBoundingClientRect().top -
       document.body.getBoundingClientRect().top -
-      45
+      45,
   )
 }
 
@@ -90,13 +90,13 @@ export default () => (
         </Prop>
         <Prop
           name="animation"
-          default="&quot;shift-away&quot;"
+          default='"shift-away"'
           value={[
             '"fade"',
             '"scale"',
             '"shift-toward"',
             '"perspective"',
-            '"shift-away"'
+            '"shift-away"',
           ]}
         >
           The type of transition animation.
@@ -115,17 +115,13 @@ export default () => (
           Determines if an arrow should be added to the tippy pointing toward
           the reference element.
         </Prop>
-        <Prop
-          name="arrowType"
-          default="&quot;sharp&quot;"
-          value={['"sharp"', '"round"']}
-        >
+        <Prop name="arrowType" default='"sharp"' value={['"sharp"', '"round"']}>
           The type of arrow. <code>"sharp"</code> is a CSS triangle using the
           border method, while <code>"round"</code> is a custom SVG shape.
         </Prop>
         <Prop
           name="arrowTransform"
-          default="&quot;&quot;"
+          default='""'
           value={['"scaleX(2)"', '"scale(0.8)"']}
         >
           CSS transform to apply to the arrow. Only <code>scale</code> and{' '}
@@ -133,11 +129,7 @@ export default () => (
           transform that you would normally give to a <code>"top"</code>{' '}
           placement, even if the placement is different.
         </Prop>
-        <Prop
-          name="content"
-          default="&quot;&quot;"
-          value={['String', 'Element']}
-        >
+        <Prop name="content" default='""' value={['String', 'Element']}>
           The content of the tippy.
         </Prop>
         <Prop name="delay" default="[0, 20]" value={['Number', '[show, hide]']}>
@@ -169,11 +161,7 @@ export default () => (
           Determines if the tippy flips so that it is placed within the viewport
           as best it can be if there is not enough room.
         </Prop>
-        <Prop
-          name="flipBehavior"
-          default="&quot;flip&quot;"
-          value={['"flip"', 'Array']}
-        >
+        <Prop name="flipBehavior" default='"flip"' value={['"flip"', 'Array']}>
           Determines the order of flipping, i.e. which placements to prefer if a
           certain placement cannot be used. Use an array such as{' '}
           <code>["bottom", "left"]</code> to prefer the "left" placement if
@@ -228,11 +216,7 @@ export default () => (
           tippy to flip around when scrolling, and the tippy's reference is not
           in a scrollable container, you can set this to <code>false</code>.
         </Prop>
-        <Prop
-          name="maxWidth"
-          default="&quot;&quot;"
-          value={['String', 'Number']}
-        >
+        <Prop name="maxWidth" default='""' value={['String', 'Number']}>
           Specifies the maximum width of the tippy. Specifying a number will
           automatically append <code>px</code>. If using a string, ensure you
           add units (such as <code>rem</code>
@@ -267,7 +251,7 @@ export default () => (
         </Prop>
         <Prop
           name="placement"
-          default="&quot;top&quot;"
+          default='"top"'
           value={['"top"', '"bottom"', '"left"', '"right"']}
           type="string"
         >
@@ -304,7 +288,7 @@ export default () => (
         </Prop>
         <Prop
           name="size"
-          default="&quot;regular&quot;"
+          default='"regular"'
           value={['"small"', '"regular"', '"large"']}
         >
           The size of the tippy.
@@ -313,12 +297,12 @@ export default () => (
           Ensures the tippy stays stuck to its reference element if it moves
           around while showing.
         </Prop>
-        <Prop name="target" default="&quot;&quot;" value="String">
+        <Prop name="target" default='""' value="String">
           CSS selector used for event delegation.
         </Prop>
         <Prop
           name="theme"
-          default="&quot;dark&quot;"
+          default='"dark"'
           value={['String', '"dark"', '"light"', '"light-border"', '"google"']}
         >
           Themes added as classes (each separated by a space) to the tippy's
@@ -341,7 +325,7 @@ export default () => (
         </Prop>
         <Prop
           name="trigger"
-          default="&quot;mouseenter focus&quot;"
+          default='"mouseenter focus"'
           value={['"mouseenter"', '"focus"', '"click"', '"manual"']}
         >
           The events (each separated by a space) which cause a tippy to show.

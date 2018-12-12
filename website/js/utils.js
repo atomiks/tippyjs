@@ -21,7 +21,7 @@ export const snippet = name => `./website/snippets/${name}`
 export const getEmojiSrc = char => {
   const result = twemoji.parse(char, {
     folder: 'svg',
-    ext: '.svg'
+    ext: '.svg',
   })
   return result.match(/src="(.+)"/)[1]
 }

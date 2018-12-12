@@ -13,7 +13,7 @@ export function canReceiveFocus(el) {
   return el instanceof Element
     ? matches.call(
         el,
-        'a[href],area[href],button,details,input,textarea,select,iframe,[tabindex]'
+        'a[href],area[href],button,details,input,textarea,select,iframe,[tabindex]',
       ) && !el.hasAttribute('disabled')
     : true
 }
@@ -85,8 +85,8 @@ export function polyfillElementPrototypeProperties(virtualReference) {
       },
       contains(key) {
         return key in virtualReference.classList.classNames
-      }
-    }
+      },
+    },
   }
 
   for (const key in polyfills) {

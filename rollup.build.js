@@ -20,7 +20,7 @@ const sassPluginOutput = name =>
     processor: css =>
       postcss([autoprefixer, cssnano])
         .process(css)
-        .then(result => result.css)
+        .then(result => result.css),
   })
 const r = (entryFile, plugins = [], excludePopper) =>
   rollup({
@@ -34,9 +34,9 @@ const r = (entryFile, plugins = [], excludePopper) =>
             pluginCSS,
             ...plugins,
             pluginCJS,
-            pluginResolve
+            pluginResolve,
           ],
-    external: excludePopper ? ['popper.js'] : []
+    external: excludePopper ? ['popper.js'] : [],
   })
 const output = type => (fileName, { min, sourcemap = true } = {}) => ({
   name: 'tippy',
@@ -50,13 +50,13 @@ const output = type => (fileName, { min, sourcemap = true } = {}) => ({
 * Tippy.js v${pkg.version}
 * (c) 2017-${new Date().getFullYear()} atomiks
 * MIT
-*/`
+*/`,
 })
 
 // plugins
 const pluginES5 = babel({
   presets: [['env', { modules: false }], 'stage-2'],
-  plugins: ['external-helpers']
+  plugins: ['external-helpers'],
 })
 const pluginMinify = minify({ comments: false })
 const pluginJSON = json()

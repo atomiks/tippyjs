@@ -59,7 +59,7 @@ function tippy(targets, options, one) {
         instance.destroy()
       })
       this.instances = []
-    }
+    },
   }
 }
 
@@ -82,7 +82,7 @@ tippy.disableAnimations = () => {
   tippy.setDefaults({
     duration: 0,
     updateDuration: 0,
-    animateFill: false
+    animateFill: false,
   })
 }
 tippy.hideAllPoppers = hideAllPoppers

@@ -52,7 +52,7 @@ export function onDocumentClick({ target }) {
   // Clicked on a reference
   const reference = closestCallback(
     target,
-    el => el._tippy && el._tippy.reference === el
+    el => el._tippy && el._tippy.reference === el,
   )
   if (reference) {
     const tip = reference._tippy

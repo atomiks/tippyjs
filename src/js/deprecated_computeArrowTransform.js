@@ -8,7 +8,7 @@ import { closest } from './ponyfills'
 // =============================================================================
 export const TRANSFORM_NUMBER_RE = {
   translate: /translateX?Y?\(([^)]+)\)/,
-  scale: /scaleX?Y?\(([^)]+)\)/
+  scale: /scaleX?Y?\(([^)]+)\)/,
 }
 
 /**
@@ -20,7 +20,7 @@ export function transformAxisBasedOnPlacement(axis, isVertical) {
       ? axis
       : {
           X: 'Y',
-          Y: 'X'
+          Y: 'X',
         }[axis]) || ''
   )
 }
@@ -32,7 +32,7 @@ export function transformNumbersBasedOnPlacement(
   type,
   numbers,
   isVertical,
-  isReverse
+  isReverse,
 ) {
   /**
    * Avoid destructuring because a large boilerplate function is generated
@@ -63,7 +63,7 @@ export function transformNumbersBasedOnPlacement(
           return isReverse ? `${-b}px, ${a}px` : `${b}px, ${a}px`
         }
       }
-    })()
+    })(),
   }
 
   return transforms[type]
@@ -98,13 +98,13 @@ function computeArrowTransform(arrow, arrowTransform) {
       axis: getTransformAxis(arrowTransform, 'translate'),
       numbers: getTransformNumbers(
         arrowTransform,
-        TRANSFORM_NUMBER_RE.translate
-      )
+        TRANSFORM_NUMBER_RE.translate,
+      ),
     },
     scale: {
       axis: getTransformAxis(arrowTransform, 'scale'),
-      numbers: getTransformNumbers(arrowTransform, TRANSFORM_NUMBER_RE.scale)
-    }
+      numbers: getTransformNumbers(arrowTransform, TRANSFORM_NUMBER_RE.scale),
+    },
   }
 
   const computedTransform = arrowTransform
@@ -112,25 +112,25 @@ function computeArrowTransform(arrow, arrowTransform) {
       TRANSFORM_NUMBER_RE.translate,
       `translate${transformAxisBasedOnPlacement(
         matches.translate.axis,
-        isVertical
+        isVertical,
       )}(${transformNumbersBasedOnPlacement(
         'translate',
         matches.translate.numbers,
         isVertical,
-        isReverse
-      )})`
+        isReverse,
+      )})`,
     )
     .replace(
       TRANSFORM_NUMBER_RE.scale,
       `scale${transformAxisBasedOnPlacement(
         matches.scale.axis,
-        isVertical
+        isVertical,
       )}(${transformNumbersBasedOnPlacement(
         'scale',
         matches.scale.numbers,
         isVertical,
-        isReverse
-      )})`
+        isReverse,
+      )})`,
     )
 
   arrow.style[

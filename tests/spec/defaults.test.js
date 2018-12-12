@@ -32,7 +32,7 @@ describe('allowHTML', () => {
     const ref = h()
     const { popper } = tippy.one(ref, {
       content: '<strong>content</strong>',
-      allowHTML: false
+      allowHTML: false,
     })
     expect(getChildren(popper).content.querySelector('strong')).toBeNull()
   })
@@ -43,8 +43,8 @@ describe('allowHTML', () => {
       ref,
       withTestOptions({
         content: '<strong>content</strong>',
-        allowHTML: true
-      })
+        allowHTML: true,
+      }),
     )
     expect(getChildren(popper).content.querySelector('strong')).not.toBeNull()
   })
@@ -55,7 +55,7 @@ describe('placement', () => {
     const ref = h()
     const { popperInstance } = tippy.one(
       ref,
-      withTestOptions({ placement: 'left-end' })
+      withTestOptions({ placement: 'left-end' }),
     )
     expect(popperInstance.options.placement).toBe('left-end')
   })
@@ -85,11 +85,11 @@ describe('arrowTransform', () => {
   it('sets the transform property on the arrow element', () => {
     const {
       popperChildren: { arrow },
-      popperInstance
+      popperInstance,
     } = tippy.one(h(), {
       lazy: false,
       arrow: true,
-      arrowTransform: 'translateX(5px) scale(2)'
+      arrowTransform: 'translateX(5px) scale(2)',
     })
 
     popperInstance.options.onCreate()
@@ -102,7 +102,7 @@ describe('animateFill', () => {
     const ref = h()
     const { popper } = tippy.one(ref, { animateFill: true })
     expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-      true
+      true,
     )
   })
 
@@ -110,7 +110,7 @@ describe('animateFill', () => {
     const ref = h()
     const { popper } = tippy.one(ref, { animateFill: false })
     expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-      false
+      false,
     )
   })
 })
@@ -119,7 +119,7 @@ describe('animation', () => {
   it('sets the data-animation attribute on the tooltip', () => {
     const animation = 'scale'
     const { tooltip } = tippy.one(h(), {
-      animation
+      animation,
     }).popperChildren
     expect(tooltip.getAttribute('data-animation')).toBe(animation)
   })
@@ -132,7 +132,7 @@ describe('delay', () => {
     const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
-      delay
+      delay,
     })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(false)
@@ -145,7 +145,7 @@ describe('delay', () => {
     const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
-      delay
+      delay,
     })
     ref.dispatchEvent(new Event('mouseenter'))
     await wait(delay * 2)
@@ -160,7 +160,7 @@ describe('delay', () => {
     const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
-      delay
+      delay,
     })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(false)
@@ -173,7 +173,7 @@ describe('delay', () => {
     const ref = h()
     const { state } = tippy.one(ref, {
       trigger: 'mouseenter',
-      delay
+      delay,
     })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(false)
@@ -188,14 +188,14 @@ describe('delay', () => {
 describe('content', () => {
   it('works with plain string', () => {
     const { content } = tippy.one(h(), {
-      content: 'tooltip'
+      content: 'tooltip',
     }).popperChildren
     expect(content.textContent).toBe('tooltip')
   })
 
   it('works with HTML string', () => {
     const { content } = tippy.one(h(), {
-      content: '<strong>tooltip</strong>'
+      content: '<strong>tooltip</strong>',
     }).popperChildren
     expect(content.querySelector('strong')).not.toBeNull()
   })
@@ -203,7 +203,7 @@ describe('content', () => {
   it('works with an HTML element', () => {
     const el = document.createElement('div')
     const { content } = tippy.one(h(), {
-      content: el
+      content: el,
     }).popperChildren
     expect(content.firstElementChild).toBe(el)
   })
@@ -259,7 +259,7 @@ describe('trigger', () => {
 describe('interactive', () => {
   it('true: prevents a tippy from hiding when clicked', () => {
     const tip = tippy.one(h(), {
-      interactive: true
+      interactive: true,
     })
     tip.show()
     tip.popperChildren.tooltip.dispatchEvent(new Event('click'))
@@ -268,11 +268,11 @@ describe('interactive', () => {
 
   it('false: tippy is hidden when clicked', async () => {
     const tip = tippy.one(h(), {
-      interactive: false
+      interactive: false,
     })
     tip.show()
     tip.popperChildren.tooltip.dispatchEvent(
-      new Event('click', { bubbles: true })
+      new Event('click', { bubbles: true }),
     )
     await wait(HIDE_DELAY)
     expect(tip.state.isVisible).toBe(false)
@@ -283,7 +283,7 @@ describe('arrowType', () => {
   it('sharp: is CSS triangle', () => {
     const { popperChildren } = tippy.one(h(), {
       arrow: true,
-      arrowType: 'sharp'
+      arrowType: 'sharp',
     })
     expect(popperChildren.arrow.matches('.tippy-arrow')).toBe(true)
   })
@@ -291,7 +291,7 @@ describe('arrowType', () => {
   it('round: is an SVG', () => {
     const { popperChildren } = tippy.one(h(), {
       arrow: true,
-      arrowType: 'round'
+      arrowType: 'round',
     })
     expect(popperChildren.arrow.matches('.tippy-roundarrow')).toBe(true)
   })
@@ -300,9 +300,9 @@ describe('arrowType', () => {
 describe('theme', () => {
   it('adds themes to the tooltip class list', () => {
     const {
-      popperChildren: { tooltip }
+      popperChildren: { tooltip },
     } = tippy.one(h(), {
-      theme: 'this is a test'
+      theme: 'this is a test',
     })
     expect(tooltip.classList.contains('this-theme')).toBe(true)
     expect(tooltip.classList.contains('is-theme')).toBe(true)
@@ -315,14 +315,14 @@ describe('flip', () => {
   it('true: sets flip to enabled in the popperInstance', () => {
     const { popperInstance } = tippy.one(h(), withTestOptions({ flip: true }))
     expect(popperInstance.modifiers.find(m => m.name === 'flip').enabled).toBe(
-      true
+      true,
     )
   })
 
   it('false: sets flip to disabled in the popperInstance', () => {
     const { popperInstance } = tippy.one(h(), withTestOptions({ flip: false }))
     expect(popperInstance.modifiers.find(m => m.name === 'flip').enabled).toBe(
-      false
+      false,
     )
   })
 })
@@ -331,10 +331,10 @@ describe('flipBehavior', () => {
   it('sets the value in the popperInstance', () => {
     const { popperInstance } = tippy.one(
       h(),
-      withTestOptions({ flipBehavior: ['top', 'bottom', 'left'] })
+      withTestOptions({ flipBehavior: ['top', 'bottom', 'left'] }),
     )
     expect(
-      popperInstance.modifiers.find(m => m.name === 'flip').behavior
+      popperInstance.modifiers.find(m => m.name === 'flip').behavior,
     ).toEqual(['top', 'bottom', 'left'])
   })
 })
@@ -342,14 +342,14 @@ describe('flipBehavior', () => {
 describe('performance', () => {
   it('false: looks at data-tippy-* options', () => {
     const { props } = tippy.one(h('div', { 'data-tippy-arrow': true }), {
-      performance: false
+      performance: false,
     })
     expect(props.arrow).toBe(true)
   })
 
   it('true: ignores data-tippy-* options', () => {
     const { props } = tippy.one(h('div', { 'data-tippy-arrow': true }), {
-      performance: true
+      performance: true,
     })
     expect(props.arrow).toBe(false)
   })
@@ -358,14 +358,14 @@ describe('performance', () => {
 describe('inertia', () => {
   it('true: adds a [data-inertia] attribute to the tooltip', () => {
     const {
-      popperChildren: { tooltip }
+      popperChildren: { tooltip },
     } = tippy.one(h(), { inertia: true })
     expect(tooltip.hasAttribute('data-inertia')).toBe(true)
   })
 
   it('false: does not add a [data-inertia] attribute to the tooltip', () => {
     const {
-      popperChildren: { tooltip }
+      popperChildren: { tooltip },
     } = tippy.one(h(), { inertia: false })
     expect(tooltip.hasAttribute('data-inertia')).toBe(false)
   })
@@ -377,7 +377,7 @@ describe('multiple', () => {
     expect(
       [...Array(5)]
         .map(() => tippy.one(ref, { multiple: true }))
-        .filter(Boolean).length
+        .filter(Boolean).length,
     ).toBe(5)
   })
 
@@ -386,7 +386,7 @@ describe('multiple', () => {
     expect(
       [...Array(5)]
         .map(() => tippy.one(ref, { multiple: false }))
-        .filter(Boolean).length
+        .filter(Boolean).length,
     ).toBe(1)
   })
 })
@@ -405,8 +405,8 @@ describe('followCursor', () => {
     document.dispatchEvent(
       new Event('mousemove', {
         clientX: 55,
-        clientY: 55
-      })
+        clientY: 55,
+      }),
     )
   })
 })
@@ -439,7 +439,7 @@ describe('onMount', () => {
         expect(document.documentElement.contains(tip.popper)).toBe(true)
         done()
       },
-      duration: 0
+      duration: 0,
     })
     instance.show()
   })
@@ -502,8 +502,8 @@ describe('popperOptions', () => {
     const { popperInstance } = tippy.one(h(), {
       lazy: false,
       popperOptions: {
-        anything: true
-      }
+        anything: true,
+      },
     })
     expect(popperInstance.options.anything).toBe(true)
   })
@@ -514,13 +514,13 @@ describe('popperOptions', () => {
       popperOptions: {
         modifiers: {
           preventOverflow: {
-            escapeWithReference: true
-          }
-        }
-      }
+            escapeWithReference: true,
+          },
+        },
+      },
     })
     expect(
-      popperInstance.options.modifiers.preventOverflow.escapeWithReference
+      popperInstance.options.modifiers.preventOverflow.escapeWithReference,
     ).toBe(true)
   })
 
@@ -530,10 +530,10 @@ describe('popperOptions', () => {
       popperOptions: {
         modifiers: {
           arrow: {
-            test: true
-          }
-        }
-      }
+            test: true,
+          },
+        },
+      },
     })
     expect(popperInstance.options.modifiers.arrow.test).toBe(true)
   })
@@ -544,10 +544,10 @@ describe('popperOptions', () => {
       popperOptions: {
         modifiers: {
           flip: {
-            test: true
-          }
-        }
-      }
+            test: true,
+          },
+        },
+      },
     })
     expect(popperInstance.options.modifiers.flip.test).toBe(true)
   })
@@ -558,10 +558,10 @@ describe('popperOptions', () => {
       popperOptions: {
         modifiers: {
           offset: {
-            test: true
-          }
-        }
-      }
+            test: true,
+          },
+        },
+      },
     })
     expect(popperInstance.options.modifiers.offset.test).toBe(true)
   })

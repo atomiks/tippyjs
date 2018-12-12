@@ -3,10 +3,10 @@ export default {
     imageSrc: '',
     isLoading: false,
     error: false,
-    canFetch: true
+    canFetch: true,
   },
   performance: {
     inputValue: 0,
-    numberOfElements: 0
-  }
+    numberOfElements: 0,
+  },
 }

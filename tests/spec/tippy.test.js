@@ -17,7 +17,7 @@ describe('tippy', () => {
       targets: '__invalidSelector__',
       props: Defaults,
       instances: [],
-      destroyAll: tip1.destroyAll
+      destroyAll: tip1.destroyAll,
     })
 
     const ref = h()
@@ -26,18 +26,18 @@ describe('tippy', () => {
       targets: ref,
       props: Defaults,
       instances: tip2.instances,
-      destroyAll: tip2.destroyAll
+      destroyAll: tip2.destroyAll,
     })
   })
 
   it('merges the default props with the supplied options', () => {
     expect(
       tippy(h(), {
-        placement: 'bottom-end'
-      }).props
+        placement: 'bottom-end',
+      }).props,
     ).toEqual({
       ...Defaults,
-      placement: 'bottom-end'
+      placement: 'bottom-end',
     })
   })
 
@@ -45,13 +45,13 @@ describe('tippy', () => {
     expect(() => {
       tippy(h(), {
         placement: 'top',
-        _someInvalidOption: true
+        _someInvalidOption: true,
       })
     }).toThrow()
 
     expect(() => {
       tippy(h(), {
-        placement: 'top'
+        placement: 'top',
       })
     }).not.toThrow()
   })

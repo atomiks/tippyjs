@@ -6,7 +6,7 @@ global.window.document.createRange = function createRange() {
       return { right: 0 }
     },
     getClientRects: () => [],
-    commonAncestorContainer: document.createElement('div')
+    commonAncestorContainer: document.createElement('div'),
   }
 }
 

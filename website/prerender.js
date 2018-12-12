@@ -11,8 +11,8 @@ fs.writeFileSync(
   jsBundlePath,
   `nodeRequire=typeof require!=="undefined"&&require;${fs.readFileSync(
     jsBundlePath,
-    'utf8'
-  )}`
+    'utf8',
+  )}`,
 )
 
 exec(`node ${jsBundlePath}`)

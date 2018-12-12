@@ -10,7 +10,7 @@ import { hasOwnProperty } from './utils'
 export function evaluateProps(reference, props) {
   const out = {
     ...props,
-    ...(props.performance ? {} : getDataAttributeOptions(reference))
+    ...(props.performance ? {} : getDataAttributeOptions(reference)),
   }
 
   if (out.arrow) {

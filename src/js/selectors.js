@@ -4,5 +4,5 @@ export default {
   CONTENT: '.tippy-content',
   BACKDROP: '.tippy-backdrop',
   ARROW: '.tippy-arrow',
-  ROUND_ARROW: '.tippy-roundarrow'
+  ROUND_ARROW: '.tippy-roundarrow',
 }

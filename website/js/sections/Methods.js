@@ -20,10 +20,7 @@ export default () => (
       tooltip without the use of UI events.
     </p>
 
-    <Code
-      lang="html"
-      content="<button data-tippy=&quot;Hello&quot;>Text</button>"
-    />
+    <Code lang="html" content='<button data-tippy="Hello">Text</button>' />
     <Code content="const btn = document.querySelector('button')" />
 
     <p>

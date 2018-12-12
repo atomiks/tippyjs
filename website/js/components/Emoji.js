@@ -4,7 +4,7 @@ import { getEmojiSrc } from '../utils'
 const Sizes = {
   large: '75px',
   medium: '40px',
-  small: '25px'
+  small: '25px',
 }
 
 export default ({ size, ...props }, [char]) => (

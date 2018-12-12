@@ -37,7 +37,7 @@ describe('createTippy', () => {
     const tips = [
       createTippy(h(), Defaults),
       createTippy(h(), Defaults),
-      createTippy(h(), Defaults)
+      createTippy(h(), Defaults),
     ]
     expect(tips[0].id).toBe(tips[1].id - 1)
     expect(tips[1].id).toBe(tips[2].id - 1)
@@ -48,7 +48,7 @@ describe('createTippy', () => {
     const HIDE_DELAY = 21
     const instance = createTippy(h(), {
       ...Defaults,
-      trigger: 'mouseenter focus click'
+      trigger: 'mouseenter focus click',
     })
     instance.reference.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(true)
@@ -133,12 +133,12 @@ describe('instance.show', () => {
   it('overrides instance.props.duration if supplied an argument', done => {
     const instance = createTippy(h(), {
       ...Defaults,
-      duration: 100
+      duration: 100,
     })
     instance.show(10)
     setTimeout(() => {
       expect(instance.popperChildren.tooltip.style.transitionDuration).toBe(
-        '10ms'
+        '10ms',
       )
       instance.destroy()
       done()
@@ -148,7 +148,7 @@ describe('instance.show', () => {
   it('adds .tippy-active class if interactive', done => {
     const instance = createTippy(h(), {
       ...Defaults,
-      interactive: true
+      interactive: true,
     })
     instance.show()
     setTimeout(() => {
@@ -176,7 +176,7 @@ describe('instance.hide', () => {
 
   it('removes the popper element from the DOM after hiding', () => {
     const instance = createTippy(h(), {
-      ...Defaults
+      ...Defaults,
     })
     instance.show(0)
     expect(document.querySelector(Selectors.POPPER)).toBe(instance.popper)
@@ -191,7 +191,7 @@ describe('instance.hide', () => {
   it('overrides instance.props.duration if supplied an argument', () => {
     const instance = createTippy(h(), {
       ...Defaults,
-      duration: 100
+      duration: 100,
     })
     instance.show(0)
     instance.hide(9)
@@ -261,7 +261,7 @@ describe('instance.set', () => {
   it('popperInstance popper is updated to the new popper', () => {
     const instance = createTippy(h(), {
       ...Defaults,
-      lazy: false
+      lazy: false,
     })
     instance.set({ arrow: true })
     expect(instance.popperInstance.popper).toBe(instance.popper)

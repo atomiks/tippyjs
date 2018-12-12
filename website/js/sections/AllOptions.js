@@ -120,7 +120,7 @@ export default () => (state, actions) => (
               }
               tooltip.addEventListener(
                 'transitionend',
-                tip._transitionEndListener
+                tip._transitionEndListener,
               )
 
               if (!tip._baseHeight) {
@@ -147,7 +147,7 @@ export default () => (state, actions) => (
           tooltip.style.height = null
           tooltip.removeEventListener(
             'transitionend',
-            tip._transitionEndListener
+            tip._transitionEndListener,
           )
           tip._transitionEndListener = null
         }}

@@ -8,7 +8,7 @@ const ANIMATIONS = [
   'shift-toward',
   'perspective',
   'fade',
-  'scale'
+  'scale',
 ]
 
 const printValue = value =>
@@ -16,8 +16,8 @@ const printValue = value =>
 
 const NO_GPU_ACCELERATION = {
   modifiers: {
-    computeStyle: { gpuAcceleration: false }
-  }
+    computeStyle: { gpuAcceleration: false },
+  },
 }
 
 export default () => (
@@ -51,7 +51,7 @@ export default () => (
               {placement[0].toUpperCase() + placement.slice(1)}
             </button>
           </Tippy>
-        )
+        ),
       )}
     </div>
 

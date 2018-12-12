@@ -20,7 +20,7 @@ export default () => (
     </p>
     <Code
       lang="html"
-      content="<script src=&quot;https://unpkg.com/tippy.js@3/dist/tippy.all.min.js&quot;></script>"
+      content='<script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>'
     />
     <p>
       It's recommended to place this at the bottom of the{' '}

@@ -13,7 +13,7 @@ import {
   toggleTransitionEndListener,
   setVisibilityState,
   isCursorOutsideInteractiveBorder,
-  getOffsetDistanceInPx
+  getOffsetDistanceInPx,
 } from './popper'
 import { canReceiveFocus } from './reference'
 import { validateOptions, evaluateProps } from './props'
@@ -100,7 +100,7 @@ export default function createTippy(reference, collectionProps) {
         getPopperPlacement(popper),
         popper.getBoundingClientRect(),
         event,
-        tip.props
+        tip.props,
       )
     ) {
       prepareHide()
@@ -121,7 +121,7 @@ export default function createTippy(reference, collectionProps) {
     // If the tippy is on the DOM (transitioning out or in)
     isMounted: false,
     // show() transition finished
-    isShown: false
+    isShown: false,
   }
 
   // Popper.js instance for the tippy is lazily created
@@ -145,7 +145,7 @@ export default function createTippy(reference, collectionProps) {
     hide,
     enable,
     disable,
-    destroy
+    destroy,
   }
 
   addTriggersToReference()
@@ -194,7 +194,7 @@ export default function createTippy(reference, collectionProps) {
     popperMutationObserver.observe(popper, {
       childList: true,
       subtree: true,
-      characterData: true
+      characterData: true,
     })
   }
 
@@ -239,10 +239,10 @@ export default function createTippy(reference, collectionProps) {
         top: isHorizontal ? rect.top : y,
         bottom: isHorizontal ? rect.bottom : y,
         left: isVertical ? rect.left : x,
-        right: isVertical ? rect.right : x
+        right: isVertical ? rect.right : x,
       }),
       clientWidth: 0,
-      clientHeight: 0
+      clientHeight: 0,
     }
 
     tip.popperInstance.scheduleUpdate()
@@ -261,7 +261,7 @@ export default function createTippy(reference, collectionProps) {
       createTippy(targetEl, {
         ...tip.props,
         target: '',
-        showOnInit: true
+        showOnInit: true,
       })
       prepareShow(event)
     }
@@ -337,7 +337,7 @@ export default function createTippy(reference, collectionProps) {
   function removeFollowCursorListener() {
     document.removeEventListener(
       'mousemove',
-      positionVirtualReferenceNearCursor
+      positionVirtualReferenceNearCursor,
     )
     lastMouseMoveEvent = null
   }
@@ -381,7 +381,7 @@ export default function createTippy(reference, collectionProps) {
   function onMouseMove(event) {
     const referenceTheCursorIsOver = closestCallback(
       event.target,
-      el => el._tippy
+      el => el._tippy,
     )
 
     const isCursorOverPopper =
@@ -397,7 +397,7 @@ export default function createTippy(reference, collectionProps) {
         getPopperPlacement(tip.popper),
         tip.popper.getBoundingClientRect(),
         event,
-        tip.props
+        tip.props,
       )
     ) {
       cleanupOldMouseListeners()
@@ -492,7 +492,7 @@ export default function createTippy(reference, collectionProps) {
           element: arrowSelector,
           ...(popperOptions && popperOptions.modifiers
             ? popperOptions.modifiers.arrow
-            : {})
+            : {}),
         },
         flip: {
           enabled: tip.props.flip,
@@ -500,19 +500,19 @@ export default function createTippy(reference, collectionProps) {
           behavior: tip.props.flipBehavior,
           ...(popperOptions && popperOptions.modifiers
             ? popperOptions.modifiers.flip
-            : {})
+            : {}),
         },
         offset: {
           offset: tip.props.offset,
           ...(popperOptions && popperOptions.modifiers
             ? popperOptions.modifiers.offset
-            : {})
-        }
+            : {}),
+        },
       },
       onCreate() {
         tooltip.style[getPopperPlacement(tip.popper)] = getOffsetDistanceInPx(
           tip.props.distance,
-          Defaults.distance
+          Defaults.distance,
         )
 
         if (arrow && tip.props.arrowTransform) {
@@ -527,13 +527,13 @@ export default function createTippy(reference, collectionProps) {
         styles.right = ''
         styles[getPopperPlacement(tip.popper)] = getOffsetDistanceInPx(
           tip.props.distance,
-          Defaults.distance
+          Defaults.distance,
         )
 
         if (arrow && tip.props.arrowTransform) {
           computeArrowTransform(arrow, tip.props.arrowTransform)
         }
-      }
+      },
     }
 
     if (!popperMutationObserver) {
@@ -575,7 +575,7 @@ export default function createTippy(reference, collectionProps) {
       const delay = getValue(tip.props.delay, 0, Defaults.delay)
       if (lastTriggerEvent.type) {
         positionVirtualReferenceNearCursor(
-          delay && lastMouseMoveEvent ? lastMouseMoveEvent : lastTriggerEvent
+          delay && lastMouseMoveEvent ? lastMouseMoveEvent : lastTriggerEvent,
         )
       }
     } else if (arrow) {
@@ -763,7 +763,7 @@ export default function createTippy(reference, collectionProps) {
     const nextProps = evaluateProps(tip.reference, {
       ...tip.props,
       ...options,
-      performance: true
+      performance: true,
     })
     nextProps.performance = hasOwnProperty(options, 'performance')
       ? options.performance
@@ -812,7 +812,7 @@ export default function createTippy(reference, collectionProps) {
    * Shows the tooltip
    */
   function show(
-    duration = getValue(tip.props.duration, 0, Defaults.duration[0])
+    duration = getValue(tip.props.duration, 0, Defaults.duration[0]),
   ) {
     if (
       tip.state.isDestroyed ||
@@ -852,7 +852,7 @@ export default function createTippy(reference, collectionProps) {
     // Prevent a transition if the popper is at the opposite placement
     applyTransitionDuration(
       [tip.popper, tip.popperChildren.tooltip, tip.popperChildren.backdrop],
-      0
+      0,
     )
 
     mount(() => {
@@ -869,9 +869,9 @@ export default function createTippy(reference, collectionProps) {
         [
           tip.popperChildren.tooltip,
           tip.popperChildren.backdrop,
-          tip.popperChildren.content
+          tip.popperChildren.content,
         ],
-        duration
+        duration,
       )
       if (tip.popperChildren.backdrop) {
         tip.popperChildren.content.style.transitionDelay =
@@ -890,9 +890,9 @@ export default function createTippy(reference, collectionProps) {
         [
           tip.popperChildren.tooltip,
           tip.popperChildren.backdrop,
-          tip.popperChildren.content
+          tip.popperChildren.content,
         ],
-        'visible'
+        'visible',
       )
 
       onTransitionedIn(duration, () => {
@@ -919,7 +919,7 @@ export default function createTippy(reference, collectionProps) {
    * Hides the tooltip
    */
   function hide(
-    duration = getValue(tip.props.duration, 1, Defaults.duration[1])
+    duration = getValue(tip.props.duration, 1, Defaults.duration[1]),
   ) {
     if (tip.state.isDestroyed || !tip.state.isEnabled) {
       return
@@ -945,18 +945,18 @@ export default function createTippy(reference, collectionProps) {
       [
         tip.popperChildren.tooltip,
         tip.popperChildren.backdrop,
-        tip.popperChildren.content
+        tip.popperChildren.content,
       ],
-      duration
+      duration,
     )
 
     setVisibilityState(
       [
         tip.popperChildren.tooltip,
         tip.popperChildren.backdrop,
-        tip.popperChildren.content
+        tip.popperChildren.content,
       ],
-      'hidden'
+      'hidden',
     )
 
     if (
@@ -1008,7 +1008,7 @@ export default function createTippy(reference, collectionProps) {
 
     if (tip.props.target && destroyTargetInstances) {
       arrayFrom(tip.reference.querySelectorAll(tip.props.target)).forEach(
-        child => child._tippy && child._tippy.destroy()
+        child => child._tippy && child._tippy.destroy(),
       )
     }
 

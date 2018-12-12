@@ -43,7 +43,7 @@ export default {
   trigger: 'mouseenter focus',
   updateDuration: 200,
   wait: null,
-  zIndex: 9999
+  zIndex: 9999,
 }
 
 /**
@@ -57,5 +57,5 @@ export const POPPER_INSTANCE_RELATED_PROPS = [
   'flipBehavior',
   'offset',
   'placement',
-  'popperOptions'
+  'popperOptions',
 ]

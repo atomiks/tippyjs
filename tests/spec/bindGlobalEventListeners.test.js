@@ -29,7 +29,7 @@ describe('onDocumentClick', () => {
 
   it('does not hide poppers if an interactive popper was clicked', done => {
     const instance = tippy.one(h(), {
-      interactive: true
+      interactive: true,
     })
     expect(instance.state.isVisible).toBe(false)
     instance.show()
@@ -42,7 +42,7 @@ describe('onDocumentClick', () => {
 
   it('hides poppers if a non-interactive popper was clicked', done => {
     const instance = tippy.one(h(), {
-      interactive: false
+      interactive: false,
     })
     expect(instance.state.isVisible).toBe(false)
     instance.show()
@@ -56,7 +56,7 @@ describe('onDocumentClick', () => {
   it('does not hide poppers if `hideOnClick: false` & clicked trigger-clicked reference', done => {
     const instance = tippy.one(h(), {
       trigger: 'click',
-      hideOnClick: false
+      hideOnClick: false,
     })
     instance.show()
     Listeners.onDocumentClick({ target: instance.reference })

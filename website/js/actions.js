@@ -11,7 +11,7 @@ export default {
       return {
         error: false,
         isFetching: true,
-        canFetch: false
+        canFetch: false,
       }
     },
 
@@ -25,14 +25,14 @@ export default {
       error: false,
       imageSrc: '',
       isFetching: false,
-      canFetch: true
+      canFetch: true,
     }),
 
-    errored: () => ({ error: true, imageSrc: '' })
+    errored: () => ({ error: true, imageSrc: '' }),
   },
 
   performance: {
     test: () => state => ({ numberOfElements: state.inputValue }),
-    setInputValue: event => ({ inputValue: +event.target.value })
-  }
+    setInputValue: event => ({ inputValue: +event.target.value }),
+  },
 }

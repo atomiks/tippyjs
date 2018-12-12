@@ -46,7 +46,7 @@ export function getChildren(popper) {
     content: popper.querySelector(Selectors.CONTENT),
     arrow:
       popper.querySelector(Selectors.ARROW) ||
-      popper.querySelector(Selectors.ROUND_ARROW)
+      popper.querySelector(Selectors.ROUND_ARROW),
   }
 }
 
@@ -75,7 +75,7 @@ export function createArrowElement(arrowType) {
     arrow.className = 'tippy-roundarrow'
     setInnerHTML(
       arrow,
-      '<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg"><path d="M3 8s2.021-.015 5.253-4.218C9.584 2.051 10.797 1.007 12 1c1.203-.007 2.416 1.035 3.761 2.782C19.012 8.005 21 8 21 8H3z"/></svg>'
+      '<svg viewBox="0 0 24 8" xmlns="http://www.w3.org/2000/svg"><path d="M3 8s2.021-.015 5.253-4.218C9.584 2.051 10.797 1.007 12 1c1.203-.007 2.416 1.035 3.761 2.782C19.012 8.005 21 8 21 8H3z"/></svg>',
     )
   } else {
     arrow.className = 'tippy-arrow'
@@ -349,7 +349,7 @@ export function isCursorOutsideInteractiveBorder(
   popperPlacement,
   popperRect,
   event,
-  props
+  props,
 ) {
   if (!popperPlacement) {
     return true

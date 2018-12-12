@@ -5,7 +5,7 @@ import { isBrowser } from '../utils'
 const Tippy = (realProps, [reference]) => {
   const props = {
     ...realProps,
-    content: realProps.content || "I'm a Tippy tooltip"
+    content: realProps.content || "I'm a Tippy tooltip",
   }
 
   if (props.content.constructor === Object && !props.target) {
