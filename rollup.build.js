@@ -1,5 +1,5 @@
 const fs = require('fs')
-const pkg = require('../package.json')
+const pkg = require('./package.json')
 const { rollup } = require('rollup')
 const babel = require('rollup-plugin-babel')
 const minify = require('rollup-plugin-babel-minify')

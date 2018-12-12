@@ -25,7 +25,7 @@
     "dev:docs": "parcel website/index.html -d .devserver --no-cache --open",
     "build:docs": "node website/clean.js && parcel build website/index.html -d docs/ --public-url ./ && node website/prerender.js",
     "dev": "parcel tests/visual/index.html -d tests/visual/dist --open",
-    "build": "node ./scripts/build.js && bundlesize && npm run build:docs",
+    "build": "node rollup.build.js && bundlesize && npm run build:docs",
     "test": "jest --coverage",
     "lint": "eslint \"src/**/*.js\"",
     "prettier": "prettier --write \"./**/*{js,scss}\"",
