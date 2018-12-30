@@ -7,6 +7,7 @@ export default {
   arrow: false,
   arrowTransform: '',
   arrowType: 'sharp',
+  boundary: 'scrollParent',
   content: '',
   delay: [0, 20],
   distance: 10,
