@@ -189,8 +189,9 @@ export default () => (state, actions) => (
 
     <Subheading>Tooltips inside a scrollable container</Subheading>
     <p>
-      Add the following options to prevent the tippy from staying stuck within
-      the viewport.
+      By default, Popper.js will prevent the tooltip from overflowing a
+      scrolling container. If you set the boundary to the window, it will
+      prevent the tippy from staying stuck within the viewport while scrolling.
     </p>
     <Code content={SCROLLABLE_CONTAINER} />
 

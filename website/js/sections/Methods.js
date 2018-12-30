@@ -1,6 +1,7 @@
 import { h } from 'hyperapp'
 
 import SET_METHOD from '../../snippets/set-method'
+import ACCESS_TIPPY_INSTANCE from '../../snippets/access-tippy-instance'
 
 import Section from '../components/Section'
 import Heading from '../components/Heading'
@@ -16,25 +17,13 @@ const Subheading = Heading(TITLE)
 export default () => (
   <Section title={TITLE} emoji={Emojis.METHODS}>
     <p>
-      Tippy instances have 7 methods available which allow you to control the
-      tooltip without the use of UI events.
+      Tippy instances have methods available which allow you to control the
+      tooltip without the use of UI events. There are several ways to access a
+      Tippy instance.
     </p>
 
-    <Code lang="html" content='<button data-tippy="Hello">Text</button>' />
-    <Code content="const btn = document.querySelector('button')" />
-
-    <p>
-      The Tippy instance is stored on the button element via the{' '}
-      <code>_tippy</code> property.{' '}
-    </p>
-    <Code content="const tip = btn._tippy" />
-    <blockquote class="blockquote">
-      <strong>Why is it prefixed with an underscore?</strong> Since we're
-      attaching a non-standard property to an <code>Element</code>, we prefix it
-      with an underscore. In the future, there may exist a real{' '}
-      <code>tippy</code> property of elements that would get overwritten by the
-      library, and real DOM properties are never prefixed with an underscore.
-    </blockquote>
+    <Code lang="html" content="<button>Text</button>" />
+    <Code content={ACCESS_TIPPY_INSTANCE} />
 
     <Subheading>Show the tooltip</Subheading>
     <Code content="tip.show()" />
@@ -81,7 +70,10 @@ export default () => (
       There are a few static methods on the <code>tippy</code> function itself.
       These methods are global and do not affect a single instance.
     </p>
-    <p>Hide all visible poppers on the page:</p>
+    <p>
+      Hide all visible poppers on the page (except those with{' '}
+      <code>hideOnClick</code> set to <code>false</code>):
+    </p>
     <Code content="tippy.hideAllPoppers()" />
     <p>Disable animation-related default props:</p>
     <Code content="tippy.disableAnimations()" />

@@ -31,7 +31,7 @@ export default () => (
     <Subheading>
       <Emoji class="section__emoji">📦</Emoji> Option 2: Package Manager
     </Subheading>
-    <p>Install using either npm or yarn:</p>
+    <p>Install using either npm or Yarn:</p>
 
     <Code lang="shell" content="npm i tippy.js" />
     <Code lang="shell" content="yarn add tippy.js" />
@@ -42,8 +42,8 @@ export default () => (
     <Code content="import tippy from 'tippy.js'" />
 
     <p>
-      You'll also need to import Tippy's CSS. With a module bundler like Webpack
-      or Parcel, it can be imported directly:
+      You'll also need to import Tippy's CSS. Using webpack with a CSS loader or
+      Parcel by default, it can be imported directly:
     </p>
 
     <Code content="import 'tippy.js/dist/tippy.css'" />
