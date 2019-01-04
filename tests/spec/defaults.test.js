@@ -606,7 +606,7 @@ describe('autoFocus', () => {
     ref.dispatchEvent(new Event('focus'))
     await wait(1)
     expect(document.activeElement).not.toBe(tip.popper)
-    tip.popper.dispatchEvent(new Event('blur'))
+    tip.hide()
     expect(document.activeElement).not.toBe(ref)
   })
 })
