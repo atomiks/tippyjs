@@ -31,6 +31,7 @@ export interface Props {
   arrow?: boolean
   arrowType?: 'sharp' | 'round'
   arrowTransform?: string
+  boundary?: 'scrollParent' | 'window' | 'viewport' | HTMLElement
   content?: Content
   delay?: number | [number, number]
   duration?: number | [number, number]
