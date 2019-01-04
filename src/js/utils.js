@@ -103,8 +103,8 @@ export function debounce(fn, ms) {
  * in `popperOptions`
  * @param {Object} obj
  * @param {String} key
- * @return {Object}
+ * @return {Object|undefined}
  */
 export function getModifier(obj, key) {
-  return obj && obj.modifiers ? obj.modifiers[key] : {}
+  return obj && obj.modifiers && obj.modifiers[key]
 }
