@@ -908,7 +908,7 @@ export default function createTippy(reference, collectionProps) {
           focus(tip.popper)
         }
 
-        tip.reference.setAttribute(tip.props.aria, tip.popper.id)
+        tip.reference.setAttribute(`aria-${tip.props.aria}`, tip.popper.id)
 
         tip.props.onShown(tip)
         tip.state.isShown = true
