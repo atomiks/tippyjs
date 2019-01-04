@@ -580,3 +580,43 @@ describe('maxWidth', () => {
     expect(numTip.popperChildren.tooltip.style.maxWidth).toBe('100px')
   })
 })
+
+describe('autoFocus', () => {
+  it('true: focuses the popper automatically if interactive', async () => {
+    const ref = h()
+    const tip = tippy.one(ref, {
+      duration: 0,
+      interactive: true,
+      autoFocus: true,
+    })
+    ref.dispatchEvent(new Event('focus'))
+    await wait(1)
+    expect(document.activeElement).toBe(tip.popper)
+    tip.hide()
+    expect(document.activeElement).toBe(ref)
+  })
+
+  it('false: does not focus the popper automatically if interactive', async () => {
+    const ref = h()
+    const tip = tippy.one(ref, {
+      duration: 0,
+      interactive: true,
+      autoFocus: false,
+    })
+    ref.dispatchEvent(new Event('focus'))
+    await wait(1)
+    expect(document.activeElement).not.toBe(tip.popper)
+    tip.popper.dispatchEvent(new Event('blur'))
+    expect(document.activeElement).not.toBe(ref)
+  })
+})
+
+describe('aria', () => {
+  it('sets the correct attribute on the reference', async () => {
+    const ref = h()
+    const tip = tippy.one(ref, { aria: 'labelledby', duration: 0 })
+    tip.show()
+    await wait(1)
+    expect(ref.getAttribute('aria-labelledby')).toBe(tip.popper.id)
+  })
+})
