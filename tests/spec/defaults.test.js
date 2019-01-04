@@ -619,4 +619,13 @@ describe('aria', () => {
     await wait(1)
     expect(ref.getAttribute('aria-labelledby')).toBe(tip.popper.id)
   })
+
+  it('removes the attribute on hide', async () => {
+    const ref = h()
+    const tip = tippy.one(ref, { aria: 'labelledby', duration: 0 })
+    tip.show()
+    await wait(1)
+    tip.hide()
+    expect(ref.getAttribute('aria-labelledby')).toBe(null)
+  })
 })

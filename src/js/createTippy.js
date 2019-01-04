@@ -977,7 +977,7 @@ export default function createTippy(reference, collectionProps) {
         removeFollowCursorListener()
       }
 
-      tip.reference.removeAttribute(tip.props.aria)
+      tip.reference.removeAttribute(`aria-${tip.props.aria}`)
 
       tip.popperInstance.disableEventListeners()
 
