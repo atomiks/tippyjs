@@ -49,9 +49,9 @@ export interface Props {
   multiple?: boolean
   offset?: number | string
   onHidden?(instance: Instance): void
-  onHide?(instance: Instance): void
+  onHide?(instance: Instance): void | false
   onMount?(instance: Instance): void
-  onShow?(instance: Instance): void
+  onShow?(instance: Instance): void | false
   onShown?(instance: Instance): void
   performance?: boolean
   placement?: Placement
