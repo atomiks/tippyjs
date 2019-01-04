@@ -64,7 +64,7 @@ export interface Props {
   theme?: string
   touch?: boolean
   touchHold?: boolean
-  trigger?: 'mouseenter' | 'focus' | 'click' | 'manual'
+  trigger?: string
   updateDuration?: number
   wait?(instance: Instance, event: Event): void
   zIndex?: number
