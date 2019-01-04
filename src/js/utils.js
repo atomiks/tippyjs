@@ -106,5 +106,5 @@ export function debounce(fn, ms) {
  * @return {Object}
  */
 export function getModifier(obj, key) {
-  return { ...(obj && obj.modifiers ? obj.modifiers[key] : {}) }
+  return obj && obj.modifiers ? obj.modifiers[key] : {}
 }
