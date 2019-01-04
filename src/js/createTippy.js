@@ -476,20 +476,23 @@ export default function createTippy(reference, collectionProps) {
    * Creates the popper instance for the tip
    */
   function createPopperInstance() {
-    const { tooltip } = tip.popperChildren
     const { popperOptions } = tip.props
+    const { tooltip, arrow } = tip.popperChildren
 
-    const arrowSelector =
-      Selectors[tip.props.arrowType === 'round' ? 'ROUND_ARROW' : 'ARROW']
-    const arrow = tooltip.querySelector(arrowSelector)
-
-    const config = {
+    return new Popper(tip.reference, tip.popper, {
       placement: tip.props.placement,
       ...(popperOptions || {}),
       modifiers: {
         ...(popperOptions ? popperOptions.modifiers : {}),
+        preventOverflow: {
+          boundariesElement: tip.props.boundary,
+          ...(popperOptions && popperOptions.modifiers
+            ? popperOptions.modifiers.preventOverflow
+            : {}),
+        },
         arrow: {
-          element: arrowSelector,
+          element: arrow,
+          enabled: !!arrow,
           ...(popperOptions && popperOptions.modifiers
             ? popperOptions.modifiers.arrow
             : {}),
@@ -534,13 +537,7 @@ export default function createTippy(reference, collectionProps) {
           computeArrowTransform(arrow, tip.props.arrowTransform)
         }
       },
-    }
-
-    if (!popperMutationObserver) {
-      addMutationObserver()
-    }
-
-    return new Popper(tip.reference, tip.popper, config)
+    })
   }
 
   /**
@@ -550,6 +547,7 @@ export default function createTippy(reference, collectionProps) {
   function mount(callback) {
     if (!tip.popperInstance) {
       tip.popperInstance = createPopperInstance()
+      addMutationObserver()
       if (!tip.props.livePlacement || hasFollowCursorBehavior()) {
         tip.popperInstance.disableEventListeners()
       }
