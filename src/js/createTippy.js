@@ -19,7 +19,14 @@ import { canReceiveFocus } from './reference'
 import { validateOptions, evaluateProps } from './props'
 import computeArrowTransform from './deprecated_computeArrowTransform'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
-import { defer, focus, hasOwnProperty, debounce, getValue } from './utils'
+import {
+  defer,
+  focus,
+  hasOwnProperty,
+  debounce,
+  getValue,
+  getModifier,
+} from './utils'
 
 let idCounter = 1
 
@@ -481,35 +488,27 @@ export default function createTippy(reference, collectionProps) {
 
     return new Popper(tip.reference, tip.popper, {
       placement: tip.props.placement,
-      ...(popperOptions || {}),
+      ...popperOptions,
       modifiers: {
         ...(popperOptions ? popperOptions.modifiers : {}),
         preventOverflow: {
           boundariesElement: tip.props.boundary,
-          ...(popperOptions && popperOptions.modifiers
-            ? popperOptions.modifiers.preventOverflow
-            : {}),
+          ...getModifier(popperOptions, 'preventOverflow'),
         },
         arrow: {
           element: arrow,
           enabled: !!arrow,
-          ...(popperOptions && popperOptions.modifiers
-            ? popperOptions.modifiers.arrow
-            : {}),
+          ...getModifier(popperOptions, 'arrow'),
         },
         flip: {
           enabled: tip.props.flip,
           padding: tip.props.distance + 5 /* 5px from viewport boundary */,
           behavior: tip.props.flipBehavior,
-          ...(popperOptions && popperOptions.modifiers
-            ? popperOptions.modifiers.flip
-            : {}),
+          ...getModifier(popperOptions, 'flip'),
         },
         offset: {
           offset: tip.props.offset,
-          ...(popperOptions && popperOptions.modifiers
-            ? popperOptions.modifiers.offset
-            : {}),
+          ...getModifier(popperOptions, 'offset'),
         },
       },
       onCreate() {
