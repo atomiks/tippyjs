@@ -61,7 +61,7 @@ export interface Props {
   size?: 'small' | 'regular' | 'large'
   sticky?: boolean
   target?: string
-  theme?: string
+  theme?: 'dark' | 'light' | 'light-border' | 'google' | string
   touch?: boolean
   touchHold?: boolean
   trigger?: string
