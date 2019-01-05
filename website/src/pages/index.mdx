@@ -1,0 +1,221 @@
+---
+title: Demo
+path: /
+index: 0
+---
+
+import Tippy from '../components/Tippy'
+import { Button, Demo, Link } from '../components/Framework'
+
+Tippy.js is a highly customizable tooltip and popover library powered by
+Popper.js. It's compatible with IE11+, about 99% of desktop users and 96% of
+mobile users.
+
+### Features
+
+Tippy can be used to create simple static text tooltips, or complex HTML
+popovers that utilize AJAX. It's designed to be highly configurable to suit the
+wide array of use cases when dealing with tooltips and popovers.
+
+#### Default
+
+The default tooltip looks like this when given no options. It has a nifty
+background fill animation!
+
+<Demo>
+  <Tippy>
+    <Button>Default</Button>
+  </Tippy>
+</Demo>
+
+#### Placement
+
+Tooltips can be placed in four different ways in relation to the reference
+element. Additionally, the tooltip can be shifted along the axis using the
+suffix `-start` or `-end`.
+
+<Demo>
+  <Tippy placement="top">
+    <Button>Top</Button>
+  </Tippy>
+  <Tippy placement="bottom">
+    <Button>Bottom</Button>
+  </Tippy>
+  <Tippy placement="left">
+    <Button>Left</Button>
+  </Tippy>
+  <Tippy placement="right">
+    <Button>Right</Button>
+  </Tippy>
+  <Tippy placement="top-start">
+    <Button>Top-Start</Button>
+  </Tippy>
+  <Tippy placement="top-end">
+    <Button>Top-End</Button>
+  </Tippy>
+</Demo>
+
+#### Arrows
+
+Tooltips can have an arrow that points toward the reference element. The size
+and proportion can also be modified.
+
+<Demo>
+  <Tippy arrow animation="fade">
+    <Button>Default arrow</Button>
+  </Tippy>
+  <Tippy arrow arrowType="round" animation="fade">
+    <Button>Round arrow</Button>
+  </Tippy>
+  <Tippy arrow arrowTransform="scaleX(0.5)" animation="fade">
+    <Button>Skinny arrow</Button>
+  </Tippy>
+  <Tippy arrow arrowTransform="scaleX(2)" animation="fade">
+    <Button>Wide arrow</Button>
+  </Tippy>
+  <Tippy arrow arrowTransform="scale(2)" distance={15} animation="fade">
+    <Button>Large arrow</Button>
+  </Tippy>
+</Demo>
+
+#### Animations
+
+Tooltips can have different types of transition animations. Note, the filling
+effect has been disabled in these examples (`animateFill: false`).
+
+<Demo>
+  <Tippy animation="shift-away" animateFill={false}>
+    <Button>Shift-away</Button>
+  </Tippy>
+  <Tippy animation="shift-toward" animateFill={false}>
+    <Button>Shift-toward</Button>
+  </Tippy>
+  <Tippy animation="scale" animateFill={false}>
+    <Button>Scale</Button>
+  </Tippy>
+  <Tippy animation="fade" animateFill={false}>
+    <Button>Fade</Button>
+  </Tippy>
+  <Tippy animation="perspective" animateFill={false}>
+    <Button>Perspective</Button>
+  </Tippy>
+</Demo>
+
+#### Themes
+
+Tooltips can have custom styling. There are a few themes that come with the
+package available under `dist/themes/`.
+
+<Demo>
+  <Tippy theme="dark" animateFill={false}>
+    <Button>Dark</Button>
+  </Tippy>
+  <Tippy theme="light" animateFill={false}>
+    <Button>Light</Button>
+  </Tippy>
+  <Tippy theme="light-border" animateFill={false}>
+    <Button>Light-border</Button>
+  </Tippy>
+  <Tippy theme="google" animateFill={false}>
+    <Button>Google</Button>
+  </Tippy>
+</Demo>
+
+#### Triggers
+
+Tooltips can also be triggered by `click` or `focus` events.
+
+<Demo>
+  <Tippy trigger="click">
+    <Button>Click</Button>
+  </Tippy>
+  <Tippy trigger="focus" hideOnClick={false}>
+    <Button>Focus</Button>
+  </Tippy>
+</Demo>
+
+#### Interactivity
+
+Tooltips can be interactive, allowing you to hover over and click inside them.
+
+<Demo>
+  <Tippy interactive content="You can select the text inside here.">
+    <Button>Interactive</Button>
+  </Tippy>
+</Demo>
+
+#### HTML Content
+
+Tooltips can contain HTML.
+
+<Demo>
+  <Tippy
+    content={
+      <strong>
+        Bolded <span style={{ color: 'aqua' }}>content</span>
+      </strong>
+    }
+  >
+    <Button>HTML Content</Button>
+  </Tippy>
+</Demo>
+
+#### Delay and Duration
+
+The transition duration and delay of tooltips can be changed, allowing different
+show and hide durations.
+
+<Demo>
+  <Tippy duration={0}>
+    <Button>0</Button>
+  </Tippy>
+  <Tippy duration={1000}>
+    <Button>1000</Button>
+  </Tippy>
+  <Tippy duration={[800, 100]}>
+    <Button>[800, 100]</Button>
+  </Tippy>
+  <Tippy delay={500}>
+    <Button>500</Button>
+  </Tippy>
+  <Tippy delay={[800, 0]}>
+    <Button>[800, 0]</Button>
+  </Tippy>
+</Demo>
+
+#### Follow Cursor
+
+Tooltips can follow the mouse cursor and abide by a certain axis. It can also
+only follow the cursor a single time, such that the tooltip appears where the
+cursor last was.
+
+<Demo>
+  <Tippy followCursor animateFill={false} duration={200} animation="fade">
+    <Button>Default</Button>
+  </Tippy>
+  <Tippy
+    followCursor="horizontal"
+    animateFill={false}
+    duration={200}
+    animation="fade"
+  >
+    <Button>Horizontal</Button>
+  </Tippy>
+  <Tippy
+    followCursor="vertical"
+    animateFill={false}
+    duration={200}
+    animation="fade"
+  >
+    <Button>Vertical</Button>
+  </Tippy>
+  {/*
+  <Tippy followCursor="initial" delay={200}>
+    <Button>Initial</Button>
+  </Tippy>
+  */}
+</Demo>
+
+<br />
+
+The above is not a complete list of features. There is plenty more!

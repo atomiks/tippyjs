@@ -1,0 +1,35 @@
+---
+title: Customizing Tooltips
+path: /customizing-tooltips
+index: 3
+---
+
+import Tippy from '../components/Tippy'
+import { Button } from '../components/Framework'
+
+The `tippy()` function takes an object of options as a second argument to
+customize the tooltips.
+
+```js
+tippy('button', {
+  animation: 'scale',
+  duration: 0,
+  arrow: true,
+  delay: [1000, 200],
+})
+```
+
+You can also specify options on the element using data attributes, which is
+useful if using the Auto (`data-tippy` attribute) method.
+
+```html
+<button
+  data-tippy="Tooltip"
+  data-tippy-animation="scale"
+  data-tippy-duration="0"
+  data-tippy-arrow="true"
+  data-tippy-delay="[800, 200]"
+>
+  Text
+</button>
+```
