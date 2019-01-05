@@ -9,6 +9,7 @@ export default {
   arrowTransform: '',
   arrowType: 'sharp',
   autoFocus: true,
+  boundary: 'scrollParent',
   content: '',
   delay: [0, 20],
   distance: 10,
@@ -53,6 +54,7 @@ export default {
  * recreated
  */
 export const POPPER_INSTANCE_RELATED_PROPS = [
+  'arrow',
   'arrowType',
   'distance',
   'flip',

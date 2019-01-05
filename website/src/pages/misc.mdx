@@ -1,0 +1,97 @@
+---
+title: Misc
+path: /misc
+index: 10
+---
+
+### Hide tooltips on scroll
+
+In some cases it may be desirable to hide tooltips when scrolling (for example,
+on touch devices).
+
+```js
+// Basic usage
+// Note that `hideAllPoppers` won't hide a tippy if it has `hideOnClick: false`
+window.addEventListener('scroll', tippy.hideAllPoppers)
+
+// More control
+window.addEventListener('scroll', () => {
+  const poppers = Array.from(document.querySelectorAll('.tippy-popper'))
+  poppers.forEach(popper => {
+    // If you pass 0 as the duration, you can make all of them hide instantly
+    popper._tippy.hide(0)
+  })
+})
+```
+
+### Scrollable containers
+
+By default, a tippy is prevented from overflowing a scrolling container (with
+`overflow` set). If the reference element is inside, the tippy can stay stuck in
+the container viewport while scrolling or may be positioned incorrectly in some
+cases. To solve this, you can use the following popperOptions.
+
+```js
+tippy(ref, {
+  popperOptions: {
+    modifiers: {
+      preventOverflow: {
+        boundariesElement: 'window',
+      },
+    },
+  },
+})
+```
+
+### Buttons with tooltips on touch devices
+
+A tooltip on a button is generally used to convey information before the user
+decides to click on it. On touch devices, this isn't possible because a tap is
+required to show the tooltip, which will fire a click event.
+
+On iOS, a tap will show the tooltip but click events won't fire until a second
+tap. This allows the user to see the tooltip before deciding to click the
+button. On Android, clicking the button will show the tooltip and also fire a
+click event.
+
+Depending on your use case, one of these will be preferred, so user agent
+checking may be needed. If neither behavior is preferred, consider using the
+touchHold: true option which allows the user to see the tooltip while pressing
+and holding the button, but won't fire a click event unless the click appears to
+be intentional.
+
+```js
+const button = document.querySelector('button')
+const isIOS = /iPhone|iPad|iPod/.test(navigator.platform)
+
+/*==================================================
+Make iOS behave like Android (single tap to click)
+==================================================*/
+button.addEventListener('click', () => {
+  // Your logic
+})
+tippy(button, {
+  onShow() {
+    if (isIOS) {
+      button.click()
+    }
+  },
+})
+
+/*==================================================
+Make Android behave like iOS (double tap to click)
+==================================================*/
+// Useful function for dynamically determining the input type:
+// https://github.com/30-seconds/30-seconds-of-code#onuserinputchange
+let isUsingTouch = false
+onUserInputChange(type => {
+  isUsingTouch = type === 'touch'
+})
+
+const tip = tippy.one(button)
+button.addEventListener('click', () => {
+  if (isIOS || !isUsingTouch ? true : tip.state.isShown) {
+    // Your logic
+  }
+})
+```

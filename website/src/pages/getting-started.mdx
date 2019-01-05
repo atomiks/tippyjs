@@ -1,0 +1,47 @@
+---
+title: Getting Started
+path: /getting-started
+index: 1
+---
+
+### Option 1: CDN
+
+Include this script tag from the unpkg CDN in your document before your own
+scripts.
+
+```html
+<script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>
+```
+
+Place it at the bottom of the `<body>` or in the `<head>` with a `defer`
+attribute.
+
+### Option 2: Package Manager
+
+Install using either npm or Yarn.
+
+```bash
+# npm
+npm i tippy.js
+
+# Yarn
+yarn add tippy.js
+```
+
+Then, import the `tippy` module and its CSS.
+
+```js
+import tippy from 'tippy.js'
+import 'tippy.js/dist/tippy.css'
+```
+
+### Distribution Files
+
+Tippy is distributed in two formats: `umd` (used by the browser and Node
+modules), and `esm` (ES6 syntax used by module bundlers like webpack).
+
+- `tippy.all.js` is all dependencies (`tippy.js`, `popper.js`, and the CSS) in a
+  single file. The CSS stylesheet gets injected into the document `<head>`.
+- `tippy.standalone.js` is `tippy.js` by itself, externally importing
+  `popper.js`.
+- `tippy.js` includes `popper.js` bundled.

@@ -524,6 +524,20 @@ describe('popperOptions', () => {
     ).toBe(true)
   })
 
+  it('modifiers.preventOverflow', () => {
+    const { popperInstance } = tippy.one(h(), {
+      lazy: false,
+      popperOptions: {
+        modifiers: {
+          preventOverflow: {
+            test: true,
+          },
+        },
+      },
+    })
+    expect(popperInstance.options.modifiers.preventOverflow.test).toBe(true)
+  })
+
   it('modifiers.arrow', () => {
     const { popperInstance } = tippy.one(h(), {
       lazy: false,
@@ -627,5 +641,17 @@ describe('aria', () => {
     await wait(1)
     tip.hide()
     expect(ref.getAttribute('aria-labelledby')).toBe(null)
+  })
+})
+
+describe('boundary', () => {
+  it('sets the `boundariesElement` property in popperInstance', () => {
+    const { popperInstance } = tippy.one(h(), {
+      lazy: false,
+      boundary: 'example',
+    })
+    expect(
+      popperInstance.options.modifiers.preventOverflow.boundariesElement,
+    ).toBe('example')
   })
 })

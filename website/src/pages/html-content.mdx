@@ -1,0 +1,109 @@
+---
+title: HTML Content
+path: /html-content
+index: 9
+---
+
+Tippy offers a few ways to use HTML inside tooltips.
+
+### String
+
+```html
+<button data-tippy="<strong>Bolded content</strong>">Text</button>
+```
+
+Or, if using the function:
+
+```js
+tippy('button', {
+  content: '<strong>Bolded content</strong>',
+})
+```
+
+### Element
+
+#### `<template>` element
+
+```html
+<template id="example">
+  <strong>Bolded content</strong>
+</template>
+```
+
+```js
+const template = document.getElementById('example')
+const container = document.createElement('div')
+container.appendChild(document.importNode(template.content, true))
+
+tippy('button', { content: container })
+```
+
+⚠️ Note that IE11 does not support the `<template>` element, see the
+[polyfill](https://github.com/webcomponents/template).
+
+#### Standard `<div>`
+
+You can also just use a `<div>`.
+
+<!-- prettier-ignore -->
+```html
+<div id="example" style="display: none;">
+  <strong>Bolded content</strong>
+</div>
+```
+
+```js
+const template = document.getElementById('example')
+tippy('button', { content: template.innerHTML })
+```
+
+### Keep event listeners attached
+
+If you want to keep event listeners attached to the element, you can pass the
+element itself (`<div>` element):
+
+```js
+const template = document.getElementById('example')
+tippy('button', { content: template })
+template.style.display = 'block'
+```
+
+Note that this is a one-time operation. It can only exist in a single tippy
+since it's not being cloned.
+
+### Template linking
+
+If you have multiple references each with their own unique template, there is a
+way to link them with their associated template.
+
+```html
+<button data-template="one">One</button>
+<button data-template="two">Two</button>
+<button data-template="three">Three</button>
+
+<template id="one">
+  <strong>Content for `one`</strong>
+</template>
+<template id="two">
+  <strong>Content for `two`</strong>
+</template>
+<template id="three">
+  <strong>Content for `three`</strong>
+</template>
+```
+
+We can make `content` a function that receives the reference element (button in
+this case) and returns template content.
+
+```js
+tippy('button', {
+  content(reference) {
+    const id = reference.getAttribute('data-template')
+    const container = document.createElement('div')
+    const linkedTemplate = document.getElementById(id)
+    const node = document.importNode(linkedTemplate.content, true)
+    container.appendChild(node)
+    return container
+  },
+})
+```

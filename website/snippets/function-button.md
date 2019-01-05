@@ -1,3 +1,0 @@
-```html
-<button>Text</button>
-```

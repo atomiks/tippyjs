@@ -1,0 +1,72 @@
+---
+title: Creating Tooltips
+path: /creating-tooltips
+index: 2
+---
+
+import Tippy from '../components/Tippy'
+import { Button } from '../components/Framework'
+
+### Method 1: Auto
+
+Give your reference element(s) a `data-tippy` attribute containing the tooltip
+content. Tooltips are automatically created on page load.
+
+```html
+<button data-tippy="Tooltip">Text</button>
+<button data-tippy="Another Tooltip">Text</button>
+<button data-tippy="Hey">Text</button>
+```
+
+If you have dynamically generated elements or are using a framework, use Method
+2 and `data-tippy-content` instead.
+
+### Method 2: Function
+
+Use the `tippy()` function by passing in a CSS selector, and give your reference
+element(s) a `data-tippy-content` attribute.
+
+```html
+<button data-tippy-content="Tooltip">Text</button>
+<button data-tippy-content="Another Tooltip">Text</button>
+<button data-tippy-content="Hey">Text</button>
+```
+
+```js
+tippy('button')
+```
+
+The `tippy` function accepts the following types:
+
+- `String` (CSS selector)
+- `Element` (HTML or SVG)
+- `Element[]` (array of elements)
+- `NodeList`
+- `Object` (virtual element)
+
+### Virtual elements
+
+In some cases you may need to use a virtual element instead of a real DOM
+element. Pass a plain object with the following properties in:
+
+```js
+const virtualElement = {
+  getBoundingClientRect() {
+    return {
+      width: 0,
+      height: 0,
+      top: 100,
+      right: 100,
+      bottom: 100,
+      left: 100,
+    }
+  },
+  clientWidth: 0,
+  clientHeight: 0,
+}
+
+tippy(virtualElement)
+```
+
+Change the numbers to suit your needs. Popper.js uses these properties to
+position the tippy.

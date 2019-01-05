@@ -33,6 +33,7 @@ export interface Props {
   arrowType?: 'sharp' | 'round'
   arrowTransform?: string
   autoFocus?: boolean
+  boundary?: 'scrollParent' | 'window' | 'viewport' | HTMLElement
   content?: Content
   delay?: number | [number, number]
   duration?: number | [number, number]
@@ -51,9 +52,9 @@ export interface Props {
   multiple?: boolean
   offset?: number | string
   onHidden?(instance: Instance): void
-  onHide?(instance: Instance): void
+  onHide?(instance: Instance): void | false
   onMount?(instance: Instance): void
-  onShow?(instance: Instance): void
+  onShow?(instance: Instance): void | false
   onShown?(instance: Instance): void
   performance?: boolean
   placement?: Placement
@@ -63,10 +64,10 @@ export interface Props {
   size?: 'small' | 'regular' | 'large'
   sticky?: boolean
   target?: string
-  theme?: string
+  theme?: 'dark' | 'light' | 'light-border' | 'google' | string
   touch?: boolean
   touchHold?: boolean
-  trigger?: 'mouseenter' | 'focus' | 'click' | 'manual'
+  trigger?: string
   updateDuration?: number
   wait?(instance: Instance, event: Event): void
   zIndex?: number

@@ -22,10 +22,8 @@
     "url": "git+https://github.com/atomiks/tippyjs.git"
   },
   "scripts": {
-    "dev:docs": "parcel website/index.html -d .devserver --no-cache --open",
-    "build:docs": "node website/clean.js && parcel build website/index.html -d docs/ --public-url ./ && node website/prerender.js",
     "dev": "parcel tests/visual/index.html -d tests/visual/dist --open",
-    "build": "node rollup.build.js && bundlesize && npm run build:docs",
+    "build": "node rollup.build.js && bundlesize",
     "test": "jest --coverage",
     "lint": "eslint \"src/**/*.js\"",
     "prettier": "prettier --write \"./**/*{js,scss}\"",
@@ -35,9 +33,7 @@
     "setupFiles": [
       "./tests/polyfills.js"
     ],
-    "coveragePathIgnorePatterns": [
-      "tests"
-    ]
+    "testRegex": "./tests/.*.test.js$"
   },
   "prettier": {
     "semi": false,
@@ -58,34 +54,25 @@
     }
   ],
   "devDependencies": {
-    "@hyperapp/render": "^2.0.0",
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.26.3",
     "babel-jest": "^22.4.4",
     "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-stage-2": "^6.24.1",
     "bundlesize": "^0.17.0",
-    "caniuse-lite": "^1.0.30000912",
     "colorette": "^1.0.7",
     "cssnano": "^3.10.0",
     "eslint": "^4.18.2",
-    "focus-visible": "^4.1.4",
-    "hyperapp": "^1.2.6",
     "jest": "^23.5.0",
-    "jsdom": "^11.11.0",
     "mutation-observer": "^1.0.3",
     "node-sass": "^4.10.0",
-    "normalize.css": "^8.0.1",
     "parcel-bundler": "^1.10.3",
-    "parcel-plugin-markdown-string": "^1.3.3",
     "postcss": "^5.2.18",
     "postcss-cssnext": "^3.1.0",
     "postcss-import": "^11.1.0",
     "prettier": "^1.15.3",
-    "prismjs": "^1.15.0",
     "rollup": "^0.55.5",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-babel-minify": "^4.0.0",
@@ -93,9 +80,7 @@
     "rollup-plugin-css-only": "^0.2.0",
     "rollup-plugin-json": "^2.3.1",
     "rollup-plugin-node-resolve": "^3.2.0",
-    "rollup-plugin-sass": "^0.4.10",
-    "rollup-plugin-strip": "^1.2.0",
-    "twemoji": "^11.2.0"
+    "rollup-plugin-sass": "^0.4.10"
   },
   "dependencies": {
     "popper.js": "^1.14.6"
