@@ -15,7 +15,7 @@ const HeaderRoot = styled.header`
 `
 
 const Logo = styled.img`
-  width: 80px;
+  height: 70px;
   margin-bottom: 10px;
 `
 
@@ -84,7 +84,7 @@ function Header({ openNav }) {
   return (
     <HeaderRoot>
       <Container>
-        <MenuButton onClick={openNav}>
+        <MenuButton aria-label="Menu" onClick={openNav}>
           <Menu style={menuStyles} />
         </MenuButton>
         <Logo src={TippyLogo} draggable="false" />

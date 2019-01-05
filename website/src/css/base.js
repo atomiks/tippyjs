@@ -18,6 +18,7 @@ export default createGlobalStyle`
     color: #324b64;
     height: 100%;
     font-size: 17px;
+    -webkit-tap-highlight-color: transparent;
   }
 
   :focus:not(.focus-visible) {

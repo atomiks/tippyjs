@@ -9,10 +9,6 @@ import 'focus-visible'
 import elasticScroll from 'elastic-scroll-polyfill'
 import { toKebabCase } from './src/utils'
 
-if (/Firefox/.test(navigator.userAgent)) {
-  document.body.classList.add('Firefox')
-}
-
 function addDataLabelToTdElements() {
   const labels = Array.from(document.querySelectorAll('th')).map(
     th => th.textContent,
@@ -28,7 +24,9 @@ function addDataLabelToTdElements() {
 }
 
 function addElasticScrollingToCodeBlocks() {
-  elasticScroll({ targets: 'pre[class*="language"]' })
+  if (/Mac/.test(navigator.platform)) {
+    elasticScroll({ targets: 'pre[class*="language"]' })
+  }
 }
 
 function highlightDeprecatedOptions() {

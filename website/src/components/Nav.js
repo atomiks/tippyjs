@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, createRef } from 'react'
 import styled from 'styled-components'
-import { MEDIA, MEDIA_SIZES, Link } from './Framework'
+import { MEDIA, Link } from './Framework'
 import { StaticQuery, graphql } from 'gatsby'
 import { sortPagesByIndex } from '../utils'
 import X from 'react-feather/dist/icons/x'
 
 const Navbar = styled.nav`
+  display: ${props => (props.isMounted ? 'block' : 'none')};
   position: fixed;
   top: 0;
   bottom: 0;
@@ -16,11 +17,21 @@ const Navbar = styled.nav`
   background: #f7f8fc;
   overflow-y: auto;
   z-index: 1;
-  transition: transform ${props => (props.isOpen ? '0.45s' : '0.3s')};
+  transform: ${props =>
+    props.isOpen ? 'translate3d(0, 0, 0)' : 'translate3d(-100%, 0, 0)'};
+  transition: transform ${props => (props.isOpen ? '0.45s' : '0.3s')},
+    visibility 0.2s;
   transition-timing-function: ${props =>
     props.isOpen
       ? 'cubic-bezier(.165, .84, .44, 1)'
       : 'cubic-bezier(.77, 0, .175, 1)'};
+  visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
+
+  ${MEDIA.lg} {
+    display: block;
+    visibility: visible;
+    transform: none;
+  }
 `
 
 const List = styled.ul`
@@ -61,21 +72,14 @@ const XButton = styled.button`
 
 class Nav extends Component {
   state = {
-    windowWidth: 1200,
+    isMounted: false,
     transitions: true,
   }
 
-  get transform() {
-    return this.props.isOpen || this.state.windowWidth >= MEDIA_SIZES.lg
-      ? 'translate3d(0, 0, 0)'
-      : 'translate3d(-100%, 0, 0)'
-  }
+  ref = createRef()
 
   handleResize = () => {
-    this.setState({
-      windowWidth: window.innerWidth,
-      transitions: false,
-    })
+    this.setState({ transitions: false })
     clearTimeout(this.timeout)
     this.timeout = setTimeout(() => {
       this.setState({ transitions: true })
@@ -86,7 +90,20 @@ class Nav extends Component {
     this.props.close()
   }
 
+  handleTransitionEnd = () => {
+    if (this.props.isOpen) {
+      this.ref.current.focus()
+    }
+  }
+
+  handleBlur = e => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      this.props.close()
+    }
+  }
+
   componentDidMount() {
+    this.setState({ isMounted: true })
     window.addEventListener('resize', this.handleResize)
     this.handleResize()
   }
@@ -97,15 +114,20 @@ class Nav extends Component {
   }
 
   render() {
+    const { isOpen } = this.props
+    const { isMounted, transitions } = this.state
     return (
       <Navbar
-        isOpen={this.props.isOpen}
-        style={{
-          transform: this.transform,
-          transition: this.state.transitions ? '' : 'none',
-        }}
+        tabIndex="-1"
+        aria-label="Menu"
+        ref={this.ref}
+        style={{ transition: transitions ? '' : 'none' }}
+        isOpen={isOpen}
+        isMounted={isMounted}
+        onTransitionEnd={this.handleTransitionEnd}
+        onBlur={this.handleBlur}
       >
-        <XButton onClick={this.handleClose}>
+        <XButton aria-label="Close Menu" onClick={this.handleClose}>
           <X style={{ width: 36, height: 36 }} />
         </XButton>
         <List>

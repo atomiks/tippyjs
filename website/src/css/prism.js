@@ -5,15 +5,6 @@ export default createGlobalStyle`
   code,
   pre {
     font-family: Menlo, Consolas, 'Liberation Mono', Courier, monospace;
-    filter: saturate(1.15);
-  }
-
-  /* Firefox really hates this apparently */
-  .Firefox {
-    code, 
-    pre {
-      filter: none;
-    }
   }
 
   code[class*='language-'],
@@ -41,11 +32,12 @@ export default createGlobalStyle`
     margin-top: 0;
     margin-left: -5.55%;
     margin-right: -5.55%;
-    background: #28283d;
-    font-size: 95%;
+    background: #22223f;
+    font-size: 15px;
     line-height: 2;
     max-height: 650px;
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
 
     [data-elastic-wrapper] {
       display: inline-block;
@@ -61,6 +53,7 @@ export default createGlobalStyle`
       margin-left: 0;
       margin-right: 0;
       padding: 16px 24px;
+      font-size: 16px;
     }
   }
 
@@ -77,30 +70,30 @@ export default createGlobalStyle`
   .token.important,
   .token.atrule,
   .token.keyword {
-    color: #c49dff;
+    color: #bc90ff;
   }
 
   .token.comment,
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    color: #8398cd;
+    color: #7692d9;
   }
 
   .token.attr-name,
   .token.selector {
-    color: #ffbb8e;
+    color: #ffb07b;
   }
 
   .token.boolean {
-    color: #ff92d6;
+    color: #ff81d0;
   }
 
   .token.punctuation,
   .token.operator,
   .token.op,
   .token.module {
-    color: #8fddff;
+    color: #6ed3ff;
   }
 
   .token.nil {
@@ -131,13 +124,13 @@ export default createGlobalStyle`
   }
 
   .token.tag {
-    color: #ff7e99;
+    color: #ff6c8b;
   }
 
   .token.number,
   .token.symbol,
   .token.deleted {
-    color: #ff9f57;
+    color: #ff984b;
   }
 
   .token.string,
@@ -158,7 +151,7 @@ export default createGlobalStyle`
 
   .token.function,
   .token.property {
-    color: #6fadff;
+    color: #61a5ff;
   }
 
   .token.method {
@@ -171,15 +164,15 @@ export default createGlobalStyle`
 
   .token.dom,
   .token.class-name {
-    color: #ffdb94;
+    color: #ffd278;
   }
 
   .token.property.definition {
-    color: #c3e9a9;
+    color: #b6e992;
   }
 
   .token.property.access {
-    color: #99c3e9;
+    color: #8ec1ef;
   }
 
   .token.regex {
