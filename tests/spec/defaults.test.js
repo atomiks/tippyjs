@@ -524,6 +524,20 @@ describe('popperOptions', () => {
     ).toBe(true)
   })
 
+  it('modifiers.preventOverflow', () => {
+    const { popperInstance } = tippy.one(h(), {
+      lazy: false,
+      popperOptions: {
+        modifiers: {
+          preventOverflow: {
+            test: true,
+          },
+        },
+      },
+    })
+    expect(popperInstance.options.modifiers.preventOverflow.test).toBe(true)
+  })
+
   it('modifiers.arrow', () => {
     const { popperInstance } = tippy.one(h(), {
       lazy: false,
@@ -578,5 +592,17 @@ describe('maxWidth', () => {
   it('auto-adds "px" to a number', () => {
     const numTip = tippy.one(h(), { maxWidth: 100 })
     expect(numTip.popperChildren.tooltip.style.maxWidth).toBe('100px')
+  })
+})
+
+describe('boundary', () => {
+  it('sets the `boundariesElement` property in popperInstance', () => {
+    const { popperInstance } = tippy.one(h(), {
+      lazy: false,
+      boundary: 'example',
+    })
+    expect(
+      popperInstance.options.modifiers.preventOverflow.boundariesElement,
+    ).toBe('example')
   })
 })

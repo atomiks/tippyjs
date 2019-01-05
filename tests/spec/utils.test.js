@@ -192,3 +192,22 @@ describe('focus', () => {
     expect(el).toBe(document.activeElement)
   })
 })
+
+describe('getModifier', () => {
+  it('returns an object nested in `modifiers` object without errors', () => {
+    expect(Utils.getModifier({}, 'flip')).toBe(undefined)
+    expect(Utils.getModifier({ modifiers: {} }, 'flip')).toBe(undefined)
+    expect(
+      Utils.getModifier(
+        {
+          modifiers: {
+            flip: {
+              enabled: true,
+            },
+          },
+        },
+        'flip',
+      ),
+    ).toEqual({ enabled: true })
+  })
+})
