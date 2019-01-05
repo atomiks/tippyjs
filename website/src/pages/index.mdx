@@ -160,10 +160,9 @@ Tooltips can contain HTML.
   </Tippy>
 </Demo>
 
-#### Delay and Duration
+#### Duration
 
-The transition duration and delay of tooltips can be changed, allowing different
-show and hide durations.
+Tooltips can have different animation durations.
 
 <Demo>
   <Tippy duration={0}>
@@ -175,19 +174,27 @@ show and hide durations.
   <Tippy duration={[800, 100]}>
     <Button>[800, 100]</Button>
   </Tippy>
+</Demo>
+
+#### Delay
+
+Tooltips can delay hiding or showing after a trigger.
+
+<Demo>
   <Tippy delay={500}>
     <Button>500</Button>
   </Tippy>
   <Tippy delay={[800, 0]}>
     <Button>[800, 0]</Button>
   </Tippy>
+  <Tippy delay={[0, 800]}>
+    <Button>[0, 800]</Button>
+  </Tippy>
 </Demo>
 
 #### Follow Cursor
 
-Tooltips can follow the mouse cursor and abide by a certain axis. It can also
-only follow the cursor a single time, such that the tooltip appears where the
-cursor last was.
+Tooltips can follow the mouse cursor and abide by a certain axis.
 
 <Demo>
   <Tippy followCursor animateFill={false} duration={200} animation="fade">
@@ -218,4 +225,4 @@ cursor last was.
 
 <br />
 
-The above is not a complete list of features. There is plenty more!
+The above is not a complete list of features. There are plenty more!
