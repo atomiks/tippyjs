@@ -82,7 +82,7 @@ function NavButtons({ next }) {
 
 export default NavButtons
 
-export const allMdxQuery = graphql`
+const allMdxQuery = graphql`
   query {
     allMdx {
       edges {

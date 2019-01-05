@@ -129,7 +129,7 @@ class Nav extends Component {
 
 export default Nav
 
-export const allMdxQuery = graphql`
+const allMdxQuery = graphql`
   query {
     allMdx {
       edges {
