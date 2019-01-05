@@ -61,7 +61,7 @@ const XButton = styled.button`
 
 class Nav extends Component {
   state = {
-    windowWidth: 0,
+    windowWidth: 1200,
     transitions: true,
   }
 
