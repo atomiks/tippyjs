@@ -1,0 +1,121 @@
+---
+title: Themes
+path: /themes
+index: 8
+---
+
+import { Button, Demo } from '../components/Framework'
+import Tippy from '../components/Tippy'
+
+Tippy is highly themeable through CSS. The sky is the limit when it comes to
+their appearance!
+
+### Tippy elements
+
+To learn how to create a theme, it's helpful to understand the structure of a
+tippy element.
+
+<!-- prettier-ignore -->
+```html
+<div class="tippy-popper">
+  <div class="tippy-tooltip">
+    <div class="tippy-content">
+      My content
+    </div>
+  </div>
+</div>
+```
+
+A tippy is essentially three nested `div`s.
+
+- `tippy-popper` is the outermost node. It is what Popper.js uses to position
+  the tippy. You shouldn't apply any styles directly to this element, but you'll
+  need it when targeting a specific placement (`x-placement`).
+- `tippy-tooltip` is the actual tooltip node.
+- `tippy-content` is the content node.
+
+Depending on the options supplied, there will exist other elements inside it.
+
+<!-- prettier-ignore -->
+```html
+<div class="tippy-popper">
+  <div class="tippy-tooltip">
+    <div class="tippy-backdrop"></div> <!-- animateFill: true -->
+    <div class="tippy-arrow"></div> <!-- arrow: true -->
+    <div class="tippy-content">
+      My content
+    </div>
+  </div>
+</div>
+```
+
+### Creating a theme
+
+Themes are created by including a class on the `tippy-tooltip` element as part
+of a selector.
+
+Let's demonstrate this by creating our own theme called `tomato`.
+
+If `animateFill: true` (default), style the backdrop element and specify the
+theme's name including a `-theme` suffix:
+
+```css
+.tippy-tooltip.tomato-theme .tippy-backdrop {
+  background: tomato;
+}
+```
+
+If `animateFill: false` (or if `arrow: true`), style the tooltip element:
+
+```css
+.tippy-tooltip.tomato-theme {
+  background: tomato;
+}
+```
+
+To apply the theme, specify a `theme` option without the `-theme` suffix:
+
+```js
+tippy('button', {
+  theme: 'tomato',
+})
+```
+
+<Demo>
+  <Tippy theme="tomato">
+    <Button>Custom theme</Button>
+  </Tippy>
+</Demo>
+
+### Styling the arrow
+
+There are two types of arrows built-in: traditional CSS arrows (using the
+`border` trick), and a custom round SVG arrow.
+
+To style the default (sharp) CSS arrow, you'll need to target each different
+base placement and apply it to the `.tippy-arrow` element:
+
+```css
+.tippy-popper[x-placement^='top'] .tippy-tooltip.tomato-theme .tippy-arrow {
+  border-top-color: tomato;
+}
+.tippy-popper[x-placement^='bottom'] .tippy-tooltip.tomato-theme .tippy-arrow {
+  border-bottom-color: tomato;
+}
+.tippy-popper[x-placement^='left'] .tippy-tooltip.tomato-theme .tippy-arrow {
+  border-left-color: tomato;
+}
+.tippy-popper[x-placement^='right'] .tippy-tooltip.tomato-theme .tippy-arrow {
+  border-right-color: tomato;
+}
+```
+
+To style the round SVG arrow, it's as simple as specifying the `fill` and
+targeting `.tippy-roundarrow`:
+
+<!-- prettier-ignore -->
+```css
+.tippy-tooltip.tomato-theme .tippy-roundarrow {
+  fill: tomato;
+}
+```

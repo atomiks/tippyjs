@@ -1,0 +1,100 @@
+---
+title: Methods
+path: /methods
+index: 6
+---
+
+Methods on instances allow you to control the tippy programmatically. See the
+[Objects](/objects) section for how to access a Tippy instance.
+
+### Show the tippy
+
+Programmatically show the tippy at any time.
+
+```js
+instance.show()
+```
+
+### Hide the tippy
+
+Programmatically hide the tippy at any time.
+
+```js
+instance.hide()
+```
+
+### Disable the tippy
+
+You can temporarily prevent a tippy from showing or hiding.
+
+```js
+instance.disable()
+```
+
+Re-enable it with this method.
+
+```js
+instance.enable()
+```
+
+### Destroy the tippy
+
+To permanently destroy and clean up the instance, use this method.
+
+```js
+instance.destroy()
+```
+
+The `_tippy` property is deleted from the reference element upon destruction.
+
+### Update the tippy
+
+You can update any option after the instance has been created using the `set()`
+method. Pass an object of new options in.
+
+```js
+instance.set({
+  arrow: true,
+  animation: 'scale',
+})
+```
+
+There is also a shortcut for updating the content.
+
+```js
+instance.setContent('New content')
+```
+
+### Static methods
+
+The `tippy` function module also has static methods available.
+
+#### Create a single tooltip and get its instance
+
+```js
+const instance = tippy.one(targets, options)
+```
+
+#### Hide all visible tippys on the page
+
+```js
+// Hide all poppers
+tippy.hideAllPoppers()
+// Hide all except a particular instance
+tippy.hideAllPoppers(instance)
+```
+
+Note that if the instance has `hideOnClick: false`, it won't hide. This will
+most likely be changed in the next version.
+
+#### Defaults
+
+You can set the default props for future instances so you don't need to specify
+them over and over again. Pass an object of options in.
+
+```js
+tippy.setDefaults({
+  arrow: true,
+  duration: 0,
+})
+```

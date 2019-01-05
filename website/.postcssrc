@@ -1,6 +1,0 @@
-{
-  "plugins": {
-    "postcss-import": {},
-    "postcss-cssnext": { "browsers": ["> 0.5%"], "warnForDuplicates": false }
-  }
-}
