@@ -92,21 +92,6 @@ export default createGlobalStyle`
     margin-top: 0.5rem;
   }
 
-  .gatsby-highlight {
-    position: relative;
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      display: block;
-      width: 100%;
-      height: 40px;
-      pointer-events: none;
-      border-radius: 0 0 8px 8px;
-    }
-  }
-
   table {
     box-shadow: 0 0 0 1px rgba(0,32,128,0.1);
     border-collapse: collapse;

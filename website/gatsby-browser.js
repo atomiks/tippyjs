@@ -9,6 +9,10 @@ import 'focus-visible'
 import elasticScroll from 'elastic-scroll-polyfill'
 import { toKebabCase } from './src/utils'
 
+if (/Firefox/.test(navigator.userAgent)) {
+  document.body.classList.add('Firefox')
+}
+
 function addDataLabelToTdElements() {
   const labels = Array.from(document.querySelectorAll('th')).map(
     th => th.textContent,

@@ -8,6 +8,14 @@ export default createGlobalStyle`
     filter: saturate(1.15);
   }
 
+  /* Firefox really hates this apparently */
+  .Firefox {
+    code, 
+    pre {
+      filter: none;
+    }
+  }
+
   code[class*='language-'],
   pre[class*='language-'] {
     color: #cee6ff;
@@ -37,7 +45,7 @@ export default createGlobalStyle`
     font-size: 95%;
     line-height: 2;
     max-height: 650px;
-    overflow-y: auto;
+    overflow: auto;
 
     [data-elastic-wrapper] {
       display: inline-block;
