@@ -4,6 +4,59 @@ path: /misc
 index: 10
 ---
 
+import EventDelegation from '../components/examples/EventDelegation'
+import { Demo } from '../components/Framework'
+
+### Event delegation
+
+Event delegation allows you to bind a Tippy instance to a parent container
+element to handle creation of tippys for children.
+
+This allows two things:
+
+- It eliminates the need to create new instances for new children getting
+  appended to the parent.
+- It improves performance as only a single instance is created, and event
+  bubbling handles creation of instances at the right time.
+
+Children will inherit the options specified in the parent instance, but
+individual options can be specified via `data-tippy-*` attributes.
+
+<!-- prettier-ignore -->
+```html
+<div id="parent">
+  <button class="child" data-tippy-content="Tooltip 1">One</button>
+  <button 
+    class="child" 
+    data-tippy-content="Tooltip 2"
+    data-tippy-arrow="true"
+  >
+    Two
+  </button>
+  <button 
+    class="child" 
+    data-tippy-content="Tooltip 3" 
+    data-tippy-theme="light"
+  >
+    Three
+  </button>
+</div>
+```
+
+To enable this behavior, bind the instance to the `#parent` element and specify
+a `target` option with a CSS selector that matches the child elements which
+should receive tooltips.
+
+```js
+tippy('#parent', {
+  target: '.child',
+})
+```
+
+<Demo>
+  <EventDelegation />
+</Demo>
+
 ### Hide tooltips on scroll
 
 In some cases it may be desirable to hide tooltips when scrolling (for example,
