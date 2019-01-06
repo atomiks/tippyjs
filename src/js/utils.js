@@ -97,3 +97,14 @@ export function debounce(fn, ms) {
     timeoutId = setTimeout(() => fn.apply(this, arguments), ms)
   }
 }
+
+/**
+ * Prevents errors from being thrown while accessing nested modifier objects
+ * in `popperOptions`
+ * @param {Object} obj
+ * @param {String} key
+ * @return {Object|undefined}
+ */
+export function getModifier(obj, key) {
+  return obj && obj.modifiers && obj.modifiers[key]
+}

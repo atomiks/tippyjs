@@ -19,7 +19,14 @@ import { canReceiveFocus } from './reference'
 import { validateOptions, evaluateProps } from './props'
 import computeArrowTransform from './deprecated_computeArrowTransform'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
-import { defer, focus, hasOwnProperty, debounce, getValue } from './utils'
+import {
+  defer,
+  focus,
+  hasOwnProperty,
+  debounce,
+  getValue,
+  getModifier,
+} from './utils'
 
 let idCounter = 1
 
@@ -476,37 +483,32 @@ export default function createTippy(reference, collectionProps) {
    * Creates the popper instance for the tip
    */
   function createPopperInstance() {
-    const { tooltip } = tip.popperChildren
     const { popperOptions } = tip.props
+    const { tooltip, arrow } = tip.popperChildren
 
-    const arrowSelector =
-      Selectors[tip.props.arrowType === 'round' ? 'ROUND_ARROW' : 'ARROW']
-    const arrow = tooltip.querySelector(arrowSelector)
-
-    const config = {
+    return new Popper(tip.reference, tip.popper, {
       placement: tip.props.placement,
-      ...(popperOptions || {}),
+      ...popperOptions,
       modifiers: {
         ...(popperOptions ? popperOptions.modifiers : {}),
+        preventOverflow: {
+          boundariesElement: tip.props.boundary,
+          ...getModifier(popperOptions, 'preventOverflow'),
+        },
         arrow: {
-          element: arrowSelector,
-          ...(popperOptions && popperOptions.modifiers
-            ? popperOptions.modifiers.arrow
-            : {}),
+          element: arrow,
+          enabled: !!arrow,
+          ...getModifier(popperOptions, 'arrow'),
         },
         flip: {
           enabled: tip.props.flip,
           padding: tip.props.distance + 5 /* 5px from viewport boundary */,
           behavior: tip.props.flipBehavior,
-          ...(popperOptions && popperOptions.modifiers
-            ? popperOptions.modifiers.flip
-            : {}),
+          ...getModifier(popperOptions, 'flip'),
         },
         offset: {
           offset: tip.props.offset,
-          ...(popperOptions && popperOptions.modifiers
-            ? popperOptions.modifiers.offset
-            : {}),
+          ...getModifier(popperOptions, 'offset'),
         },
       },
       onCreate() {
@@ -534,13 +536,7 @@ export default function createTippy(reference, collectionProps) {
           computeArrowTransform(arrow, tip.props.arrowTransform)
         }
       },
-    }
-
-    if (!popperMutationObserver) {
-      addMutationObserver()
-    }
-
-    return new Popper(tip.reference, tip.popper, config)
+    })
   }
 
   /**
@@ -550,6 +546,7 @@ export default function createTippy(reference, collectionProps) {
   function mount(callback) {
     if (!tip.popperInstance) {
       tip.popperInstance = createPopperInstance()
+      addMutationObserver()
       if (!tip.props.livePlacement || hasFollowCursorBehavior()) {
         tip.popperInstance.disableEventListeners()
       }
