@@ -60,7 +60,6 @@ class AjaxSmooth extends Component {
 
         // Store the base height of the tooltip when it has the
         // initial Loading... content.
-        console.dir(tooltip)
         if (!tip._baseHeight) {
           tip._baseHeight = tooltip.clientHeight || 30
         }

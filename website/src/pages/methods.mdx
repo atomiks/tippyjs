@@ -23,6 +23,15 @@ Programmatically hide the tippy at any time.
 instance.hide()
 ```
 
+For both the `show()` and `hide()` methods, you can pass a number in as an
+argument to use as the animation duration. This will override the instance's
+option.
+
+```js
+instance.show(1000) // 1000ms
+instance.hide(0) // 0ms
+```
+
 ### Disable the tippy
 
 You can temporarily prevent a tippy from showing or hiding.
@@ -46,6 +55,14 @@ instance.destroy()
 ```
 
 The `_tippy` property is deleted from the reference element upon destruction.
+
+If you're destroying a delegate instance (i.e., one you created with the
+`target` option), pass `true` as an argument to destroy all child instances that
+may have been created too.
+
+```js
+instance.destroy(true)
+```
 
 ### Update the tippy
 
@@ -96,5 +113,6 @@ them over and over again. Pass an object of options in.
 tippy.setDefaults({
   arrow: true,
   duration: 0,
+  func: this,
 })
 ```

@@ -19,7 +19,8 @@ content. Tooltips are automatically created on page load.
 ```
 
 If you have dynamically generated elements or are using a framework, use Method
-2 and `data-tippy-content` instead.
+2 and `data-tippy-content` instead. This is because auto-initialization only
+happens once upon page load.
 
 ### Method 2: Function
 
@@ -43,6 +44,27 @@ The `tippy` function accepts the following types:
 - `Element[]` (array of elements)
 - `NodeList`
 - `Object` (virtual element)
+
+⚠️ IE11 requires a `classList` polyfill if using an SVG element as the
+reference.
+
+### Disabled elements
+
+If an element is disabled, you will need to use a wrapper element (`<span>` or
+`<div>`) in order for the tippy to work. Elements with the disabled attribute
+aren't interactive, meaning users cannot focus, hover, or click them to trigger
+a tippy.
+
+<!-- prettier-ignore -->
+```html
+<!-- Won't work! -->
+<button data-tippy="Tooltip" disabled>Text</button>
+
+<!-- Wrapper <span> will work -->
+<span data-tippy="Tooltip">
+  <button disabled>Text</button>
+</span>
+```
 
 ### Virtual elements
 

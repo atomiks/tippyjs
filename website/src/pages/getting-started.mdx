@@ -45,3 +45,17 @@ modules), and `esm` (ES6 syntax used by module bundlers like webpack).
 - `tippy.standalone.js` is `tippy.js` by itself, externally importing
   `popper.js`.
 - `tippy.js` includes `popper.js` bundled.
+
+### Frameworks
+
+Tippy.js is making an effort to create official wrappers for various frameworks.
+At present, there is an official React wrapper available:
+
+- [`@tippy.js/react`](https://github.com/atomiks/tippy.js-react)
+
+### JavaScript syntax
+
+This documentation is making use of new JavaScript features (ES6+) that old
+browsers like IE11 do not support. Although Tippy.js itself supports IE11, the
+code written in these docs may need to be transpiled using a tool like Babel to
+a compatible format if you want to copy and paste it.
