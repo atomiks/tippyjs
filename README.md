@@ -1,6 +1,8 @@
-# Tippy.js
+<p align="center">
+  <img src="https://github.com/atomiks/tippyjs/raw/master/logo.png" alt="Logo" width="150">
+</p>
 
-<img src="https://github.com/atomiks/tippyjs/raw/master/logo.png" alt="Logo" width="150">
+<h1 align="center">Tippy.js</h1>
 
 [![Build Status](https://travis-ci.org/atomiks/tippyjs.svg?branch=master)](https://travis-ci.org/atomiks/tippyjs)
 [![npm Downloads](https://img.shields.io/npm/dt/tippy.js.svg)](https://www.npmjs.com/package/tippy.js)
