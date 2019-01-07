@@ -1,5 +1,7 @@
 # Tippy.js
 
+<img src="https://github.com/atomiks/tippyjs/raw/master/logo.png" alt="Logo" width="150">
+
 [![Build Status](https://travis-ci.org/atomiks/tippyjs.svg?branch=master)](https://travis-ci.org/atomiks/tippyjs)
 [![npm Downloads](https://img.shields.io/npm/dt/tippy.js.svg)](https://www.npmjs.com/package/tippy.js)
 ![gzip Size](http://img.badgesize.io/https://unpkg.com/tippy.js/dist/tippy.all.min.js?compression=gzip&label=gzip%20size)
@@ -55,7 +57,7 @@ CDN: https://unpkg.com/tippy.js/dist/
       tippy.setDefaults({
         arrow: true,
         delay: 40,
-        theme: 'my-tippy'
+        theme: 'my-tippy',
       })
     </script>
   </body>
@@ -71,3 +73,7 @@ IE11+: browsers that support `MutationObserver` and `requestAnimationFrame`.
 ## Component Wrappers
 
 - [React component](https://github.com/atomiks/tippy.js-react)
+
+## License
+
+MIT
