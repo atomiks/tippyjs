@@ -28,9 +28,11 @@ export interface Props {
   animateFill?: boolean
   animation?: 'fade' | 'scale' | 'shift-toward' | 'perspective' | 'shift-away'
   appendTo?: Element | ((ref: Element) => Element)
+  aria?: 'describedby' | 'labelledby'
   arrow?: boolean
   arrowType?: 'sharp' | 'round'
   arrowTransform?: string
+  autoFocus?: boolean
   boundary?: 'scrollParent' | 'window' | 'viewport' | HTMLElement
   content?: Content
   delay?: number | [number, number]
