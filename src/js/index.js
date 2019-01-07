@@ -50,17 +50,19 @@ function tippy(targets, options, one) {
     return acc
   }, [])
 
-  return {
+  const collection = {
     targets,
     props,
     instances,
     destroyAll() {
-      this.instances.forEach(instance => {
+      collection.instances.forEach(instance => {
         instance.destroy()
       })
-      this.instances = []
+      collection.instances = []
     },
   }
+
+  return collection
 }
 
 /**
