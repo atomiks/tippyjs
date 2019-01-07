@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/atomiks/tippyjs/raw/master/logo.png" alt="Logo" width="150">
+  <img src="https://github.com/atomiks/tippyjs/raw/master/logo.png" alt="Logo" width="132">
 </p>
 
 <h1 align="center">Tippy.js</h1>
