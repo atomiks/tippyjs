@@ -81,7 +81,7 @@ export default function createTippy(reference, collectionProps) {
       : onMouseMove
 
   /* ======================= 🔑 Public members 🔑 ======================= */
-  // id used for the `aria-describedby` attribute
+  // id used for the `aria-describedby` / `aria-labelledby` attribute
   const id = idCounter++
 
   // Popper element reference
@@ -898,13 +898,14 @@ export default function createTippy(reference, collectionProps) {
         }
 
         if (
+          tip.props.autoFocus &&
           tip.props.interactive &&
           ['focus', 'click'].indexOf(lastTriggerEvent.type) > -1
         ) {
           focus(tip.popper)
         }
 
-        tip.reference.setAttribute('aria-describedby', tip.popper.id)
+        tip.reference.setAttribute(`aria-${tip.props.aria}`, tip.popper.id)
 
         tip.props.onShown(tip)
         tip.state.isShown = true
@@ -957,6 +958,7 @@ export default function createTippy(reference, collectionProps) {
     )
 
     if (
+      tip.props.autoFocus &&
       tip.props.interactive &&
       !referenceJustProgrammaticallyFocused &&
       ['focus', 'click'].indexOf(lastTriggerEvent.type) > -1
@@ -972,7 +974,7 @@ export default function createTippy(reference, collectionProps) {
         removeFollowCursorListener()
       }
 
-      tip.reference.removeAttribute('aria-describedby')
+      tip.reference.removeAttribute(`aria-${tip.props.aria}`)
 
       tip.popperInstance.disableEventListeners()
 
