@@ -6,6 +6,7 @@ index: 0
 
 import Tippy from '../components/Tippy'
 import { Button, Demo, Link } from '../components/Framework'
+import Dropdown from '../components/examples/Dropdown'
 
 Tippy.js is a highly customizable tooltip and popover library powered by
 Popper.js. It's compatible with IE11+, about 99% of desktop users and 96% of
@@ -158,6 +159,7 @@ Tooltips can contain HTML.
   >
     <Button>HTML Content</Button>
   </Tippy>
+  <Dropdown />
 </Demo>
 
 #### Duration
@@ -194,7 +196,9 @@ Tooltips can delay hiding or showing after a trigger.
 
 #### Follow Cursor
 
-Tooltips can follow the mouse cursor and abide by a certain axis.
+Tooltips can follow the mouse cursor and abide by a certain axis. Additionally,
+the tooltip can follow the cursor until it shows, at which point it will stop
+following (initial).
 
 <Demo>
   <Tippy followCursor animateFill={false} duration={200} animation="fade">
@@ -216,11 +220,43 @@ Tooltips can follow the mouse cursor and abide by a certain axis.
   >
     <Button>Vertical</Button>
   </Tippy>
-  {/*
-  <Tippy followCursor="initial" delay={200}>
+  <Tippy
+    followCursor="initial"
+    animateFill={false}
+    delay={200}
+    duration={200}
+    animation="fade"
+  >
     <Button>Initial</Button>
   </Tippy>
-  */}
+</Demo>
+
+#### Nesting
+
+And for fun, tooltips can even be nested. You can have fun with the following
+little example :-)
+
+<Demo>
+  <Tippy
+    content={
+      <Tippy
+        content={
+          <Tippy>
+            <Button style={{ margin: 0 }}>Nesting</Button>
+          </Tippy>
+        }
+        interactive
+        theme="light"
+      >
+        <Button style={{ margin: 0 }}>Nesting</Button>
+      </Tippy>
+    }
+    interactive
+    autoFocus={false}
+    theme="light"
+  >
+    <Button>Nesting</Button>
+  </Tippy>
 </Demo>
 
 <br />

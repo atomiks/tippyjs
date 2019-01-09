@@ -176,4 +176,10 @@ export default createGlobalStyle`
       font-size: 100%;
     }
   }
+
+  hr {
+    border: none;
+    border-top: 1px solid rgba(0, 16, 64, 0.15);
+    margin-top: 5px;
+  }
 `

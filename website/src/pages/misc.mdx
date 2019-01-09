@@ -1,7 +1,7 @@
 ---
 title: Misc
-path: /misc
-index: 10
+path: /misc/
+index: 11
 ---
 
 import EventDelegation from '../components/examples/EventDelegation'
@@ -82,17 +82,12 @@ window.addEventListener('scroll', () => {
 By default, a tippy is prevented from overflowing a scrolling container (with
 `overflow` set). If the reference element is inside, the tippy can stay stuck in
 the container viewport while scrolling or may be positioned incorrectly in some
-cases. To solve this, you can use the following popperOptions.
+cases. To solve this, you can use the `boundary` (v3.4) option and set it to
+`window`. Other values are also possible, see [All Options](/all-options).
 
 ```js
 tippy(ref, {
-  popperOptions: {
-    modifiers: {
-      preventOverflow: {
-        boundariesElement: 'window',
-      },
-    },
-  },
+  boundary: 'window',
 })
 ```
 

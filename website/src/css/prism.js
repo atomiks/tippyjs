@@ -28,7 +28,7 @@ export default createGlobalStyle`
   }
 
   pre[class*='language-'] {
-    padding: 16px 15px;
+    padding: 16px 5%;
     margin-top: 0;
     margin-left: -5.55%;
     margin-right: -5.55%;
@@ -46,6 +46,7 @@ export default createGlobalStyle`
     ${MEDIA.sm} {
       margin-left: -25px;
       margin-right: -25px;
+      padding: 0 25px;
     }
 
     ${MEDIA.md} {

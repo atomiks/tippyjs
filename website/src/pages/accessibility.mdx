@@ -1,0 +1,97 @@
+---
+title: Accessibility
+path: /accessibility/
+index: 10
+---
+
+import { Demo, Button } from '../components/Framework'
+import Dropdown from '../components/examples/Dropdown'
+
+Tooltips have some basic attributes to help with accessibility.
+
+It's recommended that tooltips are applied only to natively focusable elements
+like `<button>`. Most screenreader software will not announce the tooltip on an
+element like `<div>`.
+
+### Trigger
+
+The default trigger for tooltips is `"mouseenter focus"`. This means both a
+hover and focus via keyboard navigation will trigger a tooltip.
+
+### ARIA attributes
+
+By default, the reference element receives an `aria-describedby` attribute
+(configurable) once the tooltip is fully shown.
+
+```html
+<button aria-describedby="tippy-1">Text</button>
+<div id="tippy-1" role="tooltip" class="tippy-popper">
+  <!-- inner elements -->
+</div>
+```
+
+This allows screenreader software to announce the tooltip content describing the
+reference element. No work is required by you to achieve this functionality.
+
+### Popovers and interactivity
+
+By default, interactive tippys will be auto-focused once they are fully shown to
+allow the user to interact with elements inside it. However, some additional
+work will be needed in certain cases.
+
+It's recommended that an interactive tippy with a `focus` trigger is appended
+directly after the reference element in the DOM tree using the `appendTo` option
+and have `autoFocus` disabled. If triggered by a `click`, the default options
+suffice.
+
+For UI elements like dropdowns, you should apply these attributes to the
+reference:
+
+- `aria-haspopup="true"`
+- `aria-expanded="false"`
+
+<!-- prettier-ignore -->
+```html
+<!-- The element should have its own wrapper. -->
+<div>
+  <button aria-haspopup="true" aria-expanded="false">Text</button>
+</div>
+```
+
+We will need to dynamically change the `aria-expanded` attribute based on the
+state of the tooltip:
+
+```js
+tippy('button', {
+  autoFocus: false,
+  appendTo: ref => ref.parentNode,
+  onMount({ reference }) {
+    reference.setAttribute('aria-expanded', 'true')
+  },
+  onHide({ reference }) {
+    reference.setAttribute('aria-expanded', 'false')
+  },
+})
+```
+
+<Demo>
+  <Button>Click me then press Tab</Button>
+  <Dropdown />
+</Demo>
+
+Elements within the tippy can be tabbed to since they are directly after the
+reference element. The tooltip automatically hides once no elements inside it
+are in focus.
+
+If for some reason you don't want the tooltip to hide once blurred, you can
+define the following option:
+
+```js
+tippy('button', {
+  shouldPopperHideOnBlur(focusOutEvent) {
+    // You can read the `focusout` event object
+    // to determine which boolean should be returned.
+    return false
+  },
+})
+```

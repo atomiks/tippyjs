@@ -30,4 +30,9 @@ export default createGlobalStyle`
       background: tomato;
     }
   }
+
+  .tippy-tooltip.dropdown-theme {
+    text-align: left;
+    font-size: 95%;
+  }
 `
