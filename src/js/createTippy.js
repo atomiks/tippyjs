@@ -905,7 +905,9 @@ export default function createTippy(reference, collectionProps) {
           focus(tip.popper)
         }
 
-        tip.reference.setAttribute(`aria-${tip.props.aria}`, tip.popper.id)
+        if (tip.props.aria) {
+          tip.reference.setAttribute(`aria-${tip.props.aria}`, tip.popper.id)
+        }
 
         tip.props.onShown(tip)
         tip.state.isShown = true
@@ -974,7 +976,9 @@ export default function createTippy(reference, collectionProps) {
         removeFollowCursorListener()
       }
 
-      tip.reference.removeAttribute(`aria-${tip.props.aria}`)
+      if (tip.props.aria) {
+        tip.reference.removeAttribute(`aria-${tip.props.aria}`)
+      }
 
       tip.popperInstance.disableEventListeners()
 

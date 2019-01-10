@@ -642,6 +642,15 @@ describe('aria', () => {
     tip.hide()
     expect(ref.getAttribute('aria-labelledby')).toBe(null)
   })
+
+  it('does not set attribute for falsy/null value', async () => {
+    const ref = h()
+    const tip = tippy.one(ref, { aria: null, duration: 0 })
+    tip.show()
+    await wait(1)
+    expect(ref.getAttribute('aria-null')).toBe(null)
+    expect(ref.getAttribute('aria-describedby')).toBe(null)
+  })
 })
 
 describe('boundary', () => {
