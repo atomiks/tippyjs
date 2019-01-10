@@ -46,7 +46,7 @@ export default createGlobalStyle`
     ${MEDIA.sm} {
       margin-left: -25px;
       margin-right: -25px;
-      padding: 0 25px;
+      padding: 16px 25px;
     }
 
     ${MEDIA.md} {

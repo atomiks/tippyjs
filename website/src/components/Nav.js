@@ -4,6 +4,7 @@ import { MEDIA, Link } from './Framework'
 import { StaticQuery, graphql } from 'gatsby'
 import { sortPagesByIndex } from '../utils'
 import X from 'react-feather/dist/icons/x'
+import ElasticScroll from './ElasticScroll'
 
 const Navbar = styled.nav`
   display: ${props => (props.isMounted ? 'block' : 'none')};
@@ -14,7 +15,8 @@ const Navbar = styled.nav`
   border-right: 1px solid rgba(0, 16, 64, 0.08);
   background-clip: padding-box;
   padding: 16px 0;
-  background: #f7f8fc;
+  background: #4b4f74;
+  color: white;
   overflow-y: auto;
   z-index: 1;
   transform: ${props =>
@@ -117,34 +119,36 @@ class Nav extends Component {
     const { isOpen } = this.props
     const { isMounted, transitions } = this.state
     return (
-      <Navbar
-        tabIndex="-1"
-        aria-label="Menu"
-        ref={this.ref}
-        style={{ transition: transitions ? '' : 'none' }}
-        isOpen={isOpen}
-        isMounted={isMounted}
-        onTransitionEnd={this.handleTransitionEnd}
-        onBlur={this.handleBlur}
-      >
-        <XButton aria-label="Close Menu" onClick={this.handleClose}>
-          <X style={{ width: 36, height: 36 }} />
-        </XButton>
-        <List>
-          <StaticQuery
-            query={allMdxQuery}
-            render={data => {
-              return sortPagesByIndex(data.allMdx.edges).map(({ node }) => (
-                <ListItem key={node.frontmatter.path}>
-                  <Link to={node.frontmatter.path}>
-                    {node.frontmatter.title}
-                  </Link>
-                </ListItem>
-              ))
-            }}
-          />
-        </List>
-      </Navbar>
+      <ElasticScroll>
+        <Navbar
+          tabIndex="-1"
+          aria-label="Menu"
+          ref={this.ref}
+          style={{ transition: transitions ? '' : 'none' }}
+          isOpen={isOpen}
+          isMounted={isMounted}
+          onTransitionEnd={this.handleTransitionEnd}
+          onBlur={this.handleBlur}
+        >
+          <XButton aria-label="Close Menu" onClick={this.handleClose}>
+            <X style={{ width: 36, height: 36 }} />
+          </XButton>
+          <List>
+            <StaticQuery
+              query={allMdxQuery}
+              render={data => {
+                return sortPagesByIndex(data.allMdx.edges).map(({ node }) => (
+                  <ListItem key={node.frontmatter.path}>
+                    <Link to={node.frontmatter.path}>
+                      {node.frontmatter.title}
+                    </Link>
+                  </ListItem>
+                ))
+              }}
+            />
+          </List>
+        </Navbar>
+      </ElasticScroll>
     )
   }
 }
