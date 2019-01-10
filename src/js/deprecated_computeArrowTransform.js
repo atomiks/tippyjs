@@ -1,6 +1,7 @@
 import Selectors from './selectors'
 import { getPopperPlacement } from './popper'
 import { closest } from './ponyfills'
+import { includes } from './utils'
 
 // =============================================================================
 // DEPRECATED
@@ -90,8 +91,8 @@ export function getTransformNumbers(str, regex) {
  */
 function computeArrowTransform(arrow, arrowTransform) {
   const placement = getPopperPlacement(closest(arrow, Selectors.POPPER))
-  const isVertical = placement === 'top' || placement === 'bottom'
-  const isReverse = placement === 'right' || placement === 'bottom'
+  const isVertical = includes(['top', 'bottom'], placement)
+  const isReverse = includes(['right', 'bottom'], placement)
 
   const matches = {
     translate: {

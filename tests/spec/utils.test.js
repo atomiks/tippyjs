@@ -211,3 +211,19 @@ describe('getModifier', () => {
     ).toEqual({ enabled: true })
   })
 })
+
+describe('includes', () => {
+  it('includes(string, string)', () => {
+    expect(Utils.includes('test', 'es')).toBe(true)
+    expect(Utils.includes('$128', '$12')).toBe(true)
+    expect(Utils.includes('test', 'tesst')).toBe(false)
+    expect(Utils.includes('$128', '$$')).toBe(false)
+  })
+
+  it('includes(Array, string)', () => {
+    expect(Utils.includes(['test', 'other'], 'other')).toBe(true)
+    expect(Utils.includes(['test', 'other'], 'test')).toBe(true)
+    expect(Utils.includes(['test', 'other'], 'othr')).toBe(false)
+    expect(Utils.includes(['test', 'other'], 'tst')).toBe(false)
+  })
+})

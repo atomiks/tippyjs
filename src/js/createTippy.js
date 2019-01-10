@@ -220,8 +220,8 @@ export default function createTippy(reference, collectionProps) {
     // overflowing. Maybe Popper.js issue?
     const placement = getPopperPlacement(tip.popper)
     const padding = tip.popperChildren.arrow ? 20 : 5
-    const isVerticalPlacement = placement === 'top' || placement === 'bottom'
-    const isHorizontalPlacement = placement === 'left' || placement === 'right'
+    const isVerticalPlacement = includes(['top', 'bottom'], placement)
+    const isHorizontalPlacement = includes(['left', 'right'], placement)
 
     // Top / left boundary
     let x = isVerticalPlacement ? Math.max(padding, clientX) : clientX
