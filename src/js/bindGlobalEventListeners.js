@@ -2,6 +2,7 @@ import { supportsTouch, isIOS } from './browser'
 import Selectors from './selectors'
 import { hideAllPoppers } from './popper'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
+import { includes } from './utils'
 
 export let isUsingTouch = false
 
@@ -56,7 +57,7 @@ export function onDocumentClick({ target }) {
   )
   if (reference) {
     const tip = reference._tippy
-    const isClickTrigger = tip.props.trigger.indexOf('click') > -1
+    const isClickTrigger = includes(tip.props.trigger, 'click')
 
     if (isUsingTouch || isClickTrigger) {
       return hideAllPoppers(tip)
