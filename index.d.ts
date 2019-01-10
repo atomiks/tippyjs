@@ -40,7 +40,13 @@ export interface Props {
   distance?: number
   flip?: boolean
   flipBehavior?: 'flip' | Placement[]
-  followCursor?: boolean | 'vertical' | 'horizontal' | 'initial'
+  followCursor?:
+    | boolean
+    | 'vertical'
+    | 'horizontal'
+    | 'initial'
+    | 'initialVertical'
+    | 'initialHorizontal'
   hideOnClick?: boolean | 'toggle'
   inertia?: boolean
   interactive?: boolean
