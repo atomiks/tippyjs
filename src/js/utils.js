@@ -108,3 +108,13 @@ export function debounce(fn, ms) {
 export function getModifier(obj, key) {
   return obj && obj.modifiers && obj.modifiers[key]
 }
+
+/**
+ * Determines if an array or string includes a value
+ * @param {Array|String} a
+ * @param {any} b
+ * @return {Boolean}
+ */
+export function includes(a, b) {
+  return a.indexOf(b) > -1
+}

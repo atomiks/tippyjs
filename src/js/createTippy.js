@@ -26,6 +26,7 @@ import {
   debounce,
   getValue,
   getModifier,
+  includes,
 } from './utils'
 
 let idCounter = 1
@@ -219,8 +220,8 @@ export default function createTippy(reference, collectionProps) {
     // overflowing. Maybe Popper.js issue?
     const placement = getPopperPlacement(tip.popper)
     const padding = tip.popperChildren.arrow ? 20 : 5
-    const isVerticalPlacement = placement === 'top' || placement === 'bottom'
-    const isHorizontalPlacement = placement === 'left' || placement === 'right'
+    const isVerticalPlacement = includes(['top', 'bottom'], placement)
+    const isHorizontalPlacement = includes(['left', 'right'], placement)
 
     // Top / left boundary
     let x = isVerticalPlacement ? Math.max(padding, clientX) : clientX
@@ -236,8 +237,11 @@ export default function createTippy(reference, collectionProps) {
 
     const rect = tip.reference.getBoundingClientRect()
     const { followCursor } = tip.props
-    const isHorizontal = followCursor === 'horizontal'
-    const isVertical = followCursor === 'vertical'
+    const isHorizontal = includes(
+      ['horizontal', 'initialHorizontal'],
+      followCursor,
+    )
+    const isVertical = includes(['vertical', 'initialVertical'], followCursor)
 
     tip.popperInstance.reference = {
       getBoundingClientRect: () => ({
@@ -254,7 +258,7 @@ export default function createTippy(reference, collectionProps) {
 
     tip.popperInstance.scheduleUpdate()
 
-    if (followCursor === 'initial' && tip.state.isVisible) {
+    if (includes(String(followCursor), 'initial') && tip.state.isVisible) {
       removeFollowCursorListener()
     }
   }
@@ -297,8 +301,10 @@ export default function createTippy(reference, collectionProps) {
 
     // If the tooltip has a delay, we need to be listening to the mousemove as
     // soon as the trigger event is fired, so that it's in the correct position
-    // upon mount
-    if (hasFollowCursorBehavior()) {
+    // upon mount.
+    // Edge case: if the tooltip is still mounted, but then prepareShow() is
+    // called, it causes a jump.
+    if (hasFollowCursorBehavior() && !tip.state.isMounted) {
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
@@ -472,7 +478,7 @@ export default function createTippy(reference, collectionProps) {
    * `touchHold` option
    */
   function isEventListenerStopped(event) {
-    const isTouchEvent = event.type.indexOf('touch') > -1
+    const isTouchEvent = includes(event.type, 'touch')
     const caseA =
       supportsTouch && isUsingTouch && tip.props.touchHold && !isTouchEvent
     const caseB = isUsingTouch && !tip.props.touchHold && isTouchEvent
@@ -900,7 +906,7 @@ export default function createTippy(reference, collectionProps) {
         if (
           tip.props.autoFocus &&
           tip.props.interactive &&
-          ['focus', 'click'].indexOf(lastTriggerEvent.type) > -1
+          includes(['focus', 'click'], lastTriggerEvent.type)
         ) {
           focus(tip.popper)
         }
@@ -963,7 +969,7 @@ export default function createTippy(reference, collectionProps) {
       tip.props.autoFocus &&
       tip.props.interactive &&
       !referenceJustProgrammaticallyFocused &&
-      ['focus', 'click'].indexOf(lastTriggerEvent.type) > -1
+      includes(['focus', 'click'], lastTriggerEvent.type)
     ) {
       if (lastTriggerEvent.type === 'focus') {
         referenceJustProgrammaticallyFocused = true
