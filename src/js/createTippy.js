@@ -681,7 +681,7 @@ export default function createTippy(reference, collectionProps) {
    * Adds event listeners to the reference based on the `trigger` prop
    */
   function addTriggersToReference() {
-    if (tip.props.touchHold) {
+    if (tip.props.touchHold && !tip.props.target) {
       on('touchstart', onTrigger, PASSIVE)
       on('touchend', onMouseLeave, PASSIVE)
     }
