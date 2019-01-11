@@ -64,7 +64,7 @@
     "bundlesize": "^0.17.0",
     "colorette": "^1.0.7",
     "cssnano": "^3.10.0",
-    "eslint": "^4.18.2",
+    "eslint": "^5.12.0",
     "jest": "^23.5.0",
     "mutation-observer": "^1.0.3",
     "node-sass": "^4.10.0",
