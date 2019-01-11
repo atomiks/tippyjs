@@ -28,6 +28,7 @@ import {
   getModifier,
   includes,
 } from './utils'
+import { PASSIVE } from './constants'
 
 let idCounter = 1
 
@@ -669,68 +670,66 @@ export default function createTippy(reference, collectionProps) {
   }
 
   /**
-   * Adds an event listener to the reference
+   * Adds an event listener to the reference and stores it in `listeners`
    */
-  function on(eventType, handler, acc) {
-    tip.reference.addEventListener(eventType, handler)
-    acc.push({ eventType, handler })
+  function on(eventType, handler, options = false) {
+    tip.reference.addEventListener(eventType, handler, options)
+    listeners.push({ eventType, handler, options })
   }
 
   /**
    * Adds event listeners to the reference based on the `trigger` prop
    */
   function addTriggersToReference() {
-    listeners = tip.props.trigger
+    if (tip.props.touchHold) {
+      on('touchstart', onTrigger, PASSIVE)
+      on('touchend', onMouseLeave, PASSIVE)
+    }
+
+    tip.props.trigger
       .trim()
       .split(' ')
-      .reduce((acc, eventType) => {
+      .forEach(eventType => {
         if (eventType === 'manual') {
-          return acc
+          return
         }
 
         if (!tip.props.target) {
-          on(eventType, onTrigger, acc)
-
-          if (tip.props.touchHold) {
-            on('touchstart', onTrigger, acc)
-            on('touchend', onMouseLeave, acc)
-          }
-
+          on(eventType, onTrigger)
           switch (eventType) {
             case 'mouseenter':
-              on('mouseleave', onMouseLeave, acc)
+              on('mouseleave', onMouseLeave)
               break
             case 'focus':
-              on(isIE ? 'focusout' : 'blur', onBlur, acc)
+              on(isIE ? 'focusout' : 'blur', onBlur)
               break
           }
         } else {
           switch (eventType) {
             case 'mouseenter':
-              on('mouseover', onDelegateShow, acc)
-              on('mouseout', onDelegateHide, acc)
+              on('mouseover', onDelegateShow)
+              on('mouseout', onDelegateHide)
               break
             case 'focus':
-              on('focusin', onDelegateShow, acc)
-              on('focusout', onDelegateHide, acc)
+              on('focusin', onDelegateShow)
+              on('focusout', onDelegateHide)
               break
             case 'click':
-              on(eventType, onDelegateShow, acc)
+              on(eventType, onDelegateShow)
               break
           }
         }
-
-        return acc
-      }, [])
+      })
   }
 
   /**
    * Removes event listeners from the reference
    */
   function removeTriggersFromReference() {
-    listeners.forEach(({ eventType, handler }) => {
-      tip.reference.removeEventListener(eventType, handler)
+    listeners.forEach(({ eventType, handler, options }) => {
+      tip.reference.removeEventListener(eventType, handler, options)
     })
+    listeners = []
   }
 
   /* ======================= 🔑 Public methods 🔑 ======================= */

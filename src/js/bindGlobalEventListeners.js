@@ -3,6 +3,7 @@ import Selectors from './selectors'
 import { hideAllPoppers } from './popper'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
 import { includes } from './utils'
+import { PASSIVE } from './constants'
 
 export let isUsingTouch = false
 
@@ -94,8 +95,7 @@ export function onWindowResize() {
  */
 export default function bindGlobalEventListeners() {
   document.addEventListener('click', onDocumentClick, true)
-  // Old browsers will use capture phase but the phase does not matter anyway
-  document.addEventListener('touchstart', onDocumentTouch, { passive: true })
+  document.addEventListener('touchstart', onDocumentTouch, PASSIVE)
   window.addEventListener('blur', onWindowBlur)
   window.addEventListener('resize', onWindowResize)
 

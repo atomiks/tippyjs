@@ -1,7 +1,6 @@
 import Selectors from './selectors'
 import { arrayFrom, closestCallback } from './ponyfills'
-
-const FF_EXTENSION_TRICK = { x: true }
+import { FF_EXTENSION_TRICK } from './constants'
 
 /**
  * Returns a new `div` element
