@@ -238,11 +238,8 @@ export default function createTippy(reference, collectionProps) {
 
     const rect = tip.reference.getBoundingClientRect()
     const { followCursor } = tip.props
-    const isHorizontal = includes(
-      ['horizontal', 'initialHorizontal'],
-      followCursor,
-    )
-    const isVertical = includes(['vertical', 'initialVertical'], followCursor)
+    const isHorizontal = followCursor === 'horizontal'
+    const isVertical = followCursor === 'vertical'
 
     tip.popperInstance.reference = {
       getBoundingClientRect: () => ({
@@ -259,7 +256,7 @@ export default function createTippy(reference, collectionProps) {
 
     tip.popperInstance.scheduleUpdate()
 
-    if (includes(String(followCursor), 'initial') && tip.state.isVisible) {
+    if (followCursor === 'initial' && tip.state.isVisible) {
       removeFollowCursorListener()
     }
   }
