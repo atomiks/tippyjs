@@ -67,6 +67,8 @@ function Dropdown() {
         </>
       }
       interactive
+      aria={null}
+      hideOnClick={false}
       animateFill={false}
       placement="bottom"
       distance={7}
