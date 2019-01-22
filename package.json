@@ -22,23 +22,18 @@
     "url": "git+https://github.com/atomiks/tippyjs.git"
   },
   "scripts": {
-    "dev": "parcel tests/visual/index.html -d tests/visual/dist --open",
+    "dev": "parcel demo/index.html -d .devserver --open",
     "build": "node rollup.build.js && bundlesize",
     "test": "jest --coverage",
-    "lint": "eslint \"src/**/*.js\"",
-    "prettier": "prettier --write \"./**/*{js,scss}\"",
+    "lint": "eslint --fix \"src/**/*.js\"",
+    "format": "prettier --write \"{src,test}/**/*{js,scss}\"",
     "release": "npm test && npm run build && git add . && git commit -am $npm_package_version && git tag v$npm_package_version && git push origin master && git push --tags && npm publish"
   },
   "jest": {
     "setupFiles": [
-      "./tests/polyfills.js"
+      "./test/setup.js"
     ],
-    "testRegex": "./tests/.*.test.js$"
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "all"
+    "testRegex": "./test/.*.test.js$"
   },
   "browserslist": [
     "> 0.5%"
@@ -53,6 +48,21 @@
       "maxSize": "2 kB"
     }
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "{src,test}/**/*.{js,json,scss,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "src/**/*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.26.3",
@@ -65,8 +75,8 @@
     "colorette": "^1.0.7",
     "cssnano": "^3.10.0",
     "eslint": "^5.12.0",
+    "eslint-config-prettier": "^3.6.0",
     "jest": "^23.5.0",
-    "mutation-observer": "^1.0.3",
     "node-sass": "^4.10.0",
     "parcel-bundler": "^1.10.3",
     "postcss": "^5.2.18",

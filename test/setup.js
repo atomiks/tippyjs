@@ -10,7 +10,11 @@ global.window.document.createRange = function createRange() {
   }
 }
 
-global.window.MutationObserver = require('mutation-observer')
+global.window.MutationObserver = class {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+}
 
 global.window.focus = () => {}
 global.window.scroll = () => {}
