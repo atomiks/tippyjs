@@ -762,11 +762,11 @@ export default function createTippy(reference, collectionProps) {
     const nextProps = evaluateProps(tip.reference, {
       ...tip.props,
       ...options,
-      performance: true,
+      ignoreAttributes: true,
     })
-    nextProps.performance = hasOwnProperty(options, 'performance')
-      ? options.performance
-      : prevProps.performance
+    nextProps.ignoreAttributes = hasOwnProperty(options, 'ignoreAttributes')
+      ? options.ignoreAttributes
+      : prevProps.ignoreAttributes
     tip.props = nextProps
 
     if (
