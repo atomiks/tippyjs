@@ -81,22 +81,6 @@ describe('arrow', () => {
   })
 })
 
-describe('arrowTransform', () => {
-  it('sets the transform property on the arrow element', () => {
-    const {
-      popperChildren: { arrow },
-      popperInstance,
-    } = tippy.one(h(), {
-      lazy: false,
-      arrow: true,
-      arrowTransform: 'translateX(5px) scale(2)',
-    })
-
-    popperInstance.options.onCreate()
-    expect(arrow.style.transform).toBe('translateX(5px) scale(2)')
-  })
-})
-
 describe('animateFill', () => {
   it('true: sets `data-animatefill` attribute on tooltip', () => {
     const ref = h()
@@ -339,17 +323,17 @@ describe('flipBehavior', () => {
   })
 })
 
-describe('performance', () => {
+describe('ignoreAttributes', () => {
   it('false: looks at data-tippy-* options', () => {
     const { props } = tippy.one(h('div', { 'data-tippy-arrow': true }), {
-      performance: false,
+      ignoreAttributes: false,
     })
     expect(props.arrow).toBe(true)
   })
 
   it('true: ignores data-tippy-* options', () => {
     const { props } = tippy.one(h('div', { 'data-tippy-arrow': true }), {
-      performance: true,
+      ignoreAttributes: true,
     })
     expect(props.arrow).toBe(false)
   })
