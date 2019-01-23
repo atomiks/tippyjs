@@ -1,7 +1,7 @@
-import styles from '../dist/tippy.css'
+import css from '../index.css'
 import tippy from '../src/js/index'
 import { injectCSS } from '../src/js/css'
 
-injectCSS(styles)
+injectCSS(css)
 
 export default tippy

@@ -2,8 +2,8 @@
   "name": "tippy.js",
   "version": "3.4.1",
   "description": "Vanilla JS Tooltip & Popover Library",
-  "main": "dist/tippy.all.js",
-  "module": "dist/esm/tippy.standalone.js",
+  "main": "./umd/index.all.min.js",
+  "module": "./es/index.all.js",
   "types": "index.d.ts",
   "author": "atomiks",
   "license": "MIT",
@@ -40,11 +40,11 @@
   ],
   "bundlesize": [
     {
-      "path": "./dist/tippy.all.min.js",
-      "maxSize": "15 kB"
+      "path": "./umd/index.min.js",
+      "maxSize": "7 kB"
     },
     {
-      "path": "./dist/tippy.css",
+      "path": "./index.css",
       "maxSize": "2 kB"
     }
   ],
@@ -64,13 +64,11 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.1",
+    "@babel/preset-env": "^7.3.1",
     "autoprefixer": "^6.7.7",
-    "babel-core": "^6.26.3",
     "babel-jest": "^22.4.4",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015-rollup": "^3.0.0",
-    "babel-preset-stage-2": "^6.24.1",
     "bundlesize": "^0.17.0",
     "colorette": "^1.0.7",
     "cssnano": "^3.10.0",
@@ -83,14 +81,14 @@
     "postcss-cssnext": "^3.1.0",
     "postcss-import": "^11.1.0",
     "prettier": "^1.15.3",
-    "rollup": "^0.55.5",
-    "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-babel-minify": "^4.0.0",
-    "rollup-plugin-commonjs": "^8.4.1",
-    "rollup-plugin-css-only": "^0.2.0",
-    "rollup-plugin-json": "^2.3.1",
-    "rollup-plugin-node-resolve": "^3.2.0",
-    "rollup-plugin-sass": "^0.4.10"
+    "rollup": "^1.1.2",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-babel-minify": "^7.0.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-css-only": "^0.4.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-sass": "^1.1.0"
   },
   "dependencies": {
     "popper.js": "^1.14.6"

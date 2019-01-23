@@ -9,104 +9,89 @@ const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
 const resolve = require('rollup-plugin-node-resolve')
 const commonjs = require('rollup-plugin-commonjs')
-const cssOnly = require('rollup-plugin-css-only')
 const json = require('rollup-plugin-json')
-const { magenta, red, green, blue, bold, yellow } = require('colorette')
+const cssOnly = require('rollup-plugin-css-only')
+const { green, blue } = require('colorette')
 
-// wrapper utils
-const sassPluginOutput = name =>
+const BANNER = `/**!
+* tippy.js v${pkg.version}
+* (c) 2017-${new Date().getFullYear()} atomiks
+* MIT License
+*/
+`
+
+const pluginBabel = babel({ exclude: 'node_modules/**' })
+const pluginMinify = minify({ comments: false })
+const pluginResolve = resolve()
+const pluginCSS = cssOnly({ output: false })
+const pluginJSON = json()
+const createPluginSCSS = output =>
   sass({
-    output: name,
+    output,
     processor: css =>
       postcss([autoprefixer, cssnano])
         .process(css)
         .then(result => result.css),
   })
-const r = (entryFile, plugins = [], excludePopper) =>
-  rollup({
-    input: `./build/${entryFile}`,
-    plugins:
-      typeof plugins === 'string'
-        ? [sassPluginOutput(plugins), cssOnly({ output: plugins })]
-        : [
-            pluginJSON,
-            pluginSCSS,
-            pluginCSS,
-            ...plugins,
-            pluginCJS,
-            pluginResolve,
-          ],
-    external: excludePopper ? ['popper.js'] : [],
-  })
-const output = type => (fileName, { min, sourcemap = true } = {}) => ({
-  name: 'tippy',
-  format: type,
-  file: `./dist/${type === 'es' ? 'esm/' : ''}${fileName}`,
-  globals: { 'popper.js': 'Popper' },
-  sourcemap,
-  banner: min
-    ? false
-    : `/*!
-* Tippy.js v${pkg.version}
-* (c) 2017-${new Date().getFullYear()} atomiks
-* MIT
-*/`,
+
+const config = input => (...plugins) => ({
+  input,
+  plugins: [pluginBabel, pluginResolve, pluginJSON, ...plugins],
+  external: ['popper.js'],
 })
 
-// plugins
-const pluginES5 = babel({
-  presets: [['env', { modules: false }], 'stage-2'],
-  plugins: ['external-helpers'],
-})
-const pluginMinify = minify({ comments: false })
-const pluginJSON = json()
-const pluginSCSS = sassPluginOutput('./dist/tippy.css')
-const pluginCSS = cssOnly({ output: false })
-const pluginCJS = commonjs()
-const pluginResolve = resolve({ browser: true })
+const output = format => (file, { min = false } = {}) => {
+  const isCSS = ['css', 'themes'].includes(format)
+  return {
+    name: 'tippy',
+    format: isCSS ? 'umd' : format,
+    sourcemap: !isCSS,
+    file: format === 'css' ? 'index.js' : `./${format}/${file}`,
+    globals: { 'popper.js': 'Popper' },
+    banner: min ? undefined : BANNER,
+  }
+}
 
-const umd = output('umd')
-const esm = output('es')
+const bundleFormats = [output('umd'), output('es')]
+const cssFormat = output('css')
+const themesFormat = output('themes')
 
 const build = async () => {
-  console.log(blue('⏳ Building UMD and ESM bundles...'))
+  console.log(blue('⏳ Building bundles...'))
 
-  // Tippy + Popper
-  const bundle = await r('bundle.js', [pluginES5])
-  // "all" is reliant on the existence of compiled css
-  await bundle.write(umd('tippy.js'))
-  const bundleMin = await r('bundle.js', [pluginES5, pluginMinify])
+  const indexConfig = config('./build/index.js')
+  const allConfig = config('./build/all.js')
 
-  // Tippy
-  const standalone = await r('bundle.js', [pluginES5], true)
-  const standaloneMin = await r('bundle.js', [pluginES5, pluginMinify], true)
+  const preCSSBundle = await rollup(
+    config('./build/css.js')(createPluginSCSS('./index.css')),
+  )
+  await preCSSBundle.write(cssFormat('./index.js'))
+  fs.unlinkSync('./index.js')
 
-  // Tippy + Popper + CSS
-  const all = await r('main.js', [pluginES5])
-  const allMin = await r('main.js', [pluginES5, pluginMinify])
+  const bundle = await rollup(indexConfig())
+  const bundleMin = await rollup(indexConfig(pluginMinify))
+  const bundleCSS = await rollup(allConfig(pluginCSS))
+  const bundleCSSMin = await rollup(allConfig(pluginMinify, pluginCSS))
 
-  all.write(umd('tippy.all.js'))
-  allMin.write(umd('tippy.all.min.js', { min: true }))
-  console.log(green('✓ All'))
+  for (const format of bundleFormats) {
+    bundle.write(format('index.js'))
+    bundleMin.write(format('index.min.js', { min: true }))
+    bundleCSS.write(format('index.all.js'))
+    bundleCSSMin.write(format('index.all.min.js', { min: true }))
+  }
 
-  bundle.write(esm('tippy.js'))
-  bundleMin.write(umd('tippy.min.js', { min: true }))
-  bundleMin.write(esm('tippy.min.js', { min: true }))
-  console.log(green('✓ Bundle'))
-
-  standalone.write(umd('tippy.standalone.js'))
-  standalone.write(esm('tippy.standalone.js'))
-  standaloneMin.write(umd('tippy.standalone.min.js', { min: true }))
-  standaloneMin.write(esm('tippy.standalone.min.js', { min: true }))
-  console.log(green('✓ Standalone'))
+  console.log(green('Bundles complete'))
 
   console.log(blue('\n⏳ Building CSS themes...'))
-  for (let theme of fs.readdirSync('./src/scss/themes')) {
-    theme = theme.replace('.scss', '')
-    const t = await r(`themes/${theme}.js`, `./dist/themes/${theme}.css`)
-    await t.write(umd(`tippy.${theme}.js`, { sourcemap: false }))
-    fs.unlinkSync(`./dist/tippy.${theme}.js`)
+
+  for (const theme of fs.readdirSync('./build/themes')) {
+    const themeConfig = config(`./build/themes/${theme}`)
+    const outputFile = `./themes/${theme.replace('.js', '')}.css`
+    const bundle = await rollup(themeConfig(createPluginSCSS(outputFile)))
+    await bundle.write(themesFormat(theme))
+    fs.unlinkSync(`./themes/${theme}`)
   }
+
   console.log(green('✓ Themes\n'))
 }
 

@@ -1,18 +1,4 @@
 {
-  "presets": [["env", { "modules": false }], "stage-2"],
-  "env": {
-    "test": {
-      "presets": [
-        [
-          "env",
-          {
-            "targets": {
-              "node": "current"
-            }
-          }
-        ],
-        "jest"
-      ]
-    }
-  }
+  "presets": ["@babel/preset-env"],
+  "plugins": [["@babel/plugin-proposal-object-rest-spread", { "loose": true }]]
 }
