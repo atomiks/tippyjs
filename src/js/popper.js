@@ -1,6 +1,6 @@
 import Selectors from './selectors'
 import { arrayFrom, closestCallback } from './ponyfills'
-import { FF_EXTENSION_TRICK } from './constants'
+import { innerHTML } from './utils'
 
 /**
  * Returns a new `div` element
@@ -16,8 +16,7 @@ export function div() {
  * @param {Element|String} html
  */
 export function setInnerHTML(el, html) {
-  el[FF_EXTENSION_TRICK.x && 'innerHTML'] =
-    html instanceof Element ? html[FF_EXTENSION_TRICK.x && 'innerHTML'] : html
+  el[innerHTML()] = html instanceof Element ? html[innerHTML()] : html
 }
 
 /**

@@ -127,3 +127,11 @@ export function includes(a, b) {
 export function isSingular(value) {
   return isPlainObject(value) || value instanceof Element
 }
+
+/**
+ * Tricking bundlers, linters, and minifiers
+ * @return {String}
+ */
+export function innerHTML() {
+  return 'innerHTML'
+}
