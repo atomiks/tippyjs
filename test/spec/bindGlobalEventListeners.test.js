@@ -17,7 +17,7 @@ describe('onDocumentTouch', () => {
 
 describe('onDocumentClick', () => {
   it('hides all poppers if neither a popper or reference was clicked', done => {
-    const instance = tippy.one(h())
+    const instance = tippy(h())
     expect(instance.state.isVisible).toBe(false)
     instance.show()
     Listeners.onDocumentClick({ target: document.createElement('div') })
@@ -28,7 +28,7 @@ describe('onDocumentClick', () => {
   })
 
   it('does not hide poppers if an interactive popper was clicked', done => {
-    const instance = tippy.one(h(), {
+    const instance = tippy(h(), {
       interactive: true,
     })
     expect(instance.state.isVisible).toBe(false)
@@ -41,7 +41,7 @@ describe('onDocumentClick', () => {
   })
 
   it('hides poppers if a non-interactive popper was clicked', done => {
-    const instance = tippy.one(h(), {
+    const instance = tippy(h(), {
       interactive: false,
     })
     expect(instance.state.isVisible).toBe(false)
@@ -54,7 +54,7 @@ describe('onDocumentClick', () => {
   })
 
   it('does not hide poppers if `hideOnClick: false` & clicked trigger-clicked reference', done => {
-    const instance = tippy.one(h(), {
+    const instance = tippy(h(), {
       trigger: 'click',
       hideOnClick: false,
     })
@@ -70,7 +70,7 @@ describe('onDocumentClick', () => {
 describe('onWindowBlur', () => {
   it('blurs reference elements', () => {
     const ref = document.createElement('button')
-    const instance = tippy.one(ref, { content: 'content' })
+    const instance = tippy(ref, { content: 'content' })
     document.body.append(ref)
     let called = false
     ref.addEventListener('blur', () => {
@@ -84,7 +84,7 @@ describe('onWindowBlur', () => {
 
 describe('onWindowResize', () => {
   it('updates poppers with `livePlacement: false`', () => {
-    const instance = tippy.one(h(), withTestOptions({ livePlacement: false }))
+    const instance = tippy(h(), withTestOptions({ livePlacement: false }))
     instance.show()
     const { scheduleUpdate } = instance.popperInstance
     instance.popperInstance.scheduleUpdate = jest.fn()

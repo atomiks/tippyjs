@@ -7,7 +7,7 @@ import { polyfillElementPrototypeProperties } from './reference'
 import { validateOptions } from './props'
 import { arrayFrom } from './ponyfills'
 import { hideAllPoppers } from './popper'
-import { isPlainObject, getArrayOfElements } from './utils'
+import { isSingular, isPlainObject, getArrayOfElements } from './utils'
 
 let globalEventListenersBound = false
 
@@ -15,10 +15,9 @@ let globalEventListenersBound = false
  * Exported module
  * @param {String|Element|Element[]|NodeList|Object} targets
  * @param {Object} options
- * @param {Boolean} one
  * @return {Object}
  */
-function tippy(targets, options, one) {
+function tippy(targets, options) {
   validateOptions(options, Defaults)
 
   if (!globalEventListenersBound) {
@@ -36,13 +35,7 @@ function tippy(targets, options, one) {
     polyfillElementPrototypeProperties(targets)
   }
 
-  const references = getArrayOfElements(targets)
-  const firstReference = references[0]
-
-  const instances = (one && firstReference
-    ? [firstReference]
-    : references
-  ).reduce((acc, reference) => {
+  const instances = getArrayOfElements(targets).reduce((acc, reference) => {
     const tip = reference && createTippy(reference, props)
     if (tip) {
       acc.push(tip)
@@ -50,19 +43,7 @@ function tippy(targets, options, one) {
     return acc
   }, [])
 
-  const collection = {
-    targets,
-    props,
-    instances,
-    destroyAll() {
-      collection.instances.forEach(instance => {
-        instance.destroy()
-      })
-      collection.instances = []
-    },
-  }
-
-  return collection
+  return isSingular(targets) ? instances[0] : instances
 }
 
 /**
@@ -74,7 +55,6 @@ tippy.defaults = Defaults
 /**
  * Static methods
  */
-tippy.one = (targets, options) => tippy(targets, options, true).instances[0]
 tippy.setDefaults = partialDefaults => {
   Object.keys(partialDefaults).forEach(key => {
     Defaults[key] = partialDefaults[key]

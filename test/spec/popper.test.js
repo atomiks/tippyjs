@@ -27,18 +27,7 @@ import {
 afterEach(cleanDocumentBody)
 
 describe('hideAllPoppers', () => {
-  it('hides all poppers on the document', done => {
-    const tip = tippy([...Array(10)].map(() => h()), {
-      duration: 0,
-    })
-    tip.instances.forEach(i => i.show(0))
-    expect(document.querySelectorAll(Selectors.POPPER).length > 0).toBe(true)
-    hideAllPoppers()
-    setTimeout(() => {
-      expect(document.querySelectorAll(Selectors.POPPER).length).toBe(0)
-      done()
-    })
-  })
+  // todo
 })
 
 describe('createPopperElement', () => {
@@ -133,7 +122,7 @@ describe('createPopperElement', () => {
   it('adds a `focusout` listener to hide the popper when the relatedTarget is outside', () => {
     const randEl = document.createElement('button')
     document.body.append(randEl)
-    const instance = tippy.one(h())
+    const instance = tippy(h())
     instance.show(0)
     expect(instance.state.isVisible).toBe(true)
     instance.popper.dispatchEvent(
@@ -323,7 +312,7 @@ describe('updatePopperElement', () => {
 
 describe('afterPopperPositionUpdates', () => {
   it('is called by popper if not already updated', done => {
-    const tip = tippy.one(h(), { lazy: false })
+    const tip = tippy(h(), { lazy: false })
     // popper calls scheduleUpdate() on init
     const fn = jest.fn()
     afterPopperPositionUpdates(tip.popperInstance, fn)
@@ -334,7 +323,7 @@ describe('afterPopperPositionUpdates', () => {
   })
 
   it('is not called by popper if already updated', done => {
-    const tip = tippy.one(h(), { lazy: false })
+    const tip = tippy(h(), { lazy: false })
     const fn = jest.fn()
     // popper calls scheduleUpdate() on init
     setTimeout(() => {

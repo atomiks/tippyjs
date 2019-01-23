@@ -34,7 +34,7 @@ export function isNumeric(value) {
  * @return {Array}
  */
 export function getArrayOfElements(value) {
-  if (value instanceof Element || isPlainObject(value)) {
+  if (isSingular(value)) {
     return [value]
   }
   if (value instanceof NodeList) {
@@ -117,4 +117,13 @@ export function getModifier(obj, key) {
  */
 export function includes(a, b) {
   return a.indexOf(b) > -1
+}
+
+/**
+ * Determines if the value is singular-like
+ * @param {any} value
+ * @return {Boolean}
+ */
+export function isSingular(value) {
+  return isPlainObject(value) || value instanceof Element
 }
