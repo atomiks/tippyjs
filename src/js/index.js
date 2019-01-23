@@ -80,16 +80,7 @@ tippy.setDefaults = partialDefaults => {
     Defaults[key] = partialDefaults[key]
   })
 }
-tippy.disableAnimations = () => {
-  tippy.setDefaults({
-    duration: 0,
-    updateDuration: 0,
-    animateFill: false,
-  })
-}
 tippy.hideAllPoppers = hideAllPoppers
-// noop: deprecated static method as capture phase is now default
-tippy.useCapture = () => {}
 
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
