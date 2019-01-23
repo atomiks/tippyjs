@@ -14,7 +14,9 @@
     "tippy.js"
   ],
   "files": [
-    "dist",
+    "umd",
+    "es",
+    "index.css",
     "index.d.ts"
   ],
   "repository": {
