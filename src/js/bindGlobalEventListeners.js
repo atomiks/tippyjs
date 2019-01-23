@@ -61,7 +61,7 @@ export function onDocumentClick({ target }) {
     const isClickTrigger = includes(tip.props.trigger, 'click')
 
     if (isUsingTouch || isClickTrigger) {
-      return hideAllPoppers(tip)
+      return hideAllPoppers(tip, true)
     }
 
     if (tip.props.hideOnClick !== true || isClickTrigger) {
@@ -71,7 +71,7 @@ export function onDocumentClick({ target }) {
     tip.clearDelayTimeouts()
   }
 
-  hideAllPoppers()
+  hideAllPoppers(undefined, true)
 }
 
 export function onWindowBlur() {
