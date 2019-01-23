@@ -720,6 +720,17 @@ export default function createTippy(reference, collectionProps) {
     listeners = []
   }
 
+  /**
+   * Returns inner elements used in show/hide methods
+   */
+  function getInnerElements() {
+    return [
+      tip.popperChildren.tooltip,
+      tip.popperChildren.backdrop,
+      tip.popperChildren.content,
+    ]
+  }
+
   /* ======================= 🔑 Public methods 🔑 ======================= */
   /**
    * Enables the instance to allow it to show or hide
@@ -855,14 +866,8 @@ export default function createTippy(reference, collectionProps) {
         tip.popperInstance.update()
       }
 
-      applyTransitionDuration(
-        [
-          tip.popperChildren.tooltip,
-          tip.popperChildren.backdrop,
-          tip.popperChildren.content,
-        ],
-        duration,
-      )
+      applyTransitionDuration(getInnerElements(), duration)
+
       if (tip.popperChildren.backdrop) {
         tip.popperChildren.content.style.transitionDelay =
           Math.round(duration / 6) + 'ms'
@@ -876,14 +881,7 @@ export default function createTippy(reference, collectionProps) {
         makeSticky()
       }
 
-      setVisibilityState(
-        [
-          tip.popperChildren.tooltip,
-          tip.popperChildren.backdrop,
-          tip.popperChildren.content,
-        ],
-        'visible',
-      )
+      setVisibilityState(getInnerElements(), 'visible')
 
       onTransitionedIn(duration, () => {
         if (tip.props.updateDuration === 0) {
@@ -934,23 +932,9 @@ export default function createTippy(reference, collectionProps) {
     tip.state.isVisible = false
     tip.state.isShown = false
 
-    applyTransitionDuration(
-      [
-        tip.popperChildren.tooltip,
-        tip.popperChildren.backdrop,
-        tip.popperChildren.content,
-      ],
-      duration,
-    )
+    applyTransitionDuration(getInnerElements(), duration)
 
-    setVisibilityState(
-      [
-        tip.popperChildren.tooltip,
-        tip.popperChildren.backdrop,
-        tip.popperChildren.content,
-      ],
-      'hidden',
-    )
+    setVisibilityState(getInnerElements(), 'hidden')
 
     if (
       tip.props.autoFocus &&
