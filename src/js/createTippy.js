@@ -17,7 +17,6 @@ import {
 } from './popper'
 import { canReceiveFocus } from './reference'
 import { validateOptions, evaluateProps } from './props'
-import computeArrowTransform from './deprecated_computeArrowTransform'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
 import {
   defer,
@@ -520,10 +519,6 @@ export default function createTippy(reference, collectionProps) {
           tip.props.distance,
           Defaults.distance,
         )
-
-        if (arrow && tip.props.arrowTransform) {
-          computeArrowTransform(arrow, tip.props.arrowTransform)
-        }
       },
       onUpdate() {
         const styles = tooltip.style
@@ -535,10 +530,6 @@ export default function createTippy(reference, collectionProps) {
           tip.props.distance,
           Defaults.distance,
         )
-
-        if (arrow && tip.props.arrowTransform) {
-          computeArrowTransform(arrow, tip.props.arrowTransform)
-        }
       },
     })
   }

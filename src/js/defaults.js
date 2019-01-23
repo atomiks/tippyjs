@@ -6,7 +6,6 @@ export default {
   appendTo: () => document.body,
   aria: 'describedby',
   arrow: false,
-  arrowTransform: '',
   arrowType: 'sharp',
   autoFocus: true,
   boundary: 'scrollParent',
