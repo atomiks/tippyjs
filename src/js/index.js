@@ -36,9 +36,9 @@ function tippy(targets, options) {
   }
 
   const instances = getArrayOfElements(targets).reduce((acc, reference) => {
-    const tip = reference && createTippy(reference, props)
-    if (tip) {
-      acc.push(tip)
+    const instance = reference && createTippy(reference, props)
+    if (instance) {
+      acc.push(instance)
     }
     return acc
   }, [])

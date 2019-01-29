@@ -324,13 +324,13 @@ export function afterPopperPositionUpdates(popperInstance, callback) {
  */
 export function hideAll({ checkHideOnClick, exclude, duration } = {}) {
   arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
-    const tip = popper._tippy
+    const instance = popper._tippy
     if (
-      tip &&
-      (checkHideOnClick ? tip.props.hideOnClick === true : true) &&
+      instance &&
+      (checkHideOnClick ? instance.props.hideOnClick === true : true) &&
       (!exclude || popper !== exclude.popper)
     ) {
-      tip.hide(duration)
+      instance.hide(duration)
     }
   })
 }

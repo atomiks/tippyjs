@@ -57,18 +57,18 @@ export function onDocumentClick({ target }) {
     el => el._tippy && el._tippy.reference === el,
   )
   if (reference) {
-    const tip = reference._tippy
-    const isClickTrigger = includes(tip.props.trigger, 'click')
+    const instance = reference._tippy
+    const isClickTrigger = includes(instance.props.trigger, 'click')
 
     if (isUsingTouch || isClickTrigger) {
-      return hideAll({ exclude: tip, checkHideOnClick: true })
+      return hideAll({ exclude: instance, checkHideOnClick: true })
     }
 
-    if (tip.props.hideOnClick !== true || isClickTrigger) {
+    if (instance.props.hideOnClick !== true || isClickTrigger) {
       return
     }
 
-    tip.clearDelayTimeouts()
+    instance.clearDelayTimeouts()
   }
 
   hideAll({ checkHideOnClick: true })
@@ -83,9 +83,9 @@ export function onWindowBlur() {
 
 export function onWindowResize() {
   arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
-    const tippyInstance = popper._tippy
-    if (!tippyInstance.props.livePlacement) {
-      tippyInstance.popperInstance.scheduleUpdate()
+    const instance = popper._tippy
+    if (!instance.props.livePlacement) {
+      instance.popperInstance.scheduleUpdate()
     }
   })
 }
