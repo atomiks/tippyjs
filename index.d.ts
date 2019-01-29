@@ -31,7 +31,6 @@ export interface Props {
   aria?: 'describedby' | 'labelledby'
   arrow?: boolean
   arrowType?: 'sharp' | 'round'
-  arrowTransform?: string
   autoFocus?: boolean
   boundary?: 'scrollParent' | 'window' | 'viewport' | HTMLElement
   content?: Content
@@ -109,7 +108,7 @@ export interface HideAllOptions {
 }
 
 export interface Tippy {
-  (targets: Targets, options?: Props): Collection
+  (targets: Targets, options?: Props): Instance | Instance[]
   readonly defaults: Props
   readonly version: string
   hideAll(options: HideAllOptions): void
