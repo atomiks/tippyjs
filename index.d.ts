@@ -111,7 +111,7 @@ export interface Tippy {
   (targets: Targets, options?: Props): Instance | Instance[]
   readonly defaults: Props
   readonly version: string
-  hideAll(options: HideAllOptions): void
+  hideAll(options?: HideAllOptions): void
   setDefaults(options: Props): void
 }
 
