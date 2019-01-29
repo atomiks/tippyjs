@@ -55,7 +55,7 @@ export interface Props {
   onMount?(instance: Instance): void
   onShow?(instance: Instance): void | false
   onShown?(instance: Instance): void
-  performance?: boolean
+  ignoreAttributes?: boolean
   placement?: Placement
   popperOptions?: Popper.PopperOptions
   shouldPopperHideOnBlur?: (event: FocusEvent) => boolean
