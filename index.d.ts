@@ -102,22 +102,18 @@ export interface Instance {
   }
 }
 
-export interface Collection {
-  destroyAll(): void
-  instances: Instance[]
-  props: Props
-  targets: Targets
+export interface HideAllOptions {
+  exclude?: Instance
+  checkHideOnClick?: boolean
+  duration?: number
 }
 
 export interface Tippy {
   (targets: Targets, options?: Props): Collection
   readonly defaults: Props
   readonly version: string
-  disableAnimations(): void
-  hideAllPoppers(): void
-  one(targets: Targets, options?: Props): Instance
+  hideAll(options: HideAllOptions): void
   setDefaults(options: Props): void
-  useCapture(): void
 }
 
 declare const tippy: Tippy
