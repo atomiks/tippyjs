@@ -1,5 +1,5 @@
 import Popper from 'popper.js'
-import { supportsTouch, isIE } from './browser'
+import { isIE } from './browser'
 import { isUsingTouch } from './bindGlobalEventListeners'
 import Defaults, { POPPER_INSTANCE_RELATED_PROPS } from './defaults'
 import Selectors from './selectors'
@@ -475,11 +475,13 @@ export default function createTippy(reference, collectionProps) {
    * `touchHold` option
    */
   function isEventListenerStopped(event) {
+    const supportsTouch = 'ontouchstart' in window
     const isTouchEvent = includes(event.type, 'touch')
-    const caseA =
-      supportsTouch && isUsingTouch && instance.props.touchHold && !isTouchEvent
-    const caseB = isUsingTouch && !instance.props.touchHold && isTouchEvent
-    return caseA || caseB
+    const { touchHold } = instance.props
+    return (
+      (supportsTouch && isUsingTouch && touchHold && !isTouchEvent) ||
+      (isUsingTouch && !touchHold && isTouchEvent)
+    )
   }
 
   /**
