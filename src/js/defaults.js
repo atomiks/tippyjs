@@ -24,7 +24,7 @@ export default {
   interactiveDebounce: 0,
   lazy: true,
   livePlacement: true,
-  maxWidth: '',
+  maxWidth: 350,
   multiple: false,
   offset: 0,
   onHidden() {},
