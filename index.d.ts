@@ -102,9 +102,9 @@ export interface Instance {
 }
 
 export interface HideAllOptions {
-  exclude?: Instance
   checkHideOnClick?: boolean
   duration?: number
+  exclude?: Instance
 }
 
 export interface Tippy {
