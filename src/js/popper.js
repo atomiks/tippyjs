@@ -319,22 +319,18 @@ export function afterPopperPositionUpdates(popperInstance, callback) {
 }
 
 /**
- * Hides all visible poppers on the document, optionally excluding one
- * @param {Tippy} tippyInstanceToExclude
- * @param {Boolean} checkHideOnClick
+ * Hides all visible poppers on the document
+ * @param {Object} options
  */
-export function hideAllPoppers(
-  tippyInstanceToExclude,
-  checkHideOnClick = false,
-) {
+export function hideAll({ checkHideOnClick, exclude, duration } = {}) {
   arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
     const tip = popper._tippy
     if (
       tip &&
       (checkHideOnClick ? tip.props.hideOnClick === true : true) &&
-      (!tippyInstanceToExclude || popper !== tippyInstanceToExclude.popper)
+      (!exclude || popper !== exclude.popper)
     ) {
-      tip.hide()
+      tip.hide(duration)
     }
   })
 }

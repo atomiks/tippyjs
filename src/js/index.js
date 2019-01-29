@@ -6,7 +6,7 @@ import bindGlobalEventListeners from './bindGlobalEventListeners'
 import { polyfillElementPrototypeProperties } from './reference'
 import { validateOptions } from './props'
 import { arrayFrom } from './ponyfills'
-import { hideAllPoppers } from './popper'
+import { hideAll } from './popper'
 import { isSingular, isPlainObject, getArrayOfElements } from './utils'
 
 let globalEventListenersBound = false
@@ -60,7 +60,7 @@ tippy.setDefaults = partialDefaults => {
     Defaults[key] = partialDefaults[key]
   })
 }
-tippy.hideAllPoppers = hideAllPoppers
+tippy.hideAll = hideAll
 
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute

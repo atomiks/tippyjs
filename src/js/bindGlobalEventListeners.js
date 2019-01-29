@@ -1,6 +1,6 @@
 import { supportsTouch, isIOS } from './browser'
 import Selectors from './selectors'
-import { hideAllPoppers } from './popper'
+import { hideAll } from './popper'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
 import { includes } from './utils'
 import { PASSIVE } from './constants'
@@ -42,7 +42,7 @@ export function onDocumentMouseMove() {
 export function onDocumentClick({ target }) {
   // Simulated events dispatched on the document
   if (!(target instanceof Element)) {
-    return hideAllPoppers()
+    return hideAll()
   }
 
   // Clicked on an interactive popper
@@ -61,7 +61,7 @@ export function onDocumentClick({ target }) {
     const isClickTrigger = includes(tip.props.trigger, 'click')
 
     if (isUsingTouch || isClickTrigger) {
-      return hideAllPoppers(tip, true)
+      return hideAll({ exclude: tip, checkHideOnClick: true })
     }
 
     if (tip.props.hideOnClick !== true || isClickTrigger) {
@@ -71,7 +71,7 @@ export function onDocumentClick({ target }) {
     tip.clearDelayTimeouts()
   }
 
-  hideAllPoppers(undefined, true)
+  hideAll({ checkHideOnClick: true })
 }
 
 export function onWindowBlur() {
