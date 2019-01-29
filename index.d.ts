@@ -41,6 +41,7 @@ export interface Props {
   flipBehavior?: 'flip' | Placement[]
   followCursor?: boolean | 'vertical' | 'horizontal' | 'initial'
   hideOnClick?: boolean | 'toggle'
+  ignoreAttributes?: boolean
   inertia?: boolean
   interactive?: boolean
   interactiveBorder?: number
@@ -55,7 +56,6 @@ export interface Props {
   onMount?(instance: Instance): void
   onShow?(instance: Instance): void | false
   onShown?(instance: Instance): void
-  ignoreAttributes?: boolean
   placement?: Placement
   popperOptions?: Popper.PopperOptions
   shouldPopperHideOnBlur?: (event: FocusEvent) => boolean
