@@ -82,27 +82,6 @@ describe('getArrayOfElements', () => {
   })
 })
 
-describe('isNumeric', () => {
-  it('returns true for a number', () => {
-    expect(Utils.isNumeric(1)).toBe(true)
-  })
-
-  it('returns true for a number-like string', () => {
-    expect(Utils.isNumeric('1')).toBe(true)
-    expect(Utils.isNumeric('1e10')).toBe(true)
-    expect(Utils.isNumeric('1287')).toBe(true)
-    expect(Utils.isNumeric('-50')).toBe(true)
-  })
-
-  it('returns false for a non-number-like string', () => {
-    expect(Utils.isNumeric('true')).toBe(false)
-    expect(Utils.isNumeric('null')).toBe(false)
-    expect(Utils.isNumeric('!0')).toBe(false)
-    expect(Utils.isNumeric('[1, 0]')).toBe(false)
-    expect(Utils.isNumeric('_')).toBe(false)
-  })
-})
-
 describe('hasOwnProperty', () => {
   it('works for plain objects', () => {
     expect(Utils.hasOwnProperty({ prop: true }, 'prop')).toBe(true)

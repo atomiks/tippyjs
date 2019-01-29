@@ -2,7 +2,7 @@ const fs = require('fs')
 const pkg = require('./package.json')
 const { rollup } = require('rollup')
 const babel = require('rollup-plugin-babel')
-const minify = require('rollup-plugin-babel-minify')
+const { terser } = require('rollup-plugin-terser')
 const sass = require('rollup-plugin-sass')
 const postcss = require('postcss')
 const autoprefixer = require('autoprefixer')
@@ -21,7 +21,7 @@ const BANNER = `/**!
 `
 
 const pluginBabel = babel({ exclude: 'node_modules/**' })
-const pluginMinify = minify({ comments: false })
+const pluginMinify = terser()
 const pluginResolve = resolve()
 const pluginCSS = cssOnly({ output: false })
 const pluginJSON = json()

@@ -42,7 +42,7 @@
   ],
   "bundlesize": [
     {
-      "path": "./umd/index.min.js",
+      "path": "./es/index.min.js",
       "maxSize": "7 kB"
     },
     {
@@ -90,7 +90,8 @@
     "rollup-plugin-css-only": "^0.4.0",
     "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-sass": "^1.1.0"
+    "rollup-plugin-sass": "^1.1.0",
+    "rollup-plugin-terser": "^4.0.3"
   },
   "dependencies": {
     "popper.js": "^1.14.6"
