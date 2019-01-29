@@ -20,15 +20,6 @@ export function hasOwnProperty(obj, key) {
 }
 
 /**
- * Determines if a value is numeric
- * @param {any} value
- * @return {Boolean}
- */
-export function isNumeric(value) {
-  return !isNaN(value) && !isNaN(parseFloat(value))
-}
-
-/**
  * Returns an array of elements based on the value
  * @param {any} value
  * @return {Array}

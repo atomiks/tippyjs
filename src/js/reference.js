@@ -1,6 +1,5 @@
 import Defaults from './defaults'
 import { matches } from './ponyfills'
-import { isNumeric } from './utils'
 
 const keys = Object.keys(Defaults)
 
