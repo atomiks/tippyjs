@@ -8,7 +8,7 @@ import {
   afterPopperPositionUpdates,
   createArrowElement,
   createBackdropElement,
-  hideAllPoppers,
+  hideAll,
   getChildren,
   addInertia,
   removeInertia,
@@ -26,7 +26,7 @@ import {
 
 afterEach(cleanDocumentBody)
 
-describe('hideAllPoppers', () => {
+describe('hideAll', () => {
   // todo
 })
 
