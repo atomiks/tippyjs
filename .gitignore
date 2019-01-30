@@ -6,5 +6,5 @@ node_modules
 dist
 index.css
 umd
-es
+esm
 themes

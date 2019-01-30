@@ -3,7 +3,7 @@
   "version": "3.4.1",
   "description": "Vanilla JS Tooltip & Popover Library",
   "main": "./umd/index.all.min.js",
-  "module": "./es/index.all.js",
+  "module": "./esm/index.all.js",
   "types": "index.d.ts",
   "author": "atomiks",
   "license": "MIT",
@@ -15,7 +15,7 @@
   ],
   "files": [
     "umd",
-    "es",
+    "esm",
     "index.css",
     "index.d.ts"
   ],
@@ -42,7 +42,7 @@
   ],
   "bundlesize": [
     {
-      "path": "./es/index.min.js",
+      "path": "./esm/index.min.js",
       "maxSize": "7 kB"
     },
     {
@@ -87,7 +87,6 @@
     "prettier": "^1.16.1",
     "rollup": "^1.1.2",
     "rollup-plugin-babel": "^4.3.2",
-    "rollup-plugin-babel-minify": "^7.0.0",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-css-only": "^0.4.0",
     "rollup-plugin-json": "^3.1.0",
