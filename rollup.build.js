@@ -56,9 +56,6 @@ const configs = {
   css: config('./build/css.js'),
   index: config('./build/index.js'),
   all: config('./build/all.js'),
-  // plugins: {
-  //   group: config('./build/plugins/group.js'),
-  // },
 }
 
 const outputs = {
@@ -81,19 +78,13 @@ const build = async () => {
     indexMin: await rollup(configs.index(pluginMinify)),
     all: await rollup(configs.all(pluginCSS)),
     allMin: await rollup(configs.all(pluginMinify, pluginCSS)),
-    // plugins: {
-    //   group: await rollup(configs.plugins.group()),
-    //   groupMin: await rollup(configs.plugins.group(pluginMinify)),
-    // },
   }
 
   for (const getOutput of outputs.bundle) {
     bundles.index.write(getOutput('index.js'))
-    bundles.indexMin.write(getOutput('index.min.js'))
+    bundles.indexMin.write(getOutput('index.min.js', { min: true }))
     bundles.all.write(getOutput('index.all.js'))
-    bundles.allMin.write(getOutput('index.all.min.js'))
-    // bundles.plugins.group.write(getOutput('plugins/group.js'))
-    // bundles.plugins.groupMin.write(getOutput('plugins/group.min.js'))
+    bundles.allMin.write(getOutput('index.all.min.js', { min: true }))
   }
 
   console.log(green('Bundles complete'))
