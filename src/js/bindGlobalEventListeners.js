@@ -1,4 +1,4 @@
-import { supportsTouch, isIOS } from './browser'
+import { isIOS } from './browser'
 import Selectors from './selectors'
 import { hideAll } from './popper'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
@@ -98,11 +98,4 @@ export default function bindGlobalEventListeners() {
   document.addEventListener('touchstart', onDocumentTouch, PASSIVE)
   window.addEventListener('blur', onWindowBlur)
   window.addEventListener('resize', onWindowResize)
-
-  if (
-    !supportsTouch &&
-    (navigator.maxTouchPoints || navigator.msMaxTouchPoints)
-  ) {
-    document.addEventListener('pointerdown', onDocumentTouch)
-  }
 }
