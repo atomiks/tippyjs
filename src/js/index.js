@@ -8,6 +8,7 @@ import { validateOptions } from './props'
 import { arrayFrom } from './ponyfills'
 import { hideAll } from './popper'
 import { isSingular, isPlainObject, getArrayOfElements } from './utils'
+import group from './group'
 
 let globalEventListenersBound = false
 
@@ -61,11 +62,12 @@ tippy.setDefaults = partialDefaults => {
   })
 }
 tippy.hideAll = hideAll
+tippy.group = group
 
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
  */
-export const autoInit = () => {
+export function autoInit() {
   arrayFrom(document.querySelectorAll('[data-tippy]')).forEach(el => {
     const content = el.getAttribute('data-tippy')
     if (content) {
