@@ -1,7 +1,4 @@
-import { h, hasTippy, cleanDocumentBody, withTestOptions, wait } from '../utils'
-
-import tippy from '../../src/js/index'
-import { getChildren } from '../../src/js/popper'
+import { h } from '../utils'
 import { evaluateProps, validateOptions } from '../../src/js/props'
 
 describe('evaluateProps', () => {

@@ -1,8 +1,5 @@
-import { h, hasTippy, cleanDocumentBody, IDENTIFIER } from '../utils'
-
-import tippy from '../../src/js/index'
+import { h, cleanDocumentBody, IDENTIFIER } from '../utils'
 import Defaults from '../../src/js/defaults'
-import Selectors from '../../src/js/selectors'
 import * as Utils from '../../src/js/utils'
 
 afterEach(cleanDocumentBody)

@@ -1,4 +1,4 @@
-import { h, hasTippy, cleanDocumentBody, withTestOptions, wait } from '../utils'
+import { h, cleanDocumentBody, withTestOptions, wait } from '../utils'
 import tippy from '../../src/js/index'
 import { getChildren } from '../../src/js/popper'
 

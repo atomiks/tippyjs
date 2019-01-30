@@ -1,7 +1,5 @@
 import { h, hasTippy, cleanDocumentBody } from '../utils'
-
 import Defaults from '../../src/js/defaults'
-import Selectors from '../../src/js/selectors'
 import tippy, { autoInit } from '../../src/js/index'
 
 afterEach(cleanDocumentBody)

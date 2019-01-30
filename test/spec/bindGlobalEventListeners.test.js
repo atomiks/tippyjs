@@ -1,9 +1,6 @@
-import { h, hasTippy, cleanDocumentBody, withTestOptions } from '../utils'
+import { h, cleanDocumentBody, withTestOptions } from '../utils'
 
 import tippy from '../../src/js/index'
-import Defaults from '../../src/js/defaults'
-import Selectors from '../../src/js/selectors'
-import createTippy from '../../src/js/createTippy'
 import bindEventListeners, * as Listeners from '../../src/js/bindGlobalEventListeners'
 
 afterEach(cleanDocumentBody)
@@ -70,7 +67,7 @@ describe('onDocumentClick', () => {
 describe('onWindowBlur', () => {
   it('blurs reference elements', () => {
     const ref = document.createElement('button')
-    const instance = tippy(ref, { content: 'content' })
+    tippy(ref, { content: 'content' })
     document.body.append(ref)
     let called = false
     ref.addEventListener('blur', () => {
@@ -86,7 +83,6 @@ describe('onWindowResize', () => {
   it('updates poppers with `livePlacement: false`', () => {
     const instance = tippy(h(), withTestOptions({ livePlacement: false }))
     instance.show()
-    const { scheduleUpdate } = instance.popperInstance
     instance.popperInstance.scheduleUpdate = jest.fn()
     Listeners.onWindowResize()
     expect(instance.popperInstance.scheduleUpdate.mock.calls.length).toBe(1)
