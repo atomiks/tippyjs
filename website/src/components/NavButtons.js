@@ -52,12 +52,18 @@ function NavButtons({ next }) {
             <>
               {prevLink && (
                 <NavButton to={prevLink.frontmatter.path} aria-label="Previous">
-                  <ArrowLeft style={{verticalAlign:-4}} /> {prevLink.frontmatter.title}
+                  <ArrowLeft style={{ verticalAlign: -4 }} />{' '}
+                  {prevLink.frontmatter.title}
                 </NavButton>
               )}
               {nextLink && (
-                <NavButton to={nextLink.frontmatter.path} data-next aria-label="Next">
-                  {nextLink.frontmatter.title} <ArrowRight style={{verticalAlign:-4}} />
+                <NavButton
+                  to={nextLink.frontmatter.path}
+                  data-next
+                  aria-label="Next"
+                >
+                  {nextLink.frontmatter.title}{' '}
+                  <ArrowRight style={{ verticalAlign: -4 }} />
                 </NavButton>
               )}
             </>

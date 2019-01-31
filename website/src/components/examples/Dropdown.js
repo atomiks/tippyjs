@@ -10,7 +10,7 @@ const List = styled.ul`
   text-align: left;
 `
 
-const Reaction = styled.button.attrs({role: 'menuitem'})`
+const Reaction = styled.button.attrs({ role: 'menuitem' })`
   background: none;
   border: none;
   font-size: 22px;
@@ -93,7 +93,7 @@ function Dropdown({ text }) {
 }
 
 Dropdown.defaultProps = {
-  text: 'Dropdown'
+  text: 'Dropdown',
 }
 
 export default Dropdown

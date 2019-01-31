@@ -96,9 +96,13 @@ function Header({ openNav, isNavOpen }) {
             View on GitHub
           </ButtonLink>
         </Flex>
-        <MenuButton aria-label="Menu" aria-expanded={isNavOpen ? 'true' : 'false'} onClick={openNav}>
-        <Menu style={menuStyles} />
-      </MenuButton>
+        <MenuButton
+          aria-label="Menu"
+          aria-expanded={isNavOpen ? 'true' : 'false'}
+          onClick={openNav}
+        >
+          <Menu style={menuStyles} />
+        </MenuButton>
       </Container>
     </HeaderRoot>
   )
