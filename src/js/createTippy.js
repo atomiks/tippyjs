@@ -26,6 +26,7 @@ import {
   getValue,
   getModifier,
   includes,
+  evaluateValue,
 } from './utils'
 import { PASSIVE } from './constants'
 
@@ -80,6 +81,9 @@ export default function createTippy(reference, collectionProps) {
     props.interactiveDebounce > 0
       ? debounce(onMouseMove, props.interactiveDebounce)
       : onMouseMove
+
+  // Node the tippy is currently appended to
+  let parentNode = null
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   // id used for the `aria-describedby` / `aria-labelledby` attribute
@@ -268,6 +272,8 @@ export default function createTippy(reference, collectionProps) {
     if (targetEl && !targetEl._tippy) {
       createTippy(targetEl, {
         ...instance.props,
+        content: evaluateValue(collectionProps.content, [targetEl]),
+        appendTo: collectionProps.appendTo,
         target: '',
         showOnInit: true,
       })
@@ -577,8 +583,10 @@ export default function createTippy(reference, collectionProps) {
 
     afterPopperPositionUpdates(instance.popperInstance, callback)
 
-    if (!instance.props.appendTo.contains(instance.popper)) {
-      instance.props.appendTo.appendChild(instance.popper)
+    parentNode = evaluateValue(instance.props.appendTo, [instance.reference])
+
+    if (!parentNode.contains(instance.popper)) {
+      parentNode.appendChild(instance.popper)
       instance.props.onMount(instance)
       instance.state.isMounted = true
     }
@@ -624,10 +632,7 @@ export default function createTippy(reference, collectionProps) {
    */
   function onTransitionedOut(duration, callback) {
     onTransitionEnd(duration, () => {
-      if (
-        !instance.state.isVisible &&
-        instance.props.appendTo.contains(instance.popper)
-      ) {
+      if (!instance.state.isVisible && parentNode.contains(instance.popper)) {
         callback()
       }
     })
@@ -969,7 +974,7 @@ export default function createTippy(reference, collectionProps) {
 
       instance.popperInstance.disableEventListeners()
 
-      instance.props.appendTo.removeChild(instance.popper)
+      parentNode.removeChild(instance.popper)
       instance.state.isMounted = false
 
       instance.props.onHidden(instance)

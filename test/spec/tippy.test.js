@@ -21,7 +21,6 @@ describe('tippy', () => {
       }).props,
     ).toEqual({
       ...Defaults,
-      appendTo: document.body,
       placement: 'bottom-end',
     })
   })

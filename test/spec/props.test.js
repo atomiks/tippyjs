@@ -10,12 +10,24 @@ describe('evaluateProps', () => {
     })
   })
 
-  it('sets `props.appendTo` to be the return value of calling it if a function', () => {
-    const ref = h()
-    const props = {
-      appendTo: reference => reference,
-    }
-    expect(evaluateProps(ref, props).appendTo).toBe(ref)
+  it('ignores attributes if `ignoreAttributes: true`', () => {
+    const props = { animation: 'scale', ignoreAttributes: true }
+    const reference = h()
+    reference.setAttribute('data-tippy-animation', 'fade')
+    expect(evaluateProps(reference, props)).toEqual({
+      animation: 'scale',
+      ignoreAttributes: true,
+    })
+  })
+
+  it('does not ignore attributes if `ignoreAttributes: false`', () => {
+    const props = { animation: 'scale', ignoreAttributes: false }
+    const reference = h()
+    reference.setAttribute('data-tippy-animation', 'fade')
+    expect(evaluateProps(reference, props)).toEqual({
+      animation: 'fade',
+      ignoreAttributes: false,
+    })
   })
 
   it('sets `props.content` to be the return value of calling it if a function', () => {

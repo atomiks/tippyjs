@@ -126,3 +126,13 @@ export function isSingular(value) {
 export function innerHTML() {
   return 'innerHTML'
 }
+
+/**
+ * Evaluates a function if one, or returns the value
+ * @param {any}
+ * @param {any[]}
+ * @return {Boolean}
+ */
+export function evaluateValue(value, args) {
+  return typeof value === 'function' ? value.apply(null, args) : value
+}
