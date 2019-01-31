@@ -11,6 +11,7 @@ const Navbar = styled.nav`
   position: fixed;
   top: 0;
   bottom: 0;
+  left: 0;
   width: 250px;
   border-right: 1px solid rgba(0, 16, 64, 0.08);
   background-clip: padding-box;
@@ -28,11 +29,13 @@ const Navbar = styled.nav`
       ? 'cubic-bezier(.165, .84, .44, 1)'
       : 'cubic-bezier(.77, 0, .175, 1)'};
   visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
+  box-shadow: 5px 0 30px 0 rgba(0, 32, 64, 0.25);
 
   ${MEDIA.lg} {
     display: block;
     visibility: visible;
     transform: none;
+    box-shadow: none;
   }
 `
 
@@ -92,14 +95,14 @@ class Nav extends Component {
     this.props.close()
   }
 
-  handleTransitionEnd = () => {
-    if (this.props.isOpen) {
-      this.ref.current.focus()
+  handleBlur = e => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      this.props.close()
     }
   }
 
-  handleBlur = e => {
-    if (!e.currentTarget.contains(e.relatedTarget)) {
+  handleOutsideClick = e => {
+    if (this.props.isOpen && !this.ref.current.contains(e.target)) {
       this.props.close()
     }
   }
@@ -107,11 +110,13 @@ class Nav extends Component {
   componentDidMount() {
     this.setState({ isMounted: true })
     window.addEventListener('resize', this.handleResize)
+    window.addEventListener('click', this.handleOutsideClick, true)
     this.handleResize()
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize)
+    window.removeEventListener('click', this.handleOutsideClick, true)
     clearTimeout(this.timeout)
   }
 
@@ -121,13 +126,11 @@ class Nav extends Component {
     return (
       <ElasticScroll>
         <Navbar
-          tabIndex="-1"
-          aria-label="Menu"
+          id="main-nav"
           ref={this.ref}
           style={{ transition: transitions ? '' : 'none' }}
           isOpen={isOpen}
           isMounted={isMounted}
-          onTransitionEnd={this.handleTransitionEnd}
           onBlur={this.handleBlur}
         >
           <XButton aria-label="Close Menu" onClick={this.handleClose}>

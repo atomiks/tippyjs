@@ -51,15 +51,14 @@ reference:
 </div>
 ```
 
-If the dropdown is triggered by `mouseenter focus` (default) instead of `click`,
-supply these options:
+If you would like your dropdown to be triggered by a hover instead of a click,
+still include click as part of the trigger for keyboard users:
+`mouseenter click`. The `focus` event is not suitable for buttons.
 
 - `aria: null` - we don't want the dropdown's contents to be announced upon
   focus
 - `autoFocus: false` - keep focus on the button, focus on the dropdown should
   only occur when the user presses Tab
-- `hideOnClick: false` - we want the dropdown to still display when the button
-  is clicked
 - `appendTo` the parent wrapper element, so the dropdown exists directly after
   the button in the DOM tree
 
@@ -71,7 +70,7 @@ functions:
 tippy('button', {
   aria: null,
   autoFocus: false,
-  hideOnClick: false,
+  trigger: 'mouseenter click',
   appendTo: ref => ref.parentNode,
   onMount({ reference }) {
     reference.setAttribute('aria-expanded', 'true')
@@ -84,7 +83,7 @@ tippy('button', {
 
 <Demo>
   <Button>Click me then press Tab</Button>
-  <Dropdown />
+  <Dropdown text="Press enter to click" />
 </Demo>
 
 Elements within the tippy can be tabbed to since they are directly after the
@@ -102,4 +101,13 @@ tippy('button', {
     return false
   },
 })
+```
+
+It's also possible to change the `role` of the tippy to something other than
+`"tooltip"`.
+
+```js
+const someButton = document.querySelector('button')
+const instance = tippy(someButton)
+instance.popper.setAttribute('role', 'menu')
 ```

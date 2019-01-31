@@ -80,13 +80,10 @@ const menuStyles = {
   height: 36,
 }
 
-function Header({ openNav }) {
+function Header({ openNav, isNavOpen }) {
   return (
     <HeaderRoot>
       <Container>
-        <MenuButton aria-label="Menu" onClick={openNav}>
-          <Menu style={menuStyles} />
-        </MenuButton>
         <Logo src={TippyLogo} draggable="false" />
         <Title>Tippy.js</Title>
         <Flex justify="center">
@@ -99,6 +96,9 @@ function Header({ openNav }) {
             View on GitHub
           </ButtonLink>
         </Flex>
+        <MenuButton aria-label="Menu" aria-expanded={isNavOpen ? 'true' : 'false'} onClick={openNav}>
+        <Menu style={menuStyles} />
+      </MenuButton>
       </Container>
     </HeaderRoot>
   )

@@ -3,24 +3,12 @@ import { Link, graphql, StaticQuery } from 'gatsby'
 import styled from 'styled-components'
 import { MEDIA, Flex } from './Framework'
 import { sortPagesByIndex } from '../utils'
-
-const FadedText = styled.span`
-  position: relative;
-  top: -2px;
-  opacity: 0.4;
-  font-size: 70%;
-  margin-right: 10px;
-  font-weight: bold;
-  display: block;
-
-  ${MEDIA.md} {
-    display: inline;
-  }
-`
+import ArrowRight from 'react-feather/dist/icons/arrow-right'
+import ArrowLeft from 'react-feather/dist/icons/arrow-left'
 
 const NavButton = styled(Link)`
   display: block;
-  padding: 40px 25px;
+  padding: 40px;
   border: ${props =>
     props['data-next'] ? 'none' : '1px solid rgba(0, 16, 64, 0.15)'};
   border-radius: 4px;
@@ -33,7 +21,7 @@ const NavButton = styled(Link)`
   transition: box-shadow 0.2s;
   flex: 1;
   margin: 0 10px;
-  max-width: 500px;
+  max-width: 425px;
   font-size: 20px;
   transition: all 0.1s;
 
@@ -63,13 +51,13 @@ function NavButtons({ next }) {
           return (
             <>
               {prevLink && (
-                <NavButton to={prevLink.frontmatter.path}>
-                  <FadedText>PREV</FadedText> {prevLink.frontmatter.title}
+                <NavButton to={prevLink.frontmatter.path} aria-label="Previous">
+                  <ArrowLeft style={{verticalAlign:-4}} /> {prevLink.frontmatter.title}
                 </NavButton>
               )}
               {nextLink && (
-                <NavButton to={nextLink.frontmatter.path} data-next>
-                  <FadedText>NEXT</FadedText> {nextLink.frontmatter.title}
+                <NavButton to={nextLink.frontmatter.path} data-next aria-label="Next">
+                  {nextLink.frontmatter.title} <ArrowRight style={{verticalAlign:-4}} />
                 </NavButton>
               )}
             </>

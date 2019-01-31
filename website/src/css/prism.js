@@ -35,7 +35,6 @@ export default createGlobalStyle`
     background: #22223f;
     font-size: 15px;
     line-height: 2;
-    max-height: 650px;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
 
@@ -87,7 +86,7 @@ export default createGlobalStyle`
   }
 
   .token.boolean {
-    color: #ff81d0;
+    color: #ff959c;
   }
 
   .token.punctuation,
@@ -141,7 +140,7 @@ export default createGlobalStyle`
   .token.char,
   .token.builtin,
   .token.inserted {
-    color: #4ef2d0;
+    color: #adee90;
   }
 
   .token.entity,
@@ -152,11 +151,11 @@ export default createGlobalStyle`
 
   .token.function,
   .token.property {
-    color: #61a5ff;
+    color: #5eb9ff;
   }
 
   .token.method {
-    color: #16c5ff;
+    color: #1ac9df;
   }
 
   .token.variable {
@@ -169,7 +168,7 @@ export default createGlobalStyle`
   }
 
   .token.property.definition {
-    color: #b6e992;
+    color: #57e5b4;
   }
 
   .token.property.access {
