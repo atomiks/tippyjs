@@ -29,14 +29,6 @@ describe('evaluateProps', () => {
       ignoreAttributes: false,
     })
   })
-
-  it('sets `props.content` to be the return value of calling it if a function', () => {
-    const ref = h()
-    const props = {
-      content: reference => reference,
-    }
-    expect(evaluateProps(ref, props).content).toBe(ref)
-  })
 })
 
 describe('validateOptions', () => {

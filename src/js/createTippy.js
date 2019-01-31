@@ -632,7 +632,11 @@ export default function createTippy(reference, collectionProps) {
    */
   function onTransitionedOut(duration, callback) {
     onTransitionEnd(duration, () => {
-      if (!instance.state.isVisible && parentNode.contains(instance.popper)) {
+      if (
+        !instance.state.isVisible &&
+        parentNode &&
+        parentNode.contains(instance.popper)
+      ) {
         callback()
       }
     })
