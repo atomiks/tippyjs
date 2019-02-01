@@ -117,7 +117,7 @@ class AjaxSmooth extends Component {
         onShow={this.onShow}
         onHidden={this.onHidden}
       >
-        <Button>Hover for a new image</Button>
+        <Button>Smooth transition</Button>
       </Tippy>
     )
   }

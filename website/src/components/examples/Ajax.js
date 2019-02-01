@@ -2,7 +2,7 @@ import React from 'react'
 import Tippy from '../Tippy'
 import { Button } from '../Framework'
 
-function Ajax() {
+function Ajax({ children }) {
   const initialContent = 'Loading...'
 
   return (
@@ -48,9 +48,13 @@ function Ajax() {
         tip.setContent(initialContent)
       }}
     >
-      <Button>Hover for a new image</Button>
+      <Button>{children}</Button>
     </Tippy>
   )
+}
+
+Ajax.defaultProps = {
+  withoutState: false,
 }
 
 export default Ajax

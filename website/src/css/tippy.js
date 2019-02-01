@@ -22,13 +22,29 @@ export default createGlobalStyle`
     top: 0;
   }
 
+  .tippy-popper[x-placement^='top'] .tippy-tooltip.tomato-theme .tippy-arrow {
+    border-top-color: tomato;
+  }
+  .tippy-popper[x-placement^='bottom'] .tippy-tooltip.tomato-theme .tippy-arrow {
+    border-bottom-color: tomato;
+  }
+
   .tippy-tooltip.tomato-theme {
     font-weight: bold;
     color: yellow;
+    background: tomato;
 
     .tippy-backdrop {
       background: tomato;
     }
+
+    .tippy-roundarrow {
+      fill: tomato;
+    }
+  }
+
+  .tippy-tooltip.scaled-arrow-theme .tippy-arrow {
+    transform: scale(1.5);
   }
 
   .tippy-tooltip.dropdown-theme {

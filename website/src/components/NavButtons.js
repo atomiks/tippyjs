@@ -8,7 +8,7 @@ import ArrowLeft from 'react-feather/dist/icons/arrow-left'
 
 const NavButton = styled(Link)`
   display: block;
-  padding: 40px;
+  padding: 40px 25px;
   border: ${props =>
     props['data-next'] ? 'none' : '1px solid rgba(0, 16, 64, 0.15)'};
   border-radius: 4px;
@@ -16,23 +16,40 @@ const NavButton = styled(Link)`
     props['data-next'] ? 'linear-gradient(90deg,#f3edff,#edf5ff)' : 'white'};
   text-decoration: none;
   color: ${props => (props['data-next'] ? '#2569d7' : 'inherit')};
-  filter: ${props => props['data-next'] && 'saturate(1.15)'};
   font-weight: bold;
   transition: box-shadow 0.2s;
-  flex: 1;
-  margin: 0 10px;
-  max-width: 425px;
+  margin: 0 10px 15px;
   font-size: 20px;
   transition: all 0.1s;
+  width: 100%;
 
   &:hover {
     border-color: inherit;
-    border-bottom: ${props => props['data-next'] && 'none'};
-    filter: ${props => props['data-next'] && 'saturate(1.15) brightness(1.02)'};
+  }
+
+  &[data-next] {
+    border-bottom: none;
+    filter: saturate(1.15);
+    order: -1;
+
+    &:hover {
+      filter: saturate(1.15) brightness(1.02);
+    }
+  }
+
+  ${MEDIA.sm} {
+    width: calc(50% - 20px);
+    margin: 0 10px;
+    order: initial;
+
+    &[data-next] {
+      order: initial;
+    }
   }
 
   ${MEDIA.md} {
     font-size: 24px;
+    padding: 40px;
   }
 `
 

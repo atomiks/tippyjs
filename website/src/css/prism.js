@@ -155,7 +155,7 @@ export default createGlobalStyle`
   }
 
   .token.method {
-    color: #1ac9df;
+    color: #14c4e5;
   }
 
   .token.variable {

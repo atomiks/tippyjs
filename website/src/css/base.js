@@ -93,6 +93,10 @@ export default createGlobalStyle`
     margin-top: 0.5rem;
   }
 
+  ul {
+    padding-left: 25px;
+  }
+
   table {
     box-shadow: 0 0 0 1px rgba(0,32,128,0.1);
     border-collapse: collapse;

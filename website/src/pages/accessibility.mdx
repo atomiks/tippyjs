@@ -19,7 +19,7 @@ hover and focus via keyboard navigation will trigger a tooltip.
 ### ARIA attributes
 
 By default, the reference element receives an `aria-describedby` attribute
-(configurable) once the tooltip is fully shown.
+(configurable) once the tooltip is fully shown:
 
 ```html
 <button aria-describedby="tippy-1">Text</button>
@@ -104,10 +104,8 @@ tippy('button', {
 ```
 
 It's also possible to change the `role` of the tippy to something other than
-`"tooltip"`.
+`"tooltip"`:
 
 ```js
-const someButton = document.querySelector('button')
-const instance = tippy(someButton)
 instance.popper.setAttribute('role', 'menu')
 ```

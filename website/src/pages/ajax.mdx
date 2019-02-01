@@ -4,11 +4,12 @@ path: /ajax/
 index: 7
 ---
 
+import Tippy from '../components/Tippy'
 import Ajax from '../components/examples/Ajax'
 import AjaxSmooth from '../components/examples/AjaxSmooth'
-import { Demo } from '../components/Framework'
+import { Demo, Button } from '../components/Framework'
 
-Using AJAX in tooltips is facilitated by lifecycle functions:
+Initiating AJAX requests is facilitated by lifecycle functions:
 
 - `onShow()`
 - `onMount()`
@@ -17,63 +18,177 @@ Using AJAX in tooltips is facilitated by lifecycle functions:
 - `onHidden()`
 
 This allows you to do very powerful things. For example, let's say you wanted to
-show a new image inside a tooltip each time it gets shown.
+show a new image inside a tooltip each time it gets shown:
 
 <Demo>
-  <Ajax />
+  <Ajax>Hover for a new image</Ajax>
 </Demo>
 
-```js
-const INITIAL_CONTENT = 'Loading...'
+Let's walk through a little tutorial to learn how to do this.
 
+First, let's setup our HTML:
+
+```html
+<button id="ajax-tippy">Hover for a new image</button>
+```
+
+Now, let's add some JavaScript:
+
+```js
 tippy('#ajax-tippy', {
-  content: INITIAL_CONTENT,
-  async onShow(tip) {
+  content: 'Loading...',
+  animateFill: false,
+  animation: 'fade',
+})
+```
+
+Here's the result so far:
+
+<Demo>
+  <Tippy content="Loading..." animation="fade" animateFill={false}>
+    <Button>Hover for a new image</Button>
+  </Tippy>
+</Demo>
+
+To initiate the AJAX request every time the tippy shows, use the `onShow`
+lifecycle:
+
+```js
+tippy('#ajax-tippy', {
+  content: 'Loading...',
+  animateFill: false,
+  animation: 'fade',
+  onShow(instance) {
+    // Code here is executed every time the tippy shows
+  },
+})
+```
+
+Modern browsers support the `fetch` API, so we'll use it for this example
+because it's cleaner than `XMLHttpRequest`. We are using an Unsplash API to
+fetch a random 200x200 image:
+
+```js
+tippy('#ajax-tippy', {
+  // ...
+  onShow(instance) {
+    fetch('https://unsplash.it/200/?random')
+      .then(response => response.blob())
+      .then(blob => {
+        // Convert the blob into a URL
+        const url = URL.createObjectURL(blob)
+        // Create an image
+        const image = new Image()
+        image.width = 200
+        image.height = 200
+        image.style.display = 'block'
+        image.src = url
+        // Update the tippy content with the image
+        instance.setContent(image)
+      })
+  },
+})
+```
+
+<Demo>
+  <Tippy
+    content="Loading..."
+    animation="fade"
+    animateFill={false}
+    onShow={instance => {
+      fetch('https://unsplash.it/200/?random')
+        .then(response => response.blob())
+        .then(blob => {
+          // Convert the blob into a URL
+          const url = URL.createObjectURL(blob)
+          // Create an image
+          const image = new Image()
+          image.width = 200
+          image.height = 200
+          image.style.display = 'block'
+          image.src = url
+          // Update the tippy content with the image
+          instance.setContent(image)
+        })
+        .catch(error => {
+          // Fallback if the network request failed
+          instance.setContent(`Request failed. ${error}`)
+        })
+    }}
+  >
+    <Button>Hover for a new image</Button>
+  </Tippy>
+</Demo>
+
+There are currently two problems with this:
+
+- When the tippy is hidden, it doesn't reset back to `Loading...`
+- If you quickly hover in and out of the tippy, it initiates many different
+  requests and each image rapidly replaces the old one as each request finishes.
+
+The first one can be solved by using the `onHidden` lifecycle, which is executed
+once the tippy fully transitions out and is unmounted from the DOM:
+
+```js
+tippy('#ajax-tippy', {
+  // ...
+  onHidden(instance) {
+    instance.setContent('Loading...')
+  },
+})
+```
+
+The second one is trickier and requires using state. This will let us know the
+current condition the tooltip is in.
+
+```js
+tippy('#ajax-tippy', {
+  // ...
+  onShow(instance) {
     // We can monkey-patch the instance's state object with our own state
-    if (!tip.state.ajax) {
-      tip.state.ajax = {
+    if (instance.state.ajax === undefined) {
+      instance.state.ajax = {
         isFetching: false,
         canFetch: true,
       }
     }
 
-    if (tip.state.ajax.isFetching || !tip.state.ajax.canFetch) {
+    // Now we will avoid initiating a new request unless the old one
+    // finished (`isFetching`).
+    // We also only want to initiate a request if the tooltip has been
+    // reset back to Loading... (`canFetch`).
+    if (instance.state.ajax.isFetching || !instance.state.ajax.canFetch) {
       return
     }
 
-    tip.state.ajax.isFetching = true
-    tip.state.ajax.canFetch = false
-
-    try {
-      const response = await fetch('https://unsplash.it/200/?random')
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      if (tip.state.isVisible) {
-        const img = new Image()
-        img.width = 200
-        img.height = 200
-        img.src = url
-        img.style.display = 'block'
-        tip.setContent(img)
-      }
-    } catch (e) {
-      tip.setContent(`Fetch failed. ${e}`)
-    } finally {
-      tip.state.ajax.isFetching = false
-    }
+    fetch('https://unsplash.it/200/?random')
+      .then(response => response.blob())
+      .then(blob => {
+        // ...
+      })
+      .catch(error => {
+        // ...
+      })
+      .finally(() => {
+        // Make sure to set it back to false so new requests can be
+        // initiated
+        instance.state.ajax.isFetching = false
+      })
   },
-  onHidden(tip) {
-    tip.state.ajax.canFetch = true
-    tip.setContent(INITIAL_CONTENT)
+  onHidden(instance) {
+    instance.setContent('Loading...')
+    instance.state.ajax.canFetch = true
   },
 })
 ```
 
-However, while this works, it doesn't look very pleasant. The image instantly
-replaces the `Loading...` text without any smooth transition.
+We use state to keep track of the request's status. Without the state booleans,
+unexpected effects may occur, such as initiating too many requests before
+waiting for the previous one to finish, or showing new images before the tooltip
+hides and resets back to `Loading...`, both of which appear "buggy".
 
-How do we make it so the tooltip smoothly transitions in height from the
-`Loading...` text to the image height?
+Currently, the image instantly replaces the `Loading...` text without any smooth
+transition. How do we make it so the tooltip smoothly transitions in height?
 
 <Demo>
   <AjaxSmooth />

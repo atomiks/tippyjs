@@ -8,7 +8,7 @@ import Tippy from '../components/Tippy'
 import { Button } from '../components/Framework'
 
 The `tippy()` function takes an object of options as a second argument to
-customize the tooltips.
+customize the tooltips:
 
 ```js
 tippy('button', {
@@ -20,7 +20,7 @@ tippy('button', {
 ```
 
 You can also specify options on the element using data attributes, which is
-useful if using the Auto (`data-tippy` attribute) method.
+useful if using auto-initialization (`data-tippy` attribute):
 
 ```html
 <button
@@ -32,4 +32,43 @@ useful if using the Auto (`data-tippy` attribute) method.
 >
   Text
 </button>
+```
+
+It can be useful to use the function for "global" settings and choose attributes
+for individual settings here and there:
+
+```html
+<button>Default</button>
+<button data-tippy-content="hello">I have my own content</button>
+<button data-tippy-arrow="true">I have my own option</button>
+```
+
+```js
+// Global settings for all <button>s
+tippy('button', {
+  content: 'global content',
+  animation: 'fade',
+})
+```
+
+To set the default options for every tooltip, you can use the
+`tippy.setDefaults()` method:
+
+```js
+tippy.setDefaults({
+  animation: 'fade',
+  arrow: true,
+})
+```
+
+You can place this call directly after the script to set the defaults for
+auto-initialized tooltips:
+
+```html
+<script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>
+<script>
+  tippy.setDefaults({
+    // Your options here
+  })
+</script>
 ```
