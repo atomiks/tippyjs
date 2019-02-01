@@ -57,16 +57,22 @@ this by creating our own theme called `tomato`.
 
 ```css
 .tippy-tooltip.tomato-theme {
-  background: tomato;
+  background-color: tomato;
   color: yellow;
 }
+
+.tippy-tooltip.tomato-theme[data-animatefill] {
+  background-color: transparent;
+}
+
 .tippy-tooltip.tomato-theme .tippy-backdrop {
-  background: tomato;
+  background-color: tomato;
 }
 ```
 
 The backdrop element is the background "filling" effect that's enabled by
 default. You should color the background of both the tooltip and the backdrop.
+Ensure the tooltip's background is transparent if `animateFill: true`.
 
 To apply the theme, specify a `theme` option without the `-theme` suffix:
 

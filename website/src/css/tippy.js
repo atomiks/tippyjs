@@ -34,6 +34,10 @@ export default createGlobalStyle`
     color: yellow;
     background: tomato;
 
+    &[data-animatefill] {
+      background-color: transparent;
+    }
+
     .tippy-backdrop {
       background: tomato;
     }
