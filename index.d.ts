@@ -1,4 +1,5 @@
 import Popper from 'popper.js'
+import group from './src/js/group'
 
 export type BasicPlacement = 'top' | 'bottom' | 'left' | 'right'
 
@@ -101,6 +102,11 @@ export interface Instance {
   }
 }
 
+export interface GroupOptions {
+  delay: number | [number, number]
+  duration?: number | [number, number]
+}
+
 export interface HideAllOptions {
   checkHideOnClick?: boolean
   duration?: number
@@ -111,6 +117,7 @@ export interface Tippy {
   (targets: Targets, options?: Props): Instance | Instance[]
   readonly defaults: Props
   readonly version: string
+  group(instances: Instance[], options: GroupOptions): void
   hideAll(options?: HideAllOptions): void
   setDefaults(options: Props): void
 }
