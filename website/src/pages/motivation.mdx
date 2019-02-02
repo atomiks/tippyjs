@@ -1,0 +1,102 @@
+---
+title: Motivation
+path: /motivation/
+index: 12
+---
+
+Tippy's goal is to be as powerful as possible in the smallest possible size
+using the simplest possible API. It wants to give the user the most control
+while making them do as little as possible and incurring small cost in terms of
+download size.
+
+The most basic tooltip is achieved via an attribute without needing to touch
+JavaScript. Once you start needing more advanced use cases, Tippy gives you full
+power.
+
+How does Tippy compare to other solutions? For example:
+
+- `popper.js`
+- `tooltip.js`
+- `tooltipster`
+- `microtip`
+- `balloon.css`
+
+Tippy.js, including the CSS and Popper.js dependency, is about **15 kB in
+size**.
+
+### Why does Tippy come with Popper.js as a dependency?
+
+Positioning "poppers" (elements that exist outside of the normal flow of the
+document), is quite complex, particularly when dealing with overflow and
+viewport awareness. Popper.js is actively maintained and very good at what it
+does, so there's no need to re-invent the wheel.
+
+### Comparison with Popper.js
+
+**Size: 7 kB**
+
+Popper.js is a positioning engine, not a tooltip library. Popper's only goal is
+to position one element (the tooltip) near another element (the reference). For
+people who want full control over their tooltips' appearance and behavior, this
+is a fantastic library. If you want "out of the box" behavior, then using Tippy
+might be better.
+
+Since Popper is a dependency of Tippy, you can use them together without
+incurring additional cost. If your bundler supports ES modules and the
+`"module"` field (both Parcel and Webpack support this):
+
+```js
+import Popper from 'popper.js'
+import tippy from 'tippy.js'
+import 'tippy.js/dist/tippy.css'
+```
+
+### Comparison with Tooltip.js
+
+**Size: 8.5 kB**
+
+Tooltip.js is a small tooltip library built on top of Popper, much like Tippy
+is.
+
+Unlike Tippy, however, it:
+
+- Does not come with styling or animations
+- Has no lifecycle functions for AJAX requests
+- Has no `followCursor` option
+- Is more complex to set up, particularly using HTML
+- Interactivity is not possible with a hover event
+- Is less accessible out of the box
+- Cannot update any option after the instance was created
+
+### Comparison with Tooltipster
+
+**Size: 40 kB**
+
+Tooltipster is a fantastic library with very similar functionality, but requires
+a jQuery dependency, unlike Tippy. To many people these days, this is a
+dealbreaker! jQuery's minzipped size is about 30 kB, and Tooltipster including
+CSS is about 10 kB. To people using frameworks like React, Vue, or Angular, it
+can be hard to deal with such a large dependency.
+
+Tooltipster is also receiving less frequent updates than Tippy, its last version
+was released over a year ago (as of Feb 2019).
+
+### Comparison with Microtip and Balloon.css
+
+**Size: 1 kB**
+
+Both of these are pure CSS tooltip libraries. CSS tooltips can be tiny in size,
+but come with many drawbacks:
+
+- Lack of positioning engine makes flipping impossible (to best fit within
+  viewport)
+- Will overflow in certain situations, particularly when close to the window
+  edge
+- No lifecycle functions / API to initiate effects, such as AJAX
+- No `followCursor` option
+- No interactivity
+- No dynamic arrow positioning
+- Using HTML content within them (e.g. popovers) is cumbersome or not possible
+
+If you don't need the above, then a CSS tooltip library might better fit your
+needs.
