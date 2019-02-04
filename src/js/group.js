@@ -1,4 +1,7 @@
-export default function group(instances, { delay, duration = 0 }) {
+export default function group(
+  instances,
+  { delay = instances[0].props.delay, duration = 0 } = {},
+) {
   let isAnyTippyOpen = false
 
   instances.forEach(instance => {
