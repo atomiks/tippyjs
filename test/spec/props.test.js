@@ -10,6 +10,15 @@ describe('evaluateProps', () => {
     })
   })
 
+  it('sets `animateFill` option to false if `arrow` is true (data attribute)', () => {
+    const ref = h()
+    ref.setAttribute('data-tippy-arrow', 'true')
+    expect(evaluateProps(ref, { animateFill: true })).toEqual({
+      arrow: true,
+      animateFill: false,
+    })
+  })
+
   it('ignores attributes if `ignoreAttributes: true`', () => {
     const props = { animation: 'scale', ignoreAttributes: true }
     const reference = h()

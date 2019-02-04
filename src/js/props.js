@@ -7,7 +7,7 @@ export function evaluateProps(reference, props) {
     ...(props.ignoreAttributes ? {} : getDataAttributeOptions(reference)),
   }
 
-  if (props.arrow) {
+  if (out.arrow) {
     out.animateFill = false
   }
 
