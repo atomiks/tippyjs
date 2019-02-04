@@ -15,7 +15,7 @@ export default {
   duration: [325, 275],
   flip: true,
   flipBehavior: 'flip',
-  flipScroll: true,
+  flipScroll: false,
   followCursor: false,
   hideOnClick: true,
   ignoreAttributes: false,
