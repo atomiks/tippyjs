@@ -1,6 +1,13 @@
 import { getDataAttributeOptions } from './reference'
 import { hasOwnProperty } from './utils'
 
+/**
+ * Evaluates the props object by merging data attributes and
+ * disabling conflicting options where necessary
+ * @param {Element} reference
+ * @param {Object} props
+ * @return {Object}
+ */
 export function evaluateProps(reference, props) {
   const out = {
     ...props,
