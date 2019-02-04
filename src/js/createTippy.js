@@ -979,9 +979,8 @@ export default function createTippy(reference, collectionProps) {
       instance.popperInstance.disableEventListeners()
 
       parentNode.removeChild(instance.popper)
-      instance.state.isMounted = false
-
       instance.props.onHidden(instance)
+      instance.state.isMounted = false
     })
   }
 
