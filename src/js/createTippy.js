@@ -578,7 +578,7 @@ export default function createTippy(reference, collectionProps) {
   function hasFollowCursorBehavior() {
     return (
       instance.props.followCursor &&
-      !isUsingTouch &&
+      (!isUsingTouch || instance.props.followCursor === 'initial') &&
       lastTriggerEvent.type !== 'focus'
     )
   }
