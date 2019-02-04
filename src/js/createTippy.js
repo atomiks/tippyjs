@@ -853,7 +853,11 @@ export default function createTippy(reference, collectionProps) {
 
     // Prevent a transition if the popper is at the opposite placement
     applyTransitionDuration(
-      [instance.popperChildren.tooltip, instance.popperChildren.backdrop],
+      [
+        instance.popper,
+        instance.popperChildren.tooltip,
+        instance.popperChildren.backdrop,
+      ],
       0,
     )
 
@@ -867,6 +871,7 @@ export default function createTippy(reference, collectionProps) {
         instance.popperInstance.update()
       }
 
+      popper.style.transitionDuration = `${props.updateDuration}ms`
       applyTransitionDuration(getInnerElements(), duration)
 
       if (instance.popperChildren.backdrop) {
