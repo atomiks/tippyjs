@@ -57,26 +57,6 @@ export function getValue(value, index, defaultValue) {
 }
 
 /**
- * Focuses an element while preventing a scroll jump if it's not within the
- * viewport
- * @param {Element} el
- */
-export function focus(el) {
-  const x = window.scrollX || window.pageXOffset
-  const y = window.scrollY || window.pageYOffset
-  el.focus()
-  scroll(x, y)
-}
-
-/**
- * Defers a function's execution until the call stack has cleared
- * @param {Function} fn
- */
-export function defer(fn) {
-  setTimeout(fn, 1)
-}
-
-/**
  * Debounce utility
  * @param {Function} fn
  * @param {Number} ms

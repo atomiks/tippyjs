@@ -129,18 +129,6 @@ describe('getValue', () => {
   })
 })
 
-describe('defer', () => {
-  it('waits until call stack has cleared', done => {
-    const fn = jest.fn()
-    Utils.defer(fn)
-    expect(fn.mock.calls.length).toBe(0)
-    setTimeout(() => {
-      expect(fn.mock.calls.length).toBe(1)
-      done()
-    }, 1)
-  })
-})
-
 describe('debounce', () => {
   it('works as expected', done => {
     const fn = jest.fn()
@@ -158,14 +146,6 @@ describe('debounce', () => {
         }, 51)
       }, 20)
     }, 40)
-  })
-})
-
-describe('focus', () => {
-  it('focuses an element', () => {
-    const el = document.createElement('button') // can receive focus
-    Utils.focus(el)
-    expect(el).toBe(document.activeElement)
   })
 })
 

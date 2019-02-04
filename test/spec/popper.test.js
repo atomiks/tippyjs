@@ -118,18 +118,6 @@ describe('createPopperElement', () => {
       getChildren(popper).tooltip.classList.contains('firetruck-theme'),
     ).toBe(true)
   })
-
-  it('adds a `focusout` listener to hide the popper when the relatedTarget is outside', () => {
-    const randEl = document.createElement('button')
-    document.body.append(randEl)
-    const instance = tippy(h())
-    instance.show(0)
-    expect(instance.state.isVisible).toBe(true)
-    instance.popper.dispatchEvent(
-      new FocusEvent('focusout', { relatedTarget: randEl }),
-    )
-    expect(instance.state.isVisible).toBe(false)
-  })
 })
 
 describe('updatePopperElement', () => {

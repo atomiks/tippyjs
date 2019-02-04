@@ -1,5 +1,5 @@
 import Selectors from './selectors'
-import { arrayFrom, closestCallback } from './ponyfills'
+import { arrayFrom } from './ponyfills'
 import { innerHTML } from './utils'
 
 /**
@@ -225,18 +225,6 @@ export function createPopperElement(id, props) {
 
   tooltip.appendChild(content)
   popper.appendChild(tooltip)
-
-  popper.addEventListener('focusout', e => {
-    if (
-      e.relatedTarget &&
-      popper._tippy &&
-      !closestCallback(e.relatedTarget, el => el === popper) &&
-      e.relatedTarget !== popper._tippy.reference &&
-      popper._tippy.props.shouldPopperHideOnBlur(e)
-    ) {
-      popper._tippy.hide()
-    }
-  })
 
   return popper
 }

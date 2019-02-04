@@ -19,8 +19,6 @@ import { canReceiveFocus } from './reference'
 import { validateOptions, evaluateProps } from './props'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
 import {
-  defer,
-  focus,
   hasOwnProperty,
   debounce,
   getValue,
@@ -70,9 +68,6 @@ export default function createTippy(reference, collectionProps) {
 
   // Array of event listeners currently attached to the reference element
   let listeners = []
-
-  // Flag to determine if the reference was recently programmatically focused
-  let referenceJustProgrammaticallyFocused = false
 
   // Private onMouseMove handler reference, debounced or not
   let debouncedOnMouseMove =
@@ -160,8 +155,6 @@ export default function createTippy(reference, collectionProps) {
 
   addTriggersToReference()
 
-  reference.addEventListener('click', onReferenceClick)
-
   if (!props.lazy) {
     createPopperInstance()
     instance.popperInstance.disableEventListeners()
@@ -183,15 +176,6 @@ export default function createTippy(reference, collectionProps) {
   return instance
 
   /* ======================= 🔒 Private methods 🔒 ======================= */
-  /**
-   * If the reference was clicked, it also receives focus
-   */
-  function onReferenceClick() {
-    defer(() => {
-      referenceJustProgrammaticallyFocused = false
-    })
-  }
-
   /**
    * Positions the virtual reference near the mouse cursor
    */
@@ -847,13 +831,6 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    // If the reference was just programmatically focused for accessibility
-    // reasons
-    if (referenceJustProgrammaticallyFocused) {
-      referenceJustProgrammaticallyFocused = false
-      return
-    }
-
     if (instance.props.onShow(instance) === false) {
       return
     }
@@ -904,14 +881,6 @@ export default function createTippy(reference, collectionProps) {
           instance.popperChildren.tooltip.classList.add('tippy-notransition')
         }
 
-        if (
-          instance.props.autoFocus &&
-          instance.props.interactive &&
-          includes(['focus', 'click'], lastTriggerEvent.type)
-        ) {
-          focus(instance.popper)
-        }
-
         if (instance.props.aria) {
           instance.reference.setAttribute(
             `aria-${instance.props.aria}`,
@@ -955,18 +924,6 @@ export default function createTippy(reference, collectionProps) {
 
     setVisibilityState(getInnerElements(), 'hidden')
 
-    if (
-      instance.props.autoFocus &&
-      instance.props.interactive &&
-      !referenceJustProgrammaticallyFocused &&
-      includes(['focus', 'click'], lastTriggerEvent.type)
-    ) {
-      if (lastTriggerEvent.type === 'focus') {
-        referenceJustProgrammaticallyFocused = true
-      }
-      focus(instance.reference)
-    }
-
     onTransitionedOut(duration, () => {
       if (!isPreparingToShow) {
         removeFollowCursorListener()
@@ -1000,8 +957,6 @@ export default function createTippy(reference, collectionProps) {
     }
 
     removeTriggersFromReference()
-
-    instance.reference.removeEventListener('click', onReferenceClick)
 
     delete instance.reference._tippy
 
