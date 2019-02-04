@@ -203,3 +203,13 @@ describe('includes', () => {
     expect(Utils.includes(['test', 'other'], 'tst')).toBe(false)
   })
 })
+
+describe('setFlipModifierEnabled', () => {
+  it('sets it correctly', () => {
+    const modifiers = [{ name: 'x' }, { name: 'flip', enabled: true }]
+    Utils.setFlipModifierEnabled(modifiers, false)
+    expect(modifiers[1].enabled).toBe(false)
+    Utils.setFlipModifierEnabled(modifiers, true)
+    expect(modifiers[1].enabled).toBe(true)
+  })
+})

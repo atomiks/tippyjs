@@ -1,7 +1,7 @@
 import { isIOS } from './browser'
 import Selectors from './selectors'
 import { hideAll } from './popper'
-import { closest, closestCallback, arrayFrom } from './ponyfills'
+import { closest, closestCallback } from './ponyfills'
 import { includes } from './utils'
 import { PASSIVE } from './constants'
 
@@ -81,15 +81,6 @@ export function onWindowBlur() {
   }
 }
 
-export function onWindowResize() {
-  arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
-    const instance = popper._tippy
-    if (!instance.props.livePlacement) {
-      instance.popperInstance.scheduleUpdate()
-    }
-  })
-}
-
 /**
  * Adds the needed global event listeners
  */
@@ -97,5 +88,4 @@ export default function bindGlobalEventListeners() {
   document.addEventListener('click', onDocumentClick, true)
   document.addEventListener('touchstart', onDocumentTouch, PASSIVE)
   window.addEventListener('blur', onWindowBlur)
-  window.addEventListener('resize', onWindowResize)
 }

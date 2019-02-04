@@ -27,6 +27,7 @@ import {
   getModifier,
   includes,
   evaluateValue,
+  setFlipModifierEnabled,
 } from './utils'
 import { PASSIVE } from './constants'
 
@@ -508,7 +509,14 @@ export default function createTippy(reference, collectionProps) {
           getPopperPlacement(instance.popper)
         ] = getOffsetDistanceInPx(instance.props.distance, Defaults.distance)
       },
-      onUpdate() {
+      onUpdate(data) {
+        if (data && !instance.props.flipScroll) {
+          if (data.flipped) {
+            instance.popperInstance.options.placement = data.placement
+          }
+          setFlipModifierEnabled(instance.popperInstance.modifiers, false)
+        }
+
         const styles = tooltip.style
         styles.top = ''
         styles.bottom = ''
@@ -529,16 +537,15 @@ export default function createTippy(reference, collectionProps) {
   function mount(callback) {
     if (!instance.popperInstance) {
       createPopperInstance()
-      if (!instance.props.livePlacement || hasFollowCursorBehavior()) {
+      if (hasFollowCursorBehavior()) {
         instance.popperInstance.disableEventListeners()
       }
     } else {
       if (!hasFollowCursorBehavior()) {
         instance.popperInstance.scheduleUpdate()
-        if (instance.props.livePlacement) {
-          instance.popperInstance.enableEventListeners()
-        }
+        instance.popperInstance.enableEventListeners()
       }
+      setFlipModifierEnabled(instance.popperInstance.modifiers, true)
     }
 
     // If the instance previously had followCursor behavior, it will be
@@ -868,7 +875,7 @@ export default function createTippy(reference, collectionProps) {
 
       // Arrow will sometimes not be positioned correctly. Force another update
       if (!hasFollowCursorBehavior()) {
-        instance.popperInstance.update()
+        //instance.popperInstance.update()
       }
 
       popper.style.transitionDuration = `${props.updateDuration}ms`
@@ -967,6 +974,7 @@ export default function createTippy(reference, collectionProps) {
       }
 
       instance.popperInstance.disableEventListeners()
+      instance.popperInstance.options.placement = instance.props.placement
 
       parentNode.removeChild(instance.popper)
       instance.props.onHidden(instance)

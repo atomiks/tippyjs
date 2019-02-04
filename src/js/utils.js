@@ -129,10 +129,19 @@ export function innerHTML() {
 
 /**
  * Evaluates a function if one, or returns the value
- * @param {any}
- * @param {any[]}
+ * @param {any} value
+ * @param {any[]} args
  * @return {Boolean}
  */
 export function evaluateValue(value, args) {
   return typeof value === 'function' ? value.apply(null, args) : value
+}
+
+/**
+ * Sets a popperInstance `flip` modifier's enabled state
+ * @param {Object} modifiers
+ * @param {any[]}
+ */
+export function setFlipModifierEnabled(modifiers, value) {
+  modifiers.filter(m => m.name === 'flip')[0].enabled = value
 }

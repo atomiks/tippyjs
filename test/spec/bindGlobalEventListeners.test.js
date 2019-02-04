@@ -79,16 +79,6 @@ describe('onWindowBlur', () => {
   })
 })
 
-describe('onWindowResize', () => {
-  it('updates poppers with `livePlacement: false`', () => {
-    const instance = tippy(h(), withTestOptions({ livePlacement: false }))
-    instance.show()
-    instance.popperInstance.scheduleUpdate = jest.fn()
-    Listeners.onWindowResize()
-    expect(instance.popperInstance.scheduleUpdate.mock.calls.length).toBe(1)
-  })
-})
-
 describe('bindEventListeners', () => {
   it('onDocumentTouch falls back to `pointerdown`', () => {
     Listeners.supportsTouch = false
