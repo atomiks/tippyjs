@@ -875,7 +875,7 @@ export default function createTippy(reference, collectionProps) {
 
       // Arrow will sometimes not be positioned correctly. Force another update
       if (!hasFollowCursorBehavior()) {
-        //instance.popperInstance.update()
+        instance.popperInstance.update()
       }
 
       popper.style.transitionDuration = `${props.updateDuration}ms`
