@@ -39,6 +39,7 @@ export interface Props {
   distance?: number
   flip?: boolean
   flipBehavior?: 'flip' | Placement[]
+  flipScroll?: boolean
   followCursor?: boolean | 'vertical' | 'horizontal' | 'initial'
   hideOnClick?: boolean | 'toggle'
   ignoreAttributes?: boolean
@@ -47,7 +48,6 @@ export interface Props {
   interactiveBorder?: number
   interactiveDebounce?: number
   lazy?: boolean
-  livePlacement?: boolean
   maxWidth?: number | string
   multiple?: boolean
   offset?: number | string
@@ -102,7 +102,7 @@ export interface Instance {
 }
 
 export interface GroupOptions {
-  delay: number | [number, number]
+  delay?: number | [number, number]
   duration?: number | [number, number]
 }
 
@@ -116,7 +116,7 @@ export interface Tippy {
   (targets: Targets, options?: Props): Instance | Instance[]
   readonly defaults: Props
   readonly version: string
-  group(instances: Instance[], options: GroupOptions): void
+  group(instances: Instance[], options?: GroupOptions): void
   hideAll(options?: HideAllOptions): void
   setDefaults(options: Props): void
 }
