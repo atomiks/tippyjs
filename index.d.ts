@@ -1,5 +1,4 @@
 import Popper from 'popper.js'
-import group from './src/js/group'
 
 export type BasicPlacement = 'top' | 'bottom' | 'left' | 'right'
 
