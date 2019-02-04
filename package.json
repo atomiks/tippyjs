@@ -1,7 +1,7 @@
 {
   "name": "tippy.js",
   "version": "3.4.1",
-  "description": "Vanilla JS Tooltip & Popover Library",
+  "description": "Highly customizable tooltip and popover library",
   "main": "./umd/index.all.min.js",
   "module": "./esm/index.all.js",
   "types": "index.d.ts",
@@ -16,6 +16,7 @@
   "files": [
     "umd",
     "esm",
+    "themes",
     "index.css",
     "index.d.ts"
   ],
