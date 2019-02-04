@@ -43,7 +43,7 @@ export default {
   touch: true,
   touchHold: false,
   trigger: 'mouseenter focus',
-  updateDuration: 200,
+  updateDuration: 0,
   wait: null,
   zIndex: 9999,
 }
