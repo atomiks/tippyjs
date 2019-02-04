@@ -55,13 +55,13 @@
     }
   } @else if ($animation == 'scale') {
     @if ($placement == 'top') {
-      transform: translateY(0) scale(0.5);
+      transform: translateY(-10px) scale(0.5);
     } @else if ($placement == 'bottom') {
-      transform: translateY(0) scale(0.5);
+      transform: translateY(10px) scale(0.5);
     } @else if ($placement == 'left') {
-      transform: translateX(0) scale(0.5);
+      transform: translateX(-10px) scale(0.5);
     } @else if ($placement == 'right') {
-      transform: translateX(0) scale(0.5);
+      transform: translateX(10px) scale(0.5);
     }
   } @else if ($animation == 'shift-toward') {
     @if ($placement == 'top') {

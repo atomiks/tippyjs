@@ -101,6 +101,8 @@
       }
 
       [data-animation='scale'] {
+        transform-origin: nth($origins, index($placements, $placement));
+
         &[data-state='visible'] {
           @include enter-transform($placement, 'scale');
         }
