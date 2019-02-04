@@ -49,9 +49,6 @@ export default function createTippy(reference, collectionProps) {
   }
 
   /* ======================= 🔒 Private members 🔒 ======================= */
-  // The popper element's mutation observer
-  let popperMutationObserver = null
-
   // The last trigger event object that caused the tippy to show
   let lastTriggerEvent = {}
 
@@ -191,22 +188,6 @@ export default function createTippy(reference, collectionProps) {
   function onReferenceClick() {
     defer(() => {
       referenceJustProgrammaticallyFocused = false
-    })
-  }
-
-  /**
-   * Ensure the popper's position stays correct if its dimensions change. Use
-   * update() over .scheduleUpdate() so there is no 1 frame flash due to
-   * async update
-   */
-  function addMutationObserver() {
-    popperMutationObserver = new MutationObserver(
-      instance.popperInstance.update,
-    )
-    popperMutationObserver.observe(popper, {
-      childList: true,
-      subtree: true,
-      characterData: true,
     })
   }
 
@@ -548,7 +529,6 @@ export default function createTippy(reference, collectionProps) {
   function mount(callback) {
     if (!instance.popperInstance) {
       createPopperInstance()
-      addMutationObserver()
       if (!instance.props.livePlacement || hasFollowCursorBehavior()) {
         instance.popperInstance.disableEventListeners()
       }
@@ -803,17 +783,22 @@ export default function createTippy(reference, collectionProps) {
     updatePopperElement(instance.popper, prevProps, nextProps)
     instance.popperChildren = getChildren(instance.popper)
 
-    if (
-      instance.popperInstance &&
-      POPPER_INSTANCE_RELATED_PROPS.some(prop => hasOwnProperty(options, prop))
-    ) {
-      instance.popperInstance.destroy()
-      createPopperInstance()
-      if (!instance.state.isVisible) {
-        instance.popperInstance.disableEventListeners()
-      }
-      if (instance.props.followCursor && lastMouseMoveEvent) {
-        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+    if (instance.popperInstance) {
+      instance.popperInstance.scheduleUpdate()
+
+      if (
+        POPPER_INSTANCE_RELATED_PROPS.some(prop =>
+          hasOwnProperty(options, prop),
+        )
+      ) {
+        instance.popperInstance.destroy()
+        createPopperInstance()
+        if (!instance.state.isVisible) {
+          instance.popperInstance.disableEventListeners()
+        }
+        if (instance.props.followCursor && lastMouseMoveEvent) {
+          positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+        }
       }
     }
   }
@@ -1016,10 +1001,6 @@ export default function createTippy(reference, collectionProps) {
 
     if (instance.popperInstance) {
       instance.popperInstance.destroy()
-    }
-
-    if (popperMutationObserver) {
-      popperMutationObserver.disconnect()
     }
 
     instance.state.isDestroyed = true
