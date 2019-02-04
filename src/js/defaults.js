@@ -34,6 +34,7 @@ export default {
   onShown() {},
   placement: 'top',
   popperOptions: {},
+  role: 'tooltip',
   shouldPopperHideOnBlur: () => true,
   showOnInit: false,
   size: 'regular',

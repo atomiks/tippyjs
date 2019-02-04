@@ -295,6 +295,23 @@ describe('theme', () => {
   })
 })
 
+describe('role', () => {
+  it('sets "role" attribute to popper element', () => {
+    const { popper: a } = tippy(h(), { role: 'menu' })
+    expect(a.getAttribute('role')).toBe('menu')
+    const { popper: b } = tippy(h(), { role: null })
+    expect(b.hasAttribute('role')).toBe(false)
+  })
+
+  it('is updated correctly by .set()', () => {
+    const instance = tippy(h(), { role: 'tooltip' })
+    instance.set({ role: 'menu' })
+    expect(instance.popper.getAttribute('role')).toBe('menu')
+    instance.set({ role: null })
+    expect(instance.popper.hasAttribute('role')).toBe(false)
+  })
+})
+
 describe('flip', () => {
   it('true: sets flip to enabled in the popperInstance', () => {
     const { popperInstance } = tippy(h(), withTestOptions({ flip: true }))
