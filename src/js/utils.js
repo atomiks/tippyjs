@@ -139,8 +139,8 @@ export function evaluateValue(value, args) {
 
 /**
  * Sets a popperInstance `flip` modifier's enabled state
- * @param {Object} modifiers
- * @param {any[]}
+ * @param {Object[]} modifiers
+ * @param {any} value
  */
 export function setFlipModifierEnabled(modifiers, value) {
   modifiers.filter(m => m.name === 'flip')[0].enabled = value
