@@ -26,11 +26,11 @@ export default createGlobalStyle`
   }
 
   &::-moz-selection {
-    background: #a886ff;
+    background: #333;
     color: white;
   }
   &::selection {
-    background: #a886ff;
+    background: #333;
     color: white;
   }
   
@@ -56,7 +56,6 @@ export default createGlobalStyle`
 
     > a {
       color: inherit;
-      padding-bottom: 0.25rem;
     }
   }
 
@@ -91,6 +90,10 @@ export default createGlobalStyle`
   li {
     line-height: 1.6;
     margin-top: 0.5rem;
+  }
+
+  ul {
+    padding-left: 25px;
   }
 
   table {

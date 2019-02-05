@@ -3,20 +3,8 @@ import { Link, graphql, StaticQuery } from 'gatsby'
 import styled from 'styled-components'
 import { MEDIA, Flex } from './Framework'
 import { sortPagesByIndex } from '../utils'
-
-const FadedText = styled.span`
-  position: relative;
-  top: -2px;
-  opacity: 0.4;
-  font-size: 70%;
-  margin-right: 10px;
-  font-weight: bold;
-  display: block;
-
-  ${MEDIA.md} {
-    display: inline;
-  }
-`
+import ArrowRight from 'react-feather/dist/icons/arrow-right'
+import ArrowLeft from 'react-feather/dist/icons/arrow-left'
 
 const NavButton = styled(Link)`
   display: block;
@@ -28,23 +16,40 @@ const NavButton = styled(Link)`
     props['data-next'] ? 'linear-gradient(90deg,#f3edff,#edf5ff)' : 'white'};
   text-decoration: none;
   color: ${props => (props['data-next'] ? '#2569d7' : 'inherit')};
-  filter: ${props => props['data-next'] && 'saturate(1.15)'};
   font-weight: bold;
   transition: box-shadow 0.2s;
-  flex: 1;
-  margin: 0 10px;
-  max-width: 500px;
+  margin: 0 10px 15px;
   font-size: 20px;
   transition: all 0.1s;
+  width: 100%;
 
   &:hover {
     border-color: inherit;
-    border-bottom: ${props => props['data-next'] && 'none'};
-    filter: ${props => props['data-next'] && 'saturate(1.15) brightness(1.02)'};
+  }
+
+  &[data-next] {
+    border-bottom: none;
+    filter: saturate(1.15);
+    order: -1;
+
+    &:hover {
+      filter: saturate(1.15) brightness(1.02);
+    }
+  }
+
+  ${MEDIA.sm} {
+    width: calc(50% - 20px);
+    margin: 0 10px;
+    order: initial;
+
+    &[data-next] {
+      order: initial;
+    }
   }
 
   ${MEDIA.md} {
     font-size: 24px;
+    padding: 40px;
   }
 `
 
@@ -63,13 +68,19 @@ function NavButtons({ next }) {
           return (
             <>
               {prevLink && (
-                <NavButton to={prevLink.frontmatter.path}>
-                  <FadedText>PREV</FadedText> {prevLink.frontmatter.title}
+                <NavButton to={prevLink.frontmatter.path} aria-label="Previous">
+                  <ArrowLeft style={{ verticalAlign: -4 }} />{' '}
+                  {prevLink.frontmatter.title}
                 </NavButton>
               )}
               {nextLink && (
-                <NavButton to={nextLink.frontmatter.path} data-next>
-                  <FadedText>NEXT</FadedText> {nextLink.frontmatter.title}
+                <NavButton
+                  to={nextLink.frontmatter.path}
+                  data-next
+                  aria-label="Next"
+                >
+                  {nextLink.frontmatter.title}{' '}
+                  <ArrowRight style={{ verticalAlign: -4 }} />
                 </NavButton>
               )}
             </>

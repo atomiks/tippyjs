@@ -9,7 +9,7 @@ Methods on instances allow you to control the tippy programmatically. See the
 
 ### Show the tippy
 
-Programmatically show the tippy at any time.
+Programmatically show the tippy at any time:
 
 ```js
 instance.show()
@@ -17,7 +17,7 @@ instance.show()
 
 ### Hide the tippy
 
-Programmatically hide the tippy at any time.
+Programmatically hide the tippy at any time:
 
 ```js
 instance.hide()
@@ -34,13 +34,13 @@ instance.hide(0) // 0ms
 
 ### Disable the tippy
 
-You can temporarily prevent a tippy from showing or hiding.
+Temporarily prevent a tippy from showing or hiding:
 
 ```js
 instance.disable()
 ```
 
-Re-enable it with this method.
+Re-enable it with this method:
 
 ```js
 instance.enable()
@@ -48,7 +48,7 @@ instance.enable()
 
 ### Destroy the tippy
 
-To permanently destroy and clean up the instance, use this method.
+To permanently destroy and clean up the instance, use this method:
 
 ```js
 instance.destroy()
@@ -67,7 +67,7 @@ instance.destroy(true)
 ### Update the tippy
 
 You can update any option after the instance has been created using the `set()`
-method. Pass an object of new options in.
+method. Pass an object of new options in:
 
 ```js
 instance.set({
@@ -76,7 +76,7 @@ instance.set({
 })
 ```
 
-There is also a shortcut for updating the content.
+There is also a shortcut for updating the content:
 
 ```js
 instance.setContent('New content')
@@ -107,7 +107,7 @@ most likely be changed in the next version.
 #### Defaults
 
 You can set the default props for future instances so you don't need to specify
-them over and over again. Pass an object of options in.
+them over and over again. Pass an object of options in:
 
 ```js
 tippy.setDefaults({

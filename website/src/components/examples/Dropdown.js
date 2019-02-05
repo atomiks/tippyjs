@@ -10,7 +10,7 @@ const List = styled.ul`
   text-align: left;
 `
 
-const Reaction = styled.button`
+const Reaction = styled.button.attrs({ role: 'menuitem' })`
   background: none;
   border: none;
   font-size: 22px;
@@ -30,7 +30,7 @@ const Text = styled.p`
   color: #777;
 `
 
-function Dropdown() {
+function Dropdown({ text }) {
   return (
     <Tippy
       content={
@@ -68,16 +68,16 @@ function Dropdown() {
       }
       interactive
       aria={null}
-      hideOnClick={false}
+      autoFocus={false}
       animateFill={false}
       placement="bottom"
       distance={7}
       animation="fade"
       theme="light-border dropdown"
       updateDuration={0}
+      trigger="mouseenter click"
       arrow
       appendTo={ref => ref.parentNode}
-      autoFocus={false}
       onMount={tip => {
         tip.reference.setAttribute('aria-expanded', 'true')
       }}
@@ -86,10 +86,14 @@ function Dropdown() {
       }}
     >
       <Button aria-haspopup="true" aria-expanded="false">
-        Dropdown example
+        {text}
       </Button>
     </Tippy>
   )
+}
+
+Dropdown.defaultProps = {
+  text: 'Dropdown',
 }
 
 export default Dropdown

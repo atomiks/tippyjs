@@ -1,7 +1,7 @@
 ---
 title: HTML Content
 path: /html-content/
-index: 9
+index: 7
 ---
 
 Tippy offers a few ways to use HTML inside tooltips.
@@ -43,7 +43,7 @@ tippy('button', { content: container })
 
 #### Standard `<div>`
 
-You can also just use a `<div>`.
+You can also just use a `<div>`:
 
 <!-- prettier-ignore -->
 ```html
@@ -74,7 +74,7 @@ since it's not being cloned.
 ### Template linking
 
 If you have multiple references each with their own unique template, there is a
-way to link them with their associated template.
+way to link them with their associated template:
 
 ```html
 <button data-template="one">One</button>
@@ -93,7 +93,7 @@ way to link them with their associated template.
 ```
 
 We can make `content` a function that receives the reference element (button in
-this case) and returns template content.
+this case) and returns template content:
 
 ```js
 tippy('button', {

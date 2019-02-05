@@ -13,11 +13,11 @@ their appearance!
 ### Tippy elements
 
 To learn how to create a theme, it's helpful to understand the structure of a
-tippy element.
+tippy element:
 
 <!-- prettier-ignore -->
 ```html
-<div class="tippy-popper">
+<div class="tippy-popper" x-placement="top">
   <div class="tippy-tooltip">
     <div class="tippy-content">
       My content
@@ -34,7 +34,7 @@ A tippy is essentially three nested `div`s.
 - `tippy-tooltip` is the actual tooltip node.
 - `tippy-content` is the content node.
 
-Depending on the options supplied, there will exist other elements inside it.
+Depending on the options supplied, there will exist other elements inside it:
 
 <!-- prettier-ignore -->
 ```html
@@ -52,26 +52,27 @@ Depending on the options supplied, there will exist other elements inside it.
 ### Creating a theme
 
 Themes are created by including a class on the `tippy-tooltip` element as part
-of a selector.
-
-Let's demonstrate this by creating our own theme called `tomato`.
-
-If `animateFill: true` (default), style the backdrop element and specify the
-theme's name including a `-theme` suffix:
-
-```css
-.tippy-tooltip.tomato-theme .tippy-backdrop {
-  background: tomato;
-}
-```
-
-If `animateFill: false` (or if `arrow: true`), style the tooltip element:
+of a selector in the form `.tippy-tooltip.mythemename-theme`. Let's demonstrate
+this by creating our own theme called `tomato`.
 
 ```css
 .tippy-tooltip.tomato-theme {
-  background: tomato;
+  background-color: tomato;
+  color: yellow;
+}
+
+.tippy-tooltip.tomato-theme[data-animatefill] {
+  background-color: transparent;
+}
+
+.tippy-tooltip.tomato-theme .tippy-backdrop {
+  background-color: tomato;
 }
 ```
+
+The backdrop element is the background "filling" effect that's enabled by
+default. You should color the background of both the tooltip and the backdrop.
+Ensure the tooltip's background is transparent if `animateFill: true`.
 
 To apply the theme, specify a `theme` option without the `-theme` suffix:
 
@@ -110,8 +111,8 @@ base placement and apply it to the `.tippy-arrow` element:
 }
 ```
 
-To style the round SVG arrow, it's as simple as specifying the `fill` and
-targeting `.tippy-roundarrow`:
+To color the SVG arrow, it's as simple as specifying the `fill` and targeting
+`.tippy-roundarrow`:
 
 <!-- prettier-ignore -->
 ```css
@@ -119,3 +120,32 @@ targeting `.tippy-roundarrow`:
   fill: tomato;
 }
 ```
+
+<Demo>
+  <Tippy theme="tomato" arrow>
+    <Button>CSS arrow</Button>
+  </Tippy>
+  <Tippy theme="tomato" arrow arrowType="round">
+    <Button>SVG arrow</Button>
+  </Tippy>
+</Demo>
+
+#### Changing the arrow size
+
+If you would like to increase or decrease the arrow's size, you can use
+`transform: scale()`:
+
+```css
+.tippy-tooltip.tomato-theme .tippy-arrow {
+  transform: scale(1.5);
+}
+```
+
+<Demo>
+  <Tippy theme="tomato scaled-arrow" arrow>
+    <Button>Scaled arrow</Button>
+  </Tippy>
+</Demo>
+
+If you're using a bordered theme like `light-border` included in the package,
+then you should avoid using `scale`.
