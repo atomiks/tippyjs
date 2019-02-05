@@ -17,8 +17,7 @@ const BANNER = `/**!
 * tippy.js v${pkg.version}
 * (c) 2017-${new Date().getFullYear()} atomiks
 * MIT License
-*/
-`
+*/`
 
 const pluginBabel = babel({ exclude: 'node_modules/**' })
 const pluginMinify = terser()
