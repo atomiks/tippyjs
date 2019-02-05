@@ -13,6 +13,7 @@
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
   max-width: calc(100% - 10px);
   pointer-events: none;
+  outline: 0;
 
   @each $placement in $placements {
     &[x-placement^='#{$placement}'] {
