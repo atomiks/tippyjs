@@ -1,10 +1,20 @@
-import { h, cleanDocumentBody, withTestOptions, wait } from '../utils'
-import tippy from '../../src/js/index'
+import {
+  h,
+  cleanDocumentBody,
+  withTestOptions,
+  wait,
+  enableTouchEnvironment,
+  disableTouchEnvironment,
+} from '../utils'
+import tippy from '../../src/js'
 import { getChildren } from '../../src/js/popper'
 
 afterEach(cleanDocumentBody)
 
-const HIDE_DELAY = 21
+tippy.setDefaults({
+  duration: 0,
+  delay: 0,
+})
 
 describe('a11y', () => {
   it('false: it does not add `tabindex` attribute if ref is not focusable', () => {
@@ -194,48 +204,56 @@ describe('content', () => {
 })
 
 describe('trigger', () => {
-  it('default: many triggers', async () => {
+  it('default: many triggers', () => {
     const ref = h()
     const { state } = tippy(ref)
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('mouseleave'))
-    await wait(HIDE_DELAY)
     expect(state.isVisible).toBe(false)
     ref.dispatchEvent(new Event('focus'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('blur'))
-    await wait(HIDE_DELAY)
     expect(state.isVisible).toBe(false)
   })
 
-  it('mouseenter', async () => {
+  it('mouseenter', () => {
     const ref = h()
     const { state } = tippy(ref, { trigger: 'mouseenter' })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('mouseleave'))
-    await wait(HIDE_DELAY)
     expect(state.isVisible).toBe(false)
   })
 
-  it('focus', async () => {
+  it('focus', () => {
     const ref = h()
     const { state } = tippy(ref, { trigger: 'focus' })
     ref.dispatchEvent(new Event('focus'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('blur'))
-    await wait(HIDE_DELAY)
     expect(state.isVisible).toBe(false)
   })
 
-  it('click', async () => {
+  it('click', () => {
     const ref = h()
     const { state } = tippy(ref, { trigger: 'click' })
     ref.dispatchEvent(new Event('click'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('click'))
-    await wait(HIDE_DELAY)
+    expect(state.isVisible).toBe(false)
+  })
+
+  it('manual', () => {
+    const ref = h()
+    const { state } = tippy(ref, { trigger: 'manual' })
+    ref.dispatchEvent(new Event('mouseenter'))
+    expect(state.isVisible).toBe(false)
+    ref.dispatchEvent(new Event('focus'))
+    expect(state.isVisible).toBe(false)
+    ref.dispatchEvent(new Event('click'))
+    expect(state.isVisible).toBe(false)
+    ref.dispatchEvent(new Event('touchstart'))
     expect(state.isVisible).toBe(false)
   })
 })
@@ -250,7 +268,16 @@ describe('interactive', () => {
     expect(tip.state.isVisible).toBe(true)
   })
 
-  it('false: tippy is hidden when clicked', async () => {
+  it('true: toggles `tippy-active` class on the reference', () => {
+    const ref = h()
+    const instance = tippy(ref, { interactive: true, duration: 0, delay: 0 })
+    instance.show()
+    expect(ref.classList.contains('tippy-active')).toBe(true)
+    instance.hide()
+    expect(ref.classList.contains('tippy-active')).toBe(false)
+  })
+
+  it('false: tippy is hidden when clicked', () => {
     const tip = tippy(h(), {
       interactive: false,
     })
@@ -258,7 +285,6 @@ describe('interactive', () => {
     tip.popperChildren.tooltip.dispatchEvent(
       new Event('click', { bubbles: true }),
     )
-    await wait(HIDE_DELAY)
     expect(tip.state.isVisible).toBe(false)
   })
 })
@@ -631,5 +657,54 @@ describe('boundary', () => {
     expect(
       popperInstance.options.modifiers.preventOverflow.boundariesElement,
     ).toBe('example')
+  })
+})
+
+describe('showOnInit', () => {
+  it('shows the tooltip on init', () => {
+    const instance = tippy(h(), { showOnInit: true })
+    expect(instance.state.isVisible).toBe(true)
+  })
+})
+
+describe('touch', () => {
+  it('true: shows tooltips on touch device', () => {
+    enableTouchEnvironment()
+    const instance = tippy(h(), { touch: true })
+    instance.show()
+    expect(instance.state.isVisible).toBe(true)
+    disableTouchEnvironment()
+  })
+
+  it('false: does not show tooltip on touch device', () => {
+    enableTouchEnvironment()
+    const instance = tippy(h(), { touch: false })
+    instance.show()
+    expect(instance.state.isVisible).toBe(false)
+    disableTouchEnvironment()
+  })
+})
+
+describe('touchHold', () => {
+  it('true: uses `touch` listeners instead', () => {
+    enableTouchEnvironment()
+    const ref = h()
+    const instance = tippy(ref, { touchHold: true })
+    ref.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(false)
+    ref.dispatchEvent(new Event('focus'))
+    expect(instance.state.isVisible).toBe(false)
+    ref.dispatchEvent(new Event('touchstart'))
+    expect(instance.state.isVisible).toBe(true)
+    disableTouchEnvironment()
+  })
+
+  it('false: uses standard listeners', () => {
+    enableTouchEnvironment()
+    const ref = h()
+    const instance = tippy(ref, { touchHold: false })
+    ref.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(true)
+    disableTouchEnvironment()
   })
 })
