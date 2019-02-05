@@ -27,10 +27,6 @@ yard add tippy.js
 
 CDN: https://unpkg.com/tippy.js/dist/
 
-## Browser Support
-
-IE11+: browsers that support `MutationObserver` and `requestAnimationFrame`.
-
 ## Component Wrappers
 
 - [React component](https://github.com/atomiks/tippy.js-react)
