@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "3.4.1",
+  "version": "4.0.0-alpha.0",
   "description": "Highly customizable tooltip and popover library",
   "main": "./umd/index.all.min.js",
   "module": "./esm/index.all.js",
@@ -96,6 +96,6 @@
     "rollup-plugin-terser": "^4.0.3"
   },
   "dependencies": {
-    "popper.js": "^1.14.6"
+    "popper.js": "^1.14.7"
   }
 }
