@@ -838,6 +838,10 @@ export default function createTippy(reference, collectionProps) {
     instance.popper.style.visibility = 'visible'
     instance.state.isVisible = true
 
+    if (instance.props.interactive) {
+      instance.reference.classList.add('tippy-active')
+    }
+
     // Prevent a transition if the popper is at the opposite placement
     applyTransitionDuration(
       [
@@ -864,10 +868,6 @@ export default function createTippy(reference, collectionProps) {
       if (instance.popperChildren.backdrop) {
         instance.popperChildren.content.style.transitionDelay =
           Math.round(duration / 6) + 'ms'
-      }
-
-      if (instance.props.interactive) {
-        instance.reference.classList.add('tippy-active')
       }
 
       if (instance.props.sticky) {
