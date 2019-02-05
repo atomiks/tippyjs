@@ -31,7 +31,6 @@ export interface Props {
   aria?: 'describedby' | 'labelledby'
   arrow?: boolean
   arrowType?: 'sharp' | 'round'
-  autoFocus?: boolean
   boundary?: 'scrollParent' | 'window' | 'viewport' | HTMLElement
   content?: Content
   delay?: number | [number, number]
@@ -58,7 +57,7 @@ export interface Props {
   onShown?(instance: Instance): void
   placement?: Placement
   popperOptions?: Popper.PopperOptions
-  shouldPopperHideOnBlur?: (event: FocusEvent) => boolean
+  role?: string
   showOnInit?: boolean
   size?: 'small' | 'regular' | 'large'
   sticky?: boolean
