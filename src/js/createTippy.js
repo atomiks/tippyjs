@@ -778,7 +778,7 @@ export default function createTippy(reference, collectionProps) {
     instance.popperChildren = getChildren(instance.popper)
 
     if (instance.popperInstance) {
-      instance.popperInstance.scheduleUpdate()
+      instance.popperInstance.update()
 
       if (
         POPPER_INSTANCE_RELATED_PROPS.some(prop =>
