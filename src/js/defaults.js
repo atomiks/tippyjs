@@ -51,12 +51,14 @@ export default {
  * If the set() method encounters one of these, the popperInstance must be
  * recreated
  */
-export const POPPER_INSTANCE_RELATED_PROPS = [
+export const POPPER_INSTANCE_DEPENDENCIES = [
   'arrow',
   'arrowType',
+  'boundary',
   'distance',
   'flip',
   'flipBehavior',
+  'flipScroll',
   'offset',
   'placement',
   'popperOptions',

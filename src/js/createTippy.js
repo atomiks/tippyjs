@@ -1,7 +1,7 @@
 import Popper from 'popper.js'
 import { isIE } from './browser'
 import { isUsingTouch } from './bindGlobalEventListeners'
-import Defaults, { POPPER_INSTANCE_RELATED_PROPS } from './defaults'
+import Defaults, { POPPER_INSTANCE_DEPENDENCIES } from './defaults'
 import Selectors from './selectors'
 import {
   createPopperElement,
@@ -781,9 +781,7 @@ export default function createTippy(reference, collectionProps) {
       instance.popperInstance.update()
 
       if (
-        POPPER_INSTANCE_RELATED_PROPS.some(prop =>
-          hasOwnProperty(options, prop),
-        )
+        POPPER_INSTANCE_DEPENDENCIES.some(prop => hasOwnProperty(options, prop))
       ) {
         instance.popperInstance.destroy()
         createPopperInstance()
