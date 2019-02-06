@@ -27,7 +27,7 @@ export interface Props {
   allowHTML?: boolean
   animateFill?: boolean
   animation?: 'fade' | 'scale' | 'shift-toward' | 'perspective' | 'shift-away'
-  appendTo?: Element | ((ref: Element) => Element)
+  appendTo?: 'parent' | Element | ((ref: Element) => Element)
   aria?: 'describedby' | 'labelledby'
   arrow?: boolean
   arrowType?: 'sharp' | 'round'
