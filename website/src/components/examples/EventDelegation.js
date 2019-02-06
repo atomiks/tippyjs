@@ -4,7 +4,7 @@ import { Button } from '../Framework'
 
 function EventDelegation() {
   return (
-    <Tippy target=".child" performance={false}>
+    <Tippy target=".child" ignoreAttributes={false}>
       <div id="parent">
         <Button className="child" data-tippy-content="Tooltip 1">
           One

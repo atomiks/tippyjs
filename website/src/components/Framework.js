@@ -140,7 +140,7 @@ export const Button = styled.button`
 `
 
 export const Demo = styled.div`
-  margin: 15px 0;
+  margin: 15px 0 25px;
   background: #eeeefa;
   padding: 15px 15px 6px;
   border-radius: 8px;

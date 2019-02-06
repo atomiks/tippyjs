@@ -74,7 +74,7 @@ export default createGlobalStyle`
 
   h3 {
     font-size: 1.728rem;
-    margin-top: 1.728rem;
+    margin-top: 2rem;
   }
 
   h4 {

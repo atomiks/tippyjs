@@ -5,7 +5,7 @@ index: 6
 ---
 
 Methods on instances allow you to control the tippy programmatically. See the
-[Objects](/objects#instances) section for how to access a Tippy instance.
+[Tippy Instance](/tippy-instance/) section for how to access a Tippy instance.
 
 ### Show the tippy
 
@@ -80,38 +80,4 @@ There is also a shortcut for updating the content:
 
 ```js
 instance.setContent('New content')
-```
-
-### Static methods
-
-The `tippy` function module also has static methods available.
-
-#### Create a single tooltip and get its instance
-
-```js
-const instance = tippy.one(targets, options)
-```
-
-#### Hide all visible tippys on the page
-
-```js
-// Hide all poppers
-tippy.hideAllPoppers()
-// Hide all except a particular instance
-tippy.hideAllPoppers(instance)
-```
-
-Note that if the instance has `hideOnClick: false`, it won't hide. This will
-most likely be changed in the next version.
-
-#### Defaults
-
-You can set the default props for future instances so you don't need to specify
-them over and over again. Pass an object of options in:
-
-```js
-tippy.setDefaults({
-  arrow: true,
-  duration: 0,
-})
 ```

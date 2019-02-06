@@ -1,0 +1,55 @@
+---
+title: FAQ
+path: /faq/
+index: 12
+---
+
+### Why is there a blue outline around my element?
+
+You may notice a blue outline around your reference element. The blue outline is
+called a focus ring; it lets keyboard users know which element on the page is
+currently in focus. Tippy adds an attribute to the element so that it can
+receive focus if it natively cannot, so that keyboard users (e.g. blind users)
+can access the tooltip without using a mouse.
+
+Recommended: use the `focus-visible` polyfill:
+https://github.com/WICG/focus-visible. This will remove the outline for mouse
+users but keep it visible for keyboard users.
+
+If your tooltip is **non-essential** (only acts as enhancement), then you can
+disable the `a11y` option:
+
+```js
+tippy('div', {
+  a11y: false,
+})
+```
+
+### I can't click things inside the tooltip
+
+To enable interactivity, set the `interactive` option to `true`.
+
+### My tooltip is not working using `data-tippy`
+
+Make sure Tippy's scripts are placed _before_ your own scripts, at the very
+bottom of the page, like so:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My page</title>
+  </head>
+  <body>
+    <button data-tippy="Created automatically">Text</button>
+    <button data-tippy-content="Created by function">Text</button>
+
+    <!-- Very end of the body -->
+    <script src="https://unpkg.com/popper.js@1/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@4"></script>
+    <script>
+      tippy('button')
+    </script>
+  </body>
+</html>
+```

@@ -11,14 +11,11 @@ It's recommended that tooltips are applied only to natively focusable elements
 like `<button>`. Most screenreader software will not announce the tooltip on an
 element like `<div>`.
 
-### Trigger
+Non-interactive tooltips are accessible by default. The default trigger for
+tooltips is `"mouseenter focus"`. This means both a hover and focus via keyboard
+navigation will trigger a tooltip.
 
-The default trigger for tooltips is `"mouseenter focus"`. This means both a
-hover and focus via keyboard navigation will trigger a tooltip.
-
-### ARIA attributes
-
-By default, the reference element receives an `aria-describedby` attribute
+In addition, the reference element receives an `aria-describedby` attribute
 (configurable) once the tooltip is fully shown:
 
 ```html
@@ -31,11 +28,10 @@ By default, the reference element receives an `aria-describedby` attribute
 This allows screenreader software to announce the tooltip content describing the
 reference element. No work is required by you to achieve this functionality.
 
-### Popovers and interactivity
+### Interactivity
 
-By default, interactive tippys will be auto-focused once they are fully shown to
-allow the user to interact with elements inside it. However, some additional
-work will be needed in certain cases.
+Although non-interactive tooltips are accessible by default, making interactive
+tooltips accessible requires a bit of work by you.
 
 For UI elements like dropdowns, you should apply these attributes to the
 reference:
@@ -51,27 +47,18 @@ reference:
 </div>
 ```
 
-If you would like your dropdown to be triggered by a hover instead of a click,
-still include click as part of the trigger for keyboard users:
-`mouseenter click`. The `focus` event is not suitable for buttons.
-
-- `aria: null` - we don't want the dropdown's contents to be announced upon
-  focus
-- `autoFocus: false` - keep focus on the button, focus on the dropdown should
-  only occur when the user presses Tab
-- `appendTo` the parent wrapper element, so the dropdown exists directly after
-  the button in the DOM tree
-
-We will also need to dynamically change the `aria-expanded` attribute based on
-the state of the tooltip, which can be achieved by using the lifecycle
-functions:
+The following options are recommended:
 
 ```js
 tippy('button', {
+  // Don't announce the tooltip's contents when expanded
   aria: null,
-  autoFocus: false,
+  // Hover for mouse users, click for keyboard users
   trigger: 'mouseenter click',
+  // Important: the tooltip should be DIRECTLY after the reference element
+  // in the DOM source order
   appendTo: ref => ref.parentNode,
+  // Let the user know the popup has been expanded
   onMount({ reference }) {
     reference.setAttribute('aria-expanded', 'true')
   },
@@ -87,25 +74,13 @@ tippy('button', {
 </Demo>
 
 Elements within the tippy can be tabbed to since they are directly after the
-reference element. The tooltip automatically hides once no elements inside it
-are in focus.
-
-If for some reason you don't want the tooltip to hide once blurred, you can
-define the following option:
-
-```js
-tippy('button', {
-  shouldPopperHideOnBlur(focusOutEvent) {
-    // You can read the `focusout` event object
-    // to determine which boolean should be returned.
-    return false
-  },
-})
-```
+reference element.
 
 It's also possible to change the `role` of the tippy to something other than
 `"tooltip"`:
 
 ```js
-instance.popper.setAttribute('role', 'menu')
+tippy('button', {
+  role: 'menu',
+})
 ```

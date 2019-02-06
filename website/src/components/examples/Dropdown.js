@@ -68,13 +68,11 @@ function Dropdown({ text }) {
       }
       interactive
       aria={null}
-      autoFocus={false}
       animateFill={false}
       placement="bottom"
       distance={7}
       animation="fade"
       theme="light-border dropdown"
-      updateDuration={0}
       trigger="mouseenter click"
       arrow
       appendTo={ref => ref.parentNode}

@@ -6,15 +6,15 @@ index: 1
 
 ### Option 1: CDN
 
-Include this script tag from the unpkg CDN in your document before your own
-scripts.
+Tippy uses `popper.js` as a dependency for positioning. Include these script
+tags in your document before your own scripts:
 
 ```html
-<script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>
+<script src="https://unpkg.com/popper.js@1/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@4"></script>
 ```
 
-Place it at the bottom of the `<body>` or in the `<head>` with a `defer`
-attribute.
+Place them at the bottom of the `<body>`.
 
 ### Option 2: Package Manager
 
@@ -28,11 +28,10 @@ npm i tippy.js
 yarn add tippy.js
 ```
 
-Then, import the `tippy` module and its CSS.
+Then, import the `tippy` module.
 
 ```js
 import tippy from 'tippy.js'
-import 'tippy.js/dist/tippy.css'
 ```
 
 ### Distribution Files
@@ -40,11 +39,10 @@ import 'tippy.js/dist/tippy.css'
 Tippy is distributed in two formats: `umd` (used by the browser and Node
 modules), and `esm` (ES6 syntax used by module bundlers like webpack).
 
-- `tippy.all.js` is all dependencies (`tippy.js`, `popper.js`, and the CSS) in a
-  single file. The CSS stylesheet gets injected into the document `<head>`.
-- `tippy.standalone.js` is `tippy.js` by itself, externally importing
-  `popper.js`.
-- `tippy.js` includes `popper.js` bundled.
+- `tippy.js/umd/index.all.js` is Tippy's JS and CSS in a single file. The CSS
+  gets injected at the beginning of the document `<head>`.
+- `tippy.js/umd/index.js` is Tippy's JS by itself.
+- `tippy.js/index.css` is Tippy's CSS by itself.
 
 ### Frameworks
 
