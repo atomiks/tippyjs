@@ -557,7 +557,12 @@ export default function createTippy(reference, collectionProps) {
 
     afterPopperPositionUpdates(instance.popperInstance, callback)
 
-    parentNode = evaluateValue(instance.props.appendTo, [instance.reference])
+    const { appendTo } = instance.props
+
+    parentNode =
+      appendTo === 'parent'
+        ? instance.reference.parentNode
+        : evaluateValue(appendTo, [instance.reference])
 
     if (!parentNode.contains(instance.popper)) {
       parentNode.appendChild(instance.popper)

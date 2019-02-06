@@ -708,3 +708,41 @@ describe('touchHold', () => {
     disableTouchEnvironment()
   })
 })
+
+describe('appendTo', () => {
+  it('"parent" appends to parentNode', done => {
+    const ref = h()
+    const instance = tippy(ref, {
+      appendTo: 'parent',
+      onMount() {
+        expect(ref.parentNode.contains(instance.popper)).toBe(true)
+        done()
+      },
+    })
+    instance.show()
+  })
+
+  it('function', done => {
+    const ref = h()
+    const instance = tippy(ref, {
+      appendTo: ref => ref.parentNode,
+      onMount() {
+        expect(ref.parentNode.contains(instance.popper)).toBe(true)
+        done()
+      },
+    })
+    instance.show()
+  })
+
+  it('element', done => {
+    const ref = h()
+    const instance = tippy(ref, {
+      appendTo: ref.parentNode,
+      onMount() {
+        expect(ref.parentNode.contains(instance.popper)).toBe(true)
+        done()
+      },
+    })
+    instance.show()
+  })
+})
