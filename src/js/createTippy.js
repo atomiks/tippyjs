@@ -870,7 +870,7 @@ export default function createTippy(reference, collectionProps) {
 
       if (instance.popperChildren.backdrop) {
         instance.popperChildren.content.style.transitionDelay =
-          Math.round(duration / 6) + 'ms'
+          Math.round(duration / 12) + 'ms'
       }
 
       if (instance.props.sticky) {
