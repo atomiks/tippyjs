@@ -10,6 +10,45 @@ import Tippy from '../components/Tippy'
 Tippy is highly themeable through CSS. The sky is the limit when it comes to
 their appearance!
 
+### Default themes
+
+To use the `light`, `light-border`, `google` themes shown in the demo, you must
+import them since they are separate from the main CSS file.
+
+Only import the themes you actually use to conserve size and/or HTTP requests.
+
+**CDN:**
+
+```html
+<head>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/tippy.js@3/dist/themes/light.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/tippy.js@3/dist/themes/light-border.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/tippy.js@3/dist/themes/google.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/tippy.js@3/dist/themes/translucent.css"
+  />
+</head>
+```
+
+**Package managers:**
+
+```js
+import 'tippy.js/dist/themes/light.css'
+import 'tippy.js/dist/themes/light-border.css'
+import 'tippy.js/dist/themes/google.css'
+import 'tippy.js/dist/themes/translucent.css'
+```
+
 ### Tippy elements
 
 To learn how to create a theme, it's helpful to understand the structure of a
