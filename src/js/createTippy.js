@@ -908,6 +908,10 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
+    if (instance.popperInstance) {
+      instance.popperInstance.options.placement = instance.props.placement
+    }
+
     if (instance.props.updateDuration === 0) {
       instance.popperChildren.tooltip.classList.remove('tippy-notransition')
     }
@@ -934,7 +938,6 @@ export default function createTippy(reference, collectionProps) {
       }
 
       instance.popperInstance.disableEventListeners()
-      instance.popperInstance.options.placement = instance.props.placement
 
       parentNode.removeChild(instance.popper)
       instance.props.onHidden(instance)
