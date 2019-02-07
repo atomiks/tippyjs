@@ -342,6 +342,12 @@ export default function createTippy(reference, collectionProps) {
 
     if (!instance.state.isVisible) {
       lastTriggerEvent = event
+
+      // Use the `mouseenter` event as a "mock" mousemove event for touch
+      // devices
+      if (isUsingTouch && includes(event.type, 'mouse')) {
+        lastMouseMoveEvent = event
+      }
     }
 
     // Toggle show/hide when clicking click-triggered tooltips
@@ -577,7 +583,7 @@ export default function createTippy(reference, collectionProps) {
   function hasFollowCursorBehavior() {
     return (
       instance.props.followCursor &&
-      (!isUsingTouch || instance.props.followCursor === 'initial') &&
+      !isUsingTouch &&
       lastTriggerEvent.type !== 'focus'
     )
   }
@@ -863,6 +869,11 @@ export default function createTippy(reference, collectionProps) {
       // Arrow will sometimes not be positioned correctly. Force another update
       if (!hasFollowCursorBehavior()) {
         instance.popperInstance.update()
+      }
+
+      // Allow followCursor: 'initial' on touch devices
+      if (isUsingTouch && instance.props.followCursor === 'initial') {
+        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
       }
 
       popper.style.transitionDuration = `${props.updateDuration}ms`
