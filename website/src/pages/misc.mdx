@@ -37,17 +37,13 @@ tippy.group(tippy('button', { delay: 1000 }))
 ```
 
 <Demo>
-  <TippyGroup>
-    {props => (
-      <>
-        <Tippy {...props}>
-          <Button>Text</Button>
-        </Tippy>
-        <Tippy {...props}>
-          <Button>Text</Button>
-        </Tippy>
-      </>
-    )}
+  <TippyGroup delay={1000}>
+    <Tippy>
+      <Button>Text</Button>
+    </Tippy>
+    <Tippy>
+      <Button>Text</Button>
+    </Tippy>
   </TippyGroup>
 </Demo>
 

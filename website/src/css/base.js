@@ -13,11 +13,11 @@ export default createGlobalStyle`
   }
 
   body {
-    font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     margin: 0;
     color: #324b64;
     height: 100%;
-    font-size: 17px;
+    font-size: 18px;
     -webkit-tap-highlight-color: transparent;
   }
 

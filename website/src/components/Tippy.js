@@ -113,20 +113,27 @@ Tippy.defaultProps = {
   ignoreAttributes: true,
 }
 
-export class TippyGroup extends React.Component {
-  instances = []
+export function TippyGroup({ children, ...props }) {
+  const instances = React.useRef([])
 
-  componentDidMount() {
-    tippy.group(this.instances, { delay: 1000 })
-  }
+  React.useEffect(() => {
+    tippy.group(instances.current, props)
+    return () => {
+      instances.current = null
+    }
+  }, [])
 
-  render() {
-    return this.props.children({
+  return React.Children.map(children, child => {
+    return React.cloneElement(child, {
+      ...child.props,
       onCreate: instance => {
-        this.instances.push(instance)
+        if (child.props.onCreate) {
+          child.props.onCreate(instance)
+        }
+        instances.current.push(instance)
       },
     })
-  }
+  })
 }
 
 export default Tippy

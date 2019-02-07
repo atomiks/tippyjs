@@ -24,6 +24,10 @@ class AjaxSmooth extends Component {
     const { popper } = tip
     const { tooltip, content } = tip.popperChildren
 
+    // Set up our transition styles
+    tooltip.style.transitionDuration = '0.2s'
+    tooltip.style.transitionProperty = 'height, opacity'
+
     // Because the tooltip has `position: absolute`,
     // it no longer affects the parent popper's layout.
     // We need to explicitly give it a width.
@@ -112,7 +116,6 @@ class AjaxSmooth extends Component {
         }
         animation="fade"
         animateFill={false}
-        duration={200}
         theme="ajax"
         onShow={this.onShow}
         onHidden={this.onHidden}

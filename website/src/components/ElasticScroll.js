@@ -1,9 +1,7 @@
-import React, { Component, Children, cloneElement, createRef } from 'react'
+import React, { Component, Children, cloneElement } from 'react'
 import elasticScroll from 'elastic-scroll-polyfill'
 
 class ElasticScroll extends Component {
-  scroller = createRef()
-
   componentDidMount() {
     this.instance = elasticScroll({
       targets: this.scroller,

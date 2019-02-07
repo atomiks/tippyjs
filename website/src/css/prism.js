@@ -189,4 +189,9 @@ export default createGlobalStyle`
   .token.entity {
     cursor: help;
   }
+
+  .gatsby-highlight {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
 `
