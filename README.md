@@ -22,7 +22,7 @@ https://atomiks.github.io/tippyjs/
 npm i tippy.js
 
 # Yarn
-yard add tippy.js
+yarn add tippy.js
 ```
 
 CDN: https://unpkg.com/tippy.js/dist/
