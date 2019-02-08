@@ -5,6 +5,7 @@ import { StaticQuery, graphql } from 'gatsby'
 import { sortPagesByIndex } from '../utils'
 import X from 'react-feather/dist/icons/x'
 import ElasticScroll from './ElasticScroll'
+import { version } from '../../../package.json'
 
 const Navbar = styled.nav`
   display: ${props => (props.isMounted ? 'block' : 'none')};
@@ -54,7 +55,8 @@ const ListItem = styled.li`
 
   > a {
     display: block;
-    padding: 12px 25px;
+    padding: 10px 25px;
+    font-size: 18px;
 
     &:hover {
       border-bottom-color: transparent;
@@ -73,6 +75,19 @@ const XButton = styled.button`
   ${MEDIA.lg} {
     display: none;
   }
+`
+
+const Version = styled.span`
+  display: inline-block;
+  font-size: 15px;
+  background: rgb(0, 0, 0, 0.25);
+  border-radius: 30px;
+  color: #d0ffba;
+  font-weight: bold;
+  padding: 2px 8px;
+  margin-left: 20px;
+  margin-top: -10px;
+  margin-bottom: 10px;
 `
 
 class Nav extends Component {
@@ -133,6 +148,7 @@ class Nav extends Component {
           isMounted={isMounted}
           onBlur={this.handleBlur}
         >
+          <Version>v{version}</Version>
           <XButton aria-label="Close Menu" onClick={this.handleClose}>
             <X style={{ width: 36, height: 36 }} />
           </XButton>

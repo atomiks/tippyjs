@@ -51,13 +51,14 @@ The following options are recommended:
 
 ```js
 tippy('button', {
+  interactive: true,
   // Don't announce the tooltip's contents when expanded
   aria: null,
   // Hover for mouse users, click for keyboard users
   trigger: 'mouseenter click',
   // Important: the tooltip should be DIRECTLY after the reference element
-  // in the DOM source order
-  appendTo: ref => ref.parentNode,
+  // in the DOM source order, which is why it has its own wrapper element
+  appendTo: 'parent',
   // Let the user know the popup has been expanded
   onMount({ reference }) {
     reference.setAttribute('aria-expanded', 'true')
@@ -73,8 +74,8 @@ tippy('button', {
   <Dropdown text="Press enter to click" />
 </Demo>
 
-Elements within the tippy can be tabbed to since they are directly after the
-reference element.
+Using this technique, elements within the tippy can be tabbed to since they are
+directly after the reference element.
 
 It's also possible to change the `role` of the tippy to something other than
 `"tooltip"`:

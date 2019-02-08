@@ -61,8 +61,9 @@ class Scroller extends Component {
   render() {
     const props = {}
 
-    if (this.props.flipScroll) {
-      props.flipScroll = true
+    if (this.props.flipOnUpdate) {
+      props.flipOnUpdate = true
+      props.appendTo = 'parent'
     }
 
     if (this.props.boundary) {
@@ -70,7 +71,7 @@ class Scroller extends Component {
       props.appendTo = ref => ref.parentNode
     }
 
-    if (this.props.flipScroll || this.props.boundary) {
+    if (this.props.flipOnUpdate || this.props.boundary) {
       props.popperOptions = {
         modifiers: {
           flip: {

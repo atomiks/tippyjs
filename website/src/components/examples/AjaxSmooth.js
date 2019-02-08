@@ -7,10 +7,9 @@ class AjaxSmooth extends Component {
     isFetching: false,
     canFetch: true,
     imageURL: null,
-    showImage: false,
   }
 
-  onShow = tip => {
+  onShow = instance => {
     if (this.state.isFetching === true || this.state.canFetch === false) {
       return
     }
@@ -18,30 +17,27 @@ class AjaxSmooth extends Component {
     this.setState({
       isFetching: true,
       canFetch: false,
-      showImage: false,
     })
 
-    const { popper } = tip
-    const { tooltip, content } = tip.popperChildren
+    const { popper } = instance
+    const { tooltip, content } = instance.popperChildren
 
     // Set up our transition styles
     tooltip.style.transitionDuration = '0.2s'
-    tooltip.style.transitionProperty = 'height, opacity'
+    tooltip.style.transitionProperty = 'height, visibility, opacity'
 
     // Because the tooltip has `position: absolute`,
     // it no longer affects the parent popper's layout.
     // We need to explicitly give it a width.
     popper.style.width = '200px'
+    popper.style.height = '200px'
 
     fetch('https://unsplash.it/200/?random')
       .then(response => response.blob())
       .then(blob => {
-        this.setState({
-          isFetching: false,
-          imageURL: URL.createObjectURL(blob),
-        })
+        this.setState({ isFetching: false })
 
-        if (!tip.state.isVisible) {
+        if (!instance.state.isVisible) {
           return
         }
 
@@ -49,23 +45,26 @@ class AjaxSmooth extends Component {
         // fading the content in. Since we have `overflow: hidden`
         // on the tooltip this isn't actually needed, but if you
         // have an arrow element it will be.
-        if (!tip._transitionEndListener) {
-          tip._transitionEndListener = event => {
+        if (!instance._transitionEndListener) {
+          instance._transitionEndListener = event => {
             if (
               event.target === event.currentTarget &&
               event.propertyName === 'height'
             ) {
               content.style.opacity = '1'
-              this.setState({ showImage: true })
+              this.setState({ imageURL: URL.createObjectURL(blob) })
             }
           }
+          tooltip.addEventListener(
+            'transitionend',
+            instance._transitionEndListener,
+          )
         }
-        tooltip.addEventListener('transitionend', tip._transitionEndListener)
 
         // Store the base height of the tooltip when it has the
         // initial Loading... content.
-        if (!tip._baseHeight) {
-          tip._baseHeight = tooltip.clientHeight || 30
+        if (!instance._baseHeight) {
+          instance._baseHeight = tooltip.clientHeight
         }
 
         // Here is where we find out the height of the tooltip
@@ -77,38 +76,42 @@ class AjaxSmooth extends Component {
         // Apply the height to the parent popper element.
         popper.style.height = height + 'px'
         // Reset the tooltip's height to the base height.
-        tooltip.style.height = tip._baseHeight + 'px'
+        tooltip.style.height = instance._baseHeight + 'px'
         // Cause reflow so we can start the height transition.
         void tooltip.offsetHeight
         // Start the transition.
         tooltip.style.height = height + 'px'
         // Remove the Loading... content and wait until the
         // transition finishes.
-        tip.setContent('')
+        instance.setContent('')
       })
       .catch(() => {
         this.setState({ isFetching: false })
       })
   }
 
-  onHidden = tip => {
+  onHidden = instance => {
     this.setState({
       canFetch: true,
       imageURL: null,
     })
-    const { tooltip } = tip.popperChildren
+
+    const { tooltip } = instance.popperChildren
     tooltip.style.height = null
-    tooltip.removeEventListener('transitionend', tip._transitionEndListener)
-    tip._transitionEndListener = null
+    tooltip.removeEventListener(
+      'transitionend',
+      instance._transitionEndListener,
+    )
+    instance._transitionEndListener = null
   }
 
   render() {
-    const { imageURL, showImage } = this.state
+    const { imageURL } = this.state
 
     return (
       <Tippy
         content={
-          showImage ? (
+          imageURL ? (
             <img src={imageURL} alt="Unsplash" />
           ) : (
             <div style={{ margin: 5 }}>Loading...</div>

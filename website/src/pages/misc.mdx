@@ -12,7 +12,7 @@ import Tippy, { TippyGroup } from '../components/Tippy'
 ### Groups
 
 Groups are designed to improve user experience when tooltips have delays. When
-moving the cursor between each item in the group, the tooltips will instant
+moving the cursor between each item in the group, the tooltips will instantly
 show.
 
 Compare the following tooltips **without** grouping:
@@ -62,14 +62,19 @@ tippy.group(instances, {
 ### Scrollable containers
 
 Here are 3 common solutions. Note that no solution is completely ideal in all
-situations - it depends on the UI.
+situations - it depends on the UI. In each of these, if you want the tippy to be
+clipped by the scrolling area, use `appendTo: "parent"`. If the tippy is large
+then this may be undesirable.
 
 <Scroller type="Unintrusive" boundary />
+
+With this technique, the tooltip acts like it does on the document normally. It
+gets clipped by the scrolling area and does not attempt to position itself to be
+fully visible (but will still flip).
 
 ```js
 tippy('#unintrusive-example', {
   boundary: 'window',
-  // Prevents the tooltip from showing outside the scrolling area
   appendTo: 'parent',
   popperOptions: {
     modifiers: {
@@ -81,11 +86,15 @@ tippy('#unintrusive-example', {
 })
 ```
 
-<Scroller type="Scroll flipping" flipScroll />
+<Scroller type="Flip on update" flipOnUpdate />
+
+With this technique, the tooltip attempts to reposition itself to be visible to
+the user at all times. Sometimes this can be a little overly intrusive, though.
 
 ```js
 tippy('#scroll-flipping-example', {
-  flipScroll: true,
+  appendTo: 'parent',
+  flipOnUpdate: true,
   // Leave this out if you want flipping to occur based on the
   // viewport rather than the container
   popperOptions: {
@@ -100,6 +109,10 @@ tippy('#scroll-flipping-example', {
 
 <Scroller type="Hide on scroll" hideOnScroll />
 
+With this technique, the tooltip hides instantly whenever the user starts
+scrolling. In addition, it initially positions itself to be as visible as
+possible within the scrolling area.
+
 ```js
 const instance = tippy(document.querySelector('#hide-on-scroll-example'))
 const container = document.querySelector('#scrollable-container')
@@ -107,6 +120,41 @@ container.addEventListener('scroll', () => {
   instance.hide(0)
 })
 ```
+
+### Animate.css animations
+
+Want more animations than the built-in ones? You can use any CSS animation you
+like, for example, [animate.css](https://daneden.github.io/animate.css/).
+Include it on your page and then add/remove the classes onShow/onHidden:
+
+```js
+tippy('button', {
+  // If you don't want the filling effect as well
+  animateFill: false,
+  onShow(instance) {
+    instance.popperChildren.tooltip.classList.add('animated', 'wobble')
+  },
+  // Sometimes `onHide` may work better with a certain animation.
+  onHidden(instance) {
+    instance.popperChildren.tooltip.classList.remove('animated', 'wobble')
+  },
+})
+```
+
+<Demo>
+  <Tippy
+    animateFill={false}
+    onShow={instance => {
+      instance.popperChildren.tooltip.classList.add('animated', 'wobble')
+    }}
+    onHidden={instance => {
+      instance.popperChildren.tooltip.classList.remove('animated', 'wobble')
+    }}
+    offset="0, 10"
+  >
+    <Button>wobble</Button>
+  </Tippy>
+</Demo>
 
 ### Event delegation
 
@@ -214,9 +262,10 @@ onUserInputChange(type => {
   isUsingTouch = type === 'touch'
 })
 
-const tip = tippy.one(button)
+const instance = tippy(button)
+
 button.addEventListener('click', () => {
-  if (isIOS || !isUsingTouch ? true : tip.state.isShown) {
+  if (isIOS || !isUsingTouch ? true : instance.state.isShown) {
     // Your logic
   }
 })

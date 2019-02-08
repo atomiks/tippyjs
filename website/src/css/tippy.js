@@ -1,12 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
 
 export default createGlobalStyle`
-  .tippy-popper[x-out-of-boundaries] {
-    visibility: hidden !important;
-    transition-duration: 0ms !important;
-    opacity: 0;
-  }
-
   .tippy-tooltip.ajax-theme {
     position: absolute;
     width: 200px;
@@ -62,7 +56,9 @@ export default createGlobalStyle`
     font-size: 95%;
   }
 
-  .tippy-tooltip.hint-theme {
-    text-align: left;
+  .tippy-tooltip.crazy-inertia-theme {
+    &[data-inertia][data-state="visible"] {
+      transition-timing-function: cubic-bezier(0.54, 100, 0.2, 0.26);
+    }
   }
 `

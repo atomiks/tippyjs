@@ -5,6 +5,7 @@
  * **These should be gatsby plugins, but some weren't working.**
  * **For now I'm monkey-patching them...**
  */
+import 'animate.css'
 import 'focus-visible'
 import elasticScroll from 'elastic-scroll-polyfill'
 import { toKebabCase } from './src/utils'
