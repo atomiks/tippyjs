@@ -503,7 +503,7 @@ export default function createTippy(reference, collectionProps) {
         ] = getOffsetDistanceInPx(instance.props.distance, Defaults.distance)
       },
       onUpdate(data) {
-        if (data && !instance.props.flipScroll) {
+        if (data && !instance.props.flipOnUpdate) {
           if (data.flipped) {
             instance.popperInstance.options.placement = data.placement
           }
@@ -922,10 +922,6 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    if (instance.popperInstance) {
-      instance.popperInstance.options.placement = instance.props.placement
-    }
-
     if (instance.props.updateDuration === 0) {
       instance.popperChildren.tooltip.classList.remove('tippy-notransition')
     }
@@ -952,6 +948,7 @@ export default function createTippy(reference, collectionProps) {
       }
 
       instance.popperInstance.disableEventListeners()
+      instance.popperInstance.options.placement = instance.props.placement
 
       parentNode.removeChild(instance.popper)
       instance.props.onHidden(instance)
