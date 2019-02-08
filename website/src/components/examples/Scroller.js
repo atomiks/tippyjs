@@ -2,14 +2,15 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import Tippy from '../Tippy'
 import { Button, MEDIA } from '../Framework'
+import ElasticScroll from '../ElasticScroll'
 
 const ScrollingContainer = styled.div`
   position: relative;
   width: 300px;
   height: 300px;
-  background: #eeeefa;
   overflow: auto;
   margin-bottom: 1.5rem;
+  color: #787eae;
 
   ${MEDIA.sm} {
     min-width: 300px;
@@ -47,6 +48,12 @@ const Type = styled.div`
   font-weight: bold;
 `
 
+const ScrollingBackground = styled.div`
+  width: 600px;
+  height: 600px;
+  background: linear-gradient(150deg, #f1eefc, #9dc6ff 70%, #a5bcff);
+`
+
 class Scroller extends Component {
   handleScroll = () => {
     if (this.props.hideOnScroll) {
@@ -82,16 +89,22 @@ class Scroller extends Component {
     }
 
     return (
-      <ScrollingContainer onScroll={this.handleScroll}>
-        <div style={{ width: 600, height: 600 }}>
-          <Type>{this.props.type}</Type>
-          <Tippy trigger="click" onCreate={this.storeTippyInstance} {...props}>
-            <Button style={{ transform: 'translate(85px, 125px)' }}>
-              Click to open
-            </Button>
-          </Tippy>
-        </div>
-      </ScrollingContainer>
+      <ElasticScroll>
+        <ScrollingContainer onScroll={this.handleScroll}>
+          <ScrollingBackground>
+            <Type>{this.props.type}</Type>
+            <Tippy
+              trigger="click"
+              onCreate={this.storeTippyInstance}
+              {...props}
+            >
+              <Button style={{ transform: 'translate(85px, 125px)' }}>
+                Click to open
+              </Button>
+            </Tippy>
+          </ScrollingBackground>
+        </ScrollingContainer>
+      </ElasticScroll>
     )
   }
 }

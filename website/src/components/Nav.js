@@ -90,6 +90,12 @@ const Version = styled.span`
   margin-bottom: 10px;
 `
 
+function Hello() {
+  return <div app="name" style={{ hello: 'lol' }} />
+}
+
+Hello()
+
 class Nav extends Component {
   state = {
     isMounted: false,
