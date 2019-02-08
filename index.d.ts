@@ -38,7 +38,7 @@ export interface Props {
   duration?: number | [number, number]
   flip?: boolean
   flipBehavior?: 'flip' | Placement[]
-  flipScroll?: boolean
+  flipOnUpdate?: boolean
   followCursor?: boolean | 'vertical' | 'horizontal' | 'initial'
   hideOnClick?: boolean | 'toggle'
   ignoreAttributes?: boolean
