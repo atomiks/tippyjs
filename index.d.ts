@@ -34,8 +34,8 @@ export interface Props {
   boundary?: 'scrollParent' | 'window' | 'viewport' | HTMLElement
   content?: Content
   delay?: number | [number, number]
-  duration?: number | [number, number]
   distance?: number
+  duration?: number | [number, number]
   flip?: boolean
   flipBehavior?: 'flip' | Placement[]
   flipScroll?: boolean
