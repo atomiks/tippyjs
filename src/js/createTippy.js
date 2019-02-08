@@ -96,19 +96,25 @@ export default function createTippy(reference, collectionProps) {
       prepareShow(event)
     }
   })
-  popper.addEventListener('mouseleave', event => {
+  popper.addEventListener('mouseleave', () => {
     if (
       instance.props.interactive &&
       lastTriggerEvent.type === 'mouseenter' &&
-      instance.props.interactiveDebounce === 0 &&
-      isCursorOutsideInteractiveBorder(
-        getPopperPlacement(popper),
-        popper.getBoundingClientRect(),
-        event,
-        instance.props,
-      )
+      instance.props.interactiveDebounce === 0
     ) {
-      prepareHide()
+      document.addEventListener('mousemove', function handler(event) {
+        if (
+          isCursorOutsideInteractiveBorder(
+            getPopperPlacement(instance.popper),
+            instance.popper.getBoundingClientRect(),
+            event,
+            instance.props,
+          )
+        ) {
+          document.removeEventListener('mousemove', handler)
+          prepareHide()
+        }
+      })
     }
   })
 
