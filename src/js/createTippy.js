@@ -528,15 +528,21 @@ export default function createTippy(reference, collectionProps) {
    * popper's position has updated
    */
   function mount(callback) {
+    const shouldEnableListeners =
+      !hasFollowCursorBehavior() &&
+      !(instance.props.followCursor === 'initial' && isUsingTouch)
+
     if (!instance.popperInstance) {
       createPopperInstance()
-      if (hasFollowCursorBehavior()) {
+      if (!shouldEnableListeners) {
         instance.popperInstance.disableEventListeners()
       }
     } else {
       if (!hasFollowCursorBehavior()) {
         instance.popperInstance.scheduleUpdate()
-        instance.popperInstance.enableEventListeners()
+        if (shouldEnableListeners) {
+          instance.popperInstance.enableEventListeners()
+        }
       }
       setFlipModifierEnabled(instance.popperInstance.modifiers, true)
     }
@@ -876,7 +882,7 @@ export default function createTippy(reference, collectionProps) {
         positionVirtualReferenceNearCursor(lastMouseMoveEvent)
       }
 
-      popper.style.transitionDuration = `${props.updateDuration}ms`
+      applyTransitionDuration([instance.popper], props.updateDuration)
       applyTransitionDuration(getInnerElements(), duration)
 
       if (instance.popperChildren.backdrop) {
@@ -891,9 +897,7 @@ export default function createTippy(reference, collectionProps) {
       setVisibilityState(getInnerElements(), 'visible')
 
       onTransitionedIn(duration, () => {
-        if (instance.props.updateDuration === 0) {
-          instance.popperChildren.tooltip.classList.add('tippy-notransition')
-        }
+        instance.popperChildren.tooltip.classList.add('tippy-notransition')
 
         if (instance.props.aria) {
           instance.reference.setAttribute(
@@ -922,9 +926,7 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    if (instance.props.updateDuration === 0) {
-      instance.popperChildren.tooltip.classList.remove('tippy-notransition')
-    }
+    instance.popperChildren.tooltip.classList.remove('tippy-notransition')
 
     if (instance.props.interactive) {
       instance.reference.classList.remove('tippy-active')
