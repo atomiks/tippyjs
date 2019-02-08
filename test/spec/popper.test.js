@@ -46,7 +46,7 @@ describe('hideAll', () => {
     const instances = [...Array(3)].map(() => tippy(h(), options))
     hideAll({ duration: 0 })
     instances.forEach(instance => {
-      expect(instance.state.isVisible).toBe(false)
+      expect(instance.state.isMounted).toBe(false)
     })
   })
 
