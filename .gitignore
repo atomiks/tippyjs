@@ -3,8 +3,7 @@
 coverage
 .devserver
 node_modules
-dist
-index.css
+/index.css
 umd
 esm
 themes

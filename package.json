@@ -27,7 +27,8 @@
   "scripts": {
     "dev": "parcel demo/index.html -d .devserver --open",
     "build": "node rollup.build.js && bundlesize",
-    "test": "jest --coverage && parcel test/browser/index.html -d .devserver --open",
+    "test": "jest --coverage",
+    "test:browser": "parcel test/browser/index.html -d .devserver --open",
     "lint": "eslint --fix \"src/**/*.js\"",
     "format": "prettier --write \"{src,test}/**/*{js,scss}\"",
     "release": "npm test && npm run build && git add . && git commit -am $npm_package_version && git tag v$npm_package_version && git push origin master && git push --tags && npm publish"
