@@ -28,10 +28,8 @@ function tippy(targets, options) {
 
   const props = { ...Defaults, ...options }
 
-  /**
-   * If they are specifying a virtual positioning reference, we need to polyfill
-   * some native DOM props
-   */
+  // If they are specifying a virtual positioning reference, we need to polyfill
+  // some native DOM props
   if (isPlainObject(targets)) {
     polyfillElementPrototypeProperties(targets)
   }
