@@ -27,7 +27,7 @@ import {
   evaluateValue,
   setFlipModifierEnabled,
 } from './utils'
-import { PASSIVE } from './constants'
+import { PASSIVE, PADDING } from './constants'
 
 let idCounter = 1
 
@@ -192,10 +192,10 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    // Ensure virtual reference is padded by 5px to prevent tooltip from
+    // Ensure virtual reference is padded to prevent tooltip from
     // overflowing. Maybe Popper.js issue?
     const placement = getPopperPlacement(instance.popper)
-    const padding = instance.popperChildren.arrow ? 18 : 2
+    const padding = instance.popperChildren.arrow ? PADDING + 16 : PADDING
     const isVerticalPlacement = includes(['top', 'bottom'], placement)
     const isHorizontalPlacement = includes(['left', 'right'], placement)
 
@@ -482,7 +482,7 @@ export default function createTippy(reference, collectionProps) {
         ...(popperOptions ? popperOptions.modifiers : {}),
         preventOverflow: {
           boundariesElement: instance.props.boundary,
-          padding: 2,
+          padding: PADDING,
           ...getModifier(popperOptions, 'preventOverflow'),
         },
         arrow: {
@@ -494,7 +494,7 @@ export default function createTippy(reference, collectionProps) {
           enabled: instance.props.flip,
           // The tooltip is offset by 10px from the popper in CSS,
           // we need to account for its distance
-          padding: instance.props.distance + 2,
+          padding: instance.props.distance + PADDING,
           behavior: instance.props.flipBehavior,
           ...getModifier(popperOptions, 'flip'),
         },
