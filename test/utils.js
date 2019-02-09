@@ -1,14 +1,21 @@
+import {
+  onDocumentTouch,
+  onDocumentMouseMove,
+} from '../src/js/bindGlobalEventListeners'
+
 export const IDENTIFIER = '__tippy'
 
 export const el = type => document.createElement(type)
 
-export const cleanDocumentBody = () => {
+export function cleanDocumentBody() {
   document.body.innerHTML = ''
 }
 
-export const hasTippy = el => !!el._tippy
+export function hasTippy(el) {
+  return !!el._tippy
+}
 
-export const h = (nodeName = 'div', attributes = {}) => {
+export function h(nodeName = 'div', attributes = {}) {
   const el = document.createElement(nodeName)
   el.className = IDENTIFIER
 
@@ -27,4 +34,17 @@ export const withTestOptions = options => ({
   ...options,
 })
 
-export const wait = ms => new Promise(res => setTimeout(res, ms))
+export function wait(ms) {
+  return new Promise(res => setTimeout(res, ms))
+}
+
+export function enableTouchEnvironment() {
+  window.ontouchstart = true
+  onDocumentTouch()
+}
+
+export function disableTouchEnvironment() {
+  delete window.ontouchstart
+  onDocumentMouseMove()
+  onDocumentMouseMove()
+}

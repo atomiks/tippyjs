@@ -1,18 +1,11 @@
 {
-  "presets": [["env", { "modules": false }], "stage-2"],
+  "presets": ["@babel/env"],
+  "plugins": [
+    ["@babel/proposal-object-rest-spread", { "loose": true }, "unique"]
+  ],
   "env": {
     "test": {
-      "presets": [
-        [
-          "env",
-          {
-            "targets": {
-              "node": "current"
-            }
-          }
-        ],
-        "jest"
-      ]
+      "presets": [["@babel/env", { "targets": { "node": "current" } }]]
     }
   }
 }

@@ -1,6 +1,5 @@
 import Defaults from './defaults'
 import { matches } from './ponyfills'
-import { isNumeric } from './utils'
 
 const keys = Object.keys(Defaults)
 
@@ -35,16 +34,12 @@ export function getDataAttributeOptions(reference) {
 
     if (key === 'content') {
       acc[key] = valueAsString
-    } else if (valueAsString === 'true') {
-      acc[key] = true
-    } else if (valueAsString === 'false') {
-      acc[key] = false
-    } else if (isNumeric(valueAsString)) {
-      acc[key] = Number(valueAsString)
-    } else if (valueAsString[0] === '[' || valueAsString[0] === '{') {
-      acc[key] = JSON.parse(valueAsString)
     } else {
-      acc[key] = valueAsString
+      try {
+        acc[key] = JSON.parse(valueAsString)
+      } catch (e) {
+        acc[key] = valueAsString
+      }
     }
 
     return acc

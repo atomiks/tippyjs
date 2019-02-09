@@ -55,4 +55,10 @@ export default createGlobalStyle`
     text-align: left;
     font-size: 95%;
   }
+
+  .tippy-tooltip.crazy-inertia-theme {
+    &[data-inertia][data-state="visible"] {
+      transition-timing-function: cubic-bezier(0.54, 100, 0.2, 0.26);
+    }
+  }
 `

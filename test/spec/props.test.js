@@ -1,7 +1,4 @@
-import { h, hasTippy, cleanDocumentBody, withTestOptions, wait } from '../utils'
-
-import tippy from '../../src/js/index'
-import { getChildren } from '../../src/js/popper'
+import { h } from '../utils'
 import { evaluateProps, validateOptions } from '../../src/js/props'
 
 describe('evaluateProps', () => {
@@ -13,20 +10,33 @@ describe('evaluateProps', () => {
     })
   })
 
-  it('sets `props.appendTo` to be the return value of calling it if a function', () => {
+  it('sets `animateFill` option to false if `arrow` is true (data attribute)', () => {
     const ref = h()
-    const props = {
-      appendTo: reference => reference,
-    }
-    expect(evaluateProps(ref, props).appendTo).toBe(ref)
+    ref.setAttribute('data-tippy-arrow', 'true')
+    expect(evaluateProps(ref, { animateFill: true })).toEqual({
+      arrow: true,
+      animateFill: false,
+    })
   })
 
-  it('sets `props.content` to be the return value of calling it if a function', () => {
-    const ref = h()
-    const props = {
-      content: reference => reference,
-    }
-    expect(evaluateProps(ref, props).content).toBe(ref)
+  it('ignores attributes if `ignoreAttributes: true`', () => {
+    const props = { animation: 'scale', ignoreAttributes: true }
+    const reference = h()
+    reference.setAttribute('data-tippy-animation', 'fade')
+    expect(evaluateProps(reference, props)).toEqual({
+      animation: 'scale',
+      ignoreAttributes: true,
+    })
+  })
+
+  it('does not ignore attributes if `ignoreAttributes: false`', () => {
+    const props = { animation: 'scale', ignoreAttributes: false }
+    const reference = h()
+    reference.setAttribute('data-tippy-animation', 'fade')
+    expect(evaluateProps(reference, props)).toEqual({
+      animation: 'fade',
+      ignoreAttributes: false,
+    })
   })
 })
 

@@ -1,8 +1,5 @@
-import { h, hasTippy, cleanDocumentBody, IDENTIFIER } from '../utils'
-
-import tippy from '../../src/js/index'
+import { h, cleanDocumentBody, IDENTIFIER } from '../utils'
 import Defaults from '../../src/js/defaults'
-import Selectors from '../../src/js/selectors'
 import * as Utils from '../../src/js/utils'
 
 afterEach(cleanDocumentBody)
@@ -82,27 +79,6 @@ describe('getArrayOfElements', () => {
   })
 })
 
-describe('isNumeric', () => {
-  it('returns true for a number', () => {
-    expect(Utils.isNumeric(1)).toBe(true)
-  })
-
-  it('returns true for a number-like string', () => {
-    expect(Utils.isNumeric('1')).toBe(true)
-    expect(Utils.isNumeric('1e10')).toBe(true)
-    expect(Utils.isNumeric('1287')).toBe(true)
-    expect(Utils.isNumeric('-50')).toBe(true)
-  })
-
-  it('returns false for a non-number-like string', () => {
-    expect(Utils.isNumeric('true')).toBe(false)
-    expect(Utils.isNumeric('null')).toBe(false)
-    expect(Utils.isNumeric('!0')).toBe(false)
-    expect(Utils.isNumeric('[1, 0]')).toBe(false)
-    expect(Utils.isNumeric('_')).toBe(false)
-  })
-})
-
 describe('hasOwnProperty', () => {
   it('works for plain objects', () => {
     expect(Utils.hasOwnProperty({ prop: true }, 'prop')).toBe(true)
@@ -153,18 +129,6 @@ describe('getValue', () => {
   })
 })
 
-describe('defer', () => {
-  it('waits until call stack has cleared', done => {
-    const fn = jest.fn()
-    Utils.defer(fn)
-    expect(fn.mock.calls.length).toBe(0)
-    setTimeout(() => {
-      expect(fn.mock.calls.length).toBe(1)
-      done()
-    }, 1)
-  })
-})
-
 describe('debounce', () => {
   it('works as expected', done => {
     const fn = jest.fn()
@@ -182,14 +146,6 @@ describe('debounce', () => {
         }, 51)
       }, 20)
     }, 40)
-  })
-})
-
-describe('focus', () => {
-  it('focuses an element', () => {
-    const el = document.createElement('button') // can receive focus
-    Utils.focus(el)
-    expect(el).toBe(document.activeElement)
   })
 })
 
@@ -225,5 +181,15 @@ describe('includes', () => {
     expect(Utils.includes(['test', 'other'], 'test')).toBe(true)
     expect(Utils.includes(['test', 'other'], 'othr')).toBe(false)
     expect(Utils.includes(['test', 'other'], 'tst')).toBe(false)
+  })
+})
+
+describe('setFlipModifierEnabled', () => {
+  it('sets it correctly', () => {
+    const modifiers = [{ name: 'x' }, { name: 'flip', enabled: true }]
+    Utils.setFlipModifierEnabled(modifiers, false)
+    expect(modifiers[1].enabled).toBe(false)
+    Utils.setFlipModifierEnabled(modifiers, true)
+    expect(modifiers[1].enabled).toBe(true)
   })
 })

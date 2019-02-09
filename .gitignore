@@ -3,5 +3,7 @@
 coverage
 .devserver
 node_modules
-dist
-tests/visual/dist
+/index.css
+umd
+esm
+themes

@@ -54,7 +54,7 @@ suffix `-start` or `-end`.
 #### Arrows
 
 Tooltips can have an arrow that points toward the reference element. The size
-and proportion can also be modified.
+and proportion can also be modified with CSS.
 
 <Demo>
   <Tippy arrow animation="fade">
@@ -62,15 +62,6 @@ and proportion can also be modified.
   </Tippy>
   <Tippy arrow arrowType="round" animation="fade">
     <Button>Round arrow</Button>
-  </Tippy>
-  <Tippy arrow arrowTransform="scaleX(0.5)" animation="fade">
-    <Button>Skinny arrow</Button>
-  </Tippy>
-  <Tippy arrow arrowTransform="scaleX(2)" animation="fade">
-    <Button>Wide arrow</Button>
-  </Tippy>
-  <Tippy arrow arrowTransform="scale(2)" distance={15} animation="fade">
-    <Button>Large arrow</Button>
   </Tippy>
 </Demo>
 
@@ -95,12 +86,44 @@ effect has been disabled in these examples (`animateFill: false`).
   <Tippy animation="perspective" animateFill={false}>
     <Button>Perspective</Button>
   </Tippy>
+  <Tippy animateFill={false} duration={[450, 200]} inertia>
+    <Button>Shift with inertia</Button>
+  </Tippy>
+  <Tippy animation="scale" animateFill={false} duration={[450, 200]} inertia>
+    <Button>Scale with inertia</Button>
+  </Tippy>
+  <Tippy
+    animateFill={false}
+    duration={[500, 200]}
+    onShow={instance => {
+      instance.popperChildren.tooltip.classList.add('rubberBand', 'animated')
+    }}
+    onHide={instance => {
+      instance.popperChildren.tooltip.classList.remove('rubberBand', 'animated')
+    }}
+    offset="0, 10"
+  >
+    <Button>Animate.css: rubberBand</Button>
+  </Tippy>
+  <Tippy
+    animateFill={false}
+    duration={[500, 200]}
+    onShow={instance => {
+      instance.popperChildren.tooltip.classList.add('tada', 'animated')
+    }}
+    onHide={instance => {
+      instance.popperChildren.tooltip.classList.remove('tada', 'animated')
+    }}
+    offset="0, 10"
+  >
+    <Button>Animate.css: tada</Button>
+  </Tippy>
 </Demo>
 
 #### Themes
 
 Tooltips can have custom styling. There are a few themes that come with the
-package available under `dist/themes/`.
+package available under `themes/`.
 
 <Demo>
   <Tippy theme="dark" animateFill={false}>
@@ -226,6 +249,23 @@ following (initial).
   </Tippy>
 </Demo>
 
+#### SVGs
+
+Tooltips can be placed on SVG nodes, where `followCursor: 'initial'` becomes
+very useful, since it can be placed directly on the line.
+
+<svg height="150" width="150">
+  <Tippy followCursor="initial" animation="fade" delay={100} arrow>
+    <line
+      x1="0"
+      y1="0"
+      x2="150"
+      y2="150"
+      style={{ stroke: 'tomato', strokeWidth: 5 }}
+    />
+  </Tippy>
+</svg>
+
 #### Nesting
 
 Tooltips can even be nested. You can have fun with the following little example
@@ -247,7 +287,6 @@ Tooltips can even be nested. You can have fun with the following little example
       </Tippy>
     }
     interactive
-    autoFocus={false}
     theme="light"
   >
     <Button>Nesting</Button>

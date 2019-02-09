@@ -27,27 +27,26 @@ export interface Props {
   allowHTML?: boolean
   animateFill?: boolean
   animation?: 'fade' | 'scale' | 'shift-toward' | 'perspective' | 'shift-away'
-  appendTo?: Element | ((ref: Element) => Element)
+  appendTo?: 'parent' | Element | ((ref: Element) => Element)
   aria?: 'describedby' | 'labelledby'
   arrow?: boolean
   arrowType?: 'sharp' | 'round'
-  arrowTransform?: string
-  autoFocus?: boolean
   boundary?: 'scrollParent' | 'window' | 'viewport' | HTMLElement
   content?: Content
   delay?: number | [number, number]
-  duration?: number | [number, number]
   distance?: number
+  duration?: number | [number, number]
   flip?: boolean
   flipBehavior?: 'flip' | Placement[]
+  flipOnUpdate?: boolean
   followCursor?: boolean | 'vertical' | 'horizontal' | 'initial'
   hideOnClick?: boolean | 'toggle'
+  ignoreAttributes?: boolean
   inertia?: boolean
   interactive?: boolean
   interactiveBorder?: number
   interactiveDebounce?: number
   lazy?: boolean
-  livePlacement?: boolean
   maxWidth?: number | string
   multiple?: boolean
   offset?: number | string
@@ -56,10 +55,9 @@ export interface Props {
   onMount?(instance: Instance): void
   onShow?(instance: Instance): void | false
   onShown?(instance: Instance): void
-  performance?: boolean
   placement?: Placement
   popperOptions?: Popper.PopperOptions
-  shouldPopperHideOnBlur?: (event: FocusEvent) => boolean
+  role?: string
   showOnInit?: boolean
   size?: 'small' | 'regular' | 'large'
   sticky?: boolean
@@ -102,22 +100,24 @@ export interface Instance {
   }
 }
 
-export interface Collection {
-  destroyAll(): void
-  instances: Instance[]
-  props: Props
-  targets: Targets
+export interface GroupOptions {
+  delay?: number | [number, number]
+  duration?: number | [number, number]
+}
+
+export interface HideAllOptions {
+  checkHideOnClick?: boolean
+  duration?: number
+  exclude?: Instance
 }
 
 export interface Tippy {
-  (targets: Targets, options?: Props): Collection
+  (targets: Targets, options?: Props): Instance | Instance[]
   readonly defaults: Props
   readonly version: string
-  disableAnimations(): void
-  hideAllPoppers(): void
-  one(targets: Targets, options?: Props): Instance
+  group(instances: Instance[], options?: GroupOptions): void
+  hideAll(options?: HideAllOptions): void
   setDefaults(options: Props): void
-  useCapture(): void
 }
 
 declare const tippy: Tippy

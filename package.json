@@ -1,9 +1,9 @@
 {
   "name": "tippy.js",
-  "version": "3.4.1",
-  "description": "Vanilla JS Tooltip & Popover Library",
-  "main": "dist/tippy.all.js",
-  "module": "dist/esm/tippy.standalone.js",
+  "version": "4.0.0-alpha.0",
+  "description": "Highly customizable tooltip and popover library",
+  "main": "./umd/index.all.min.js",
+  "module": "./esm/index.all.js",
   "types": "index.d.ts",
   "author": "atomiks",
   "license": "MIT",
@@ -14,7 +14,10 @@
     "tippy.js"
   ],
   "files": [
-    "dist",
+    "umd",
+    "esm",
+    "themes",
+    "index.css",
     "index.d.ts"
   ],
   "repository": {
@@ -25,6 +28,7 @@
     "dev": "parcel demo/index.html -d .devserver --open",
     "build": "node rollup.build.js && bundlesize",
     "test": "jest --coverage",
+    "test:browser": "parcel test/browser/index.html -d .devserver --open",
     "lint": "eslint --fix \"src/**/*.js\"",
     "format": "prettier --write \"{src,test}/**/*{js,scss}\"",
     "release": "npm test && npm run build && git add . && git commit -am $npm_package_version && git tag v$npm_package_version && git push origin master && git push --tags && npm publish"
@@ -36,15 +40,15 @@
     "testRegex": "./test/.*.test.js$"
   },
   "browserslist": [
-    "> 0.5%"
+    "> 0.25%"
   ],
   "bundlesize": [
     {
-      "path": "./dist/tippy.all.min.js",
-      "maxSize": "15 kB"
+      "path": "./esm/index.min.js",
+      "maxSize": "7 kB"
     },
     {
-      "path": "./dist/tippy.css",
+      "path": "./index.css",
       "maxSize": "2 kB"
     }
   ],
@@ -64,20 +68,18 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.1",
+    "@babel/preset-env": "^7.3.1",
     "autoprefixer": "^6.7.7",
-    "babel-core": "^6.26.3",
-    "babel-jest": "^22.4.4",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015-rollup": "^3.0.0",
-    "babel-preset-stage-2": "^6.24.1",
+    "babel-jest": "^23.6.0",
     "bundlesize": "^0.17.0",
     "colorette": "^1.0.7",
     "cssnano": "^3.10.0",
     "eslint": "^5.12.0",
     "eslint-config-prettier": "^3.6.0",
     "husky": "^1.3.1",
-    "jest": "^23.5.0",
+    "jest": "^24.0.0",
     "lint-staged": "^8.1.1",
     "node-sass": "^4.10.0",
     "parcel-bundler": "^1.10.3",
@@ -85,16 +87,16 @@
     "postcss-cssnext": "^3.1.0",
     "postcss-import": "^11.1.0",
     "prettier": "^1.16.1",
-    "rollup": "^0.55.5",
-    "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-babel-minify": "^4.0.0",
-    "rollup-plugin-commonjs": "^8.4.1",
-    "rollup-plugin-css-only": "^0.2.0",
-    "rollup-plugin-json": "^2.3.1",
-    "rollup-plugin-node-resolve": "^3.2.0",
-    "rollup-plugin-sass": "^0.4.10"
+    "rollup": "^1.1.2",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-css-only": "^0.4.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-sass": "^1.1.0",
+    "rollup-plugin-terser": "^4.0.3"
   },
   "dependencies": {
-    "popper.js": "^1.14.6"
+    "popper.js": "^1.14.7"
   }
 }

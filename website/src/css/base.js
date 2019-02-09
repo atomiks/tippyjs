@@ -13,9 +13,9 @@ export default createGlobalStyle`
   }
 
   body {
-    font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Muli', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     margin: 0;
-    color: #324b64;
+    color: #515168;
     height: 100%;
     font-size: 17px;
     -webkit-tap-highlight-color: transparent;
@@ -53,6 +53,7 @@ export default createGlobalStyle`
   h6 {
     margin-top: 0;
     margin-bottom: 1rem;
+    color: #333;
 
     > a {
       color: inherit;
@@ -74,12 +75,12 @@ export default createGlobalStyle`
 
   h3 {
     font-size: 1.728rem;
-    margin-top: 1.728rem;
+    margin-top: 2.5rem;
   }
 
   h4 {
     font-size: 1.44rem;
-    margin-top: 1.5rem;
+    margin-top: 2.2rem;
   }
 
   h5 {
@@ -117,7 +118,7 @@ export default createGlobalStyle`
   td:first-child code {
     background: none;
     font-size: 90%;
-    color: inherit;
+    color: #333;
     padding: 0;
   }
 

@@ -82,7 +82,7 @@ export const Link = styled(GatsbyLink).attrs(props => ({
   activeStyle: {
     fontWeight: 'bold',
     background: 'linear-gradient(90deg, #676c95, #4b4f74)',
-    color: '#94e9ff',
+    color: 'white',
   },
 }))`
   color: inherit;
@@ -120,7 +120,7 @@ Flex.defaultProps = {
 
 export const Button = styled.button`
   border: none;
-  background: linear-gradient(135deg, #56c8ff, #6f99fc) no-repeat;
+  background: linear-gradient(135deg, #00acff, #6f99fc) no-repeat;
   color: white;
   will-change: opacity;
   box-shadow: 0 4px 8px -1px rgba(25, 80, 137, 0.08),
@@ -140,7 +140,7 @@ export const Button = styled.button`
 `
 
 export const Demo = styled.div`
-  margin: 15px 0;
+  margin: 15px 0 25px;
   background: #eeeefa;
   padding: 15px 15px 6px;
   border-radius: 8px;

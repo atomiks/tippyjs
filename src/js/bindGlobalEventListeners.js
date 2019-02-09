@@ -1,7 +1,7 @@
-import { supportsTouch, isIOS } from './browser'
+import { isIOS } from './browser'
 import Selectors from './selectors'
-import { hideAllPoppers } from './popper'
-import { closest, closestCallback, arrayFrom } from './ponyfills'
+import { hideAll } from './popper'
+import { closest, closestCallback } from './ponyfills'
 import { includes } from './utils'
 import { PASSIVE } from './constants'
 
@@ -42,7 +42,7 @@ export function onDocumentMouseMove() {
 export function onDocumentClick({ target }) {
   // Simulated events dispatched on the document
   if (!(target instanceof Element)) {
-    return hideAllPoppers()
+    return hideAll()
   }
 
   // Clicked on an interactive popper
@@ -57,21 +57,21 @@ export function onDocumentClick({ target }) {
     el => el._tippy && el._tippy.reference === el,
   )
   if (reference) {
-    const tip = reference._tippy
-    const isClickTrigger = includes(tip.props.trigger, 'click')
+    const instance = reference._tippy
+    const isClickTrigger = includes(instance.props.trigger, 'click')
 
     if (isUsingTouch || isClickTrigger) {
-      return hideAllPoppers(tip)
+      return hideAll({ exclude: instance, checkHideOnClick: true })
     }
 
-    if (tip.props.hideOnClick !== true || isClickTrigger) {
+    if (instance.props.hideOnClick !== true || isClickTrigger) {
       return
     }
 
-    tip.clearDelayTimeouts()
+    instance.clearDelayTimeouts()
   }
 
-  hideAllPoppers()
+  hideAll({ checkHideOnClick: true })
 }
 
 export function onWindowBlur() {
@@ -81,15 +81,6 @@ export function onWindowBlur() {
   }
 }
 
-export function onWindowResize() {
-  arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
-    const tippyInstance = popper._tippy
-    if (!tippyInstance.props.livePlacement) {
-      tippyInstance.popperInstance.scheduleUpdate()
-    }
-  })
-}
-
 /**
  * Adds the needed global event listeners
  */
@@ -97,12 +88,4 @@ export default function bindGlobalEventListeners() {
   document.addEventListener('click', onDocumentClick, true)
   document.addEventListener('touchstart', onDocumentTouch, PASSIVE)
   window.addEventListener('blur', onWindowBlur)
-  window.addEventListener('resize', onWindowResize)
-
-  if (
-    !supportsTouch &&
-    (navigator.maxTouchPoints || navigator.msMaxTouchPoints)
-  ) {
-    document.addEventListener('pointerdown', onDocumentTouch)
-  }
 }

@@ -1,13 +1,13 @@
 @mixin enter-transform($placement, $animation) {
   @if ($animation == 'perspective') {
     @if ($placement == 'top') {
-      transform: translateY(-10px) rotateX(0);
+      transform: perspective(700px) translateY(-10px) rotateX(0);
     } @else if ($placement == 'bottom') {
-      transform: translateY(10px) rotateX(0);
+      transform: perspective(700px) translateY(10px) rotateX(0);
     } @else if ($placement == 'left') {
-      transform: translateX(-10px) rotateY(0);
+      transform: perspective(700px) translateX(-10px) rotateY(0);
     } @else if ($placement == 'right') {
-      transform: translateX(10px) rotateY(0);
+      transform: perspective(700px) translateX(10px) rotateY(0);
     }
   } @else if ($animation == 'fade') {
     @if ($placement == 'top') {
@@ -35,13 +35,13 @@
 @mixin leave-transform($placement, $animation) {
   @if ($animation == 'perspective') {
     @if ($placement == 'top') {
-      transform: translateY(0) rotateX(60deg);
+      transform: perspective(700px) translateY(0) rotateX(60deg);
     } @else if ($placement == 'bottom') {
-      transform: translateY(0) rotateX(-60deg);
+      transform: perspective(700px) translateY(0) rotateX(-60deg);
     } @else if ($placement == 'left') {
-      transform: translateX(0) rotateY(-60deg);
+      transform: perspective(700px) translateX(0) rotateY(-60deg);
     } @else if ($placement == 'right') {
-      transform: translateX(0) rotateY(60deg);
+      transform: perspective(700px) translateX(0) rotateY(60deg);
     }
   } @else if ($animation == 'shift-away') {
     @if ($placement == 'top') {
@@ -55,13 +55,13 @@
     }
   } @else if ($animation == 'scale') {
     @if ($placement == 'top') {
-      transform: translateY(0) scale(0.5);
+      transform: translateY(-10px) scale(0.5);
     } @else if ($placement == 'bottom') {
-      transform: translateY(0) scale(0.5);
+      transform: translateY(10px) scale(0.5);
     } @else if ($placement == 'left') {
-      transform: translateX(0) scale(0.5);
+      transform: translateX(-10px) scale(0.5);
     } @else if ($placement == 'right') {
-      transform: translateX(0) scale(0.5);
+      transform: translateX(10px) scale(0.5);
     }
   } @else if ($animation == 'shift-toward') {
     @if ($placement == 'top') {

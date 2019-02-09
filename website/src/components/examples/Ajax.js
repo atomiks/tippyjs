@@ -10,6 +10,8 @@ function Ajax({ children }) {
       content={initialContent}
       animation="fade"
       animateFill={false}
+      flipOnUpdate
+      updateDuration={350}
       onShow={async tip => {
         if (!tip.state.ajax) {
           tip.state.ajax = {
@@ -35,6 +37,7 @@ function Ajax({ children }) {
             img.height = 200
             img.src = url
             img.style.display = 'block'
+            tip.popper.style.transitionDuration = '0ms'
             tip.setContent(img)
           }
         } catch (e) {

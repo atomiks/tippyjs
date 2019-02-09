@@ -6,17 +6,14 @@
 }
 
 .tippy-notransition {
-  transition: none !important;
+  transition: none;
 }
 
 .tippy-popper {
-  perspective: 700px;
-  z-index: 9999;
-  outline: 0;
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
-  pointer-events: none;
-  line-height: 1.4;
   max-width: calc(100% - 10px);
+  pointer-events: none;
+  outline: 0;
 
   @each $placement in $placements {
     &[x-placement^='#{$placement}'] {
@@ -104,6 +101,8 @@
       }
 
       [data-animation='scale'] {
+        transform-origin: nth($origins, index($placements, $placement));
+
         &[data-state='visible'] {
           @include enter-transform($placement, 'scale');
         }
@@ -122,11 +121,9 @@
   border-radius: 4px;
   font-size: 0.9rem;
   padding: 0.3rem 0.6rem;
-  max-width: 350px;
+  line-height: 1.4;
   text-align: center;
   will-change: transform;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   background-color: #333;
 
   &[data-size='small'] {

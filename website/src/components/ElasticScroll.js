@@ -1,9 +1,7 @@
-import React, { Component, Children, cloneElement, createRef } from 'react'
+import React, { Component, Children, cloneElement } from 'react'
 import elasticScroll from 'elastic-scroll-polyfill'
 
 class ElasticScroll extends Component {
-  scroller = createRef()
-
   componentDidMount() {
     this.instance = elasticScroll({
       targets: this.scroller,
@@ -19,7 +17,11 @@ class ElasticScroll extends Component {
   render() {
     return Children.map(this.props.children, child =>
       cloneElement(child, {
-        children: <div data-elastic-wrapper>{child.props.children}</div>,
+        children: (
+          <div data-elastic-wrapper style={{ display: 'inline-block' }}>
+            {child.props.children}
+          </div>
+        ),
         ref: node => {
           this.scroller = node
           const { ref } = child

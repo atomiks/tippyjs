@@ -1,6 +1,6 @@
 import Selectors from './selectors'
-import { arrayFrom, closestCallback } from './ponyfills'
-import { FF_EXTENSION_TRICK } from './constants'
+import { arrayFrom } from './ponyfills'
+import { innerHTML } from './utils'
 
 /**
  * Returns a new `div` element
@@ -16,8 +16,7 @@ export function div() {
  * @param {Element|String} html
  */
 export function setInnerHTML(el, html) {
-  el[FF_EXTENSION_TRICK.x && 'innerHTML'] =
-    html instanceof Element ? html[FF_EXTENSION_TRICK.x && 'innerHTML'] : html
+  el[innerHTML()] = html instanceof Element ? html[innerHTML()] : html
 }
 
 /**
@@ -167,6 +166,18 @@ export function reflow(popper) {
 }
 
 /**
+ * Adds/removes theme from tooltip's classList
+ * @param {HTMLDivElement} tooltip
+ * @param {String} action
+ * @param {String} theme
+ */
+export function toggleTheme(tooltip, action, theme) {
+  theme.split(' ').forEach(themeName => {
+    tooltip.classList[action](themeName + '-theme')
+  })
+}
+
+/**
  * Constructs the popper element and returns it
  * @param {Number} id
  * @param {Object} props
@@ -174,9 +185,11 @@ export function reflow(popper) {
 export function createPopperElement(id, props) {
   const popper = div()
   popper.className = 'tippy-popper'
-  popper.setAttribute('role', 'tooltip')
   popper.id = `tippy-${id}`
   popper.style.zIndex = props.zIndex
+  if (props.role) {
+    popper.setAttribute('role', props.role)
+  }
 
   const tooltip = div()
   tooltip.className = 'tippy-tooltip'
@@ -185,9 +198,7 @@ export function createPopperElement(id, props) {
   tooltip.setAttribute('data-size', props.size)
   tooltip.setAttribute('data-animation', props.animation)
   tooltip.setAttribute('data-state', 'hidden')
-  props.theme.split(' ').forEach(t => {
-    tooltip.classList.add(t + '-theme')
-  })
+  toggleTheme(tooltip, 'add', props.theme)
 
   const content = div()
   content.className = 'tippy-content'
@@ -215,18 +226,6 @@ export function createPopperElement(id, props) {
   tooltip.appendChild(content)
   popper.appendChild(tooltip)
 
-  popper.addEventListener('focusout', e => {
-    if (
-      e.relatedTarget &&
-      popper._tippy &&
-      !closestCallback(e.relatedTarget, el => el === popper) &&
-      e.relatedTarget !== popper._tippy.reference &&
-      popper._tippy.props.shouldPopperHideOnBlur(e)
-    ) {
-      popper._tippy.hide()
-    }
-  })
-
   return popper
 }
 
@@ -244,6 +243,11 @@ export function updatePopperElement(popper, prevProps, nextProps) {
   tooltip.setAttribute('data-animation', nextProps.animation)
   tooltip.style.maxWidth =
     nextProps.maxWidth + (typeof nextProps.maxWidth === 'number' ? 'px' : '')
+  if (nextProps.role) {
+    popper.setAttribute('role', nextProps.role)
+  } else {
+    popper.removeAttribute('role')
+  }
 
   if (prevProps.content !== nextProps.content) {
     setContent(content, nextProps)
@@ -290,12 +294,8 @@ export function updatePopperElement(popper, prevProps, nextProps) {
 
   // theme
   if (prevProps.theme !== nextProps.theme) {
-    prevProps.theme.split(' ').forEach(theme => {
-      tooltip.classList.remove(theme + '-theme')
-    })
-    nextProps.theme.split(' ').forEach(theme => {
-      tooltip.classList.add(theme + '-theme')
-    })
+    toggleTheme(tooltip, 'remove', prevProps.theme)
+    toggleTheme(tooltip, 'add', nextProps.theme)
   }
 }
 
@@ -320,18 +320,18 @@ export function afterPopperPositionUpdates(popperInstance, callback) {
 }
 
 /**
- * Hides all visible poppers on the document, optionally excluding one
- * @param {Tippy} tippyInstanceToExclude
+ * Hides all visible poppers on the document
+ * @param {Object} options
  */
-export function hideAllPoppers(tippyInstanceToExclude) {
+export function hideAll({ checkHideOnClick, exclude, duration } = {}) {
   arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
-    const tip = popper._tippy
+    const instance = popper._tippy
     if (
-      tip &&
-      tip.props.hideOnClick === true &&
-      (!tippyInstanceToExclude || popper !== tippyInstanceToExclude.popper)
+      instance &&
+      (checkHideOnClick ? instance.props.hideOnClick === true : true) &&
+      (!exclude || popper !== exclude.popper)
     ) {
-      tip.hide()
+      instance.hide(duration)
     }
   })
 }

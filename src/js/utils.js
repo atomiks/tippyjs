@@ -20,21 +20,12 @@ export function hasOwnProperty(obj, key) {
 }
 
 /**
- * Determines if a value is numeric
- * @param {any} value
- * @return {Boolean}
- */
-export function isNumeric(value) {
-  return !isNaN(value) && !isNaN(parseFloat(value))
-}
-
-/**
  * Returns an array of elements based on the value
  * @param {any} value
  * @return {Array}
  */
 export function getArrayOfElements(value) {
-  if (value instanceof Element || isPlainObject(value)) {
+  if (isSingular(value)) {
     return [value]
   }
   if (value instanceof NodeList) {
@@ -63,26 +54,6 @@ export function getValue(value, index, defaultValue) {
     return v == null ? defaultValue : v
   }
   return value
-}
-
-/**
- * Focuses an element while preventing a scroll jump if it's not within the
- * viewport
- * @param {Element} el
- */
-export function focus(el) {
-  const x = window.scrollX || window.pageXOffset
-  const y = window.scrollY || window.pageYOffset
-  el.focus()
-  scroll(x, y)
-}
-
-/**
- * Defers a function's execution until the call stack has cleared
- * @param {Function} fn
- */
-export function defer(fn) {
-  setTimeout(fn, 1)
 }
 
 /**
@@ -117,4 +88,40 @@ export function getModifier(obj, key) {
  */
 export function includes(a, b) {
   return a.indexOf(b) > -1
+}
+
+/**
+ * Determines if the value is singular-like
+ * @param {any} value
+ * @return {Boolean}
+ */
+export function isSingular(value) {
+  return isPlainObject(value) || value instanceof Element
+}
+
+/**
+ * Tricking bundlers, linters, and minifiers
+ * @return {String}
+ */
+export function innerHTML() {
+  return 'innerHTML'
+}
+
+/**
+ * Evaluates a function if one, or returns the value
+ * @param {any} value
+ * @param {any[]} args
+ * @return {Boolean}
+ */
+export function evaluateValue(value, args) {
+  return typeof value === 'function' ? value.apply(null, args) : value
+}
+
+/**
+ * Sets a popperInstance `flip` modifier's enabled state
+ * @param {Object[]} modifiers
+ * @param {any} value
+ */
+export function setFlipModifierEnabled(modifiers, value) {
+  modifiers.filter(m => m.name === 'flip')[0].enabled = value
 }

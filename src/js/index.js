@@ -6,8 +6,9 @@ import bindGlobalEventListeners from './bindGlobalEventListeners'
 import { polyfillElementPrototypeProperties } from './reference'
 import { validateOptions } from './props'
 import { arrayFrom } from './ponyfills'
-import { hideAllPoppers } from './popper'
-import { isPlainObject, getArrayOfElements } from './utils'
+import { hideAll } from './popper'
+import { isSingular, isPlainObject, getArrayOfElements } from './utils'
+import group from './group'
 
 let globalEventListenersBound = false
 
@@ -15,10 +16,9 @@ let globalEventListenersBound = false
  * Exported module
  * @param {String|Element|Element[]|NodeList|Object} targets
  * @param {Object} options
- * @param {Boolean} one
  * @return {Object}
  */
-function tippy(targets, options, one) {
+function tippy(targets, options) {
   validateOptions(options, Defaults)
 
   if (!globalEventListenersBound) {
@@ -28,41 +28,21 @@ function tippy(targets, options, one) {
 
   const props = { ...Defaults, ...options }
 
-  /**
-   * If they are specifying a virtual positioning reference, we need to polyfill
-   * some native DOM props
-   */
+  // If they are specifying a virtual positioning reference, we need to polyfill
+  // some native DOM props
   if (isPlainObject(targets)) {
     polyfillElementPrototypeProperties(targets)
   }
 
-  const references = getArrayOfElements(targets)
-  const firstReference = references[0]
-
-  const instances = (one && firstReference
-    ? [firstReference]
-    : references
-  ).reduce((acc, reference) => {
-    const tip = reference && createTippy(reference, props)
-    if (tip) {
-      acc.push(tip)
+  const instances = getArrayOfElements(targets).reduce((acc, reference) => {
+    const instance = reference && createTippy(reference, props)
+    if (instance) {
+      acc.push(instance)
     }
     return acc
   }, [])
 
-  const collection = {
-    targets,
-    props,
-    instances,
-    destroyAll() {
-      collection.instances.forEach(instance => {
-        instance.destroy()
-      })
-      collection.instances = []
-    },
-  }
-
-  return collection
+  return isSingular(targets) ? instances[0] : instances
 }
 
 /**
@@ -74,27 +54,18 @@ tippy.defaults = Defaults
 /**
  * Static methods
  */
-tippy.one = (targets, options) => tippy(targets, options, true).instances[0]
 tippy.setDefaults = partialDefaults => {
   Object.keys(partialDefaults).forEach(key => {
     Defaults[key] = partialDefaults[key]
   })
 }
-tippy.disableAnimations = () => {
-  tippy.setDefaults({
-    duration: 0,
-    updateDuration: 0,
-    animateFill: false,
-  })
-}
-tippy.hideAllPoppers = hideAllPoppers
-// noop: deprecated static method as capture phase is now default
-tippy.useCapture = () => {}
+tippy.hideAll = hideAll
+tippy.group = group
 
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
  */
-export const autoInit = () => {
+export function autoInit() {
   arrayFrom(document.querySelectorAll('[data-tippy]')).forEach(el => {
     const content = el.getAttribute('data-tippy')
     if (content) {

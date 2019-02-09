@@ -29,7 +29,11 @@ class Layout extends Component {
         <CSS />
         <SEO pageContext={pageContext} />
         <Main>
-          <Header openNav={this.openNav} isNavOpen={isNavOpen} />
+          <Header
+            openNav={this.openNav}
+            isNavOpen={isNavOpen}
+            pageIndex={pageContext.frontmatter.index}
+          />
           <Nav isOpen={isNavOpen} close={this.closeNav} />
           <Container>
             <h2>{pageContext.frontmatter.title}</h2>

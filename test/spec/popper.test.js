@@ -8,7 +8,7 @@ import {
   afterPopperPositionUpdates,
   createArrowElement,
   createBackdropElement,
-  hideAllPoppers,
+  hideAll,
   getChildren,
   addInertia,
   removeInertia,
@@ -24,19 +24,40 @@ import {
   div,
 } from '../../src/js/popper'
 
+tippy.setDefaults({ duration: 0, delay: 0 })
+
 afterEach(cleanDocumentBody)
 
-describe('hideAllPoppers', () => {
-  it('hides all poppers on the document', done => {
-    const tip = tippy([...Array(10)].map(() => h()), {
-      duration: 0,
+describe('hideAll', () => {
+  it('hides all tippys on the document, ignoring `hideOnClick`', () => {
+    const options = { showOnInit: true, hideOnClick: false }
+    const instances = [...Array(3)].map(() => tippy(h(), options))
+    instances.forEach(instance => {
+      expect(instance.state.isVisible).toBe(true)
     })
-    tip.instances.forEach(i => i.show(0))
-    expect(document.querySelectorAll(Selectors.POPPER).length > 0).toBe(true)
-    hideAllPoppers()
-    setTimeout(() => {
-      expect(document.querySelectorAll(Selectors.POPPER).length).toBe(0)
-      done()
+    hideAll()
+    instances.forEach(instance => {
+      expect(instance.state.isVisible).toBe(false)
+    })
+  })
+
+  it('respects `duration` option', () => {
+    const options = { showOnInit: true, duration: 100 }
+    const instances = [...Array(3)].map(() => tippy(h(), options))
+    hideAll({ duration: 0 })
+    instances.forEach(instance => {
+      expect(instance.state.isMounted).toBe(false)
+    })
+  })
+
+  it('respects `exclude` option', () => {
+    const options = { showOnInit: true }
+    const instances = [...Array(3)].map(() => tippy(h(), options))
+    hideAll({ exclude: instances[0] })
+    instances.forEach(instance => {
+      expect(instance.state.isVisible).toBe(
+        instance === instances[0] ? true : false,
+      )
     })
   })
 })
@@ -128,18 +149,6 @@ describe('createPopperElement', () => {
     expect(
       getChildren(popper).tooltip.classList.contains('firetruck-theme'),
     ).toBe(true)
-  })
-
-  it('adds a `focusout` listener to hide the popper when the relatedTarget is outside', () => {
-    const randEl = document.createElement('button')
-    document.body.append(randEl)
-    const instance = tippy.one(h())
-    instance.show(0)
-    expect(instance.state.isVisible).toBe(true)
-    instance.popper.dispatchEvent(
-      new FocusEvent('focusout', { relatedTarget: randEl }),
-    )
-    expect(instance.state.isVisible).toBe(false)
   })
 })
 
@@ -323,7 +332,7 @@ describe('updatePopperElement', () => {
 
 describe('afterPopperPositionUpdates', () => {
   it('is called by popper if not already updated', done => {
-    const tip = tippy.one(h(), { lazy: false })
+    const tip = tippy(h(), { lazy: false })
     // popper calls scheduleUpdate() on init
     const fn = jest.fn()
     afterPopperPositionUpdates(tip.popperInstance, fn)
@@ -334,7 +343,7 @@ describe('afterPopperPositionUpdates', () => {
   })
 
   it('is not called by popper if already updated', done => {
-    const tip = tippy.one(h(), { lazy: false })
+    const tip = tippy(h(), { lazy: false })
     const fn = jest.fn()
     // popper calls scheduleUpdate() on init
     setTimeout(() => {

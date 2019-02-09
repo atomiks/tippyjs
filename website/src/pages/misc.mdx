@@ -5,7 +5,156 @@ index: 11
 ---
 
 import EventDelegation from '../components/examples/EventDelegation'
-import { Demo } from '../components/Framework'
+import Scroller from '../components/examples/Scroller'
+import { Demo, Button, Flex } from '../components/Framework'
+import Tippy, { TippyGroup } from '../components/Tippy'
+
+### Groups
+
+Groups are designed to improve user experience when tooltips have delays. When
+moving the cursor between each item in the group, the tooltips will instantly
+show.
+
+Compare the following tooltips **without** grouping:
+
+```js
+tippy('button', { delay: 1000 })
+```
+
+<Demo>
+  <Tippy delay={1000}>
+    <Button>Text</Button>
+  </Tippy>
+  <Tippy delay={1000}>
+    <Button>Text</Button>
+  </Tippy>
+</Demo>
+
+Now compare the following tooltips **with** grouping:
+
+```js
+tippy.group(tippy('button', { delay: 1000 }))
+```
+
+<Demo>
+  <TippyGroup delay={1000}>
+    <Tippy>
+      <Button>Text</Button>
+    </Tippy>
+    <Tippy>
+      <Button>Text</Button>
+    </Tippy>
+  </TippyGroup>
+</Demo>
+
+As you can see, the user experience is much nicer. To enable group behavior,
+call the method `tippy.group()` and pass in an array of Tippy instances.
+
+The group method also takes an optional options object as a second argument:
+
+```js
+tippy.group(instances, {
+  delay: 1000, // if the instances don't specify a `delay`
+  duration: 50, // instead of 0 (instant duration)
+})
+```
+
+### Scrollable containers
+
+Here are 3 common solutions. Note that no solution is completely ideal in all
+situations - it depends on the UI. In each of these, if you want the tippy to be
+clipped by the scrolling area, use `appendTo: "parent"`. If the tippy is large
+then this may be undesirable.
+
+<Scroller type="Unintrusive" boundary />
+
+With this technique, the tooltip acts like it does on the document normally. It
+gets clipped by the scrolling area and does not attempt to position itself to be
+fully visible (but will still flip).
+
+```js
+tippy('#unintrusive-example', {
+  boundary: 'window',
+  appendTo: 'parent',
+  popperOptions: {
+    modifiers: {
+      flip: {
+        boundariesElement: 'scrollParent',
+      },
+    },
+  },
+})
+```
+
+<Scroller type="Flip on update" flipOnUpdate />
+
+With this technique, the tooltip attempts to reposition itself to be visible to
+the user at all times. Sometimes this can be a little overly intrusive, though.
+
+```js
+tippy('#scroll-flipping-example', {
+  appendTo: 'parent',
+  flipOnUpdate: true,
+  // Leave this out if you want flipping to occur based on the
+  // viewport rather than the container
+  popperOptions: {
+    modifiers: {
+      flip: {
+        boundariesElement: 'scrollParent',
+      },
+    },
+  },
+})
+```
+
+<Scroller type="Hide on scroll" hideOnScroll />
+
+With this technique, the tooltip hides instantly whenever the user starts
+scrolling. In addition, it initially positions itself to be as visible as
+possible within the scrolling area.
+
+```js
+const instance = tippy(document.querySelector('#hide-on-scroll-example'))
+const container = document.querySelector('#scrollable-container')
+container.addEventListener('scroll', () => {
+  instance.hide(0)
+})
+```
+
+### Animate.css animations
+
+Want more animations than the built-in ones? You can use any CSS animation you
+like, for example, [animate.css](https://daneden.github.io/animate.css/).
+Include it on your page and then add/remove the classes onShow/onHidden:
+
+```js
+tippy('button', {
+  // If you don't want the filling effect as well
+  animateFill: false,
+  onShow(instance) {
+    instance.popperChildren.tooltip.classList.add('animated', 'wobble')
+  },
+  // Sometimes `onHide` may work better with a certain animation.
+  onHidden(instance) {
+    instance.popperChildren.tooltip.classList.remove('animated', 'wobble')
+  },
+})
+```
+
+<Demo>
+  <Tippy
+    animateFill={false}
+    onShow={instance => {
+      instance.popperChildren.tooltip.classList.add('animated', 'wobble')
+    }}
+    onHidden={instance => {
+      instance.popperChildren.tooltip.classList.remove('animated', 'wobble')
+    }}
+    offset="0, 10"
+  >
+    <Button>wobble</Button>
+  </Tippy>
+</Demo>
 
 ### Event delegation
 
@@ -59,35 +208,12 @@ tippy('#parent', {
 
 ### Hide tooltips on scroll
 
-In some cases it may be desirable to hide tooltips when scrolling (for example,
-on touch devices).
-
 ```js
-// Basic usage
-// Note that `hideAllPoppers` won't hide a tippy if it has `hideOnClick: false`
-window.addEventListener('scroll', tippy.hideAllPoppers)
-
-// More control
 window.addEventListener('scroll', () => {
-  const poppers = Array.from(document.querySelectorAll('.tippy-popper'))
-  poppers.forEach(popper => {
-    // If you pass 0 as the duration, you can make all of them hide instantly
-    popper._tippy.hide(0)
-  })
-})
-```
-
-### Scrollable containers
-
-By default, a tippy is prevented from overflowing a scrolling container (with
-`overflow` set). If the reference element is inside, the tippy can stay stuck in
-the container viewport while scrolling or may be positioned incorrectly in some
-cases. To solve this, you can use the `boundary` (v3.4) option and set it to
-`window`. Other values are also possible, see [All Options](/all-options).
-
-```js
-tippy(ref, {
-  boundary: 'window',
+  // If you want to use their own durations
+  tippy.hideAll()
+  // Or, if you want to make them all hide instantly
+  tippy.hideAll({ duration: 0 })
 })
 ```
 
@@ -136,9 +262,10 @@ onUserInputChange(type => {
   isUsingTouch = type === 'touch'
 })
 
-const tip = tippy.one(button)
+const instance = tippy(button)
+
 button.addEventListener('click', () => {
-  if (isIOS || !isUsingTouch ? true : tip.state.isShown) {
+  if (isIOS || !isUsingTouch ? true : instance.state.isShown) {
     // Your logic
   }
 })

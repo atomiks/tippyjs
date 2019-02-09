@@ -1,23 +1,13 @@
-import tippy from '../src/js/index'
-import '../src/scss/tippy.scss'
+import tippy from '../src/js'
+import '../src/scss/index.scss'
 import '../src/scss/themes/light-border.scss'
 
-window.tippy = tippy
-
-tippy('button:not([data-exclude]), p', {
-  content: 'I am a Tippy tooltip',
+tippy.group(tippy('.group', { content: 'Tooltip' }), {
+  delay: 1000,
+  duration: tippy.defaults.duration,
 })
 
-const template = document.createElement('div')
-template.innerHTML = '<strong>tooltip</strong>'
-tippy('.html', {
-  content: template,
-})
-
-tippy('.multiple', {
-  content: 'tooltip',
-})
-tippy('.multiple', {
-  content: '<strong>popover</strong>',
-  trigger: 'click',
+tippy('body', {
+  appendTo: ref => ref.parentNode,
+  target: '.delegation',
 })
