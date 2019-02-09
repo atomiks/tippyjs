@@ -73,7 +73,7 @@ function Dropdown({ text }) {
       distance={7}
       animation="fade"
       theme="light-border dropdown"
-      trigger="mouseenter click"
+      trigger="click"
       arrow
       appendTo={ref => ref.parentNode}
       onMount={tip => {

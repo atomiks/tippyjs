@@ -52,10 +52,10 @@ The following options are recommended:
 ```js
 tippy('button', {
   interactive: true,
+  // `focus` is not suitable for buttons with dropdowns
+  trigger: 'click',
   // Don't announce the tooltip's contents when expanded
   aria: null,
-  // Hover for mouse users, click for keyboard users
-  trigger: 'mouseenter click',
   // Important: the tooltip should be DIRECTLY after the reference element
   // in the DOM source order, which is why it has its own wrapper element
   appendTo: 'parent',
