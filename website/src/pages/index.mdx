@@ -54,7 +54,7 @@ suffix `-start` or `-end`.
 #### Arrows
 
 Tooltips can have an arrow that points toward the reference element. The size
-and proportion can also be modified.
+and proportion can also be modified with CSS.
 
 <Demo>
   <Tippy arrow animation="fade">
@@ -255,7 +255,7 @@ Tooltips can be placed on SVG nodes, where `followCursor: 'initial'` becomes
 very useful, since it can be placed directly on the line.
 
 <svg height="150" width="150">
-  <Tippy followCursor="initial">
+  <Tippy followCursor="initial" animation="fade" delay={100} arrow>
     <line
       x1="0"
       y1="0"

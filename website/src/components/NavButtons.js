@@ -13,9 +13,11 @@ const NavButton = styled(Link)`
     props['data-next'] ? 'none' : '1px solid rgba(0, 16, 64, 0.15)'};
   border-radius: 4px;
   background: ${props =>
-    props['data-next'] ? 'linear-gradient(90deg,#f3edff,#edf5ff)' : 'white'};
+    props['data-next']
+      ? 'linear-gradient(135deg,#00acff,#6f99fc) no-repeat'
+      : 'white'};
   text-decoration: none;
-  color: ${props => (props['data-next'] ? '#2569d7' : 'inherit')};
+  color: ${props => (props['data-next'] ? 'white' : 'inherit')};
   font-weight: bold;
   transition: box-shadow 0.2s;
   margin: 0 10px 15px;
@@ -33,7 +35,7 @@ const NavButton = styled(Link)`
     order: -1;
 
     &:hover {
-      filter: saturate(1.15) brightness(1.02);
+      filter: saturate(1.15) brightness(1.2);
     }
   }
 
