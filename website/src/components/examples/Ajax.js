@@ -1,7 +1,6 @@
 import React from 'react'
 import Tippy from '../Tippy'
 import { Button } from '../Framework'
-import { request } from 'http'
 
 function Ajax({ children }) {
   const initialContent = 'Loading...'
