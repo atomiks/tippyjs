@@ -296,6 +296,11 @@ describe('instance.setContent', () => {
     const content = 'Hello!'
     instance.setContent(content)
     expect(instance.props.content).toBe(content)
+    expect(instance.popperChildren.content.textContent).toBe(content)
+    const div = document.createElement('div')
+    instance.setContent(div)
+    expect(instance.props.content).toBe(div)
+    expect(instance.popperChildren.content.firstElementChild).toBe(div)
   })
 })
 

@@ -201,6 +201,34 @@ describe('content', () => {
     }).popperChildren
     expect(content.firstElementChild).toBe(el)
   })
+
+  it('works with a function', () => {
+    const instance = tippy(h('div', { title: 'test' }), {
+      content(reference) {
+        return reference.getAttribute('title')
+      },
+    })
+    expect(instance.props.content).toBe('test')
+    expect(instance.popperChildren.content.textContent).toBe('test')
+  })
+
+  it('works as a function with instance.set() / instance.setContent()', () => {
+    const instance = tippy(h('div', { title: 'test' }), {
+      content(reference) {
+        return reference.getAttribute('title')
+      },
+    })
+    instance.set({
+      content() {
+        return 'set'
+      },
+    })
+    expect(instance.props.content).toBe('set')
+    expect(instance.popperChildren.content.textContent).toBe('set')
+    instance.setContent(() => 'setContent')
+    expect(instance.props.content).toBe('setContent')
+    expect(instance.popperChildren.content.textContent).toBe('setContent')
+  })
 })
 
 describe('trigger', () => {
