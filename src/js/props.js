@@ -1,5 +1,5 @@
 import { getDataAttributeOptions } from './reference'
-import { hasOwnProperty } from './utils'
+import { hasOwnProperty, evaluateValue } from './utils'
 
 /**
  * Evaluates the props object by merging data attributes and
@@ -12,6 +12,7 @@ export function evaluateProps(reference, props) {
   const out = {
     ...props,
     ...(props.ignoreAttributes ? {} : getDataAttributeOptions(reference)),
+    content: evaluateValue(props.content, [reference]),
   }
 
   if (out.arrow) {

@@ -201,6 +201,16 @@ describe('content', () => {
     }).popperChildren
     expect(content.firstElementChild).toBe(el)
   })
+
+  it('works with a function', () => {
+    const instance = tippy(h('div', { title: 'test' }), {
+      content(reference) {
+        return reference.getAttribute('title')
+      },
+    })
+    expect(instance.props.content).toBe('test')
+    expect(instance.popperChildren.content.textContent).toBe('test')
+  })
 })
 
 describe('trigger', () => {
