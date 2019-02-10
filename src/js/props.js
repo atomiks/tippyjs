@@ -11,8 +11,8 @@ import { hasOwnProperty, evaluateValue } from './utils'
 export function evaluateProps(reference, props) {
   const out = {
     ...props,
-    ...(props.ignoreAttributes ? {} : getDataAttributeOptions(reference)),
     content: evaluateValue(props.content, [reference]),
+    ...(props.ignoreAttributes ? {} : getDataAttributeOptions(reference)),
   }
 
   if (out.arrow) {
