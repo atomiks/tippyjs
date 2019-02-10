@@ -211,6 +211,21 @@ describe('content', () => {
     expect(instance.props.content).toBe('test')
     expect(instance.popperChildren.content.textContent).toBe('test')
   })
+
+  it('works as a function with instance.set()', () => {
+    const instance = tippy(h('div', { title: 'test' }), {
+      content(reference) {
+        return reference.getAttribute('title')
+      },
+    })
+    instance.set({
+      content() {
+        return 'new'
+      },
+    })
+    expect(instance.props.content).toBe('new')
+    expect(instance.popperChildren.content.textContent).toBe('new')
+  })
 })
 
 describe('trigger', () => {
