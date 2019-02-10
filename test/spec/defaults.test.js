@@ -212,7 +212,7 @@ describe('content', () => {
     expect(instance.popperChildren.content.textContent).toBe('test')
   })
 
-  it('works as a function with instance.set()', () => {
+  it('works as a function with instance.set() / instance.setContent()', () => {
     const instance = tippy(h('div', { title: 'test' }), {
       content(reference) {
         return reference.getAttribute('title')
@@ -220,11 +220,14 @@ describe('content', () => {
     })
     instance.set({
       content() {
-        return 'new'
+        return 'set'
       },
     })
-    expect(instance.props.content).toBe('new')
-    expect(instance.popperChildren.content.textContent).toBe('new')
+    expect(instance.props.content).toBe('set')
+    expect(instance.popperChildren.content.textContent).toBe('set')
+    instance.setContent(() => 'setContent')
+    expect(instance.props.content).toBe('setContent')
+    expect(instance.popperChildren.content.textContent).toBe('setContent')
   })
 })
 
