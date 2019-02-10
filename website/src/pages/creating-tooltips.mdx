@@ -7,46 +7,79 @@ index: 2
 import Tippy from '../components/Tippy'
 import { Button } from '../components/Framework'
 
-### Method 1: Auto
-
-Give your reference element(s) a `data-tippy` attribute containing the tooltip
-content. Tooltips are automatically created on page load.
-
-```html
-<button data-tippy="Tooltip">Text</button>
-<button data-tippy="Another Tooltip">Text</button>
-<button data-tippy="Hey">Text</button>
-```
-
-If you have dynamically generated elements or are using a framework, use Method
-2 and `data-tippy-content` instead. This is because auto-initialization only
-happens once upon page load.
-
-### Method 2: Function
-
-Use the `tippy()` function by passing in a CSS selector, and give your reference
-element(s) a `data-tippy-content` attribute:
+To give elements a tippy, call the `tippy()` function by passing in a CSS
+selector, and give your reference element(s) a `data-tippy-content` attribute:
 
 ```html
 <button data-tippy-content="Tooltip">Text</button>
 <button data-tippy-content="Another Tooltip">Text</button>
-<button data-tippy-content="Hey">Text</button>
-```
-
-```js
-tippy('button')
+<script>
+  tippy('button')
+</script>
 ```
 
 The `tippy` function accepts the following types:
 
 - `String` (CSS selector)
+
+```js
+// Any CSS selector is valid
+tippy('#id')
+tippy('.class')
+tippy('[data-tippy-content]')
+```
+
 - `Element` (HTML or SVG)
-- `Element[]` (array of elements)
+- `Element[]`
+
+```js
+// An element or an array of elements is valid
+const element = document.getElementById('my-element')
+tippy(element)
+tippy([element1, element2, element3])
+```
+
 - `NodeList`
-- `Object` (virtual element)
+
+```js
+const els = document.querySelectorAll('.my-elements')
+tippy(els)
+```
 
 ⚠️ IE11 requires a `classList` polyfill if using an SVG element as the
 reference.
+
+### Auto-initialization
+
+If your web page has regular server-rendered HTML, and you aren't using a
+front-end framework like React or Vue, then you can bypass the function call and
+use the `data-tippy` attribute:
+
+```html
+<button data-tippy="I will be created automatically">Text</button>
+```
+
+Note the lack of `-content` suffix.
+
+This attribute should only be used for basic tippys that exist on the document
+on page load. You can avoid it if you want - it's just the quickest way to
+initialize a tooltip.
+
+### Client-rendered elements
+
+Every time you create a new element with JavaScript, you should pass it to
+`tippy()` in order to apply a tooltip to it.
+
+```js
+const strong = document.createElement('strong')
+strong.textContent = 'reference'
+document.body.appendChild(div)
+
+// `content` is the JavaScript form of the `data-tippy-content` HTML attribute
+tippy(strong, { content: 'tooltip' })
+```
+
+You will learn about the object passed as a second argument in the next section.
 
 ### Disabled elements
 
@@ -65,30 +98,3 @@ a tippy.
   <button disabled>Text</button>
 </span>
 ```
-
-### Virtual elements
-
-In some cases you may need to use a virtual element instead of a real DOM
-element. Pass a plain object with the following properties in:
-
-```js
-const virtualElement = {
-  getBoundingClientRect() {
-    return {
-      width: 0,
-      height: 0,
-      top: 100,
-      right: 100,
-      bottom: 100,
-      left: 100,
-    }
-  },
-  clientWidth: 0,
-  clientHeight: 0,
-}
-
-tippy(virtualElement)
-```
-
-Change the numbers to suit your needs. Popper.js uses these properties to
-position the tippy.

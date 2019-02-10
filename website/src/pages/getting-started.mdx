@@ -7,18 +7,23 @@ index: 1
 ### Option 1: CDN
 
 Tippy uses `popper.js` as a dependency for positioning. Include these script
-tags in your document before your own scripts:
+tags in your document:
 
 ```html
 <script src="https://unpkg.com/popper.js@1/dist/umd/popper.min.js"></script>
 <script src="https://unpkg.com/tippy.js@4"></script>
 ```
 
-Place them at the bottom of the `<body>`.
+Place them at the very bottom of the `<body>`, ensuring they are placed before
+your own scripts.
+
+The version numbers after `@` are important, make sure they don't get removed!
+They indicate the major version and won't have breaking changes when new
+versions get released.
 
 ### Option 2: Package Manager
 
-Install using either npm or Yarn.
+Install using either npm or Yarn:
 
 ```bash
 # npm
@@ -28,7 +33,7 @@ npm i tippy.js
 yarn add tippy.js
 ```
 
-Then, import the `tippy` module.
+Then, import the `tippy` module:
 
 ```js
 import tippy from 'tippy.js'

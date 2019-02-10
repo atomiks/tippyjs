@@ -278,3 +278,30 @@ button.addEventListener('click', () => {
   }
 })
 ```
+
+### Virtual elements
+
+In some cases you may need to use a virtual element instead of a real DOM
+element. Pass a plain object with the following properties in:
+
+```js
+const virtualElement = {
+  getBoundingClientRect() {
+    return {
+      width: 0,
+      height: 0,
+      top: 100,
+      right: 100,
+      bottom: 100,
+      left: 100,
+    }
+  },
+  clientWidth: 0,
+  clientHeight: 0,
+}
+
+tippy(virtualElement)
+```
+
+Change the numbers to suit your needs. Popper.js uses these properties to
+position the tippy.
