@@ -25,7 +25,7 @@ npm i tippy.js
 yarn add tippy.js
 ```
 
-CDN: https://unpkg.com/tippy.js/dist/
+CDN: https://unpkg.com/tippy.js@4/
 
 ## Component Wrappers
 
