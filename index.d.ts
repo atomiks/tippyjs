@@ -13,7 +13,7 @@ export type Placement =
   | 'right-start'
   | 'right-end'
 
-export type Content = string | Element
+export type Content = string | Element | ((ref: Element) => Element | string)
 
 export type Targets =
   | string
