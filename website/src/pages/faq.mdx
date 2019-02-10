@@ -53,3 +53,46 @@ bottom of the page, like so:
   </body>
 </html>
 ```
+
+### Can I use the `title` attribute?
+
+Yes. The `content` option can be a function that receives the reference element
+as an argument and returns a string or element.
+
+```js
+tippy('button', {
+  content(reference) {
+    const title = reference.getAttribute('title')
+    reference.removeAttribute('title')
+    return title
+  },
+})
+```
+
+The `title` attribute should be removed once you have its content so the
+browser's default tooltip isn't displayed along with the tippy.
+
+With the beauty of higher-order functions, you can "enhance" the base tippy
+function with new functionality. To add this behavior by default, you can do
+something like this at the very top of your scripts before any calls to
+`tippy()`:
+
+```js
+function withTitleAttributeContent(tippy) {
+  return (targets, options = {}) => {
+    return tippy(targets, {
+      ...options,
+      content(reference) {
+        if (options.content) {
+          return options.content
+        }
+        const title = reference.getAttribute('title')
+        reference.removeAttribute('title')
+        return title
+      },
+    })
+  }
+}
+
+window.tippy = withTitleAttributeContent(tippy)
+```
