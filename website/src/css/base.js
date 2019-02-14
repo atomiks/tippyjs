@@ -186,4 +186,20 @@ export default createGlobalStyle`
     border-top: 1px solid rgba(0, 16, 64, 0.15);
     margin-top: 5px;
   }
+
+  [data-reach-skip-link] {
+    position: fixed;
+    z-index: 2;
+    padding: 10px;
+    left: -9999px;
+    background: white;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 15px;
+
+    &:focus {
+      left: 5px;
+      top: 5px;
+    }
+  }
 `

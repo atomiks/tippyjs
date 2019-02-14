@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { SkipNavLink, SkipNavContent } from '@reach/skip-nav'
 import { Container } from './Framework'
 import Nav from './Nav'
 import NavButtons from './NavButtons'
@@ -28,6 +29,7 @@ class Layout extends Component {
       <>
         <CSS />
         <SEO pageContext={pageContext} />
+        <SkipNavLink />
         <Main>
           <Header
             openNav={this.openNav}
@@ -35,11 +37,13 @@ class Layout extends Component {
             pageIndex={pageContext.frontmatter.index}
           />
           <Nav isOpen={isNavOpen} close={this.closeNav} />
-          <Container>
-            <h2>{pageContext.frontmatter.title}</h2>
-            {children}
-            <NavButtons next={pageContext.frontmatter.index + 1} />
-          </Container>
+          <SkipNavContent>
+            <Container>
+              <h2>{pageContext.frontmatter.title}</h2>
+              {children}
+              <NavButtons next={pageContext.frontmatter.index + 1} />
+            </Container>
+          </SkipNavContent>
           <Footer>© {new Date().getFullYear()} - MIT License</Footer>
         </Main>
       </>
