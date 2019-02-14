@@ -5,7 +5,7 @@ const keys = Object.keys(Defaults)
 
 /**
  * Determines if an element can receive focus
- * @param {Element} el
+ * @param {Element|Object} el
  * @return {Boolean}
  */
 export function canReceiveFocus(el) {
@@ -19,7 +19,7 @@ export function canReceiveFocus(el) {
 
 /**
  * Returns an object of optional props from data-tippy-* attributes
- * @param {Element} reference
+ * @param {Element|Object} reference
  * @return {Object}
  */
 export function getDataAttributeOptions(reference) {
@@ -50,7 +50,6 @@ export function getDataAttributeOptions(reference) {
  * Polyfills the virtual reference (plain object) with Element.prototype props
  * Mutating because DOM elements are mutated, adds `_tippy` property
  * @param {Object} virtualReference
- * @return {Object}
  */
 export function polyfillElementPrototypeProperties(virtualReference) {
   const polyfills = {

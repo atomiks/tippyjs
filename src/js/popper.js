@@ -37,6 +37,7 @@ export function setContent(contentEl, props) {
 /**
  * Returns the child elements of a popper element
  * @param {HTMLElement} popper
+ * @return {Object}
  */
 export function getChildren(popper) {
   return {
@@ -67,6 +68,7 @@ export function removeInertia(tooltip) {
 
 /**
  * Creates an arrow element and returns it
+ * @return {HTMLDivElement}
  */
 export function createArrowElement(arrowType) {
   const arrow = div()
@@ -84,6 +86,7 @@ export function createArrowElement(arrowType) {
 
 /**
  * Creates a backdrop element and returns it
+ * @return {HTMLDivElement}
  */
 export function createBackdropElement() {
   const backdrop = div()
@@ -183,6 +186,7 @@ export function toggleTheme(tooltip, action, theme) {
  * Constructs the popper element and returns it
  * @param {Number} id
  * @param {Object} props
+ * @return {HTMLDivElement}
  */
 export function createPopperElement(id, props) {
   const popper = div()
@@ -233,7 +237,7 @@ export function createPopperElement(id, props) {
 
 /**
  * Updates the popper element based on the new props
- * @param {HTMLElement} popper
+ * @param {HTMLDivElement} popper
  * @param {Object} prevProps
  * @param {Object} nextProps
  */
@@ -342,9 +346,10 @@ export function hideAll({ checkHideOnClick, exclude, duration } = {}) {
  * Determines if the mouse cursor is outside of the popper's interactive border
  * region
  * @param {String} popperPlacement
- * @param {Object} popperRect
+ * @param {ClientRect} popperRect
  * @param {MouseEvent} event
  * @param {Object} props
+ * @return {Boolean}
  */
 export function isCursorOutsideInteractiveBorder(
   popperPlacement,
@@ -391,6 +396,7 @@ export function isCursorOutsideInteractiveBorder(
  * the transform: translate() rule in CSS
  * @param {Number} distance
  * @param {Number} defaultDistance
+ * @return {Boolean}
  */
 export function getOffsetDistanceInPx(distance, defaultDistance) {
   return -(distance - defaultDistance) + 'px'

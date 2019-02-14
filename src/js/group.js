@@ -1,3 +1,9 @@
+/**
+ * Groups an array of instances by taking control of their props during
+ * certain lifecycles.
+ * @param {Object[]} targets
+ * @param {Object} options
+ */
 export default function group(
   instances,
   { delay = instances[0].props.delay, duration = 0 } = {},

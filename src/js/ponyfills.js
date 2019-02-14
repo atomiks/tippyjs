@@ -11,8 +11,8 @@ export const matches =
 
 /**
  * Ponyfill for Array.from - converts iterable values to an array
- * @param {Array-like} value
- * @return {Array}
+ * @param {ArrayLike} value
+ * @return {any[]}
  */
 export function arrayFrom(value) {
   return [].slice.call(value)
