@@ -109,8 +109,9 @@ export default createGlobalStyle`
   }
 
   .token.flow {
-    color: #e99eff;
+    color: #8cedff;
     font-style: italic;
+    font-weight: bold;
   }
 
   .token.spread {

@@ -80,7 +80,7 @@ Col.defaultProps = {
 
 export const Link = styled(GatsbyLink).attrs(props => ({
   activeStyle: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     background: 'linear-gradient(90deg, #676c95, #4b4f74)',
     color: 'white',
   },

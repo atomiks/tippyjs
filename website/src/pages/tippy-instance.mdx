@@ -8,7 +8,7 @@ The Tippy instance is an individual tooltip object. It has a bunch of properties
 and methods that contain information and functionality to manipulate the tooltip
 programmatically.
 
-#### Accessing an instance
+### Accessing an instance
 
 If you pass an element or virtual element, the instance is directly returned:
 
@@ -27,7 +27,7 @@ created):
 const instances = tippy('.btn') // Array
 ```
 
-#### Auto-initialization
+### Auto-initialization
 
 If you're using auto-initialization (`data-tippy` attribute), and you need to
 access the instance immediately at runtime, make sure you wrap access in
@@ -39,6 +39,8 @@ setTimeout(() => {
   const instance = button._tippy
 })
 ```
+
+### Shape and properties
 
 `instance` is a plain object with these properties:
 

@@ -36,7 +36,7 @@ function VersionNotice() {
       <br />
       <a
         href="https://github.com/atomiks/tippyjs/releases/tag/v4.0.0"
-        rel="noopener"
+        rel="noopener noreferrer"
         target="_blank"
       >
         Read the migration guide from v3
@@ -44,7 +44,7 @@ function VersionNotice() {
       or{' '}
       <a
         href="https://github.com/atomiks/tippyjs/tree/8c8a367fa8de94ddd1b1cc7fb259dd5d5f075458/website/src/pages"
-        rel="noopener"
+        rel="noopener noreferrer"
         target="_blank"
       >
         view the old docs for v3

@@ -5,17 +5,15 @@ import { MEDIA, Flex } from './Framework'
 import { sortPagesByIndex } from '../utils'
 import ArrowRight from 'react-feather/dist/icons/arrow-right'
 import ArrowLeft from 'react-feather/dist/icons/arrow-left'
+import Theme from '../css/theme'
 
 const NavButton = styled(Link)`
   display: block;
   padding: 40px 25px;
   border: ${props =>
-    props['data-next'] ? 'none' : '1px solid rgba(0, 16, 64, 0.15)'};
+    props['data-next'] ? 'none' : `1px solid ${Theme.border}`};
   border-radius: 4px;
-  background: ${props =>
-    props['data-next']
-      ? 'linear-gradient(135deg,#00acff,#6f99fc) no-repeat'
-      : 'white'};
+  background: ${props => (props['data-next'] ? Theme.gradient : 'white')};
   text-decoration: none;
   color: ${props => (props['data-next'] ? 'white' : 'inherit')};
   font-weight: bold;

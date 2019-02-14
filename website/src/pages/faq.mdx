@@ -96,3 +96,8 @@ function withTitleAttributeContent(tippy) {
 
 window.tippy = withTitleAttributeContent(tippy)
 ```
+
+### My tooltip is hiding instantly after showing
+
+If you're using a `focus` trigger, for example on an `<input>`, make sure you
+also set `hideOnClick: false`.
