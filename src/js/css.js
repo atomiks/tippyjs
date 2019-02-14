@@ -9,6 +9,12 @@ export function injectCSS(css) {
     const style = document.createElement('style')
     style.type = 'text/css'
     style.textContent = css
-    document.head.insertBefore(style, document.head.firstChild)
+    const head = document.head
+    const { firstChild } = head
+    if (firstChild) {
+      head.insertBefore(style, firstChild)
+    } else {
+      head.appendChild(style)
+    }
   }
 }

@@ -1,6 +1,7 @@
 import Selectors from './selectors'
 import { arrayFrom } from './ponyfills'
 import { innerHTML } from './utils'
+import { isUCBrowser } from './browser'
 
 /**
  * Returns a new `div` element
@@ -131,7 +132,8 @@ export function applyTransitionDuration(els, value) {
  * @param {Function} listener
  */
 export function toggleTransitionEndListener(tooltip, action, listener) {
-  tooltip[action + 'EventListener']('transitionend', listener)
+  const eventName = isUCBrowser ? 'webkitTransitionEnd' : 'transitionend'
+  tooltip[action + 'EventListener'](eventName, listener)
 }
 
 /**

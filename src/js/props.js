@@ -1,5 +1,6 @@
 import { getDataAttributeOptions } from './reference'
 import { hasOwnProperty, evaluateValue } from './utils'
+import { isUCBrowser } from './browser'
 
 /**
  * Evaluates the props object by merging data attributes and
@@ -15,7 +16,7 @@ export function evaluateProps(reference, props) {
     ...(props.ignoreAttributes ? {} : getDataAttributeOptions(reference)),
   }
 
-  if (out.arrow) {
+  if (out.arrow || isUCBrowser) {
     out.animateFill = false
   }
 
