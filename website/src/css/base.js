@@ -33,6 +33,17 @@ export default createGlobalStyle`
     background: #333;
     color: white;
   }
+
+  pre code::-moz-selection,
+  pre span::-moz-selection {
+    background-color: rgba(200, 210, 255, 0.25);
+    color: inherit;
+  }
+  pre code::selection,
+  pre span::selection {
+    background-color: rgba(200, 210, 255, 0.25);
+    color: inherit;
+  }
   
   a {
     color: #0065d5;

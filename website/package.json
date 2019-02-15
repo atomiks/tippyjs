@@ -29,6 +29,7 @@
     "gatsby-source-filesystem": "^2.0.8",
     "gatsby-transformer-remark": "^2.1.18",
     "gatsby-transformer-sharp": "^2.1.8",
+    "normalize.css": "^8.0.1",
     "prismjs": "^1.15.0",
     "prop-types": "^15.6.2",
     "react": "^16.8.1",
