@@ -1,3 +1,5 @@
+// __gatsby-monkey-patch-start
+
 Prism.languages.insertBefore('javascript', 'keyword', {
   module: {
     pattern: /\b(?:import|as|export|from|default)\b/,
@@ -14,6 +16,11 @@ Prism.languages.insertBefore('javascript', 'keyword', {
   flow: {
     pattern: /\b(?:return|await)\b/,
     alias: 'keyword',
+  },
+  func: {
+    pattern: /(\.\s*)[a-z_$][\w$]*(?=(\())/i,
+    lookbehind: true,
+    alias: 'method',
   },
 })
 
@@ -82,4 +89,4 @@ Prism.languages.insertBefore('javascript', 'keyword', {
   ],
 })
 
-// __gatsby-monkey-patched__
+// __gatsby-monkey-patch-end
