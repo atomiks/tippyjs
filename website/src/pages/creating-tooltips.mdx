@@ -73,7 +73,7 @@ Every time you create a new element with JavaScript, you should pass it to
 ```js
 const strong = document.createElement('strong')
 strong.textContent = 'reference'
-document.body.appendChild(div)
+document.body.appendChild(strong)
 
 // `content` is the JavaScript form of the `data-tippy-content` HTML attribute
 tippy(strong, { content: 'tooltip' })

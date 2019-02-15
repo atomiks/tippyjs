@@ -136,12 +136,16 @@ tippy('button', {
   // will override it, so we'll need to use +10 more distance than the default (10)
   distance: 20,
   onMount(instance) {
+    const { tooltip } = instance.popperChildren
     requestAnimationFrame(() => {
-      instance.popperChildren.tooltip.classList.add('animated', 'wobble')
+      tooltip.classList.add('animated')
+      tooltip.classList.add('wobble')
     })
   },
   onHidden(instance) {
-    instance.popperChildren.tooltip.classList.remove('animated', 'wobble')
+    const { tooltip } = instance.popperChildren
+    tooltip.classList.remove('animated')
+    tooltip.classList.remove('wobble')
   },
 })
 ```
