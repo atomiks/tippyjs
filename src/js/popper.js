@@ -135,7 +135,12 @@ export function applyTransitionDuration(els, value) {
  * @param {Function} listener
  */
 export function toggleTransitionEndListener(tooltip, action, listener) {
-  const eventName = isUCBrowser ? 'webkitTransitionEnd' : 'transitionend'
+  // UC Browser hasn't adopted the `transitionend` event despite supporting
+  // unprefixed transitions...
+  const eventName =
+    isUCBrowser && document.body.style.WebkitTransition !== undefined
+      ? 'webkitTransitionEnd'
+      : 'transitionend'
   tooltip[action + 'EventListener'](eventName, listener)
 }
 
