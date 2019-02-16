@@ -321,10 +321,10 @@ export function afterPopperPositionUpdates(popperInstance, callback) {
   const { popper, options } = popperInstance
   const { onCreate, onUpdate } = options
 
-  options.onCreate = options.onUpdate = () => {
+  options.onCreate = options.onUpdate = data => {
     reflow(popper)
     callback()
-    onUpdate()
+    onUpdate(data)
     options.onCreate = onCreate
     options.onUpdate = onUpdate
   }

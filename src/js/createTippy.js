@@ -487,13 +487,8 @@ export default function createTippy(reference, collectionProps) {
           ...getModifier(popperOptions, 'offset'),
         },
       },
-      onCreate() {
-        tooltip.style[
-          getPopperPlacement(instance.popper)
-        ] = getOffsetDistanceInPx(instance.props.distance)
-      },
       onUpdate(data) {
-        if (data && !instance.props.flipOnUpdate) {
+        if (!instance.props.flipOnUpdate) {
           if (data.flipped) {
             instance.popperInstance.options.placement = data.placement
           }
