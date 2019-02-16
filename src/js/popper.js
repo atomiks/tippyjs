@@ -398,11 +398,10 @@ export function isCursorOutsideInteractiveBorder(
 
 /**
  * Returns the distance offset, taking into account the default offset due to
- * the transform: translate() rule in CSS
+ * the transform: translate() rule (10px) in CSS
  * @param {Number} distance
- * @param {Number} defaultDistance
- * @return {Boolean}
+ * @return {String}
  */
-export function getOffsetDistanceInPx(distance, defaultDistance) {
-  return -(distance - defaultDistance) + 'px'
+export function getOffsetDistanceInPx(distance) {
+  return -(distance - 10) + 'px'
 }
