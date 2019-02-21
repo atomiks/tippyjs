@@ -39,7 +39,6 @@ const ButtonLink = styled(ExternalLink)`
   transition: all 0.25s;
   color: #ffffff;
   margin: 0 10px 10px;
-  font-weight: 300;
 
   &:hover {
     background: white;
@@ -109,7 +108,7 @@ class Header extends Component {
       <HeaderRoot>
         <Container>
           {displayVersionNotice && <VersionNotice />}
-          <Logo src={TippyLogo} draggable="false" />
+          <Logo src={TippyLogo} draggable="false" alt="Tippy Logo" />
           <Title>
             <TextGradient>Tippy.js</TextGradient>
           </Title>

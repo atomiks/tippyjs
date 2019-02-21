@@ -4,15 +4,15 @@ path: /html-content/
 index: 7
 ---
 
-Tippy offers a few ways to use HTML inside tooltips.
+Tippy isn't just limited to simple text tooltips. Rich HTML content can be
+displayed within the tippy, and users can interact with content inside.
+
+Note that if you want to be able to interact with the content inside the tippy,
+you'll need to set `interactive: true`.
 
 ### String
 
-```html
-<button data-tippy="<strong>Bolded content</strong>">Text</button>
-```
-
-Or, if using the function:
+A string of HTML can be used:
 
 ```js
 tippy('button', {
@@ -23,6 +23,9 @@ tippy('button', {
 ### Element
 
 #### `<template>` element
+
+The content within a `<template>` is "inert" and doesn't get rendered on the
+page. This makes it ideal for creating reusable pieces of content:
 
 ```html
 <template id="example">
@@ -43,7 +46,7 @@ tippy('button', { content: container })
 
 #### Standard `<div>`
 
-You can also just use a `<div>`:
+It's also possible to use a `<div>` (or any other element) instead:
 
 <!-- prettier-ignore -->
 ```html
@@ -57,6 +60,9 @@ const template = document.getElementById('example')
 tippy('button', { content: template.innerHTML })
 ```
 
+Content within the `<div>` gets rendered and displayed on the page, so we need
+to hide it using `display: none`.
+
 ### Keep event listeners attached
 
 If you want to keep event listeners attached to the element, you can pass the
@@ -68,8 +74,12 @@ tippy('button', { content: template })
 template.style.display = 'block'
 ```
 
-Note that this is a one-time operation. It can only exist in a single tippy
-since it's not being cloned.
+Once Tippy has appended the template to the tooltip, we need to unhide it, which
+we can do by setting its `display` property to `block`.
+
+Tippy will move the template from the document into the tooltip. Note that this
+is a one-time operation. It can only exist in a single tippy since it's not
+being cloned.
 
 ### Template linking
 

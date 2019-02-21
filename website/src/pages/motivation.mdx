@@ -4,6 +4,28 @@ path: /motivation/
 index: 13
 ---
 
+### Why tooltips and popovers?
+
+Both are elements positioned near a "reference" element, and are hidden until
+they are triggered. They help conserve space by hiding secondary information or
+functionality behind a hover or click. They are positioned outside the normal
+flow of the document so when they are triggered, they are overlayed on top of
+the existing UI without disrupting the flow of content.
+
+Tippy.js distinguishes them in the following way:
+
+- A **tooltip** is an element containing simple text content describing a
+  particular element. It's hidden until the user desires more information from
+  the element, e.g. before deciding to click a button.
+- A **popover** is an interactive HTML tooltip. It can be a dropdown, menu, or
+  any other kind of box that pops out from the normal flow of the document. This
+  type of element contains non-vital functionality and can be hidden behind a
+  click or hover to conserve space.
+
+Both of these are called a "tippy" when using Tippy.js!
+
+### Why Tippy.js?
+
 Tippy's goal is to be as powerful as possible in the smallest possible size
 using the simplest possible API. It wants to give the user the most control
 while making them do as little as possible and incurring small cost in terms of
@@ -23,13 +45,6 @@ How does Tippy compare to other solutions? For example:
 
 Tippy.js, including the CSS and Popper.js dependency, is about **15 kB in
 size**.
-
-### Why does Tippy come with Popper.js as a dependency?
-
-Positioning "poppers" (elements that exist outside of the normal flow of the
-document), is quite complex, particularly when dealing with overflow and
-viewport awareness. Popper.js is actively maintained and very good at what it
-does, so there's no need to re-invent the wheel.
 
 ### Comparison with Popper.js
 
@@ -101,3 +116,10 @@ but come with many drawbacks:
 
 If you don't need the above, then a CSS tooltip library might better fit your
 needs.
+
+### Why does Tippy come with Popper.js as a dependency?
+
+Positioning "poppers" (elements that exist outside of the normal flow of the
+document), is quite complex, particularly when dealing with overflow and
+viewport awareness. Popper.js is actively maintained and very good at what it
+does, so there's no need to re-invent the wheel.

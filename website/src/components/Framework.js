@@ -32,7 +32,7 @@ export const Container = styled.div`
     padding: 0 40px;
   }
   ${MEDIA.lg} {
-    padding: 0 50px;
+    padding: 0 75px;
   }
 `
 Container.defaultProps = {
@@ -126,7 +126,7 @@ export const Button = styled.button`
   box-shadow: 0 4px 8px -1px rgba(25, 80, 137, 0.08),
     0 8px 24px -2px rgba(0, 128, 255, 0.06);
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 500;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   padding: 8px 16px;
   border-radius: 4px;
@@ -140,8 +140,18 @@ export const Button = styled.button`
 `
 
 export const Demo = styled.div`
-  margin: 15px 0 25px;
   background: #eeeefa;
-  padding: 15px 15px 6px;
-  border-radius: 8px;
+  margin: 15px -5% 25px;
+  padding: 25px 5% 16px;
+
+  ${MEDIA.sm} {
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-left: -25px;
+    margin-right: -25px;
+  }
+
+  ${MEDIA.md} {
+    border-radius: 8px;
+  }
 `

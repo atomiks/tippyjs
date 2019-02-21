@@ -1,6 +1,11 @@
 import React, { Component, Children, cloneElement } from 'react'
 import elasticScroll from 'elastic-scroll-polyfill'
 
+const elasticWrapperStyles = {
+  display: 'inline-block',
+  width: '100%',
+}
+
 class ElasticScroll extends Component {
   componentDidMount() {
     this.instance = elasticScroll({
@@ -18,7 +23,7 @@ class ElasticScroll extends Component {
     return Children.map(this.props.children, child =>
       cloneElement(child, {
         children: (
-          <div data-elastic-wrapper style={{ display: 'inline-block' }}>
+          <div data-elastic-wrapper style={elasticWrapperStyles}>
             {child.props.children}
           </div>
         ),

@@ -7,6 +7,17 @@ import ArrowRight from 'react-feather/dist/icons/arrow-right'
 import ArrowLeft from 'react-feather/dist/icons/arrow-left'
 import Theme from '../css/theme'
 
+const Container = styled(Flex)`
+  margin-top: 40px;
+  margin-left: -10px;
+  margin-right: -10px;
+
+  ${MEDIA.md} {
+    margin-left: -35px;
+    margin-right: -35px;
+  }
+`
+
 const NavButton = styled(Link)`
   display: block;
   padding: 40px 25px;
@@ -25,6 +36,8 @@ const NavButton = styled(Link)`
 
   &:hover {
     border-color: inherit;
+    background: ${props => (props['data-next'] ? Theme.gradient : 'white')};
+    color: ${props => (props['data-next'] ? 'white' : 'inherit')};
   }
 
   &[data-next] {
@@ -49,13 +62,12 @@ const NavButton = styled(Link)`
 
   ${MEDIA.md} {
     font-size: 24px;
-    padding: 40px;
   }
 `
 
 function NavButtons({ next }) {
   return (
-    <Flex style={{ marginTop: 40, marginLeft: -10, marginRight: -10 }}>
+    <Container>
       <StaticQuery
         query={allMdxQuery}
         render={data => {
@@ -86,7 +98,7 @@ function NavButtons({ next }) {
           )
         }}
       />
-    </Flex>
+    </Container>
   )
 }
 

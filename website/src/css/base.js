@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
+import { MEDIA } from '../components/Framework'
 
 export default createGlobalStyle`
   html {
@@ -13,12 +14,16 @@ export default createGlobalStyle`
   }
 
   body {
-    font-family: 'Muli', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     margin: 0;
     color: #515168;
     height: 100%;
-    font-size: 17px;
+    font-size: 16px;
     -webkit-tap-highlight-color: transparent;
+
+    ${MEDIA.md} {
+      font-size: 17px;
+    }
   }
 
   :focus:not(.focus-visible) {
@@ -48,12 +53,6 @@ export default createGlobalStyle`
   a {
     color: #0065d5;
     text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-bottom-color 0.15s;
-
-    &:hover {
-      border-bottom-color: inherit;
-    }
   }
 
   h1, 
@@ -71,6 +70,69 @@ export default createGlobalStyle`
     }
   }
 
+  h3 {
+    > a {
+      display: inline-block;
+      position: relative;
+      color: inherit;
+      text-shadow: -2px 2px 0px #fbedff, -4px 4px 0px #fff;
+      color: #3b69dd;
+      padding: 10px 0;
+      transition: color 0.3s;
+
+      &::-moz-selection {
+        text-shadow: none;
+      }
+
+      &::selection {
+        text-shadow: none;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: calc(50% + 40px);
+        margin-left: -25px;
+        background: linear-gradient(90deg,#faf3e0,#fbedff);
+        z-index: -1;
+        transition: width 0.7s cubic-bezier(.23, 1, .32, 1);
+        border-radius: 3px;
+      }
+
+      &:hover {
+        color: #00acff;
+      }
+
+      &:hover::before {
+        width: calc(100% + 25px);
+      }
+
+      ${MEDIA.md} {
+        &:hover::before {
+          width: calc(100% + 50px);
+        }
+      }
+
+      code.language-text {
+        background: none;
+        color: inherit;
+        font-size: 100%;
+        padding: 0;
+
+        &::-moz-selection {
+          text-shadow: none;
+        }
+
+        &::selection {
+          text-shadow: none;
+        }
+      }
+    }
+  }
+
   h1 {
     font-size: 2.488rem;
     margin-top: 2.488rem;
@@ -82,20 +144,33 @@ export default createGlobalStyle`
     border-bottom: 1px solid rgba(0, 32, 128, 0.1);
     padding-bottom: 10px;
     margin-bottom: 1.5rem;
+    font-weight: 600;
+
+    ${MEDIA.md} {
+      font-size: 2.488rem;
+    }
   }
 
   h3 {
     font-size: 1.728rem;
     margin-top: 2.5rem;
+
+    ${MEDIA.md} {
+      font-size: 2.074rem;
+    }
   }
 
   h4 {
     font-size: 1.44rem;
     margin-top: 2.2rem;
+
+    ${MEDIA.md} {
+      font-size: 1.728rem;
+    }
   }
 
   h5 {
-    font-size: 1.2rem;
+    font-size: 1.44rem;
   }
 
   p, 
@@ -105,7 +180,7 @@ export default createGlobalStyle`
   }
 
   ul {
-    padding-left: 25px;
+    padding-left: 18px;
   }
 
   table {
@@ -113,9 +188,14 @@ export default createGlobalStyle`
     border-collapse: collapse;
     margin: 0;
     padding: 0;
-    width: 100%;
     line-height: 1.4;
     border-radius: 0 0 10px 10px;
+    font-size: 16px;
+
+    ${MEDIA.xl} {
+      width: calc(100% + 50px);
+      margin-left: -25px;
+    }
   }
 
   table tr {
@@ -128,14 +208,22 @@ export default createGlobalStyle`
 
   td:first-child code {
     background: none;
-    font-size: 90%;
+    font-size: 18px;
     color: #333;
     padding: 0;
   }
 
+  th:last-child, td:last-child {
+    padding-left: 25px;
+  }
+
   table th, table td {
-    padding: 16px;
     text-align: left;
+    padding: 15px;
+
+    ${MEDIA.xl} {
+      padding: 15px 25px;
+    }
   }
 
   table th {
@@ -175,6 +263,10 @@ export default createGlobalStyle`
 
     table td:last-child {
       border-bottom: 0;
+    }
+
+    th:last-child, td:last-child {
+      padding-left: 15px;
     }
 
     table td::before {

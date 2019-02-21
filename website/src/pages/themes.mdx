@@ -17,11 +17,15 @@ import them since they are separate from the main CSS file.
 
 Only import the themes you actually use to conserve size and/or HTTP requests.
 
-**CDN:**
+#### CDN
 
+<!-- prettier-ignore -->
 ```html
 <head>
-  <link rel="stylesheet" href="https://unpkg.com/tippy.js@4/themes/light.css" />
+  <link 
+    rel="stylesheet" 
+    href="https://unpkg.com/tippy.js@4/themes/light.css" 
+  />
   <link
     rel="stylesheet"
     href="https://unpkg.com/tippy.js@4/themes/light-border.css"
@@ -37,7 +41,7 @@ Only import the themes you actually use to conserve size and/or HTTP requests.
 </head>
 ```
 
-**Package managers:**
+#### Package managers
 
 ```js
 import 'tippy.js/themes/light.css'
@@ -120,7 +124,7 @@ tippy('button', {
 
 <Demo>
   <Tippy theme="tomato">
-    <Button>Custom theme</Button>
+    <Button>Tomato theme</Button>
   </Tippy>
 </Demo>
 
@@ -184,4 +188,5 @@ If you would like to increase or decrease the arrow's size, you can use
 </Demo>
 
 If you're using a bordered theme like `light-border` included in the package,
-then you should avoid using `scale`.
+then you should avoid using `scale`, because the 1px border also gets scaled,
+leading to distortion.

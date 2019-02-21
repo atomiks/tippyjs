@@ -28,6 +28,9 @@ tippy('button', { delay: 1000 })
   <Tippy delay={1000}>
     <Button>Text</Button>
   </Tippy>
+  <Tippy delay={1000}>
+    <Button>Text</Button>
+  </Tippy>
 </Demo>
 
 Now compare the following tooltips **with** grouping:
@@ -38,6 +41,9 @@ tippy.group(tippy('button', { delay: 1000 }))
 
 <Demo>
   <TippyGroup delay={1000}>
+    <Tippy>
+      <Button>Text</Button>
+    </Tippy>
     <Tippy>
       <Button>Text</Button>
     </Tippy>
@@ -66,7 +72,9 @@ situations - it depends on the UI. In each of these, if you want the tippy to be
 clipped by the scrolling area, use `appendTo: "parent"`. If the tippy is large
 then this may be undesirable.
 
-<Scroller type="Unintrusive" boundary />
+<Demo>
+  <Scroller type="Unintrusive" boundary />
+</Demo>
 
 With this technique, the tooltip acts like it does on the document normally. It
 gets clipped by the scrolling area and does not attempt to position itself to be
@@ -86,7 +94,9 @@ tippy('#unintrusive-example', {
 })
 ```
 
-<Scroller type="Flip on update" flipOnUpdate />
+<Demo>
+  <Scroller type="Flip on update" flipOnUpdate />
+</Demo>
 
 With this technique, the tooltip attempts to reposition itself to be visible to
 the user at all times. Sometimes this can be a little overly intrusive, though.
@@ -107,7 +117,9 @@ tippy('#scroll-flipping-example', {
 })
 ```
 
-<Scroller type="Hide on scroll" hideOnScroll />
+<Demo>
+  <Scroller type="Hide on scroll" hideOnScroll />
+</Demo>
 
 With this technique, the tooltip hides instantly whenever the user starts
 scrolling. In addition, it initially positions itself to be as visible as
@@ -241,18 +253,26 @@ button. On Android, clicking the button will show the tooltip and also fire a
 click event.
 
 Depending on your use case, one of these will be preferred, so user agent
-checking may be needed. If neither behavior is preferred, consider using the
-touchHold: true option which allows the user to see the tooltip while pressing
-and holding the button, but won't fire a click event unless the click appears to
-be intentional.
+checking may be needed.
+
+If neither behavior is preferred, consider using the `touchHold` option which
+allows the user to see the tooltip while pressing and holding the button, but
+won't fire a click event unless the click appears to be intentional.
 
 ```js
 const button = document.querySelector('button')
 const isIOS = /iPhone|iPad|iPod/.test(navigator.platform)
 
-/*==================================================
-Make iOS behave like Android (single tap to click)
-==================================================*/
+/*========================================================
+A: Use `touchHold: true`
+========================================================*/
+tippy(button, {
+  touchHold: true,
+})
+
+/*========================================================
+B: Make iOS behave like Android (single tap to click)
+========================================================*/
 button.addEventListener('click', () => {
   // Your logic
 })
@@ -264,9 +284,9 @@ tippy(button, {
   },
 })
 
-/*==================================================
-Make Android behave like iOS (double tap to click)
-==================================================*/
+/*========================================================
+C: Make Android behave like iOS (double tap to click)
+========================================================*/
 // Useful function for dynamically determining the input type:
 // https://github.com/30-seconds/30-seconds-of-code#onuserinputchange
 let isUsingTouch = false

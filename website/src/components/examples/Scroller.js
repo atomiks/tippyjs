@@ -9,7 +9,6 @@ const ScrollingContainer = styled.div`
   width: 300px;
   height: 300px;
   overflow: auto;
-  margin-bottom: 1.5rem;
   color: #787eae;
 
   ${MEDIA.sm} {
@@ -51,7 +50,7 @@ const Type = styled.div`
 const ScrollingBackground = styled.div`
   width: 600px;
   height: 600px;
-  background: linear-gradient(150deg, #f1eefc, #9dc6ff 70%, #a5bcff);
+  background: white;
 `
 
 class Scroller extends Component {
