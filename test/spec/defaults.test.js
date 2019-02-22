@@ -380,6 +380,14 @@ describe('flip', () => {
       false,
     )
   })
+
+  it('does not change after mounting', () => {
+    const instance = tippy(h(), withTestOptions({ flip: false, duration: 0 }))
+    instance.show()
+    expect(
+      instance.popperInstance.modifiers.find(m => m.name === 'flip').enabled,
+    ).toBe(false)
+  })
 })
 
 describe('flipBehavior', () => {
