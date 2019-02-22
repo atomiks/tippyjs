@@ -4,24 +4,24 @@ import * as Utils from '../../src/js/utils'
 
 afterEach(cleanDocumentBody)
 
-describe('isPlainObject', () => {
+describe('isBareVirtualElement', () => {
   it('returns true for a plain object', () => {
-    expect(Utils.isPlainObject({})).toBe(true)
+    expect(Utils.isBareVirtualElement({})).toBe(true)
   })
 
   it('returns false for other object types', () => {
-    expect(Utils.isPlainObject([])).toBe(false)
-    expect(Utils.isPlainObject(function() {})).toBe(false)
-    expect(Utils.isPlainObject(h('div')))
+    expect(Utils.isBareVirtualElement([])).toBe(false)
+    expect(Utils.isBareVirtualElement(function() {})).toBe(false)
+    expect(Utils.isBareVirtualElement(h('div')))
   })
 
   it('returns false for primitive values', () => {
-    expect(Utils.isPlainObject('')).toBe(false)
-    expect(Utils.isPlainObject(Symbol())).toBe(false)
-    expect(Utils.isPlainObject(0)).toBe(false)
-    expect(Utils.isPlainObject(undefined)).toBe(false)
-    expect(Utils.isPlainObject(null)).toBe(false)
-    expect(Utils.isPlainObject(true)).toBe(false)
+    expect(Utils.isBareVirtualElement('')).toBe(false)
+    expect(Utils.isBareVirtualElement(Symbol())).toBe(false)
+    expect(Utils.isBareVirtualElement(0)).toBe(false)
+    expect(Utils.isBareVirtualElement(undefined)).toBe(false)
+    expect(Utils.isBareVirtualElement(null)).toBe(false)
+    expect(Utils.isBareVirtualElement(true)).toBe(false)
   })
 })
 
@@ -56,8 +56,8 @@ describe('getArrayOfElements', () => {
     expect(arr.length).toBe(1)
   })
 
-  it('returns an array of length 1 if the value is a plain object', () => {
-    const ref = {}
+  it('returns an array of length 1 if the value is a polyfilled virtual element', () => {
+    const ref = { isVirtual: true }
     const arr = Utils.getArrayOfElements(ref)
     expect(arr[0]).toBe(ref)
     expect(arr.length).toBe(1)

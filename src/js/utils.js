@@ -1,12 +1,17 @@
 import { arrayFrom } from './ponyfills'
 
 /**
- * Determines if a value is a plain object
+ * Determines if a value is a "bare" virtual element (before mutations done
+ * by `polyfillElementPrototypeProperties()`). JSDOM elements show up as
+ * [object Object], we can check if the value is "element-like" if it has
+ * `addEventListener`
  * @param {any} value
  * @return {Boolean}
  */
-export function isPlainObject(value) {
-  return {}.toString.call(value) === '[object Object]'
+export function isBareVirtualElement(value) {
+  return (
+    {}.toString.call(value) === '[object Object]' && !value.addEventListener
+  )
 }
 
 /**
@@ -96,7 +101,7 @@ export function includes(a, b) {
  * @return {Boolean}
  */
 export function isSingular(value) {
-  return isPlainObject(value) || value instanceof Element
+  return (!!value && value.isVirtual) || value instanceof Element
 }
 
 /**

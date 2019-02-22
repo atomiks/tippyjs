@@ -7,7 +7,7 @@ import { polyfillElementPrototypeProperties } from './reference'
 import { validateOptions } from './props'
 import { arrayFrom } from './ponyfills'
 import { hideAll } from './popper'
-import { isSingular, isPlainObject, getArrayOfElements } from './utils'
+import { isSingular, isBareVirtualElement, getArrayOfElements } from './utils'
 import group from './group'
 
 let globalEventListenersBound = false
@@ -30,7 +30,7 @@ function tippy(targets, options) {
 
   // If they are specifying a virtual positioning reference, we need to polyfill
   // some native DOM props
-  if (isPlainObject(targets)) {
+  if (isBareVirtualElement(targets)) {
     polyfillElementPrototypeProperties(targets)
   }
 
