@@ -488,7 +488,7 @@ export default function createTippy(reference, collectionProps) {
         },
       },
       onUpdate(data) {
-        if (!instance.props.flipOnUpdate) {
+        if (instance.props.flip && !instance.props.flipOnUpdate) {
           if (data.flipped) {
             instance.popperInstance.options.placement = data.placement
           }
@@ -528,7 +528,10 @@ export default function createTippy(reference, collectionProps) {
           instance.popperInstance.enableEventListeners()
         }
       }
-      setFlipModifierEnabled(instance.popperInstance.modifiers, true)
+      setFlipModifierEnabled(
+        instance.popperInstance.modifiers,
+        instance.props.flip,
+      )
     }
 
     // If the instance previously had followCursor behavior, it will be
