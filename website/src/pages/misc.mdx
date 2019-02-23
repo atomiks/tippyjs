@@ -6,6 +6,7 @@ index: 11
 
 import EventDelegation from '../components/examples/EventDelegation'
 import Scroller from '../components/examples/Scroller'
+import AnchorLink from '../components/examples/AnchorLink'
 import { Demo, Button, Flex } from '../components/Framework'
 import Tippy, { TippyGroup } from '../components/Tippy'
 
@@ -64,6 +65,26 @@ tippy.group(instances, {
   duration: 50, // instead of 0 (instant duration)
 })
 ```
+
+### Anchor links
+
+When an inline anchor link spans two or more lines, the tippy gets centered as
+though it were attached to a block:
+
+<Demo style={{ paddingBottom: 20 }}>
+  <AnchorLink />
+</Demo>
+
+If this is a problem (e.g. with interactivity), there is a way to solve it.
+Additionally, this makes the tooltip appear right above the mouse cursor,
+similar to the `followCursor` option:
+
+<Demo style={{ paddingBottom: 20 }}>
+  <AnchorLink smart />
+</Demo>
+
+It requires using a [virtual positioning reference](#virtual-elements). See the
+[CodePen demo](https://codepen.io/anon/pen/bzPraV?editors=0110).
 
 ### Scrollable containers
 
