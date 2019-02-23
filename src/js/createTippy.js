@@ -503,6 +503,10 @@ export default function createTippy(reference, collectionProps) {
         styles[getPopperPlacement(instance.popper)] = getOffsetDistanceInPx(
           instance.props.distance,
         )
+
+        if (popperOptions.onUpdate) {
+          popperOptions.onUpdate(data)
+        }
       },
     })
   }
