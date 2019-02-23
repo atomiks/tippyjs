@@ -38,7 +38,7 @@ const template = document.getElementById('example')
 const container = document.createElement('div')
 container.appendChild(document.importNode(template.content, true))
 
-tippy('button', { content: container })
+tippy('button', { content: container.innerHTML })
 ```
 
 ⚠️ Note that IE11 does not support the `<template>` element, see the
