@@ -106,24 +106,22 @@ export default function createTippy(reference, collectionProps) {
   // Popper element children: { arrow, backdrop, content, tooltip }
   const popperChildren = getChildren(popper)
 
-  // The state of the tippy
   const state = {
-    // If the tippy is currently enabled
+    // Is the instance currently enabled?
     isEnabled: true,
-    // show() invoked, not currently transitioning out
+    // Is the tippy currently showing and not transitioning out?
     isVisible: false,
-    // If the tippy has been destroyed
+    // Has the instance been destroyed?
     isDestroyed: false,
-    // If the tippy is on the DOM (transitioning out or in)
+    // Is the tippy currently mounted to the DOM?
     isMounted: false,
-    // show() transition finished
+    // Has the tippy finished transitioning in?
     isShown: false,
   }
 
   // Popper.js instance for the tippy is lazily created
   const popperInstance = null
 
-  // 🌟 tippy instance
   const instance = {
     // properties
     id,
@@ -610,7 +608,7 @@ export default function createTippy(reference, collectionProps) {
   }
 
   /**
-   * Updates the tooltip's position on each animation frame + timeout
+   * Updates the tooltip's position on each animation frame
    */
   function makeSticky() {
     applyTransitionDuration(
@@ -618,7 +616,7 @@ export default function createTippy(reference, collectionProps) {
       isIE ? 0 : instance.props.updateDuration,
     )
 
-    const updatePosition = () => {
+    function updatePosition() {
       if (instance.popperInstance) {
         instance.popperInstance.scheduleUpdate()
       }
@@ -665,19 +663,23 @@ export default function createTippy(reference, collectionProps) {
    * @param {Function} callback
    */
   function onTransitionEnd(duration, callback) {
+    /**
+     * Listener added as the `transitionend` handler
+     */
+    function listener(event) {
+      if (event.target === tooltip) {
+        toggleTransitionEndListener(tooltip, 'remove', listener)
+        callback()
+      }
+    }
+
     // Make callback synchronous if duration is 0
+    // `transitionend` won't fire otherwise
     if (duration === 0) {
       return callback()
     }
 
     const { tooltip } = instance.popperChildren
-
-    const listener = e => {
-      if (e.target === tooltip) {
-        toggleTransitionEndListener(tooltip, 'remove', listener)
-        callback()
-      }
-    }
 
     toggleTransitionEndListener(tooltip, 'remove', transitionEndListener)
     toggleTransitionEndListener(tooltip, 'add', listener)
@@ -713,6 +715,7 @@ export default function createTippy(reference, collectionProps) {
           return
         }
 
+        // Non-delegates
         if (!instance.props.target) {
           on(eventType, onTrigger)
           switch (eventType) {
@@ -724,6 +727,7 @@ export default function createTippy(reference, collectionProps) {
               break
           }
         } else {
+          // Delegates
           switch (eventType) {
             case 'mouseenter':
               on('mouseover', onDelegateShow)
