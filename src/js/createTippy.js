@@ -61,8 +61,8 @@ export default function createTippy(reference, collectionProps) {
   // Timeout created by the hide delay
   let hideTimeoutId = 0
 
-  // Flag to determine if the tippy is preparing to show due to the show timeout
-  let isPreparingToShow = false
+  // Flag to determine if the tippy is scheduled to show due to the show timeout
+  let isScheduledToShow = false
 
   // The current `transitionend` callback reference
   let transitionEndListener = () => {}
@@ -94,7 +94,7 @@ export default function createTippy(reference, collectionProps) {
       instance.state.isVisible &&
       lastTriggerEvent.type === 'mouseenter'
     ) {
-      prepareShow(event)
+      scheduleShow(event)
     }
   })
   popper.addEventListener('mouseleave', () => {
@@ -150,7 +150,7 @@ export default function createTippy(reference, collectionProps) {
   }
 
   if (props.showOnInit) {
-    prepareShow()
+    scheduleShow()
   }
 
   // Ensure the reference element can receive focus (and is not a delegate)
@@ -238,7 +238,7 @@ export default function createTippy(reference, collectionProps) {
         target: '',
         showOnInit: true,
       })
-      prepareShow(event)
+      scheduleShow(event)
     }
   }
 
@@ -246,7 +246,7 @@ export default function createTippy(reference, collectionProps) {
    * Setup before show() is invoked (delays, etc.)
    * @param {Event} [event]
    */
-  function prepareShow(event) {
+  function scheduleShow(event) {
     clearDelayTimeouts()
 
     if (instance.state.isVisible) {
@@ -258,7 +258,7 @@ export default function createTippy(reference, collectionProps) {
       return createDelegateChildTippy(event)
     }
 
-    isPreparingToShow = true
+    isScheduledToShow = true
 
     if (instance.props.wait) {
       return instance.props.wait(instance, event)
@@ -267,7 +267,7 @@ export default function createTippy(reference, collectionProps) {
     // If the tooltip has a delay, we need to be listening to the mousemove as
     // soon as the trigger event is fired, so that it's in the correct position
     // upon mount.
-    // Edge case: if the tooltip is still mounted, but then prepareShow() is
+    // Edge case: if the tooltip is still mounted, but then scheduleShow() is
     // called, it causes a jump.
     if (hasFollowCursorBehavior() && !instance.state.isMounted) {
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
@@ -288,14 +288,14 @@ export default function createTippy(reference, collectionProps) {
   /**
    * Setup before hide() is invoked (delays, etc.)
    */
-  function prepareHide() {
+  function scheduleHide() {
     clearDelayTimeouts()
 
     if (!instance.state.isVisible) {
       return removeFollowCursorListener()
     }
 
-    isPreparingToShow = false
+    isScheduledToShow = false
 
     const delay = getValue(instance.props.delay, 1, Defaults.delay)
 
@@ -326,7 +326,7 @@ export default function createTippy(reference, collectionProps) {
    * Cleans up old listeners
    */
   function cleanupOldMouseListeners() {
-    document.body.removeEventListener('mouseleave', prepareHide)
+    document.body.removeEventListener('mouseleave', scheduleHide)
     document.removeEventListener('mousemove', debouncedOnMouseMove)
   }
 
@@ -355,9 +355,9 @@ export default function createTippy(reference, collectionProps) {
       instance.props.hideOnClick !== false &&
       instance.state.isVisible
     ) {
-      prepareHide()
+      scheduleHide()
     } else {
-      prepareShow(event)
+      scheduleShow(event)
     }
   }
 
@@ -392,7 +392,7 @@ export default function createTippy(reference, collectionProps) {
       )
     ) {
       cleanupOldMouseListeners()
-      prepareHide()
+      scheduleHide()
     }
   }
 
@@ -406,12 +406,12 @@ export default function createTippy(reference, collectionProps) {
     }
 
     if (instance.props.interactive) {
-      document.body.addEventListener('mouseleave', prepareHide)
+      document.body.addEventListener('mouseleave', scheduleHide)
       document.addEventListener('mousemove', debouncedOnMouseMove)
       return
     }
 
-    prepareHide()
+    scheduleHide()
   }
 
   /**
@@ -432,7 +432,7 @@ export default function createTippy(reference, collectionProps) {
       return
     }
 
-    prepareHide()
+    scheduleHide()
   }
 
   /**
@@ -442,7 +442,7 @@ export default function createTippy(reference, collectionProps) {
   function onDelegateShow(event) {
     // @ts-ignore
     if (closest(event.target, instance.props.target)) {
-      prepareShow(event)
+      scheduleShow(event)
     }
   }
 
@@ -453,7 +453,7 @@ export default function createTippy(reference, collectionProps) {
   function onDelegateHide(event) {
     // @ts-ignore
     if (closest(event.target, instance.props.target)) {
-      prepareHide()
+      scheduleHide()
     }
   }
 
@@ -975,7 +975,7 @@ export default function createTippy(reference, collectionProps) {
     setVisibilityState(getInnerElements(), 'hidden')
 
     onTransitionedOut(duration, () => {
-      if (!isPreparingToShow) {
+      if (!isScheduledToShow) {
         removeFollowCursorListener()
       }
 
