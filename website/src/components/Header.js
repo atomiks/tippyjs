@@ -44,6 +44,7 @@ const ButtonLink = styled(ExternalLink)`
     background: white;
     border-bottom-color: white;
     box-shadow: 0 8px 16px -2px rgba(0, 32, 128, 0.25);
+    text-decoration: none;
   }
 `
 

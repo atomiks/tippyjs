@@ -29,6 +29,11 @@ tippy('div', {
 
 To enable interactivity, set the `interactive` option to `true`.
 
+### My tooltip is hiding instantly after showing
+
+If you're using a `focus` trigger, for example on an `<input>`, make sure you
+also set `hideOnClick: false`.
+
 ### My tooltip is not working using `data-tippy`
 
 Make sure Tippy's scripts are placed _before_ your own scripts, at the very
@@ -53,6 +58,31 @@ bottom of the page, like so:
   </body>
 </html>
 ```
+
+### Changing data-tippy-\* attributes does not update the tooltip
+
+Updating the data-tippy-\* attribute on an element will currently not update the
+tooltip. You must use the [`set()` method](/methods#update-the-tippy) on a Tippy
+instance.
+
+For example, let's say you want to update the `theme` for tooltips when changing
+between dark and light mode:
+
+```js
+const instances = tippy('.example', {
+  theme: 'custom-dark',
+})
+
+// When clicking the theme toggle button, you can do this:
+const newTheme = 'whatever'
+instances.forEach(instance => {
+  instance.set({ theme: newTheme })
+})
+```
+
+It's also possible to attach a `MutationObserver` to the reference elements and
+observe mutations to attributes if need be, then call `.set()` with the new
+values.
 
 ### Can I use the `title` attribute?
 
@@ -96,8 +126,3 @@ function withTitleAttributeContent(tippy) {
 
 window.tippy = withTitleAttributeContent(tippy)
 ```
-
-### My tooltip is hiding instantly after showing
-
-If you're using a `focus` trigger, for example on an `<input>`, make sure you
-also set `hideOnClick: false`.

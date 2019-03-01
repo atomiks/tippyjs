@@ -53,6 +53,10 @@ export default createGlobalStyle`
   a {
     color: #0065d5;
     text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   h1, 
@@ -61,75 +65,13 @@ export default createGlobalStyle`
   h4, 
   h5, 
   h6 {
+    position: relative;
     margin-top: 0;
     margin-bottom: 1rem;
     color: #333;
 
-    > a {
-      color: inherit;
-    }
-  }
-
-  h3 {
-    > a {
-      display: inline-block;
-      position: relative;
-      color: inherit;
-      text-shadow: -2px 2px 0px #fbedff, -4px 4px 0px #fff;
-      color: #3b69dd;
-      padding: 10px 0;
-      transition: color 0.3s;
-
-      &::-moz-selection {
-        text-shadow: none;
-      }
-
-      &::selection {
-        text-shadow: none;
-      }
-
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: calc(50% + 40px);
-        margin-left: -25px;
-        background: linear-gradient(90deg,#faf3e0,#fbedff);
-        z-index: -1;
-        transition: width 0.7s cubic-bezier(.23, 1, .32, 1);
-        border-radius: 3px;
-      }
-
-      &:hover {
-        color: #00acff;
-      }
-
-      &:hover::before {
-        width: calc(100% + 25px);
-      }
-
-      ${MEDIA.md} {
-        &:hover::before {
-          width: calc(100% + 50px);
-        }
-      }
-
-      code.language-text {
-        background: none;
-        color: inherit;
-        font-size: 100%;
-        padding: 0;
-
-        &::-moz-selection {
-          text-shadow: none;
-        }
-
-        &::selection {
-          text-shadow: none;
-        }
-      }
+    &:hover .link-icon {
+      opacity: 1;
     }
   }
 
@@ -139,12 +81,35 @@ export default createGlobalStyle`
   }
 
   h2 {
-    font-size: 2.074rem;
-    margin-top: 2.074rem;
-    border-bottom: 1px solid rgba(0, 32, 128, 0.1);
-    padding-bottom: 10px;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
+    font-size: 2rem;
+    display: inline-block;
+    color: inherit;
+    text-shadow: -2px 2px 0px #ffffff, -4px 4px 0px #aeffce;
+    color: #5b36df;
+    padding: 10px 0;
+    transition: color 0.3s;
+
+    &::-moz-selection {
+      text-shadow: none;
+    }
+
+    &::selection {
+      text-shadow: none;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: calc(50% + 40px);
+      margin-left: -25px;
+      background: linear-gradient(90deg,#aefcf9,#f4ffdf);
+      z-index: -1;
+      transition: width 0.4s cubic-bezier(.23, 1, .32, 1);
+      border-radius: 3px;
+    }
 
     ${MEDIA.md} {
       font-size: 2.488rem;
@@ -154,15 +119,25 @@ export default createGlobalStyle`
   h3 {
     font-size: 1.728rem;
     margin-top: 2.5rem;
+    padding-right: 30px;
 
     ${MEDIA.md} {
       font-size: 2.074rem;
+    }
+
+    .link-icon {
+      top: -12px;
     }
   }
 
   h4 {
     font-size: 1.44rem;
     margin-top: 2.2rem;
+    color: #666c80;
+
+    .link-icon {
+      top: -15px;
+    }
 
     ${MEDIA.md} {
       font-size: 1.728rem;
@@ -171,6 +146,41 @@ export default createGlobalStyle`
 
   h5 {
     font-size: 1.44rem;
+    color: #666c80;
+  }
+
+  .link-icon {
+    display: inline-block;
+    position: absolute;
+    padding: 20px 0;
+    box-sizing: content-box;
+    background-repeat: no-repeat;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItbGluayI+PHBhdGggZD0iTTEwIDEzYTUgNSAwIDAgMCA3LjU0LjU0bDMtM2E1IDUgMCAwIDAtNy4wNy03LjA3bC0xLjcyIDEuNzEiPjwvcGF0aD48cGF0aCBkPSJNMTQgMTFhNSA1IDAgMCAwLTcuNTQtLjU0bC0zIDNhNSA1IDAgMCAwIDcuMDcgNy4wN2wxLjcxLTEuNzEiPjwvcGF0aD48L3N2Zz4=');
+    background-position: left center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    width: 26px;
+    height: 18px;
+    background-size: 18px 18px;
+    top: -15px;
+    right: 0;
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+    }
+
+    ${MEDIA.md} {
+      width: 25px;
+      height: 20px;
+      right: initial;
+      background-size: 20px 20px;
+      left: -25px;
+
+      &:focus {
+        width: 20px;
+      }
+    }
   }
 
   p, 
@@ -303,6 +313,14 @@ export default createGlobalStyle`
     &:focus {
       left: 5px;
       top: 5px;
+    }
+  }
+
+  button,
+  a {
+    &.focus-visible {
+      outline: 0;
+      box-shadow: 0 0 0 2px rgb(255, 255, 255), 0 0 0 5px rgb(150, 180, 255);
     }
   }
 `

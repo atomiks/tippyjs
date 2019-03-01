@@ -248,4 +248,8 @@ export default createGlobalStyle`
       }
     }
   }
+
+  a code.language-text {
+    color: inherit;
+  }
 `

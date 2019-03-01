@@ -50,9 +50,9 @@ function autoLinkHeaders() {
     const href = toKebabCase(header.textContent)
     a.id = href
     a.href = `#${href}`
-    a.innerHTML = header.innerHTML
-    header.innerHTML = ''
-    header.appendChild(a)
+    a.className = 'link-icon'
+    a.setAttribute('aria-hidden', 'true')
+    header.insertBefore(a, header.firstChild)
   })
 }
 

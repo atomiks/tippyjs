@@ -38,6 +38,7 @@ const NavButton = styled(Link)`
     border-color: inherit;
     background: ${props => (props['data-next'] ? Theme.gradient : 'white')};
     color: ${props => (props['data-next'] ? 'white' : 'inherit')};
+    text-decoration: none;
   }
 
   &[data-next] {

@@ -61,6 +61,8 @@ const ListItem = styled.li`
 
     &:hover {
       border-bottom-color: transparent;
+      text-decoration: none;
+      color: white;
     }
   }
 `
@@ -81,11 +83,9 @@ const XButton = styled.button`
 const Version = styled.span`
   display: inline-block;
   font-size: 15px;
-  background: rgb(0, 0, 0, 0.25);
   border-radius: 30px;
   color: #d0ffba;
   font-weight: bold;
-  padding: 2px 8px;
   margin-left: 25px;
   margin-top: -10px;
   margin-bottom: 10px;

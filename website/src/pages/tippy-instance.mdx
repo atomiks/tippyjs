@@ -10,13 +10,12 @@ programmatically.
 
 ### Accessing an instance
 
-If you pass an element or virtual element, the instance is directly returned:
+If you pass an element or virtual element to `tippy()`, the instance is directly
+returned:
 
 ```js
 const button = document.querySelector('button')
 const instance = tippy(button)
-// In addition, the instance exists as the `_tippy` property on the element:
-button._tippy
 ```
 
 If you're passing a CSS selector string, NodeList, or an array of elements, then
@@ -26,6 +25,29 @@ created):
 ```js
 const instances = tippy('.btn') // Array
 ```
+
+### `_tippy` property
+
+Both the reference element and the popper element have the instance attached as
+the `_tippy` property.
+
+Reference element:
+
+```js
+const button = document.querySelector('button')
+tippy(button)
+const instance = button._tippy
+```
+
+Popper element (parent of tooltip):
+
+```js
+const popper = document.querySelector('.tippy-popper')
+const instance = popper._tippy
+```
+
+This is especially useful when listening to events on the tooltip and you need
+to find which reference element it's associated with.
 
 ### Auto-initialization
 

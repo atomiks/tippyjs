@@ -141,7 +141,7 @@ export const Button = styled.button`
 
 export const Demo = styled.div`
   background: #eeeefa;
-  margin: 15px -5% 25px;
+  margin: 15px -5.55% 25px;
   padding: 25px 5% 16px;
 
   ${MEDIA.sm} {
