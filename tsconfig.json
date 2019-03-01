@@ -2,7 +2,8 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "allowJs": true,
-    "checkJs": true
+    "checkJs": true,
+    "noEmit": true
   },
-  "files": ["src/**/*.js"]
+  "include": ["src/**/*"]
 }
