@@ -526,7 +526,7 @@ export default function createTippy(reference, collectionProps) {
           instance.props.distance,
         )
 
-        if (popperOptions.onUpdate) {
+        if (popperOptions && popperOptions.onUpdate) {
           popperOptions.onUpdate(data)
         }
       },
