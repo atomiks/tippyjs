@@ -30,7 +30,9 @@ export function closest(element, parentSelector) {
     function(selector) {
       let el = this
       while (el) {
-        if (matches.call(el, selector)) return el
+        if (matches.call(el, selector)) {
+          return el
+        }
         el = el.parentElement
       }
     }
@@ -45,7 +47,9 @@ export function closest(element, parentSelector) {
  */
 export function closestCallback(element, callback) {
   while (element) {
-    if (callback(element)) return element
+    if (callback(element)) {
+      return element
+    }
     element = element.parentElement
   }
 }

@@ -1,8 +1,8 @@
 /**
  * Groups an array of instances by taking control of their props during
  * certain lifecycles.
- * @param {Object[]} targets
- * @param {Object} options
+ * @param {object[]} instances
+ * @param {object} options
  */
 export default function group(
   instances,

@@ -6,8 +6,8 @@ import { isUCBrowser } from './browser'
  * Evaluates the props object by merging data attributes and
  * disabling conflicting options where necessary
  * @param {Element} reference
- * @param {Object} props
- * @return {Object}
+ * @param {object} props
+ * @return {object}
  */
 export function evaluateProps(reference, props) {
   const out = {
@@ -25,8 +25,8 @@ export function evaluateProps(reference, props) {
 
 /**
  * Validates an object of options with the valid default props object
- * @param {Object} options
- * @param {Object} defaults
+ * @param {object} options
+ * @param {object} defaults
  */
 export function validateOptions(options = {}, defaults) {
   Object.keys(options).forEach(option => {

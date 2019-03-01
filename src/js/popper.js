@@ -1,28 +1,20 @@
 import Selectors from './selectors'
 import { arrayFrom } from './ponyfills'
-import { innerHTML } from './utils'
+import { innerHTML, div } from './utils'
 import { isUCBrowser } from './browser'
 
 /**
- * Returns a new `div` element
- * @return {HTMLDivElement}
- */
-export function div() {
-  return document.createElement('div')
-}
-
-/**
  * Sets the innerHTML of an element while tricking linters & minifiers
- * @param {HTMLElement} el
+ * @param {HTMLElement} element
  * @param {Element|String} html
  */
-export function setInnerHTML(el, html) {
-  el[innerHTML()] = html instanceof Element ? html[innerHTML()] : html
+export function setInnerHTML(element, html) {
+  element[innerHTML()] = html instanceof Element ? html[innerHTML()] : html
 }
 
 /**
  * Sets the content of a tooltip
- * @param {HTMLElement} contentEl
+ * @param {HTMLDivElement} contentEl
  * @param {Object} props
  */
 export function setContent(contentEl, props) {
@@ -36,7 +28,7 @@ export function setContent(contentEl, props) {
 
 /**
  * Returns the child elements of a popper element
- * @param {HTMLElement} popper
+ * @param {HTMLDivElement} popper
  * @return {Object}
  */
 export function getChildren(popper) {
@@ -52,7 +44,7 @@ export function getChildren(popper) {
 
 /**
  * Adds `data-inertia` attribute
- * @param {HTMLElement} tooltip
+ * @param {HTMLDivElement} tooltip
  */
 export function addInertia(tooltip) {
   tooltip.setAttribute('data-inertia', '')
@@ -60,7 +52,7 @@ export function addInertia(tooltip) {
 
 /**
  * Removes `data-inertia` attribute
- * @param {HTMLElement} tooltip
+ * @param {HTMLDivElement} tooltip
  */
 export function removeInertia(tooltip) {
   tooltip.removeAttribute('data-inertia')
@@ -97,8 +89,8 @@ export function createBackdropElement() {
 
 /**
  * Adds interactive-related attributes
- * @param {HTMLElement} popper
- * @param {HTMLElement} tooltip
+ * @param {HTMLDivElement} popper
+ * @param {HTMLDivElement} tooltip
  */
 export function addInteractive(popper, tooltip) {
   popper.setAttribute('tabindex', '-1')
@@ -107,8 +99,8 @@ export function addInteractive(popper, tooltip) {
 
 /**
  * Removes interactive-related attributes
- * @param {HTMLElement} popper
- * @param {HTMLElement} tooltip
+ * @param {HTMLDivElement} popper
+ * @param {HTMLDivElement} tooltip
  */
 export function removeInteractive(popper, tooltip) {
   popper.removeAttribute('tabindex')
@@ -117,7 +109,7 @@ export function removeInteractive(popper, tooltip) {
 
 /**
  * Applies a transition duration to a list of elements
- * @param {Array} els
+ * @param {HTMLDivElement[]} els
  * @param {Number} value
  */
 export function applyTransitionDuration(els, value) {
@@ -138,7 +130,7 @@ export function toggleTransitionEndListener(tooltip, action, listener) {
   // UC Browser hasn't adopted the `transitionend` event despite supporting
   // unprefixed transitions...
   const eventName =
-    isUCBrowser && document.body.style.WebkitTransition !== undefined
+    isUCBrowser && document.body.style.webkitTransition !== undefined
       ? 'webkitTransitionEnd'
       : 'transitionend'
   tooltip[action + 'EventListener'](eventName, listener)
@@ -156,7 +148,7 @@ export function getPopperPlacement(popper) {
 
 /**
  * Sets the visibility state to elements so they can begin to transition
- * @param {Array} els
+ * @param {HTMLDivElement[]} els
  * @param {String} state
  */
 export function setVisibilityState(els, state) {
@@ -169,7 +161,7 @@ export function setVisibilityState(els, state) {
 
 /**
  * Triggers reflow
- * @param {Element} popper
+ * @param {HTMLDivElement} popper
  */
 export function reflow(popper) {
   void popper.offsetHeight
@@ -314,7 +306,7 @@ export function updatePopperElement(popper, prevProps, nextProps) {
  * Runs the callback after the popper's position has been updated
  * update() is debounced with Promise.resolve() or setTimeout()
  * scheduleUpdate() is update() wrapped in requestAnimationFrame()
- * @param {Popper} popperInstance
+ * @param {Object} popperInstance
  * @param {Function} callback
  */
 export function afterPopperPositionUpdates(popperInstance, callback) {

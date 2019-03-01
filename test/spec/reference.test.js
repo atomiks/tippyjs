@@ -1,65 +1,8 @@
 import { h } from '../utils'
 import {
-  canReceiveFocus,
   getDataAttributeOptions,
   polyfillElementPrototypeProperties,
 } from '../../src/js/reference'
-
-describe('canReceiveFocus', () => {
-  it('returns true for a[href]', () => {
-    const a = h('a')
-    a.href = '#'
-    expect(canReceiveFocus(a)).toBe(true)
-  })
-
-  it('returns true for area[href]', () => {
-    const area = h('area')
-    area.href = '#'
-    expect(canReceiveFocus(area)).toBe(true)
-  })
-
-  it('returns true for input', () => {
-    const input = h('input')
-    expect(canReceiveFocus(input)).toBe(true)
-  })
-
-  it('returns true for textarea', () => {
-    const textarea = h('textarea')
-    expect(canReceiveFocus(textarea)).toBe(true)
-  })
-
-  it('returns true for select', () => {
-    const select = h('select')
-    expect(canReceiveFocus(select)).toBe(true)
-  })
-
-  it('returns true for iframe', () => {
-    const iframe = h('iframe')
-    expect(canReceiveFocus(iframe)).toBe(true)
-  })
-
-  it('returns true for [tabindex]', () => {
-    const div = h('div')
-    div.tabIndex = '0'
-    expect(canReceiveFocus(div)).toBe(true)
-  })
-
-  it('returns false for [disabled]', () => {
-    const ref = h('div')
-    ref.setAttribute('disabled', 'disabled')
-    expect(canReceiveFocus(ref)).toBe(false)
-  })
-
-  it('returns false for other elements', () => {
-    const other = h('span')
-    expect(canReceiveFocus(other)).toBe(false)
-  })
-
-  it('does not throw an error if given a virtual reference', () => {
-    const ref = {}
-    expect(canReceiveFocus(ref)).toBe(true)
-  })
-})
 
 describe('getDataAttributeOptions', () => {
   it('uses data-tippy-content', () => {

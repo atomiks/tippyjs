@@ -21,8 +21,8 @@ import {
   isCursorOutsideInteractiveBorder,
   getOffsetDistanceInPx,
   getPopperPlacement,
-  div,
 } from '../../src/js/popper'
+import { div } from '../../src/js/utils'
 
 tippy.setDefaults({ duration: 0, delay: 0 })
 
@@ -692,12 +692,5 @@ describe('getPopperPlacement', () => {
   it('returns an empty string if there is no placement', () => {
     const popper = h('div')
     expect(getPopperPlacement(popper)).toBe('')
-  })
-})
-
-describe('div', () => {
-  it('creates and returns a div element', () => {
-    const d = div()
-    expect(d.nodeName).toBe('DIV')
   })
 })

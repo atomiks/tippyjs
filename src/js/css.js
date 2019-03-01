@@ -2,7 +2,7 @@ import { isBrowser } from './browser'
 
 /**
  * Injects a string of CSS styles to a style node in <head>
- * @param {String} css
+ * @param {string} css
  */
 export function injectCSS(css) {
   if (isBrowser) {

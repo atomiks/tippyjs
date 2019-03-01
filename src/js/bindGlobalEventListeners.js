@@ -47,6 +47,7 @@ export function onDocumentClick({ target }) {
 
   // Clicked on an interactive popper
   const popper = closest(target, Selectors.POPPER)
+  // @ts-ignore
   if (popper && popper._tippy && popper._tippy.props.interactive) {
     return
   }
@@ -54,9 +55,10 @@ export function onDocumentClick({ target }) {
   // Clicked on a reference
   const reference = closestCallback(
     target,
-    el => el._tippy && el._tippy.reference === el,
+    element => element._tippy && element._tippy.reference === element,
   )
   if (reference) {
+    // @ts-ignore
     const instance = reference._tippy
     const isClickTrigger = includes(instance.props.trigger, 'click')
 
@@ -76,7 +78,9 @@ export function onDocumentClick({ target }) {
 
 export function onWindowBlur() {
   const { activeElement } = document
+  // @ts-ignore
   if (activeElement && activeElement.blur && activeElement._tippy) {
+    // @ts-ignore
     activeElement.blur()
   }
 }

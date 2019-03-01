@@ -1,25 +1,10 @@
 import Defaults from './defaults'
-import { matches } from './ponyfills'
 
 const keys = Object.keys(Defaults)
 
 /**
- * Determines if an element can receive focus
- * @param {Element|Object} el
- * @return {Boolean}
- */
-export function canReceiveFocus(el) {
-  return el instanceof Element
-    ? matches.call(
-        el,
-        'a[href],area[href],button,details,input,textarea,select,iframe,[tabindex]',
-      ) && !el.hasAttribute('disabled')
-    : true
-}
-
-/**
  * Returns an object of optional props from data-tippy-* attributes
- * @param {Element|Object} reference
+ * @param {Element} reference
  * @return {Object}
  */
 export function getDataAttributeOptions(reference) {

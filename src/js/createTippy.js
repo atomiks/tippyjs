@@ -15,7 +15,6 @@ import {
   isCursorOutsideInteractiveBorder,
   getOffsetDistanceInPx,
 } from './popper'
-import { canReceiveFocus } from './reference'
 import { validateOptions, evaluateProps } from './props'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
 import {
@@ -26,6 +25,7 @@ import {
   includes,
   evaluateValue,
   setFlipModifierEnabled,
+  canReceiveFocus,
 } from './utils'
 import { PASSIVE, PADDING } from './constants'
 
@@ -43,6 +43,7 @@ export default function createTippy(reference, collectionProps) {
   const props = evaluateProps(reference, collectionProps)
 
   // If the reference shouldn't have multiple tippys, return null early
+  // @ts-ignore
   if (!props.multiple && reference._tippy) {
     return null
   }
@@ -160,14 +161,17 @@ export default function createTippy(reference, collectionProps) {
   }
 
   // Install shortcuts
+  // @ts-ignore
   reference._tippy = instance
+  // @ts-ignore
   popper._tippy = instance
 
   return instance
 
   /* ======================= 🔒 Private methods 🔒 ======================= */
   /**
-   * Positions the virtual reference near the mouse cursor
+   * Positions the virtual reference near the cursor
+   * @param {MouseEvent} event
    */
   function positionVirtualReferenceNearCursor(event) {
     const { clientX, clientY } = (lastMouseMoveEvent = event)
@@ -222,9 +226,12 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Creates the tippy instance for a delegate when it's been triggered
+   * @param {Event} event
    */
   function createDelegateChildTippy(event) {
+    // @ts-ignore
     const targetEl = closest(event.target, instance.props.target)
+    // @ts-ignore
     if (targetEl && !targetEl._tippy) {
       createTippy(targetEl, {
         ...instance.props,
@@ -239,6 +246,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Setup before show() is invoked (delays, etc.)
+   * @param {Event} [event]
    */
   function prepareShow(event) {
     clearDelayTimeouts()
@@ -270,6 +278,7 @@ export default function createTippy(reference, collectionProps) {
     const delay = getValue(instance.props.delay, 0, Defaults.delay)
 
     if (delay) {
+      // @ts-ignore
       showTimeoutId = setTimeout(() => {
         show()
       }, delay)
@@ -293,6 +302,7 @@ export default function createTippy(reference, collectionProps) {
     const delay = getValue(instance.props.delay, 1, Defaults.delay)
 
     if (delay) {
+      // @ts-ignore
       hideTimeoutId = setTimeout(() => {
         if (instance.state.isVisible) {
           hide()
@@ -324,6 +334,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Event listener invoked upon trigger
+   * @param {Event} event
    */
   function onTrigger(event) {
     if (!instance.state.isEnabled || isEventListenerStopped(event)) {
@@ -355,14 +366,17 @@ export default function createTippy(reference, collectionProps) {
   /**
    * Event listener used for interactive tooltips to detect when they should
    * hide
+   * @param {MouseEvent} event
    */
   function onMouseMove(event) {
     const referenceTheCursorIsOver = closestCallback(
+      // @ts-ignore
       event.target,
       el => el._tippy,
     )
 
     const isCursorOverPopper =
+      // @ts-ignore
       closest(event.target, Selectors.POPPER) === instance.popper
     const isCursorOverReference =
       referenceTheCursorIsOver === instance.reference
@@ -386,6 +400,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Event listener invoked upon mouseleave
+   * @param {MouseEvent} event
    */
   function onMouseLeave(event) {
     if (isEventListenerStopped(event)) {
@@ -403,6 +418,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Event listener invoked upon blur
+   * @param {FocusEvent} event
    */
   function onBlur(event) {
     if (event.target !== instance.reference) {
@@ -412,6 +428,7 @@ export default function createTippy(reference, collectionProps) {
     if (
       instance.props.interactive &&
       event.relatedTarget &&
+      // @ts-ignore
       instance.popper.contains(event.relatedTarget)
     ) {
       return
@@ -422,8 +439,10 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Event listener invoked when a child target is triggered
+   * @param {Event} event
    */
   function onDelegateShow(event) {
+    // @ts-ignore
     if (closest(event.target, instance.props.target)) {
       prepareShow(event)
     }
@@ -431,8 +450,10 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Event listener invoked when a child target should hide
+   * @param {Event} event
    */
   function onDelegateHide(event) {
+    // @ts-ignore
     if (closest(event.target, instance.props.target)) {
       prepareHide()
     }
@@ -441,6 +462,7 @@ export default function createTippy(reference, collectionProps) {
   /**
    * Determines if an event listener should stop further execution due to the
    * `touchHold` option
+   * @param {Event} event
    */
   function isEventListenerStopped(event) {
     const supportsTouch = 'ontouchstart' in window
@@ -514,6 +536,7 @@ export default function createTippy(reference, collectionProps) {
   /**
    * Mounts the tooltip to the DOM, callback to show tooltip is run **after**
    * popper's position has updated
+   * @param {Function} callback
    */
   function mount(callback) {
     const shouldEnableListeners =
@@ -576,6 +599,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Determines if the instance is in `followCursor` mode
+   * @return {Boolean}
    */
   function hasFollowCursorBehavior() {
     return (
@@ -611,6 +635,8 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Invokes a callback once the tooltip has fully transitioned out
+   * @param {Number} duration
+   * @param {Function} callback
    */
   function onTransitionedOut(duration, callback) {
     onTransitionEnd(duration, () => {
@@ -626,6 +652,8 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Invokes a callback once the tooltip has fully transitioned in
+   * @param {Number} duration
+   * @param {Function} callback
    */
   function onTransitionedIn(duration, callback) {
     onTransitionEnd(duration, callback)
@@ -633,6 +661,8 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Invokes a callback once the tooltip's CSS transition ends
+   * @param {Number} duration
+   * @param {Function} callback
    */
   function onTransitionEnd(duration, callback) {
     // Make callback synchronous if duration is 0
@@ -657,6 +687,9 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Adds an event listener to the reference and stores it in `listeners`
+   * @param {String} eventType
+   * @param {EventListenerOrEventListenerObject} handler
+   * @param {Object|Boolean} options
    */
   function on(eventType, handler, options = false) {
     instance.reference.addEventListener(eventType, handler, options)
@@ -720,6 +753,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Returns inner elements used in show/hide methods
+   * @return {HTMLDivElement[]}
    */
   function getInnerElements() {
     return [
@@ -754,6 +788,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Sets new props for the instance and redraws the tooltip
+   * @param {Object} options
    */
   function set(options = {}) {
     validateOptions(options, Defaults)
@@ -805,6 +840,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Shortcut for .set({ content: newContent })
+   * @param {String|Element|Function} content
    */
   function setContent(content) {
     set({ content })
@@ -812,6 +848,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Shows the tooltip
+   * @param {Number} duration
    */
   function show(
     duration = getValue(instance.props.duration, 0, Defaults.duration[0]),
@@ -826,6 +863,7 @@ export default function createTippy(reference, collectionProps) {
 
     // Destroy tooltip if the reference element is no longer on the DOM
     if (
+      // @ts-ignore
       !instance.reference.isVirtual &&
       !document.documentElement.contains(instance.reference)
     ) {
@@ -905,6 +943,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Hides the tooltip
+   * @param {Number} duration
    */
   function hide(
     duration = getValue(instance.props.duration, 1, Defaults.duration[1]),
@@ -951,6 +990,7 @@ export default function createTippy(reference, collectionProps) {
 
   /**
    * Destroys the tooltip
+   * @param {Boolean} [destroyTargetInstances]
    */
   function destroy(destroyTargetInstances) {
     if (instance.state.isDestroyed) {
@@ -965,6 +1005,7 @@ export default function createTippy(reference, collectionProps) {
 
     removeTriggersFromReference()
 
+    // @ts-ignore
     delete instance.reference._tippy
 
     if (instance.props.target && destroyTargetInstances) {
