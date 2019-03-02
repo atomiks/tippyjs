@@ -102,7 +102,9 @@ export function includes(a, b) {
  * @return {Boolean}
  */
 export function isSingular(value) {
-  return !!(value && value.isVirtual) || value instanceof Element
+  return (
+    !!(value && hasOwnProperty(value, 'isVirtual')) || value instanceof Element
+  )
 }
 
 /**
