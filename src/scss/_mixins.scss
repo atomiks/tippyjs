@@ -131,9 +131,11 @@
 
   @if ($isRoundArrow) {
     @if ($placement == 'left') {
-      right: -$width * 2;
+      right: -$width * 2 + 0.5px;
     } @else if ($placement == 'right') {
       left: -$width * 2;
+    } @else if ($placement == 'top') {
+      bottom: -$width + 0.5px;
     }
   } @else {
     @if ($placement == 'left') {
