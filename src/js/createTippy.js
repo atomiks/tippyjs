@@ -868,7 +868,7 @@ export default function createTippy(reference, collectionProps) {
     // Destroy tooltip if the reference element is no longer on the DOM
     if (
       // @ts-ignore
-      !instance.reference.isVirtual &&
+      !hasOwnProperty(instance.reference, 'isVirtual') &&
       !document.documentElement.contains(instance.reference)
     ) {
       return destroy()
