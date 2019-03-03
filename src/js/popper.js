@@ -60,6 +60,7 @@ export function removeInertia(tooltip) {
 
 /**
  * Creates an arrow element and returns it
+ * @param {String} arrowType
  * @return {HTMLDivElement}
  */
 export function createArrowElement(arrowType) {
@@ -122,7 +123,7 @@ export function applyTransitionDuration(els, value) {
 
 /**
  * Add/remove transitionend listener from tooltip
- * @param {Element} tooltip
+ * @param {HTMLDivElement} tooltip
  * @param {String} action
  * @param {Function} listener
  */
@@ -138,7 +139,7 @@ export function toggleTransitionEndListener(tooltip, action, listener) {
 
 /**
  * Returns the popper's placement, ignoring shifting (top-start, etc)
- * @param {Element} popper
+ * @param {HTMLDivElement} popper
  * @return {String}
  */
 export function getPopperPlacement(popper) {

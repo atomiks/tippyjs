@@ -108,7 +108,7 @@ export function isSingular(value) {
 }
 
 /**
- * Tricking bundlers, linters, and minifiers
+ * Firefox extensions don't allow setting .innerHTML directly, this will trick it
  * @return {String}
  */
 export function innerHTML() {
