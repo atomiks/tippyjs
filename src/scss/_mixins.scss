@@ -146,7 +146,7 @@
 
 @mixin arrow-margin($placement) {
   @if ($placement == 'top' or $placement == 'bottom') {
-    margin: 0 6px;
+    margin: 0 3px;
   } @else {
     margin: 3px 0;
   }
