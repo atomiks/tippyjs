@@ -523,15 +523,18 @@ export default function createTippy(reference, collectionProps) {
         styles.left = ''
         styles.right = ''
         styles[basePlacement] = getOffsetDistanceInPx(instance.props.distance)
-        instance.popperInstance.modifiers.filter(
-          m => m.name === 'preventOverflow',
-        )[0].padding = {
+
+        // Avoid _defineProperty helper function created by Babel
+        const padding = {
           top: PADDING,
           bottom: PADDING,
           left: PADDING,
           right: PADDING,
-          [basePlacement]: PADDING + instance.props.distance,
         }
+        padding[basePlacement] = PADDING + instance.props.distance
+        instance.popperInstance.modifiers.filter(
+          m => m.name === 'preventOverflow',
+        )[0].padding = padding
 
         if (popperOptions && popperOptions.onUpdate) {
           popperOptions.onUpdate(data)
