@@ -181,7 +181,9 @@ export default function createTippy(reference, collectionProps) {
     // Ensure virtual reference is padded to prevent tooltip from
     // overflowing. Maybe Popper.js issue?
     const placement = getPopperPlacement(instance.popper)
-    const padding = instance.popperChildren.arrow ? PADDING + 16 : PADDING
+    const padding = instance.props.arrow
+      ? PADDING + (instance.props.arrowType === 'round' ? 24 : 16)
+      : PADDING
     const isVerticalPlacement = includes(['top', 'bottom'], placement)
     const isHorizontalPlacement = includes(['left', 'right'], placement)
 
@@ -319,7 +321,6 @@ export default function createTippy(reference, collectionProps) {
       'mousemove',
       positionVirtualReferenceNearCursor,
     )
-    lastMouseMoveEvent = null
   }
 
   /**
