@@ -11,7 +11,7 @@
 
 .tippy-popper {
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
-  max-width: calc(100% - 10px);
+  max-width: calc(100% - 8px);
   pointer-events: none;
   outline: 0;
 
@@ -25,8 +25,9 @@
       }
 
       .tippy-roundarrow {
-        @include arrow-position($placement, 8px, true);
+        @include arrow-position($placement, 7px, true);
         @include roundarrow-transform-origin($placement);
+        @include arrow-margin($placement);
 
         svg {
           position: absolute;
@@ -167,8 +168,8 @@
 }
 
 .tippy-roundarrow {
-  width: 24px;
-  height: 8px;
+  width: 18px;
+  height: 7px;
   fill: #333;
   pointer-events: none;
 }
