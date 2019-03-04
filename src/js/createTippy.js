@@ -342,9 +342,7 @@ export default function createTippy(reference, collectionProps) {
     if (!instance.state.isVisible) {
       lastTriggerEvent = event
 
-      // Use the `mouseenter` event as a "mock" mousemove event for touch
-      // devices
-      if (isUsingTouch && includes(event.type, 'mouse')) {
+      if (event instanceof MouseEvent) {
         lastMouseMoveEvent = event
       }
     }
@@ -577,6 +575,18 @@ export default function createTippy(reference, collectionProps) {
       }
     } else if (arrow) {
       arrow.style.margin = ''
+    }
+
+    // Allow followCursor: 'initial' on touch devices
+    if (
+      isUsingTouch &&
+      lastMouseMoveEvent &&
+      instance.props.followCursor === 'initial'
+    ) {
+      positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+      if (arrow) {
+        arrow.style.margin = '0'
+      }
     }
 
     afterPopperPositionUpdates(instance.popperInstance, callback)
@@ -908,11 +918,6 @@ export default function createTippy(reference, collectionProps) {
       // Arrow will sometimes not be positioned correctly. Force another update
       if (!hasFollowCursorBehavior()) {
         instance.popperInstance.update()
-      }
-
-      // Allow followCursor: 'initial' on touch devices
-      if (isUsingTouch && instance.props.followCursor === 'initial') {
-        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
       }
 
       applyTransitionDuration([instance.popper], props.updateDuration)
