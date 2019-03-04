@@ -8,7 +8,7 @@
     "@mdx-js/mdx": "^0.17.5",
     "@mdx-js/tag": "^0.15.6",
     "@reach/skip-nav": "^0.1.2",
-    "@tippy.js/react": "^2.0.2",
+    "@tippy.js/react": "^2.1.1",
     "animate.css": "^3.7.0",
     "babel-plugin-styled-components": "^1.10.0",
     "elastic-scroll-polyfill": "^2.0.0",

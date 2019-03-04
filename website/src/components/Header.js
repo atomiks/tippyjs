@@ -7,14 +7,37 @@ import CloudLightning from 'react-feather/dist/icons/cloud-lightning'
 import Menu from 'react-feather/dist/icons/menu'
 import VersionNotice from './VersionNotice'
 import TextGradient from './TextGradient'
+import bubbles from '../images/bubbles.svg'
 
 const HeaderRoot = styled.header`
   position: relative;
-  background: radial-gradient(circle at 0% 20%, #a09eff, #4884f0, #b3e0fa);
+  background-image: radial-gradient(
+    circle at 0% 20%,
+    #a09eff,
+    #4884f0,
+    #b3e0fa
+  );
+  background-repeat: no-repeat;
+  background-size: cover;
   padding: 25px 0;
   text-align: center;
   margin-bottom: 50px;
   color: white;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    display: block;
+    background-image: url(${bubbles});
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+
+    ${MEDIA.lg} {
+      left: -250px;
+    }
+  }
 `
 
 const Logo = styled.img`

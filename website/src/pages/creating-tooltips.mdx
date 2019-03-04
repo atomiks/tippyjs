@@ -46,9 +46,6 @@ const els = document.querySelectorAll('.my-elements')
 tippy(els)
 ```
 
-⚠️ IE11 requires a `classList` polyfill if using an SVG element as the
-reference.
-
 ### Auto-initialization
 
 If your web page has regular server-rendered HTML, and you aren't using a
@@ -97,4 +94,21 @@ a tippy.
 <span data-tippy="Tooltip">
   <button disabled>Text</button>
 </span>
+```
+
+### ⚠️ SVG in IE11
+
+If you need to support SVG elements in IE11, you will need to include polyfills
+for `Element.prototype.classList` and `SVGElement.prototype.contains`.
+
+The easiest fix is to include these scripts in your document before Tippy's
+scripts:
+
+```html
+<script src="https://polyfill.io/v3/polyfill.min.js?features=Element.prototype.classList"></script>
+<script>
+  if (!SVGElement.prototype.contains) {
+    SVGElement.prototype.contains = HTMLDivElement.prototype.contains
+  }
+</script>
 ```
