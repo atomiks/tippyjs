@@ -182,7 +182,7 @@ export default function createTippy(reference, collectionProps) {
     // overflowing. Maybe Popper.js issue?
     const placement = getPopperPlacement(instance.popper)
     const padding = instance.props.arrow
-      ? PADDING + (instance.props.arrowType === 'round' ? 24 : 16)
+      ? PADDING + (instance.props.arrowType === 'round' ? 18 : 16)
       : PADDING
     const isVerticalPlacement = includes(['top', 'bottom'], placement)
     const isHorizontalPlacement = includes(['left', 'right'], placement)
@@ -514,14 +514,24 @@ export default function createTippy(reference, collectionProps) {
           setFlipModifierEnabled(instance.popperInstance.modifiers, false)
         }
 
+        const basePlacement = getPopperPlacement(instance.popper)
         const styles = tooltip.style
+
+        // Account for the `distance` offset
         styles.top = ''
         styles.bottom = ''
         styles.left = ''
         styles.right = ''
-        styles[getPopperPlacement(instance.popper)] = getOffsetDistanceInPx(
-          instance.props.distance,
-        )
+        styles[basePlacement] = getOffsetDistanceInPx(instance.props.distance)
+        instance.popperInstance.modifiers.filter(
+          m => m.name === 'preventOverflow',
+        )[0].padding = {
+          top: PADDING,
+          bottom: PADDING,
+          left: PADDING,
+          right: PADDING,
+          [basePlacement]: PADDING + instance.props.distance,
+        }
 
         if (popperOptions && popperOptions.onUpdate) {
           popperOptions.onUpdate(data)
