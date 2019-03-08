@@ -623,7 +623,7 @@ export default function createTippy(
   /**
    * Determines if the instance is in `followCursor` mode
    */
-  function hasFollowCursorBehavior(): Boolean {
+  function hasFollowCursorBehavior(): boolean {
     return (
       instance.props.followCursor &&
       !isUsingTouch &&

@@ -1,4 +1,5 @@
 {
+  "parser": "@typescript-eslint/parser",
   "env": {
     "browser": true,
     "node": true,
@@ -8,5 +9,8 @@
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2018
+  },
+  "rules": {
+    "no-unused-vars": "off"
   }
 }
