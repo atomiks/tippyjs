@@ -1,2 +1,2 @@
-import tippy from '../src/js/index.ts'
+import tippy from '../src/index.ts'
 export default tippy

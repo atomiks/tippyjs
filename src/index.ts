@@ -1,4 +1,4 @@
-import { version } from '../../package.json'
+import { version } from '../package.json'
 import { isBrowser } from './browser'
 import Defaults from './defaults'
 import createTippy from './createTippy'

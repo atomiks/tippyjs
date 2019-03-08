@@ -1,9 +1,9 @@
-import { h, cleanDocumentBody, wait } from '../utils'
+import { h, cleanDocumentBody } from '../utils'
 
-import tippy from '../../src/js'
-import Defaults from '../../src/js/defaults'
-import Selectors from '../../src/js/selectors'
-import createTippy from '../../src/js/createTippy'
+import tippy from '../../src/index'
+import Defaults from '../../src/defaults'
+import Selectors from '../../src/selectors'
+import createTippy from '../../src/createTippy'
 
 afterEach(cleanDocumentBody)
 

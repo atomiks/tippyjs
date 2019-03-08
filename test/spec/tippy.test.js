@@ -1,6 +1,6 @@
 import { h, hasTippy, cleanDocumentBody } from '../utils'
-import Defaults from '../../src/js/defaults'
-import tippy, { autoInit } from '../../src/js/index'
+import Defaults from '../../src/defaults'
+import tippy, { autoInit } from '../../src/index'
 
 afterEach(cleanDocumentBody)
 

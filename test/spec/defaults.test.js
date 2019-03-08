@@ -6,8 +6,8 @@ import {
   enableTouchEnvironment,
   disableTouchEnvironment,
 } from '../utils'
-import tippy from '../../src/js'
-import { getChildren } from '../../src/js/popper'
+import tippy from '../../src/index'
+import { getChildren } from '../../src/popper'
 
 afterEach(cleanDocumentBody)
 

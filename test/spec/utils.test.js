@@ -1,6 +1,6 @@
 import { h, cleanDocumentBody, IDENTIFIER } from '../utils'
-import Defaults from '../../src/js/defaults'
-import * as Utils from '../../src/js/utils'
+import Defaults from '../../src/defaults'
+import * as Utils from '../../src/utils'
 
 afterEach(cleanDocumentBody)
 

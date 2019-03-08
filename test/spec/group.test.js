@@ -1,5 +1,5 @@
-import tippy from '../../src/js'
-import group from '../../src/js/group'
+import tippy from '../../src/index'
+import group from '../../src/group'
 import { h, wait } from '../utils'
 
 describe('group', () => {

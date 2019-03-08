@@ -1,5 +1,5 @@
 import { h } from '../utils'
-import { evaluateProps, validateOptions } from '../../src/js/props'
+import { evaluateProps, validateOptions } from '../../src/props'
 
 describe('evaluateProps', () => {
   it('sets `animateFill` option to false if `arrow` is true', () => {

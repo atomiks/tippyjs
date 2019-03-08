@@ -1,4 +1,4 @@
-import { injectCSS } from '../../src/js/css'
+import { injectCSS } from '../../src/css'
 
 describe('injectCSS', () => {
   it('injects a string of css styles into the document `head`', () => {

@@ -1,7 +1,7 @@
 import { h, cleanDocumentBody } from '../utils'
-import tippy from '../../src/js/index'
-import Defaults from '../../src/js/defaults'
-import Selectors from '../../src/js/selectors'
+import tippy from '../../src/index'
+import Defaults from '../../src/defaults'
+import Selectors from '../../src/selectors'
 import {
   createPopperElement,
   updatePopperElement,
@@ -21,8 +21,8 @@ import {
   isCursorOutsideInteractiveBorder,
   getOffsetDistanceInPx,
   getPopperPlacement,
-} from '../../src/js/popper'
-import { div } from '../../src/js/utils'
+} from '../../src/popper'
+import { div } from '../../src/utils'
 
 tippy.setDefaults({ duration: 0, delay: 0 })
 
