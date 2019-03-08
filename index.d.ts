@@ -15,12 +15,37 @@ export type Placement =
 
 export type Content = string | Element | ((ref: Element) => Element | string)
 
-export type Targets =
-  | string
-  | Element
-  | Element[]
-  | NodeList
-  | Popper.ReferenceObject
+export type Targets = string | Element | Element[] | NodeList | VirtualReference
+
+export interface ReferenceElement extends Element {
+  _tippy?: Instance
+}
+
+export interface PopperElement extends HTMLDivElement {
+  _tippy?: Instance
+}
+
+export interface VirtualReference extends Popper.ReferenceObject {
+  attributes?: {
+    [key: string]: any
+  }
+  classList?: {
+    classNames?: {
+      [key: string]: boolean
+    }
+    [key: string]: any
+  }
+}
+
+export interface Padding extends Popper.Padding {
+  [key: string]: number
+}
+
+export interface PopperInstance extends Popper {
+  reference: ReferenceElement
+  popper: PopperElement
+  modifiers: { name: string; padding: object | number }[]
+}
 
 export interface Props {
   a11y?: boolean
@@ -78,16 +103,11 @@ export interface Instance {
   enable(): void
   hide(duration?: number): void
   id: number
-  popper: Element
-  popperChildren: {
-    arrow: Element | null
-    backdrop: Element | null
-    content: Element | null
-    tooltip: Element | null
-  }
-  popperInstance: Popper | null
+  popper: PopperElement
+  popperChildren: PopperChildren
+  popperInstance: PopperInstance | null
   props: Props
-  reference: Element
+  reference: ReferenceElement
   set(options: Props): void
   setContent(content: Content): void
   show(duration?: number): void
@@ -100,9 +120,20 @@ export interface Instance {
   }
 }
 
+export interface GroupedInstance extends Instance {
+  _originalProps?: Props
+}
+
 export interface GroupOptions {
   delay?: number | [number, number]
   duration?: number | [number, number]
+}
+
+export interface PopperChildren {
+  tooltip: HTMLDivElement
+  content: HTMLDivElement
+  arrow?: HTMLDivElement
+  backdrop?: HTMLDivElement
 }
 
 export interface HideAllOptions {
