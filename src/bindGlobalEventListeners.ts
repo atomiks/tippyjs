@@ -47,19 +47,17 @@ export function onDocumentClick({ target }: { target: EventTarget }) {
   }
 
   // Clicked on an interactive popper
-  const popper = closest(target, Selectors.POPPER)
-  // @ts-ignore
+  const popper: ReferenceElement = closest(target, Selectors.POPPER)
   if (popper && popper._tippy && popper._tippy.props.interactive) {
     return
   }
 
   // Clicked on a reference
-  const reference = closestCallback(
+  const reference: ReferenceElement = closestCallback(
     target,
     (el: ReferenceElement) => el._tippy && el._tippy.reference === el,
   )
   if (reference) {
-    // @ts-ignore
     const instance = reference._tippy
     const isClickTrigger = includes(instance.props.trigger, 'click')
 
