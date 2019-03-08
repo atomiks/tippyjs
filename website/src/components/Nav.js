@@ -17,27 +17,29 @@ const Navbar = styled.nav`
   width: 250px;
   border-right: 1px solid rgba(0, 16, 64, 0.08);
   background-clip: padding-box;
-  padding: 16px 0;
+  padding: 0 0 25px;
   background: #43436a;
   color: #cbd6ff;
   overflow-y: auto;
   z-index: 1;
   transform: ${props =>
-    props.isOpen ? 'translate3d(0, 0, 0)' : 'translate3d(-100%, 0, 0)'};
-  transition: transform ${props => (props.isOpen ? '0.45s' : '0.3s')},
-    visibility 0.2s;
-  transition-timing-function: ${props =>
     props.isOpen
-      ? 'cubic-bezier(.165, .84, .44, 1)'
-      : 'cubic-bezier(.77, 0, .175, 1)'};
+      ? 'translate3d(-4%, 0, 0) scaleX(1)'
+      : 'translate3d(-100%, 0, 0) scaleX(0)'};
+  transition: transform ${props => (props.isOpen ? '0.55s' : '0.3s')},
+    visibility 0.2s, opacity 0.8s;
+  transition-timing-function: ${props =>
+    props.isOpen ? 'cubic-bezier(.165, 1.3, 0.4, 1)' : 'ease'};
   visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
   box-shadow: 5px 0 30px 0 rgba(0, 32, 64, 0.25);
+  opacity: ${props => (props.isOpen ? 1 : 0)};
 
   ${MEDIA.lg} {
     display: block;
     visibility: visible;
     transform: none;
     box-shadow: none;
+    opacity: 1;
   }
 `
 
@@ -57,7 +59,12 @@ const ListItem = styled.li`
   > a {
     display: block;
     padding: 10px 25px;
+    padding-left: calc(25px + 4%);
     font-size: 17px;
+
+    ${MEDIA.lg} {
+      padding-left: 25px;
+    }
 
     &:hover {
       border-bottom-color: transparent;
@@ -69,26 +76,29 @@ const ListItem = styled.li`
 
 const XButton = styled.button`
   position: absolute;
-  right: 10px;
+  right: 5px;
+  top: 5px;
   background: none;
   border: none;
   color: inherit;
   padding: 0;
+  transform: scale(0.9);
 
   ${MEDIA.lg} {
     display: none;
   }
 `
 
-const Version = styled.span`
-  display: inline-block;
-  font-size: 15px;
-  border-radius: 30px;
+const Version = styled.div`
   color: #d0ffba;
   font-weight: bold;
-  margin-left: 25px;
-  margin-top: -10px;
-  margin-bottom: 10px;
+  margin: 0;
+  padding: 15px 25px;
+  padding-left: calc(25px + 4%);
+
+  ${MEDIA.lg} {
+    padding-left: 25px;
+  }
 `
 
 class Nav extends Component {
@@ -126,13 +136,13 @@ class Nav extends Component {
   componentDidMount() {
     this.setState({ isMounted: true })
     window.addEventListener('resize', this.handleResize)
-    window.addEventListener('click', this.handleOutsideClick, true)
+    window.addEventListener('mousedown', this.handleOutsideClick, true)
     this.handleResize()
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize)
-    window.removeEventListener('click', this.handleOutsideClick, true)
+    window.removeEventListener('mousedown', this.handleOutsideClick, true)
     clearTimeout(this.timeout)
   }
 

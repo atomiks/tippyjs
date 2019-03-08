@@ -20,7 +20,6 @@ function AnchorLink({ smart }) {
   const options = {
     content: "I'm a Tippy tooltip!",
     animation: 'fade',
-    flip: false,
     arrow: true,
     onMount(instance) {
       instance.popperInstance.disableEventListeners()

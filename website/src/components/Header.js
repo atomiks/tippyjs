@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import TippyLogo from '../images/logo.svg'
 import { MEDIA, Container, Flex, ExternalLink } from './Framework'
 import GitHub from 'react-feather/dist/icons/github'
@@ -8,6 +8,7 @@ import Menu from 'react-feather/dist/icons/menu'
 import VersionNotice from './VersionNotice'
 import TextGradient from './TextGradient'
 import bubbles from '../images/bubbles.svg'
+import Tippy from './Tippy'
 
 const HeaderRoot = styled.header`
   position: relative;
@@ -62,6 +63,7 @@ const ButtonLink = styled(ExternalLink)`
   transition: all 0.25s;
   color: #ffffff;
   margin: 0 10px 10px;
+  font-weight: 500;
 
   &:hover {
     background: white;
@@ -88,6 +90,29 @@ const MenuButton = styled.button`
   }
 `
 
+const PoweredByLink = styled(ExternalLink)`
+  position: relative;
+  top: 10px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 90%;
+
+  &:hover {
+    color: white;
+  }
+`
+
+const svgStyles = css`
+  margin: 0 0 -30px;
+
+  ${MEDIA.md} {
+    margin: -6% 0 -30px;
+  }
+
+  @media (min-width: 1700px) {
+    margin: -7% 0 -30px;
+  }
+`
+
 const iconStyles = {
   verticalAlign: -6,
   marginRight: 10,
@@ -96,6 +121,8 @@ const iconStyles = {
 const cloudLightningStyles = {
   ...iconStyles,
   color: '#ffe6b3',
+  width: 20,
+  height: 20,
 }
 
 const githubStyles = {
@@ -137,14 +164,16 @@ class Header extends Component {
             <TextGradient>Tippy.js</TextGradient>
           </Title>
           <Flex justify="center">
-            <ButtonLink href="https://popper.js.org">
-              <CloudLightning style={cloudLightningStyles} />
-              Powered by Popper.js
-            </ButtonLink>
-            <ButtonLink href="https://github.com/atomiks/tippyjs">
-              <GitHub style={githubStyles} />
-              View on GitHub
-            </ButtonLink>
+            <Tippy
+              content="If you like Tippy.js, feel free to star it on GitHub!"
+              animation="shift-toward"
+              arrow
+            >
+              <ButtonLink href="https://github.com/atomiks/tippyjs">
+                <GitHub style={githubStyles} />
+                View on GitHub
+              </ButtonLink>
+            </Tippy>
           </Flex>
           <MenuButton
             aria-label="Menu"
@@ -153,9 +182,13 @@ class Header extends Component {
           >
             <Menu style={menuStyles} />
           </MenuButton>
+          <PoweredByLink href="https://popper.js.org">
+            <CloudLightning style={cloudLightningStyles} />
+            Proudly powered by Popper.js
+          </PoweredByLink>
         </Container>
         <svg
-          style={{ margin: '-6% 0 -30px' }}
+          css={svgStyles}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1920 240"
           fill="white"

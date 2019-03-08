@@ -7,8 +7,8 @@ index: 2
 import Tippy from '../components/Tippy'
 import { Button } from '../components/Framework'
 
-To give elements a tippy, call the `tippy()` function by passing in a CSS
-selector, and give your reference element(s) a `data-tippy-content` attribute:
+Call the `tippy()` function by passing in a CSS selector, and give your
+reference element(s) a `data-tippy-content` attribute:
 
 ```html
 <button data-tippy-content="Tooltip">Text</button>
@@ -18,30 +18,34 @@ selector, and give your reference element(s) a `data-tippy-content` attribute:
 </script>
 ```
 
-The `tippy` function accepts the following types:
+The `data-tippy-content` attribute allows you to give different tooltip content
+to many different elements, while only needing to initialize once.
 
-- `String` (CSS selector)
+For single elements, you can use the `content` option:
 
 ```js
-// Any CSS selector is valid
+tippy('#singleElement', {
+  content: 'Tooltip',
+})
+```
+
+### Target types
+
+The first argument you pass to `tippy()` is the targets you want to give
+tooltips to. This can represent one or many different elements.
+
+```js
+// String: Any CSS selector is valid
 tippy('#id')
 tippy('.class')
 tippy('[data-tippy-content]')
-```
 
-- `Element` (HTML or SVG)
-- `Element[]`
-
-```js
-// An element or an array of elements is valid
+// Element | Element[]: An element or an array of elements is valid
 const element = document.getElementById('my-element')
 tippy(element)
 tippy([element1, element2, element3])
-```
 
-- `NodeList`
-
-```js
+// NodeList is valid
 const els = document.querySelectorAll('.my-elements')
 tippy(els)
 ```

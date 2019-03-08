@@ -124,20 +124,12 @@ export default createGlobalStyle`
     ${MEDIA.md} {
       font-size: 2.074rem;
     }
-
-    .link-icon {
-      top: -12px;
-    }
   }
 
   h4 {
     font-size: 1.44rem;
     margin-top: 2.2rem;
     color: #666c80;
-
-    .link-icon {
-      top: -15px;
-    }
 
     ${MEDIA.md} {
       font-size: 1.728rem;
@@ -152,30 +144,23 @@ export default createGlobalStyle`
   .link-icon {
     display: inline-block;
     position: absolute;
-    padding: 20px 0;
-    box-sizing: content-box;
-    background-repeat: no-repeat;
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItbGluayI+PHBhdGggZD0iTTEwIDEzYTUgNSAwIDAgMCA3LjU0LjU0bDMtM2E1IDUgMCAwIDAtNy4wNy03LjA3bC0xLjcyIDEuNzEiPjwvcGF0aD48cGF0aCBkPSJNMTQgMTFhNSA1IDAgMCAwLTcuNTQtLjU0bC0zIDNhNSA1IDAgMCAwIDcuMDcgNy4wN2wxLjcxLTEuNzEiPjwvcGF0aD48L3N2Zz4=');
-    background-position: left center;
+    padding: 10px 0;
     opacity: 0;
     transition: opacity 0.2s;
-    width: 26px;
-    height: 18px;
-    background-size: 18px 18px;
-    top: -15px;
+    width: 30px;
+    top: -10px;
     right: 0;
+    color: #5b36df;
 
     &:hover,
     &:focus {
       opacity: 1;
+      text-decoration: none;
     }
 
     ${MEDIA.md} {
-      width: 25px;
-      height: 20px;
       right: initial;
-      background-size: 20px 20px;
-      left: -25px;
+      left: -30px;
 
       &:focus {
         width: 20px;

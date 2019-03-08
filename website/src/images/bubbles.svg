@@ -69,7 +69,7 @@
         </g>
     </g>
     <defs>
-        <filter id="_Effect1" filterUnits="userSpaceOnUse" x="1192.26" y="423.289" width="1220.46" height="1220.46">
+        <filter id="_Effect1" filterUnits="userSpaceOnUse" x="1192.26" y="423.289" width="1220.46" height="1220.46" color-interpolation-filters="sRGB">
             <feGaussianBlur in="SourceGraphic" stdDeviation="30"/>
         </filter>
         <radialGradient id="_Radial2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(801.971,0,0,801.971,1581.7,734.784)"><stop offset="0" style="stop-color:rgb(132,167,255);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(132,230,255);stop-opacity:0"/></radialGradient>
@@ -80,19 +80,19 @@
         <radialGradient id="_Radial7" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(72.9028,0,0,72.9028,1980.82,246.318)"><stop offset="0" style="stop-color:rgb(148,255,193);stop-opacity:0"/><stop offset="1" style="stop-color:rgb(67,255,97);stop-opacity:0.211765"/></radialGradient>
         <radialGradient id="_Radial8" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(46.5294,0,0,46.5294,941.263,119.557)"><stop offset="0" style="stop-color:rgb(49,87,251);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(255,253,229);stop-opacity:1"/></radialGradient>
         <radialGradient id="_Radial9" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(39,0,0,39,981.218,149.986)"><stop offset="0" style="stop-color:rgb(148,255,193);stop-opacity:0"/><stop offset="1" style="stop-color:rgb(67,255,97);stop-opacity:0.211765"/></radialGradient>
-        <filter id="_Effect10" filterUnits="userSpaceOnUse" x="1096.53" y="197.466" width="140.548" height="140.548">
+        <filter id="_Effect10" filterUnits="userSpaceOnUse" x="1096.53" y="197.466" width="140.548" height="140.548" color-interpolation-filters="sRGB">
             <feGaussianBlur in="SourceGraphic" stdDeviation="5"/>
         </filter>
         <radialGradient id="_Radial11" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(76.3216,0,0,76.3216,1146.14,239.775)"><stop offset="0" style="stop-color:rgb(0,48,255);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(132,167,255);stop-opacity:1"/></radialGradient>
         <radialGradient id="_Radial12" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(63.9712,0,0,63.9712,1211.67,289.688)"><stop offset="0" style="stop-color:rgb(148,255,193);stop-opacity:0"/><stop offset="1" style="stop-color:rgb(67,255,97);stop-opacity:0.211765"/></radialGradient>
         <radialGradient id="_Radial13" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(46.1807,0,0,46.1807,831.706,992.226)"><stop offset="0" style="stop-color:rgb(49,87,251);stop-opacity:1"/><stop offset="0.99" style="stop-color:rgb(132,167,255);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(132,167,255);stop-opacity:1"/></radialGradient>
         <radialGradient id="_Radial14" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(38.7077,0,0,38.7077,871.362,1022.43)"><stop offset="0" style="stop-color:rgb(255,253,229);stop-opacity:0"/><stop offset="1" style="stop-color:rgb(99,226,153);stop-opacity:0.211765"/></radialGradient>
-        <filter id="_Effect15" filterUnits="userSpaceOnUse" x="327.719" y="237.74" width="207.6" height="207.6">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5"/>
+        <filter id="_Effect15" filterUnits="userSpaceOnUse" x="265.574" y="175.595" width="331.891" height="331.891" color-interpolation-filters="sRGB">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="15.3576"/>
         </filter>
         <radialGradient id="_Radial16" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(139.855,0,0,139.855,393.646,290.296)"><stop offset="0" style="stop-color:rgb(49,87,251);stop-opacity:1"/><stop offset="0.99" style="stop-color:rgb(132,167,255);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(132,167,255);stop-opacity:1"/></radialGradient>
         <radialGradient id="_Radial17" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(117.224,0,0,117.224,513.741,381.758)"><stop offset="0" style="stop-color:rgb(255,253,229);stop-opacity:0"/><stop offset="1" style="stop-color:rgb(99,226,153);stop-opacity:0.211765"/></radialGradient>
-        <filter id="_Effect18" filterUnits="userSpaceOnUse" x="1337.5" y="10.019" width="359.284" height="359.284">
+        <filter id="_Effect18" filterUnits="userSpaceOnUse" x="1337.5" y="10.019" width="359.284" height="359.284" color-interpolation-filters="sRGB">
             <feGaussianBlur in="SourceGraphic" stdDeviation="20"/>
         </filter>
         <radialGradient id="_Radial19" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(116.407,0,0,116.407,1486.54,148.248)"><stop offset="0" style="stop-color:rgb(222,0,111);stop-opacity:1"/><stop offset="0.99" style="stop-color:rgb(252,213,255);stop-opacity:0.831373"/><stop offset="1" style="stop-color:rgb(252,213,255);stop-opacity:0.831373"/></radialGradient>

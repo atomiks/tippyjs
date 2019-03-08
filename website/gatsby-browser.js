@@ -51,6 +51,7 @@ function autoLinkHeaders() {
     a.id = href
     a.href = `#${href}`
     a.className = 'link-icon'
+    a.textContent = '#'
     a.setAttribute('aria-hidden', 'true')
     header.insertBefore(a, header.firstChild)
   })

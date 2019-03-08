@@ -13,16 +13,30 @@ Popper.js. It's compatible with IE11+, about 99% of desktop users and 96% of
 mobile users. It can be used to create simple static text tooltips, or complex
 HTML popovers that utilize AJAX.
 
+Given an element on the page...
+
+```html
+<button id="myButton">My Button</button>
+```
+
+We can give it many different types of tooltips. Let's explore some of the
+options below!
+
 ### Default
 
-The default tooltip looks like this when given no options. It has a nifty
-background fill animation!
+The default tooltip looks like this. It has a nifty background fill animation!
 
 <Demo>
   <Tippy>
-    <Button>Default</Button>
+    <Button>My Button</Button>
   </Tippy>
 </Demo>
+
+```js
+tippy('#myButton', {
+  content: "I'm a Tippy tooltip!",
+})
+```
 
 ### Placement
 
@@ -51,6 +65,12 @@ suffix `-start` or `-end`.
   </Tippy>
 </Demo>
 
+```js
+tippy('#myButton', {
+  placement: 'bottom', // or 'left', 'right', ...
+})
+```
+
 ### Arrows
 
 Tooltips can have an arrow that points toward the reference element. The size
@@ -64,6 +84,13 @@ and proportion can also be modified with CSS.
     <Button>Round arrow</Button>
   </Tippy>
 </Demo>
+
+```js
+tippy('#myButton', {
+  arrow: true,
+  arrowType: 'round', // or 'sharp' (default)
+})
+```
 
 ### Animations
 
@@ -126,6 +153,13 @@ effect has been disabled in these examples (`animateFill: false`).
   </Tippy>
 </Demo>
 
+```js
+tippy('#myButton', {
+  animateFill: false,
+  animation: 'scale', // or 'shift-toward', 'fade', ...
+})
+```
+
 ### Themes
 
 Tooltips can have custom styling. There are a few themes that come with the
@@ -146,6 +180,12 @@ package available under `themes/`.
   </Tippy>
 </Demo>
 
+```js
+tippy('#myButton', {
+  theme: 'light', // or 'light-border', 'google', ...
+})
+```
+
 ### Triggers
 
 Tooltips can also be triggered by `click` or `focus` events.
@@ -159,6 +199,12 @@ Tooltips can also be triggered by `click` or `focus` events.
   </Tippy>
 </Demo>
 
+```js
+tippy('#myButton', {
+  trigger: 'click', // or 'focus'
+})
+```
+
 ### Interactivity
 
 Tooltips can be interactive, allowing you to hover over and click inside them.
@@ -168,6 +214,13 @@ Tooltips can be interactive, allowing you to hover over and click inside them.
     <Button>Interactive</Button>
   </Tippy>
 </Demo>
+
+```js
+tippy('#myButton', {
+  content: 'You can select the text inside here.',
+  interactive: true,
+})
+```
 
 ### HTML Content
 
@@ -186,6 +239,12 @@ Tooltips can contain HTML.
   <Dropdown />
 </Demo>
 
+```js
+tippy('#myButton', {
+  content: '<strong>Bolded <span style="color: aqua;">content</span></strong>',
+})
+```
+
 ### Duration
 
 Tooltips can have different animation durations.
@@ -202,6 +261,12 @@ Tooltips can have different animation durations.
   </Tippy>
 </Demo>
 
+```js
+tippy('#myButton', {
+  duration: 0,
+})
+```
+
 ### Delay
 
 Tooltips can delay hiding or showing after a trigger.
@@ -217,6 +282,12 @@ Tooltips can delay hiding or showing after a trigger.
     <Button>[0, 800]</Button>
   </Tippy>
 </Demo>
+
+```js
+tippy('#myButton', {
+  delay: 500,
+})
+```
 
 ### Follow Cursor
 
@@ -255,6 +326,12 @@ following (initial).
   </Tippy>
 </Demo>
 
+```js
+tippy('#myButton', {
+  followCursor: true,
+})
+```
+
 ### SVGs
 
 Tooltips can be placed on SVG nodes, where `followCursor: 'initial'` becomes
@@ -272,32 +349,53 @@ very useful, since it can be placed directly on the line.
   </Tippy>
 </svg>
 
-### Nesting
+```js
+tippy('line', {
+  followCursor: 'initial',
+  delay: 200,
+  arrow: true,
+})
+```
 
-Tooltips can even be nested. You can have fun with the following little example
-:-)
+### Multiple
+
+Attach many tippys to a single element.
 
 <Demo>
-  <Tippy
-    content={
-      <Tippy
-        content={
-          <Tippy>
-            <Button style={{ margin: 0 }}>Nesting</Button>
-          </Tippy>
-        }
-        interactive
-        theme="light"
-      >
-        <Button style={{ margin: 0 }}>Nesting</Button>
+  <Tippy content="Left" flip={false} placement="left" multiple>
+    <Tippy content="Bottom" flip={false} placement="bottom" multiple>
+      <Tippy content="Right" flip={false} placement="right" multiple>
+        <Tippy content="Top" flip={false} multiple>
+          <Button
+            style={{
+              transform: 'translateX(-50%)',
+              left: '50%',
+              position: 'relative',
+            }}
+          >
+            Multiple
+          </Button>
+        </Tippy>
       </Tippy>
-    }
-    interactive
-    theme="light"
-  >
-    <Button>Nesting</Button>
+    </Tippy>
   </Tippy>
 </Demo>
+
+```js
+tippy('#myButton', {
+  content: 'Left',
+  placement: 'left',
+  multiple: true,
+})
+
+tippy('#myButton', {
+  content: 'Right',
+  placement: 'right',
+  multiple: true,
+})
+
+// ...
+```
 
 <br />
 

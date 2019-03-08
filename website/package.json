@@ -5,8 +5,8 @@
   "version": "0.1.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
-    "@mdx-js/mdx": "^0.17.5",
-    "@mdx-js/tag": "^0.15.6",
+    "@mdx-js/mdx": "^0.20.3",
+    "@mdx-js/tag": "^0.20.3",
     "@reach/skip-nav": "^0.1.2",
     "@tippy.js/react": "^2.1.1",
     "animate.css": "^3.7.0",
@@ -15,7 +15,7 @@
     "focus-visible": "^4.1.5",
     "gatsby": "^2.0.76",
     "gatsby-image": "^2.0.20",
-    "gatsby-mdx": "^0.2.0",
+    "gatsby-mdx": "^0.4.2",
     "gatsby-plugin-catch-links": "^2.0.9",
     "gatsby-plugin-google-analytics": "^2.0.8",
     "gatsby-plugin-google-fonts": "0.0.4",
@@ -52,7 +52,7 @@
     "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\""
   },
   "devDependencies": {
-    "@mdx-js/loader": "^0.16.6",
+    "@mdx-js/loader": "^0.18.2",
     "gh-pages": "^2.0.1",
     "loader-utils": "^1.2.3",
     "prettier": "^1.16.3"

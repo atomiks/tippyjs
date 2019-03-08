@@ -28,10 +28,9 @@ const NavButton = styled(Link)`
   text-decoration: none;
   color: ${props => (props['data-next'] ? 'white' : 'inherit')};
   font-weight: bold;
-  transition: box-shadow 0.2s;
   margin: 0 10px 15px;
   font-size: 20px;
-  transition: all 0.1s;
+  transition: box-shadow 0.15s, border 0.15s, filter 0.15s;
   width: 100%;
 
   &:hover {
