@@ -53,7 +53,7 @@ export interface Props {
   animateFill?: boolean
   animation?: 'fade' | 'scale' | 'shift-toward' | 'perspective' | 'shift-away'
   appendTo?: 'parent' | Element | ((ref: Element) => Element)
-  aria?: 'describedby' | 'labelledby'
+  aria?: 'describedby' | 'labelledby' | null
   arrow?: boolean
   arrowType?: 'sharp' | 'round'
   boundary?: 'scrollParent' | 'window' | 'viewport' | HTMLElement
@@ -132,8 +132,8 @@ export interface GroupOptions {
 export interface PopperChildren {
   tooltip: HTMLDivElement
   content: HTMLDivElement
-  arrow?: HTMLDivElement
-  backdrop?: HTMLDivElement
+  arrow: HTMLDivElement | null
+  backdrop: HTMLDivElement | null
 }
 
 export interface HideAllOptions {
