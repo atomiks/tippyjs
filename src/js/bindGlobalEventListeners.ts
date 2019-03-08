@@ -4,6 +4,7 @@ import { hideAll } from './popper'
 import { closest, closestCallback } from './ponyfills'
 import { includes } from './utils'
 import { PASSIVE } from './constants'
+import { ReferenceElement } from './types'
 
 export let isUsingTouch = false
 
@@ -39,7 +40,7 @@ export function onDocumentMouseMove() {
   lastMouseMoveTime = now
 }
 
-export function onDocumentClick({ target }) {
+export function onDocumentClick({ target }: { target: EventTarget }) {
   // Simulated events dispatched on the document
   if (!(target instanceof Element)) {
     return hideAll()
@@ -55,7 +56,7 @@ export function onDocumentClick({ target }) {
   // Clicked on a reference
   const reference = closestCallback(
     target,
-    element => element._tippy && element._tippy.reference === element,
+    (el: ReferenceElement) => el._tippy && el._tippy.reference === el,
   )
   if (reference) {
     // @ts-ignore
@@ -77,10 +78,8 @@ export function onDocumentClick({ target }) {
 }
 
 export function onWindowBlur() {
-  const { activeElement } = document
-  // @ts-ignore
+  const { activeElement }: { activeElement: any } = document
   if (activeElement && activeElement.blur && activeElement._tippy) {
-    // @ts-ignore
     activeElement.blur()
   }
 }

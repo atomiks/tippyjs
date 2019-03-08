@@ -1,4 +1,6 @@
-export default {
+import { Props } from './types'
+
+const Defaults: Props = {
   a11y: true,
   allowHTML: true,
   animateFill: true,
@@ -46,6 +48,8 @@ export default {
   wait: null,
   zIndex: 9999,
 }
+
+export default Defaults
 
 /**
  * If the set() method encounters one of these, the popperInstance must be

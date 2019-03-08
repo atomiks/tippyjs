@@ -1,15 +1,16 @@
 import { getDataAttributeOptions } from './reference'
 import { hasOwnProperty, evaluateValue } from './utils'
 import { isUCBrowser } from './browser'
+import { ReferenceElement, Props } from './types'
 
 /**
  * Evaluates the props object by merging data attributes and
  * disabling conflicting options where necessary
- * @param {Element} reference
- * @param {object} props
- * @return {object}
  */
-export function evaluateProps(reference, props) {
+export function evaluateProps(
+  reference: ReferenceElement,
+  props: Props,
+): Props {
   const out = {
     ...props,
     content: evaluateValue(props.content, [reference]),
@@ -25,10 +26,8 @@ export function evaluateProps(reference, props) {
 
 /**
  * Validates an object of options with the valid default props object
- * @param {object} options
- * @param {object} defaults
  */
-export function validateOptions(options = {}, defaults) {
+export function validateOptions(options = {}, defaults: Props) {
   Object.keys(options).forEach(option => {
     if (!hasOwnProperty(defaults, option)) {
       throw new Error(`[tippy]: \`${option}\` is not a valid option`)

@@ -1,37 +1,41 @@
+import Popper from 'popper.js'
 import Selectors from './selectors'
 import { arrayFrom } from './ponyfills'
 import { innerHTML, div } from './utils'
 import { isUCBrowser } from './browser'
+import {
+  PopperElement,
+  Props,
+  PopperChildren,
+  HideAllOptions,
+  BasicPlacement,
+} from './types'
 
 /**
- * Sets the innerHTML of an element while tricking linters & minifiers
- * @param {HTMLElement} element
- * @param {Element|String} html
+ * Sets the innerHTML of an element
  */
-export function setInnerHTML(element, html) {
-  element[innerHTML()] = html instanceof Element ? html[innerHTML()] : html
+export function setInnerHTML(element: Element, html: string | Element) {
+  ;(element as any)[innerHTML()] =
+    html instanceof Element ? (html as any)[innerHTML()] : html
 }
 
 /**
  * Sets the content of a tooltip
- * @param {HTMLDivElement} contentEl
- * @param {Object} props
  */
-export function setContent(contentEl, props) {
+export function setContent(contentEl: PopperChildren['content'], props: Props) {
   if (props.content instanceof Element) {
     setInnerHTML(contentEl, '')
     contentEl.appendChild(props.content)
   } else {
+    // @ts-ignore
     contentEl[props.allowHTML ? 'innerHTML' : 'textContent'] = props.content
   }
 }
 
 /**
  * Returns the child elements of a popper element
- * @param {HTMLDivElement} popper
- * @return {Object}
  */
-export function getChildren(popper) {
+export function getChildren(popper: PopperElement): PopperChildren {
   return {
     tooltip: popper.querySelector(Selectors.TOOLTIP),
     backdrop: popper.querySelector(Selectors.BACKDROP),
@@ -44,26 +48,22 @@ export function getChildren(popper) {
 
 /**
  * Adds `data-inertia` attribute
- * @param {HTMLDivElement} tooltip
  */
-export function addInertia(tooltip) {
+export function addInertia(tooltip: PopperChildren['tooltip']) {
   tooltip.setAttribute('data-inertia', '')
 }
 
 /**
  * Removes `data-inertia` attribute
- * @param {HTMLDivElement} tooltip
  */
-export function removeInertia(tooltip) {
+export function removeInertia(tooltip: PopperChildren['tooltip']) {
   tooltip.removeAttribute('data-inertia')
 }
 
 /**
  * Creates an arrow element and returns it
- * @param {String} arrowType
- * @return {HTMLDivElement}
  */
-export function createArrowElement(arrowType) {
+export function createArrowElement(arrowType: Props['arrowType']) {
   const arrow = div()
   if (arrowType === 'round') {
     arrow.className = 'tippy-roundarrow'
@@ -79,7 +79,6 @@ export function createArrowElement(arrowType) {
 
 /**
  * Creates a backdrop element and returns it
- * @return {HTMLDivElement}
  */
 export function createBackdropElement() {
   const backdrop = div()
@@ -90,30 +89,30 @@ export function createBackdropElement() {
 
 /**
  * Adds interactive-related attributes
- * @param {HTMLDivElement} popper
- * @param {HTMLDivElement} tooltip
  */
-export function addInteractive(popper, tooltip) {
+export function addInteractive(
+  popper: PopperElement,
+  tooltip: PopperChildren['tooltip'],
+) {
   popper.setAttribute('tabindex', '-1')
   tooltip.setAttribute('data-interactive', '')
 }
 
 /**
  * Removes interactive-related attributes
- * @param {HTMLDivElement} popper
- * @param {HTMLDivElement} tooltip
  */
-export function removeInteractive(popper, tooltip) {
+export function removeInteractive(
+  popper: PopperElement,
+  tooltip: PopperChildren['tooltip'],
+) {
   popper.removeAttribute('tabindex')
   tooltip.removeAttribute('data-interactive')
 }
 
 /**
  * Applies a transition duration to a list of elements
- * @param {HTMLDivElement[]} els
- * @param {Number} value
  */
-export function applyTransitionDuration(els, value) {
+export function applyTransitionDuration(els: HTMLDivElement[], value: number) {
   els.forEach(el => {
     if (el) {
       el.style.transitionDuration = `${value}ms`
@@ -123,36 +122,36 @@ export function applyTransitionDuration(els, value) {
 
 /**
  * Add/remove transitionend listener from tooltip
- * @param {HTMLDivElement} tooltip
- * @param {String} action
- * @param {Function} listener
  */
-export function toggleTransitionEndListener(tooltip, action, listener) {
+export function toggleTransitionEndListener(
+  tooltip: PopperChildren['tooltip'],
+  action: 'add' | 'remove',
+  listener: EventListener,
+) {
   // UC Browser hasn't adopted the `transitionend` event despite supporting
   // unprefixed transitions...
   const eventName =
     isUCBrowser && document.body.style.webkitTransition !== undefined
       ? 'webkitTransitionEnd'
       : 'transitionend'
-  tooltip[action + 'EventListener'](eventName, listener)
+  ;(tooltip as any)[action + 'EventListener'](eventName, listener)
 }
 
 /**
  * Returns the popper's placement, ignoring shifting (top-start, etc)
- * @param {HTMLDivElement} popper
- * @return {String}
  */
-export function getPopperPlacement(popper) {
+export function getPopperPlacement(popper: PopperElement) {
   const fullPlacement = popper.getAttribute('x-placement')
-  return fullPlacement ? fullPlacement.split('-')[0] : ''
+  return (fullPlacement ? fullPlacement.split('-')[0] : '') as BasicPlacement
 }
 
 /**
  * Sets the visibility state to elements so they can begin to transition
- * @param {HTMLDivElement[]} els
- * @param {String} state
  */
-export function setVisibilityState(els, state) {
+export function setVisibilityState(
+  els: HTMLDivElement[],
+  state: 'visible' | 'hidden',
+) {
   els.forEach(el => {
     if (el) {
       el.setAttribute('data-state', state)
@@ -162,19 +161,19 @@ export function setVisibilityState(els, state) {
 
 /**
  * Triggers reflow
- * @param {HTMLDivElement} popper
  */
-export function reflow(popper) {
+export function reflow(popper: PopperElement) {
   void popper.offsetHeight
 }
 
 /**
  * Adds/removes theme from tooltip's classList
- * @param {HTMLDivElement} tooltip
- * @param {String} action
- * @param {String} theme
  */
-export function toggleTheme(tooltip, action, theme) {
+export function toggleTheme(
+  tooltip: PopperChildren['tooltip'],
+  action: 'add' | 'remove',
+  theme: Props['theme'],
+) {
   theme.split(' ').forEach(themeName => {
     tooltip.classList[action](themeName + '-theme')
   })
@@ -182,15 +181,12 @@ export function toggleTheme(tooltip, action, theme) {
 
 /**
  * Constructs the popper element and returns it
- * @param {Number} id
- * @param {Object} props
- * @return {HTMLDivElement}
  */
-export function createPopperElement(id, props) {
+export function createPopperElement(id: number, props: Props): PopperElement {
   const popper = div()
   popper.className = 'tippy-popper'
   popper.id = `tippy-${id}`
-  popper.style.zIndex = props.zIndex
+  popper.style.zIndex = '' + props.zIndex
   if (props.role) {
     popper.setAttribute('role', props.role)
   }
@@ -235,14 +231,15 @@ export function createPopperElement(id, props) {
 
 /**
  * Updates the popper element based on the new props
- * @param {HTMLDivElement} popper
- * @param {Object} prevProps
- * @param {Object} nextProps
  */
-export function updatePopperElement(popper, prevProps, nextProps) {
+export function updatePopperElement(
+  popper: PopperElement,
+  prevProps: Props,
+  nextProps: Props,
+) {
   const { tooltip, content, backdrop, arrow } = getChildren(popper)
 
-  popper.style.zIndex = nextProps.zIndex
+  popper.style.zIndex = '' + nextProps.zIndex
   tooltip.setAttribute('data-size', nextProps.size)
   tooltip.setAttribute('data-animation', nextProps.animation)
   tooltip.style.maxWidth =
@@ -307,14 +304,16 @@ export function updatePopperElement(popper, prevProps, nextProps) {
  * Runs the callback after the popper's position has been updated
  * update() is debounced with Promise.resolve() or setTimeout()
  * scheduleUpdate() is update() wrapped in requestAnimationFrame()
- * @param {Object} popperInstance
- * @param {Function} callback
  */
-export function afterPopperPositionUpdates(popperInstance, callback) {
+export function afterPopperPositionUpdates(
+  // FIXME: popperInstance doesn't seem to be a type exported by Popper.js?
+  popperInstance: any,
+  callback: Function,
+) {
   const { popper, options } = popperInstance
   const { onCreate, onUpdate } = options
 
-  options.onCreate = options.onUpdate = data => {
+  options.onCreate = options.onUpdate = (data: Popper.Data) => {
     reflow(popper)
     callback()
     onUpdate(data)
@@ -325,35 +324,35 @@ export function afterPopperPositionUpdates(popperInstance, callback) {
 
 /**
  * Hides all visible poppers on the document
- * @param {Object} options
  */
-export function hideAll({ checkHideOnClick, exclude, duration } = {}) {
-  arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(popper => {
-    const instance = popper._tippy
-    if (
-      instance &&
-      (checkHideOnClick ? instance.props.hideOnClick === true : true) &&
-      (!exclude || popper !== exclude.popper)
-    ) {
-      instance.hide(duration)
-    }
-  })
+export function hideAll({
+  checkHideOnClick,
+  exclude,
+  duration,
+}: HideAllOptions = {}) {
+  arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(
+    (popper: PopperElement) => {
+      const instance = popper._tippy
+      if (
+        instance &&
+        (checkHideOnClick ? instance.props.hideOnClick === true : true) &&
+        (!exclude || popper !== exclude.popper)
+      ) {
+        instance.hide(duration)
+      }
+    },
+  )
 }
 
 /**
  * Determines if the mouse cursor is outside of the popper's interactive border
  * region
- * @param {String} popperPlacement
- * @param {ClientRect} popperRect
- * @param {MouseEvent} event
- * @param {Object} props
- * @return {Boolean}
  */
 export function isCursorOutsideInteractiveBorder(
-  popperPlacement,
-  popperRect,
-  event,
-  props,
+  popperPlacement: BasicPlacement,
+  popperRect: ClientRect,
+  event: MouseEvent,
+  props: Props,
 ) {
   if (!popperPlacement) {
     return true
@@ -392,9 +391,7 @@ export function isCursorOutsideInteractiveBorder(
 /**
  * Returns the distance offset, taking into account the default offset due to
  * the transform: translate() rule (10px) in CSS
- * @param {Number} distance
- * @return {String}
  */
-export function getOffsetDistanceInPx(distance) {
+export function getOffsetDistanceInPx(distance: number) {
   return -(distance - 10) + 'px'
 }

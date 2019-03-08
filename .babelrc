@@ -1,5 +1,5 @@
 {
-  "presets": ["@babel/env"],
+  "presets": ["@babel/env", "@babel/typescript"],
   "plugins": [
     ["@babel/proposal-object-rest-spread", { "loose": true }, "unique"]
   ],

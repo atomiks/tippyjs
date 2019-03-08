@@ -1,3 +1,5 @@
+import { GroupedInstance, GroupOptions } from './types'
+
 /**
  * Groups an array of instances by taking control of their props during
  * certain lifecycles.
@@ -5,8 +7,8 @@
  * @param {Object} options
  */
 export default function group(
-  instances,
-  { delay = instances[0].props.delay, duration = 0 } = {},
+  instances: GroupedInstance[],
+  { delay = instances[0].props.delay, duration = 0 }: GroupOptions = {},
 ) {
   let isAnyTippyOpen = false
 
@@ -19,12 +21,12 @@ export default function group(
     }
   })
 
-  function setIsAnyTippyOpen(value) {
+  function setIsAnyTippyOpen(value: boolean) {
     isAnyTippyOpen = value
     updateInstances()
   }
 
-  function onShow(instance) {
+  function onShow(instance: GroupedInstance) {
     instance._originalProps.onShow(instance)
     instances.forEach(instance => {
       instance.set({ duration })
@@ -33,12 +35,12 @@ export default function group(
     setIsAnyTippyOpen(true)
   }
 
-  function onHide(instance) {
+  function onHide(instance: GroupedInstance) {
     instance._originalProps.onHide(instance)
     setIsAnyTippyOpen(false)
   }
 
-  function onShown(instance) {
+  function onShown(instance: GroupedInstance) {
     instance._originalProps.onShown(instance)
     instance.set({ duration: instance._originalProps.duration })
   }
