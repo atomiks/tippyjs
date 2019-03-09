@@ -23,6 +23,7 @@ export function closest(element: Element, parentSelector: string): Element {
   return (
     elementProto.closest ||
     function(selector: string) {
+      // @ts-ignore
       let el = this
       while (el) {
         if (matches.call(el, selector)) {
@@ -37,7 +38,10 @@ export function closest(element: Element, parentSelector: string): Element {
 /**
  * Works like Element.prototype.closest, but uses a callback instead
  */
-export function closestCallback(element: Element, callback: Function): Element {
+export function closestCallback(
+  element: Element | null,
+  callback: Function,
+): Element | undefined {
   while (element) {
     if (callback(element)) {
       return element

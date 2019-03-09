@@ -38,9 +38,9 @@ export function setContent(contentEl: PopperChildren['content'], props: Props) {
  */
 export function getChildren(popper: PopperElement): PopperChildren {
   return {
-    tooltip: popper.querySelector(Selectors.TOOLTIP),
+    tooltip: popper.querySelector(Selectors.TOOLTIP) as HTMLDivElement,
     backdrop: popper.querySelector(Selectors.BACKDROP),
-    content: popper.querySelector(Selectors.CONTENT),
+    content: popper.querySelector(Selectors.CONTENT) as HTMLDivElement,
     arrow:
       popper.querySelector(Selectors.ARROW) ||
       popper.querySelector(Selectors.ROUND_ARROW),
@@ -130,7 +130,7 @@ export function applyTransitionDuration(
 export function toggleTransitionEndListener(
   tooltip: PopperChildren['tooltip'],
   action: 'add' | 'remove',
-  listener: EventListener,
+  listener: (event: TransitionEvent) => void,
 ) {
   // UC Browser hasn't adopted the `transitionend` event despite supporting
   // unprefixed transitions...
@@ -140,7 +140,7 @@ export function toggleTransitionEndListener(
       : 'transitionend'
   tooltip[
     (action + 'EventListener') as 'addEventListener' | 'removeEventListener'
-  ](eventName, listener)
+  ](eventName, listener as EventListener)
 }
 
 /**
@@ -265,7 +265,7 @@ export function updatePopperElement(
     tooltip.appendChild(createBackdropElement())
     tooltip.setAttribute('data-animatefill', '')
   } else if (prevProps.animateFill && !nextProps.animateFill) {
-    tooltip.removeChild(backdrop)
+    tooltip.removeChild(backdrop as Node)
     tooltip.removeAttribute('data-animatefill')
   }
 
@@ -273,7 +273,7 @@ export function updatePopperElement(
   if (!prevProps.arrow && nextProps.arrow) {
     tooltip.appendChild(createArrowElement(nextProps.arrowType))
   } else if (prevProps.arrow && !nextProps.arrow) {
-    tooltip.removeChild(arrow)
+    tooltip.removeChild(arrow as Node)
   }
 
   // arrowType
@@ -282,7 +282,7 @@ export function updatePopperElement(
     nextProps.arrow &&
     prevProps.arrowType !== nextProps.arrowType
   ) {
-    tooltip.replaceChild(createArrowElement(nextProps.arrowType), arrow)
+    tooltip.replaceChild(createArrowElement(nextProps.arrowType), arrow as Node)
   }
 
   // interactive

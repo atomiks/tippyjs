@@ -32,9 +32,9 @@ import {
   ReferenceElement,
   PopperInstance,
   Props,
+  Options,
   Instance,
   Content,
-  Padding,
   Listener,
 } from './types'
 
@@ -154,7 +154,7 @@ export default function createTippy(
 
   if (!props.lazy) {
     createPopperInstance()
-    instance.popperInstance.disableEventListeners()
+    instance.popperInstance!.disableEventListeners()
   }
 
   if (props.showOnInit) {
@@ -504,9 +504,9 @@ export default function createTippy(
       onUpdate(data: Popper.Data) {
         if (instance.props.flip && !instance.props.flipOnUpdate) {
           if (data.flipped) {
-            instance.popperInstance.options.placement = data.placement
+            instance.popperInstance!.options.placement = data.placement
           }
-          setFlipModifierEnabled(instance.popperInstance.modifiers, false)
+          setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
         }
 
         const basePlacement = getPopperPlacement(instance.popper)
@@ -520,7 +520,7 @@ export default function createTippy(
         styles[basePlacement] = getOffsetDistanceInPx(instance.props.distance)
 
         // Avoid _defineProperty helper function created by Babel
-        const padding: Pick<Padding, 'top' | 'bottom' | 'left' | 'right'> = {
+        const padding = {
           top: PADDING,
           bottom: PADDING,
           left: PADDING,
@@ -529,7 +529,7 @@ export default function createTippy(
 
         padding[basePlacement] = PADDING + instance.props.distance
 
-        instance.popperInstance.modifiers.filter(
+        instance.popperInstance!.modifiers.filter(
           m => m.name === 'preventOverflow',
         )[0].padding = padding
 
@@ -558,7 +558,7 @@ export default function createTippy(
     if (!instance.popperInstance) {
       createPopperInstance()
       if (!shouldEnableListeners) {
-        instance.popperInstance.disableEventListeners()
+        instance.popperInstance!.disableEventListeners()
       }
     } else {
       if (!hasFollowCursorBehavior()) {
@@ -576,7 +576,7 @@ export default function createTippy(
     // If the instance previously had followCursor behavior, it will be
     // positioned incorrectly if triggered by `focus` afterwards.
     // Update the reference back to the real DOM element
-    instance.popperInstance.reference = instance.reference
+    instance.popperInstance!.reference = instance.reference
     const { arrow } = instance.popperChildren
 
     if (hasFollowCursorBehavior()) {
@@ -709,7 +709,7 @@ export default function createTippy(
    */
   function on(
     eventType: string,
-    handler: EventListenerOrEventListenerObject,
+    handler: EventListener,
     options: boolean | object = false,
   ) {
     instance.reference.addEventListener(eventType, handler, options)
@@ -722,7 +722,7 @@ export default function createTippy(
   function addTriggersToReference() {
     if (instance.props.touchHold && !instance.props.target) {
       on('touchstart', onTrigger, PASSIVE)
-      on('touchend', onMouseLeave, PASSIVE)
+      on('touchend', onMouseLeave as EventListener, PASSIVE)
     }
 
     instance.props.trigger
@@ -738,10 +738,10 @@ export default function createTippy(
           on(eventType, onTrigger)
           switch (eventType) {
             case 'mouseenter':
-              on('mouseleave', onMouseLeave)
+              on('mouseleave', onMouseLeave as EventListener)
               break
             case 'focus':
-              on(isIE ? 'focusout' : 'blur', onBlur)
+              on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
               break
           }
         } else {
@@ -810,7 +810,10 @@ export default function createTippy(
   /**
    * Sets new props for the instance and redraws the tooltip
    */
-  function set(options: Props = {}) {
+  function set(options: Options) {
+    // Backwards-compatible after TypeScript change
+    options = options || {}
+
     validateOptions(options, Defaults)
 
     const prevProps = instance.props
@@ -819,9 +822,9 @@ export default function createTippy(
       ...options,
       ignoreAttributes: true,
     })
-    nextProps.ignoreAttributes = hasOwnProperty(options, 'ignoreAttributes')
+    nextProps.ignoreAttributes = (hasOwnProperty(options, 'ignoreAttributes')
       ? options.ignoreAttributes
-      : prevProps.ignoreAttributes
+      : prevProps.ignoreAttributes) as boolean
     instance.props = nextProps
 
     if (
@@ -834,7 +837,10 @@ export default function createTippy(
 
     if (hasOwnProperty(options, 'interactiveDebounce')) {
       cleanupOldMouseListeners()
-      debouncedOnMouseMove = debounce(onMouseMove, options.interactiveDebounce)
+      debouncedOnMouseMove = debounce(
+        onMouseMove,
+        options.interactiveDebounce as number,
+      )
     }
 
     updatePopperElement(instance.popper, prevProps, nextProps)
@@ -926,7 +932,7 @@ export default function createTippy(
 
       // Arrow will sometimes not be positioned correctly. Force another update
       if (!hasFollowCursorBehavior()) {
-        instance.popperInstance.update()
+        instance.popperInstance!.update()
       }
 
       applyTransitionDuration([instance.popper], props.updateDuration)
@@ -1000,8 +1006,8 @@ export default function createTippy(
         instance.reference.removeAttribute(`aria-${instance.props.aria}`)
       }
 
-      instance.popperInstance.disableEventListeners()
-      instance.popperInstance.options.placement = instance.props.placement
+      instance.popperInstance!.disableEventListeners()
+      instance.popperInstance!.options.placement = instance.props.placement
 
       parentNode.removeChild(instance.popper)
       instance.props.onHidden(instance)

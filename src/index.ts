@@ -10,6 +10,7 @@ import { hideAll } from './popper'
 import { isSingular, isBareVirtualElement, getArrayOfElements } from './utils'
 import group from './group'
 import {
+  Options,
   Props,
   Instance,
   Targets,
@@ -22,7 +23,7 @@ let globalEventListenersBound = false
 /**
  * Exported module
  */
-function tippy(targets: Targets, options?: Props): Instance | Instance[] {
+function tippy(targets: Targets, options?: Options): Instance | Instance[] {
   validateOptions(options, Defaults)
 
   if (!globalEventListenersBound) {
