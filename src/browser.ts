@@ -1,4 +1,5 @@
-export const isBrowser = typeof window !== 'undefined'
+export const isBrowser =
+  typeof window !== 'undefined' && typeof document !== 'undefined'
 
 const ua = isBrowser ? navigator.userAgent : ''
 
