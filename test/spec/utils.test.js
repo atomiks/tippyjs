@@ -1,5 +1,5 @@
 import { h, cleanDocumentBody, IDENTIFIER } from '../utils'
-import Defaults from '../../src/defaults'
+import { defaultProps } from '../../src/props'
 import * as Utils from '../../src/utils'
 
 afterEach(cleanDocumentBody)
@@ -107,25 +107,31 @@ describe('getValue', () => {
   })
 
   it('uses the default duration if the value is null', () => {
-    expect(Utils.getValue([null, 5], 0, Defaults.duration[0])).toBe(
-      Defaults.duration[0],
+    expect(Utils.getValue([null, 5], 0, defaultProps.duration[0])).toBe(
+      defaultProps.duration[0],
     )
-    expect(Utils.getValue([5, null], 1, Defaults.duration[1])).toBe(
-      Defaults.duration[1],
+    expect(Utils.getValue([5, null], 1, defaultProps.duration[1])).toBe(
+      defaultProps.duration[1],
     )
-    expect(Utils.getValue([null, 5], 0, Defaults.delay)).toBe(Defaults.delay)
-    expect(Utils.getValue([5, null], 1, Defaults.delay)).toBe(Defaults.delay)
+    expect(Utils.getValue([null, 5], 0, defaultProps.delay)).toBe(
+      defaultProps.delay,
+    )
+    expect(Utils.getValue([5, null], 1, defaultProps.delay)).toBe(
+      defaultProps.delay,
+    )
   })
 
   it('uses the default duration if the value is undefined', () => {
-    expect(Utils.getValue([, 5], 0, Defaults.duration[0])).toBe(
-      Defaults.duration[0],
+    expect(Utils.getValue([, 5], 0, defaultProps.duration[0])).toBe(
+      defaultProps.duration[0],
     )
-    expect(Utils.getValue([5], 1, Defaults.duration[1])).toBe(
-      Defaults.duration[1],
+    expect(Utils.getValue([5], 1, defaultProps.duration[1])).toBe(
+      defaultProps.duration[1],
     )
-    expect(Utils.getValue([, 5], 0, Defaults.delay)).toBe(Defaults.delay)
-    expect(Utils.getValue([5], 1, Defaults.delay)).toBe(Defaults.delay)
+    expect(Utils.getValue([, 5], 0, defaultProps.delay)).toBe(
+      defaultProps.delay,
+    )
+    expect(Utils.getValue([5], 1, defaultProps.delay)).toBe(defaultProps.delay)
   })
 })
 
@@ -254,5 +260,61 @@ describe('div', () => {
   it('creates and returns a div element', () => {
     const d = Utils.div()
     expect(d.nodeName).toBe('DIV')
+  })
+})
+
+describe('evaluateProps', () => {
+  it('sets `animateFill` option to false if `arrow` is true', () => {
+    const props = { animateFill: true, arrow: true }
+    expect(Utils.evaluateProps(h(), props)).toEqual({
+      animateFill: false,
+      arrow: true,
+    })
+  })
+
+  it('sets `animateFill` option to false if `arrow` is true (data attribute)', () => {
+    const ref = h()
+    ref.setAttribute('data-tippy-arrow', 'true')
+    expect(Utils.evaluateProps(ref, { animateFill: true })).toEqual({
+      arrow: true,
+      animateFill: false,
+    })
+  })
+
+  it('ignores attributes if `ignoreAttributes: true`', () => {
+    const props = { animation: 'scale', ignoreAttributes: true }
+    const reference = h()
+    reference.setAttribute('data-tippy-animation', 'fade')
+    expect(Utils.evaluateProps(reference, props)).toEqual({
+      animation: 'scale',
+      ignoreAttributes: true,
+    })
+  })
+
+  it('does not ignore attributes if `ignoreAttributes: false`', () => {
+    const props = { animation: 'scale', ignoreAttributes: false }
+    const reference = h()
+    reference.setAttribute('data-tippy-animation', 'fade')
+    expect(Utils.evaluateProps(reference, props)).toEqual({
+      animation: 'fade',
+      ignoreAttributes: false,
+    })
+  })
+})
+
+describe('validateOptions', () => {
+  it('does nothing if valid options were passed', () => {
+    expect(() =>
+      Utils.validateOptions(
+        { arrow: true, arrowType: 'round' },
+        { arrow: false, arrowType: 'sharp' },
+      ),
+    ).not.toThrow()
+  })
+
+  it('throws with the correct message if invalid options were passed', () => {
+    expect(() =>
+      Utils.validateOptions({ intractive: true }, { interactive: false }),
+    ).toThrow('[tippy]: `intractive` is not a valid option')
   })
 })

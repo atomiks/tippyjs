@@ -1,36 +1,67 @@
-import { getDataAttributeOptions } from './reference'
-import { hasOwnProperty, evaluateValue } from './utils'
-import { isUCBrowser } from './browser'
-import { ReferenceElement, Props } from './types'
+import { Props } from './types'
 
-/**
- * Evaluates the props object by merging data attributes and
- * disabling conflicting options where necessary
- */
-export function evaluateProps(
-  reference: ReferenceElement,
-  props: Props,
-): Props {
-  const out = {
-    ...props,
-    content: evaluateValue(props.content, [reference]),
-    ...(props.ignoreAttributes ? {} : getDataAttributeOptions(reference)),
-  }
-
-  if (out.arrow || isUCBrowser) {
-    out.animateFill = false
-  }
-
-  return out
+export const defaultProps: Props = {
+  a11y: true,
+  allowHTML: true,
+  animateFill: true,
+  animation: 'shift-away',
+  appendTo: () => document.body,
+  aria: 'describedby',
+  arrow: false,
+  arrowType: 'sharp',
+  boundary: 'scrollParent',
+  content: '',
+  delay: [0, 20],
+  distance: 10,
+  duration: [325, 275],
+  flip: true,
+  flipBehavior: 'flip',
+  flipOnUpdate: false,
+  followCursor: false,
+  hideOnClick: true,
+  ignoreAttributes: false,
+  inertia: false,
+  interactive: false,
+  interactiveBorder: 2,
+  interactiveDebounce: 0,
+  lazy: true,
+  maxWidth: 350,
+  multiple: false,
+  offset: 0,
+  onHidden() {},
+  onHide() {},
+  onMount() {},
+  onShow() {},
+  onShown() {},
+  placement: 'top',
+  popperOptions: {},
+  role: 'tooltip',
+  showOnInit: false,
+  size: 'regular',
+  sticky: false,
+  target: '',
+  theme: 'dark',
+  touch: true,
+  touchHold: false,
+  trigger: 'mouseenter focus',
+  updateDuration: 0,
+  wait: null,
+  zIndex: 9999,
 }
 
 /**
- * Validates an object of options with the valid default props object
+ * If the set() method encounters one of these, the popperInstance must be
+ * recreated
  */
-export function validateOptions(options = {}, defaults: Props): void {
-  Object.keys(options).forEach(option => {
-    if (!hasOwnProperty(defaults, option)) {
-      throw new Error(`[tippy]: \`${option}\` is not a valid option`)
-    }
-  })
-}
+export const POPPER_INSTANCE_DEPENDENCIES = [
+  'arrow',
+  'arrowType',
+  'boundary',
+  'distance',
+  'flip',
+  'flipBehavior',
+  'flipOnUpdate',
+  'offset',
+  'placement',
+  'popperOptions',
+]

@@ -1,7 +1,7 @@
-import Defaults from './defaults'
+import { defaultProps } from './props'
 import { Props, VirtualReference, ReferenceElement } from './types'
 
-const keys = Object.keys(Defaults)
+const keys = Object.keys(defaultProps)
 
 /**
  * Returns an object of optional props from data-tippy-* attributes

@@ -1,13 +1,17 @@
 import { version } from '../package.json'
 import { isBrowser } from './browser'
-import Defaults from './defaults'
+import { defaultProps } from './props'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
 import { polyfillElementPrototypeProperties } from './reference'
-import { validateOptions } from './props'
 import { arrayFrom } from './ponyfills'
 import { hideAll } from './popper'
-import { isSingular, isBareVirtualElement, getArrayOfElements } from './utils'
+import {
+  isSingular,
+  isBareVirtualElement,
+  getArrayOfElements,
+  validateOptions,
+} from './utils'
 import group from './group'
 import {
   Options,
@@ -24,14 +28,14 @@ let globalEventListenersBound = false
  * Exported module
  */
 function tippy(targets: Targets, options?: Options): Instance | Instance[] {
-  validateOptions(options, Defaults)
+  validateOptions(options, defaultProps)
 
   if (!globalEventListenersBound) {
     bindGlobalEventListeners()
     globalEventListenersBound = true
   }
 
-  const props: Props = { ...Defaults, ...options }
+  const props: Props = { ...defaultProps, ...options }
 
   // If they are specifying a virtual positioning reference, we need to polyfill
   // some native DOM props
@@ -58,15 +62,15 @@ function tippy(targets: Targets, options?: Options): Instance | Instance[] {
  * Static props
  */
 tippy.version = version
-tippy.defaults = Defaults
+tippy.defaults = defaultProps
 
 /**
  * Static methods
  */
-tippy.setDefaults = (partialDefaults: Partial<Props>) => {
+tippy.setDefaults = (partialDefaults: Options) => {
   Object.keys(partialDefaults).forEach(key => {
     // @ts-ignore
-    Defaults[key] = partialDefaults[key]
+    defaultProps[key] = partialDefaults[key]
   })
 }
 tippy.hideAll = hideAll

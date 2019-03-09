@@ -1,7 +1,7 @@
 import Popper from 'popper.js'
 import { isIE } from './browser'
 import { isUsingTouch } from './bindGlobalEventListeners'
-import Defaults, { POPPER_INSTANCE_DEPENDENCIES } from './defaults'
+import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import Selectors from './selectors'
 import {
   createPopperElement,
@@ -15,7 +15,6 @@ import {
   isCursorOutsideInteractiveBorder,
   getOffsetDistanceInPx,
 } from './popper'
-import { validateOptions, evaluateProps } from './props'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
 import {
   hasOwnProperty,
@@ -26,6 +25,8 @@ import {
   evaluateValue,
   setFlipModifierEnabled,
   canReceiveFocus,
+  validateOptions,
+  evaluateProps,
 } from './utils'
 import { PASSIVE, PADDING } from './constants'
 import {
@@ -282,7 +283,7 @@ export default function createTippy(
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
-    const delay = getValue(instance.props.delay, 0, Defaults.delay)
+    const delay = getValue(instance.props.delay, 0, defaultProps.delay)
 
     if (delay) {
       // @ts-ignore
@@ -306,7 +307,7 @@ export default function createTippy(
 
     isScheduledToShow = false
 
-    const delay = getValue(instance.props.delay, 1, Defaults.delay)
+    const delay = getValue(instance.props.delay, 1, defaultProps.delay)
 
     if (delay) {
       // @ts-ignore
@@ -814,7 +815,7 @@ export default function createTippy(
     // Backwards-compatible after TypeScript change
     options = options || {}
 
-    validateOptions(options, Defaults)
+    validateOptions(options, defaultProps)
 
     const prevProps = instance.props
     const nextProps = evaluateProps(instance.reference, {
@@ -880,7 +881,7 @@ export default function createTippy(
     duration: number = getValue(
       instance.props.duration,
       0,
-      (Defaults.duration as any)[0],
+      (defaultProps.duration as any)[0],
     ),
   ): void | false {
     if (
@@ -972,7 +973,7 @@ export default function createTippy(
     duration: number = getValue(
       instance.props.duration,
       1,
-      (Defaults.duration as any)[1],
+      (defaultProps.duration as any)[1],
     ),
   ): void | false {
     if (instance.state.isDestroyed || !instance.state.isEnabled) {

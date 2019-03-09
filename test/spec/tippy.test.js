@@ -1,5 +1,5 @@
 import { h, hasTippy, cleanDocumentBody } from '../utils'
-import Defaults from '../../src/defaults'
+import { defaultProps } from '../../src/props'
 import tippy, { autoInit } from '../../src/index'
 
 afterEach(cleanDocumentBody)
@@ -20,7 +20,7 @@ describe('tippy', () => {
         placement: 'bottom-end',
       }).props,
     ).toEqual({
-      ...Defaults,
+      ...defaultProps,
       placement: 'bottom-end',
     })
   })
@@ -65,7 +65,7 @@ describe('tippy.setDefaults()', () => {
   it('changes the default props applied to instances', () => {
     const newPlacement = 'bottom-end'
     tippy.setDefaults({ placement: newPlacement })
-    expect(Defaults.placement).toBe(newPlacement)
+    expect(defaultProps.placement).toBe(newPlacement)
   })
 })
 
