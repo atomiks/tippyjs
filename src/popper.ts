@@ -15,14 +15,17 @@ import {
 /**
  * Sets the innerHTML of an element
  */
-export function setInnerHTML(element: Element, html: string | Element) {
+export function setInnerHTML(element: Element, html: string | Element): void {
   element[innerHTML()] = html instanceof Element ? html[innerHTML()] : html
 }
 
 /**
  * Sets the content of a tooltip
  */
-export function setContent(contentEl: PopperChildren['content'], props: Props) {
+export function setContent(
+  contentEl: PopperChildren['content'],
+  props: Props,
+): void {
   if (props.content instanceof Element) {
     setInnerHTML(contentEl, '')
     contentEl.appendChild(props.content)
@@ -51,21 +54,23 @@ export function getChildren(popper: PopperElement): PopperChildren {
 /**
  * Adds `data-inertia` attribute
  */
-export function addInertia(tooltip: PopperChildren['tooltip']) {
+export function addInertia(tooltip: PopperChildren['tooltip']): void {
   tooltip.setAttribute('data-inertia', '')
 }
 
 /**
  * Removes `data-inertia` attribute
  */
-export function removeInertia(tooltip: PopperChildren['tooltip']) {
+export function removeInertia(tooltip: PopperChildren['tooltip']): void {
   tooltip.removeAttribute('data-inertia')
 }
 
 /**
  * Creates an arrow element and returns it
  */
-export function createArrowElement(arrowType: Props['arrowType']) {
+export function createArrowElement(
+  arrowType: Props['arrowType'],
+): HTMLDivElement {
   const arrow = div()
   if (arrowType === 'round') {
     arrow.className = 'tippy-roundarrow'
@@ -82,7 +87,7 @@ export function createArrowElement(arrowType: Props['arrowType']) {
 /**
  * Creates a backdrop element and returns it
  */
-export function createBackdropElement() {
+export function createBackdropElement(): HTMLDivElement {
   const backdrop = div()
   backdrop.className = 'tippy-backdrop'
   backdrop.setAttribute('data-state', 'hidden')
@@ -95,7 +100,7 @@ export function createBackdropElement() {
 export function addInteractive(
   popper: PopperElement,
   tooltip: PopperChildren['tooltip'],
-) {
+): void {
   popper.setAttribute('tabindex', '-1')
   tooltip.setAttribute('data-interactive', '')
 }
@@ -106,7 +111,7 @@ export function addInteractive(
 export function removeInteractive(
   popper: PopperElement,
   tooltip: PopperChildren['tooltip'],
-) {
+): void {
   popper.removeAttribute('tabindex')
   tooltip.removeAttribute('data-interactive')
 }
@@ -117,7 +122,7 @@ export function removeInteractive(
 export function applyTransitionDuration(
   els: (HTMLDivElement | null)[],
   value: number,
-) {
+): void {
   els.forEach(el => {
     if (el) {
       el.style.transitionDuration = `${value}ms`
@@ -132,7 +137,7 @@ export function toggleTransitionEndListener(
   tooltip: PopperChildren['tooltip'],
   action: 'add' | 'remove',
   listener: (event: TransitionEvent) => void,
-) {
+): void {
   // UC Browser hasn't adopted the `transitionend` event despite supporting
   // unprefixed transitions...
   const eventName =
@@ -147,7 +152,7 @@ export function toggleTransitionEndListener(
 /**
  * Returns the popper's placement, ignoring shifting (top-start, etc)
  */
-export function getPopperPlacement(popper: PopperElement) {
+export function getPopperPlacement(popper: PopperElement): BasicPlacement {
   const fullPlacement = popper.getAttribute('x-placement')
   return (fullPlacement ? fullPlacement.split('-')[0] : '') as BasicPlacement
 }
@@ -158,7 +163,7 @@ export function getPopperPlacement(popper: PopperElement) {
 export function setVisibilityState(
   els: (HTMLDivElement | null)[],
   state: 'visible' | 'hidden',
-) {
+): void {
   els.forEach(el => {
     if (el) {
       el.setAttribute('data-state', state)
@@ -169,7 +174,7 @@ export function setVisibilityState(
 /**
  * Triggers reflow
  */
-export function reflow(popper: PopperElement) {
+export function reflow(popper: PopperElement): void {
   void popper.offsetHeight
 }
 
@@ -180,7 +185,7 @@ export function toggleTheme(
   tooltip: PopperChildren['tooltip'],
   action: 'add' | 'remove',
   theme: Props['theme'],
-) {
+): void {
   theme.split(' ').forEach(themeName => {
     tooltip.classList[action](themeName + '-theme')
   })
@@ -243,7 +248,7 @@ export function updatePopperElement(
   popper: PopperElement,
   prevProps: Props,
   nextProps: Props,
-) {
+): void {
   const { tooltip, content, backdrop, arrow } = getChildren(popper)
 
   popper.style.zIndex = '' + nextProps.zIndex
@@ -315,7 +320,7 @@ export function updatePopperElement(
 export function afterPopperPositionUpdates(
   popperInstance: PopperInstance,
   callback: () => void,
-) {
+): void {
   const { popper, options } = popperInstance
   const { onCreate, onUpdate } = options
 
@@ -339,7 +344,7 @@ export function hideAll({
   checkHideOnClick,
   exclude,
   duration,
-}: HideAllOptions = {}) {
+}: HideAllOptions = {}): void {
   arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(
     (popper: PopperElement) => {
       const instance = popper._tippy
@@ -363,7 +368,7 @@ export function isCursorOutsideInteractiveBorder(
   popperRect: ClientRect,
   event: MouseEvent,
   props: Props,
-) {
+): boolean {
   if (!popperPlacement) {
     return true
   }
@@ -402,6 +407,6 @@ export function isCursorOutsideInteractiveBorder(
  * Returns the distance offset, taking into account the default offset due to
  * the transform: translate() rule (10px) in CSS
  */
-export function getOffsetDistanceInPx(distance: number) {
+export function getOffsetDistanceInPx(distance: number): string {
   return -(distance - 10) + 'px'
 }

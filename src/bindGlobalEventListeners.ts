@@ -8,7 +8,7 @@ import { ReferenceElement } from './types'
 
 export let isUsingTouch = false
 
-export function onDocumentTouch() {
+export function onDocumentTouch(): void {
   if (isUsingTouch) {
     return
   }
@@ -25,7 +25,7 @@ export function onDocumentTouch() {
 }
 
 let lastMouseMoveTime = 0
-export function onDocumentMouseMove() {
+export function onDocumentMouseMove(): void {
   const now = performance.now()
 
   // Chrome 60+ is 1 mousemove per animation frame, use 20ms time difference
@@ -40,7 +40,7 @@ export function onDocumentMouseMove() {
   lastMouseMoveTime = now
 }
 
-export function onDocumentClick(event: MouseEvent) {
+export function onDocumentClick(event: MouseEvent): void {
   // Simulated events dispatched on the document
   if (!(event.target instanceof Element)) {
     return hideAll()
@@ -78,7 +78,7 @@ export function onDocumentClick(event: MouseEvent) {
   hideAll({ checkHideOnClick: true })
 }
 
-export function onWindowBlur() {
+export function onWindowBlur(): void {
   const { activeElement }: { activeElement: any } = document
   if (activeElement && activeElement.blur && activeElement._tippy) {
     activeElement.blur()
@@ -88,7 +88,7 @@ export function onWindowBlur() {
 /**
  * Adds the needed global event listeners
  */
-export default function bindGlobalEventListeners() {
+export default function bindGlobalEventListeners(): void {
   document.addEventListener('click', onDocumentClick, true)
   document.addEventListener('touchstart', onDocumentTouch, PASSIVE)
   window.addEventListener('blur', onWindowBlur)

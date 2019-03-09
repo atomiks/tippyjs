@@ -7,19 +7,19 @@ import { GroupedInstance, GroupOptions } from './types'
 export default function group(
   instances: GroupedInstance[],
   { delay = instances[0].props.delay, duration = 0 }: GroupOptions = {},
-) {
+): void {
   let isAnyTippyOpen = false
 
   instances.forEach(instance => {
     instance._originalProps = { ...instance.props }
   })
 
-  function setIsAnyTippyOpen(value: boolean) {
+  function setIsAnyTippyOpen(value: boolean): void {
     isAnyTippyOpen = value
     updateInstances()
   }
 
-  function onShow(instance: GroupedInstance) {
+  function onShow(instance: GroupedInstance): void {
     instance._originalProps.onShow(instance)
     instances.forEach(instance => {
       instance.set({ duration })
@@ -28,17 +28,17 @@ export default function group(
     setIsAnyTippyOpen(true)
   }
 
-  function onHide(instance: GroupedInstance) {
+  function onHide(instance: GroupedInstance): void {
     instance._originalProps.onHide(instance)
     setIsAnyTippyOpen(false)
   }
 
-  function onShown(instance: GroupedInstance) {
+  function onShown(instance: GroupedInstance): void {
     instance._originalProps.onShown(instance)
     instance.set({ duration: instance._originalProps.duration })
   }
 
-  function updateInstances() {
+  function updateInstances(): void {
     instances.forEach(instance => {
       instance.set({
         onShow,

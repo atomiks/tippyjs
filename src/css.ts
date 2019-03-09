@@ -3,7 +3,7 @@ import { isBrowser } from './browser'
 /**
  * Injects a string of CSS styles to a style node in <head>
  */
-export function injectCSS(css: string) {
+export function injectCSS(css: string): void {
   if (isBrowser) {
     const style = document.createElement('style')
     style.type = 'text/css'

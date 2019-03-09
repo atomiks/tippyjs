@@ -36,7 +36,7 @@ export function getDataAttributeOptions(reference: ReferenceElement): Props {
  */
 export function polyfillElementPrototypeProperties(
   virtualReference: VirtualReference & Record<string, any>,
-) {
+): void {
   const polyfills: Record<string, any> = {
     isVirtual: true,
     attributes: virtualReference.attributes || {},

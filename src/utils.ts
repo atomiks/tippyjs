@@ -1,4 +1,5 @@
 import { arrayFrom, matches } from './ponyfills'
+import { VirtualReference } from './types'
 
 /**
  * Determines if a value is a "bare" virtual element (before mutations done
@@ -6,7 +7,7 @@ import { arrayFrom, matches } from './ponyfills'
  * [object Object], we can check if the value is "element-like" if it has
  * `addEventListener`
  */
-export function isBareVirtualElement(value: any) {
+export function isBareVirtualElement(value: any): boolean {
   return (
     {}.toString.call(value) === '[object Object]' && !value.addEventListener
   )
@@ -22,7 +23,7 @@ export function hasOwnProperty(obj: object, key: string): boolean {
 /**
  * Returns an array of elements based on the value
  */
-export function getArrayOfElements(value: any): Element[] | object[] {
+export function getArrayOfElements(value: any): Element[] | VirtualReference[] {
   if (isSingular(value)) {
     return [value]
   }
@@ -45,7 +46,7 @@ export function getArrayOfElements(value: any): Element[] | object[] {
 /**
  * Returns a value at a given index depending on if it's an array or number
  */
-export function getValue(value: any, index: number, defaultValue: any) {
+export function getValue(value: any, index: number, defaultValue: any): any {
   if (Array.isArray(value)) {
     const v = value[index]
     return v == null ? defaultValue : v
@@ -56,7 +57,7 @@ export function getValue(value: any, index: number, defaultValue: any) {
 /**
  * Debounce utility
  */
-export function debounce(fn: Function, ms: number) {
+export function debounce(fn: Function, ms: number): () => void {
   let timeoutId: number
   return function() {
     clearTimeout(timeoutId)
@@ -69,7 +70,7 @@ export function debounce(fn: Function, ms: number) {
  * Prevents errors from being thrown while accessing nested modifier objects
  * in `popperOptions`
  */
-export function getModifier(obj: any, key: string) {
+export function getModifier(obj: any, key: string): any {
   return obj && obj.modifiers && obj.modifiers[key]
 }
 
@@ -99,14 +100,14 @@ export function innerHTML(): 'innerHTML' {
 /**
  * Evaluates a function if one, or returns the value
  */
-export function evaluateValue(value: any, args: any[]) {
+export function evaluateValue(value: any, args: any[]): any {
   return typeof value === 'function' ? value.apply(null, args) : value
 }
 
 /**
  * Sets a popperInstance `flip` modifier's enabled state
  */
-export function setFlipModifierEnabled(modifiers: any[], value: any) {
+export function setFlipModifierEnabled(modifiers: any[], value: any): void {
   modifiers.filter(m => m.name === 'flip')[0].enabled = value
 }
 
@@ -114,7 +115,7 @@ export function setFlipModifierEnabled(modifiers: any[], value: any) {
  * Determines if an element can receive focus
  * Always returns true for virtual objects
  */
-export function canReceiveFocus(element: Element) {
+export function canReceiveFocus(element: Element): boolean {
   return element instanceof Element
     ? matches.call(
         element,
@@ -126,6 +127,6 @@ export function canReceiveFocus(element: Element) {
 /**
  * Returns a new `div` element
  */
-export function div() {
+export function div(): HTMLDivElement {
   return document.createElement('div')
 }

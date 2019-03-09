@@ -75,7 +75,7 @@ tippy.group = group
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
  */
-export function autoInit() {
+export function autoInit(): void {
   arrayFrom(document.querySelectorAll('[data-tippy]')).forEach(el => {
     const content = el.getAttribute('data-tippy')
     if (content) {
