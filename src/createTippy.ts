@@ -822,9 +822,9 @@ export default function createTippy(
       ...options,
       ignoreAttributes: true,
     })
-    nextProps.ignoreAttributes = (hasOwnProperty(options, 'ignoreAttributes')
-      ? options.ignoreAttributes
-      : prevProps.ignoreAttributes) as boolean
+    nextProps.ignoreAttributes = hasOwnProperty(options, 'ignoreAttributes')
+      ? options.ignoreAttributes || false
+      : prevProps.ignoreAttributes
     instance.props = nextProps
 
     if (
@@ -839,7 +839,7 @@ export default function createTippy(
       cleanupOldMouseListeners()
       debouncedOnMouseMove = debounce(
         onMouseMove,
-        options.interactiveDebounce as number,
+        options.interactiveDebounce || 0,
       )
     }
 
