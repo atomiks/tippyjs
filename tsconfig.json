@@ -3,7 +3,6 @@
     "moduleResolution": "node",
     "noEmit": true,
     "resolveJsonModule": true,
-    "noImplicitAny": true,
     "strict": true,
     "noUnusedLocals": true
   },
