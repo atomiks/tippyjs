@@ -657,7 +657,7 @@ export default function createTippy(
   /**
    * Invokes a callback once the tooltip has fully transitioned out
    */
-  function onTransitionedOut(duration: number, callback: Function) {
+  function onTransitionedOut(duration: number, callback: () => void) {
     onTransitionEnd(duration, () => {
       if (
         !instance.state.isVisible &&
@@ -672,14 +672,14 @@ export default function createTippy(
   /**
    * Invokes a callback once the tooltip has fully transitioned in
    */
-  function onTransitionedIn(duration: number, callback: Function) {
+  function onTransitionedIn(duration: number, callback: () => void) {
     onTransitionEnd(duration, callback)
   }
 
   /**
    * Invokes a callback once the tooltip's CSS transition ends
    */
-  function onTransitionEnd(duration: number, callback: Function) {
+  function onTransitionEnd(duration: number, callback: () => void) {
     /**
      * Listener added as the `transitionend` handler
      */
