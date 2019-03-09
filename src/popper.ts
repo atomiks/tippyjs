@@ -266,7 +266,7 @@ export function updatePopperElement(
     tooltip.appendChild(createBackdropElement())
     tooltip.setAttribute('data-animatefill', '')
   } else if (prevProps.animateFill && !nextProps.animateFill) {
-    tooltip.removeChild(backdrop as Node)
+    tooltip.removeChild(backdrop!)
     tooltip.removeAttribute('data-animatefill')
   }
 
@@ -274,7 +274,7 @@ export function updatePopperElement(
   if (!prevProps.arrow && nextProps.arrow) {
     tooltip.appendChild(createArrowElement(nextProps.arrowType))
   } else if (prevProps.arrow && !nextProps.arrow) {
-    tooltip.removeChild(arrow as Node)
+    tooltip.removeChild(arrow!)
   }
 
   // arrowType
@@ -283,7 +283,7 @@ export function updatePopperElement(
     nextProps.arrow &&
     prevProps.arrowType !== nextProps.arrowType
   ) {
-    tooltip.replaceChild(createArrowElement(nextProps.arrowType), arrow as Node)
+    tooltip.replaceChild(createArrowElement(nextProps.arrowType), arrow!)
   }
 
   // interactive
