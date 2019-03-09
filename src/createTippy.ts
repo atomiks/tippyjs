@@ -128,7 +128,7 @@ export default function createTippy(
   }
 
   // Popper.js instance for the tippy is lazily created
-  const popperInstance: PopperInstance = null
+  const popperInstance: PopperInstance | null = null
 
   const instance: Instance = {
     // properties
