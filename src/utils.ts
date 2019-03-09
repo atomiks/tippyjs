@@ -92,7 +92,7 @@ export function isSingular(value: any): boolean {
 /**
  * Firefox extensions don't allow setting .innerHTML directly, this will trick it
  */
-export function innerHTML() {
+export function innerHTML(): 'innerHTML' {
   return 'innerHTML'
 }
 

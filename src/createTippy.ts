@@ -57,7 +57,7 @@ export default function createTippy(
 
   /* ======================= 🔒 Private members 🔒 ======================= */
   // The last trigger event object that caused the tippy to show
-  let lastTriggerEvent = {} as Event
+  let lastTriggerEventType: string
 
   // The last mousemove event object created by the document mousemove event
   let lastMouseMoveEvent: MouseEvent
@@ -99,13 +99,13 @@ export default function createTippy(
     if (
       instance.props.interactive &&
       instance.state.isVisible &&
-      lastTriggerEvent.type === 'mouseenter'
+      lastTriggerEventType === 'mouseenter'
     ) {
       scheduleShow(event)
     }
   })
   popper.addEventListener('mouseleave', () => {
-    if (instance.props.interactive && lastTriggerEvent.type === 'mouseenter') {
+    if (instance.props.interactive && lastTriggerEventType === 'mouseenter') {
       document.addEventListener('mousemove', debouncedOnMouseMove)
     }
   })
@@ -343,7 +343,7 @@ export default function createTippy(
     }
 
     if (!instance.state.isVisible) {
-      lastTriggerEvent = event
+      lastTriggerEventType = event.type
 
       if (event instanceof MouseEvent) {
         lastMouseMoveEvent = event
@@ -579,14 +579,9 @@ export default function createTippy(
       if (arrow) {
         arrow.style.margin = '0'
       }
-      const delay = getValue(instance.props.delay, 0, Defaults.delay)
-      if (lastTriggerEvent.type) {
-        positionVirtualReferenceNearCursor(
-          delay && lastMouseMoveEvent
-            ? lastMouseMoveEvent
-            : // TODO: figure out why this is here
-              (lastTriggerEvent as MouseEvent),
-        )
+      // TODO: check if removing lastTriggerEvent causes issues.
+      if (lastMouseMoveEvent) {
+        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
       }
     } else if (arrow) {
       arrow.style.margin = ''
@@ -627,7 +622,7 @@ export default function createTippy(
     return (
       instance.props.followCursor &&
       !isUsingTouch &&
-      lastTriggerEvent.type !== 'focus'
+      lastTriggerEventType !== 'focus'
     )
   }
 
