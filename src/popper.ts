@@ -25,7 +25,7 @@ export function setContent(contentEl: PopperChildren['content'], props: Props) {
   if (props.content instanceof Element) {
     setInnerHTML(contentEl, '')
     contentEl.appendChild(props.content)
-  } else {
+  } else if (typeof props.content !== 'function') {
     const key: 'innerHTML' | 'textContent' = props.allowHTML
       ? 'innerHTML'
       : 'textContent'

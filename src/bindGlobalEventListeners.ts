@@ -53,7 +53,7 @@ export function onDocumentClick(event: MouseEvent) {
   }
 
   // Clicked on a reference
-  const reference: ReferenceElement = closestCallback(
+  const reference: ReferenceElement | undefined = closestCallback(
     event.target,
     (el: ReferenceElement) => el._tippy && el._tippy.reference === el,
   )
