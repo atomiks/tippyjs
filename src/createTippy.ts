@@ -57,7 +57,7 @@ export default function createTippy(
   }
 
   /* ======================= 🔒 Private members 🔒 ======================= */
-  // The last trigger event object that caused the tippy to show
+  // The last trigger event type that caused the tippy to show
   let lastTriggerEventType: string
 
   // The last mousemove event object created by the document mousemove event
@@ -603,7 +603,7 @@ export default function createTippy(
       }
     }
 
-    afterPopperPositionUpdates(instance.popperInstance, callback)
+    afterPopperPositionUpdates(instance.popperInstance!, callback)
 
     const { appendTo } = instance.props
 

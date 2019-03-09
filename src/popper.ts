@@ -9,6 +9,7 @@ import {
   PopperChildren,
   HideAllOptions,
   BasicPlacement,
+  PopperInstance,
 } from './types'
 
 /**
@@ -312,9 +313,8 @@ export function updatePopperElement(
  * scheduleUpdate() is update() wrapped in requestAnimationFrame()
  */
 export function afterPopperPositionUpdates(
-  // FIXME: popperInstance doesn't seem to be a type exported by Popper.js?
-  popperInstance: any,
-  callback: Function,
+  popperInstance: PopperInstance,
+  callback: () => void,
 ) {
   const { popper, options } = popperInstance
   const { onCreate, onUpdate } = options
@@ -322,7 +322,11 @@ export function afterPopperPositionUpdates(
   options.onCreate = options.onUpdate = (data: Popper.Data) => {
     reflow(popper)
     callback()
-    onUpdate(data)
+
+    if (onUpdate) {
+      onUpdate(data)
+    }
+
     options.onCreate = onCreate
     options.onUpdate = onUpdate
   }
