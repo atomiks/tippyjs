@@ -1,6 +1,6 @@
 import { isBrowser } from './browser'
 
-const elementProto = isBrowser ? Element.prototype : ({} as any)
+const elementProto: Record<string, any> = isBrowser ? Element.prototype : {}
 
 export const matches =
   elementProto.matches ||

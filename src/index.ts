@@ -9,7 +9,13 @@ import { arrayFrom } from './ponyfills'
 import { hideAll } from './popper'
 import { isSingular, isBareVirtualElement, getArrayOfElements } from './utils'
 import group from './group'
-import { Props, Instance, Targets, VirtualReference } from './types'
+import {
+  Props,
+  Instance,
+  Targets,
+  ReferenceElement,
+  VirtualReference,
+} from './types'
 
 let globalEventListenersBound = false
 
@@ -24,7 +30,7 @@ function tippy(targets: Targets, options?: Props): Instance | Instance[] {
     globalEventListenersBound = true
   }
 
-  const props = { ...Defaults, ...options }
+  const props: Props = { ...Defaults, ...options }
 
   // If they are specifying a virtual positioning reference, we need to polyfill
   // some native DOM props
@@ -32,15 +38,15 @@ function tippy(targets: Targets, options?: Props): Instance | Instance[] {
     polyfillElementPrototypeProperties(targets as VirtualReference)
   }
 
+  // @ts-ignore
   const instances = getArrayOfElements(targets).reduce(
-    (acc: any, reference) => {
+    (acc: any, reference: ReferenceElement) => {
       const instance = reference && createTippy(reference, props)
       if (instance) {
         acc.push(instance)
       }
       return acc
     },
-    // @ts-ignore
     [],
   )
 
@@ -56,9 +62,10 @@ tippy.defaults = Defaults
 /**
  * Static methods
  */
-tippy.setDefaults = (partialDefaults: Props) => {
+tippy.setDefaults = (partialDefaults: Partial<Props>) => {
   Object.keys(partialDefaults).forEach(key => {
-    ;(Defaults as any)[key] = (partialDefaults as any)[key]
+    // @ts-ignore
+    Defaults[key] = partialDefaults[key]
   })
 }
 tippy.hideAll = hideAll

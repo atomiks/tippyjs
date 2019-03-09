@@ -15,8 +15,7 @@ import {
  * Sets the innerHTML of an element
  */
 export function setInnerHTML(element: Element, html: string | Element) {
-  ;(element as any)[innerHTML()] =
-    html instanceof Element ? (html as any)[innerHTML()] : html
+  element[innerHTML()] = html instanceof Element ? html[innerHTML()] : html
 }
 
 /**
@@ -27,8 +26,10 @@ export function setContent(contentEl: PopperChildren['content'], props: Props) {
     setInnerHTML(contentEl, '')
     contentEl.appendChild(props.content)
   } else {
-    // @ts-ignore
-    contentEl[props.allowHTML ? 'innerHTML' : 'textContent'] = props.content
+    const key: 'innerHTML' | 'textContent' = props.allowHTML
+      ? 'innerHTML'
+      : 'textContent'
+    contentEl[key] = props.content
   }
 }
 
@@ -112,7 +113,10 @@ export function removeInteractive(
 /**
  * Applies a transition duration to a list of elements
  */
-export function applyTransitionDuration(els: HTMLDivElement[], value: number) {
+export function applyTransitionDuration(
+  els: (HTMLDivElement | null)[],
+  value: number,
+) {
   els.forEach(el => {
     if (el) {
       el.style.transitionDuration = `${value}ms`
@@ -134,7 +138,9 @@ export function toggleTransitionEndListener(
     isUCBrowser && document.body.style.webkitTransition !== undefined
       ? 'webkitTransitionEnd'
       : 'transitionend'
-  ;(tooltip as any)[action + 'EventListener'](eventName, listener)
+  tooltip[
+    (action + 'EventListener') as 'addEventListener' | 'removeEventListener'
+  ](eventName, listener)
 }
 
 /**
@@ -149,7 +155,7 @@ export function getPopperPlacement(popper: PopperElement) {
  * Sets the visibility state to elements so they can begin to transition
  */
 export function setVisibilityState(
-  els: HTMLDivElement[],
+  els: (HTMLDivElement | null)[],
   state: 'visible' | 'hidden',
 ) {
   els.forEach(el => {

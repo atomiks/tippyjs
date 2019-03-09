@@ -92,7 +92,7 @@ export interface Props {
   touchHold?: boolean
   trigger?: string
   updateDuration?: number
-  wait?(instance: Instance, event: Event): void
+  wait?: ((instance: Instance, event?: Event) => void) | null
   zIndex?: number
 }
 
@@ -121,7 +121,7 @@ export interface Instance {
 }
 
 export interface GroupedInstance extends Instance {
-  _originalProps?: Props
+  _originalProps: Props
 }
 
 export interface GroupOptions {
@@ -140,6 +140,12 @@ export interface HideAllOptions {
   checkHideOnClick?: boolean
   duration?: number
   exclude?: Instance
+}
+
+export interface Listener {
+  eventType: string
+  handler: EventListenerOrEventListenerObject
+  options: boolean | object
 }
 
 export interface Tippy {

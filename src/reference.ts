@@ -35,9 +35,9 @@ export function getDataAttributeOptions(reference: ReferenceElement): Props {
  * Mutating because DOM elements are mutated, adds `_tippy` property
  */
 export function polyfillElementPrototypeProperties(
-  virtualReference: VirtualReference,
+  virtualReference: VirtualReference & Record<string, any>,
 ) {
-  const polyfills: any = {
+  const polyfills: Record<string, any> = {
     isVirtual: true,
     attributes: virtualReference.attributes || {},
     setAttribute(key: string, value: any) {
@@ -69,6 +69,6 @@ export function polyfillElementPrototypeProperties(
   }
 
   for (const key in polyfills) {
-    ;(virtualReference as any)[key] = polyfills[key]
+    virtualReference[key] = polyfills[key]
   }
 }

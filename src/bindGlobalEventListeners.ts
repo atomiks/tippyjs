@@ -40,36 +40,39 @@ export function onDocumentMouseMove() {
   lastMouseMoveTime = now
 }
 
-export function onDocumentClick({ target }: { target: EventTarget }) {
+export function onDocumentClick(event: MouseEvent) {
   // Simulated events dispatched on the document
-  if (!(target instanceof Element)) {
+  if (!(event.target instanceof Element)) {
     return hideAll()
   }
 
   // Clicked on an interactive popper
-  const popper: ReferenceElement = closest(target, Selectors.POPPER)
+  const popper: ReferenceElement = closest(event.target, Selectors.POPPER)
   if (popper && popper._tippy && popper._tippy.props.interactive) {
     return
   }
 
   // Clicked on a reference
   const reference: ReferenceElement = closestCallback(
-    target,
+    event.target,
     (el: ReferenceElement) => el._tippy && el._tippy.reference === el,
   )
   if (reference) {
     const instance = reference._tippy
-    const isClickTrigger = includes(instance.props.trigger, 'click')
 
-    if (isUsingTouch || isClickTrigger) {
-      return hideAll({ exclude: instance, checkHideOnClick: true })
+    if (instance) {
+      const isClickTrigger = includes(instance.props.trigger || '', 'click')
+
+      if (isUsingTouch || isClickTrigger) {
+        return hideAll({ exclude: instance, checkHideOnClick: true })
+      }
+
+      if (instance.props.hideOnClick !== true || isClickTrigger) {
+        return
+      }
+
+      instance.clearDelayTimeouts()
     }
-
-    if (instance.props.hideOnClick !== true || isClickTrigger) {
-      return
-    }
-
-    instance.clearDelayTimeouts()
   }
 
   hideAll({ checkHideOnClick: true })

@@ -35,6 +35,7 @@ import {
   Instance,
   Content,
   Padding,
+  Listener,
 } from './types'
 
 let idCounter = 1
@@ -47,7 +48,7 @@ let idCounter = 1
 export default function createTippy(
   reference: ReferenceElement,
   collectionProps: Props,
-): Instance {
+): Instance | null {
   const props = evaluateProps(reference, collectionProps)
 
   // If the reference shouldn't have multiple tippys, return null early
@@ -72,10 +73,10 @@ export default function createTippy(
   let isScheduledToShow = false
 
   // The current `transitionend` callback reference
-  let transitionEndListener: EventListener
+  let transitionEndListener: (event: TransitionEvent) => void
 
   // Array of event listeners currently attached to the reference element
-  let listeners: object[] = []
+  let listeners: Listener[] = []
 
   // Private onMouseMove handler reference, debounced or not
   let debouncedOnMouseMove =
@@ -209,6 +210,7 @@ export default function createTippy(
     const isVertical = followCursor === 'vertical'
 
     instance.popperInstance.reference = {
+      ...instance.popperInstance.reference,
       getBoundingClientRect: () => ({
         width: 0,
         height: 0,
@@ -219,7 +221,7 @@ export default function createTippy(
       }),
       clientWidth: 0,
       clientHeight: 0,
-    } as ReferenceElement
+    }
 
     instance.popperInstance.scheduleUpdate()
 
@@ -231,20 +233,22 @@ export default function createTippy(
   /**
    * Creates the tippy instance for a delegate when it's been triggered
    */
-  function createDelegateChildTippy(event: Event) {
-    const targetEl: ReferenceElement = closest(
-      event.target as Element,
-      instance.props.target,
-    )
-    if (targetEl && !targetEl._tippy) {
-      createTippy(targetEl, {
-        ...instance.props,
-        content: evaluateValue(collectionProps.content, [targetEl]),
-        appendTo: collectionProps.appendTo,
-        target: '',
-        showOnInit: true,
-      })
-      scheduleShow(event)
+  function createDelegateChildTippy(event?: Event) {
+    if (event) {
+      const targetEl: ReferenceElement = closest(
+        event.target as Element,
+        instance.props.target,
+      )
+      if (targetEl && !targetEl._tippy) {
+        createTippy(targetEl, {
+          ...instance.props,
+          content: evaluateValue(collectionProps.content, [targetEl]),
+          appendTo: collectionProps.appendTo,
+          target: '',
+          showOnInit: true,
+        })
+        scheduleShow(event)
+      }
     }
   }
 
@@ -516,12 +520,12 @@ export default function createTippy(
         styles[basePlacement] = getOffsetDistanceInPx(instance.props.distance)
 
         // Avoid _defineProperty helper function created by Babel
-        const padding = {
+        const padding: Pick<Padding, 'top' | 'bottom' | 'left' | 'right'> = {
           top: PADDING,
           bottom: PADDING,
           left: PADDING,
           right: PADDING,
-        } as Padding
+        }
 
         padding[basePlacement] = PADDING + instance.props.distance
 
@@ -546,7 +550,7 @@ export default function createTippy(
    * Mounts the tooltip to the DOM, callback to show tooltip is run **after**
    * popper's position has updated
    */
-  function mount(callback: Function) {
+  function mount(callback: () => void) {
     const shouldEnableListeners =
       !hasFollowCursorBehavior() &&
       !(instance.props.followCursor === 'initial' && isUsingTouch)
@@ -705,7 +709,7 @@ export default function createTippy(
    */
   function on(
     eventType: string,
-    handler: EventListener,
+    handler: EventListenerOrEventListenerObject,
     options: boolean | object = false,
   ) {
     instance.reference.addEventListener(eventType, handler, options)
@@ -763,19 +767,9 @@ export default function createTippy(
    * Removes event listeners from the reference
    */
   function removeTriggersFromReference() {
-    listeners.forEach(
-      ({
-        eventType,
-        handler,
-        options,
-      }: {
-        eventType: string
-        handler: EventListener
-        options: EventListenerOptions
-      }) => {
-        instance.reference.removeEventListener(eventType, handler, options)
-      },
-    )
+    listeners.forEach(({ eventType, handler, options }: Listener) => {
+      instance.reference.removeEventListener(eventType, handler, options)
+    })
     listeners = []
   }
 

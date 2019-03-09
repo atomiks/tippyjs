@@ -3,8 +3,6 @@ import { GroupedInstance, GroupOptions } from './types'
 /**
  * Groups an array of instances by taking control of their props during
  * certain lifecycles.
- * @param {Object[]} instances
- * @param {Object} options
  */
 export default function group(
   instances: GroupedInstance[],
@@ -13,12 +11,7 @@ export default function group(
   let isAnyTippyOpen = false
 
   instances.forEach(instance => {
-    instance._originalProps = {
-      duration: instance.props.duration,
-      onHide: instance.props.onHide,
-      onShow: instance.props.onShow,
-      onShown: instance.props.onShown,
-    }
+    instance._originalProps = { ...instance.props }
   })
 
   function setIsAnyTippyOpen(value: boolean) {
