@@ -584,7 +584,6 @@ export default function createTippy(
       if (arrow) {
         arrow.style.margin = '0'
       }
-      // TODO: check if removing lastTriggerEvent causes issues.
       if (lastMouseMoveEvent) {
         positionVirtualReferenceNearCursor(lastMouseMoveEvent)
       }
