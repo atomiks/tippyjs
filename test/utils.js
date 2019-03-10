@@ -1,7 +1,7 @@
 import {
   onDocumentTouch,
   onDocumentMouseMove,
-} from '../src/js/bindGlobalEventListeners'
+} from '../src/bindGlobalEventListeners'
 
 export const IDENTIFIER = '__tippy'
 

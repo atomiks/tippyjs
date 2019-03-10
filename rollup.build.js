@@ -19,9 +19,14 @@ const BANNER = `/**!
 * MIT License
 */`
 
-const pluginBabel = babel({ exclude: 'node_modules/**' })
+const extensions = ['.js', '.ts']
+
+const pluginBabel = babel({
+  exclude: 'node_modules/**',
+  extensions,
+})
 const pluginMinify = terser()
-const pluginResolve = resolve()
+const pluginResolve = resolve({ extensions })
 const pluginCSS = cssOnly({ output: false })
 const pluginJSON = json()
 const createPluginSCSS = output =>

@@ -1,14 +1,13 @@
-import Defaults from './defaults'
+import { Props, VirtualReference, ReferenceElement } from './types'
+import { defaultProps } from './props'
 
-const keys = Object.keys(Defaults)
+const keys = Object.keys(defaultProps)
 
 /**
  * Returns an object of optional props from data-tippy-* attributes
- * @param {Element} reference
- * @return {Object}
  */
-export function getDataAttributeOptions(reference) {
-  return keys.reduce((acc, key) => {
+export function getDataAttributeOptions(reference: ReferenceElement): Props {
+  return keys.reduce((acc: any, key) => {
     const valueAsString = (
       reference.getAttribute(`data-tippy-${key}`) || ''
     ).trim()
@@ -34,35 +33,36 @@ export function getDataAttributeOptions(reference) {
 /**
  * Polyfills the virtual reference (plain object) with Element.prototype props
  * Mutating because DOM elements are mutated, adds `_tippy` property
- * @param {Object} virtualReference
  */
-export function polyfillElementPrototypeProperties(virtualReference) {
-  const polyfills = {
+export function polyfillElementPrototypeProperties(
+  virtualReference: VirtualReference & Record<string, any>,
+): void {
+  const polyfills: Record<string, any> = {
     isVirtual: true,
     attributes: virtualReference.attributes || {},
-    setAttribute(key, value) {
+    setAttribute(key: string, value: any) {
       virtualReference.attributes[key] = value
     },
-    getAttribute(key) {
+    getAttribute(key: string) {
       return virtualReference.attributes[key]
     },
-    removeAttribute(key) {
+    removeAttribute(key: string) {
       delete virtualReference.attributes[key]
     },
-    hasAttribute(key) {
+    hasAttribute(key: string) {
       return key in virtualReference.attributes
     },
     addEventListener() {},
     removeEventListener() {},
     classList: {
       classNames: {},
-      add(key) {
+      add(key: string) {
         virtualReference.classList.classNames[key] = true
       },
-      remove(key) {
+      remove(key: string) {
         delete virtualReference.classList.classNames[key]
       },
-      contains(key) {
+      contains(key: string) {
         return key in virtualReference.classList.classNames
       },
     },

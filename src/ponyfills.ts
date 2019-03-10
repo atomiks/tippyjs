@@ -1,6 +1,6 @@
 import { isBrowser } from './browser'
 
-const elementProto = isBrowser ? Element.prototype : {}
+const elementProto: Record<string, any> = isBrowser ? Element.prototype : {}
 
 export const matches =
   elementProto.matches ||
@@ -11,23 +11,19 @@ export const matches =
 
 /**
  * Ponyfill for Array.from - converts iterable values to an array
- * @param {ArrayLike} value
- * @return {any[]}
  */
-export function arrayFrom(value) {
+export function arrayFrom(value: ArrayLike<any>): any[] {
   return [].slice.call(value)
 }
 
 /**
  * Ponyfill for Element.prototype.closest
- * @param {Element} element
- * @param {String} parentSelector
- * @return {Element}
  */
-export function closest(element, parentSelector) {
+export function closest(element: Element, parentSelector: string): Element {
   return (
     elementProto.closest ||
-    function(selector) {
+    function(selector: string) {
+      // @ts-ignore
       let el = this
       while (el) {
         if (matches.call(el, selector)) {
@@ -41,11 +37,11 @@ export function closest(element, parentSelector) {
 
 /**
  * Works like Element.prototype.closest, but uses a callback instead
- * @param {Element} element
- * @param {Function} callback
- * @return {Element}
  */
-export function closestCallback(element, callback) {
+export function closestCallback(
+  element: Element | null,
+  callback: Function,
+): Element | undefined {
   while (element) {
     if (callback(element)) {
       return element

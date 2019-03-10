@@ -2,7 +2,7 @@ import { h } from '../utils'
 import {
   getDataAttributeOptions,
   polyfillElementPrototypeProperties,
-} from '../../src/js/reference'
+} from '../../src/reference'
 
 describe('getDataAttributeOptions', () => {
   it('uses data-tippy-content', () => {

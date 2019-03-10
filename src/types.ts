@@ -43,11 +43,7 @@ export interface PopperInstance extends Popper {
   modifiers: { name: string; padding: object | number }[]
 }
 
-/**
- * This interface will be called `Props` in the next major.
- * Exists for backwards-compat after TypeScript rewrite.
- */
-export interface WholeProps {
+export interface Props {
   a11y: boolean
   allowHTML: boolean
   animateFill: boolean
@@ -96,13 +92,7 @@ export interface WholeProps {
   zIndex: number
 }
 
-/**
- * @deprecated
- * Use `Options` instead.
- */
-export type Props = Partial<WholeProps>
-
-export type Options = Partial<WholeProps>
+export type Options = Partial<Props>
 
 export interface Instance {
   clearDelayTimeouts(): void
@@ -149,6 +139,14 @@ export interface HideAllOptions {
   duration?: number
   exclude?: Instance
 }
+
+export interface Listener {
+  eventType: string
+  handler: EventListenerOrEventListenerObject
+  options: boolean | object
+}
+
+export type TriggerListener = (event: MouseEvent | FocusEvent) => void
 
 export interface Tippy {
   (targets: Targets, options?: Props): Instance | Instance[]

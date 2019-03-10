@@ -1,14 +1,15 @@
+import { Props, ReferenceElement, VirtualReference } from './types'
 import { arrayFrom, matches } from './ponyfills'
+import { isUCBrowser } from './browser'
+import { getDataAttributeOptions } from './reference'
 
 /**
  * Determines if a value is a "bare" virtual element (before mutations done
  * by `polyfillElementPrototypeProperties()`). JSDOM elements show up as
  * [object Object], we can check if the value is "element-like" if it has
  * `addEventListener`
- * @param {any} value
- * @return {Boolean}
  */
-export function isBareVirtualElement(value) {
+export function isBareVirtualElement(value: any): boolean {
   return (
     {}.toString.call(value) === '[object Object]' && !value.addEventListener
   )
@@ -16,26 +17,23 @@ export function isBareVirtualElement(value) {
 
 /**
  * Safe .hasOwnProperty check, for prototype-less objects
- * @param {Object} obj
- * @param {String} key
- * @return {Boolean}
  */
-export function hasOwnProperty(obj, key) {
+export function hasOwnProperty(obj: object, key: string): boolean {
   return {}.hasOwnProperty.call(obj, key)
 }
 
 /**
  * Returns an array of elements based on the value
- * @param {Object|String|Element|Element[]|NodeList} value
- * @return {Element[]}
  */
-export function getArrayOfElements(value) {
+export function getArrayOfElements(value: any): Element[] | VirtualReference[] {
   if (isSingular(value)) {
     return [value]
   }
+
   if (value instanceof NodeList) {
     return arrayFrom(value)
   }
+
   if (Array.isArray(value)) {
     return value
   }
@@ -49,11 +47,8 @@ export function getArrayOfElements(value) {
 
 /**
  * Returns a value at a given index depending on if it's an array or number
- * @param {any} value
- * @param {Number} index
- * @param {any} [defaultValue]
  */
-export function getValue(value, index, defaultValue) {
+export function getValue(value: any, index: number, defaultValue: any): any {
   if (Array.isArray(value)) {
     const v = value[index]
     return v == null ? defaultValue : v
@@ -63,11 +58,9 @@ export function getValue(value, index, defaultValue) {
 
 /**
  * Debounce utility
- * @param {Function} fn
- * @param {Number} ms
  */
-export function debounce(fn, ms) {
-  let timeoutId
+export function debounce(fn: Function, ms: number): () => void {
+  let timeoutId: number
   return function() {
     clearTimeout(timeoutId)
     // @ts-ignore
@@ -78,30 +71,22 @@ export function debounce(fn, ms) {
 /**
  * Prevents errors from being thrown while accessing nested modifier objects
  * in `popperOptions`
- * @param {Object} obj
- * @param {String} key
- * @return {Object}
  */
-export function getModifier(obj, key) {
+export function getModifier(obj: any, key: string): any {
   return obj && obj.modifiers && obj.modifiers[key]
 }
 
 /**
  * Determines if an array or string includes a value
- * @param {any[]|String} a
- * @param {any} b
- * @return {Boolean}
  */
-export function includes(a, b) {
+export function includes(a: any[] | string, b: any): boolean {
   return a.indexOf(b) > -1
 }
 
 /**
  * Determines if the value is singular-like
- * @param {any} value
- * @return {Boolean}
  */
-export function isSingular(value) {
+export function isSingular(value: any): boolean {
   return (
     !!(value && hasOwnProperty(value, 'isVirtual')) || value instanceof Element
   )
@@ -109,38 +94,30 @@ export function isSingular(value) {
 
 /**
  * Firefox extensions don't allow setting .innerHTML directly, this will trick it
- * @return {String}
  */
-export function innerHTML() {
+export function innerHTML(): 'innerHTML' {
   return 'innerHTML'
 }
 
 /**
  * Evaluates a function if one, or returns the value
- * @param {any} value
- * @param {any[]} args
- * @return {any}
  */
-export function evaluateValue(value, args) {
+export function evaluateValue(value: any, args: any[]): any {
   return typeof value === 'function' ? value.apply(null, args) : value
 }
 
 /**
  * Sets a popperInstance `flip` modifier's enabled state
- * @param {Object[]} modifiers
- * @param {Boolean} value
  */
-export function setFlipModifierEnabled(modifiers, value) {
+export function setFlipModifierEnabled(modifiers: any[], value: any): void {
   modifiers.filter(m => m.name === 'flip')[0].enabled = value
 }
 
 /**
  * Determines if an element can receive focus
  * Always returns true for virtual objects
- * @param {Element} element
- * @return {Boolean}
  */
-export function canReceiveFocus(element) {
+export function canReceiveFocus(element: Element): boolean {
   return element instanceof Element
     ? matches.call(
         element,
@@ -151,8 +128,39 @@ export function canReceiveFocus(element) {
 
 /**
  * Returns a new `div` element
- * @return {HTMLDivElement}
  */
-export function div() {
+export function div(): HTMLDivElement {
   return document.createElement('div')
+}
+
+/**
+ * Evaluates the props object by merging data attributes and
+ * disabling conflicting options where necessary
+ */
+export function evaluateProps(
+  reference: ReferenceElement,
+  props: Props,
+): Props {
+  const out = {
+    ...props,
+    content: evaluateValue(props.content, [reference]),
+    ...(props.ignoreAttributes ? {} : getDataAttributeOptions(reference)),
+  }
+
+  if (out.arrow || isUCBrowser) {
+    out.animateFill = false
+  }
+
+  return out
+}
+
+/**
+ * Validates an object of options with the valid default props object
+ */
+export function validateOptions(options = {}, defaults: Props): void {
+  Object.keys(options).forEach(option => {
+    if (!hasOwnProperty(defaults, option)) {
+      throw new Error(`[tippy]: \`${option}\` is not a valid option`)
+    }
+  })
 }
