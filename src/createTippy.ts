@@ -880,9 +880,9 @@ export default function createTippy(
     duration: number = getValue(
       instance.props.duration,
       0,
-      (defaultProps.duration as any)[0],
+      (defaultProps.duration as [number, number])[1],
     ),
-  ): void | false {
+  ): void {
     if (
       instance.state.isDestroyed ||
       !instance.state.isEnabled ||
@@ -972,9 +972,9 @@ export default function createTippy(
     duration: number = getValue(
       instance.props.duration,
       1,
-      (defaultProps.duration as any)[1],
+      (defaultProps.duration as [number, number])[1],
     ),
-  ): void | false {
+  ): void {
     if (instance.state.isDestroyed || !instance.state.isEnabled) {
       return
     }
