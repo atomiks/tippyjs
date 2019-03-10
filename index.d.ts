@@ -43,8 +43,10 @@ export interface PopperInstance extends Popper {
   modifiers: { name: string; padding: object | number }[]
 }
 
-// NOTE: This interface should just be called `Props`, but needs to be optional
-// for this major for backwards-compat.
+/**
+ * This interface will be called `Props` in the next major.
+ * Exists for backwards-compat after TypeScript rewrite.
+ */
 export interface WholeProps {
   a11y: boolean
   allowHTML: boolean
@@ -94,9 +96,13 @@ export interface WholeProps {
   zIndex: number
 }
 
-// Backwards-compat
+/**
+ * @deprecated
+ * Use `Options` instead.
+ */
 export type Props = Partial<WholeProps>
-export type Options = Props
+
+export type Options = Partial<WholeProps>
 
 export interface Instance {
   clearDelayTimeouts(): void
