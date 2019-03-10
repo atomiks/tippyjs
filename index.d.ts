@@ -43,7 +43,9 @@ export interface PopperInstance extends Popper {
   modifiers: { name: string; padding: object | number }[]
 }
 
-export interface Defaults {
+// NOTE: This interface should just be called `Props`, but needs to be optional
+// for this major for backwards-compat.
+export interface WholeProps {
   a11y: boolean
   allowHTML: boolean
   animateFill: boolean
@@ -93,7 +95,7 @@ export interface Defaults {
 }
 
 // Backwards-compat
-export type Props = Partial<Defaults>
+export type Props = Partial<WholeProps>
 export type Options = Props
 
 export interface Instance {
