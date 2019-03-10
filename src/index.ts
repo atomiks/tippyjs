@@ -13,14 +13,7 @@ import {
   getArrayOfElements,
   validateOptions,
 } from './utils'
-import {
-  Options,
-  Props,
-  Instance,
-  Targets,
-  ReferenceElement,
-  VirtualReference,
-} from './types'
+import { Options, Props, Instance, Targets, VirtualReference } from './types'
 
 let globalEventListenersBound = false
 
@@ -43,9 +36,8 @@ function tippy(targets: Targets, options?: Options): Instance | Instance[] {
     polyfillElementPrototypeProperties(targets as VirtualReference)
   }
 
-  // @ts-ignore
-  const instances = getArrayOfElements(targets).reduce(
-    (acc: any, reference: ReferenceElement) => {
+  const instances = getArrayOfElements(targets).reduce<Instance[]>(
+    (acc, reference) => {
       const instance = reference && createTippy(reference, props)
       if (instance) {
         acc.push(instance)

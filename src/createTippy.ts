@@ -286,7 +286,6 @@ export default function createTippy(
     const delay = getValue(instance.props.delay, 0, defaultProps.delay)
 
     if (delay) {
-      // @ts-ignore
       showTimeoutId = setTimeout(() => {
         show()
       }, delay)
@@ -310,7 +309,6 @@ export default function createTippy(
     const delay = getValue(instance.props.delay, 1, defaultProps.delay)
 
     if (delay) {
-      // @ts-ignore
       hideTimeoutId = setTimeout(() => {
         if (instance.state.isVisible) {
           hide()
