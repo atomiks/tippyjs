@@ -9,6 +9,3 @@ global.window.document.createRange = function createRange() {
     commonAncestorContainer: document.createElement('div'),
   }
 }
-
-global.window.focus = () => {}
-global.window.scroll = () => {}
