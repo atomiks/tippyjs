@@ -1,8 +1,5 @@
 import Popper from 'popper.js'
 import Selectors from './selectors'
-import { arrayFrom } from './ponyfills'
-import { innerHTML, div } from './utils'
-import { isUCBrowser } from './browser'
 import {
   PopperElement,
   Props,
@@ -11,6 +8,9 @@ import {
   BasicPlacement,
   PopperInstance,
 } from './types'
+import { arrayFrom } from './ponyfills'
+import { innerHTML, div } from './utils'
+import { isUCBrowser } from './browser'
 
 /**
  * Sets the innerHTML of an element

@@ -1,5 +1,5 @@
-import { defaultProps } from './props'
 import { Props, VirtualReference, ReferenceElement } from './types'
+import { defaultProps } from './props'
 
 const keys = Object.keys(defaultProps)
 

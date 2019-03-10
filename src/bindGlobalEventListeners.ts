@@ -1,10 +1,10 @@
-import { isIOS } from './browser'
 import Selectors from './selectors'
-import { hideAll } from './popper'
+import { ReferenceElement } from './types'
 import { closest, closestCallback } from './ponyfills'
+import { isIOS } from './browser'
+import { hideAll } from './popper'
 import { includes } from './utils'
 import { PASSIVE } from './constants'
-import { ReferenceElement } from './types'
 
 export let isUsingTouch = false
 

@@ -3,6 +3,7 @@ import { isBrowser } from './browser'
 import { defaultProps } from './props'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
+import group from './group'
 import { polyfillElementPrototypeProperties } from './reference'
 import { arrayFrom } from './ponyfills'
 import { hideAll } from './popper'
@@ -12,7 +13,6 @@ import {
   getArrayOfElements,
   validateOptions,
 } from './utils'
-import group from './group'
 import {
   Options,
   Props,

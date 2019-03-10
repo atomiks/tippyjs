@@ -1,8 +1,10 @@
 import Popper from 'popper.js'
+import Selectors from './selectors'
 import { isIE } from './browser'
 import { isUsingTouch } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
-import Selectors from './selectors'
+import { closest, closestCallback, arrayFrom } from './ponyfills'
+import { PASSIVE, PADDING } from './constants'
 import {
   createPopperElement,
   updatePopperElement,
@@ -15,7 +17,6 @@ import {
   isCursorOutsideInteractiveBorder,
   getOffsetDistanceInPx,
 } from './popper'
-import { closest, closestCallback, arrayFrom } from './ponyfills'
 import {
   hasOwnProperty,
   debounce,
@@ -28,7 +29,6 @@ import {
   validateOptions,
   evaluateProps,
 } from './utils'
-import { PASSIVE, PADDING } from './constants'
 import {
   ReferenceElement,
   PopperInstance,

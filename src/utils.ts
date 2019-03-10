@@ -1,7 +1,7 @@
-import { arrayFrom, matches } from './ponyfills'
-import { getDataAttributeOptions } from './reference'
-import { isUCBrowser } from './browser'
 import { Props, ReferenceElement, VirtualReference } from './types'
+import { arrayFrom, matches } from './ponyfills'
+import { isUCBrowser } from './browser'
+import { getDataAttributeOptions } from './reference'
 
 /**
  * Determines if a value is a "bare" virtual element (before mutations done
