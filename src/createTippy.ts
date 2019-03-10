@@ -1,10 +1,19 @@
 import Popper from 'popper.js'
 import Selectors from './selectors'
+import {
+  ReferenceElement,
+  PopperInstance,
+  Props,
+  Options,
+  Instance,
+  Content,
+  Listener,
+} from './types'
 import { isIE } from './browser'
-import { isUsingTouch } from './bindGlobalEventListeners'
-import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
 import { PASSIVE, PADDING } from './constants'
+import { isUsingTouch } from './bindGlobalEventListeners'
+import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
   createPopperElement,
   updatePopperElement,
@@ -29,15 +38,6 @@ import {
   validateOptions,
   evaluateProps,
 } from './utils'
-import {
-  ReferenceElement,
-  PopperInstance,
-  Props,
-  Options,
-  Instance,
-  Content,
-  Listener,
-} from './types'
 
 let idCounter = 1
 
