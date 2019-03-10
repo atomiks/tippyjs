@@ -96,7 +96,7 @@ export interface Options {
  * @deprecated
  * Use `Options` instead.
  */
-export type Props = Partial<Options>
+export type Props = Options
 
 export interface Instance {
   clearDelayTimeouts(): void
