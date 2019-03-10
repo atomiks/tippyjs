@@ -4,7 +4,7 @@ import {
   closest,
   closestCallback,
   matches,
-} from '../../src/js/ponyfills'
+} from '../../src/ponyfills'
 
 describe('arrayFrom', () => {
   it('converts a NodeList to an array', () => {

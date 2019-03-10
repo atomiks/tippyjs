@@ -1,7 +1,7 @@
-import { h, cleanDocumentBody, withTestOptions } from '../utils'
+import { h, cleanDocumentBody } from '../utils'
 
-import tippy from '../../src/js/index'
-import bindEventListeners, * as Listeners from '../../src/js/bindGlobalEventListeners'
+import tippy from '../../src/index'
+import bindEventListeners, * as Listeners from '../../src/bindGlobalEventListeners'
 
 afterEach(cleanDocumentBody)
 

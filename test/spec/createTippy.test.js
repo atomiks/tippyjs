@@ -1,9 +1,9 @@
-import { h, cleanDocumentBody, wait } from '../utils'
+import { h, cleanDocumentBody } from '../utils'
 
-import tippy from '../../src/js'
-import Defaults from '../../src/js/defaults'
-import Selectors from '../../src/js/selectors'
-import createTippy from '../../src/js/createTippy'
+import tippy from '../../src/index'
+import { defaultProps } from '../../src/props'
+import Selectors from '../../src/selectors'
+import createTippy from '../../src/createTippy'
 
 afterEach(cleanDocumentBody)
 
@@ -16,11 +16,11 @@ describe('createTippy', () => {
   it('returns `null` if the reference already has a tippy instance', () => {
     const reference = h()
     reference._tippy = true
-    expect(createTippy(reference, Defaults)).toBe(null)
+    expect(createTippy(reference, defaultProps)).toBe(null)
   })
 
   it('returns the instance with expected properties', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     expect(instance.id).toBeDefined()
     expect(instance.reference).toBeDefined()
     expect(instance.popper).toBeDefined()
@@ -40,9 +40,9 @@ describe('createTippy', () => {
 
   it('increments the `id` on each call with valid arguments', () => {
     const tips = [
-      createTippy(h(), Defaults),
-      createTippy(h(), Defaults),
-      createTippy(h(), Defaults),
+      createTippy(h(), defaultProps),
+      createTippy(h(), defaultProps),
+      createTippy(h(), defaultProps),
     ]
     expect(tips[0].id).toBe(tips[1].id - 1)
     expect(tips[1].id).toBe(tips[2].id - 1)
@@ -50,7 +50,7 @@ describe('createTippy', () => {
 
   it('adds correct listeners to the reference element based on `trigger`', () => {
     const instance = createTippy(h(), {
-      ...Defaults,
+      ...defaultProps,
       trigger: 'mouseenter focus click',
     })
     instance.reference.dispatchEvent(new Event('mouseenter'))
@@ -72,14 +72,14 @@ describe('createTippy', () => {
 
 describe('instance.destroy', () => {
   it('sets state.isDestroyed to `true`', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.destroy()
     expect(instance.state.isDestroyed).toBe(true)
   })
 
   it('deletes the `_tippy` property from the reference', () => {
     const ref = h()
-    const instance = createTippy(ref, Defaults)
+    const instance = createTippy(ref, defaultProps)
     expect('_tippy' in ref).toBe(true)
     instance.destroy()
     expect('_tippy' in ref).toBe(false)
@@ -87,7 +87,10 @@ describe('instance.destroy', () => {
 
   it('removes listeners from the reference', () => {
     const ref = h()
-    const instance = createTippy(ref, { ...Defaults, trigger: 'mouseenter' })
+    const instance = createTippy(ref, {
+      ...defaultProps,
+      trigger: 'mouseenter',
+    })
     instance.destroy()
     ref.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(false)
@@ -95,7 +98,7 @@ describe('instance.destroy', () => {
 
   it('does nothing if the instance is already destroyed', () => {
     const ref = h()
-    const instance = createTippy(ref, Defaults)
+    const instance = createTippy(ref, defaultProps)
     instance.state.isDestroyed = true
     instance.destroy()
     expect(ref._tippy).toBeDefined()
@@ -105,8 +108,8 @@ describe('instance.destroy', () => {
     const ref = h()
     const p = document.createElement('p')
     ref.append(p)
-    const instance = createTippy(ref, { ...Defaults, target: 'p' })
-    p._tippy = createTippy(p, Defaults)
+    const instance = createTippy(ref, { ...defaultProps, target: 'p' })
+    p._tippy = createTippy(p, defaultProps)
     expect(p._tippy).toBeDefined()
     ref._tippy.destroy(true)
     expect(p._tippy).toBeUndefined()
@@ -115,14 +118,14 @@ describe('instance.destroy', () => {
 
 describe('instance.show', () => {
   it('changes state.isVisible to `true`', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.show()
     expect(instance.state.isVisible).toBe(true)
     instance.destroy()
   })
 
   it('mounts the popper to the DOM', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.show()
     expect(document.querySelector(Selectors.POPPER)).toBe(instance.popper)
     instance.destroy()
@@ -130,7 +133,7 @@ describe('instance.show', () => {
 
   it('overrides instance.props.duration if supplied an argument', done => {
     const instance = createTippy(h(), {
-      ...Defaults,
+      ...defaultProps,
       duration: 100,
     })
     instance.show(10)
@@ -145,7 +148,7 @@ describe('instance.show', () => {
 
   it('adds .tippy-active class if interactive', done => {
     const instance = createTippy(h(), {
-      ...Defaults,
+      ...defaultProps,
       interactive: true,
     })
     instance.show()
@@ -158,14 +161,14 @@ describe('instance.show', () => {
   it('does not show tooltip if the reference has a `disabled` attribute', () => {
     const ref = h()
     ref.setAttribute('disabled', 'disabled')
-    const instance = createTippy(ref, Defaults)
+    const instance = createTippy(ref, defaultProps)
     instance.show()
     expect(instance.state.isVisible).toBe(false)
   })
 
   it('destroys the instance if the reference is not on the DOM', () => {
     const ref = h()
-    const instance = createTippy(ref, Defaults)
+    const instance = createTippy(ref, defaultProps)
     ref.remove()
     instance.show()
     expect(instance.state.isDestroyed).toBe(true)
@@ -174,7 +177,7 @@ describe('instance.show', () => {
 
 describe('instance.hide', () => {
   it('changes state.isVisible to false', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.hide()
     expect(instance.state.isVisible).toBe(false)
     instance.destroy()
@@ -182,7 +185,7 @@ describe('instance.hide', () => {
 
   it('removes the popper element from the DOM after hiding', () => {
     const instance = createTippy(h(), {
-      ...Defaults,
+      ...defaultProps,
     })
     instance.show(0)
     expect(document.querySelector(Selectors.POPPER)).toBe(instance.popper)
@@ -196,7 +199,7 @@ describe('instance.hide', () => {
 
   it('overrides instance.props.duration if supplied an argument', () => {
     const instance = createTippy(h(), {
-      ...Defaults,
+      ...defaultProps,
       duration: 100,
     })
     instance.show(0)
@@ -208,14 +211,14 @@ describe('instance.hide', () => {
 
 describe('instance.enable', () => {
   it('sets state.isEnabled to `true`', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.enable()
     expect(instance.state.isEnabled).toBe(true)
     instance.destroy()
   })
 
   it('allows a tippy to be shown', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.enable()
     instance.show()
     expect(instance.state.isVisible).toBe(true)
@@ -225,14 +228,14 @@ describe('instance.enable', () => {
 
 describe('instance.disable', () => {
   it('sets state.isEnabled to `false`', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.disable()
     expect(instance.state.isEnabled).toBe(false)
     instance.destroy()
   })
 
   it('disallows a tippy to be shown', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.disable()
     instance.show()
     expect(instance.state.isVisible).toBe(false)
@@ -242,23 +245,23 @@ describe('instance.disable', () => {
 
 describe('instance.set', () => {
   it('sets the new props by merging them with the current instance', () => {
-    const instance = createTippy(h(), Defaults)
-    expect(instance.props.arrow).toBe(Defaults.arrow)
-    expect(instance.props.duration).toBe(Defaults.duration)
-    instance.set({ arrow: !Defaults.arrow, duration: 82 })
-    expect(instance.props.arrow).toBe(!Defaults.arrow)
+    const instance = createTippy(h(), defaultProps)
+    expect(instance.props.arrow).toBe(defaultProps.arrow)
+    expect(instance.props.duration).toBe(defaultProps.duration)
+    instance.set({ arrow: !defaultProps.arrow, duration: 82 })
+    expect(instance.props.arrow).toBe(!defaultProps.arrow)
     expect(instance.props.duration).toBe(82)
   })
 
   it('redraws the tooltip by creating a new popper element', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     expect(instance.popper.querySelector('.tippy-arrow')).toBeNull()
     instance.set({ arrow: true })
     expect(instance.popper.querySelector('.tippy-arrow')).not.toBeNull()
   })
 
   it('popperChildren property is updated to reflect the new popper element', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     expect(instance.popperChildren.arrow).toBeNull()
     instance.set({ arrow: true })
     expect(instance.popperChildren.arrow).not.toBeNull()
@@ -266,7 +269,7 @@ describe('instance.set', () => {
 
   it('popperInstance popper is updated to the new popper', () => {
     const instance = createTippy(h(), {
-      ...Defaults,
+      ...defaultProps,
       lazy: false,
     })
     instance.set({ arrow: true })
@@ -274,14 +277,14 @@ describe('instance.set', () => {
   })
 
   it('popper._tippy is defined with the correct instance', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.set({ arrow: true })
     expect(instance.popper._tippy).toBe(instance)
   })
 
   it('changing `trigger` or `touchHold` changes listeners', () => {
     const ref = h()
-    const instance = createTippy(ref, Defaults)
+    const instance = createTippy(ref, defaultProps)
     instance.set({ trigger: 'click' })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(false)
@@ -292,7 +295,7 @@ describe('instance.set', () => {
 
 describe('instance.setContent', () => {
   it('works like set({ content: newContent })', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     const content = 'Hello!'
     instance.setContent(content)
     expect(instance.props.content).toBe(content)
@@ -306,7 +309,7 @@ describe('instance.setContent', () => {
 
 describe('instance.state', () => {
   it('isEnabled', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.show()
     expect(instance.state.isVisible).toBe(true)
     instance.state.isEnabled = false
@@ -321,7 +324,7 @@ describe('instance.state', () => {
   })
 
   it('isVisible', () => {
-    const instance = createTippy(h(), Defaults)
+    const instance = createTippy(h(), defaultProps)
     instance.show()
     expect(instance.state.isVisible).toBe(true)
     instance.hide()

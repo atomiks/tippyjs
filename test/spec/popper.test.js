@@ -1,7 +1,7 @@
 import { h, cleanDocumentBody } from '../utils'
-import tippy from '../../src/js/index'
-import Defaults from '../../src/js/defaults'
-import Selectors from '../../src/js/selectors'
+import tippy from '../../src/index'
+import { defaultProps } from '../../src/props'
+import Selectors from '../../src/selectors'
 import {
   createPopperElement,
   updatePopperElement,
@@ -21,8 +21,8 @@ import {
   isCursorOutsideInteractiveBorder,
   getOffsetDistanceInPx,
   getPopperPlacement,
-} from '../../src/js/popper'
-import { div } from '../../src/js/utils'
+} from '../../src/popper'
+import { div } from '../../src/utils'
 
 tippy.setDefaults({ duration: 0, delay: 0 })
 
@@ -64,43 +64,43 @@ describe('hideAll', () => {
 
 describe('createPopperElement', () => {
   it('returns an element', () => {
-    expect(createPopperElement(1, Defaults) instanceof Element).toBe(true)
+    expect(createPopperElement(1, defaultProps) instanceof Element).toBe(true)
   })
 
   it('always creates a tooltip element child', () => {
-    const popper = createPopperElement(1, Defaults)
+    const popper = createPopperElement(1, defaultProps)
     expect(getChildren(popper).tooltip).not.toBe(null)
   })
 
   it('sets the `id` property correctly', () => {
     const id = 1829
-    const popper = createPopperElement(id, Defaults)
+    const popper = createPopperElement(id, defaultProps)
     expect(popper.id).toBe(`tippy-${id}`)
   })
 
   it('sets the `role` attribute correctly', () => {
-    const popper = createPopperElement(1, Defaults)
+    const popper = createPopperElement(1, defaultProps)
     expect(popper.getAttribute('role')).toBe('tooltip')
   })
 
   it('sets the className property correctly', () => {
-    const popper = createPopperElement(1, Defaults)
+    const popper = createPopperElement(1, defaultProps)
     expect(popper.matches(Selectors.POPPER)).toBe(true)
   })
 
   it('does not create an arrow element if props.arrow is false', () => {
-    const popper = createPopperElement(1, { ...Defaults, arrow: false })
+    const popper = createPopperElement(1, { ...defaultProps, arrow: false })
     expect(popper.querySelector(Selectors.ARROW)).toBe(null)
   })
 
   it('creates an arrow element if props.arrow is true', () => {
-    const popper = createPopperElement(1, { ...Defaults, arrow: true })
+    const popper = createPopperElement(1, { ...defaultProps, arrow: true })
     expect(popper.querySelector(Selectors.ARROW)).not.toBe(null)
   })
 
   it('does not create a backdrop element if props.animateFill is false', () => {
     const popper = createPopperElement(1, {
-      ...Defaults,
+      ...defaultProps,
       animateFill: false,
     })
     expect(popper.querySelector(Selectors.BACKDROP)).toBe(null)
@@ -108,7 +108,7 @@ describe('createPopperElement', () => {
 
   it('sets `[data-animatefill]` on the tooltip element if props.animateFill is true', () => {
     const popper = createPopperElement(1, {
-      ...Defaults,
+      ...defaultProps,
       animateFill: true,
     })
     expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
@@ -118,7 +118,7 @@ describe('createPopperElement', () => {
 
   it('sets `[data-interactive]` on the tooltip if props.interactive is true', () => {
     const popper = createPopperElement(1, {
-      ...Defaults,
+      ...defaultProps,
       interactive: true,
     })
     expect(getChildren(popper).tooltip.hasAttribute('data-interactive')).toBe(
@@ -128,7 +128,7 @@ describe('createPopperElement', () => {
 
   it('sets the correct data-* attributes on the tooltip based on props', () => {
     const popper = createPopperElement(1, {
-      ...Defaults,
+      ...defaultProps,
       size: 'large',
       animation: 'scale',
     })
@@ -140,7 +140,7 @@ describe('createPopperElement', () => {
 
   it('sets the correct theme class names on the tooltip based on props', () => {
     const popper = createPopperElement(1, {
-      ...Defaults,
+      ...defaultProps,
       theme: 'red firetruck',
     })
     expect(getChildren(popper).tooltip.classList.contains('red-theme')).toBe(
@@ -154,18 +154,18 @@ describe('createPopperElement', () => {
 
 describe('updatePopperElement', () => {
   it('sets new zIndex', () => {
-    const popper = createPopperElement(1, Defaults)
-    updatePopperElement(popper, Defaults, {
-      ...Defaults,
+    const popper = createPopperElement(1, defaultProps)
+    updatePopperElement(popper, defaultProps, {
+      ...defaultProps,
       zIndex: 213,
     })
     expect(popper.style.zIndex).toBe('213')
   })
 
   it('updates size and animation attributes', () => {
-    const popper = createPopperElement(1, Defaults)
-    updatePopperElement(popper, Defaults, {
-      ...Defaults,
+    const popper = createPopperElement(1, defaultProps)
+    updatePopperElement(popper, defaultProps, {
+      ...defaultProps,
       size: 'large',
       animation: 'scale',
     })
@@ -176,23 +176,23 @@ describe('updatePopperElement', () => {
   })
 
   it('sets new content', () => {
-    const popper = createPopperElement(1, Defaults)
-    updatePopperElement(popper, Defaults, {
-      ...Defaults,
+    const popper = createPopperElement(1, defaultProps)
+    updatePopperElement(popper, defaultProps, {
+      ...defaultProps,
       content: 'hello',
     })
     expect(getChildren(popper).content.textContent).toBe('hello')
-    updatePopperElement(popper, Defaults, {
-      ...Defaults,
+    updatePopperElement(popper, defaultProps, {
+      ...defaultProps,
       content: '<strong>hello</strong>',
     })
     expect(getChildren(popper).content.querySelector('strong')).not.toBe(null)
   })
 
   it('sets new backdrop element', () => {
-    const popper = createPopperElement(1, Defaults)
-    updatePopperElement(popper, Defaults, {
-      ...Defaults,
+    const popper = createPopperElement(1, defaultProps)
+    updatePopperElement(popper, defaultProps, {
+      ...defaultProps,
       animateFill: false,
     })
     expect(popper.querySelector(Selectors.BACKDROP)).toBe(null)
@@ -201,9 +201,9 @@ describe('updatePopperElement', () => {
     )
     updatePopperElement(
       popper,
-      { ...Defaults, animateFill: false },
+      { ...defaultProps, animateFill: false },
       {
-        ...Defaults,
+        ...defaultProps,
         animateFill: true,
       },
     )
@@ -215,19 +215,19 @@ describe('updatePopperElement', () => {
 
   it('sets new arrow element', () => {
     {
-      const popper = createPopperElement(1, Defaults)
-      updatePopperElement(popper, Defaults, {
-        ...Defaults,
+      const popper = createPopperElement(1, defaultProps)
+      updatePopperElement(popper, defaultProps, {
+        ...defaultProps,
         arrow: true,
       })
       expect(popper.querySelector(Selectors.ARROW)).not.toBe(null)
     }
 
     {
-      const props = { ...Defaults, arrow: true }
+      const props = { ...defaultProps, arrow: true }
       const popper = createPopperElement(1, props)
       updatePopperElement(popper, props, {
-        ...Defaults,
+        ...defaultProps,
         arrow: false,
       })
       expect(popper.querySelector(Selectors.ARROW)).toBe(null)
@@ -236,9 +236,9 @@ describe('updatePopperElement', () => {
 
   it('sets new arrow element type', () => {
     {
-      const popper = createPopperElement(1, Defaults)
-      updatePopperElement(popper, Defaults, {
-        ...Defaults,
+      const popper = createPopperElement(1, defaultProps)
+      updatePopperElement(popper, defaultProps, {
+        ...defaultProps,
         arrow: true,
         arrowType: 'round',
       })
@@ -247,25 +247,25 @@ describe('updatePopperElement', () => {
     }
 
     {
-      const props = { ...Defaults, arrowType: 'round', arrow: true }
+      const props = { ...defaultProps, arrowType: 'round', arrow: true }
       const popper = createPopperElement(1, props)
-      const newProps = { ...Defaults, arrowType: 'sharp', arrow: true }
+      const newProps = { ...defaultProps, arrowType: 'sharp', arrow: true }
       updatePopperElement(popper, props, newProps)
       expect(popper.querySelector(Selectors.ARROW)).not.toBe(null)
       expect(popper.querySelector(Selectors.ROUND_ARROW)).toBe(null)
-      updatePopperElement(popper, newProps, Defaults)
+      updatePopperElement(popper, newProps, defaultProps)
       expect(popper.querySelector(Selectors.ARROW)).toBe(null)
       expect(popper.querySelector(Selectors.ROUND_ARROW)).toBe(null)
     }
   })
 
   it('sets interactive attribute', () => {
-    const popper = createPopperElement(1, Defaults)
+    const popper = createPopperElement(1, defaultProps)
     const newProps = {
-      ...Defaults,
+      ...defaultProps,
       interactive: true,
     }
-    updatePopperElement(popper, Defaults, newProps)
+    updatePopperElement(popper, defaultProps, newProps)
     expect(popper.getAttribute('tabindex')).toBe('-1')
     expect(getChildren(popper).tooltip.hasAttribute('data-interactive')).toBe(
       true,
@@ -281,12 +281,12 @@ describe('updatePopperElement', () => {
   })
 
   it('sets inertia attribute', () => {
-    const popper = createPopperElement(1, Defaults)
+    const popper = createPopperElement(1, defaultProps)
     const newProps = {
-      ...Defaults,
+      ...defaultProps,
       inertia: true,
     }
-    updatePopperElement(popper, Defaults, newProps)
+    updatePopperElement(popper, defaultProps, newProps)
     expect(getChildren(popper).tooltip.hasAttribute('data-inertia')).toBe(true)
     updatePopperElement(popper, newProps, {
       ...newProps,
@@ -296,12 +296,12 @@ describe('updatePopperElement', () => {
   })
 
   it('sets new theme', () => {
-    const popper = createPopperElement(1, Defaults)
+    const popper = createPopperElement(1, defaultProps)
     const newProps = {
-      ...Defaults,
+      ...defaultProps,
       theme: 'my custom themes',
     }
-    updatePopperElement(popper, Defaults, newProps)
+    updatePopperElement(popper, defaultProps, newProps)
     expect(getChildren(popper).tooltip.classList.contains('my-theme')).toBe(
       true,
     )
@@ -397,7 +397,7 @@ describe('removeInertia', () => {
 
 describe('getChildren', () => {
   it('returns the children of the popper element, default props', () => {
-    const popper = createPopperElement(1, Defaults)
+    const popper = createPopperElement(1, defaultProps)
     const children = getChildren(popper)
     expect(children.tooltip).toBeDefined()
     expect(children.content).toBeDefined()
@@ -405,7 +405,7 @@ describe('getChildren', () => {
   })
 
   it('returns the children of the popper element, with arrow', () => {
-    const popper = createPopperElement(1, { ...Defaults, arrow: true })
+    const popper = createPopperElement(1, { ...defaultProps, arrow: true })
     const children = getChildren(popper)
     expect(children.tooltip).toBeDefined()
     expect(children.content).toBeDefined()
@@ -414,7 +414,7 @@ describe('getChildren', () => {
 
   it('returns the children of the popper element, with round arrow', () => {
     const popper = createPopperElement(1, {
-      ...Defaults,
+      ...defaultProps,
       arrow: true,
       arrowType: 'round',
     })
@@ -655,7 +655,7 @@ describe('isCursorOutsideInteractiveBorder', () => {
 
 describe('getOffsetDistanceInPx', () => {
   it('returns 0px by default', () => {
-    expect(getOffsetDistanceInPx(Defaults.distance)).toBe('0px')
+    expect(getOffsetDistanceInPx(defaultProps.distance)).toBe('0px')
   })
 
   it('returns -10px if the distance is 20', () => {

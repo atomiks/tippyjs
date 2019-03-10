@@ -1,46 +1,59 @@
-import { version } from '../../package.json'
+import { version } from '../package.json'
 import { isBrowser } from './browser'
-import Defaults from './defaults'
+import { defaultProps } from './props'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
+import group from './group'
 import { polyfillElementPrototypeProperties } from './reference'
-import { validateOptions } from './props'
 import { arrayFrom } from './ponyfills'
 import { hideAll } from './popper'
-import { isSingular, isBareVirtualElement, getArrayOfElements } from './utils'
-import group from './group'
+import {
+  isSingular,
+  isBareVirtualElement,
+  getArrayOfElements,
+  validateOptions,
+} from './utils'
+import {
+  Options,
+  Props,
+  Instance,
+  Targets,
+  ReferenceElement,
+  VirtualReference,
+} from './types'
 
 let globalEventListenersBound = false
 
 /**
  * Exported module
- * @param {String|Element|Element[]|NodeList|Object} targets
- * @param {Object} options
- * @return {Object}
  */
-function tippy(targets, options) {
-  validateOptions(options, Defaults)
+function tippy(targets: Targets, options?: Options): Instance | Instance[] {
+  validateOptions(options, defaultProps)
 
   if (!globalEventListenersBound) {
     bindGlobalEventListeners()
     globalEventListenersBound = true
   }
 
-  const props = { ...Defaults, ...options }
+  const props: Props = { ...defaultProps, ...options }
 
   // If they are specifying a virtual positioning reference, we need to polyfill
   // some native DOM props
   if (isBareVirtualElement(targets)) {
-    polyfillElementPrototypeProperties(targets)
+    polyfillElementPrototypeProperties(targets as VirtualReference)
   }
 
-  const instances = getArrayOfElements(targets).reduce((acc, reference) => {
-    const instance = reference && createTippy(reference, props)
-    if (instance) {
-      acc.push(instance)
-    }
-    return acc
-  }, [])
+  // @ts-ignore
+  const instances = getArrayOfElements(targets).reduce(
+    (acc: any, reference: ReferenceElement) => {
+      const instance = reference && createTippy(reference, props)
+      if (instance) {
+        acc.push(instance)
+      }
+      return acc
+    },
+    [],
+  )
 
   return isSingular(targets) ? instances[0] : instances
 }
@@ -49,14 +62,15 @@ function tippy(targets, options) {
  * Static props
  */
 tippy.version = version
-tippy.defaults = Defaults
+tippy.defaults = defaultProps
 
 /**
  * Static methods
  */
-tippy.setDefaults = partialDefaults => {
+tippy.setDefaults = (partialDefaults: Options) => {
   Object.keys(partialDefaults).forEach(key => {
-    Defaults[key] = partialDefaults[key]
+    // @ts-ignore
+    defaultProps[key] = partialDefaults[key]
   })
 }
 tippy.hideAll = hideAll
@@ -65,7 +79,7 @@ tippy.group = group
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
  */
-export function autoInit() {
+export function autoInit(): void {
   arrayFrom(document.querySelectorAll('[data-tippy]')).forEach(el => {
     const content = el.getAttribute('data-tippy')
     if (content) {

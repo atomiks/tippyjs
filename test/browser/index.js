@@ -1,4 +1,4 @@
-import tippy from '../../src/js'
+import tippy from '../../src/index'
 import '../../src/scss/index.scss'
 
 tippy.setDefaults({

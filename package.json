@@ -29,8 +29,9 @@
     "build": "node rollup.build.js && bundlesize",
     "test": "jest --coverage",
     "test:browser": "parcel test/browser/index.html -d .devserver --open",
-    "lint": "eslint --fix \"src/**/*.js\"",
-    "format": "prettier --write \"{src,test}/**/*{js,scss}\"",
+    "lint": "eslint \"src/**/*.ts\"",
+    "format": "prettier --write \"{src,test}/**/*{js,ts,scss}\"",
+    "check-types": "tsc",
     "release": "npm test && npm run build && git add . && git commit -am $npm_package_version && git tag v$npm_package_version && git push origin master && git push --tags && npm publish"
   },
   "jest": {
@@ -71,13 +72,16 @@
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.1",
     "@babel/preset-env": "^7.3.1",
+    "@babel/preset-typescript": "^7.3.3",
+    "@typescript-eslint/eslint-plugin": "^1.4.2",
+    "@typescript-eslint/parser": "^1.4.2",
     "autoprefixer": "^6.7.7",
     "babel-jest": "^23.6.0",
     "bundlesize": "^0.17.0",
     "colorette": "^1.0.7",
     "cssnano": "^3.10.0",
     "eslint": "^5.12.0",
-    "eslint-config-prettier": "^3.6.0",
+    "eslint-config-prettier": "^4.1.0",
     "husky": "^1.3.1",
     "jest": "^24.0.0",
     "lint-staged": "^8.1.1",
@@ -94,7 +98,8 @@
     "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-sass": "^1.1.0",
-    "rollup-plugin-terser": "^4.0.3"
+    "rollup-plugin-terser": "^4.0.3",
+    "typescript": "^3.3.3333"
   },
   "dependencies": {
     "popper.js": "^1.14.7"
