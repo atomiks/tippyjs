@@ -21,74 +21,104 @@ const BANNER = `/**!
 
 const extensions = ['.js', '.ts']
 
-const pluginBabel = babel({
-  exclude: 'node_modules/**',
-  extensions,
-})
-const pluginMinify = terser()
-const pluginResolve = resolve({ extensions })
-const pluginCSS = cssOnly({ output: false })
-const pluginJSON = json()
-const createPluginSCSS = output =>
-  sass({
+const plugins = {
+  babel: babel({
+    exclude: 'node_modules/**',
+    extensions,
+  }),
+  minify: terser(),
+  resolve: resolve({ extensions }),
+  css: cssOnly({ output: false }),
+  json: json(),
+}
+
+const BASE_OUTPUT_CONFIG = {
+  name: 'tippy',
+  globals: { 'popper.js': 'Popper' },
+  sourcemap: true,
+}
+const BASE_PLUGINS = [plugins.resolve, plugins.json]
+
+const pluginConfigs = {
+  index: [plugins.babel, ...BASE_PLUGINS],
+  indexMinify: [plugins.babel, ...BASE_PLUGINS, plugins.minify],
+  all: [plugins.babel, ...BASE_PLUGINS, plugins.css],
+  allMinify: [plugins.babel, ...BASE_PLUGINS, plugins.minify, plugins.css],
+}
+
+const createPluginSCSS = output => {
+  return sass({
     output,
     processor: css =>
       postcss([autoprefixer, cssnano])
         .process(css)
         .then(result => result.css),
   })
+}
 
-const config = input => (...plugins) => ({
+const createRollupConfigWithoutPlugins = input => plugins => ({
   input,
-  plugins: [pluginBabel, pluginResolve, pluginJSON, ...plugins],
+  plugins,
   external: ['popper.js'],
 })
 
-const output = format => (file, { min = false } = {}) => {
+const createPreparedOutputConfig = format => (file, { min = false } = {}) => {
   const isCSS = ['css', 'themes'].includes(format)
   return {
-    name: 'tippy',
+    ...BASE_OUTPUT_CONFIG,
     format: isCSS ? 'umd' : format,
     sourcemap: !isCSS,
     file: format === 'css' ? 'index.js' : `./${format}/${file}`,
-    globals: { 'popper.js': 'Popper' },
     banner: min ? undefined : BANNER,
   }
 }
 
-const configs = {
-  css: config('./build/css.js'),
-  index: config('./build/index.js'),
-  all: config('./build/all.js'),
+const getRollupConfigs = {
+  css: createRollupConfigWithoutPlugins('./build/css.js'),
+  index: createRollupConfigWithoutPlugins('./build/index.js'),
+  all: createRollupConfigWithoutPlugins('./build/all.js'),
 }
 
-const outputs = {
-  bundle: [output('umd'), output('esm')],
-  css: output('css'),
-  theme: output('themes'),
+const getOutputConfigs = {
+  bundle: [
+    createPreparedOutputConfig('umd'),
+    createPreparedOutputConfig('esm'),
+  ],
+  css: createPreparedOutputConfig('css'),
+  theme: createPreparedOutputConfig('themes'),
 }
 
 const build = async () => {
   console.log(blue('⏳ Building bundles...'))
 
   const preCSSBundle = await rollup(
-    configs.css(createPluginSCSS('./index.css')),
+    getRollupConfigs.css(createPluginSCSS('./index.css')),
   )
-  await preCSSBundle.write(outputs.css('./index.js'))
+  await preCSSBundle.write(getOutputConfigs.css('./index.js'))
   fs.unlinkSync('./index.js')
 
+  console.log('CSS done')
+
   const bundles = {
-    index: await rollup(configs.index()),
-    indexMin: await rollup(configs.index(pluginMinify)),
-    all: await rollup(configs.all(pluginCSS)),
-    allMin: await rollup(configs.all(pluginMinify, pluginCSS)),
+    index: await rollup(getRollupConfigs.index(pluginConfigs.index)),
+    indexMin: await rollup(getRollupConfigs.index(pluginConfigs.indexMinify)),
+    all: await rollup(getRollupConfigs.all(pluginConfigs.all)),
+    allMin: await rollup(getRollupConfigs.all(pluginConfigs.allMinify)),
   }
 
-  for (const getOutput of outputs.bundle) {
-    bundles.index.write(getOutput('index.js'))
-    bundles.indexMin.write(getOutput('index.min.js', { min: true }))
-    bundles.all.write(getOutput('index.all.js'))
-    bundles.allMin.write(getOutput('index.all.min.js', { min: true }))
+  // Standard UMD + ESM
+  for (const getOutputConfig of getOutputConfigs.bundle) {
+    const outputConfigs = {
+      index: getOutputConfig('index.js'),
+      indexMin: getOutputConfig('index.min.js', { min: true }),
+      all: getOutputConfig('index.all.js'),
+      allMin: getOutputConfig('index.all.min.js', { min: true }),
+    }
+
+    bundles.index.write(outputConfigs.index)
+    bundles.indexMin.write(outputConfigs.indexMin)
+    bundles.all.write(outputConfigs.all)
+    bundles.allMin.write(outputConfigs.allMin)
   }
 
   console.log(green('Bundles complete'))
@@ -96,10 +126,14 @@ const build = async () => {
   console.log(blue('\n⏳ Building CSS themes...'))
 
   for (const theme of fs.readdirSync('./build/themes')) {
-    const themeConfig = config(`./build/themes/${theme}`)
+    const preparedThemeConfig = createRollupConfigWithoutPlugins(
+      `./build/themes/${theme}`,
+    )
     const outputFile = `./themes/${theme.replace('.js', '.css')}`
-    const bundle = await rollup(themeConfig(createPluginSCSS(outputFile)))
-    await bundle.write(outputs.theme(theme))
+    const bundle = await rollup(
+      preparedThemeConfig(createPluginSCSS(outputFile)),
+    )
+    await bundle.write(getOutputConfigs.theme(theme))
     fs.unlinkSync(`./themes/${theme}`)
   }
 

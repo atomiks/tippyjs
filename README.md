@@ -17,6 +17,8 @@ https://atomiks.github.io/tippyjs/
 
 ## Installation
 
+### Package Managers
+
 ```bash
 # npm
 npm i tippy.js
@@ -25,7 +27,22 @@ npm i tippy.js
 yarn add tippy.js
 ```
 
-CDN: https://unpkg.com/tippy.js@4/
+### CDN
+
+```html
+<script src="https://unpkg.com/popper.js@1"></script>
+<script src="https://unpkg.com/tippy.js@4"></script>
+```
+
+### Modern ES modules in the browser
+
+Currently `unpkg` does not minify modules.
+
+```html
+<script type="module">
+  import tippy from 'https://unpkg.com/tippy.js@4?module' // (unminified)
+</script>
+```
 
 ## Component Wrappers
 
