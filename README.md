@@ -32,9 +32,6 @@ yarn add tippy.js
 ```html
 <script src="https://unpkg.com/popper.js@1"></script>
 <script src="https://unpkg.com/tippy.js@4"></script>
-<script>
-  tippy('button')
-</script>
 ```
 
 ### Modern ES modules in the browser
