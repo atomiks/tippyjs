@@ -73,20 +73,6 @@ const createPreparedOutputConfig = format => (file, { min = false } = {}) => {
   }
 }
 
-const replacePopperImport = path => {
-  fs.writeFileSync(
-    path,
-    fs
-      .readFileSync(path, 'utf8')
-      .replace(
-        /import(.+)from\s*['"]popper\.js['"]/,
-        `import$1from 'https://unpkg.com/popper.js@1/dist/esm/popper${
-          path.includes('.min') ? '.min' : ''
-        }.js'`,
-      ),
-  )
-}
-
 const getRollupConfigs = {
   css: createRollupConfigWithoutPlugins('./build/css.js'),
   index: createRollupConfigWithoutPlugins('./build/index.js'),
@@ -134,17 +120,6 @@ const build = async () => {
     bundles.all.write(outputConfigs.all)
     bundles.allMin.write(outputConfigs.allMin)
   }
-
-  // Browser ESM
-  const base = { ...BASE_OUTPUT_CONFIG, format: 'esm' }
-  const paths = {
-    base: './esm/index.all.browser.js',
-    min: './esm/index.all.browser.min.js',
-  }
-  await bundles.all.write({ ...base, file: paths.base })
-  await bundles.allMin.write({ ...base, file: paths.min })
-  replacePopperImport(paths.base)
-  replacePopperImport(paths.min)
 
   console.log(green('Bundles complete'))
 
