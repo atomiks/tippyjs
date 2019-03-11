@@ -70,6 +70,9 @@ export default function createTippy(
   // Timeout created by the hide delay
   let hideTimeoutId = 0
 
+  // Frame created by scheduleHide()
+  let animationFrameId: number
+
   // Flag to determine if the tippy is scheduled to show due to the show timeout
   let isScheduledToShow = false
 
@@ -317,7 +320,7 @@ export default function createTippy(
     } else {
       // Fixes a `transitionend` problem when it fires 1 frame too
       // late sometimes, we don't want hide() to be called.
-      requestAnimationFrame(() => {
+      animationFrameId = requestAnimationFrame(() => {
         hide()
       })
     }
@@ -807,6 +810,7 @@ export default function createTippy(
   function clearDelayTimeouts(): void {
     clearTimeout(showTimeoutId)
     clearTimeout(hideTimeoutId)
+    cancelAnimationFrame(animationFrameId)
   }
 
   /**
