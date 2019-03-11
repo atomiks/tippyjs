@@ -5,6 +5,5 @@ coverage
 node_modules
 /index.css
 umd
-cjs
 esm
 themes
