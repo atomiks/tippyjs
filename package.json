@@ -16,7 +16,6 @@
   ],
   "files": [
     "umd",
-    "cjs",
     "esm",
     "themes",
     "index.css",
