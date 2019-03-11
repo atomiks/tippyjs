@@ -315,7 +315,11 @@ export default function createTippy(
         }
       }, delay)
     } else {
-      hide()
+      // Fixes a `transitionend` problem when it fires 1 frame too
+      // late sometimes, we don't want hide() to be called.
+      requestAnimationFrame(() => {
+        hide()
+      })
     }
   }
 
