@@ -4,7 +4,8 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "strict": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "types": []
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "index.d.ts"]
 }

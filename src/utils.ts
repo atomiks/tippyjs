@@ -1,4 +1,4 @@
-import { Props, ReferenceElement, VirtualReference } from './types'
+import { Props, ReferenceElement, Targets, VirtualReference } from './types'
 import { arrayFrom, matches } from './ponyfills'
 import { isUCBrowser } from './browser'
 import { getDataAttributeOptions } from './reference'
@@ -25,9 +25,10 @@ export function hasOwnProperty(obj: object, key: string): boolean {
 /**
  * Returns an array of elements based on the value
  */
-export function getArrayOfElements(value: any): Element[] | VirtualReference[] {
+export function getArrayOfElements(value: Targets): Element[] {
   if (isSingular(value)) {
-    return [value]
+    // TODO: VirtualReference is not compatible to type Element
+    return [value as Element]
   }
 
   if (value instanceof NodeList) {
@@ -86,7 +87,7 @@ export function includes(a: any[] | string, b: any): boolean {
 /**
  * Determines if the value is singular-like
  */
-export function isSingular(value: any): boolean {
+export function isSingular(value: any): value is VirtualReference | Element {
   return (
     !!(value && hasOwnProperty(value, 'isVirtual')) || value instanceof Element
   )
