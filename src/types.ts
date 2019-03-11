@@ -2,16 +2,7 @@ import Popper from 'popper.js'
 
 export type BasicPlacement = 'top' | 'bottom' | 'left' | 'right'
 
-export type Placement =
-  | BasicPlacement
-  | 'top-start'
-  | 'top-end'
-  | 'bottom-start'
-  | 'bottom-end'
-  | 'left-start'
-  | 'left-end'
-  | 'right-start'
-  | 'right-end'
+export type Placement = Popper.Placement
 
 export type Content = string | Element | ((ref: Element) => Element | string)
 
