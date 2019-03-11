@@ -65,10 +65,10 @@ export default function createTippy(
   let lastMouseMoveEvent: MouseEvent
 
   // Timeout created by the show delay
-  let showTimeoutId = 0
+  let showTimeoutId: number
 
   // Timeout created by the hide delay
-  let hideTimeoutId = 0
+  let hideTimeoutId: number
 
   // Frame created by scheduleHide()
   let animationFrameId: number
