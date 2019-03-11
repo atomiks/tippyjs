@@ -63,7 +63,7 @@ const configs = {
 }
 
 const outputs = {
-  bundle: [output('umd'), output('esm')],
+  bundle: [output('umd'), output('cjs'), output('esm')],
   css: output('css'),
   theme: output('themes'),
 }
