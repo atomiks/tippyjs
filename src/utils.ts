@@ -1,4 +1,10 @@
-import { Props, ReferenceElement, Targets, VirtualReference } from './types'
+import {
+  Options,
+  Props,
+  ReferenceElement,
+  Targets,
+  VirtualReference,
+} from './types'
 import { arrayFrom, matches } from './ponyfills'
 import { isUCBrowser } from './browser'
 import { getDataAttributeOptions } from './reference'
@@ -158,9 +164,9 @@ export function evaluateProps(
 /**
  * Validates an object of options with the valid default props object
  */
-export function validateOptions(options = {}, defaults: Props): void {
+export function validateOptions(options: Options, defaultProps: Props): void {
   Object.keys(options).forEach(option => {
-    if (!hasOwnProperty(defaults, option)) {
+    if (!hasOwnProperty(defaultProps, option)) {
       throw new Error(`[tippy]: \`${option}\` is not a valid option`)
     }
   })
