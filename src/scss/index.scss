@@ -124,7 +124,6 @@
   padding: 0.3125rem 0.5625rem;
   line-height: 1.4;
   text-align: center;
-  will-change: transform;
   background-color: #333;
 
   &[data-size='small'] {
@@ -176,7 +175,6 @@
 
 .tippy-backdrop {
   position: absolute;
-  will-change: transform;
   background-color: #333;
   border-radius: 50%;
   width: calc(110% + 2rem);
