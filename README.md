@@ -4,12 +4,21 @@
 
 <h1 align="center">Tippy.js</h1>
 
-[![Build Status](https://travis-ci.org/atomiks/tippyjs.svg?branch=master)](https://travis-ci.org/atomiks/tippyjs)
-[![npm Downloads](https://img.shields.io/npm/dt/tippy.js.svg)](https://www.npmjs.com/package/tippy.js)
-![gzip Size](http://img.badgesize.io/https://unpkg.com/tippy.js/esm/index.all.min.js?compression=gzip&label=gzip%20size)
+<p align="center">
+  <a href="https://travis-ci.org/atomiks/tippyjs">
+    <img src="https://img.shields.io/travis/atomiks/tippyjs.svg?color=%2325c879&style=for-the-badge" alt="Build">
+  </a>
+  <a href="https://www.npmjs.com/package/tippy.js">
+   <img src="https://img.shields.io/npm/dm/tippy.js.svg?color=%235599ff&style=for-the-badge" alt="npm Downloads per Month">
+  <a>
+  <a href="https://github.com/atomiks/tippyjs/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/tippy.js.svg?color=%23c677cf&style=for-the-badge" alt="MIT License">
+  </a>
+</p>
 
-Tippy.js is a highly customizable vanilla JS tooltip and popover library powered
-by Popper.js.
+<p align="center">
+  A highly customizable tooltip and popover library powered by Popper.js.
+</p>
 
 ## Demo and Documentation
 
