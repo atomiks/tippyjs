@@ -479,6 +479,11 @@ export default function createTippy(
     const { popperOptions } = instance.props
     const { tooltip, arrow } = instance.popperChildren
 
+    const preventOverflowModifier = getModifier(
+      popperOptions,
+      'preventOverflow',
+    )
+
     const config = {
       placement: instance.props.placement,
       ...popperOptions,
@@ -487,7 +492,7 @@ export default function createTippy(
         preventOverflow: {
           boundariesElement: instance.props.boundary,
           padding: PADDING,
-          ...getModifier(popperOptions, 'preventOverflow'),
+          ...preventOverflowModifier,
         },
         arrow: {
           element: arrow,
@@ -519,25 +524,32 @@ export default function createTippy(
         const styles = tooltip.style
 
         // Account for the `distance` offset
-        styles.top = ''
-        styles.bottom = ''
-        styles.left = ''
-        styles.right = ''
+        styles.top = styles.bottom = styles.left = styles.right = ''
         styles[basePlacement] = getOffsetDistanceInPx(instance.props.distance)
 
-        // Avoid _defineProperty helper function created by Babel
-        const padding = {
-          top: PADDING,
-          bottom: PADDING,
-          left: PADDING,
-          right: PADDING,
+        const padding =
+          preventOverflowModifier &&
+          preventOverflowModifier.padding !== undefined
+            ? preventOverflowModifier.padding
+            : PADDING
+
+        const isPaddingNumber = typeof padding === 'number'
+
+        const computedPadding = {
+          top: isPaddingNumber ? padding : padding.top,
+          bottom: isPaddingNumber ? padding : padding.bottom,
+          left: isPaddingNumber ? padding : padding.left,
+          right: isPaddingNumber ? padding : padding.right,
+          ...(!isPaddingNumber && padding),
         }
 
-        padding[basePlacement] = PADDING + instance.props.distance
+        computedPadding[basePlacement] = isPaddingNumber
+          ? padding + instance.props.distance
+          : (padding[basePlacement] || 0) + instance.props.distance
 
         instance.popperInstance!.modifiers.filter(
           m => m.name === 'preventOverflow',
-        )[0].padding = padding
+        )[0].padding = computedPadding
 
         if (popperOptions && popperOptions.onUpdate) {
           popperOptions.onUpdate(data)
