@@ -65,10 +65,13 @@ export default function createTippy(
   let lastMouseMoveEvent: MouseEvent
 
   // Timeout created by the show delay
-  let showTimeoutId = 0
+  let showTimeoutId: number
 
   // Timeout created by the hide delay
-  let hideTimeoutId = 0
+  let hideTimeoutId: number
+
+  // Frame created by scheduleHide()
+  let animationFrameId: number
 
   // Flag to determine if the tippy is scheduled to show due to the show timeout
   let isScheduledToShow = false
@@ -315,7 +318,11 @@ export default function createTippy(
         }
       }, delay)
     } else {
-      hide()
+      // Fixes a `transitionend` problem when it fires 1 frame too
+      // late sometimes, we don't want hide() to be called.
+      animationFrameId = requestAnimationFrame(() => {
+        hide()
+      })
     }
   }
 
@@ -803,6 +810,7 @@ export default function createTippy(
   function clearDelayTimeouts(): void {
     clearTimeout(showTimeoutId)
     clearTimeout(hideTimeoutId)
+    cancelAnimationFrame(animationFrameId)
   }
 
   /**

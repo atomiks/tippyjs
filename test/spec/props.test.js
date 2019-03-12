@@ -232,44 +232,58 @@ describe('content', () => {
 })
 
 describe('trigger', () => {
-  it('default: many triggers', () => {
+  it('default: many triggers', done => {
     const ref = h()
     const { state } = tippy(ref)
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('mouseleave'))
-    expect(state.isVisible).toBe(false)
-    ref.dispatchEvent(new Event('focus'))
-    expect(state.isVisible).toBe(true)
-    ref.dispatchEvent(new Event('blur'))
-    expect(state.isVisible).toBe(false)
+    requestAnimationFrame(() => {
+      expect(state.isVisible).toBe(false)
+      ref.dispatchEvent(new Event('focus'))
+      expect(state.isVisible).toBe(true)
+      ref.dispatchEvent(new Event('blur'))
+      requestAnimationFrame(() => {
+        expect(state.isVisible).toBe(false)
+        done()
+      })
+    })
   })
 
-  it('mouseenter', () => {
+  it('mouseenter', done => {
     const ref = h()
     const { state } = tippy(ref, { trigger: 'mouseenter' })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('mouseleave'))
-    expect(state.isVisible).toBe(false)
+    requestAnimationFrame(() => {
+      expect(state.isVisible).toBe(false)
+      done()
+    })
   })
 
-  it('focus', () => {
+  it('focus', done => {
     const ref = h()
     const { state } = tippy(ref, { trigger: 'focus' })
     ref.dispatchEvent(new Event('focus'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('blur'))
-    expect(state.isVisible).toBe(false)
+    requestAnimationFrame(() => {
+      expect(state.isVisible).toBe(false)
+      done()
+    })
   })
 
-  it('click', () => {
+  it('click', done => {
     const ref = h()
     const { state } = tippy(ref, { trigger: 'click' })
     ref.dispatchEvent(new Event('click'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('click'))
-    expect(state.isVisible).toBe(false)
+    requestAnimationFrame(() => {
+      expect(state.isVisible).toBe(false)
+      done()
+    })
   })
 
   it('manual', () => {

@@ -48,7 +48,7 @@ describe('createTippy', () => {
     expect(tips[1].id).toBe(tips[2].id - 1)
   })
 
-  it('adds correct listeners to the reference element based on `trigger`', () => {
+  it('adds correct listeners to the reference element based on `trigger`', done => {
     const instance = createTippy(h(), {
       ...defaultProps,
       trigger: 'mouseenter focus click',
@@ -56,17 +56,22 @@ describe('createTippy', () => {
     instance.reference.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(true)
     instance.reference.dispatchEvent(new Event('mouseleave'))
-    expect(instance.state.isVisible).toBe(false)
-
-    instance.reference.dispatchEvent(new Event('focus'))
-    expect(instance.state.isVisible).toBe(true)
-    instance.reference.dispatchEvent(new Event('blur'))
-    expect(instance.state.isVisible).toBe(false)
-
-    instance.reference.dispatchEvent(new Event('click'))
-    expect(instance.state.isVisible).toBe(true)
-    instance.reference.dispatchEvent(new Event('click'))
-    expect(instance.state.isVisible).toBe(false)
+    requestAnimationFrame(() => {
+      expect(instance.state.isVisible).toBe(false)
+      instance.reference.dispatchEvent(new Event('focus'))
+      expect(instance.state.isVisible).toBe(true)
+      instance.reference.dispatchEvent(new Event('blur'))
+      requestAnimationFrame(() => {
+        expect(instance.state.isVisible).toBe(false)
+        instance.reference.dispatchEvent(new Event('click'))
+        expect(instance.state.isVisible).toBe(true)
+        instance.reference.dispatchEvent(new Event('click'))
+        requestAnimationFrame(() => {
+          expect(instance.state.isVisible).toBe(false)
+          done()
+        })
+      })
+    })
   })
 })
 

@@ -11,7 +11,7 @@ export const defaultProps: Props = {
   arrowType: 'sharp',
   boundary: 'scrollParent',
   content: '',
-  delay: [0, 20],
+  delay: 0,
   distance: 10,
   duration: [325, 275],
   flip: true,
