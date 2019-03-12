@@ -1,4 +1,5 @@
 import { GroupedInstance, GroupOptions } from './types'
+import { hasOwnProperty } from './utils'
 
 /**
  * Groups an array of instances by taking control of their props during
@@ -8,6 +9,12 @@ export default function group(
   instances: GroupedInstance[],
   { delay = instances[0].props.delay, duration = 0 }: GroupOptions = {},
 ): void {
+  // Already grouped. Cannot group instances more than once (yet) or stale lifecycle
+  // closures will be invoked, causing a stack overflow
+  if (instances.some(instance => hasOwnProperty(instance, '_originalProps'))) {
+    return
+  }
+
   let isAnyTippyOpen = false
 
   instances.forEach(instance => {
