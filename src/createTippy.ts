@@ -561,7 +561,7 @@ export default function createTippy(
           popperOptions.onCreate(data)
         }
       },
-      // This gets called on initial create and show()/scroll/resize update.
+      // This gets invoked on initial create and show()/scroll/resize update.
       // This is due to `afterPopperPositionUpdates` overwriting onCreate()
       // with onUpdate()
       onUpdate(data: Popper.Data) {
