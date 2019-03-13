@@ -483,7 +483,7 @@ export default function createTippy(
       'preventOverflow',
     )
 
-    function applyMutations(data: Popper.Data) {
+    function applyMutations(data: Popper.Data): void {
       if (instance.props.flip && !instance.props.flipOnUpdate) {
         if (data.flipped) {
           instance.popperInstance!.options.placement = data.placement
