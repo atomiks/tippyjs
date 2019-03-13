@@ -57,8 +57,8 @@ tippy element:
 
 <!-- prettier-ignore -->
 ```html
-<div class="tippy-popper" x-placement="top">
-  <div class="tippy-tooltip">
+<div class="tippy-popper">
+  <div class="tippy-tooltip" x-placement="top">
     <div class="tippy-content">
       My content
     </div>
@@ -69,8 +69,7 @@ tippy element:
 A tippy is essentially three nested `div`s.
 
 - `tippy-popper` is the outermost node. It is what Popper.js uses to position
-  the tippy. You shouldn't apply any styles directly to this element, but you'll
-  need it when targeting a specific placement (`x-placement`).
+  the tippy. You don't need to apply any styles to this element.
 - `tippy-tooltip` is the actual tooltip node.
 - `tippy-content` is the content node.
 
@@ -134,19 +133,22 @@ There are two types of arrows built-in: traditional CSS arrows (using the
 `border` trick), and a custom round SVG arrow.
 
 To style the default (sharp) CSS arrow, you'll need to target each different
-base placement and apply it to the `.tippy-arrow` element:
+base placement (using the `x-placement` attribute on `.tippy-tooltip` element)
+and apply it to the `.tippy-arrow` element:
+
+> **Note:** Make sure you're using v4.2+
 
 ```css
-.tippy-popper[x-placement^='top'] .tippy-tooltip.tomato-theme .tippy-arrow {
+.tippy-tooltip.tomato-theme[x-placement^='top'] .tippy-arrow {
   border-top-color: tomato;
 }
-.tippy-popper[x-placement^='bottom'] .tippy-tooltip.tomato-theme .tippy-arrow {
+.tippy-tooltip.tomato-theme[x-placement^='bottom'] .tippy-arrow {
   border-bottom-color: tomato;
 }
-.tippy-popper[x-placement^='left'] .tippy-tooltip.tomato-theme .tippy-arrow {
+.tippy-tooltip.tomato-theme[x-placement^='left'] .tippy-arrow {
   border-left-color: tomato;
 }
-.tippy-popper[x-placement^='right'] .tippy-tooltip.tomato-theme .tippy-arrow {
+.tippy-tooltip.tomato-theme[x-placement^='right'] .tippy-arrow {
   border-right-color: tomato;
 }
 ```

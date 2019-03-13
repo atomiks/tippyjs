@@ -308,4 +308,11 @@ export default createGlobalStyle`
       box-shadow: 0 0 0 2px rgb(255, 255, 255), 0 0 0 5px rgb(150, 180, 255);
     }
   }
+
+  blockquote {
+    color: #5b36df;
+    border-left: 5px solid;
+    margin: 0;
+    padding-left: 15px;
+  }
 `
