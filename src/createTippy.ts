@@ -552,6 +552,8 @@ export default function createTippy(
           ...getModifier(popperOptions, 'offset'),
         },
       },
+      // This gets invoked when calling `.set()` and updating a popper
+      // instance dependency, since a new popper instance gets created
       onCreate(data: Popper.Data) {
         applyMutations(data)
 
@@ -559,6 +561,9 @@ export default function createTippy(
           popperOptions.onCreate(data)
         }
       },
+      // This gets called on initial create and show()/scroll/resize update.
+      // This is due to `afterPopperPositionUpdates` overwriting onCreate()
+      // with onUpdate()
       onUpdate(data: Popper.Data) {
         applyMutations(data)
 
