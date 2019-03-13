@@ -22,6 +22,19 @@ class Layout extends Component {
     this.setState({ isNavOpen: false })
   }
 
+  componentDidMount() {
+    // We're using our own hackish autolink headers thing so we need this for now
+    // Couldn't get the Gatsby plugin to work a couple months ago
+    setTimeout(() => {
+      if (window.location.hash) {
+        const anchor = document.querySelector(window.location.hash)
+        if (anchor) {
+          anchor.scrollIntoView()
+        }
+      }
+    })
+  }
+
   render() {
     const { isNavOpen } = this.state
     const { children, pageContext } = this.props
