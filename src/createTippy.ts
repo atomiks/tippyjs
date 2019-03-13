@@ -478,11 +478,51 @@ export default function createTippy(
   function createPopperInstance(): void {
     const { popperOptions } = instance.props
     const { tooltip, arrow } = instance.popperChildren
-
     const preventOverflowModifier = getModifier(
       popperOptions,
       'preventOverflow',
     )
+
+    function applyMutations(data: Popper.Data) {
+      if (instance.props.flip && !instance.props.flipOnUpdate) {
+        if (data.flipped) {
+          instance.popperInstance!.options.placement = data.placement
+        }
+        setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
+      }
+
+      tooltip.setAttribute('x-placement', data.placement)
+
+      const basePlacement = getPopperPlacement(instance.popper)
+      const styles = tooltip.style
+
+      // Account for the `distance` offset
+      styles.top = styles.bottom = styles.left = styles.right = ''
+      styles[basePlacement] = getOffsetDistanceInPx(instance.props.distance)
+
+      const padding =
+        preventOverflowModifier && preventOverflowModifier.padding !== undefined
+          ? preventOverflowModifier.padding
+          : PADDING
+
+      const isPaddingNumber = typeof padding === 'number'
+
+      const computedPadding = {
+        top: isPaddingNumber ? padding : padding.top,
+        bottom: isPaddingNumber ? padding : padding.bottom,
+        left: isPaddingNumber ? padding : padding.left,
+        right: isPaddingNumber ? padding : padding.right,
+        ...(!isPaddingNumber && padding),
+      }
+
+      computedPadding[basePlacement] = isPaddingNumber
+        ? padding + instance.props.distance
+        : (padding[basePlacement] || 0) + instance.props.distance
+
+      instance.popperInstance!.modifiers.filter(
+        m => m.name === 'preventOverflow',
+      )[0].padding = computedPadding
+    }
 
     const config = {
       placement: instance.props.placement,
@@ -513,48 +553,14 @@ export default function createTippy(
         },
       },
       onCreate(data: Popper.Data) {
-        tooltip.setAttribute('x-placement', data.placement)
+        applyMutations(data)
+
+        if (popperOptions && popperOptions.onCreate) {
+          popperOptions.onCreate(data)
+        }
       },
       onUpdate(data: Popper.Data) {
-        if (instance.props.flip && !instance.props.flipOnUpdate) {
-          if (data.flipped) {
-            instance.popperInstance!.options.placement = data.placement
-          }
-          setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
-        }
-
-        tooltip.setAttribute('x-placement', data.placement)
-
-        const basePlacement = getPopperPlacement(instance.popper)
-        const styles = tooltip.style
-
-        // Account for the `distance` offset
-        styles.top = styles.bottom = styles.left = styles.right = ''
-        styles[basePlacement] = getOffsetDistanceInPx(instance.props.distance)
-
-        const padding =
-          preventOverflowModifier &&
-          preventOverflowModifier.padding !== undefined
-            ? preventOverflowModifier.padding
-            : PADDING
-
-        const isPaddingNumber = typeof padding === 'number'
-
-        const computedPadding = {
-          top: isPaddingNumber ? padding : padding.top,
-          bottom: isPaddingNumber ? padding : padding.bottom,
-          left: isPaddingNumber ? padding : padding.left,
-          right: isPaddingNumber ? padding : padding.right,
-          ...(!isPaddingNumber && padding),
-        }
-
-        computedPadding[basePlacement] = isPaddingNumber
-          ? padding + instance.props.distance
-          : (padding[basePlacement] || 0) + instance.props.distance
-
-        instance.popperInstance!.modifiers.filter(
-          m => m.name === 'preventOverflow',
-        )[0].padding = computedPadding
+        applyMutations(data)
 
         if (popperOptions && popperOptions.onUpdate) {
           popperOptions.onUpdate(data)
