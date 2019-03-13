@@ -1,20 +1,16 @@
 @import '../_mixins.scss';
 @import '../_vars.scss';
 
-.tippy-popper {
+.tippy-tooltip.translucent-theme {
+  background-color: rgba(0, 0, 0, 0.7);
+
   @each $placement in $placements {
     &[x-placement^='#{$placement}'] {
-      .tippy-tooltip.translucent-theme {
-        .tippy-arrow {
-          @include arrow($placement, 7px, rgba(0, 0, 0, 0.7));
-        }
+      .tippy-arrow {
+        @include arrow($placement, 7px, rgba(0, 0, 0, 0.7));
       }
     }
   }
-}
-
-.tippy-tooltip.translucent-theme {
-  background-color: rgba(0, 0, 0, 0.7);
 
   .tippy-backdrop {
     background-color: rgba(0, 0, 0, 0.7);

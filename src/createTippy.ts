@@ -520,6 +520,8 @@ export default function createTippy(
           setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
         }
 
+        tooltip.setAttribute('x-placement', data.placement)
+
         const basePlacement = getPopperPlacement(instance.popper)
         const styles = tooltip.style
 

@@ -3,23 +3,19 @@
 
 $color: #505355;
 
-.tippy-popper {
-  @each $placement in $placements {
-    &[x-placement^='#{$placement}'] {
-      .tippy-tooltip.google-theme {
-        .tippy-arrow {
-          @include arrow($placement, 8px, $color);
-        }
-      }
-    }
-  }
-}
-
 .tippy-tooltip.google-theme {
   background-color: $color;
   padding: 0.25rem 0.4375rem;
   font-size: 0.8125rem;
   font-weight: 600;
+
+  @each $placement in $placements {
+    &[x-placement^='#{$placement}'] {
+      .tippy-arrow {
+        @include arrow($placement, 8px, $color);
+      }
+    }
+  }
 
   .tippy-backdrop {
     background-color: $color;
