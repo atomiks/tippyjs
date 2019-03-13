@@ -39,119 +39,119 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
       fill: $transparentDark;
     }
   }
-}
 
-.tippy-popper[x-placement^='top'] .tippy-tooltip.light-border-theme {
-  .tippy-roundarrow::after {
-    top: 1px;
-    transform: rotate(180deg);
-  }
-
-  .tippy-arrow {
-    border-top-color: #fff;
-
-    &::after {
-      border-top: 7px solid white;
-      top: -7px;
+  &[x-placement^='top'] {
+    .tippy-roundarrow::after {
+      top: 1px;
+      transform: rotate(180deg);
     }
-    &::before {
-      border-top: 7px solid $transparentDarker;
-      bottom: -1px;
-    }
-  }
-}
 
-.tippy-popper[x-placement^='bottom'] .tippy-tooltip.light-border-theme {
-  .tippy-roundarrow::after {
-    top: -1px;
-  }
+    .tippy-arrow {
+      border-top-color: #fff;
 
-  .tippy-arrow {
-    border-bottom-color: #fff;
-
-    &::after {
-      border-bottom: 7px solid white;
-      bottom: -7px;
-    }
-    &::before {
-      border-bottom: 7px solid $transparentDarker;
-      bottom: -6px;
+      &::after {
+        border-top: 7px solid white;
+        top: -7px;
+      }
+      &::before {
+        border-top: 7px solid $transparentDarker;
+        bottom: -1px;
+      }
     }
   }
-}
 
-.tippy-popper[x-placement^='left'] .tippy-tooltip.light-border-theme {
-  .tippy-roundarrow::after {
-    left: 1px;
-    top: 0;
-    transform: rotate(90deg);
-  }
-
-  .tippy-arrow {
-    border-left-color: #fff;
-
-    &::after {
-      border-left: 7px solid white;
-      left: -7px;
+  &[x-placement^='bottom'] {
+    .tippy-roundarrow::after {
+      top: -1px;
     }
-    &::before {
-      border-left: 7px solid $transparentDarker;
-      left: -6px;
+
+    .tippy-arrow {
+      border-bottom-color: #fff;
+
+      &::after {
+        border-bottom: 7px solid white;
+        bottom: -7px;
+      }
+      &::before {
+        border-bottom: 7px solid $transparentDarker;
+        bottom: -6px;
+      }
     }
   }
-}
 
-.tippy-popper[x-placement^='right'] .tippy-tooltip.light-border-theme {
-  .tippy-roundarrow::after {
-    left: -1px;
-    top: 0;
-    transform: rotate(-90deg);
-  }
-
-  .tippy-arrow {
-    border-right-color: #fff;
-
-    &::after {
-      border-right: 7px solid white;
-      right: -7px;
+  &[x-placement^='left'] {
+    .tippy-roundarrow::after {
+      left: 1px;
+      top: 0;
+      transform: rotate(90deg);
     }
-    &::before {
-      border-right: 7px solid $transparentDarker;
-      right: -6px;
-    }
-  }
-}
 
-.tippy-popper[x-placement^='top'] .tippy-tooltip.light-border-theme,
-.tippy-popper[x-placement^='bottom'] .tippy-tooltip.light-border-theme {
-  .tippy-arrow,
-  .tippy-roundarrow {
-    transform: translateX(-1px);
-  }
+    .tippy-arrow {
+      border-left-color: #fff;
 
-  .tippy-arrow {
-    &::after,
-    &::before {
-      left: -7px;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
+      &::after {
+        border-left: 7px solid white;
+        left: -7px;
+      }
+      &::before {
+        border-left: 7px solid $transparentDarker;
+        left: -6px;
+      }
     }
   }
-}
 
-.tippy-popper[x-placement^='left'] .tippy-tooltip.light-border-theme,
-.tippy-popper[x-placement^='right'] .tippy-tooltip.light-border-theme {
-  .tippy-arrow,
-  .tippy-roundarrow {
-    transform: translateY(-1px);
+  &[x-placement^='right'] {
+    .tippy-roundarrow::after {
+      left: -1px;
+      top: 0;
+      transform: rotate(-90deg);
+    }
+
+    .tippy-arrow {
+      border-right-color: #fff;
+
+      &::after {
+        border-right: 7px solid white;
+        right: -7px;
+      }
+      &::before {
+        border-right: 7px solid $transparentDarker;
+        right: -6px;
+      }
+    }
   }
 
-  .tippy-arrow {
-    &::after,
-    &::before {
-      top: -7px;
-      border-top: 7px solid transparent;
-      border-bottom: 7px solid transparent;
+  &[x-placement^='top'],
+  &[x-placement^='bottom'] {
+    .tippy-arrow,
+    .tippy-roundarrow {
+      transform: translateX(-1px);
+    }
+
+    .tippy-arrow {
+      &::after,
+      &::before {
+        left: -7px;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+      }
+    }
+  }
+
+  &[x-placement^='left'],
+  &[x-placement^='right'] {
+    .tippy-arrow,
+    .tippy-roundarrow {
+      transform: translateY(-1px);
+    }
+
+    .tippy-arrow {
+      &::after,
+      &::before {
+        top: -7px;
+        border-top: 7px solid transparent;
+        border-bottom: 7px solid transparent;
+      }
     }
   }
 }
