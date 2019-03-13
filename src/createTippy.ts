@@ -512,6 +512,9 @@ export default function createTippy(
           ...getModifier(popperOptions, 'offset'),
         },
       },
+      onCreate(data: Popper.Data) {
+        tooltip.setAttribute('x-placement', data.placement)
+      },
       onUpdate(data: Popper.Data) {
         if (instance.props.flip && !instance.props.flipOnUpdate) {
           if (data.flipped) {
