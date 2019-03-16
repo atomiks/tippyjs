@@ -2,8 +2,8 @@ import { h, cleanDocumentBody } from '../utils'
 
 import tippy from '../../src/index'
 import { defaultProps } from '../../src/props'
-import Selectors from '../../src/selectors'
 import createTippy from '../../src/createTippy'
+import { POPPER_SELECTOR } from '../../src/constants'
 
 afterEach(cleanDocumentBody)
 
@@ -132,7 +132,7 @@ describe('instance.show', () => {
   it('mounts the popper to the DOM', () => {
     const instance = createTippy(h(), defaultProps)
     instance.show()
-    expect(document.querySelector(Selectors.POPPER)).toBe(instance.popper)
+    expect(document.querySelector(POPPER_SELECTOR)).toBe(instance.popper)
     instance.destroy()
   })
 
@@ -193,10 +193,10 @@ describe('instance.hide', () => {
       ...defaultProps,
     })
     instance.show(0)
-    expect(document.querySelector(Selectors.POPPER)).toBe(instance.popper)
+    expect(document.querySelector(POPPER_SELECTOR)).toBe(instance.popper)
     instance.hide(0)
     setTimeout(() => {
-      expect(document.querySelector(Selectors.POPPER)).toBeNull()
+      expect(document.querySelector(POPPER_SELECTOR)).toBeNull()
       instance.destroy()
       done()
     }, 20)

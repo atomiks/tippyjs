@@ -1,5 +1,4 @@
 import Popper from 'popper.js'
-import Selectors from './selectors'
 import {
   ReferenceElement,
   PopperInstance,
@@ -11,7 +10,13 @@ import {
 } from './types'
 import { isIE } from './browser'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
-import { PASSIVE, PADDING } from './constants'
+import {
+  PASSIVE,
+  PADDING,
+  ACTIVE_CLASS,
+  NO_TRANSITION_CLASS,
+  POPPER_SELECTOR,
+} from './constants'
 import { isUsingTouch } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
@@ -383,7 +388,7 @@ export default function createTippy(
     )
 
     const isCursorOverPopper =
-      closest(event.target as Element, Selectors.POPPER) === instance.popper
+      closest(event.target as Element, POPPER_SELECTOR) === instance.popper
     const isCursorOverReference =
       referenceTheCursorIsOver === instance.reference
 
@@ -946,7 +951,7 @@ export default function createTippy(
     instance.state.isVisible = true
 
     if (instance.props.interactive) {
-      instance.reference.classList.add('tippy-active')
+      instance.reference.classList.add(ACTIVE_CLASS)
     }
 
     // Prevent a transition if the popper is at the opposite placement
@@ -984,7 +989,7 @@ export default function createTippy(
       setVisibilityState(getInnerElements(), 'visible')
 
       onTransitionedIn(duration, () => {
-        instance.popperChildren.tooltip.classList.add('tippy-notransition')
+        instance.popperChildren.tooltip.classList.add(NO_TRANSITION_CLASS)
 
         if (instance.props.aria) {
           instance.reference.setAttribute(
@@ -1017,10 +1022,10 @@ export default function createTippy(
       return
     }
 
-    instance.popperChildren.tooltip.classList.remove('tippy-notransition')
+    instance.popperChildren.tooltip.classList.remove(NO_TRANSITION_CLASS)
 
     if (instance.props.interactive) {
-      instance.reference.classList.remove('tippy-active')
+      instance.reference.classList.remove(ACTIVE_CLASS)
     }
 
     instance.popper.style.visibility = 'hidden'

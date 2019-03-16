@@ -1,10 +1,9 @@
-import Selectors from './selectors'
 import { ReferenceElement } from './types'
 import { closest, closestCallback } from './ponyfills'
 import { isIOS } from './browser'
 import { hideAll } from './popper'
 import { includes } from './utils'
-import { PASSIVE } from './constants'
+import { PASSIVE, IOS_CLASS, POPPER_SELECTOR } from './constants'
 
 export let isUsingTouch = false
 
@@ -16,7 +15,7 @@ export function onDocumentTouch(): void {
   isUsingTouch = true
 
   if (isIOS) {
-    document.body.classList.add('tippy-iOS')
+    document.body.classList.add(IOS_CLASS)
   }
 
   if (window.performance) {
@@ -33,7 +32,7 @@ export function onDocumentMouseMove(): void {
     isUsingTouch = false
     document.removeEventListener('mousemove', onDocumentMouseMove)
     if (!isIOS) {
-      document.body.classList.remove('tippy-iOS')
+      document.body.classList.remove(IOS_CLASS)
     }
   }
 
@@ -47,7 +46,7 @@ export function onDocumentClick(event: MouseEvent): void {
   }
 
   // Clicked on an interactive popper
-  const popper: ReferenceElement = closest(event.target, Selectors.POPPER)
+  const popper: ReferenceElement = closest(event.target, POPPER_SELECTOR)
   if (popper && popper._tippy && popper._tippy.props.interactive) {
     return
   }

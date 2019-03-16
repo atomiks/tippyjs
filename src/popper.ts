@@ -1,5 +1,4 @@
 import Popper from 'popper.js'
-import Selectors from './selectors'
 import {
   PopperElement,
   Props,
@@ -11,6 +10,14 @@ import {
 import { arrayFrom } from './ponyfills'
 import { innerHTML, div } from './utils'
 import { isUCBrowser } from './browser'
+import {
+  TOOLTIP_SELECTOR,
+  BACKDROP_SELECTOR,
+  CONTENT_SELECTOR,
+  ARROW_SELECTOR,
+  ROUND_ARROW_SELECTOR,
+  POPPER_SELECTOR,
+} from './constants'
 
 /**
  * Sets the innerHTML of an element
@@ -42,12 +49,12 @@ export function setContent(
  */
 export function getChildren(popper: PopperElement): PopperChildren {
   return {
-    tooltip: popper.querySelector(Selectors.TOOLTIP) as HTMLDivElement,
-    backdrop: popper.querySelector(Selectors.BACKDROP),
-    content: popper.querySelector(Selectors.CONTENT) as HTMLDivElement,
+    tooltip: popper.querySelector(TOOLTIP_SELECTOR) as HTMLDivElement,
+    backdrop: popper.querySelector(BACKDROP_SELECTOR),
+    content: popper.querySelector(CONTENT_SELECTOR) as HTMLDivElement,
     arrow:
-      popper.querySelector(Selectors.ARROW) ||
-      popper.querySelector(Selectors.ROUND_ARROW),
+      popper.querySelector(ARROW_SELECTOR) ||
+      popper.querySelector(ROUND_ARROW_SELECTOR),
   }
 }
 
@@ -345,7 +352,7 @@ export function hideAll({
   exclude,
   duration,
 }: HideAllOptions = {}): void {
-  arrayFrom(document.querySelectorAll(Selectors.POPPER)).forEach(
+  arrayFrom(document.querySelectorAll(POPPER_SELECTOR)).forEach(
     (popper: PopperElement) => {
       const instance = popper._tippy
       if (

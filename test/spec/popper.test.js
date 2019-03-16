@@ -1,7 +1,6 @@
 import { h, cleanDocumentBody } from '../utils'
 import tippy from '../../src/index'
 import { defaultProps } from '../../src/props'
-import Selectors from '../../src/selectors'
 import {
   createPopperElement,
   updatePopperElement,
@@ -23,6 +22,12 @@ import {
   getPopperPlacement,
 } from '../../src/popper'
 import { div } from '../../src/utils'
+import {
+  POPPER_SELECTOR,
+  BACKDROP_SELECTOR,
+  ARROW_SELECTOR,
+  ROUND_ARROW_SELECTOR,
+} from '../../src/constants'
 
 tippy.setDefaults({ duration: 0, delay: 0 })
 
@@ -85,17 +90,17 @@ describe('createPopperElement', () => {
 
   it('sets the className property correctly', () => {
     const popper = createPopperElement(1, defaultProps)
-    expect(popper.matches(Selectors.POPPER)).toBe(true)
+    expect(popper.matches(POPPER_SELECTOR)).toBe(true)
   })
 
   it('does not create an arrow element if props.arrow is false', () => {
     const popper = createPopperElement(1, { ...defaultProps, arrow: false })
-    expect(popper.querySelector(Selectors.ARROW)).toBe(null)
+    expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
   })
 
   it('creates an arrow element if props.arrow is true', () => {
     const popper = createPopperElement(1, { ...defaultProps, arrow: true })
-    expect(popper.querySelector(Selectors.ARROW)).not.toBe(null)
+    expect(popper.querySelector(ARROW_SELECTOR)).not.toBe(null)
   })
 
   it('does not create a backdrop element if props.animateFill is false', () => {
@@ -103,7 +108,7 @@ describe('createPopperElement', () => {
       ...defaultProps,
       animateFill: false,
     })
-    expect(popper.querySelector(Selectors.BACKDROP)).toBe(null)
+    expect(popper.querySelector(BACKDROP_SELECTOR)).toBe(null)
   })
 
   it('sets `[data-animatefill]` on the tooltip element if props.animateFill is true', () => {
@@ -195,7 +200,7 @@ describe('updatePopperElement', () => {
       ...defaultProps,
       animateFill: false,
     })
-    expect(popper.querySelector(Selectors.BACKDROP)).toBe(null)
+    expect(popper.querySelector(BACKDROP_SELECTOR)).toBe(null)
     expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
       false,
     )
@@ -207,7 +212,7 @@ describe('updatePopperElement', () => {
         animateFill: true,
       },
     )
-    expect(popper.querySelector(Selectors.BACKDROP)).not.toBe(null)
+    expect(popper.querySelector(BACKDROP_SELECTOR)).not.toBe(null)
     expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
       true,
     )
@@ -220,7 +225,7 @@ describe('updatePopperElement', () => {
         ...defaultProps,
         arrow: true,
       })
-      expect(popper.querySelector(Selectors.ARROW)).not.toBe(null)
+      expect(popper.querySelector(ARROW_SELECTOR)).not.toBe(null)
     }
 
     {
@@ -230,7 +235,7 @@ describe('updatePopperElement', () => {
         ...defaultProps,
         arrow: false,
       })
-      expect(popper.querySelector(Selectors.ARROW)).toBe(null)
+      expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
     }
   })
 
@@ -242,8 +247,8 @@ describe('updatePopperElement', () => {
         arrow: true,
         arrowType: 'round',
       })
-      expect(popper.querySelector(Selectors.ARROW)).toBe(null)
-      expect(popper.querySelector(Selectors.ROUND_ARROW)).not.toBe(null)
+      expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
+      expect(popper.querySelector(ROUND_ARROW_SELECTOR)).not.toBe(null)
     }
 
     {
@@ -251,11 +256,11 @@ describe('updatePopperElement', () => {
       const popper = createPopperElement(1, props)
       const newProps = { ...defaultProps, arrowType: 'sharp', arrow: true }
       updatePopperElement(popper, props, newProps)
-      expect(popper.querySelector(Selectors.ARROW)).not.toBe(null)
-      expect(popper.querySelector(Selectors.ROUND_ARROW)).toBe(null)
+      expect(popper.querySelector(ARROW_SELECTOR)).not.toBe(null)
+      expect(popper.querySelector(ROUND_ARROW_SELECTOR)).toBe(null)
       updatePopperElement(popper, newProps, defaultProps)
-      expect(popper.querySelector(Selectors.ARROW)).toBe(null)
-      expect(popper.querySelector(Selectors.ROUND_ARROW)).toBe(null)
+      expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
+      expect(popper.querySelector(ROUND_ARROW_SELECTOR)).toBe(null)
     }
   })
 
@@ -428,19 +433,19 @@ describe('getChildren', () => {
 describe('createArrowElement', () => {
   it('returns a sharp arrow by default', () => {
     const arrow = createArrowElement()
-    expect(arrow.matches(Selectors.ARROW)).toBe(true)
+    expect(arrow.matches(ARROW_SELECTOR)).toBe(true)
   })
 
   it('returns a round arrow if "round" is passed as argument', () => {
     const roundArrow = createArrowElement('round')
-    expect(roundArrow.matches(Selectors.ROUND_ARROW)).toBe(true)
+    expect(roundArrow.matches(ROUND_ARROW_SELECTOR)).toBe(true)
   })
 })
 
 describe('createBackdropElement', () => {
   it('returns a backdrop element', () => {
     const arrow = createBackdropElement()
-    expect(arrow.matches(Selectors.BACKDROP)).toBe(true)
+    expect(arrow.matches(BACKDROP_SELECTOR)).toBe(true)
     expect(arrow.getAttribute('data-state')).toBe('hidden')
   })
 })
