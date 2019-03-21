@@ -203,13 +203,18 @@ export default createGlobalStyle`
 
   td:first-child code {
     background: none;
-    font-size: 18px;
+    font-size: 16px;
     color: #333;
     padding: 0;
   }
 
   th:last-child, td:last-child {
     padding-left: 25px;
+  }
+
+  td:first-child,
+  td:nth-child(3) {
+    padding-right: 0;
   }
 
   table th, table td {

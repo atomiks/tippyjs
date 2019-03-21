@@ -38,7 +38,9 @@ const template = document.getElementById('example')
 const container = document.createElement('div')
 container.appendChild(document.importNode(template.content, true))
 
-tippy('button', { content: container.innerHTML })
+tippy('button', {
+  content: container.innerHTML,
+})
 ```
 
 ⚠️ Note that IE11 does not support the `<template>` element, see the
@@ -57,7 +59,9 @@ It's also possible to use a `<div>` (or any other element) instead:
 
 ```js
 const template = document.getElementById('example')
-tippy('button', { content: template.innerHTML })
+tippy('button', {
+  content: template.innerHTML,
+})
 ```
 
 Content within the `<div>` gets rendered and displayed on the page, so we need
@@ -70,8 +74,11 @@ element itself (`<div>` element):
 
 ```js
 const template = document.getElementById('example')
-tippy('button', { content: template })
 template.style.display = 'block'
+
+tippy('button', {
+  content: template,
+})
 ```
 
 Once Tippy has appended the template to the tooltip, we need to unhide it, which

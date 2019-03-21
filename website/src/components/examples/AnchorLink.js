@@ -21,8 +21,10 @@ function AnchorLink({ smart }) {
     content: "I'm a Tippy tooltip!",
     animation: 'fade',
     arrow: true,
-    onMount(instance) {
-      instance.popperInstance.disableEventListeners()
+    popperOptions: {
+      onUpdate() {
+        instanceRef.current.popperChildren.arrow.style.margin = '0'
+      },
     },
   }
 
@@ -46,27 +48,56 @@ function AnchorLink({ smart }) {
     )
   }, [])
 
-  function onMouseEnter({ clientX, clientY }) {
-    const LINE_HEIGHT = 22
-    const rect = ref.current.getBoundingClientRect()
-    const cursorPoint = Math.round(clientY - rect.top)
-    const lineIndex = Math.floor(cursorPoint / LINE_HEIGHT)
-    const top = rect.top + lineIndex * LINE_HEIGHT
-    const bottom = top + LINE_HEIGHT
-    instanceRef.current.reference.getBoundingClientRect = () => ({
-      width: 0,
-      height: bottom - top,
-      top,
-      bottom,
-      left: clientX,
-      right: clientX,
-    })
-    instanceRef.current.reference.clientHeight = bottom - top
-    instanceRef.current.show()
+  function createVirtualReference() {
+    const anchor = ref.current
+    return {
+      getBoundingClientRect: () => anchor.getBoundingClientRect(),
+      clientWidth: anchor.clientWidth,
+      clientHeight: anchor.clientHeight,
+    }
   }
 
-  function onMouseLeave() {
-    instanceRef.current.hide()
+  function show({ type, clientX, clientY }) {
+    const instance = instanceRef.current
+
+    if (type === 'mouseenter') {
+      const LINE_HEIGHT = 22
+      const rect = ref.current.getBoundingClientRect()
+      const cursorPoint = Math.round(clientY - rect.top)
+      const lineIndex = Math.floor(cursorPoint / LINE_HEIGHT)
+      const top = rect.top + lineIndex * LINE_HEIGHT
+      const bottom = top + LINE_HEIGHT
+
+      Object.assign(instance.reference, {
+        clientHeight: bottom - top,
+        getBoundingClientRect() {
+          return {
+            width: 0,
+            height: bottom - top,
+            top,
+            bottom,
+            left: clientX,
+            right: clientX,
+          }
+        },
+      })
+
+      // Prevent the tooltip from following scroll
+      setTimeout(() => {
+        instance.popperInstance.disableEventListeners()
+      })
+    } else {
+      Object.assign(instance.reference, createVirtualReference())
+    }
+
+    instance.show()
+  }
+
+  function hide() {
+    const instance = instanceRef.current
+    requestAnimationFrame(() => {
+      instance.hide()
+    })
   }
 
   return (
@@ -83,8 +114,10 @@ function AnchorLink({ smart }) {
           id="AnchorLink2"
           ref={ref}
           href="#AnchorLink2"
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
+          onMouseEnter={show}
+          onMouseLeave={hide}
+          onFocus={show}
+          onBlur={hide}
         >
           anchor link that spans over two lines.
         </a>

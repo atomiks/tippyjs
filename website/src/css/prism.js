@@ -1,17 +1,13 @@
 import { createGlobalStyle } from 'styled-components'
 import { MEDIA } from '../components/Framework'
 
-const MONOSPACE_FONT_STACK = `Inconsolata, "Operator Mono", "Roboto Mono", "Dank Mono", Menlo, Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace`
+const MONOSPACE_FONT_STACK = `Menlo, "Dank Mono", Inconsolata, "Operator Mono", Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", "Courier New", Courier, monospace`
 
 export default createGlobalStyle`
-  code,
-  pre {
-    font-family: ${MONOSPACE_FONT_STACK};
-  }
-
   code[class*='language-'],
   pre[class*='language-'] {
-    color: #cee6ff;
+    font-family: ${MONOSPACE_FONT_STACK};
+    color: #c6dbf4;
     background: none;
     text-align: left;
     white-space: pre;
@@ -34,8 +30,8 @@ export default createGlobalStyle`
     margin-top: 0;
     margin-left: -5.55%;
     margin-right: -5.55%;
-    background: #22223f;
-    font-size: 17px;
+    background: #212139;
+    font-size: 16px;
     line-height: 1.5;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
@@ -55,7 +51,7 @@ export default createGlobalStyle`
       margin-left: 0;
       margin-right: 0;
       padding: 16px 25px;
-      font-size: 18px;
+      font-size: 17px;
     }
   }
 
@@ -66,36 +62,44 @@ export default createGlobalStyle`
     padding: 0.2em 0.4em;
     border-radius: 4px;
     line-height: inherit;
-    font-size: 95%;
+    font-size: 90%;
   }
 
   .token.important,
   .token.atrule,
   .token.keyword {
-    color: #c7a2ff;
+    color: #c3a2ff;
   }
 
   .token.comment,
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    color: #7692d9;
+    color: #7f96cf;
   }
 
-  .token.attr-name,
+  .token.attr-name {
+    color: #c3a2ff;
+  }
+
   .token.selector {
-    color: #ffb07b;
+    color: #ffc777;
   }
 
-  .token.boolean {
+  .token.constant,
+  .token.unit {
     color: #ff959c;
   }
 
-  .token.punctuation,
+  .token.punctuation {
+    color: #9fc8ff;
+  }
+  
+  .token.tag .token.punctuation,
   .token.operator,
   .token.op,
   .token.module {
-    color: #6ed3ff;
+    color: #89DDFF;
   }
 
   .token.nil {
@@ -107,13 +111,12 @@ export default createGlobalStyle`
   }
 
   .token.parameter {
-    color: #ffc5ff;
+    color: #fface4;
   }
 
   .token.flow {
-    color: #8cedff;
+    color: #89DDFF;
     font-style: italic;
-    font-weight: bold;
   }
 
   .token.spread {
@@ -127,23 +130,29 @@ export default createGlobalStyle`
   }
 
   .token.tag {
-    color: #ff6c8b;
+    color: #fa7692;
   }
 
   .token.number,
+  .token.boolean,
   .token.symbol,
   .token.deleted {
-    color: #ff8d5d;
+    color: #ff9d74;
   }
 
   .token.string,
+  .token.value,
   .language-css .token.string,
   .token.url,
   .token.attr-value,
   .token.char,
   .token.builtin,
   .token.inserted {
-    color: #5af4c4;
+    color: #C3E88D;
+  }
+
+  .token.punctuation.quote {
+    color: #89DDFF;
   }
 
   .token.entity,
@@ -154,11 +163,12 @@ export default createGlobalStyle`
 
   .token.function,
   .token.property {
-    color: #5eb9ff;
+    color: #82AAFF;
   }
 
-  .token.method {
-    color: #00d3ed;
+  .token.method,
+  .language-css .token.function {
+    color: #25c8e5;
   }
 
   .token.variable {
@@ -167,15 +177,15 @@ export default createGlobalStyle`
 
   .token.dom,
   .token.class-name {
-    color: #ffd278;
+    color: #ffc777;
   }
 
   .token.property.definition {
-    color: #b6f69a;
+    color: #77e0c6;
   }
 
   .token.property.access {
-    color: #8ec1ef;
+    color: #89DDFF;
   }
 
   .token.regex {

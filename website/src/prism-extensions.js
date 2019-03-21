@@ -1,5 +1,4 @@
 // __gatsby-monkey-patch-start
-
 Prism.languages.insertBefore('javascript', 'keyword', {
   module: {
     pattern: /\b(?:import|as|export|from|default)\b/,
@@ -18,7 +17,7 @@ Prism.languages.insertBefore('javascript', 'keyword', {
     alias: 'keyword',
   },
   func: {
-    pattern: /(\.\s*)[a-z_$][\w$]*(?=(\())/i,
+    pattern: /(\.\s*)[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=(\())/i,
     lookbehind: true,
     alias: 'method',
   },
@@ -26,12 +25,12 @@ Prism.languages.insertBefore('javascript', 'keyword', {
 
 Prism.languages.insertBefore('javascript', 'punctuation', {
   definition: {
-    pattern: /[a-z]\w*(?=:)/i,
+    pattern: /[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=:)/i,
     lookbehind: true,
     alias: 'property',
   },
   access: {
-    pattern: /(\.\s*)[a-z_$][\w$]*/i,
+    pattern: /(\.\s*)[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*/i,
     lookbehind: true,
     alias: 'property',
   },
@@ -41,7 +40,7 @@ Prism.languages.insertBefore('javascript', 'punctuation', {
   },
   console: /\bconsole\b/,
   class: {
-    pattern: /\b[A-Z][A-Za-z0-9_]+\b/,
+    pattern: /\b[A-Z][$\w\xA0-\uFFFF]+\b/,
     alias: 'class-name',
   },
 })
@@ -59,13 +58,41 @@ Prism.languages.insertBefore('javascript', 'operator', {
 
 Prism.languages.insertBefore('javascript', 'function', {
   method: {
-    pattern: /(\.\s*)[a-z_$][\w$]*(?=(\())/i,
+    pattern: /(\.\s*)[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=(\())/i,
     lookbehind: true,
     alias: 'function',
   },
 })
 
+Prism.languages.javascript.constant = [
+  Prism.languages.javascript.constant,
+  {
+    pattern: /(const\s+(\{\s*)?)[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*/,
+    lookbehind: true,
+  },
+]
+
+Prism.languages.javascript.string = [
+  {
+    pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*(?=\1)/,
+    lookbehind: true,
+  },
+  {
+    pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*(?=\1)/,
+    alias: 'quote',
+  },
+  {
+    pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*(["'])/,
+    lookbehind: true,
+    alias: 'quote',
+  },
+]
+
 Prism.languages.insertBefore('javascript', 'keyword', {
+  quote: {
+    pattern: /['"`]/,
+    alias: 'punctuation',
+  },
   parameter: [
     {
       pattern: /(function(?:\s+[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*)?\s*\(\s*)[^\s()][^()]*?(?=\s*\))/,
@@ -89,4 +116,65 @@ Prism.languages.insertBefore('javascript', 'keyword', {
   ],
 })
 
+Prism.languages.css.selector = {
+  pattern: Prism.languages.css.selector,
+  inside: {
+    'pseudo-element': /:(?:after|before|first-letter|first-line|selection)|::[-\w]+/,
+    'pseudo-class': /:[-\w]+(?:\(.*\))?/,
+    class: /\.[-:.\w]+/,
+    id: /#[-:.\w]+/,
+    attribute: {
+      pattern: /\[(?:[^[\]"']|("|')(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1)*\]/,
+      greedy: true,
+      inside: {
+        punctuation: /^\[|\]$/,
+        'case-sensitivity': {
+          pattern: /(\s)[si]$/i,
+          lookbehind: true,
+          alias: 'keyword',
+        },
+        namespace: {
+          pattern: /^(\s*)[-*\w\xA0-\uFFFF]*\|(?!=)/,
+          lookbehind: true,
+          inside: {
+            punctuation: /\|$/,
+          },
+        },
+        attribute: {
+          pattern: /^(\s*)[-\w\xA0-\uFFFF]+/,
+          lookbehind: true,
+        },
+        value: [
+          /("|')(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
+          {
+            pattern: /(=\s*)[-\w\xA0-\uFFFF]+(?=\s*$)/,
+            lookbehind: true,
+          },
+        ],
+        operator: /[|~*^$]?=/,
+      },
+    },
+  },
+}
+
+Prism.languages.insertBefore('css', 'property', {
+  variable: {
+    pattern: /(^|[^-\w\xA0-\uFFFF])--[-_a-z\xA0-\uFFFF][-\w\xA0-\uFFFF]*/i,
+    lookbehind: true,
+  },
+})
+
+Prism.languages.insertBefore('css', 'function', {
+  operator: {
+    pattern: /(\s)[+\-*\/](?=\s)/,
+    lookbehind: true,
+  },
+  hexcode: /#[\da-f]{3,8}/i,
+  entity: /\\[\da-f]{1,8}/i,
+  unit: {
+    pattern: /(\d)(?:%|[a-z]+)/,
+    lookbehind: true,
+  },
+  number: /-?[\d.]+/,
+})
 // __gatsby-monkey-patch-end

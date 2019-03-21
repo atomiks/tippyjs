@@ -65,11 +65,5 @@ module.exports = {
         ],
       },
     },
-    {
-      resolve: `gatsby-plugin-google-fonts`,
-      options: {
-        fonts: [`inconsolata\:400,700`],
-      },
-    },
   ],
 }
