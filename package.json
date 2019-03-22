@@ -30,10 +30,7 @@
     "build": "node rollup.build.js && bundlesize",
     "test": "jest --coverage",
     "test:browser": "parcel test/browser/index.html -d .devserver --open",
-    "lint": "eslint \"src/**/*.ts\"",
-    "format": "prettier --write \"{src,test}/**/*{js,ts,scss}\"",
-    "check-types": "tsc",
-    "release": "npm test && npm run build && git add . && git commit -am $npm_package_version && git tag v$npm_package_version && git push origin master && git push --tags && npm publish"
+    "check-types": "tsc"
   },
   "jest": {
     "setupFiles": [
@@ -60,12 +57,13 @@
     }
   },
   "lint-staged": {
-    "{src,test}/**/*.{js,json,scss,md}": [
-      "prettier --write",
+    "src/**/*.ts": [
+      "jest --findRelatedTests",
+      "eslint",
       "git add"
     ],
-    "src/**/*.js": [
-      "eslint --fix",
+    "{build,src,test,website/src}/**/*.{ts,js,json,css,scss,md}": [
+      "prettier --write",
       "git add"
     ]
   },
