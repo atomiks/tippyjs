@@ -930,15 +930,9 @@ export default function createTippy(
       return
     }
 
-    // Destroy tooltip if the reference element is no longer on the DOM
-    if (
-      !hasOwnProperty(instance.reference, 'isVirtual') &&
-      !document.documentElement.contains(instance.reference)
-    ) {
-      return destroy()
-    }
-
-    // Do not show tooltip if the reference element has a `disabled` attribute
+    // Standardize `disabled` behavior across browsers.
+    // Firefox allows events on disabled elements, but Chrome doesn't.
+    // Using a wrapper element (i.e. <span>) is recommended.
     if (instance.reference.hasAttribute('disabled')) {
       return
     }
