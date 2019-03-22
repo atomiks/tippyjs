@@ -170,14 +170,6 @@ describe('instance.show', () => {
     instance.show()
     expect(instance.state.isVisible).toBe(false)
   })
-
-  it('destroys the instance if the reference is not on the DOM', () => {
-    const ref = h()
-    const instance = createTippy(ref, defaultProps)
-    ref.remove()
-    instance.show()
-    expect(instance.state.isDestroyed).toBe(true)
-  })
 })
 
 describe('instance.hide', () => {
