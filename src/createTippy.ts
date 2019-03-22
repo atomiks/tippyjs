@@ -13,6 +13,8 @@ import { closest, closestCallback, arrayFrom } from './ponyfills'
 import {
   PASSIVE,
   PADDING,
+  PLACEMENT_ATTRIBUTE,
+  OUT_OF_BOUNDARIES_ATTRIBUTE,
   ACTIVE_CLASS,
   NO_TRANSITION_CLASS,
   POPPER_SELECTOR,
@@ -496,7 +498,14 @@ export default function createTippy(
         setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
       }
 
-      tooltip.setAttribute('x-placement', data.placement)
+      // Apply all of the popper's attributes to the tootip node as well.
+      // Allows users to avoid using the .tippy-popper selector for themes.
+      tooltip.setAttribute(PLACEMENT_ATTRIBUTE, data.placement)
+      if (data.attributes[OUT_OF_BOUNDARIES_ATTRIBUTE] !== false) {
+        tooltip.setAttribute(OUT_OF_BOUNDARIES_ATTRIBUTE, '')
+      } else {
+        tooltip.removeAttribute(OUT_OF_BOUNDARIES_ATTRIBUTE)
+      }
 
       const basePlacement = getPopperPlacement(instance.popper)
       const styles = tooltip.style
