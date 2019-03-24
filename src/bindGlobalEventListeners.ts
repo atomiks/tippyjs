@@ -30,7 +30,9 @@ export function onDocumentMouseMove(): void {
   // Chrome 60+ is 1 mousemove per animation frame, use 20ms time difference
   if (now - lastMouseMoveTime < 20) {
     isUsingTouch = false
+
     document.removeEventListener('mousemove', onDocumentMouseMove)
+
     if (!isIOS) {
       document.body.classList.remove(IOS_CLASS)
     }

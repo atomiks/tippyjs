@@ -15,11 +15,10 @@ import {
   removeInteractive,
   setInnerHTML,
   setContent,
-  applyTransitionDuration,
-  setVisibilityState,
   isCursorOutsideInteractiveBorder,
   getOffsetDistanceInPx,
-  getPopperPlacement,
+  getBasicPlacement,
+  updateTheme,
 } from '../../src/popper'
 import { div } from '../../src/utils'
 import {
@@ -450,20 +449,6 @@ describe('createBackdropElement', () => {
   })
 })
 
-describe('setVisibilityState', () => {
-  it('sets the `data-state` attribute on a list of elements with the value specified', () => {
-    const els = [h(), h(), null, h()]
-    setVisibilityState(els, 'visible')
-    expect(els[0].getAttribute('data-state')).toBe('visible')
-    expect(els[1].getAttribute('data-state')).toBe('visible')
-    expect(els[3].getAttribute('data-state')).toBe('visible')
-    setVisibilityState(els, 'hidden')
-    expect(els[0].getAttribute('data-state')).toBe('hidden')
-    expect(els[1].getAttribute('data-state')).toBe('hidden')
-    expect(els[3].getAttribute('data-state')).toBe('hidden')
-  })
-})
-
 describe('setContent', () => {
   it('sets textContent of an element if `props.allowHTML` is `false`', () => {
     const ref = h()
@@ -484,16 +469,6 @@ describe('setContent', () => {
       content,
     })
     expect(ref.querySelector('strong')).not.toBe(null)
-  })
-})
-
-describe('applyTransitionDuration', () => {
-  it('sets the `transition-duration` property on a list of elements with the value specified', () => {
-    const els = [h(), h(), null, h()]
-    applyTransitionDuration(els, 1298)
-    expect(els[0].style.transitionDuration).toBe('1298ms')
-    expect(els[1].style.transitionDuration).toBe('1298ms')
-    expect(els[3].style.transitionDuration).toBe('1298ms')
   })
 })
 
@@ -689,13 +664,24 @@ describe('getPopperPlacement', () => {
     allPlacements.forEach(placement => {
       const popper = h('div')
       popper.setAttribute('x-placement', placement)
-      expect(getPopperPlacement(popper).endsWith('-start')).toBe(false)
-      expect(getPopperPlacement(popper).endsWith('-end')).toBe(false)
+      expect(getBasicPlacement(popper).endsWith('-start')).toBe(false)
+      expect(getBasicPlacement(popper).endsWith('-end')).toBe(false)
     })
   })
 
   it('returns an empty string if there is no placement', () => {
     const popper = h('div')
-    expect(getPopperPlacement(popper)).toBe('')
+    expect(getBasicPlacement(popper)).toBe('')
+  })
+})
+
+describe('updateTheme', () => {
+  it('updates the theme on an element correctly', () => {
+    const div = document.createElement('div')
+    const theme = 'hello world'
+    updateTheme(div, 'add', theme)
+    expect(div.className).toBe('hello-theme world-theme')
+    updateTheme(div, 'remove', theme)
+    expect(div.className).toBe('')
   })
 })

@@ -17,6 +17,7 @@ import {
   ARROW_SELECTOR,
   ROUND_ARROW_SELECTOR,
   POPPER_SELECTOR,
+  PLACEMENT_ATTRIBUTE,
 } from './constants'
 
 /**
@@ -124,23 +125,9 @@ export function removeInteractive(
 }
 
 /**
- * Applies a transition duration to a list of elements
- */
-export function applyTransitionDuration(
-  els: (HTMLDivElement | null)[],
-  value: number,
-): void {
-  els.forEach(el => {
-    if (el) {
-      el.style.transitionDuration = `${value}ms`
-    }
-  })
-}
-
-/**
  * Add/remove transitionend listener from tooltip
  */
-export function toggleTransitionEndListener(
+export function updateTransitionEndListener(
   tooltip: PopperChildren['tooltip'],
   action: 'add' | 'remove',
   listener: (event: TransitionEvent) => void,
@@ -159,23 +146,9 @@ export function toggleTransitionEndListener(
 /**
  * Returns the popper's placement, ignoring shifting (top-start, etc)
  */
-export function getPopperPlacement(popper: PopperElement): BasicPlacement {
-  const fullPlacement = popper.getAttribute('x-placement')
+export function getBasicPlacement(popper: PopperElement): BasicPlacement {
+  const fullPlacement = popper.getAttribute(PLACEMENT_ATTRIBUTE)
   return (fullPlacement ? fullPlacement.split('-')[0] : '') as BasicPlacement
-}
-
-/**
- * Sets the visibility state to elements so they can begin to transition
- */
-export function setVisibilityState(
-  els: (HTMLDivElement | null)[],
-  state: 'visible' | 'hidden',
-): void {
-  els.forEach(el => {
-    if (el) {
-      el.setAttribute('data-state', state)
-    }
-  })
 }
 
 /**
@@ -188,7 +161,7 @@ export function reflow(popper: PopperElement): void {
 /**
  * Adds/removes theme from tooltip's classList
  */
-export function toggleTheme(
+export function updateTheme(
   tooltip: PopperChildren['tooltip'],
   action: 'add' | 'remove',
   theme: Props['theme'],
@@ -217,7 +190,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   tooltip.setAttribute('data-size', props.size)
   tooltip.setAttribute('data-animation', props.animation)
   tooltip.setAttribute('data-state', 'hidden')
-  toggleTheme(tooltip, 'add', props.theme)
+  updateTheme(tooltip, 'add', props.theme)
 
   const content = div()
   content.className = 'tippy-content'
@@ -314,8 +287,8 @@ export function updatePopperElement(
 
   // theme
   if (prevProps.theme !== nextProps.theme) {
-    toggleTheme(tooltip, 'remove', prevProps.theme)
-    toggleTheme(tooltip, 'add', nextProps.theme)
+    updateTheme(tooltip, 'remove', prevProps.theme)
+    updateTheme(tooltip, 'add', nextProps.theme)
   }
 }
 

@@ -318,3 +318,27 @@ describe('validateOptions', () => {
     ).toThrow('[tippy]: `intractive` is not a valid option')
   })
 })
+
+describe('setTransitionDuration', () => {
+  it('sets the `transition-duration` property on a list of elements with the value specified', () => {
+    const els = [h(), h(), null, h()]
+    Utils.setTransitionDuration(els, 1298)
+    expect(els[0].style.transitionDuration).toBe('1298ms')
+    expect(els[1].style.transitionDuration).toBe('1298ms')
+    expect(els[3].style.transitionDuration).toBe('1298ms')
+  })
+})
+
+describe('setVisibilityState', () => {
+  it('sets the `data-state` attribute on a list of elements with the value specified', () => {
+    const els = [h(), h(), null, h()]
+    Utils.setVisibilityState(els, 'visible')
+    expect(els[0].getAttribute('data-state')).toBe('visible')
+    expect(els[1].getAttribute('data-state')).toBe('visible')
+    expect(els[3].getAttribute('data-state')).toBe('visible')
+    Utils.setVisibilityState(els, 'hidden')
+    expect(els[0].getAttribute('data-state')).toBe('hidden')
+    expect(els[1].getAttribute('data-state')).toBe('hidden')
+    expect(els[3].getAttribute('data-state')).toBe('hidden')
+  })
+})

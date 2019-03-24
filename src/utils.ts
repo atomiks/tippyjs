@@ -141,6 +141,34 @@ export function div(): HTMLDivElement {
 }
 
 /**
+ * Applies a transition duration to a list of elements
+ */
+export function setTransitionDuration(
+  els: (HTMLDivElement | null)[],
+  value: number,
+): void {
+  els.forEach(el => {
+    if (el) {
+      el.style.transitionDuration = `${value}ms`
+    }
+  })
+}
+
+/**
+ * Sets the visibility state to elements so they can begin to transition
+ */
+export function setVisibilityState(
+  els: (HTMLDivElement | null)[],
+  state: 'visible' | 'hidden',
+): void {
+  els.forEach(el => {
+    if (el) {
+      el.setAttribute('data-state', state)
+    }
+  })
+}
+
+/**
  * Evaluates the props object by merging data attributes and
  * disabling conflicting options where necessary
  */
