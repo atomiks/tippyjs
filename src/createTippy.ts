@@ -901,9 +901,11 @@ export default function createTippy(
       instance.popperInstance.update()
 
       if (
-        POPPER_INSTANCE_DEPENDENCIES.some((prop: string) =>
-          hasOwnProperty(options, prop),
-        )
+        POPPER_INSTANCE_DEPENDENCIES.some(prop => {
+          return (
+            hasOwnProperty(options, prop) && options[prop] !== prevProps[prop]
+          )
+        })
       ) {
         instance.popperInstance.destroy()
         createPopperInstance()

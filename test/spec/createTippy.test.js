@@ -288,6 +288,22 @@ describe('instance.set', () => {
     ref.dispatchEvent(new Event('click'))
     expect(instance.state.isVisible).toBe(true)
   })
+
+  it('avoids creating a new popperInstance if new props are identical', () => {
+    const instance = createTippy(h(), defaultProps)
+    instance.show()
+    const previousPopperInstance = instance.popperInstance
+    instance.set(defaultProps)
+    expect(instance.popperInstance).toBe(previousPopperInstance)
+  })
+
+  it('creates a new popperInstance if one of the props has changed', () => {
+    const instance = createTippy(h(), defaultProps)
+    instance.show()
+    const previousPopperInstance = instance.popperInstance
+    instance.set({ ...defaultProps, placement: 'bottom' })
+    expect(instance.popperInstance).not.toBe(previousPopperInstance)
+  })
 })
 
 describe('instance.setContent', () => {
