@@ -13,8 +13,9 @@ import { closest, closestCallback, arrayFrom } from './ponyfills'
 import {
   PASSIVE,
   PADDING,
+  PLACEMENT_ATTRIBUTE,
+  OUT_OF_BOUNDARIES_ATTRIBUTE,
   ACTIVE_CLASS,
-  NO_TRANSITION_CLASS,
   POPPER_SELECTOR,
 } from './constants'
 import { isUsingTouch } from './bindGlobalEventListeners'
@@ -85,6 +86,10 @@ export default function createTippy(
       : onMouseMove
 
   let currentParentNode: Element
+
+  let previousPlacement: string
+
+  let wasVisibleDuringPreviousUpdate = false
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   const id = idCounter++
@@ -481,7 +486,29 @@ export default function createTippy(
         setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
       }
 
-      tooltip.setAttribute('x-placement', data.placement)
+      // Apply all of the popper's attributes to the tootip node as well.
+      // Allows users to avoid using the .tippy-popper selector for themes.
+      tooltip.setAttribute(PLACEMENT_ATTRIBUTE, data.placement)
+      if (data.attributes[OUT_OF_BOUNDARIES_ATTRIBUTE] !== false) {
+        tooltip.setAttribute(OUT_OF_BOUNDARIES_ATTRIBUTE, '')
+      } else {
+        tooltip.removeAttribute(OUT_OF_BOUNDARIES_ATTRIBUTE)
+      }
+
+      // Prevents a transition when changing placements (while tippy is visible)
+      // for scroll/resize updates
+      if (
+        previousPlacement &&
+        previousPlacement !== data.placement &&
+        wasVisibleDuringPreviousUpdate
+      ) {
+        tooltip.style.transition = 'none'
+        requestAnimationFrame(() => {
+          tooltip.style.transition = ''
+        })
+      }
+      previousPlacement = data.placement
+      wasVisibleDuringPreviousUpdate = instance.state.isVisible
 
       const basePlacement = getPopperPlacement(instance.popper)
       const styles = tooltip.style
@@ -968,8 +995,6 @@ export default function createTippy(
       setVisibilityState(getInnerElements(), 'visible')
 
       onTransitionedIn(duration, () => {
-        instance.popperChildren.tooltip.classList.add(NO_TRANSITION_CLASS)
-
         if (instance.props.aria) {
           instance.reference.setAttribute(
             `aria-${instance.props.aria}`,
@@ -1001,8 +1026,6 @@ export default function createTippy(
       return
     }
 
-    instance.popperChildren.tooltip.classList.remove(NO_TRANSITION_CLASS)
-
     if (instance.props.interactive) {
       instance.reference.classList.remove(ACTIVE_CLASS)
     }
@@ -1010,6 +1033,7 @@ export default function createTippy(
     instance.popper.style.visibility = 'hidden'
     instance.state.isVisible = false
     instance.state.isShown = false
+    wasVisibleDuringPreviousUpdate = false
 
     applyTransitionDuration(getInnerElements(), duration)
 
