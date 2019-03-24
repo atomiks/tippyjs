@@ -81,7 +81,6 @@ export interface Options {
   updateDuration?: number
   wait?: ((instance: Instance, event?: Event) => void) | null
   zIndex?: number
-  [key: string]: any
 }
 
 /**
