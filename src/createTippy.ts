@@ -63,48 +63,37 @@ export default function createTippy(
   }
 
   /* ======================= 🔒 Private members 🔒 ======================= */
-  // The last trigger event type that caused the tippy to show
   let lastTriggerEventType: string
 
-  // The last mousemove event object created by the document mousemove event
   let lastMouseMoveEvent: MouseEvent
 
-  // Timeout created by the show delay
   let showTimeoutId: number
 
-  // Timeout created by the hide delay
   let hideTimeoutId: number
 
-  // Frame created by scheduleHide()
   let animationFrameId: number
 
-  // Flag to determine if the tippy is scheduled to show due to the show timeout
   let isScheduledToShow = false
 
-  // The current `transitionend` callback reference
-  let transitionEndListener: (event: TransitionEvent) => void
+  let currentTransitionEndListener: (event: TransitionEvent) => void
 
-  // Array of event listeners currently attached to the reference element
   let listeners: Listener[] = []
 
-  // Private onMouseMove handler reference, debounced or not
   let debouncedOnMouseMove =
     props.interactiveDebounce > 0
       ? debounce(onMouseMove, props.interactiveDebounce)
       : onMouseMove
 
-  // Node the tippy is currently appended to
-  let parentNode: Element
+  let currentParentNode: Element
 
   /* ======================= 🔑 Public members 🔑 ======================= */
-  // id used for the `aria-describedby` / `aria-labelledby` attribute
   const id = idCounter++
 
-  // Popper element reference
   const popper = createPopperElement(id, props)
 
-  // Popper element children: { arrow, backdrop, content, tooltip }
   const popperChildren = getChildren(popper)
+
+  const popperInstance: PopperInstance | null = null
 
   const state = {
     // Is the instance currently enabled?
@@ -118,9 +107,6 @@ export default function createTippy(
     // Has the tippy finished transitioning in?
     isShown: false,
   }
-
-  // Popper.js instance for the tippy is lazily created
-  const popperInstance: PopperInstance | null = null
 
   const instance: Instance = {
     // properties
@@ -175,7 +161,6 @@ export default function createTippy(
     }
   })
 
-  // Install shortcuts
   reference._tippy = instance
   popper._tippy = instance
 
@@ -645,13 +630,13 @@ export default function createTippy(
 
     const { appendTo } = instance.props
 
-    parentNode =
+    currentParentNode =
       appendTo === 'parent'
         ? instance.reference.parentNode
         : evaluateValue(appendTo, [instance.reference])
 
-    if (!parentNode.contains(instance.popper)) {
-      parentNode.appendChild(instance.popper)
+    if (!currentParentNode.contains(instance.popper)) {
+      currentParentNode.appendChild(instance.popper)
       instance.props.onMount(instance)
       instance.state.isMounted = true
     }
@@ -699,8 +684,8 @@ export default function createTippy(
     onTransitionEnd(duration, () => {
       if (
         !instance.state.isVisible &&
-        parentNode &&
-        parentNode.contains(instance.popper)
+        currentParentNode &&
+        currentParentNode.contains(instance.popper)
       ) {
         callback()
       }
@@ -736,10 +721,10 @@ export default function createTippy(
       return callback()
     }
 
-    toggleTransitionEndListener(tooltip, 'remove', transitionEndListener)
+    toggleTransitionEndListener(tooltip, 'remove', currentTransitionEndListener)
     toggleTransitionEndListener(tooltip, 'add', listener)
 
-    transitionEndListener = listener
+    currentTransitionEndListener = listener
   }
 
   /**
@@ -1042,7 +1027,7 @@ export default function createTippy(
       instance.popperInstance!.disableEventListeners()
       instance.popperInstance!.options.placement = instance.props.placement
 
-      parentNode.removeChild(instance.popper)
+      currentParentNode.removeChild(instance.popper)
       instance.props.onHidden(instance)
       instance.state.isMounted = false
     })
