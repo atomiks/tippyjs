@@ -18,7 +18,6 @@ import {
   ACTIVE_CLASS,
   POPPER_SELECTOR,
 } from './constants'
-import { PASSIVE, PADDING, ACTIVE_CLASS, POPPER_SELECTOR } from './constants'
 import { isUsingTouch } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
