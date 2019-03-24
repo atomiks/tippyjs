@@ -81,6 +81,7 @@ export interface Props {
   updateDuration: number
   wait: ((instance: Instance, event?: Event) => void) | null
   zIndex: number
+  [key: string]: any
 }
 
 export type Options = Partial<Props>
