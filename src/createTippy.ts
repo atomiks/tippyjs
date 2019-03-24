@@ -16,9 +16,9 @@ import {
   PLACEMENT_ATTRIBUTE,
   OUT_OF_BOUNDARIES_ATTRIBUTE,
   ACTIVE_CLASS,
-  NO_TRANSITION_CLASS,
   POPPER_SELECTOR,
 } from './constants'
+import { PASSIVE, PADDING, ACTIVE_CLASS, POPPER_SELECTOR } from './constants'
 import { isUsingTouch } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
@@ -97,6 +97,10 @@ export default function createTippy(
 
   // Node the tippy is currently appended to
   let parentNode: Element
+
+  let previousPlacement: string
+
+  let wasVisibleDuringPreviousUpdate = false
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   // id used for the `aria-describedby` / `aria-labelledby` attribute
@@ -506,6 +510,21 @@ export default function createTippy(
       } else {
         tooltip.removeAttribute(OUT_OF_BOUNDARIES_ATTRIBUTE)
       }
+
+      // Prevents a transition when changing placements (while tippy is visible)
+      // for scroll/resize updates
+      if (
+        previousPlacement &&
+        previousPlacement !== data.placement &&
+        wasVisibleDuringPreviousUpdate
+      ) {
+        tooltip.style.transition = 'none'
+        requestAnimationFrame(() => {
+          tooltip.style.transition = ''
+        })
+      }
+      previousPlacement = data.placement
+      wasVisibleDuringPreviousUpdate = instance.state.isVisible
 
       const basePlacement = getPopperPlacement(instance.popper)
       const styles = tooltip.style
@@ -992,8 +1011,6 @@ export default function createTippy(
       setVisibilityState(getInnerElements(), 'visible')
 
       onTransitionedIn(duration, () => {
-        instance.popperChildren.tooltip.classList.add(NO_TRANSITION_CLASS)
-
         if (instance.props.aria) {
           instance.reference.setAttribute(
             `aria-${instance.props.aria}`,
@@ -1025,8 +1042,6 @@ export default function createTippy(
       return
     }
 
-    instance.popperChildren.tooltip.classList.remove(NO_TRANSITION_CLASS)
-
     if (instance.props.interactive) {
       instance.reference.classList.remove(ACTIVE_CLASS)
     }
@@ -1034,6 +1049,7 @@ export default function createTippy(
     instance.popper.style.visibility = 'hidden'
     instance.state.isVisible = false
     instance.state.isShown = false
+    wasVisibleDuringPreviousUpdate = false
 
     applyTransitionDuration(getInnerElements(), duration)
 

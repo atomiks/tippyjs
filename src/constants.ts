@@ -12,7 +12,6 @@ export const OUT_OF_BOUNDARIES_ATTRIBUTE = 'x-out-of-boundaries'
 // Classes
 export const IOS_CLASS = 'tippy-iOS'
 export const ACTIVE_CLASS = 'tippy-active'
-export const NO_TRANSITION_CLASS = 'tippy-notransition'
 
 // Selectors
 export const POPPER_SELECTOR = '.tippy-popper'
