@@ -90,7 +90,6 @@ export default function createTippy(
   // Node the tippy is currently appended to
   let parentNode: Element
 
-  // The tippy's previous placement
   let previousPlacement: string
 
   let wasVisibleDuringPreviousUpdate = false
