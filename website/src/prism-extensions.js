@@ -1,3 +1,4 @@
+/* globals Prism */
 // __gatsby-monkey-patch-start
 Prism.languages.insertBefore('javascript', 'keyword', {
   module: {
@@ -166,7 +167,7 @@ Prism.languages.insertBefore('css', 'property', {
 
 Prism.languages.insertBefore('css', 'function', {
   operator: {
-    pattern: /(\s)[+\-*\/](?=\s)/,
+    pattern: /(\s)[+\-*/](?=\s)/,
     lookbehind: true,
   },
   hexcode: /#[\da-f]{3,8}/i,

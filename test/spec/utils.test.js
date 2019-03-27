@@ -122,6 +122,7 @@ describe('getValue', () => {
   })
 
   it('uses the default duration if the value is undefined', () => {
+    /* eslint-disable no-sparse-arrays */
     expect(Utils.getValue([, 5], 0, defaultProps.duration[0])).toBe(
       defaultProps.duration[0],
     )
@@ -132,6 +133,7 @@ describe('getValue', () => {
       defaultProps.delay,
     )
     expect(Utils.getValue([5], 1, defaultProps.delay)).toBe(defaultProps.delay)
+    /* eslint-enable no-sparse-arrays */
   })
 })
 

@@ -348,7 +348,7 @@ describe('afterPopperPositionUpdates', () => {
 
   it('is not called by popper if already updated', done => {
     const tip = tippy(h(), { lazy: false })
-    const fn = jest.fn()
+    /* const fn = */ jest.fn()
     // popper calls scheduleUpdate() on init
     setTimeout(() => {
       const fn = jest.fn()

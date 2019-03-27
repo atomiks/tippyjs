@@ -113,7 +113,7 @@ describe('instance.destroy', () => {
     const ref = h()
     const p = document.createElement('p')
     ref.append(p)
-    const instance = createTippy(ref, { ...defaultProps, target: 'p' })
+    /* const instance = */ createTippy(ref, { ...defaultProps, target: 'p' })
     p._tippy = createTippy(p, defaultProps)
     expect(p._tippy).toBeDefined()
     ref._tippy.destroy(true)
@@ -180,7 +180,7 @@ describe('instance.hide', () => {
     instance.destroy()
   })
 
-  it('removes the popper element from the DOM after hiding', () => {
+  it('removes the popper element from the DOM after hiding', done => {
     const instance = createTippy(h(), {
       ...defaultProps,
     })
