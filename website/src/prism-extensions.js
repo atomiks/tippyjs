@@ -1,4 +1,3 @@
-/* globals Prism */
 // __gatsby-monkey-patch-start
 Prism.languages.insertBefore('javascript', 'keyword', {
   module: {
