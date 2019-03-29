@@ -166,7 +166,7 @@ Prism.languages.insertBefore('css', 'property', {
 
 Prism.languages.insertBefore('css', 'function', {
   operator: {
-    pattern: /(\s)[+\-*\/](?=\s)/,
+    pattern: /(\s)[+\-*/](?=\s)/,
     lookbehind: true,
   },
   hexcode: /#[\da-f]{3,8}/i,

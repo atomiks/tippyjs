@@ -1,3 +1,4 @@
+/* eslint-disable no-console, @typescript-eslint/no-var-requires */
 const fs = require('fs')
 const pkg = require('./package.json')
 const { rollup } = require('rollup')
@@ -8,7 +9,7 @@ const postcss = require('postcss')
 const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
 const resolve = require('rollup-plugin-node-resolve')
-const commonjs = require('rollup-plugin-commonjs')
+// const commonjs = require('rollup-plugin-commonjs')
 const json = require('rollup-plugin-json')
 const cssOnly = require('rollup-plugin-css-only')
 const { green, blue } = require('colorette')

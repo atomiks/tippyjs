@@ -122,16 +122,18 @@ describe('getValue', () => {
   })
 
   it('uses the default duration if the value is undefined', () => {
-    expect(Utils.getValue([, 5], 0, defaultProps.duration[0])).toBe(
+    expect(Utils.getValue([undefined, 5], 0, defaultProps.duration[0])).toBe(
       defaultProps.duration[0],
     )
-    expect(Utils.getValue([5], 1, defaultProps.duration[1])).toBe(
+    expect(Utils.getValue([5, undefined], 1, defaultProps.duration[1])).toBe(
       defaultProps.duration[1],
     )
-    expect(Utils.getValue([, 5], 0, defaultProps.delay)).toBe(
+    expect(Utils.getValue([undefined, 5], 0, defaultProps.delay)).toBe(
       defaultProps.delay,
     )
-    expect(Utils.getValue([5], 1, defaultProps.delay)).toBe(defaultProps.delay)
+    expect(Utils.getValue([5, undefined], 1, defaultProps.delay)).toBe(
+      defaultProps.delay,
+    )
   })
 })
 
