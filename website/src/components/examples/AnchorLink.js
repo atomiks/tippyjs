@@ -6,7 +6,7 @@ import { MEDIA } from '../Framework'
 
 const Wrapper = styled.div`
   max-width: 275px;
-  line-height: 22px;
+  line-height: 24px;
 
   ${MEDIA.md} {
     max-width: 400px;
@@ -61,7 +61,7 @@ function AnchorLink({ smart }) {
     const instance = instanceRef.current
 
     if (type === 'mouseenter') {
-      const LINE_HEIGHT = 22
+      const LINE_HEIGHT = 24
       const rect = ref.current.getBoundingClientRect()
       const cursorPoint = Math.round(clientY - rect.top)
       const lineIndex = Math.floor(cursorPoint / LINE_HEIGHT)

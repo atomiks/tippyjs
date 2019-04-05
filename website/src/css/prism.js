@@ -26,11 +26,11 @@ export default createGlobalStyle`
   }
 
   pre[class*='language-'] {
-    padding: 16px 5%;
+    padding: 20px 5%;
     margin-top: 0;
     margin-left: -5.55%;
     margin-right: -5.55%;
-    background: #212139;
+    background: radial-gradient(50% 80% at 80% 0%, rgb(56, 50, 87), rgb(33, 33, 57));
     font-size: 16px;
     line-height: 1.5;
     overflow: auto;
@@ -43,11 +43,11 @@ export default createGlobalStyle`
     ${MEDIA.sm} {
       margin-left: -25px;
       margin-right: -25px;
-      padding: 16px 25px;
+      padding: 20px 25px;
     }
 
     ${MEDIA.md} {
-      border-radius: 0 0 8px 8px;
+      border-radius: 8px;
       margin-left: 0;
       margin-right: 0;
       padding: 16px 25px;
@@ -92,7 +92,11 @@ export default createGlobalStyle`
   }
 
   .token.punctuation {
-    color: #9fc8ff;
+    color: #89DDFF;
+  }
+
+  .token.block {
+    color: #a5cbff;
   }
   
   .token.tag .token.punctuation,
@@ -205,7 +209,7 @@ export default createGlobalStyle`
 
   .gatsby-highlight {
     position: relative;
-    margin-top: 3.5rem;
+    margin-top: 1.5rem;
     margin-bottom: 1.5rem;
   
     ${MEDIA.md} {
@@ -234,16 +238,16 @@ export default createGlobalStyle`
       display: block;
       width: 111.1%;
       position: absolute;
-      background: #43436a;
       font-weight: bold;
-      padding: 8px 8px;
+      padding: 8px 15px;
       font-family: ${MONOSPACE_FONT_STACK};
       color: white;
       margin-left: -5.55%;
       padding-left: 5%;
       text-transform: uppercase;
-      transform: translateY(-100%);
-      font-size: 18px;
+      font-size: 15px;
+      text-align: right;
+      pointer-events: none;
 
       ${MEDIA.sm} {
         width: calc(100% + 50px);
@@ -253,7 +257,7 @@ export default createGlobalStyle`
 
       ${MEDIA.md} {
         margin-left: 0;
-        border-radius: 8px 8px 0 0;
+        border-radius: 8px;
         width: 100%;
       }
     }

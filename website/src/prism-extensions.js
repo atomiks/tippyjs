@@ -12,10 +12,6 @@ Prism.languages.insertBefore('javascript', 'keyword', {
     pattern: /\b(?:null|undefined)\b/,
     alias: 'keyword',
   },
-  flow: {
-    pattern: /\b(?:return|await)\b/,
-    alias: 'keyword',
-  },
   func: {
     pattern: /(\.\s*)[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=(\())/i,
     lookbehind: true,
@@ -54,6 +50,11 @@ Prism.languages.insertBefore('javascript', 'operator', {
     pattern: /=>/,
     alias: 'operator',
   },
+})
+
+Prism.languages.javascript.punctuation = /[;,.:]/
+Prism.languages.insertBefore('javascript', 'punctuation', {
+  block: /[()[\]{}]/,
 })
 
 Prism.languages.insertBefore('javascript', 'function', {

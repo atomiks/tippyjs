@@ -14,7 +14,7 @@ export default createGlobalStyle`
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
     margin: 0;
     color: #515168;
     height: 100%;
@@ -28,15 +28,6 @@ export default createGlobalStyle`
 
   :focus:not(.focus-visible) {
     outline: 0;
-  }
-
-  &::-moz-selection {
-    background: #333;
-    color: white;
-  }
-  &::selection {
-    background: #333;
-    color: white;
   }
 
   pre code::-moz-selection,
@@ -85,15 +76,17 @@ export default createGlobalStyle`
     display: inline-block;
     color: inherit;
     text-shadow: -2px 2px 0px #ffffff, -4px 4px 0px #aeffce;
-    color: #5b36df;
+    color: #7037d5;
     padding: 10px 0;
     transition: color 0.3s;
 
     &::-moz-selection {
+      background: rgba(0, 160, 255, 0.5);
       text-shadow: none;
     }
 
     &::selection {
+      background: rgba(0, 160, 255, 0.5);
       text-shadow: none;
     }
 
@@ -103,16 +96,16 @@ export default createGlobalStyle`
       left: 0;
       top: 0;
       bottom: 0;
-      width: calc(50% + 40px);
+      width: calc(15% + 40px);
       margin-left: -25px;
-      background: linear-gradient(90deg,#aefcf9,#f4ffdf);
+      background: linear-gradient(90deg,#ded1ff,#80fff9);
       z-index: -1;
       transition: width 0.4s cubic-bezier(.23, 1, .32, 1);
       border-radius: 3px;
     }
 
     ${MEDIA.md} {
-      font-size: 2.488rem;
+      font-size: 2.75rem;
     }
   }
 

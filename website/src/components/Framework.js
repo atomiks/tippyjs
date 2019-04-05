@@ -29,7 +29,7 @@ export const Container = styled.div`
     padding: 0 25px;
   }
   ${MEDIA.md} {
-    padding: 0 40px;
+    padding: 0 60px;
   }
   ${MEDIA.lg} {
     padding: 0 75px;
