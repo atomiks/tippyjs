@@ -23,12 +23,12 @@ import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
   createPopperElement,
   updatePopperElement,
-  afterPopperPositionUpdates,
   getChildren,
   getBasicPlacement,
   updateTransitionEndListener,
   isCursorOutsideInteractiveBorder,
   getOffsetDistanceInPx,
+  reflow,
 } from './popper'
 import {
   hasOwnProperty,
@@ -73,6 +73,8 @@ export default function createTippy(
   let currentParentNode: Element
   let previousPlacement: string
   let wasVisibleDuringPreviousUpdate = false
+  let hasMountCallbackRun = false
+  let currentMountCallback: () => void
   let currentTransitionEndListener: (event: TransitionEvent) => void
   let listeners: Listener[] = []
   let debouncedOnMouseMove =
@@ -552,6 +554,17 @@ export default function createTippy(
   }
 
   /**
+   * Runs the mount callback
+   */
+  function runMountCallback(): void {
+    if (!hasMountCallbackRun && currentMountCallback) {
+      hasMountCallbackRun = true
+      reflow(popper)
+      currentMountCallback()
+    }
+  }
+
+  /**
    * Creates the popper instance for the instance
    */
   function createPopperInstance(): void {
@@ -653,19 +666,16 @@ export default function createTippy(
           ...getModifier(popperOptions, 'offset'),
         },
       },
-      // This gets invoked when calling `.set()` and updating a popper
-      // instance dependency, since a new popper instance gets created
       onCreate(data: Popper.Data) {
+        runMountCallback()
         applyMutations(data)
 
         if (popperOptions && popperOptions.onCreate) {
           popperOptions.onCreate(data)
         }
       },
-      // This gets invoked on initial create and show()/scroll/resize update.
-      // This is due to `afterPopperPositionUpdates` overwriting onCreate()
-      // with onUpdate()
       onUpdate(data: Popper.Data) {
+        runMountCallback()
         applyMutations(data)
 
         if (popperOptions && popperOptions.onUpdate) {
@@ -682,10 +692,11 @@ export default function createTippy(
   }
 
   /**
-   * Mounts the tooltip to the DOM, callback to show tooltip is run **after**
-   * popper's position has updated
+   * Mounts the tooltip to the DOM
    */
-  function mount(callback: () => void): void {
+  function mount(): void {
+    hasMountCallbackRun = false
+
     const shouldEnableListeners =
       !hasFollowCursorBehavior() &&
       !(instance.props.followCursor === 'initial' && isUsingTouch)
@@ -736,8 +747,6 @@ export default function createTippy(
         arrow.style.margin = '0'
       }
     }
-
-    afterPopperPositionUpdates(instance.popperInstance!, callback)
 
     const { appendTo } = instance.props
 
@@ -953,12 +962,11 @@ export default function createTippy(
       instance.reference.classList.add(ACTIVE_CLASS)
     }
 
-    const transitionableElements = getTransitionableElements()
-
     // Prevent a transition if the popper is at the opposite placement
+    const transitionableElements = getTransitionableElements()
     setTransitionDuration(transitionableElements.concat(instance.popper), 0)
 
-    mount(() => {
+    currentMountCallback = () => {
       if (!instance.state.isVisible) {
         return
       }
@@ -992,7 +1000,9 @@ export default function createTippy(
         instance.props.onShown(instance)
         instance.state.isShown = true
       })
-    })
+    }
+
+    mount()
   }
 
   /**

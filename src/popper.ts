@@ -1,11 +1,9 @@
-import Popper from 'popper.js'
 import {
   PopperElement,
   Props,
   PopperChildren,
   HideAllOptions,
   BasicPlacement,
-  PopperInstance,
 } from './types'
 import { arrayFrom } from './ponyfills'
 import { innerHTML, div } from './utils'
@@ -289,31 +287,6 @@ export function updatePopperElement(
   if (prevProps.theme !== nextProps.theme) {
     updateTheme(tooltip, 'remove', prevProps.theme)
     updateTheme(tooltip, 'add', nextProps.theme)
-  }
-}
-
-/**
- * Runs the callback after the popper's position has been updated
- * update() is debounced with Promise.resolve() or setTimeout()
- * scheduleUpdate() is update() wrapped in requestAnimationFrame()
- */
-export function afterPopperPositionUpdates(
-  popperInstance: PopperInstance,
-  callback: () => void,
-): void {
-  const { popper, options } = popperInstance
-  const { onCreate, onUpdate } = options
-
-  options.onCreate = options.onUpdate = (data: Popper.Data) => {
-    reflow(popper)
-    callback()
-
-    if (onUpdate) {
-      onUpdate(data)
-    }
-
-    options.onCreate = onCreate
-    options.onUpdate = onUpdate
   }
 }
 
