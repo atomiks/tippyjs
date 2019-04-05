@@ -4,7 +4,6 @@ import { defaultProps } from '../../src/props'
 import {
   createPopperElement,
   updatePopperElement,
-  afterPopperPositionUpdates,
   createArrowElement,
   createBackdropElement,
   hideAll,
@@ -331,32 +330,6 @@ describe('updatePopperElement', () => {
     expect(getChildren(popper).tooltip.classList.contains('other-theme')).toBe(
       true,
     )
-  })
-})
-
-describe('afterPopperPositionUpdates', () => {
-  it('is called by popper if not already updated', done => {
-    const tip = tippy(h(), { lazy: false })
-    // popper calls scheduleUpdate() on init
-    const fn = jest.fn()
-    afterPopperPositionUpdates(tip.popperInstance, fn)
-    setTimeout(() => {
-      expect(fn.mock.calls.length).toBe(1)
-      done()
-    }, 20)
-  })
-
-  it('is not called by popper if already updated', done => {
-    const tip = tippy(h(), { lazy: false })
-    // popper calls scheduleUpdate() on init
-    setTimeout(() => {
-      const fn = jest.fn()
-      afterPopperPositionUpdates(tip.popperInstance, fn, true)
-      setTimeout(() => {
-        expect(fn.mock.calls.length).toBe(0)
-        done()
-      }, 20)
-    }, 20)
   })
 })
 
