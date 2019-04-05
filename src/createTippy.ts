@@ -73,7 +73,7 @@ export default function createTippy(
   let currentParentNode: Element
   let previousPlacement: string
   let wasVisibleDuringPreviousUpdate = false
-  let isFirstMount = false
+  let hasMountCallbackRun = false
   let currentMountCallback: () => void
   let currentTransitionEndListener: (event: TransitionEvent) => void
   let listeners: Listener[] = []
@@ -554,11 +554,11 @@ export default function createTippy(
   }
 
   /**
-   * Runs the first mounting callback
+   * Runs the mount callback
    */
-  function onFirstMount() {
-    if (isFirstMount) {
-      isFirstMount = false
+  function runMountCallback() {
+    if (!hasMountCallbackRun && currentMountCallback) {
+      hasMountCallbackRun = true
       reflow(popper)
       currentMountCallback()
     }
@@ -667,7 +667,7 @@ export default function createTippy(
         },
       },
       onCreate(data: Popper.Data) {
-        onFirstMount()
+        runMountCallback()
         applyMutations(data)
 
         if (popperOptions && popperOptions.onCreate) {
@@ -675,7 +675,7 @@ export default function createTippy(
         }
       },
       onUpdate(data: Popper.Data) {
-        onFirstMount()
+        runMountCallback()
         applyMutations(data)
 
         if (popperOptions && popperOptions.onUpdate) {
@@ -695,7 +695,7 @@ export default function createTippy(
    * Mounts the tooltip to the DOM
    */
   function mount(): void {
-    isFirstMount = true
+    hasMountCallbackRun = false
 
     const shouldEnableListeners =
       !hasFollowCursorBehavior() &&
