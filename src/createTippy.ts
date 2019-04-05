@@ -556,7 +556,7 @@ export default function createTippy(
   /**
    * Runs the mount callback
    */
-  function runMountCallback() {
+  function runMountCallback(): void {
     if (!hasMountCallbackRun && currentMountCallback) {
       hasMountCallbackRun = true
       reflow(popper)
