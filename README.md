@@ -43,11 +43,12 @@ yarn add tippy.js
 
 ### Modern ES modules in the browser
 
-Currently `unpkg` does not minify modules.
-
 ```html
 <script type="module">
-  import tippy from 'https://unpkg.com/tippy.js@4?module' // (unminified)
+  // External Popper.js (unminified code)
+  import tippy from 'https://unpkg.com/tippy.js@4?module'
+  // Bundled Popper.js (minified code, but may be outdated)
+  import tippy from 'https://unpkg.com/tippy.js@4/esm/index.popper.all.min.js'
 </script>
 ```
 
