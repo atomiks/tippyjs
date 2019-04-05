@@ -97,6 +97,8 @@ export interface Instance {
   popperInstance: PopperInstance | null
   props: Props
   reference: ReferenceElement
+  scheduleHide(): void
+  scheduleShow(event?: Event): void
   set(options: Options): void
   setContent(content: Content): void
   show(duration?: number): void

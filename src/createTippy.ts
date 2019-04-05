@@ -116,6 +116,8 @@ export default function createTippy(
     setContent,
     show,
     hide,
+    scheduleShow,
+    scheduleHide,
     enable,
     disable,
     destroy,
@@ -762,76 +764,6 @@ export default function createTippy(
     }
   }
 
-  /**
-   * Setup before show() is invoked (delays, etc.)
-   */
-  function scheduleShow(event?: Event): void {
-    clearDelayTimeouts()
-
-    if (instance.state.isVisible) {
-      return
-    }
-
-    // Is a delegate, create an instance for the child target
-    if (instance.props.target) {
-      return createDelegateChildTippy(event)
-    }
-
-    isScheduledToShow = true
-
-    if (instance.props.wait) {
-      return instance.props.wait(instance, event)
-    }
-
-    // If the tooltip has a delay, we need to be listening to the mousemove as
-    // soon as the trigger event is fired, so that it's in the correct position
-    // upon mount.
-    // Edge case: if the tooltip is still mounted, but then scheduleShow() is
-    // called, it causes a jump.
-    if (hasFollowCursorBehavior() && !instance.state.isMounted) {
-      document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
-    }
-
-    const delay = getValue(instance.props.delay, 0, defaultProps.delay)
-
-    if (delay) {
-      showTimeoutId = setTimeout(() => {
-        show()
-      }, delay)
-    } else {
-      show()
-    }
-  }
-
-  /**
-   * Setup before hide() is invoked (delays, etc.)
-   */
-  function scheduleHide(): void {
-    clearDelayTimeouts()
-
-    if (!instance.state.isVisible) {
-      return removeFollowCursorListener()
-    }
-
-    isScheduledToShow = false
-
-    const delay = getValue(instance.props.delay, 1, defaultProps.delay)
-
-    if (delay) {
-      hideTimeoutId = setTimeout(() => {
-        if (instance.state.isVisible) {
-          hide()
-        }
-      }, delay)
-    } else {
-      // Fixes a `transitionend` problem when it fires 1 frame too
-      // late sometimes, we don't want hide() to be called.
-      animationFrameId = requestAnimationFrame(() => {
-        hide()
-      })
-    }
-  }
-
   /* ======================= 🔑 Public methods 🔑 ======================= */
   /**
    * Enables the instance to allow it to show or hide
@@ -924,6 +856,76 @@ export default function createTippy(
    */
   function setContent(content: Content): void {
     set({ content })
+  }
+
+  /**
+   * Setup before show() is invoked (delays, etc.)
+   */
+  function scheduleShow(event?: Event): void {
+    clearDelayTimeouts()
+
+    if (instance.state.isVisible) {
+      return
+    }
+
+    // Is a delegate, create an instance for the child target
+    if (instance.props.target) {
+      return createDelegateChildTippy(event)
+    }
+
+    isScheduledToShow = true
+
+    if (instance.props.wait) {
+      return instance.props.wait(instance, event)
+    }
+
+    // If the tooltip has a delay, we need to be listening to the mousemove as
+    // soon as the trigger event is fired, so that it's in the correct position
+    // upon mount.
+    // Edge case: if the tooltip is still mounted, but then scheduleShow() is
+    // called, it causes a jump.
+    if (hasFollowCursorBehavior() && !instance.state.isMounted) {
+      document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
+    }
+
+    const delay = getValue(instance.props.delay, 0, defaultProps.delay)
+
+    if (delay) {
+      showTimeoutId = setTimeout(() => {
+        show()
+      }, delay)
+    } else {
+      show()
+    }
+  }
+
+  /**
+   * Setup before hide() is invoked (delays, etc.)
+   */
+  function scheduleHide(): void {
+    clearDelayTimeouts()
+
+    if (!instance.state.isVisible) {
+      return removeFollowCursorListener()
+    }
+
+    isScheduledToShow = false
+
+    const delay = getValue(instance.props.delay, 1, defaultProps.delay)
+
+    if (delay) {
+      hideTimeoutId = setTimeout(() => {
+        if (instance.state.isVisible) {
+          hide()
+        }
+      }, delay)
+    } else {
+      // Fixes a `transitionend` problem when it fires 1 frame too
+      // late sometimes, we don't want hide() to be called.
+      animationFrameId = requestAnimationFrame(() => {
+        hide()
+      })
+    }
   }
 
   /**
