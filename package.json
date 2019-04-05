@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "description": "Highly customizable tooltip and popover library",
   "main": "./umd/index.all.js",
   "module": "./esm/index.all.js",
@@ -47,7 +47,8 @@
     "testRegex": "./test/.*.test.js$"
   },
   "browserslist": [
-    "> 0.25%"
+    "> 0.25%",
+    "not dead"
   ],
   "bundlesize": [
     {
@@ -82,7 +83,7 @@
     "@babel/preset-typescript": "^7.3.3",
     "@typescript-eslint/eslint-plugin": "^1.4.2",
     "@typescript-eslint/parser": "^1.4.2",
-    "autoprefixer": "^6.7.7",
+    "autoprefixer": "^9.5.0",
     "babel-jest": "^24.5.0",
     "bundlesize": "^0.17.0",
     "colorette": "^1.0.7",
@@ -94,12 +95,10 @@
     "lint-staged": "^8.1.1",
     "node-sass": "^4.10.0",
     "parcel-bundler": "^1.12.3",
-    "postcss": "^5.2.18",
-    "postcss-cssnext": "^3.1.0",
-    "postcss-import": "^11.1.0",
+    "postcss": "^7.0.14",
     "prettier": "^1.16.1",
     "rimraf": "^2.6.3",
-    "rollup": "^1.1.2",
+    "rollup": "^1.9.0",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-css-only": "^0.4.0",
