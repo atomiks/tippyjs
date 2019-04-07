@@ -57,13 +57,10 @@ const createPluginSCSS = output => {
   })
 }
 
-const createRollupConfigWithoutPlugins = (
-  input,
-  { includeExternal } = {},
-) => plugins => ({
+const createRollupConfigWithoutPlugins = input => plugins => ({
   input,
   plugins,
-  external: includeExternal ? ['popper.js'] : null,
+  external: ['popper.js'],
 })
 
 const createPreparedOutputConfig = format => (file, { min = false } = {}) => {
@@ -78,17 +75,9 @@ const createPreparedOutputConfig = format => (file, { min = false } = {}) => {
 }
 
 const getRollupConfigs = {
-  css: createRollupConfigWithoutPlugins('./build/css.js', {
-    includeExternal: true,
-  }),
-  index: createRollupConfigWithoutPlugins('./build/index.js', {
-    includeExternal: true,
-  }),
-  all: createRollupConfigWithoutPlugins('./build/all.js', {
-    includeExternal: true,
-  }),
-  indexWithPopper: createRollupConfigWithoutPlugins('./build/index.js'),
-  allWithPopper: createRollupConfigWithoutPlugins('./build/all.js'),
+  css: createRollupConfigWithoutPlugins('./build/css.js'),
+  index: createRollupConfigWithoutPlugins('./build/index.js'),
+  all: createRollupConfigWithoutPlugins('./build/all.js'),
 }
 
 const getOutputConfigs = {
@@ -111,27 +100,12 @@ const build = async () => {
 
   console.log('CSS done')
 
-  const bundles = {}
-  await Promise.all(
-    Object.entries({
-      index: rollup(getRollupConfigs.index(pluginConfigs.index)),
-      indexWithPopper: rollup(
-        getRollupConfigs.indexWithPopper(pluginConfigs.index),
-      ),
-      indexMin: rollup(getRollupConfigs.index(pluginConfigs.indexMinify)),
-      indexWithPopperMin: rollup(
-        getRollupConfigs.indexWithPopper(pluginConfigs.indexMinify),
-      ),
-      all: rollup(getRollupConfigs.all(pluginConfigs.all)),
-      allWithPopper: rollup(getRollupConfigs.allWithPopper(pluginConfigs.all)),
-      allMin: rollup(getRollupConfigs.all(pluginConfigs.allMinify)),
-      allWithPopperMin: rollup(
-        getRollupConfigs.allWithPopper(pluginConfigs.allMinify),
-      ),
-    }).map(async ([key, bundlePromise]) => {
-      bundles[key] = await bundlePromise
-    }),
-  )
+  const bundles = {
+    index: await rollup(getRollupConfigs.index(pluginConfigs.index)),
+    indexMin: await rollup(getRollupConfigs.index(pluginConfigs.indexMinify)),
+    all: await rollup(getRollupConfigs.all(pluginConfigs.all)),
+    allMin: await rollup(getRollupConfigs.all(pluginConfigs.allMinify)),
+  }
 
   // Standard UMD + ESM
   for (const getOutputConfig of getOutputConfigs.bundle) {
@@ -146,24 +120,6 @@ const build = async () => {
     bundles.indexMin.write(outputConfigs.indexMin)
     bundles.all.write(outputConfigs.all)
     bundles.allMin.write(outputConfigs.allMin)
-
-    if (outputConfigs.index.format !== 'esm') {
-      continue
-    }
-
-    const withPopperOutputConfigs = {
-      indexWithPopper: getOutputConfig('index.popper.js'),
-      indexWithPopperMin: getOutputConfig('index.popper.min.js', { min: true }),
-      allWithPopper: getOutputConfig('index.popper.all.js'),
-      allWithPopperMin: getOutputConfig('index.popper.all.min.js', {
-        min: true,
-      }),
-    }
-
-    bundles.indexWithPopper.write(withPopperOutputConfigs.indexWithPopper)
-    bundles.indexWithPopperMin.write(withPopperOutputConfigs.indexWithPopperMin)
-    bundles.allWithPopper.write(withPopperOutputConfigs.allWithPopper)
-    bundles.allWithPopperMin.write(withPopperOutputConfigs.allWithPopperMin)
   }
 
   console.log(green('Bundles complete'))
