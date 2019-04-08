@@ -36,7 +36,7 @@ import {
   getValue,
   getModifier,
   includes,
-  evaluateValue,
+  invokeWithArgsOrReturn,
   setFlipModifierEnabled,
   canReceiveFocus,
   validateOptions,
@@ -416,7 +416,7 @@ export default function createTippy(
       if (targetEl && !targetEl._tippy) {
         createTippy(targetEl, {
           ...instance.props,
-          content: evaluateValue(collectionProps.content, [targetEl]),
+          content: invokeWithArgsOrReturn(collectionProps.content, [targetEl]),
           appendTo: collectionProps.appendTo,
           target: '',
           showOnInit: true,
@@ -755,7 +755,7 @@ export default function createTippy(
     currentParentNode =
       appendTo === 'parent'
         ? instance.reference.parentNode
-        : evaluateValue(appendTo, [instance.reference])
+        : invokeWithArgsOrReturn(appendTo, [instance.reference])
 
     if (!currentParentNode.contains(instance.popper)) {
       currentParentNode.appendChild(instance.popper)

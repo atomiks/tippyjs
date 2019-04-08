@@ -109,7 +109,7 @@ export function innerHTML(): 'innerHTML' {
 /**
  * Evaluates a function if one, or returns the value
  */
-export function evaluateValue(value: any, args: any[]): any {
+export function invokeWithArgsOrReturn(value: any, args: any[]): any {
   return typeof value === 'function' ? value.apply(null, args) : value
 }
 
@@ -178,7 +178,7 @@ export function evaluateProps(
 ): Props {
   const out = {
     ...props,
-    content: evaluateValue(props.content, [reference]),
+    content: invokeWithArgsOrReturn(props.content, [reference]),
     ...(props.ignoreAttributes ? {} : getDataAttributeOptions(reference)),
   }
 
