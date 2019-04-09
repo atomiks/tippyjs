@@ -19,4 +19,13 @@ describe('group', () => {
     refs[0]._tippy.hide()
     expect(options.onHide).toHaveBeenCalled()
   })
+
+  it('is updateable after calling multiple times', () => {
+    const refs = [h()]
+    const instances = tippy(refs)
+    group(instances, { delay: 100 })
+    group(instances, { delay: 400 })
+    instances[0].show()
+    expect(instances[0].props.delay).toEqual([0, 400])
+  })
 })
