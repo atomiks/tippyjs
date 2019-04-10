@@ -34,10 +34,6 @@ export const withTestOptions = options => ({
   ...options,
 })
 
-export function wait(ms) {
-  return new Promise(res => setTimeout(res, ms))
-}
-
 export function enableTouchEnvironment() {
   window.ontouchstart = true
   onDocumentTouch()

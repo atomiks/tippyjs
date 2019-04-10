@@ -9,3 +9,6 @@ global.window.document.createRange = function createRange() {
     commonAncestorContainer: document.createElement('div'),
   }
 }
+
+// We want to use macrotask timers that can be mocked by Jest
+global.Promise = require('promise')

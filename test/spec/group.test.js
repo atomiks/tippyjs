@@ -1,23 +1,30 @@
 import tippy from '../../src/index'
 import group from '../../src/group'
-import { h, wait } from '../utils'
+import { h, cleanDocumentBody } from '../utils'
+
+jest.useFakeTimers()
+
+afterEach(cleanDocumentBody)
 
 describe('group', () => {
-  it('does not override lifecycle functions', async () => {
+  it('does not override lifecycle functions', () => {
+    const delay = 50
+    const refs = [h()]
     const options = {
       duration: 0,
       onHide: jest.fn(),
       onShow: jest.fn(),
       onShown: jest.fn(),
     }
-    const refs = [h()]
-    group(tippy(refs, options), { delay: 50 })
-    refs[0]._tippy.show()
-    expect(options.onShow).toHaveBeenCalled()
-    await wait(50)
-    expect(options.onShown).toHaveBeenCalled()
-    refs[0]._tippy.hide()
-    expect(options.onHide).toHaveBeenCalled()
+    const instances = tippy(refs, options, { delay })
+    group(tippy(refs, options), { delay })
+    instances[0].show()
+    jest.runAllTimers()
+    expect(options.onShow).toHaveBeenCalledTimes(1)
+    expect(options.onShown).toHaveBeenCalledTimes(1)
+    instances[0].hide()
+    jest.runAllTimers()
+    expect(options.onHide).toHaveBeenCalledTimes(1)
   })
 
   it('is updateable after calling multiple times', () => {

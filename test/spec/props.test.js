@@ -2,12 +2,13 @@ import {
   h,
   cleanDocumentBody,
   withTestOptions,
-  wait,
   enableTouchEnvironment,
   disableTouchEnvironment,
 } from '../utils'
 import tippy from '../../src/index'
 import { getChildren } from '../../src/popper'
+
+jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
 
@@ -120,9 +121,8 @@ describe('animation', () => {
 })
 
 describe('delay', () => {
-  // NOTE: props.trigger dependency here
-  it('number: delays showing the tippy', async () => {
-    const delay = 20
+  it('number: delays showing the tippy', () => {
+    const delay = 500
     const ref = h()
     const { state } = tippy(ref, {
       trigger: 'mouseenter',
@@ -130,26 +130,26 @@ describe('delay', () => {
     })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(false)
-    await wait(delay * 2)
+    jest.advanceTimersByTime(delay)
     expect(state.isVisible).toBe(true)
   })
 
   it('number: delays hiding the tippy', async () => {
-    const delay = 20
+    const delay = 500
     const ref = h()
     const { state } = tippy(ref, {
       trigger: 'mouseenter',
       delay,
     })
     ref.dispatchEvent(new Event('mouseenter'))
-    await wait(delay * 2)
+    jest.advanceTimersByTime(delay)
     ref.dispatchEvent(new Event('mouseleave'))
     expect(state.isVisible).toBe(true)
-    await wait(delay * 2)
+    jest.advanceTimersByTime(delay)
     expect(state.isVisible).toBe(false)
   })
 
-  it('array: uses the first element as the delay when showing', async () => {
+  it('array: uses the first element as the delay when showing', () => {
     const delay = [20, 100]
     const ref = h()
     const { state } = tippy(ref, {
@@ -158,11 +158,11 @@ describe('delay', () => {
     })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(false)
-    await wait(delay[0] * 2)
+    jest.advanceTimersByTime(delay[0])
     expect(state.isVisible).toBe(true)
   })
 
-  it('array: uses the second element as the delay when hiding', async () => {
+  it('array: uses the second element as the delay when hiding', () => {
     const delay = [100, 20]
     const ref = h()
     const { state } = tippy(ref, {
@@ -171,10 +171,10 @@ describe('delay', () => {
     })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(false)
-    await wait(delay[0] * 2)
+    jest.advanceTimersByTime(delay[0])
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('mouseleave'))
-    await wait(delay[1] * 2)
+    jest.advanceTimersByTime(delay[1])
     expect(state.isVisible).toBe(false)
   })
 })
@@ -576,25 +576,25 @@ describe('onShow', () => {
 describe('onMount', () => {
   it('is called once the tooltip is mounted to the DOM', done => {
     const instance = tippy(h(), {
-      onMount: tip => {
-        expect(tip).toBe(instance)
-        expect(document.documentElement.contains(tip.popper)).toBe(true)
+      onMount(i) {
+        expect(i).toBe(instance)
+        expect(document.documentElement.contains(i.popper)).toBe(true)
         done()
       },
-      duration: 0,
     })
     instance.show()
   })
 })
 
 describe('onShown', () => {
-  it('is called on transition end of show, passed the instance as an argument', async () => {
-    const spy = jest.fn()
-    const instance = tippy(h(), { onShown: spy, duration: 0 })
+  it('is called on transition end of show, passed the instance as an argument', done => {
+    const instance = tippy(h(), {
+      onShown(i) {
+        expect(i).toBe(instance)
+        done()
+      },
+    })
     instance.show()
-    await wait(1)
-    expect(spy.mock.calls.length).toBe(1)
-    expect(spy).toBeCalledWith(instance)
   })
 })
 
@@ -603,7 +603,7 @@ describe('onHide', () => {
     const spy = jest.fn()
     const instance = tippy(h(), { onHide: spy })
     instance.hide()
-    expect(spy.mock.calls.length).toBe(1)
+    expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toBeCalledWith(instance)
   })
 
@@ -616,12 +616,12 @@ describe('onHide', () => {
 })
 
 describe('onHidden', () => {
-  it('is called on transition end of hide, passed the instance as an argument', async () => {
+  it('is called on transition end of hide, passed the instance as an argument', () => {
     const spy = jest.fn()
     const instance = tippy(h(), { onHidden: spy, duration: 0 })
     instance.show()
     instance.hide()
-    await wait(1)
+    jest.runAllTimers()
     expect(spy.mock.calls.length).toBe(1)
     expect(spy).toBeCalledWith(instance)
   })
@@ -738,28 +738,28 @@ describe('maxWidth', () => {
 })
 
 describe('aria', () => {
-  it('sets the correct attribute on the reference', async () => {
+  it('sets the correct attribute on the reference', () => {
     const ref = h()
     const tip = tippy(ref, { aria: 'labelledby', duration: 0 })
     tip.show()
-    await wait(1)
+    jest.runAllTimers()
     expect(ref.getAttribute('aria-labelledby')).toBe(tip.popper.id)
   })
 
-  it('removes the attribute on hide', async () => {
+  it('removes the attribute on hide', () => {
     const ref = h()
     const tip = tippy(ref, { aria: 'labelledby', duration: 0 })
     tip.show()
-    await wait(1)
+    jest.runAllTimers()
     tip.hide()
     expect(ref.getAttribute('aria-labelledby')).toBe(null)
   })
 
-  it('does not set attribute for falsy/null value', async () => {
+  it('does not set attribute for falsy/null value', () => {
     const ref = h()
     const tip = tippy(ref, { aria: null, duration: 0 })
     tip.show()
-    await wait(1)
+    jest.runAllTimers()
     expect(ref.getAttribute('aria-null')).toBe(null)
     expect(ref.getAttribute('aria-describedby')).toBe(null)
   })
