@@ -45,10 +45,8 @@ yarn add tippy.js
 
 ```html
 <script type="module">
-  // External Popper.js (unminified code)
+  // Uses latest popper.js (unminified code)
   import tippy from 'https://unpkg.com/tippy.js@4?module'
-  // Bundled Popper.js (minified code, but may be outdated)
-  import tippy from 'https://unpkg.com/tippy.js@4/esm/index.popper.all.min.js'
 </script>
 ```
 
