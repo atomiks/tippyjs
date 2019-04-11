@@ -1,8 +1,10 @@
-import { h } from '../utils'
+import { h, cleanDocumentBody } from '../utils'
 import {
   getDataAttributeOptions,
   polyfillElementPrototypeProperties,
 } from '../../src/reference'
+
+afterEach(cleanDocumentBody)
 
 describe('getDataAttributeOptions', () => {
   it('uses data-tippy-content', () => {

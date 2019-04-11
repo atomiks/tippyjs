@@ -1,10 +1,12 @@
-import { h, IDENTIFIER } from '../utils'
+import { h, IDENTIFIER, cleanDocumentBody } from '../utils'
 import {
   arrayFrom,
   closest,
   closestCallback,
   matches,
 } from '../../src/ponyfills'
+
+afterEach(cleanDocumentBody)
 
 describe('arrayFrom', () => {
   it('converts a NodeList to an array', () => {
