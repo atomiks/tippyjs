@@ -2,6 +2,8 @@ import { h, cleanDocumentBody, IDENTIFIER } from '../utils'
 import { defaultProps } from '../../src/props'
 import * as Utils from '../../src/utils'
 
+jest.useFakeTimers()
+
 afterEach(cleanDocumentBody)
 
 describe('isBareVirtualElement', () => {
@@ -138,22 +140,18 @@ describe('getValue', () => {
 })
 
 describe('debounce', () => {
-  it('works as expected', done => {
+  it('works as expected', () => {
     const fn = jest.fn()
     const debouncedFn = Utils.debounce(fn, 50)
     debouncedFn()
-    expect(fn.mock.calls.length).toBe(0)
-    setTimeout(() => {
-      expect(fn.mock.calls.length).toBe(0)
-      debouncedFn()
-      setTimeout(() => {
-        expect(fn.mock.calls.length).toBe(0)
-        setTimeout(() => {
-          expect(fn.mock.calls.length).toBe(1)
-          done()
-        }, 51)
-      }, 20)
-    }, 40)
+    expect(fn).toHaveBeenCalledTimes(0)
+    jest.advanceTimersByTime(40)
+    expect(fn).toHaveBeenCalledTimes(0)
+    debouncedFn()
+    jest.advanceTimersByTime(40)
+    expect(fn).toHaveBeenCalledTimes(0)
+    jest.advanceTimersByTime(10)
+    expect(fn).toHaveBeenCalledTimes(1)
   })
 })
 
