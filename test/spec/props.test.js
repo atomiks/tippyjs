@@ -232,58 +232,44 @@ describe('content', () => {
 })
 
 describe('trigger', () => {
-  it('default: many triggers', done => {
+  it('default: many triggers', () => {
     const ref = h()
     const { state } = tippy(ref)
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('mouseleave'))
-    requestAnimationFrame(() => {
-      expect(state.isVisible).toBe(false)
-      ref.dispatchEvent(new Event('focus'))
-      expect(state.isVisible).toBe(true)
-      ref.dispatchEvent(new Event('blur'))
-      requestAnimationFrame(() => {
-        expect(state.isVisible).toBe(false)
-        done()
-      })
-    })
+    expect(state.isVisible).toBe(false)
+    ref.dispatchEvent(new Event('focus'))
+    expect(state.isVisible).toBe(true)
+    ref.dispatchEvent(new Event('blur'))
+    expect(state.isVisible).toBe(false)
   })
 
-  it('mouseenter', done => {
+  it('mouseenter', () => {
     const ref = h()
     const { state } = tippy(ref, { trigger: 'mouseenter' })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('mouseleave'))
-    requestAnimationFrame(() => {
-      expect(state.isVisible).toBe(false)
-      done()
-    })
+    expect(state.isVisible).toBe(false)
   })
 
-  it('focus', done => {
+  it('focus', () => {
     const ref = h()
     const { state } = tippy(ref, { trigger: 'focus' })
     ref.dispatchEvent(new Event('focus'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('blur'))
-    requestAnimationFrame(() => {
-      expect(state.isVisible).toBe(false)
-      done()
-    })
+    expect(state.isVisible).toBe(false)
   })
 
-  it('click', done => {
+  it('click', () => {
     const ref = h()
     const { state } = tippy(ref, { trigger: 'click' })
     ref.dispatchEvent(new Event('click'))
     expect(state.isVisible).toBe(true)
     ref.dispatchEvent(new Event('click'))
-    requestAnimationFrame(() => {
-      expect(state.isVisible).toBe(false)
-      done()
-    })
+    expect(state.isVisible).toBe(false)
   })
 
   it('manual', () => {
@@ -302,17 +288,15 @@ describe('trigger', () => {
 
 describe('interactive', () => {
   it('true: prevents a tippy from hiding when clicked', () => {
-    const tip = tippy(h(), {
-      interactive: true,
-    })
-    tip.show()
-    tip.popperChildren.tooltip.dispatchEvent(new Event('click'))
-    expect(tip.state.isVisible).toBe(true)
+    const instance = tippy(h(), { interactive: true })
+    instance.show()
+    instance.popperChildren.tooltip.dispatchEvent(new Event('click'))
+    expect(instance.state.isVisible).toBe(true)
   })
 
   it('true: toggles `tippy-active` class on the reference', () => {
     const ref = h()
-    const instance = tippy(ref, { interactive: true, duration: 0, delay: 0 })
+    const instance = tippy(ref, { interactive: true })
     instance.show()
     expect(ref.classList.contains('tippy-active')).toBe(true)
     instance.hide()
@@ -320,14 +304,12 @@ describe('interactive', () => {
   })
 
   it('false: tippy is hidden when clicked', () => {
-    const tip = tippy(h(), {
-      interactive: false,
-    })
-    tip.show()
-    tip.popperChildren.tooltip.dispatchEvent(
+    const instance = tippy(h(), { interactive: false })
+    instance.show()
+    instance.popperChildren.tooltip.dispatchEvent(
       new Event('click', { bubbles: true }),
     )
-    expect(tip.state.isVisible).toBe(false)
+    expect(instance.state.isVisible).toBe(false)
   })
 })
 
@@ -680,6 +662,49 @@ describe('popperOptions', () => {
     expect(popperInstance.options.modifiers.preventOverflow.test).toBe(true)
   })
 
+  it('modifiers.preventOverflow.padding is not overwritten', () => {
+    const paddings = [15, { top: 15, bottom: -5, left: 50, right: 0 }]
+    const placements = ['top', 'bottom', 'left', 'right']
+
+    placements.forEach(placement => {
+      paddings.forEach(padding => {
+        const instance = tippy(h(), {
+          placement,
+          lazy: false,
+          popperOptions: {
+            modifiers: {
+              preventOverflow: {
+                padding,
+              },
+            },
+          },
+        })
+
+        jest.runAllTimers()
+
+        const preventOverflowPadding = instance.popperInstance.modifiers.find(
+          m => m.name === 'preventOverflow',
+        ).padding
+
+        const paddingObject =
+          typeof padding === 'number'
+            ? {
+                top: padding,
+                right: padding,
+                bottom: padding,
+                left: padding,
+                [placement]: padding + 10,
+              }
+            : {
+                ...padding,
+                [placement]: padding[placement] + 10,
+              }
+
+        expect(preventOverflowPadding).toEqual(paddingObject)
+      })
+    })
+  })
+
   it('modifiers.arrow', () => {
     const { popperInstance } = tippy(h(), {
       lazy: false,
@@ -720,6 +745,22 @@ describe('popperOptions', () => {
       },
     })
     expect(popperInstance.options.modifiers.offset.test).toBe(true)
+  })
+
+  it('onCreate / onUpdate', () => {
+    const onCreate = jest.fn()
+    const onUpdate = jest.fn()
+    const instance = tippy(h(), {
+      lazy: false,
+      popperOptions: { onCreate, onUpdate },
+    })
+    jest.runAllTimers()
+    expect(onCreate).toHaveBeenCalledTimes(1)
+    expect(onUpdate).toHaveBeenCalledTimes(0)
+    instance.show()
+    jest.runAllTimers()
+    expect(onCreate).toHaveBeenCalledTimes(1)
+    expect(onUpdate).toHaveBeenCalledTimes(2)
   })
 })
 
@@ -861,5 +902,37 @@ describe('appendTo', () => {
       },
     })
     instance.show()
+  })
+})
+
+describe('sticky', () => {
+  it('updates position on each animation frame', done => {
+    const mockRAF = requestAnimationFrame
+    global.requestAnimationFrame = nativeRequestAnimationFrame
+    let calls = 0
+
+    const instance = tippy(h(), { sticky: true, lazy: false })
+    jest
+      .spyOn(instance.popperInstance, 'scheduleUpdate')
+      .mockImplementation(() => {
+        calls++
+      })
+    instance.show()
+
+    expect(calls).toBe(1)
+
+    requestAnimationFrame(() => {
+      expect(calls).toBe(2)
+      instance.state.isMounted = false
+      requestAnimationFrame(() => {
+        expect(calls).toBe(3)
+        requestAnimationFrame(() => {
+          // Loop was broken
+          expect(calls).toBe(3)
+          global.requestAnimationFrame = mockRAF
+          done()
+        })
+      })
+    })
   })
 })

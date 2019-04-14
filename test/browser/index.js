@@ -55,3 +55,7 @@ tippy('#followCursor-initial-delay', {
   followCursor: 'initial',
   delay: 200,
 })
+
+tippy('#notransition-flip-updates', {
+  flipOnUpdate: true,
+})

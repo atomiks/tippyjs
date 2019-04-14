@@ -12,3 +12,6 @@ global.window.document.createRange = function createRange() {
 
 // We want to use macrotask timers that can be mocked by Jest
 global.Promise = require('promise')
+
+global.nativeRequestAnimationFrame = requestAnimationFrame
+global.requestAnimationFrame = cb => cb()
