@@ -6,7 +6,7 @@ import {
   BasicPlacement,
 } from './types'
 import { arrayFrom } from './ponyfills'
-import { innerHTML, div } from './utils'
+import { innerHTML, div, isReferenceElement } from './utils'
 import { isUCBrowser } from './browser'
 import {
   TOOLTIP_SELECTOR,
@@ -295,18 +295,28 @@ export function updatePopperElement(
  */
 export function hideAll({
   checkHideOnClick,
-  exclude,
+  exclude: excludedReferenceOrInstance,
   duration,
 }: HideAllOptions = {}): void {
   arrayFrom(document.querySelectorAll(POPPER_SELECTOR)).forEach(
     (popper: PopperElement) => {
       const instance = popper._tippy
-      if (
-        instance &&
-        (checkHideOnClick ? instance.props.hideOnClick === true : true) &&
-        (!exclude || popper !== exclude.popper)
-      ) {
-        instance.hide(duration)
+
+      if (instance) {
+        const shouldHideDueToHideOnClickOption = checkHideOnClick
+          ? instance.props.hideOnClick === true
+          : true
+
+        let isExcluded = false
+        if (excludedReferenceOrInstance) {
+          isExcluded = isReferenceElement(excludedReferenceOrInstance)
+            ? instance.reference === excludedReferenceOrInstance
+            : popper === excludedReferenceOrInstance.popper
+        }
+
+        if (shouldHideDueToHideOnClickOption && !isExcluded) {
+          instance.hide(duration)
+        }
       }
     },
   )

@@ -1,4 +1,4 @@
-import { ReferenceElement } from './types'
+import { PopperElement, ReferenceElement } from './types'
 import { closest, closestCallback } from './ponyfills'
 import { isIOS } from './browser'
 import { hideAll } from './popper'
@@ -48,7 +48,7 @@ export function onDocumentClick(event: MouseEvent): void {
   }
 
   // Clicked on an interactive popper
-  const popper: ReferenceElement = closest(event.target, POPPER_SELECTOR)
+  const popper = closest(event.target, POPPER_SELECTOR) as PopperElement
   if (popper && popper._tippy && popper._tippy.props.interactive) {
     return
   }
@@ -65,7 +65,7 @@ export function onDocumentClick(event: MouseEvent): void {
       const isClickTrigger = includes(instance.props.trigger || '', 'click')
 
       if (isUsingTouch || isClickTrigger) {
-        return hideAll({ exclude: instance, checkHideOnClick: true })
+        return hideAll({ exclude: reference, checkHideOnClick: true })
       }
 
       if (instance.props.hideOnClick !== true || isClickTrigger) {
