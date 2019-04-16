@@ -63,6 +63,20 @@ describe('hideAll', () => {
       )
     })
   })
+
+  it('respects `exclude` option as type ReferenceElement for multiple tippys', () => {
+    const options = { showOnInit: true, multiple: true }
+    const ref = h()
+    tippy(ref, options)
+    tippy(ref, options)
+    hideAll({ exclude: ref })
+    const instances = [...document.querySelectorAll(POPPER_SELECTOR)].map(
+      popper => popper._tippy,
+    )
+    instances.forEach(instance => {
+      expect(instance.state.isVisible).toBe(true)
+    })
+  })
 })
 
 describe('createPopperElement', () => {

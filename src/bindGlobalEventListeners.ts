@@ -65,7 +65,7 @@ export function onDocumentClick(event: MouseEvent): void {
       const isClickTrigger = includes(instance.props.trigger || '', 'click')
 
       if (isUsingTouch || isClickTrigger) {
-        return hideAll({ exclude: instance, checkHideOnClick: true })
+        return hideAll({ exclude: reference, checkHideOnClick: true })
       }
 
       if (instance.props.hideOnClick !== true || isClickTrigger) {
