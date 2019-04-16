@@ -8,6 +8,7 @@ import {
 import { arrayFrom, matches } from './ponyfills'
 import { isUCBrowser } from './browser'
 import { getDataAttributeOptions } from './reference'
+import { POPPER_SELECTOR } from './constants'
 
 /**
  * Determines if a value is a "bare" virtual element (before mutations done
@@ -19,6 +20,13 @@ export function isBareVirtualElement(value: any): boolean {
   return (
     {}.toString.call(value) === '[object Object]' && !value.addEventListener
   )
+}
+
+/**
+ * Determines if the value is a reference element
+ */
+export function isReferenceElement(value: any): value is ReferenceElement {
+  return !!value._tippy && !matches.call(value, POPPER_SELECTOR)
 }
 
 /**
