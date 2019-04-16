@@ -130,7 +130,7 @@ export interface PopperChildren {
 export interface HideAllOptions {
   checkHideOnClick?: boolean
   duration?: number
-  exclude?: any
+  exclude?: Instance | ReferenceElement
 }
 
 export interface Listener {

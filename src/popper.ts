@@ -6,7 +6,7 @@ import {
   BasicPlacement,
 } from './types'
 import { arrayFrom } from './ponyfills'
-import { innerHTML, div } from './utils'
+import { innerHTML, div, isReferenceElement } from './utils'
 import { isUCBrowser } from './browser'
 import {
   TOOLTIP_SELECTOR,
@@ -309,7 +309,7 @@ export function hideAll({
 
         let isExcluded = false
         if (excludedReferenceOrInstance) {
-          isExcluded = excludedReferenceOrInstance._tippy
+          isExcluded = isReferenceElement(excludedReferenceOrInstance)
             ? instance.reference === excludedReferenceOrInstance
             : popper === excludedReferenceOrInstance.popper
         }
