@@ -66,6 +66,7 @@ export default function createTippy(
   /* ======================= 🔒 Private members 🔒 ======================= */
   let lastTriggerEventType: string
   let lastMouseMoveEvent: MouseEvent
+  let lastVirtualReference: ReferenceElement
   let showTimeoutId: number
   let hideTimeoutId: number
   let animationFrameId: number
@@ -77,6 +78,13 @@ export default function createTippy(
   let currentMountCallback: () => void
   let currentTransitionEndListener: (event: TransitionEvent) => void
   let listeners: Listener[] = []
+  let currentComputedPadding: {
+    top: number
+    bottom: number
+    left: number
+    right: number
+    [key: string]: number
+  }
   let debouncedOnMouseMove =
     props.interactiveDebounce > 0
       ? debounce(onMouseMove, props.interactiveDebounce)
@@ -347,34 +355,24 @@ export default function createTippy(
   }
 
   /**
+   * Returns corrected preventOverflow padding if the instance has an arrow
+   */
+  function getCorrectedPadding(placement: string) {
+    return instance.props.arrow
+      ? currentComputedPadding[placement] +
+          (instance.props.arrowType === 'round' ? 18 : 16)
+      : currentComputedPadding[placement]
+  }
+
+  /**
    * Positions the virtual reference near the cursor
    */
   function positionVirtualReferenceNearCursor(event: MouseEvent): void {
     const { clientX, clientY } = (lastMouseMoveEvent = event)
 
-    if (!instance.popperInstance) {
+    // Gets set once popperInstance `onCreate` has been called
+    if (!currentComputedPadding) {
       return
-    }
-
-    // Ensure virtual reference is padded to prevent tooltip from
-    // overflowing. Maybe Popper.js issue?
-    const placement = getBasicPlacement(instance.popper)
-    const padding = instance.props.arrow
-      ? PADDING + (instance.props.arrowType === 'round' ? 18 : 16)
-      : PADDING
-    const isVerticalPlacement = includes(['top', 'bottom'], placement)
-    const isHorizontalPlacement = includes(['left', 'right'], placement)
-
-    // Top / left boundary
-    let x = isVerticalPlacement ? Math.max(padding, clientX) : clientX
-    let y = isHorizontalPlacement ? Math.max(padding, clientY) : clientY
-
-    // Bottom / right boundary
-    if (isVerticalPlacement && x > padding) {
-      x = Math.min(clientX, window.innerWidth - padding)
-    }
-    if (isHorizontalPlacement && y > padding) {
-      y = Math.min(clientY, window.innerHeight - padding)
     }
 
     const rect = instance.reference.getBoundingClientRect()
@@ -382,21 +380,63 @@ export default function createTippy(
     const isHorizontal = followCursor === 'horizontal'
     const isVertical = followCursor === 'vertical'
 
-    instance.popperInstance.reference = {
-      ...instance.popperInstance.reference,
-      getBoundingClientRect: () => ({
-        width: 0,
-        height: 0,
-        top: isHorizontal ? rect.top : y,
-        bottom: isHorizontal ? rect.bottom : y,
-        left: isVertical ? rect.left : x,
-        right: isVertical ? rect.right : x,
-      }),
-      clientWidth: 0,
-      clientHeight: 0,
+    // Ensure virtual reference is padded to prevent tooltip from overflowing.
+    // Seems to be a Popper.js issue
+    const placement = getBasicPlacement(instance.popper)
+    const isVerticalPlacement = includes(['top', 'bottom'], placement)
+    const isHorizontalPlacement = includes(['left', 'right'], placement)
+    const padding = { ...currentComputedPadding }
+
+    if (isVerticalPlacement) {
+      padding.left = getCorrectedPadding('left')
+      padding.right = getCorrectedPadding('right')
     }
 
-    instance.popperInstance.scheduleUpdate()
+    if (isHorizontalPlacement) {
+      padding.top = getCorrectedPadding('top')
+      padding.bottom = getCorrectedPadding('bottom')
+    }
+
+    // TODO: Remove the following later if Popper.js changes/fixes the
+    // behavior
+
+    // Top / left boundary
+    let x = isVerticalPlacement ? Math.max(padding.left, clientX) : clientX
+    let y = isHorizontalPlacement ? Math.max(padding.top, clientY) : clientY
+
+    // Bottom / right boundary
+    if (isVerticalPlacement && x > padding.right) {
+      x = Math.min(clientX, window.innerWidth - padding.right)
+    }
+    if (isHorizontalPlacement && y > padding.bottom) {
+      y = Math.min(clientY, window.innerHeight - padding.bottom)
+    }
+
+    // If the instance is interactive, avoid updating the position unless it's
+    // over the reference element
+    const isCursorOverReference = closestCallback(
+      event.target as Element,
+      (el: Element) => el === instance.reference,
+    )
+
+    if (isCursorOverReference || !instance.props.interactive) {
+      lastVirtualReference = {
+        ...instance.popperInstance!.reference,
+        getBoundingClientRect: () => ({
+          width: 0,
+          height: 0,
+          top: isHorizontal ? rect.top : y,
+          bottom: isHorizontal ? rect.bottom : y,
+          left: isVertical ? rect.left : x,
+          right: isVertical ? rect.right : x,
+        }),
+        clientWidth: 0,
+        clientHeight: 0,
+      }
+
+      instance.popperInstance!.reference = lastVirtualReference
+      instance.popperInstance!.scheduleUpdate()
+    }
 
     if (followCursor === 'initial' && instance.state.isVisible) {
       removeFollowCursorListener()
@@ -408,7 +448,7 @@ export default function createTippy(
    */
   function createDelegateChildTippy(event?: Event): void {
     if (event) {
-      const targetEl: ReferenceElement = closest(
+      const targetEl: ReferenceElement | null = closest(
         event.target as Element,
         instance.props.target,
       )
@@ -620,7 +660,6 @@ export default function createTippy(
         preventOverflowModifier && preventOverflowModifier.padding !== undefined
           ? preventOverflowModifier.padding
           : PADDING
-
       const isPaddingNumber = typeof padding === 'number'
 
       const computedPadding = {
@@ -638,6 +677,8 @@ export default function createTippy(
       instance.popperInstance!.modifiers.filter(
         m => m.name === 'preventOverflow',
       )[0].padding = computedPadding
+
+      currentComputedPadding = computedPadding
     }
 
     const config = {

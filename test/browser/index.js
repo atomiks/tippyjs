@@ -56,6 +56,17 @@ tippy('#followCursor-initial-delay', {
   delay: 200,
 })
 
+tippy('#followCursor-padding', {
+  followCursor: 'horizontal',
+  popperOptions: {
+    modifiers: {
+      preventOverflow: {
+        padding: 40,
+      },
+    },
+  },
+})
+
 tippy('#notransition-flip-updates', {
   flipOnUpdate: true,
 })
