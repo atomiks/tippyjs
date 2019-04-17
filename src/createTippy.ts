@@ -66,7 +66,6 @@ export default function createTippy(
   /* ======================= 🔒 Private members 🔒 ======================= */
   let lastTriggerEventType: string
   let lastMouseMoveEvent: MouseEvent
-  let lastVirtualReference: ReferenceElement
   let showTimeoutId: number
   let hideTimeoutId: number
   let animationFrameId: number
@@ -420,7 +419,7 @@ export default function createTippy(
     )
 
     if (isCursorOverReference || !instance.props.interactive) {
-      lastVirtualReference = {
+      instance.popperInstance!.reference = {
         ...instance.popperInstance!.reference,
         getBoundingClientRect: () => ({
           width: 0,
@@ -434,7 +433,6 @@ export default function createTippy(
         clientHeight: 0,
       }
 
-      instance.popperInstance!.reference = lastVirtualReference
       instance.popperInstance!.scheduleUpdate()
     }
 
