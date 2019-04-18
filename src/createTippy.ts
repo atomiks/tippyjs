@@ -924,6 +924,7 @@ export default function createTippy(
     // Edge case: if the tooltip is still mounted, but then scheduleShow() is
     // called, it causes a jump.
     if (hasFollowCursorBehavior() && !instance.state.isMounted) {
+      createPopperInstance()
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
