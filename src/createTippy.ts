@@ -214,10 +214,7 @@ export default function createTippy(
    * Updates the tooltip's position on each animation frame
    */
   function makeSticky(): void {
-    setTransitionDuration(
-      [instance.popper],
-      isIE ? 0 : instance.props.updateDuration,
-    )
+    setTransitionDuration([popper], isIE ? 0 : instance.props.updateDuration)
 
     function updatePosition(): void {
       if (instance.popperInstance) {
@@ -227,7 +224,7 @@ export default function createTippy(
       if (instance.state.isMounted) {
         requestAnimationFrame(updatePosition)
       } else {
-        setTransitionDuration([instance.popper], 0)
+        setTransitionDuration([popper], 0)
       }
     }
 
@@ -242,7 +239,7 @@ export default function createTippy(
       if (
         !instance.state.isVisible &&
         currentParentNode &&
-        currentParentNode.contains(instance.popper)
+        currentParentNode.contains(popper)
       ) {
         callback()
       }
@@ -292,7 +289,7 @@ export default function createTippy(
     handler: EventListener,
     options: boolean | object = false,
   ): void {
-    instance.reference.addEventListener(eventType, handler, options)
+    reference.addEventListener(eventType, handler, options)
     listeners.push({ eventType, handler, options })
   }
 
@@ -348,7 +345,7 @@ export default function createTippy(
    */
   function removeTriggersFromReference(): void {
     listeners.forEach(({ eventType, handler, options }: Listener) => {
-      instance.reference.removeEventListener(eventType, handler, options)
+      reference.removeEventListener(eventType, handler, options)
     })
     listeners = []
   }
@@ -374,14 +371,14 @@ export default function createTippy(
       return
     }
 
-    const rect = instance.reference.getBoundingClientRect()
+    const rect = reference.getBoundingClientRect()
     const { followCursor } = instance.props
     const isHorizontal = followCursor === 'horizontal'
     const isVertical = followCursor === 'vertical'
 
     // Ensure virtual reference is padded to prevent tooltip from overflowing.
     // Seems to be a Popper.js issue
-    const placement = getBasicPlacement(instance.popper)
+    const placement = getBasicPlacement(popper)
     const isVerticalPlacement = includes(['top', 'bottom'], placement)
     const isHorizontalPlacement = includes(['left', 'right'], placement)
     const padding = { ...currentComputedPadding }
@@ -415,7 +412,7 @@ export default function createTippy(
     // over the reference element
     const isCursorOverReference = closestCallback(
       event.target as Element,
-      (el: Element) => el === instance.reference,
+      (el: Element) => el === reference,
     )
 
     if (isCursorOverReference || !instance.props.interactive) {
@@ -504,9 +501,8 @@ export default function createTippy(
     )
 
     const isCursorOverPopper =
-      closest(event.target as Element, POPPER_SELECTOR) === instance.popper
-    const isCursorOverReference =
-      referenceTheCursorIsOver === instance.reference
+      closest(event.target as Element, POPPER_SELECTOR) === popper
+    const isCursorOverReference = referenceTheCursorIsOver === reference
 
     if (isCursorOverPopper || isCursorOverReference) {
       return
@@ -514,8 +510,8 @@ export default function createTippy(
 
     if (
       isCursorOutsideInteractiveBorder(
-        getBasicPlacement(instance.popper),
-        instance.popper.getBoundingClientRect(),
+        getBasicPlacement(popper),
+        popper.getBoundingClientRect(),
         event,
         instance.props,
       )
@@ -546,14 +542,14 @@ export default function createTippy(
    * Event listener invoked upon blur
    */
   function onBlur(event: FocusEvent): void {
-    if (event.target !== instance.reference) {
+    if (event.target !== reference) {
       return
     }
 
     if (
       instance.props.interactive &&
       event.relatedTarget &&
-      instance.popper.contains(event.relatedTarget as Element)
+      popper.contains(event.relatedTarget as Element)
     ) {
       return
     }
@@ -647,7 +643,7 @@ export default function createTippy(
       previousPlacement = data.placement
       wasVisibleDuringPreviousUpdate = instance.state.isVisible
 
-      const basicPlacement = getBasicPlacement(instance.popper)
+      const basicPlacement = getBasicPlacement(popper)
       const styles = tooltip.style
 
       // Account for the `distance` offset
@@ -726,8 +722,8 @@ export default function createTippy(
     }
 
     instance.popperInstance = new Popper(
-      instance.reference,
-      instance.popper,
+      reference,
+      popper,
       config,
     ) as PopperInstance
   }
@@ -763,7 +759,7 @@ export default function createTippy(
     // If the instance previously had followCursor behavior, it will be
     // positioned incorrectly if triggered by `focus` afterwards.
     // Update the reference back to the real DOM element
-    instance.popperInstance!.reference = instance.reference
+    instance.popperInstance!.reference = reference
     const { arrow } = instance.popperChildren
 
     if (hasFollowCursorBehavior()) {
@@ -793,11 +789,11 @@ export default function createTippy(
 
     currentParentNode =
       appendTo === 'parent'
-        ? instance.reference.parentNode
-        : invokeWithArgsOrReturn(appendTo, [instance.reference])
+        ? reference.parentNode
+        : invokeWithArgsOrReturn(appendTo, [reference])
 
-    if (!currentParentNode.contains(instance.popper)) {
-      currentParentNode.appendChild(instance.popper)
+    if (!currentParentNode.contains(popper)) {
+      currentParentNode.appendChild(popper)
       instance.props.onMount(instance)
       instance.state.isMounted = true
     }
@@ -837,7 +833,7 @@ export default function createTippy(
     validateOptions(options, defaultProps)
 
     const prevProps = instance.props
-    const nextProps = evaluateProps(instance.reference, {
+    const nextProps = evaluateProps(reference, {
       ...instance.props,
       ...options,
       ignoreAttributes: true,
@@ -863,8 +859,8 @@ export default function createTippy(
       )
     }
 
-    updatePopperElement(instance.popper, prevProps, nextProps)
-    instance.popperChildren = getChildren(instance.popper)
+    updatePopperElement(popper, prevProps, nextProps)
+    instance.popperChildren = getChildren(popper)
 
     if (instance.popperInstance) {
       instance.popperInstance.update()
@@ -989,7 +985,7 @@ export default function createTippy(
     // Standardize `disabled` behavior across browsers.
     // Firefox allows events on disabled elements, but Chrome doesn't.
     // Using a wrapper element (i.e. <span>) is recommended.
-    if (instance.reference.hasAttribute('disabled')) {
+    if (reference.hasAttribute('disabled')) {
       return
     }
 
@@ -997,16 +993,16 @@ export default function createTippy(
       return
     }
 
-    instance.popper.style.visibility = 'visible'
+    popper.style.visibility = 'visible'
     instance.state.isVisible = true
 
     if (instance.props.interactive) {
-      instance.reference.classList.add(ACTIVE_CLASS)
+      reference.classList.add(ACTIVE_CLASS)
     }
 
     // Prevent a transition if the popper is at the opposite placement
     const transitionableElements = getTransitionableElements()
-    setTransitionDuration(transitionableElements.concat(instance.popper), 0)
+    setTransitionDuration(transitionableElements.concat(popper), 0)
 
     currentMountCallback = () => {
       if (!instance.state.isVisible) {
@@ -1027,16 +1023,13 @@ export default function createTippy(
         makeSticky()
       }
 
-      setTransitionDuration([instance.popper], props.updateDuration)
+      setTransitionDuration([popper], props.updateDuration)
       setTransitionDuration(transitionableElements, duration)
       setVisibilityState(transitionableElements, 'visible')
 
       onTransitionedIn(duration, () => {
         if (instance.props.aria) {
-          instance.reference.setAttribute(
-            `aria-${instance.props.aria}`,
-            instance.popper.id,
-          )
+          reference.setAttribute(`aria-${instance.props.aria}`, popper.id)
         }
 
         instance.props.onShown(instance)
@@ -1065,13 +1058,13 @@ export default function createTippy(
       return
     }
 
-    instance.popper.style.visibility = 'hidden'
+    popper.style.visibility = 'hidden'
     instance.state.isVisible = false
     instance.state.isShown = false
     wasVisibleDuringPreviousUpdate = false
 
     if (instance.props.interactive) {
-      instance.reference.classList.remove(ACTIVE_CLASS)
+      reference.classList.remove(ACTIVE_CLASS)
     }
 
     const transitionableElements = getTransitionableElements()
@@ -1084,13 +1077,13 @@ export default function createTippy(
       }
 
       if (instance.props.aria) {
-        instance.reference.removeAttribute(`aria-${instance.props.aria}`)
+        reference.removeAttribute(`aria-${instance.props.aria}`)
       }
 
       instance.popperInstance!.disableEventListeners()
       instance.popperInstance!.options.placement = instance.props.placement
 
-      currentParentNode.removeChild(instance.popper)
+      currentParentNode.removeChild(popper)
       instance.props.onHidden(instance)
       instance.state.isMounted = false
     })
@@ -1112,16 +1105,16 @@ export default function createTippy(
 
     removeTriggersFromReference()
 
-    delete instance.reference._tippy
+    delete reference._tippy
 
     if (instance.props.target && destroyTargetInstances) {
-      arrayFrom(
-        instance.reference.querySelectorAll(instance.props.target),
-      ).forEach((child: ReferenceElement) => {
-        if (child._tippy) {
-          child._tippy.destroy()
-        }
-      })
+      arrayFrom(reference.querySelectorAll(instance.props.target)).forEach(
+        (child: ReferenceElement) => {
+          if (child._tippy) {
+            child._tippy.destroy()
+          }
+        },
+      )
     }
 
     if (instance.popperInstance) {
