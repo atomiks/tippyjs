@@ -17,19 +17,30 @@ export interface PopperElement extends HTMLDivElement {
 }
 
 export interface VirtualReference extends Popper.ReferenceObject {
+  _tippy?: Instance
+  setAttribute(): void
+  getAttribute(): string
+  hasAttribute(): boolean
+  removeAttribute(): void
+  addEventListener(): void
+  removeEventListener(): void
   attributes: {
     [key: string]: any
   }
   classList: {
+    add(): void
+    remove(): void
+    contains(): boolean
     classNames: {
       [key: string]: boolean
     }
     [key: string]: any
   }
+  parentNode?: Element
 }
 
 export interface PopperInstance extends Popper {
-  reference: ReferenceElement
+  reference: ReferenceElement | VirtualReference
   popper: PopperElement
   modifiers: { name: string; padding: object | number }[]
 }
@@ -78,6 +89,7 @@ export interface Props {
   touch: boolean
   touchHold: boolean
   trigger: string
+  triggerTarget: Element | null
   updateDuration: number
   wait: ((instance: Instance, event?: Event) => void) | null
   zIndex: number
@@ -96,9 +108,7 @@ export interface Instance {
   popperChildren: PopperChildren
   popperInstance: PopperInstance | null
   props: Props
-  reference: ReferenceElement
-  scheduleHide(): void
-  scheduleShow(event?: Event): void
+  reference: ReferenceElement | VirtualReference
   set(options: Options): void
   setContent(content: Content): void
   show(duration?: number): void

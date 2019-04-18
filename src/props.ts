@@ -44,6 +44,7 @@ export const defaultProps: Props = {
   touch: true,
   touchHold: false,
   trigger: 'mouseenter focus',
+  triggerTarget: null,
   updateDuration: 0,
   wait: null,
   zIndex: 9999,

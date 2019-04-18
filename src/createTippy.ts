@@ -7,6 +7,7 @@ import {
   Instance,
   Content,
   Listener,
+  VirtualReference,
 } from './types'
 import { isIE } from './browser'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
@@ -43,6 +44,7 @@ import {
   evaluateProps,
   setTransitionDuration,
   setVisibilityState,
+  isRealElement,
 } from './utils'
 
 let idCounter = 1
@@ -53,7 +55,7 @@ let idCounter = 1
  * prefixed with `_`.
  */
 export default function createTippy(
-  reference: ReferenceElement,
+  reference: ReferenceElement | VirtualReference,
   collectionProps: Props,
 ): Instance | null {
   const props = evaluateProps(reference, collectionProps)
@@ -123,8 +125,6 @@ export default function createTippy(
     setContent,
     show,
     hide,
-    scheduleShow,
-    scheduleHide,
     enable,
     disable,
     destroy,
@@ -146,8 +146,8 @@ export default function createTippy(
   }
 
   // Ensure the reference element can receive focus (and is not a delegate)
-  if (props.a11y && !props.target && !canReceiveFocus(reference)) {
-    reference.setAttribute('tabindex', '0')
+  if (props.a11y && !props.target && !canReceiveFocus(reference as Element)) {
+    getEventListenersTarget().setAttribute('tabindex', '0')
   }
 
   // Prevent a tippy with a delay from hiding if the cursor left then returned
@@ -189,6 +189,13 @@ export default function createTippy(
   }
 
   /**
+   * Returns correct target used for event listeners
+   */
+  function getEventListenersTarget(): Element | VirtualReference {
+    return instance.props.triggerTarget || reference
+  }
+
+  /**
    * Returns transitionable inner elements used in show/hide methods
    */
   function getTransitionableElements(): (HTMLDivElement | null)[] {
@@ -217,9 +224,7 @@ export default function createTippy(
     setTransitionDuration([popper], isIE ? 0 : instance.props.updateDuration)
 
     function updatePosition(): void {
-      if (instance.popperInstance) {
-        instance.popperInstance.scheduleUpdate()
-      }
+      instance.popperInstance!.scheduleUpdate()
 
       if (instance.state.isMounted) {
         requestAnimationFrame(updatePosition)
@@ -289,7 +294,7 @@ export default function createTippy(
     handler: EventListener,
     options: boolean | object = false,
   ): void {
-    reference.addEventListener(eventType, handler, options)
+    getEventListenersTarget().addEventListener(eventType, handler, options)
     listeners.push({ eventType, handler, options })
   }
 
@@ -345,7 +350,7 @@ export default function createTippy(
    */
   function removeTriggersFromReference(): void {
     listeners.forEach(({ eventType, handler, options }: Listener) => {
-      reference.removeEventListener(eventType, handler, options)
+      getEventListenersTarget().removeEventListener(eventType, handler, options)
     })
     listeners = []
   }
@@ -542,7 +547,7 @@ export default function createTippy(
    * Event listener invoked upon blur
    */
   function onBlur(event: FocusEvent): void {
-    if (event.target !== reference) {
+    if (event.target !== getEventListenersTarget()) {
       return
     }
 
@@ -799,100 +804,6 @@ export default function createTippy(
     }
   }
 
-  /* ======================= 🔑 Public methods 🔑 ======================= */
-  /**
-   * Enables the instance to allow it to show or hide
-   */
-  function enable(): void {
-    instance.state.isEnabled = true
-  }
-
-  /**
-   * Disables the instance to disallow it to show or hide
-   */
-  function disable(): void {
-    instance.state.isEnabled = false
-  }
-
-  /**
-   * Clears pending timeouts related to the `delay` prop if any
-   */
-  function clearDelayTimeouts(): void {
-    clearTimeout(showTimeoutId)
-    clearTimeout(hideTimeoutId)
-    cancelAnimationFrame(animationFrameId)
-  }
-
-  /**
-   * Sets new props for the instance and redraws the tooltip
-   */
-  function set(options: Options): void {
-    // Backwards-compatible after TypeScript change
-    options = options || {}
-
-    validateOptions(options, defaultProps)
-
-    const prevProps = instance.props
-    const nextProps = evaluateProps(reference, {
-      ...instance.props,
-      ...options,
-      ignoreAttributes: true,
-    })
-    nextProps.ignoreAttributes = hasOwnProperty(options, 'ignoreAttributes')
-      ? options.ignoreAttributes || false
-      : prevProps.ignoreAttributes
-    instance.props = nextProps
-
-    if (
-      hasOwnProperty(options, 'trigger') ||
-      hasOwnProperty(options, 'touchHold')
-    ) {
-      removeTriggersFromReference()
-      addTriggersToReference()
-    }
-
-    if (hasOwnProperty(options, 'interactiveDebounce')) {
-      cleanupOldMouseListeners()
-      debouncedOnMouseMove = debounce(
-        onMouseMove,
-        options.interactiveDebounce || 0,
-      )
-    }
-
-    updatePopperElement(popper, prevProps, nextProps)
-    instance.popperChildren = getChildren(popper)
-
-    if (instance.popperInstance) {
-      instance.popperInstance.update()
-
-      if (
-        POPPER_INSTANCE_DEPENDENCIES.some(prop => {
-          return (
-            hasOwnProperty(options, prop) && options[prop] !== prevProps[prop]
-          )
-        })
-      ) {
-        instance.popperInstance.destroy()
-        createPopperInstance()
-
-        if (!instance.state.isVisible) {
-          instance.popperInstance.disableEventListeners()
-        }
-
-        if (instance.props.followCursor && lastMouseMoveEvent) {
-          positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-        }
-      }
-    }
-  }
-
-  /**
-   * Shortcut for .set({ content: newContent })
-   */
-  function setContent(content: Content): void {
-    set({ content })
-  }
-
   /**
    * Setup before show() is invoked (delays, etc.)
    */
@@ -964,6 +875,94 @@ export default function createTippy(
     }
   }
 
+  /* ======================= 🔑 Public methods 🔑 ======================= */
+  /**
+   * Enables the instance to allow it to show or hide
+   */
+  function enable(): void {
+    instance.state.isEnabled = true
+  }
+
+  /**
+   * Disables the instance to disallow it to show or hide
+   */
+  function disable(): void {
+    instance.state.isEnabled = false
+  }
+
+  /**
+   * Clears pending timeouts related to the `delay` prop if any
+   */
+  function clearDelayTimeouts(): void {
+    clearTimeout(showTimeoutId)
+    clearTimeout(hideTimeoutId)
+    cancelAnimationFrame(animationFrameId)
+  }
+
+  /**
+   * Sets new props for the instance and redraws the tooltip
+   */
+  function set(options: Options): void {
+    // Backwards-compatible after TypeScript change
+    options = options || {}
+
+    validateOptions(options, defaultProps)
+
+    removeTriggersFromReference()
+
+    const prevProps = instance.props
+    const nextProps = evaluateProps(reference, {
+      ...instance.props,
+      ...options,
+      ignoreAttributes: true,
+    })
+    nextProps.ignoreAttributes = hasOwnProperty(options, 'ignoreAttributes')
+      ? options.ignoreAttributes || false
+      : prevProps.ignoreAttributes
+    instance.props = nextProps
+
+    addTriggersToReference()
+
+    cleanupOldMouseListeners()
+    debouncedOnMouseMove = debounce(
+      onMouseMove,
+      options.interactiveDebounce || 0,
+    )
+
+    updatePopperElement(popper, prevProps, nextProps)
+    instance.popperChildren = getChildren(popper)
+
+    if (instance.popperInstance) {
+      instance.popperInstance.update()
+
+      if (
+        POPPER_INSTANCE_DEPENDENCIES.some(prop => {
+          return (
+            hasOwnProperty(options, prop) && options[prop] !== prevProps[prop]
+          )
+        })
+      ) {
+        instance.popperInstance.destroy()
+        createPopperInstance()
+
+        if (!instance.state.isVisible) {
+          instance.popperInstance.disableEventListeners()
+        }
+
+        if (instance.props.followCursor && lastMouseMoveEvent) {
+          positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+        }
+      }
+    }
+  }
+
+  /**
+   * Shortcut for .set({ content: newContent })
+   */
+  function setContent(content: Content): void {
+    set({ content })
+  }
+
   /**
    * Shows the tooltip
    */
@@ -985,7 +984,7 @@ export default function createTippy(
     // Standardize `disabled` behavior across browsers.
     // Firefox allows events on disabled elements, but Chrome doesn't.
     // Using a wrapper element (i.e. <span>) is recommended.
-    if (reference.hasAttribute('disabled')) {
+    if (getEventListenersTarget().hasAttribute('disabled')) {
       return
     }
 
@@ -997,7 +996,7 @@ export default function createTippy(
     instance.state.isVisible = true
 
     if (instance.props.interactive) {
-      reference.classList.add(ACTIVE_CLASS)
+      getEventListenersTarget().classList.add(ACTIVE_CLASS)
     }
 
     // Prevent a transition if the popper is at the opposite placement
@@ -1029,7 +1028,10 @@ export default function createTippy(
 
       onTransitionedIn(duration, () => {
         if (instance.props.aria) {
-          reference.setAttribute(`aria-${instance.props.aria}`, popper.id)
+          getEventListenersTarget().setAttribute(
+            `aria-${instance.props.aria}`,
+            popper.id,
+          )
         }
 
         instance.props.onShown(instance)
@@ -1064,7 +1066,7 @@ export default function createTippy(
     wasVisibleDuringPreviousUpdate = false
 
     if (instance.props.interactive) {
-      reference.classList.remove(ACTIVE_CLASS)
+      getEventListenersTarget().classList.remove(ACTIVE_CLASS)
     }
 
     const transitionableElements = getTransitionableElements()
@@ -1077,7 +1079,7 @@ export default function createTippy(
       }
 
       if (instance.props.aria) {
-        reference.removeAttribute(`aria-${instance.props.aria}`)
+        getEventListenersTarget().removeAttribute(`aria-${instance.props.aria}`)
       }
 
       instance.popperInstance!.disableEventListeners()
@@ -1107,8 +1109,9 @@ export default function createTippy(
 
     delete reference._tippy
 
-    if (instance.props.target && destroyTargetInstances) {
-      arrayFrom(reference.querySelectorAll(instance.props.target)).forEach(
+    const { target } = instance.props
+    if (target && destroyTargetInstances && isRealElement(reference)) {
+      arrayFrom(reference.querySelectorAll(target)).forEach(
         (child: ReferenceElement) => {
           if (child._tippy) {
             child._tippy.destroy()

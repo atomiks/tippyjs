@@ -6,7 +6,9 @@ const keys = Object.keys(defaultProps)
 /**
  * Returns an object of optional props from data-tippy-* attributes
  */
-export function getDataAttributeOptions(reference: ReferenceElement): Props {
+export function getDataAttributeOptions(
+  reference: ReferenceElement | VirtualReference,
+): Props {
   return keys.reduce((acc: any, key) => {
     const valueAsString = (
       reference.getAttribute(`data-tippy-${key}`) || ''
