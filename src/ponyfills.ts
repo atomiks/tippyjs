@@ -19,20 +19,8 @@ export function arrayFrom(value: ArrayLike<any>): any[] {
 /**
  * Ponyfill for Element.prototype.closest
  */
-export function closest(element: Element, parentSelector: string): Element {
-  return (
-    elementProto.closest ||
-    function(selector: string) {
-      // @ts-ignore
-      let el = this
-      while (el) {
-        if (matches.call(el, selector)) {
-          return el
-        }
-        el = el.parentElement
-      }
-    }
-  ).call(element, parentSelector)
+export function closest(element: Element, selector: string): Element | null {
+  return closestCallback(element, (el: Element) => matches.call(el, selector))
 }
 
 /**
@@ -41,11 +29,12 @@ export function closest(element: Element, parentSelector: string): Element {
 export function closestCallback(
   element: Element | null,
   callback: Function,
-): Element | undefined {
+): Element | null {
   while (element) {
     if (callback(element)) {
       return element
     }
     element = element.parentElement
   }
+  return null
 }
