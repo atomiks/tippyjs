@@ -33,6 +33,7 @@ export const defaultProps: Props = {
   onMount() {},
   onShow() {},
   onShown() {},
+  onTrigger() {},
   placement: 'top',
   popperOptions: {},
   role: 'tooltip',

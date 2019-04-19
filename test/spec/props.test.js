@@ -609,6 +609,22 @@ describe('onHidden', () => {
   })
 })
 
+describe('onTrigger', () => {
+  it('is called upon an event triggering, passed correct arguments', () => {
+    const spy = jest.fn()
+    const instance = tippy(h(), { onTrigger: spy })
+    const event = new MouseEvent('mouseenter')
+    instance.reference.dispatchEvent(event)
+    expect(spy).toHaveBeenCalledWith(instance, event)
+  })
+
+  it('is not called without an event to pass (showOnInit)', () => {
+    const spy = jest.fn()
+    tippy(h(), { onTrigger: spy, showOnInit: true })
+    expect(spy).not.toHaveBeenCalled()
+  })
+})
+
 describe('wait', () => {
   it('waits until the user manually shows the tooltip', () => {
     const ref = h()
