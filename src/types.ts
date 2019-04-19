@@ -18,25 +18,25 @@ export interface PopperElement extends HTMLDivElement {
 
 export interface VirtualReference extends Popper.ReferenceObject {
   _tippy?: Instance
-  setAttribute(): void
-  getAttribute(): string
-  hasAttribute(): boolean
-  removeAttribute(): void
+  parentNode?: Element
+  setAttribute(key: string, value: any): void
+  getAttribute(key: string): string
+  removeAttribute(key: string): void
+  hasAttribute(key: string): boolean
   addEventListener(): void
   removeEventListener(): void
   attributes: {
     [key: string]: any
   }
   classList: {
-    add(): void
-    remove(): void
-    contains(): boolean
+    add(key: string): void
+    remove(key: string): void
+    contains(key: string): boolean
     classNames: {
       [key: string]: boolean
     }
     [key: string]: any
   }
-  parentNode?: Element
 }
 
 export interface PopperInstance extends Popper {
