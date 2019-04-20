@@ -67,6 +67,17 @@ tippy('#followCursor-padding', {
   },
 })
 
+tippy('#followCursor-horizontal-interactive', {
+  followCursor: 'horizontal',
+  interactive: true,
+})
+
+tippy('#followCursor-vertical-interactive', {
+  placement: 'right',
+  followCursor: 'vertical',
+  interactive: true,
+})
+
 tippy('#notransition-flip-updates', {
   flipOnUpdate: true,
 })
