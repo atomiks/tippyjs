@@ -924,7 +924,7 @@ describe('appendTo', () => {
 describe('sticky', () => {
   it('updates position on each animation frame', done => {
     const mockRAF = requestAnimationFrame
-    global.requestAnimationFrame = nativeRequestAnimationFrame
+    global.requestAnimationFrame = global.nativeRequestAnimationFrame
     let calls = 0
 
     const instance = tippy(h(), { sticky: true, lazy: false })
