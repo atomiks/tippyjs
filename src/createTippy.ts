@@ -360,7 +360,7 @@ export default function createTippy(
   /**
    * Returns corrected preventOverflow padding if the instance has an arrow
    */
-  function getCorrectedPadding(placement: string) {
+  function getCorrectedPadding(placement: string): number {
     return instance.props.arrow
       ? currentComputedPadding[placement] +
           (instance.props.arrowType === 'round' ? 18 : 16)
