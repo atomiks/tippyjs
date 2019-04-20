@@ -7,6 +7,7 @@ import {
   Instance,
   Content,
   Listener,
+  VirtualReference,
 } from './types'
 import { isIE } from './browser'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
@@ -43,6 +44,7 @@ import {
   evaluateProps,
   setTransitionDuration,
   setVisibilityState,
+  isRealElement,
 } from './utils'
 
 let idCounter = 1
@@ -53,7 +55,7 @@ let idCounter = 1
  * prefixed with `_`.
  */
 export default function createTippy(
-  reference: ReferenceElement,
+  reference: ReferenceElement | VirtualReference,
   collectionProps: Props,
 ): Instance | null {
   const props = evaluateProps(reference, collectionProps)
@@ -123,8 +125,6 @@ export default function createTippy(
     setContent,
     show,
     hide,
-    scheduleShow,
-    scheduleHide,
     enable,
     disable,
     destroy,
@@ -146,8 +146,8 @@ export default function createTippy(
   }
 
   // Ensure the reference element can receive focus (and is not a delegate)
-  if (props.a11y && !props.target && !canReceiveFocus(reference)) {
-    reference.setAttribute('tabindex', '0')
+  if (props.a11y && !props.target && !canReceiveFocus(reference as Element)) {
+    getEventListenersTarget().setAttribute('tabindex', '0')
   }
 
   // Prevent a tippy with a delay from hiding if the cursor left then returned
@@ -158,7 +158,9 @@ export default function createTippy(
       instance.state.isVisible &&
       lastTriggerEventType === 'mouseenter'
     ) {
-      scheduleShow(event)
+      // We don't want props.onTrigger() to be called here, since the `event`
+      // object is not related to the reference element
+      scheduleShow(event, true)
     }
   })
   popper.addEventListener('mouseleave', () => {
@@ -189,6 +191,13 @@ export default function createTippy(
   }
 
   /**
+   * Returns correct target used for event listeners
+   */
+  function getEventListenersTarget(): Element | VirtualReference {
+    return instance.props.triggerTarget || reference
+  }
+
+  /**
    * Returns transitionable inner elements used in show/hide methods
    */
   function getTransitionableElements(): (HTMLDivElement | null)[] {
@@ -214,20 +223,15 @@ export default function createTippy(
    * Updates the tooltip's position on each animation frame
    */
   function makeSticky(): void {
-    setTransitionDuration(
-      [instance.popper],
-      isIE ? 0 : instance.props.updateDuration,
-    )
+    setTransitionDuration([popper], isIE ? 0 : instance.props.updateDuration)
 
     function updatePosition(): void {
-      if (instance.popperInstance) {
-        instance.popperInstance.scheduleUpdate()
-      }
+      instance.popperInstance!.scheduleUpdate()
 
       if (instance.state.isMounted) {
         requestAnimationFrame(updatePosition)
       } else {
-        setTransitionDuration([instance.popper], 0)
+        setTransitionDuration([popper], 0)
       }
     }
 
@@ -242,7 +246,7 @@ export default function createTippy(
       if (
         !instance.state.isVisible &&
         currentParentNode &&
-        currentParentNode.contains(instance.popper)
+        currentParentNode.contains(popper)
       ) {
         callback()
       }
@@ -292,7 +296,7 @@ export default function createTippy(
     handler: EventListener,
     options: boolean | object = false,
   ): void {
-    instance.reference.addEventListener(eventType, handler, options)
+    getEventListenersTarget().addEventListener(eventType, handler, options)
     listeners.push({ eventType, handler, options })
   }
 
@@ -348,7 +352,7 @@ export default function createTippy(
    */
   function removeTriggersFromReference(): void {
     listeners.forEach(({ eventType, handler, options }: Listener) => {
-      instance.reference.removeEventListener(eventType, handler, options)
+      getEventListenersTarget().removeEventListener(eventType, handler, options)
     })
     listeners = []
   }
@@ -374,14 +378,14 @@ export default function createTippy(
       return
     }
 
-    const rect = instance.reference.getBoundingClientRect()
+    const rect = reference.getBoundingClientRect()
     const { followCursor } = instance.props
     const isHorizontal = followCursor === 'horizontal'
     const isVertical = followCursor === 'vertical'
 
     // Ensure virtual reference is padded to prevent tooltip from overflowing.
     // Seems to be a Popper.js issue
-    const placement = getBasicPlacement(instance.popper)
+    const placement = getBasicPlacement(popper)
     const isVerticalPlacement = includes(['top', 'bottom'], placement)
     const isHorizontalPlacement = includes(['left', 'right'], placement)
     const padding = { ...currentComputedPadding }
@@ -415,7 +419,7 @@ export default function createTippy(
     // over the reference element
     const isCursorOverReference = closestCallback(
       event.target as Element,
-      (el: Element) => el === instance.reference,
+      (el: Element) => el === reference,
     )
 
     if (isCursorOverReference || !instance.props.interactive) {
@@ -459,8 +463,6 @@ export default function createTippy(
           target: '',
           showOnInit: true,
         })
-
-        scheduleShow(event)
       }
     }
   }
@@ -504,9 +506,8 @@ export default function createTippy(
     )
 
     const isCursorOverPopper =
-      closest(event.target as Element, POPPER_SELECTOR) === instance.popper
-    const isCursorOverReference =
-      referenceTheCursorIsOver === instance.reference
+      closest(event.target as Element, POPPER_SELECTOR) === popper
+    const isCursorOverReference = referenceTheCursorIsOver === reference
 
     if (isCursorOverPopper || isCursorOverReference) {
       return
@@ -514,8 +515,8 @@ export default function createTippy(
 
     if (
       isCursorOutsideInteractiveBorder(
-        getBasicPlacement(instance.popper),
-        instance.popper.getBoundingClientRect(),
+        getBasicPlacement(popper),
+        popper.getBoundingClientRect(),
         event,
         instance.props,
       )
@@ -546,14 +547,14 @@ export default function createTippy(
    * Event listener invoked upon blur
    */
   function onBlur(event: FocusEvent): void {
-    if (event.target !== instance.reference) {
+    if (event.target !== getEventListenersTarget()) {
       return
     }
 
     if (
       instance.props.interactive &&
       event.relatedTarget &&
-      instance.popper.contains(event.relatedTarget as Element)
+      popper.contains(event.relatedTarget as Element)
     ) {
       return
     }
@@ -647,7 +648,7 @@ export default function createTippy(
       previousPlacement = data.placement
       wasVisibleDuringPreviousUpdate = instance.state.isVisible
 
-      const basicPlacement = getBasicPlacement(instance.popper)
+      const basicPlacement = getBasicPlacement(popper)
       const styles = tooltip.style
 
       // Account for the `distance` offset
@@ -726,8 +727,8 @@ export default function createTippy(
     }
 
     instance.popperInstance = new Popper(
-      instance.reference,
-      instance.popper,
+      reference,
+      popper,
       config,
     ) as PopperInstance
   }
@@ -763,7 +764,7 @@ export default function createTippy(
     // If the instance previously had followCursor behavior, it will be
     // positioned incorrectly if triggered by `focus` afterwards.
     // Update the reference back to the real DOM element
-    instance.popperInstance!.reference = instance.reference
+    instance.popperInstance!.reference = reference
     const { arrow } = instance.popperChildren
 
     if (hasFollowCursorBehavior()) {
@@ -793,114 +794,23 @@ export default function createTippy(
 
     currentParentNode =
       appendTo === 'parent'
-        ? instance.reference.parentNode
-        : invokeWithArgsOrReturn(appendTo, [instance.reference])
+        ? reference.parentNode
+        : invokeWithArgsOrReturn(appendTo, [reference])
 
-    if (!currentParentNode.contains(instance.popper)) {
-      currentParentNode.appendChild(instance.popper)
+    if (!currentParentNode.contains(popper)) {
+      currentParentNode.appendChild(popper)
       instance.props.onMount(instance)
       instance.state.isMounted = true
     }
   }
 
-  /* ======================= 🔑 Public methods 🔑 ======================= */
-  /**
-   * Enables the instance to allow it to show or hide
-   */
-  function enable(): void {
-    instance.state.isEnabled = true
-  }
-
-  /**
-   * Disables the instance to disallow it to show or hide
-   */
-  function disable(): void {
-    instance.state.isEnabled = false
-  }
-
-  /**
-   * Clears pending timeouts related to the `delay` prop if any
-   */
-  function clearDelayTimeouts(): void {
-    clearTimeout(showTimeoutId)
-    clearTimeout(hideTimeoutId)
-    cancelAnimationFrame(animationFrameId)
-  }
-
-  /**
-   * Sets new props for the instance and redraws the tooltip
-   */
-  function set(options: Options): void {
-    // Backwards-compatible after TypeScript change
-    options = options || {}
-
-    validateOptions(options, defaultProps)
-
-    const prevProps = instance.props
-    const nextProps = evaluateProps(instance.reference, {
-      ...instance.props,
-      ...options,
-      ignoreAttributes: true,
-    })
-    nextProps.ignoreAttributes = hasOwnProperty(options, 'ignoreAttributes')
-      ? options.ignoreAttributes || false
-      : prevProps.ignoreAttributes
-    instance.props = nextProps
-
-    if (
-      hasOwnProperty(options, 'trigger') ||
-      hasOwnProperty(options, 'touchHold')
-    ) {
-      removeTriggersFromReference()
-      addTriggersToReference()
-    }
-
-    if (hasOwnProperty(options, 'interactiveDebounce')) {
-      cleanupOldMouseListeners()
-      debouncedOnMouseMove = debounce(
-        onMouseMove,
-        options.interactiveDebounce || 0,
-      )
-    }
-
-    updatePopperElement(instance.popper, prevProps, nextProps)
-    instance.popperChildren = getChildren(instance.popper)
-
-    if (instance.popperInstance) {
-      instance.popperInstance.update()
-
-      if (
-        POPPER_INSTANCE_DEPENDENCIES.some(prop => {
-          return (
-            hasOwnProperty(options, prop) && options[prop] !== prevProps[prop]
-          )
-        })
-      ) {
-        instance.popperInstance.destroy()
-        createPopperInstance()
-
-        if (!instance.state.isVisible) {
-          instance.popperInstance.disableEventListeners()
-        }
-
-        if (instance.props.followCursor && lastMouseMoveEvent) {
-          positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-        }
-      }
-    }
-  }
-
-  /**
-   * Shortcut for .set({ content: newContent })
-   */
-  function setContent(content: Content): void {
-    set({ content })
-  }
-
   /**
    * Setup before show() is invoked (delays, etc.)
    */
-  function scheduleShow(event?: Event): void {
+  function scheduleShow(
+    event?: Event,
+    shouldAvoidCallingOnTrigger?: boolean,
+  ): void {
     clearDelayTimeouts()
 
     if (instance.state.isVisible) {
@@ -916,6 +826,10 @@ export default function createTippy(
 
     if (instance.props.wait) {
       return instance.props.wait(instance, event)
+    }
+
+    if (event && !shouldAvoidCallingOnTrigger) {
+      instance.props.onTrigger(instance, event)
     }
 
     // If the tooltip has a delay, we need to be listening to the mousemove as
@@ -968,6 +882,94 @@ export default function createTippy(
     }
   }
 
+  /* ======================= 🔑 Public methods 🔑 ======================= */
+  /**
+   * Enables the instance to allow it to show or hide
+   */
+  function enable(): void {
+    instance.state.isEnabled = true
+  }
+
+  /**
+   * Disables the instance to disallow it to show or hide
+   */
+  function disable(): void {
+    instance.state.isEnabled = false
+  }
+
+  /**
+   * Clears pending timeouts related to the `delay` prop if any
+   */
+  function clearDelayTimeouts(): void {
+    clearTimeout(showTimeoutId)
+    clearTimeout(hideTimeoutId)
+    cancelAnimationFrame(animationFrameId)
+  }
+
+  /**
+   * Sets new props for the instance and redraws the tooltip
+   */
+  function set(options: Options): void {
+    // Backwards-compatible after TypeScript change
+    options = options || {}
+
+    validateOptions(options, defaultProps)
+
+    removeTriggersFromReference()
+
+    const prevProps = instance.props
+    const nextProps = evaluateProps(reference, {
+      ...instance.props,
+      ...options,
+      ignoreAttributes: true,
+    })
+    nextProps.ignoreAttributes = hasOwnProperty(options, 'ignoreAttributes')
+      ? options.ignoreAttributes || false
+      : prevProps.ignoreAttributes
+    instance.props = nextProps
+
+    addTriggersToReference()
+
+    cleanupOldMouseListeners()
+    debouncedOnMouseMove = debounce(
+      onMouseMove,
+      options.interactiveDebounce || 0,
+    )
+
+    updatePopperElement(popper, prevProps, nextProps)
+    instance.popperChildren = getChildren(popper)
+
+    if (instance.popperInstance) {
+      instance.popperInstance.update()
+
+      if (
+        POPPER_INSTANCE_DEPENDENCIES.some(prop => {
+          return (
+            hasOwnProperty(options, prop) && options[prop] !== prevProps[prop]
+          )
+        })
+      ) {
+        instance.popperInstance.destroy()
+        createPopperInstance()
+
+        if (!instance.state.isVisible) {
+          instance.popperInstance.disableEventListeners()
+        }
+
+        if (instance.props.followCursor && lastMouseMoveEvent) {
+          positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+        }
+      }
+    }
+  }
+
+  /**
+   * Shortcut for .set({ content: newContent })
+   */
+  function setContent(content: Content): void {
+    set({ content })
+  }
+
   /**
    * Shows the tooltip
    */
@@ -989,7 +991,7 @@ export default function createTippy(
     // Standardize `disabled` behavior across browsers.
     // Firefox allows events on disabled elements, but Chrome doesn't.
     // Using a wrapper element (i.e. <span>) is recommended.
-    if (instance.reference.hasAttribute('disabled')) {
+    if (getEventListenersTarget().hasAttribute('disabled')) {
       return
     }
 
@@ -997,16 +999,16 @@ export default function createTippy(
       return
     }
 
-    instance.popper.style.visibility = 'visible'
+    popper.style.visibility = 'visible'
     instance.state.isVisible = true
 
     if (instance.props.interactive) {
-      instance.reference.classList.add(ACTIVE_CLASS)
+      getEventListenersTarget().classList.add(ACTIVE_CLASS)
     }
 
     // Prevent a transition if the popper is at the opposite placement
     const transitionableElements = getTransitionableElements()
-    setTransitionDuration(transitionableElements.concat(instance.popper), 0)
+    setTransitionDuration(transitionableElements.concat(popper), 0)
 
     currentMountCallback = () => {
       if (!instance.state.isVisible) {
@@ -1027,15 +1029,15 @@ export default function createTippy(
         makeSticky()
       }
 
-      setTransitionDuration([instance.popper], props.updateDuration)
+      setTransitionDuration([popper], props.updateDuration)
       setTransitionDuration(transitionableElements, duration)
       setVisibilityState(transitionableElements, 'visible')
 
       onTransitionedIn(duration, () => {
         if (instance.props.aria) {
-          instance.reference.setAttribute(
+          getEventListenersTarget().setAttribute(
             `aria-${instance.props.aria}`,
-            instance.popper.id,
+            popper.id,
           )
         }
 
@@ -1065,13 +1067,13 @@ export default function createTippy(
       return
     }
 
-    instance.popper.style.visibility = 'hidden'
+    popper.style.visibility = 'hidden'
     instance.state.isVisible = false
     instance.state.isShown = false
     wasVisibleDuringPreviousUpdate = false
 
     if (instance.props.interactive) {
-      instance.reference.classList.remove(ACTIVE_CLASS)
+      getEventListenersTarget().classList.remove(ACTIVE_CLASS)
     }
 
     const transitionableElements = getTransitionableElements()
@@ -1084,13 +1086,13 @@ export default function createTippy(
       }
 
       if (instance.props.aria) {
-        instance.reference.removeAttribute(`aria-${instance.props.aria}`)
+        getEventListenersTarget().removeAttribute(`aria-${instance.props.aria}`)
       }
 
       instance.popperInstance!.disableEventListeners()
       instance.popperInstance!.options.placement = instance.props.placement
 
-      currentParentNode.removeChild(instance.popper)
+      currentParentNode.removeChild(popper)
       instance.props.onHidden(instance)
       instance.state.isMounted = false
     })
@@ -1112,16 +1114,17 @@ export default function createTippy(
 
     removeTriggersFromReference()
 
-    delete instance.reference._tippy
+    delete reference._tippy
 
-    if (instance.props.target && destroyTargetInstances) {
-      arrayFrom(
-        instance.reference.querySelectorAll(instance.props.target),
-      ).forEach((child: ReferenceElement) => {
-        if (child._tippy) {
-          child._tippy.destroy()
-        }
-      })
+    const { target } = instance.props
+    if (target && destroyTargetInstances && isRealElement(reference)) {
+      arrayFrom(reference.querySelectorAll(target)).forEach(
+        (child: ReferenceElement) => {
+          if (child._tippy) {
+            child._tippy.destroy()
+          }
+        },
+      )
     }
 
     if (instance.popperInstance) {

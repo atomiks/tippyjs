@@ -609,6 +609,22 @@ describe('onHidden', () => {
   })
 })
 
+describe('onTrigger', () => {
+  it('is called upon an event triggering, passed correct arguments', () => {
+    const spy = jest.fn()
+    const instance = tippy(h(), { onTrigger: spy })
+    const event = new MouseEvent('mouseenter')
+    instance.reference.dispatchEvent(event)
+    expect(spy).toHaveBeenCalledWith(instance, event)
+  })
+
+  it('is not called without an event to pass (showOnInit)', () => {
+    const spy = jest.fn()
+    tippy(h(), { onTrigger: spy, showOnInit: true })
+    expect(spy).not.toHaveBeenCalled()
+  })
+})
+
 describe('wait', () => {
   it('waits until the user manually shows the tooltip', () => {
     const ref = h()
@@ -934,5 +950,27 @@ describe('sticky', () => {
         })
       })
     })
+  })
+})
+
+describe('triggerTarget', () => {
+  it('acts as the trigger for the tooltip instead of the reference', () => {
+    const node = h('div')
+    const instance = tippy(h(), { triggerTarget: node })
+    instance.reference.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(false)
+    node.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(true)
+  })
+
+  it('updates accordingly with instance.set()', () => {
+    const node = h('div')
+    const node2 = h('button')
+    const instance = tippy(h(), { triggerTarget: node })
+    instance.set({ triggerTarget: node2 })
+    node.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(false)
+    node2.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(true)
   })
 })

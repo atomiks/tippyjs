@@ -99,12 +99,17 @@ export function includes(a: any[] | string, b: any): boolean {
 }
 
 /**
+ * Determines if the value is a real element
+ */
+export function isRealElement(value: any): value is Element {
+  return value instanceof Element
+}
+
+/**
  * Determines if the value is singular-like
  */
 export function isSingular(value: any): value is VirtualReference | Element {
-  return (
-    !!(value && hasOwnProperty(value, 'isVirtual')) || value instanceof Element
-  )
+  return !!(value && hasOwnProperty(value, 'isVirtual')) || isRealElement(value)
 }
 
 /**
@@ -181,7 +186,7 @@ export function setVisibilityState(
  * disabling conflicting options where necessary
  */
 export function evaluateProps(
-  reference: ReferenceElement,
+  reference: ReferenceElement | VirtualReference,
   props: Props,
 ): Props {
   const out = {
