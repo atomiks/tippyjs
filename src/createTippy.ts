@@ -1029,7 +1029,7 @@ export default function createTippy(
         makeSticky()
       }
 
-      setTransitionDuration([popper], props.updateDuration)
+      setTransitionDuration([popper], instance.props.updateDuration)
       setTransitionDuration(transitionableElements, duration)
       setVisibilityState(transitionableElements, 'visible')
 
