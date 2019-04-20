@@ -973,4 +973,23 @@ describe('triggerTarget', () => {
     node2.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(true)
   })
+
+  it('has _tippy property', () => {
+    const node = h('div')
+    const instance = tippy(h(), { triggerTarget: node })
+    expect(node._tippy).toBe(instance)
+  })
+
+  it('_tippy property lifecycle is correct', () => {
+    const node = h('div')
+    const node2 = h('button')
+    const instance = tippy(h(), { triggerTarget: node })
+    expect(node._tippy).toBe(instance)
+    instance.set({ triggerTarget: node2 })
+    expect(node._tippy).toBe(undefined)
+    expect(node2._tippy).toBe(instance)
+    expect(instance.reference._tippy).toBe(instance)
+    instance.destroy()
+    expect(node2._tippy).toBe(undefined)
+  })
 })

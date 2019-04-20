@@ -133,6 +133,7 @@ export default function createTippy(
   /* ==================== Initial instance mutations =================== */
   reference._tippy = instance
   popper._tippy = instance
+  getEventListenersTarget()._tippy = instance
 
   addTriggersToReference()
 
@@ -193,7 +194,7 @@ export default function createTippy(
   /**
    * Returns correct target used for event listeners
    */
-  function getEventListenersTarget(): Element | VirtualReference {
+  function getEventListenersTarget(): ReferenceElement | VirtualReference {
     return instance.props.triggerTarget || reference
   }
 
@@ -917,6 +918,10 @@ export default function createTippy(
 
     removeTriggersFromReference()
 
+    if (instance.props.triggerTarget) {
+      delete instance.props.triggerTarget._tippy
+    }
+
     const prevProps = instance.props
     const nextProps = evaluateProps(reference, {
       ...instance.props,
@@ -927,6 +932,8 @@ export default function createTippy(
       ? options.ignoreAttributes || false
       : prevProps.ignoreAttributes
     instance.props = nextProps
+
+    getEventListenersTarget()._tippy = instance
 
     addTriggersToReference()
 
@@ -1115,6 +1122,7 @@ export default function createTippy(
     removeTriggersFromReference()
 
     delete reference._tippy
+    delete getEventListenersTarget()._tippy
 
     const { target } = instance.props
     if (target && destroyTargetInstances && isRealElement(reference)) {
