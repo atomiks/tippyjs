@@ -139,7 +139,6 @@ export default function createTippy(
 
   if (!props.lazy) {
     createPopperInstance()
-    instance.popperInstance!.disableEventListeners()
   }
 
   if (props.showOnInit) {
@@ -682,6 +681,7 @@ export default function createTippy(
     }
 
     const config = {
+      eventsEnabled: false,
       placement: instance.props.placement,
       ...popperOptions,
       modifiers: {
@@ -746,16 +746,19 @@ export default function createTippy(
 
     if (!instance.popperInstance) {
       createPopperInstance()
-      if (!shouldEnableListeners) {
-        instance.popperInstance!.disableEventListeners()
+
+      if (shouldEnableListeners) {
+        instance.popperInstance!.enableEventListeners()
       }
     } else {
       if (!hasFollowCursorBehavior()) {
         instance.popperInstance.scheduleUpdate()
+
         if (shouldEnableListeners) {
           instance.popperInstance.enableEventListeners()
         }
       }
+
       setFlipModifierEnabled(
         instance.popperInstance.modifiers,
         instance.props.flip,
@@ -839,7 +842,9 @@ export default function createTippy(
     // Edge case: if the tooltip is still mounted, but then scheduleShow() is
     // called, it causes a jump.
     if (hasFollowCursorBehavior() && !instance.state.isMounted) {
-      createPopperInstance()
+      if (!instance.popperInstance) {
+        createPopperInstance()
+      }
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
@@ -959,8 +964,8 @@ export default function createTippy(
         instance.popperInstance.destroy()
         createPopperInstance()
 
-        if (!instance.state.isVisible) {
-          instance.popperInstance.disableEventListeners()
+        if (instance.state.isVisible) {
+          instance.popperInstance.enableEventListeners()
         }
 
         if (instance.props.followCursor && lastMouseMoveEvent) {
