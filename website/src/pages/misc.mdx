@@ -154,6 +154,72 @@ container.addEventListener('scroll', () => {
 })
 ```
 
+### Custom animations
+
+Custom animations can be created, but require a bit of CSS to setup. The default
+`"shift-away"` animation has a hardcoded translation of 10px. Sometimes, for
+small elements, this can be a bit much, especially if the tippy has an arrow.
+
+You need to:
+
+- Target each different basic placement in `x-placement` (`top`, `bottom`,
+  `left`, `right`)
+- Target the two visibility states in `data-state`: `visible` and `hidden`
+- Use your own animation name in `data-animation`
+
+Using a preprocessor with nesting support (e.g. SASS) helps reduce the
+boilerplate and amount of code required.
+
+```css
+/* Subtle shift-away animation */
+
+/* Top */
+.tippy-tooltip[x-placement^='top'][data-animation='subtle-shift-away'][data-state='visible'] {
+  transform: translateY(-10px);
+  opacity: 1;
+}
+.tippy-tooltip[x-placement^='top'][data-animation='subtle-shift-away'][data-state='hidden'] {
+  transform: translateY(-5px);
+  opacity: 0;
+}
+
+/* Bottom */
+.tippy-tooltip[x-placement^='bottom'][data-animation='subtle-shift-away'][data-state='visible'] {
+  transform: translateY(10px);
+  opacity: 1;
+}
+.tippy-tooltip[x-placement^='bottom'][data-animation='subtle-shift-away'][data-state='hidden'] {
+  transform: translateY(5px);
+  opacity: 0;
+}
+
+/* Left */
+.tippy-tooltip[x-placement^='left'][data-animation='subtle-shift-away'][data-state='visible'] {
+  transform: translateX(-10px);
+  opacity: 1;
+}
+.tippy-tooltip[x-placement^='left'][data-animation='subtle-shift-away'][data-state='hidden'] {
+  transform: translateX(-5px);
+  opacity: 0;
+}
+
+/* Right */
+.tippy-tooltip[x-placement^='right'][data-animation='subtle-shift-away'][data-state='visible'] {
+  transform: translateX(10px);
+  opacity: 1;
+}
+.tippy-tooltip[x-placement^='right'][data-animation='subtle-shift-away'][data-state='hidden'] {
+  transform: translateX(5px);
+  opacity: 0;
+}
+```
+
+> Why do the attribute names have a different prefix (`x-*` and `data-*`)?
+
+Popper.js (v1) uses the `x-` prefix convention, while Tippy.js adheres to the
+HTML5 spec with `data-` prefix. Popper.js v2 will change the prefix to match
+Tippy's.
+
 ### Animate.css animations
 
 Want more animations than the built-in ones? You can use any CSS animation you
@@ -321,6 +387,31 @@ button.addEventListener('click', () => {
   if (isIOS || !isUsingTouch ? true : instance.state.isShown) {
     // Your logic
   }
+})
+```
+
+### `onMouseRest` implementation
+
+You might desire to use this functionality instead of using a `delay`. Instead,
+the tippy will only show once the cursor is resting over the element, but not
+while it continues to move around over it.
+
+```js
+const button = document.querySelector('button')
+const instance = tippy(button, {
+  trigger: 'focus',
+})
+
+let timeout
+
+button.addEventListener('mousemove', () => {
+  clearTimeout(timeout)
+  timeout = setTimeout(() => instance.show(), 125)
+})
+
+button.addEventListener('mouseleave', () => {
+  clearTimeout(timeout)
+  instance.hide()
 })
 ```
 
