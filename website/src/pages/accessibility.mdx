@@ -6,6 +6,7 @@ index: 10
 
 import { Demo, Button } from '../components/Framework'
 import Dropdown from '../components/examples/Dropdown'
+import Tippy from '../components/Tippy'
 
 It's recommended that tooltips are applied only to natively focusable elements
 like `<button>`. Most screenreader software will not announce the tooltip on an
@@ -83,5 +84,52 @@ It's also possible to change the `role` of the tippy to something other than
 ```js
 tippy('button', {
   role: 'menu',
+})
+```
+
+### Delays and keyboard navigation
+
+When using keyboard navigation, it's probably best if there are no delays so
+that screenreaders can announce the tippy content as soon as possible if focus
+is currently on the reference element.
+
+<Demo>
+  <Tippy delay={500} duration={[300, 200]}>
+    <Button>Normal delay</Button>
+  </Tippy>
+  <Tippy
+    delay={500}
+    duration={[300, 200]}
+    onTrigger={(instance, event) => {
+      if (event.type === 'focus') {
+        instance.set({ delay: 0, duration: [200, 150] })
+      }
+    }}
+    onHide={instance => {
+      instance.set({ delay: 500, duration: [300, 200] })
+    }}
+  >
+    <Button>No keyboard delay</Button>
+  </Tippy>
+</Demo>
+
+```js
+const delay = 500
+const duration = [300, 200]
+
+tippy('button', {
+  delay,
+  duration,
+  onTrigger(instance, event) {
+    if (event.type === 'focus') {
+      // If the tippy was triggered by a `focus` event (e.g keyboard navigation)
+      // then set `delay: 0` and reduce the duration a bit.
+      instance.set({ delay: 0, duration: [200, 150] })
+    }
+  },
+  onHide(instance) {
+    // Reset
+    instance.set({ delay, duration })
+  },
 })
 ```
