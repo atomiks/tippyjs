@@ -828,12 +828,12 @@ export default function createTippy(
 
     isScheduledToShow = true
 
-    if (instance.props.wait) {
-      return instance.props.wait(instance, event)
-    }
-
     if (event && !shouldAvoidCallingOnTrigger) {
       instance.props.onTrigger(instance, event)
+    }
+
+    if (instance.props.wait) {
+      return instance.props.wait(instance, event)
     }
 
     // If the tooltip has a delay, we need to be listening to the mousemove as
