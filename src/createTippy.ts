@@ -914,7 +914,7 @@ export default function createTippy(
    * instance should hide
    */
   function onDocumentClick(event: MouseEvent): void {
-    // Clicked on an interactive tippy
+    // Clicked on interactive popper
     if (
       instance.props.interactive &&
       popper.contains(event.target as Element)
@@ -922,7 +922,7 @@ export default function createTippy(
       return
     }
 
-    // Clicked on an event listeners target
+    // Clicked on the event listeners target
     if (getEventListenersTarget().contains(event.target as Element)) {
       if (isUsingTouch) {
         return
