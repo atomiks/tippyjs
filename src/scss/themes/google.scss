@@ -3,7 +3,7 @@
 
 $color: #505355;
 
-.tippy-tooltip.google-theme {
+.#{$namespace-prefix}-tooltip.google-theme {
   background-color: $color;
   padding: 0.25rem 0.4375rem;
   font-size: 0.8125rem;
@@ -11,17 +11,17 @@ $color: #505355;
 
   @each $placement in $placements {
     &[x-placement^='#{$placement}'] {
-      .tippy-arrow {
+      .#{$namespace-prefix}-arrow {
         @include arrow($placement, 8px, $color);
       }
     }
   }
 
-  .tippy-backdrop {
+  .#{$namespace-prefix}-backdrop {
     background-color: $color;
   }
 
-  .tippy-roundarrow {
+  .#{$namespace-prefix}-roundarrow {
     fill: $color;
   }
 

@@ -1,22 +1,22 @@
 @import '../_mixins.scss';
 @import '../_vars.scss';
 
-.tippy-tooltip.translucent-theme {
+.#{$namespace-prefix}-tooltip.translucent-theme {
   background-color: rgba(0, 0, 0, 0.7);
 
   @each $placement in $placements {
     &[x-placement^='#{$placement}'] {
-      .tippy-arrow {
+      .#{$namespace-prefix}-arrow {
         @include arrow($placement, 7px, rgba(0, 0, 0, 0.7));
       }
     }
   }
 
-  .tippy-backdrop {
+  .#{$namespace-prefix}-backdrop {
     background-color: rgba(0, 0, 0, 0.7);
   }
 
-  .tippy-roundarrow {
+  .#{$namespace-prefix}-roundarrow {
     fill: rgba(0, 0, 0, 0.7);
   }
 

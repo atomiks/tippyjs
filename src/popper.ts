@@ -6,9 +6,15 @@ import {
   BasicPlacement,
 } from './types'
 import { arrayFrom } from './ponyfills'
-import { innerHTML, div, isReferenceElement } from './utils'
+import {
+  innerHTML,
+  div,
+  isReferenceElement,
+  selectorToClassName,
+} from './utils'
 import { isUCBrowser } from './browser'
 import {
+  NAMESPACE_PREFIX,
   TOOLTIP_SELECTOR,
   BACKDROP_SELECTOR,
   CONTENT_SELECTOR,
@@ -79,13 +85,13 @@ export function createArrowElement(
 ): HTMLDivElement {
   const arrow = div()
   if (arrowType === 'round') {
-    arrow.className = 'tippy-roundarrow'
+    arrow.className = selectorToClassName(ROUND_ARROW_SELECTOR)
     setInnerHTML(
       arrow,
       '<svg viewBox="0 0 18 7" xmlns="http://www.w3.org/2000/svg"><path d="M0 7s2.021-.015 5.253-4.218C6.584 1.051 7.797.007 9 0c1.203-.007 2.416 1.035 3.761 2.782C16.012 7.005 18 7 18 7H0z"/></svg>',
     )
   } else {
-    arrow.className = 'tippy-arrow'
+    arrow.className = selectorToClassName(ARROW_SELECTOR)
   }
   return arrow
 }
@@ -95,7 +101,7 @@ export function createArrowElement(
  */
 export function createBackdropElement(): HTMLDivElement {
   const backdrop = div()
-  backdrop.className = 'tippy-backdrop'
+  backdrop.className = selectorToClassName(BACKDROP_SELECTOR)
   backdrop.setAttribute('data-state', 'hidden')
   return backdrop
 }
@@ -174,15 +180,15 @@ export function updateTheme(
  */
 export function createPopperElement(id: number, props: Props): PopperElement {
   const popper = div()
-  popper.className = 'tippy-popper'
-  popper.id = `tippy-${id}`
+  popper.className = selectorToClassName(POPPER_SELECTOR)
+  popper.id = `${NAMESPACE_PREFIX}-${id}`
   popper.style.zIndex = '' + props.zIndex
   if (props.role) {
     popper.setAttribute('role', props.role)
   }
 
   const tooltip = div()
-  tooltip.className = 'tippy-tooltip'
+  tooltip.className = selectorToClassName(TOOLTIP_SELECTOR)
   tooltip.style.maxWidth =
     props.maxWidth + (typeof props.maxWidth === 'number' ? 'px' : '')
   tooltip.setAttribute('data-size', props.size)
@@ -191,7 +197,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   updateTheme(tooltip, 'add', props.theme)
 
   const content = div()
-  content.className = 'tippy-content'
+  content.className = selectorToClassName(CONTENT_SELECTOR)
   content.setAttribute('data-state', 'hidden')
 
   if (props.interactive) {

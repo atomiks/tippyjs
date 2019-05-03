@@ -1,7 +1,7 @@
 @import '../_mixins.scss';
 @import '../_vars.scss';
 
-.tippy-tooltip.light-theme {
+.#{$namespace-prefix}-tooltip.light-theme {
   color: #26323d;
   box-shadow: 0 0 20px 4px rgba(154, 161, 177, 0.15),
     0 4px 80px -8px rgba(36, 40, 47, 0.25),
@@ -10,17 +10,17 @@
 
   @each $placement in $placements {
     &[x-placement^='#{$placement}'] {
-      .tippy-arrow {
+      .#{$namespace-prefix}-arrow {
         @include arrow($placement, 8px, white);
       }
     }
   }
 
-  .tippy-backdrop {
+  .#{$namespace-prefix}-backdrop {
     background-color: white;
   }
 
-  .tippy-roundarrow {
+  .#{$namespace-prefix}-roundarrow {
     fill: white;
   }
 

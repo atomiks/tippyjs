@@ -1,12 +1,12 @@
 @import './_mixins.scss';
 @import './_vars.scss';
 
-.tippy-iOS {
+.#{$namespace-prefix}-iOS {
   cursor: pointer !important;
   -webkit-tap-highlight-color: transparent;
 }
 
-.tippy-popper {
+.#{$namespace-prefix}-popper {
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
   max-width: calc(100% - 8px);
   pointer-events: none;
@@ -14,14 +14,14 @@
 
   @each $placement in $placements {
     &[x-placement^='#{$placement}'] {
-      .tippy-backdrop {
+      .#{$namespace-prefix}-backdrop {
         border-radius: nth(
           $backdrop-border-radii,
           index($placements, $placement)
         );
       }
 
-      .tippy-roundarrow {
+      .#{$namespace-prefix}-roundarrow {
         @include arrow-position($placement, 7px, true);
         @include roundarrow-transform-origin($placement);
         @include arrow-margin($placement);
@@ -33,14 +33,14 @@
         }
       }
 
-      .tippy-arrow {
+      .#{$namespace-prefix}-arrow {
         @include arrow($placement, 8px, #333);
         @include arrow-position($placement, 7px, false);
         @include arrow-margin($placement);
         @include arrow-transform-origin($placement);
       }
 
-      .tippy-backdrop {
+      .#{$namespace-prefix}-backdrop {
         transform-origin: nth(
           $backdrop-origins,
           index($placements, $placement)
@@ -113,7 +113,7 @@
   }
 }
 
-.tippy-tooltip {
+.#{$namespace-prefix}-tooltip {
   position: relative;
   color: white;
   border-radius: 0.25rem;
@@ -156,21 +156,21 @@
   }
 }
 
-.tippy-arrow,
-.tippy-roundarrow {
+.#{$namespace-prefix}-arrow,
+.#{$namespace-prefix}-roundarrow {
   position: absolute;
   width: 0;
   height: 0;
 }
 
-.tippy-roundarrow {
+.#{$namespace-prefix}-roundarrow {
   width: 18px;
   height: 7px;
   fill: #333;
   pointer-events: none;
 }
 
-.tippy-backdrop {
+.#{$namespace-prefix}-backdrop {
   position: absolute;
   background-color: #333;
   border-radius: 50%;
@@ -188,7 +188,7 @@
   }
 }
 
-.tippy-backdrop + .tippy-content {
+.#{$namespace-prefix}-backdrop + .#{$namespace-prefix}-content {
   transition-property: opacity;
   will-change: opacity;
 

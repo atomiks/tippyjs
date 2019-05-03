@@ -1,3 +1,5 @@
+export const NAMESPACE_PREFIX = 'tippy'
+
 // Passive event listener config
 export const PASSIVE = { passive: true }
 
@@ -10,13 +12,13 @@ export const PLACEMENT_ATTRIBUTE = 'x-placement'
 export const OUT_OF_BOUNDARIES_ATTRIBUTE = 'x-out-of-boundaries'
 
 // Classes
-export const IOS_CLASS = 'tippy-iOS'
-export const ACTIVE_CLASS = 'tippy-active'
+export const IOS_CLASS = `${NAMESPACE_PREFIX}-iOS`
+export const ACTIVE_CLASS = `${NAMESPACE_PREFIX}-active`
 
 // Selectors
-export const POPPER_SELECTOR = '.tippy-popper'
-export const TOOLTIP_SELECTOR = '.tippy-tooltip'
-export const CONTENT_SELECTOR = '.tippy-content'
-export const BACKDROP_SELECTOR = '.tippy-backdrop'
-export const ARROW_SELECTOR = '.tippy-arrow'
-export const ROUND_ARROW_SELECTOR = '.tippy-roundarrow'
+export const POPPER_SELECTOR = `.${NAMESPACE_PREFIX}-popper`
+export const TOOLTIP_SELECTOR = `.${NAMESPACE_PREFIX}-tooltip`
+export const CONTENT_SELECTOR = `.${NAMESPACE_PREFIX}-content`
+export const BACKDROP_SELECTOR = `.${NAMESPACE_PREFIX}-backdrop`
+export const ARROW_SELECTOR = `.${NAMESPACE_PREFIX}-arrow`
+export const ROUND_ARROW_SELECTOR = `.${NAMESPACE_PREFIX}-roundarrow`
