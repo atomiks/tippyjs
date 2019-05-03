@@ -72,7 +72,6 @@ export default function createTippy(
   let hideTimeoutId: number
   let animationFrameId: number
   let isScheduledToShow = false
-  let isDocumentClickListenerAttached = false
   let currentParentNode: Element
   let previousPlacement: string
   let wasVisibleDuringPreviousUpdate = false
@@ -205,10 +204,7 @@ export default function createTippy(
    * Adds the document click event listener for the instance
    */
   function addDocumentClickListener(): void {
-    if (!isDocumentClickListenerAttached) {
-      document.addEventListener('click', onDocumentClick, true)
-      isDocumentClickListenerAttached = true
-    }
+    document.addEventListener('click', onDocumentClick, true)
   }
 
   /**
@@ -216,7 +212,6 @@ export default function createTippy(
    */
   function removeDocumentClickListener(): void {
     document.removeEventListener('click', onDocumentClick, true)
-    isDocumentClickListenerAttached = false
   }
 
   /**
