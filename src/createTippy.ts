@@ -72,7 +72,7 @@ export default function createTippy(
   let hideTimeoutId: number
   let animationFrameId: number
   let isScheduledToShow = false
-  let isClickListenerAttached = false
+  let isDocumentClickListenerAttached = false
   let currentParentNode: Element
   let previousPlacement: string
   let wasVisibleDuringPreviousUpdate = false
@@ -201,19 +201,19 @@ export default function createTippy(
   /**
    * Adds the document click event listener for the instance
    */
-  function addClickListener(): void {
-    if (!isClickListenerAttached) {
+  function addDocumentClickListener(): void {
+    if (!isDocumentClickListenerAttached) {
       document.addEventListener('click', onDocumentClick, true)
-      isClickListenerAttached = true
+      isDocumentClickListenerAttached = true
     }
   }
 
   /**
    * Removes the document click event listener for the instance
    */
-  function removeClickListener(): void {
+  function removeDocumentClickListener(): void {
     document.removeEventListener('click', onDocumentClick, true)
-    isClickListenerAttached = false
+    isDocumentClickListenerAttached = false
   }
 
   /**
@@ -867,7 +867,7 @@ export default function createTippy(
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
-    addClickListener()
+    addDocumentClickListener()
 
     const delay = getValue(instance.props.delay, 0, defaultProps.delay)
 
@@ -1060,7 +1060,7 @@ export default function createTippy(
       return
     }
 
-    addClickListener()
+    addDocumentClickListener()
 
     popper.style.visibility = 'visible'
     instance.state.isVisible = true
@@ -1130,7 +1130,7 @@ export default function createTippy(
       return
     }
 
-    removeClickListener()
+    removeDocumentClickListener()
 
     popper.style.visibility = 'hidden'
     instance.state.isVisible = false
