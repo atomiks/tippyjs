@@ -1,3 +1,4 @@
+// Namespace prefix to be replaced by NAMESPACE env variable
 export const NAMESPACE_PREFIX = 'tippy'
 
 // Passive event listener config
