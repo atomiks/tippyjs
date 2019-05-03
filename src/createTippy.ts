@@ -913,7 +913,7 @@ export default function createTippy(
    * Listener to handle clicks on the document to determine if the
    * instance should hide
    */
-  function onDocumentClick(event: MouseEvent) {
+  function onDocumentClick(event: MouseEvent): void {
     // Clicked on an interactive tippy
     if (
       instance.props.interactive &&
