@@ -993,3 +993,62 @@ describe('triggerTarget', () => {
     expect(node2._tippy).toBe(undefined)
   })
 })
+
+describe('hideOnClick', () => {
+  it('true: hides if reference element was clicked', () => {
+    const instance = tippy(h(), { hideOnClick: true })
+    instance.show()
+    document.dispatchEvent(new Event('click'), { target: instance.reference })
+    expect(instance.state.isVisible).toBe(false)
+  })
+
+  it('true: does not hide if interactive and popper element child was clicked', () => {
+    const instance = tippy(h(), {
+      hideOnClick: true,
+      interactive: true,
+    })
+    instance.show()
+    instance.popperChildren.tooltip.dispatchEvent(
+      new Event('click', { bubbles: true }),
+    )
+    expect(instance.state.isVisible).toBe(true)
+  })
+
+  it('true: hides if not interactive and popper element was clicked', () => {
+    const instance = tippy(h(), {
+      hideOnClick: true,
+      interactive: false,
+    })
+    instance.show()
+    instance.popperChildren.tooltip.dispatchEvent(
+      new Event('click', { bubbles: true }),
+    )
+    expect(instance.state.isVisible).toBe(false)
+  })
+
+  it('false: never hides if trigger is `click`', () => {
+    const instance = tippy(h(), {
+      trigger: 'click',
+      hideOnClick: false,
+    })
+    instance.show()
+    instance.popperChildren.tooltip.dispatchEvent(
+      new Event('click', { bubbles: true }),
+    )
+    instance.reference.dispatchEvent(new Event('click', { bubbles: true }))
+    document.body.dispatchEvent(new Event('click', { bubbles: true }))
+    expect(instance.state.isVisible).toBe(true)
+  })
+
+  it('"toggle": hides only if reference element was clicked', () => {
+    const instance = tippy(h(), {
+      trigger: 'click',
+      hideOnClick: 'toggle',
+    })
+    instance.show()
+    document.body.dispatchEvent(new Event('click', { bubbles: true }))
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(new Event('click', { bubbles: true }))
+    expect(instance.state.isVisible).toBe(false)
+  })
+})

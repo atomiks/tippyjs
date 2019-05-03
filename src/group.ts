@@ -25,10 +25,15 @@ export default function group(
 
   function onShow(instance: GroupedInstance): void {
     instance._originalProps.onShow(instance)
+
     instances.forEach(instance => {
       instance.set({ duration })
-      instance.hide()
+
+      if (instance.state.isVisible) {
+        instance.hide()
+      }
     })
+
     setIsAnyTippyOpen(true)
   }
 

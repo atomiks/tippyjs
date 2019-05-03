@@ -19,6 +19,7 @@ export interface PopperElement extends HTMLDivElement {
 export interface VirtualReference extends Popper.ReferenceObject {
   _tippy?: Instance
   parentNode?: Element
+  contains(): void
   setAttribute(key: string, value: any): void
   getAttribute(key: string): string
   removeAttribute(key: string): void
@@ -143,7 +144,6 @@ export interface PopperChildren {
 }
 
 export interface HideAllOptions {
-  checkHideOnClick?: boolean
   duration?: number
   exclude?: Instance | ReferenceElement
 }
