@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Tippy from '../Tippy'
 import { Button } from '../Framework'
 
-const List = styled.ul`
+const List = styled.div`
   margin: 0;
   padding-left: 0;
   list-style: none;
@@ -66,7 +66,7 @@ function Dropdown({ text }) {
           </List>
         </>
       }
-      interactive
+      interactive={true}
       aria={null}
       animateFill={false}
       placement="bottom"
@@ -74,18 +74,16 @@ function Dropdown({ text }) {
       animation="fade"
       theme="light-border dropdown"
       trigger="click"
-      arrow
-      appendTo={ref => ref.parentNode}
-      onMount={tip => {
-        tip.reference.setAttribute('aria-expanded', 'true')
+      arrow={true}
+      appendTo="parent"
+      onMount={instance => {
+        instance.reference.setAttribute('aria-expanded', 'true')
       }}
-      onHide={tip => {
-        tip.reference.setAttribute('aria-expanded', 'false')
+      onHide={instance => {
+        instance.reference.setAttribute('aria-expanded', 'false')
       }}
     >
-      <Button aria-haspopup="true" aria-expanded="false">
-        {text}
-      </Button>
+      <Button aria-expanded="false">{text}</Button>
     </Tippy>
   )
 }

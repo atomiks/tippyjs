@@ -7,6 +7,7 @@ index: 11
 import EventDelegation from '../components/examples/EventDelegation'
 import Scroller from '../components/examples/Scroller'
 import AnchorLink from '../components/examples/AnchorLink'
+import TriggerTarget from '../components/examples/TriggerTarget'
 import { Demo, Button, Flex } from '../components/Framework'
 import Tippy, { TippyGroup } from '../components/Tippy'
 
@@ -154,6 +155,26 @@ container.addEventListener('scroll', () => {
 })
 ```
 
+### Different trigger target
+
+You may want the tippy to appear at a different location from its trigger (event
+listeners) target. For example:
+
+<Demo>
+  <TriggerTarget />
+</Demo>
+
+For this, you can utilize the `triggerTarget` option:
+
+```js
+const innerOrangeSpanElement = document.querySelector('span')
+const outerDivElement = document.querySelector('div')
+
+tippy(innerOrangeSpanElement, {
+  triggerTarget: outerDivElement,
+})
+```
+
 ### Custom animations
 
 Custom animations can be created, but require a bit of CSS to setup. The default
@@ -285,7 +306,12 @@ individual options can be specified via `data-tippy-*` attributes.
 <!-- prettier-ignore -->
 ```html
 <div id="parent">
-  <button class="child" data-tippy-content="Tooltip 1">One</button>
+  <button 
+    class="child" 
+    data-tippy-content="Tooltip 1"
+  >
+    One
+  </button>
   <button 
     class="child" 
     data-tippy-content="Tooltip 2"

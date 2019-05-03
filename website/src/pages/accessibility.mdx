@@ -8,16 +8,18 @@ import { Demo, Button } from '../components/Framework'
 import Dropdown from '../components/examples/Dropdown'
 import Tippy from '../components/Tippy'
 
-It's recommended that tooltips are applied only to natively focusable elements
-like `<button>`. Most screenreader software will not announce the tooltip on an
+### Use natively focusable elements
+
+Tooltips should only be applied to natively focusable elements like `<button>`
+or `<input>`. Some screenreader software will not announce the tooltip on an
 element like `<div>`.
 
-Non-interactive tooltips are accessible by default. The default trigger for
-tooltips is `"mouseenter focus"`. This means both a hover and focus via keyboard
-navigation will trigger a tooltip.
+### Non-interactive tooltips are accessible by default
 
-In addition, the reference element receives an `aria-describedby` attribute
-(configurable) once the tooltip is fully shown:
+The default trigger for tooltips is `"mouseenter focus"`. This means both a
+hover and focus via keyboard navigation will trigger a tooltip. The reference
+element receives an `aria-describedby` attribute once the tooltip is fully
+shown:
 
 ```html
 <button aria-describedby="tippy-1">Text</button>
@@ -29,26 +31,22 @@ In addition, the reference element receives an `aria-describedby` attribute
 This allows screenreader software to announce the tooltip content describing the
 reference element. No work is required by you to achieve this functionality.
 
-### Interactivity
+### Creating accessible interactive tooltips
 
 Although non-interactive tooltips are accessible by default, making interactive
 tooltips accessible requires a bit of work by you.
 
-For UI elements like dropdowns, you should apply these attributes to the
-reference element:
-
-- `aria-haspopup="true"`
-- `aria-expanded="false"`
+In your HTML, the element should have its own wrapper element (e.g. `div` or
+`span`), and an `aria-expanded` attribute:
 
 <!-- prettier-ignore -->
 ```html
-<!-- The element should have its own wrapper. -->
 <div>
-  <button aria-haspopup="true" aria-expanded="false">Text</button>
+  <button aria-expanded="false">Text</button>
 </div>
 ```
 
-The following options are recommended:
+When initializing the tooltip, the following options are recommended:
 
 ```js
 tippy('button', {
@@ -60,7 +58,8 @@ tippy('button', {
   // Important: the tooltip should be DIRECTLY after the reference element
   // in the DOM source order, which is why it has its own wrapper element
   appendTo: 'parent',
-  // Let the user know the popup has been expanded
+  // Let the user know the dropdown has been expanded using these lifecycle
+  // functions
   onMount({ reference }) {
     reference.setAttribute('aria-expanded', 'true')
   },
@@ -72,7 +71,7 @@ tippy('button', {
 
 <Demo>
   <Button>Click me then press Tab</Button>
-  <Dropdown text="Press enter to click" />
+  <Dropdown text="Press Enter to click" />
 </Demo>
 
 Using this technique, elements within the tippy can be tabbed to since they are
@@ -103,10 +102,9 @@ is currently on the reference element.
     onTrigger={(instance, event) => {
       if (event.type === 'focus') {
         instance.set({ delay: 0, duration: [200, 150] })
+      } else {
+        instance.set({ delay: 500, duration: [300, 200] })
       }
-    }}
-    onHide={instance => {
-      instance.set({ delay: 500, duration: [300, 200] })
     }}
   >
     <Button>No keyboard delay</Button>
@@ -121,15 +119,13 @@ tippy('button', {
   delay,
   duration,
   onTrigger(instance, event) {
+    // If the tippy was triggered by a `focus` event (e.g keyboard navigation)
+    // then set `delay: 0` and reduce the duration a bit.
     if (event.type === 'focus') {
-      // If the tippy was triggered by a `focus` event (e.g keyboard navigation)
-      // then set `delay: 0` and reduce the duration a bit.
       instance.set({ delay: 0, duration: [200, 150] })
+    } else {
+      instance.set({ delay, duration })
     }
-  },
-  onHide(instance) {
-    // Reset
-    instance.set({ delay, duration })
   },
 })
 ```

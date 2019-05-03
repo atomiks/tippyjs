@@ -5,7 +5,6 @@ import { MEDIA, Container, Flex, ExternalLink } from './Framework'
 import GitHub from 'react-feather/dist/icons/github'
 import CloudLightning from 'react-feather/dist/icons/cloud-lightning'
 import Menu from 'react-feather/dist/icons/menu'
-import VersionNotice from './VersionNotice'
 import TextGradient from './TextGradient'
 
 const HeaderRoot = styled.header`
@@ -116,10 +115,10 @@ const svgStyles = css`
 
 const iconStyles = {
   verticalAlign: -6,
-  marginRight: 10,
+  marginRight: 8,
 }
 
-const cloudLightningStyles = {
+const headerIconStyles = {
   ...iconStyles,
   color: '#ffe6b3',
   width: 20,
@@ -137,29 +136,11 @@ const menuStyles = {
 }
 
 class Header extends Component {
-  state = {
-    displayVersionNotice: false,
-  }
-
-  componentDidMount() {
-    // People who visit 'Getting Started' are most likely new, so they don't
-    // need to know about the new version. Also only show it once.
-    const { pageIndex } = this.props
-    const disableVersionNotice = localStorage.getItem('disableVersionNotice')
-    localStorage.setItem('disableVersionNotice', 'true')
-
-    this.setState({
-      displayVersionNotice: pageIndex > 1 && disableVersionNotice === null,
-    })
-  }
-
   render() {
     const { isNavOpen, openNav } = this.props
-    const { displayVersionNotice } = this.state
     return (
       <HeaderRoot>
         <Container>
-          {displayVersionNotice && <VersionNotice />}
           <Logo src={TippyLogo} draggable="false" alt="Tippy Logo" />
           <Title>
             <TextGradient>Tippy.js</TextGradient>
@@ -170,6 +151,10 @@ class Header extends Component {
               View on GitHub
             </ButtonLink>
           </Flex>
+          <PoweredByLink href="https://popper.js.org">
+            <CloudLightning style={headerIconStyles} />
+            Powered by Popper.js
+          </PoweredByLink>
           <MenuButton
             aria-label="Menu"
             aria-expanded={isNavOpen ? 'true' : 'false'}
@@ -177,10 +162,6 @@ class Header extends Component {
           >
             <Menu style={menuStyles} />
           </MenuButton>
-          <PoweredByLink href="https://popper.js.org">
-            <CloudLightning style={cloudLightningStyles} />
-            Proudly powered by Popper.js
-          </PoweredByLink>
         </Container>
         <svg
           css={svgStyles}
