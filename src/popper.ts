@@ -294,7 +294,6 @@ export function updatePopperElement(
  * Hides all visible poppers on the document
  */
 export function hideAll({
-  checkHideOnClick,
   exclude: excludedReferenceOrInstance,
   duration,
 }: HideAllOptions = {}): void {
@@ -303,10 +302,6 @@ export function hideAll({
       const instance = popper._tippy
 
       if (instance) {
-        const shouldHideDueToHideOnClickOption = checkHideOnClick
-          ? instance.props.hideOnClick === true
-          : true
-
         let isExcluded = false
         if (excludedReferenceOrInstance) {
           isExcluded = isReferenceElement(excludedReferenceOrInstance)
@@ -314,7 +309,7 @@ export function hideAll({
             : popper === excludedReferenceOrInstance.popper
         }
 
-        if (shouldHideDueToHideOnClickOption && !isExcluded) {
+        if (!isExcluded) {
           instance.hide(duration)
         }
       }

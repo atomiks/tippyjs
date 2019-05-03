@@ -144,7 +144,6 @@ export interface PopperChildren {
 }
 
 export interface HideAllOptions {
-  checkHideOnClick?: boolean
   duration?: number
   exclude?: Instance | ReferenceElement
 }
