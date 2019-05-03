@@ -145,8 +145,12 @@ export default function createTippy(
     scheduleShow()
   }
 
-  // Ensure the reference element can receive focus (and is not a delegate)
-  if (props.a11y && !props.target && !canReceiveFocus(reference as Element)) {
+  // Ensure the event listeners target can receive focus
+  if (
+    props.a11y &&
+    !props.target &&
+    !canReceiveFocus(getEventListenersTarget() as Element)
+  ) {
     getEventListenersTarget().setAttribute('tabindex', '0')
   }
 
