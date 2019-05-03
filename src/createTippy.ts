@@ -923,12 +923,17 @@ export default function createTippy(
     }
 
     // Clicked on an event listeners target
-    if (
-      instance.state.isVisible &&
-      includes(instance.props.trigger, 'click') &&
-      getEventListenersTarget().contains(event.target as Element)
-    ) {
-      return
+    if (getEventListenersTarget().contains(event.target as Element)) {
+      if (isUsingTouch) {
+        return
+      }
+
+      if (
+        instance.state.isVisible &&
+        includes(instance.props.trigger, 'click')
+      ) {
+        return
+      }
     }
 
     if (instance.props.hideOnClick === true) {
