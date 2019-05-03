@@ -42,6 +42,7 @@ export function polyfillElementPrototypeProperties(
   const polyfills: Record<string, any> = {
     isVirtual: true,
     attributes: virtualReference.attributes || {},
+    contains() {},
     setAttribute(key: string, value: any) {
       virtualReference.attributes[key] = value
     },

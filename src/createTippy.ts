@@ -72,6 +72,7 @@ export default function createTippy(
   let hideTimeoutId: number
   let animationFrameId: number
   let isScheduledToShow = false
+  let isClickListenerAttached = false
   let currentParentNode: Element
   let previousPlacement: string
   let wasVisibleDuringPreviousUpdate = false
@@ -195,6 +196,24 @@ export default function createTippy(
    */
   function getEventListenersTarget(): ReferenceElement | VirtualReference {
     return instance.props.triggerTarget || reference
+  }
+
+  /**
+   * Adds the document click event listener for the instance
+   */
+  function addClickListener(): void {
+    if (!isClickListenerAttached) {
+      document.addEventListener('click', onDocumentClick, true)
+      isClickListenerAttached = true
+    }
+  }
+
+  /**
+   * Removes the document click event listener for the instance
+   */
+  function removeClickListener(): void {
+    document.removeEventListener('click', onDocumentClick, true)
+    isClickListenerAttached = false
   }
 
   /**
@@ -848,6 +867,8 @@ export default function createTippy(
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
+    addClickListener()
+
     const delay = getValue(instance.props.delay, 0, defaultProps.delay)
 
     if (delay) {
@@ -885,6 +906,34 @@ export default function createTippy(
       animationFrameId = requestAnimationFrame(() => {
         hide()
       })
+    }
+  }
+
+  /**
+   * Listener to handle clicks on the document to determine if the
+   * instance should hide
+   */
+  function onDocumentClick(event: MouseEvent) {
+    // Clicked on an interactive tippy
+    if (
+      instance.props.interactive &&
+      popper.contains(event.target as Element)
+    ) {
+      return
+    }
+
+    // Clicked on an event listeners target
+    if (
+      instance.state.isVisible &&
+      includes(instance.props.trigger, 'click') &&
+      getEventListenersTarget().contains(event.target as Element)
+    ) {
+      return
+    }
+
+    if (instance.props.hideOnClick === true) {
+      clearDelayTimeouts()
+      hide()
     }
   }
 
@@ -1011,6 +1060,8 @@ export default function createTippy(
       return
     }
 
+    addClickListener()
+
     popper.style.visibility = 'visible'
     instance.state.isVisible = true
 
@@ -1078,6 +1129,8 @@ export default function createTippy(
     if (instance.props.onHide(instance) === false) {
       return
     }
+
+    removeClickListener()
 
     popper.style.visibility = 'hidden'
     instance.state.isVisible = false
