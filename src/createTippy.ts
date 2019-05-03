@@ -1006,8 +1006,6 @@ export default function createTippy(
     instance.popperChildren = getChildren(popper)
 
     if (instance.popperInstance) {
-      instance.popperInstance.update()
-
       if (
         POPPER_INSTANCE_DEPENDENCIES.some(prop => {
           return (
@@ -1025,6 +1023,8 @@ export default function createTippy(
         if (instance.props.followCursor && lastMouseMoveEvent) {
           positionVirtualReferenceNearCursor(lastMouseMoveEvent)
         }
+      } else {
+        instance.popperInstance.update()
       }
     }
   }
