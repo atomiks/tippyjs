@@ -134,7 +134,6 @@ export default function createTippy(
   /* ==================== Initial instance mutations =================== */
   reference._tippy = instance
   popper._tippy = instance
-  getEventListenersTarget()._tippy = instance
 
   addTriggersToReference()
 
@@ -519,14 +518,12 @@ export default function createTippy(
    * hide
    */
   function onMouseMove(event: MouseEvent): void {
-    const referenceTheCursorIsOver = closestCallback(
-      event.target as Element,
-      (el: ReferenceElement) => el._tippy,
-    )
-
     const isCursorOverPopper =
       closest(event.target as Element, POPPER_SELECTOR) === popper
-    const isCursorOverReference = referenceTheCursorIsOver === reference
+    const isCursorOverReference = closestCallback(
+      event.target as Element,
+      (el: Element) => el === reference,
+    )
 
     if (isCursorOverPopper || isCursorOverReference) {
       return
@@ -977,10 +974,6 @@ export default function createTippy(
 
     removeTriggersFromReference()
 
-    if (instance.props.triggerTarget) {
-      delete instance.props.triggerTarget._tippy
-    }
-
     const prevProps = instance.props
     const nextProps = evaluateProps(reference, {
       ...instance.props,
@@ -991,8 +984,6 @@ export default function createTippy(
       ? options.ignoreAttributes || false
       : prevProps.ignoreAttributes
     instance.props = nextProps
-
-    getEventListenersTarget()._tippy = instance
 
     addTriggersToReference()
 
@@ -1185,7 +1176,6 @@ export default function createTippy(
     removeTriggersFromReference()
 
     delete reference._tippy
-    delete getEventListenersTarget()._tippy
 
     const { target } = instance.props
     if (target && destroyTargetInstances && isRealElement(reference)) {

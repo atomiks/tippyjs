@@ -91,7 +91,7 @@ export interface Props {
   touch: boolean
   touchHold: boolean
   trigger: string
-  triggerTarget: ReferenceElement | null
+  triggerTarget: Element | null
   updateDuration: number
   wait: ((instance: Instance, event?: Event) => void) | null
   zIndex: number
