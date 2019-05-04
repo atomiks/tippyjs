@@ -8,7 +8,7 @@ export function injectCSS(css: string): void {
     const style = document.createElement('style')
     style.type = 'text/css'
     style.textContent = css
-    style.setAttribute('data-tippy-stylesheet', '')
+    style.setAttribute('data-__NAMESPACE_PREFIX__-stylesheet', '')
     const head = document.head
     const { firstChild } = head
     if (firstChild) {
