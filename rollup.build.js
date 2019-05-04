@@ -31,8 +31,7 @@ const plugins = {
     extensions,
   }),
   replace: replace({
-    "NAMESPACE_PREFIX = 'tippy'": `NAMESPACE_PREFIX = '${NAMESPACE_PREFIX}'`,
-    delimiters: ['', ''],
+    __NAMESPACE_PREFIX__: NAMESPACE_PREFIX,
   }),
   minify: terser(),
   resolve: resolve({ extensions }),

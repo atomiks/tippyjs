@@ -147,13 +147,6 @@ export function canReceiveFocus(element: Element): boolean {
 }
 
 /**
- * Converts a selector to the className (strips the `.`)
- */
-export function selectorToClassName(selector: string): string {
-  return selector.slice(1)
-}
-
-/**
  * Returns a new `div` element
  */
 export function div(): HTMLDivElement {
