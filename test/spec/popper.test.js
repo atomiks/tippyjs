@@ -92,7 +92,7 @@ describe('createPopperElement', () => {
   it('sets the `id` property correctly', () => {
     const id = 1829
     const popper = createPopperElement(id, defaultProps)
-    expect(popper.id).toBe(`tippy-${id}`)
+    expect(popper.id).toBe(`__NAMESPACE_PREFIX__-${id}`)
   })
 
   it('sets the `role` attribute correctly', () => {

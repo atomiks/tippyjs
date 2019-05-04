@@ -298,9 +298,9 @@ describe('interactive', () => {
     const ref = h()
     const instance = tippy(ref, { interactive: true })
     instance.show()
-    expect(ref.classList.contains('tippy-active')).toBe(true)
+    expect(ref.classList.contains('__NAMESPACE_PREFIX__-active')).toBe(true)
     instance.hide()
-    expect(ref.classList.contains('tippy-active')).toBe(false)
+    expect(ref.classList.contains('__NAMESPACE_PREFIX__-active')).toBe(false)
   })
 
   it('false: tippy is hidden when clicked', () => {
@@ -319,7 +319,9 @@ describe('arrowType', () => {
       arrow: true,
       arrowType: 'sharp',
     })
-    expect(popperChildren.arrow.matches('.tippy-arrow')).toBe(true)
+    expect(popperChildren.arrow.matches('.__NAMESPACE_PREFIX__-arrow')).toBe(
+      true,
+    )
   })
 
   it('round: is an SVG', () => {
@@ -327,7 +329,9 @@ describe('arrowType', () => {
       arrow: true,
       arrowType: 'round',
     })
-    expect(popperChildren.arrow.matches('.tippy-roundarrow')).toBe(true)
+    expect(
+      popperChildren.arrow.matches('.__NAMESPACE_PREFIX__-roundarrow'),
+    ).toBe(true)
   })
 })
 

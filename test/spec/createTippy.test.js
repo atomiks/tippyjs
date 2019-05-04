@@ -155,7 +155,9 @@ describe('instance.show', () => {
     })
     instance.show()
     jest.runAllTimers()
-    expect(instance.reference.classList.contains('tippy-active')).toBe(true)
+    expect(
+      instance.reference.classList.contains('__NAMESPACE_PREFIX__-active'),
+    ).toBe(true)
   })
 
   it('does not show tooltip if the reference has a `disabled` attribute', () => {
@@ -244,9 +246,13 @@ describe('instance.set', () => {
 
   it('redraws the tooltip by creating a new popper element', () => {
     instance = createTippy(h(), defaultProps)
-    expect(instance.popper.querySelector('.tippy-arrow')).toBeNull()
+    expect(
+      instance.popper.querySelector('.__NAMESPACE_PREFIX__-arrow'),
+    ).toBeNull()
     instance.set({ arrow: true })
-    expect(instance.popper.querySelector('.tippy-arrow')).not.toBeNull()
+    expect(
+      instance.popper.querySelector('.__NAMESPACE_PREFIX__-arrow'),
+    ).not.toBeNull()
   })
 
   it('popperChildren property is updated to reflect the new popper element', () => {

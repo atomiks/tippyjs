@@ -12,6 +12,7 @@ const resolve = require('rollup-plugin-node-resolve')
 // const commonjs = require('rollup-plugin-commonjs')
 const json = require('rollup-plugin-json')
 const cssOnly = require('rollup-plugin-css-only')
+const replace = require('rollup-plugin-replace')
 const { green, blue } = require('colorette')
 
 const BANNER = `/**!
@@ -20,12 +21,17 @@ const BANNER = `/**!
 * MIT License
 */`
 
+const NAMESPACE_PREFIX = process.env.NAMESPACE || 'tippy'
+
 const extensions = ['.js', '.ts']
 
 const plugins = {
   babel: babel({
     exclude: 'node_modules/**',
     extensions,
+  }),
+  replace: replace({
+    __NAMESPACE_PREFIX__: NAMESPACE_PREFIX,
   }),
   minify: terser(),
   resolve: resolve({ extensions }),
@@ -38,7 +44,7 @@ const BASE_OUTPUT_CONFIG = {
   globals: { 'popper.js': 'Popper' },
   sourcemap: true,
 }
-const BASE_PLUGINS = [plugins.resolve, plugins.json]
+const BASE_PLUGINS = [plugins.replace, plugins.resolve, plugins.json]
 
 const pluginConfigs = {
   index: [plugins.babel, ...BASE_PLUGINS],
@@ -50,6 +56,9 @@ const pluginConfigs = {
 const createPluginSCSS = output => {
   return sass({
     output,
+    options: {
+      data: `$namespace-prefix: ${NAMESPACE_PREFIX};`,
+    },
     processor: css =>
       postcss([autoprefixer, cssnano])
         .process(css, { from: undefined })

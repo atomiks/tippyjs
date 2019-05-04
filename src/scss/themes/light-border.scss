@@ -5,19 +5,19 @@ $transparentLight: rgba(0, 8, 16, 0.08);
 $transparentDark: rgba(0, 8, 16, 0.15);
 $transparentDarker: rgba(0, 8, 16, 0.2);
 
-.tippy-tooltip.light-border-theme {
+.#{$namespace-prefix}-tooltip.light-border-theme {
   background-color: white;
   background-clip: padding-box;
   border: 1px solid $transparentDark;
   color: #26323d;
   box-shadow: 0 3px 14px -0.5px $transparentLight;
 
-  .tippy-backdrop {
+  .#{$namespace-prefix}-backdrop {
     background-color: white;
   }
 
-  .tippy-arrow,
-  .tippy-roundarrow {
+  .#{$namespace-prefix}-arrow,
+  .#{$namespace-prefix}-roundarrow {
     &::after,
     &::before {
       content: '';
@@ -26,7 +26,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
     }
   }
 
-  .tippy-roundarrow {
+  .#{$namespace-prefix}-roundarrow {
     fill: white;
 
     &::after {
@@ -41,12 +41,12 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   }
 
   &[x-placement^='top'] {
-    .tippy-roundarrow::after {
+    .#{$namespace-prefix}-roundarrow::after {
       top: 1px;
       transform: rotate(180deg);
     }
 
-    .tippy-arrow {
+    .#{$namespace-prefix}-arrow {
       border-top-color: #fff;
 
       &::after {
@@ -61,11 +61,11 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   }
 
   &[x-placement^='bottom'] {
-    .tippy-roundarrow::after {
+    .#{$namespace-prefix}-roundarrow::after {
       top: -1px;
     }
 
-    .tippy-arrow {
+    .#{$namespace-prefix}-arrow {
       border-bottom-color: #fff;
 
       &::after {
@@ -80,13 +80,13 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   }
 
   &[x-placement^='left'] {
-    .tippy-roundarrow::after {
+    .#{$namespace-prefix}-roundarrow::after {
       left: 1px;
       top: 0;
       transform: rotate(90deg);
     }
 
-    .tippy-arrow {
+    .#{$namespace-prefix}-arrow {
       border-left-color: #fff;
 
       &::after {
@@ -101,13 +101,13 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   }
 
   &[x-placement^='right'] {
-    .tippy-roundarrow::after {
+    .#{$namespace-prefix}-roundarrow::after {
       left: -1px;
       top: 0;
       transform: rotate(-90deg);
     }
 
-    .tippy-arrow {
+    .#{$namespace-prefix}-arrow {
       border-right-color: #fff;
 
       &::after {
@@ -123,12 +123,12 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
 
   &[x-placement^='top'],
   &[x-placement^='bottom'] {
-    .tippy-arrow,
-    .tippy-roundarrow {
+    .#{$namespace-prefix}-arrow,
+    .#{$namespace-prefix}-roundarrow {
       transform: translateX(-1px);
     }
 
-    .tippy-arrow {
+    .#{$namespace-prefix}-arrow {
       &::after,
       &::before {
         left: -7px;
@@ -140,12 +140,12 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
 
   &[x-placement^='left'],
   &[x-placement^='right'] {
-    .tippy-arrow,
-    .tippy-roundarrow {
+    .#{$namespace-prefix}-arrow,
+    .#{$namespace-prefix}-roundarrow {
       transform: translateY(-1px);
     }
 
-    .tippy-arrow {
+    .#{$namespace-prefix}-arrow {
       &::after,
       &::before {
         top: -7px;
