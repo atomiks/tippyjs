@@ -5,8 +5,14 @@ import {
   enableTouchEnvironment,
   disableTouchEnvironment,
 } from '../utils'
-import tippy from '../../src/index'
+import tippy from '../../src'
 import { getChildren } from '../../src/popper'
+import {
+  ACTIVE_CLASS,
+  ARROW_CLASS,
+  ARROW_SELECTOR,
+  ROUND_ARROW_SELECTOR,
+} from '../../src/constants'
 
 jest.useFakeTimers()
 
@@ -271,56 +277,61 @@ describe('content', () => {
 
 describe('trigger', () => {
   it('default: many triggers', () => {
-    const ref = h()
-    const { state } = tippy(ref)
-    ref.dispatchEvent(new Event('mouseenter'))
-    expect(state.isVisible).toBe(true)
-    ref.dispatchEvent(new Event('mouseleave'))
-    expect(state.isVisible).toBe(false)
-    ref.dispatchEvent(new Event('focus'))
-    expect(state.isVisible).toBe(true)
-    ref.dispatchEvent(new Event('blur'))
-    expect(state.isVisible).toBe(false)
+    const instance = tippy(h())
+    instance.reference.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(new Event('mouseleave'))
+    expect(instance.state.isVisible).toBe(false)
+    instance.reference.dispatchEvent(new Event('focus'))
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(new Event('blur'))
+    expect(instance.state.isVisible).toBe(false)
   })
 
   it('mouseenter', () => {
-    const ref = h()
-    const { state } = tippy(ref, { trigger: 'mouseenter' })
-    ref.dispatchEvent(new Event('mouseenter'))
-    expect(state.isVisible).toBe(true)
-    ref.dispatchEvent(new Event('mouseleave'))
-    expect(state.isVisible).toBe(false)
+    const instance = tippy(h(), { trigger: 'mouseenter' })
+    instance.reference.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(new Event('mouseleave'))
+    expect(instance.state.isVisible).toBe(false)
   })
 
   it('focus', () => {
-    const ref = h()
-    const { state } = tippy(ref, { trigger: 'focus' })
-    ref.dispatchEvent(new Event('focus'))
-    expect(state.isVisible).toBe(true)
-    ref.dispatchEvent(new Event('blur'))
-    expect(state.isVisible).toBe(false)
+    const instance = tippy(h(), { trigger: 'focus' })
+    instance.reference.dispatchEvent(new Event('focus'))
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(new Event('blur'))
+    expect(instance.state.isVisible).toBe(false)
+  })
+
+  it('focus + interactive: focus switching to inside popper does not hide tippy', () => {
+    const instance = tippy(h(), { interactive: true, trigger: 'focus' })
+    instance.reference.dispatchEvent(new Event('focus'))
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(
+      new FocusEvent('blur', { relatedTarget: instance.popper }),
+    )
+    expect(instance.state.isVisible).toBe(true)
   })
 
   it('click', () => {
-    const ref = h()
-    const { state } = tippy(ref, { trigger: 'click' })
-    ref.dispatchEvent(new Event('click'))
-    expect(state.isVisible).toBe(true)
-    ref.dispatchEvent(new Event('click'))
-    expect(state.isVisible).toBe(false)
+    const instance = tippy(h(), { trigger: 'click' })
+    instance.reference.dispatchEvent(new Event('click'))
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(new Event('click'))
+    expect(instance.state.isVisible).toBe(false)
   })
 
   it('manual', () => {
-    const ref = h()
-    const { state } = tippy(ref, { trigger: 'manual' })
-    ref.dispatchEvent(new Event('mouseenter'))
-    expect(state.isVisible).toBe(false)
-    ref.dispatchEvent(new Event('focus'))
-    expect(state.isVisible).toBe(false)
-    ref.dispatchEvent(new Event('click'))
-    expect(state.isVisible).toBe(false)
-    ref.dispatchEvent(new Event('touchstart'))
-    expect(state.isVisible).toBe(false)
+    const instance = tippy(h(), { trigger: 'manual' })
+    instance.reference.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(false)
+    instance.reference.dispatchEvent(new Event('focus'))
+    expect(instance.state.isVisible).toBe(false)
+    instance.reference.dispatchEvent(new Event('click'))
+    expect(instance.state.isVisible).toBe(false)
+    instance.reference.dispatchEvent(new Event('touchstart'))
+    expect(instance.state.isVisible).toBe(false)
   })
 })
 
@@ -336,9 +347,9 @@ describe('interactive', () => {
     const ref = h()
     const instance = tippy(ref, { interactive: true })
     instance.show()
-    expect(ref.classList.contains('__NAMESPACE_PREFIX__-active')).toBe(true)
+    expect(ref.classList.contains(ACTIVE_CLASS)).toBe(true)
     instance.hide()
-    expect(ref.classList.contains('__NAMESPACE_PREFIX__-active')).toBe(false)
+    expect(ref.classList.contains(ACTIVE_CLASS)).toBe(false)
   })
 
   it('false: tippy is hidden when clicked', () => {
@@ -346,6 +357,36 @@ describe('interactive', () => {
     instance.show()
     instance.popperChildren.tooltip.dispatchEvent(
       new Event('click', { bubbles: true }),
+    )
+    expect(instance.state.isVisible).toBe(false)
+  })
+
+  it('tippy does not hide as cursor moves over it or the reference', () => {
+    const instance = tippy(h(), { interactive: true })
+    instance.reference.dispatchEvent(new Event('mouseenter'))
+
+    instance.reference.dispatchEvent(new Event('mouseleave'))
+    instance.popper.dispatchEvent(
+      new MouseEvent('mousemove', { bubbles: true }),
+    )
+    expect(instance.state.isVisible).toBe(true)
+
+    instance.popperChildren.tooltip.dispatchEvent(
+      new Event('mousemove', { bubbles: true }),
+    )
+    expect(instance.state.isVisible).toBe(true)
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { bubbles: true }),
+    )
+    expect(instance.state.isVisible).toBe(true)
+
+    document.body.dispatchEvent(
+      new MouseEvent('mousemove', {
+        bubbles: true,
+        clientX: 1000,
+        clientY: 1000,
+      }),
     )
     expect(instance.state.isVisible).toBe(false)
   })
@@ -357,9 +398,7 @@ describe('arrowType', () => {
       arrow: true,
       arrowType: 'sharp',
     })
-    expect(popperChildren.arrow.matches('.__NAMESPACE_PREFIX__-arrow')).toBe(
-      true,
-    )
+    expect(popperChildren.arrow.matches(ARROW_SELECTOR)).toBe(true)
   })
 
   it('round: is an SVG', () => {
@@ -367,9 +406,7 @@ describe('arrowType', () => {
       arrow: true,
       arrowType: 'round',
     })
-    expect(
-      popperChildren.arrow.matches('.__NAMESPACE_PREFIX__-roundarrow'),
-    ).toBe(true)
+    expect(popperChildren.arrow.matches(ROUND_ARROW_SELECTOR)).toBe(true)
   })
 })
 
@@ -539,6 +576,25 @@ describe('target', () => {
 
     expect(contentSpy).toHaveBeenCalledWith(child)
     expect(appendToSpy).toHaveBeenCalledWith(child)
+  })
+
+  it('children hide when expected', () => {
+    const parent = document.createElement('div')
+    const child = document.createElement('div')
+    child.className = 'child'
+    parent.append(child)
+    document.body.append(parent)
+
+    tippy(parent, { target: '.child' })
+
+    child.dispatchEvent(new Event('mouseover', { bubbles: true }))
+    expect(child._tippy).toBeDefined()
+
+    child.dispatchEvent(new Event('mouseout', { bubbles: true }))
+    expect(child._tippy.state.isVisible).toBe(true)
+
+    child.dispatchEvent(new Event('mouseleave', { bubbles: true }))
+    expect(child._tippy.state.isVisible).toBe(false)
   })
 
   it('works for all events: mouseenter, focus and click', () => {
@@ -1279,5 +1335,44 @@ describe('followCursor', () => {
     expect(rect.right).toBe(first.clientX)
     expect(rect.top).toBe(referenceRect.top)
     expect(rect.bottom).toBe(referenceRect.bottom)
+  })
+
+  it('sets arrow margin to 0 (Popper.js workaround for now)', () => {
+    const instance = tippy(h(), {
+      followCursor: true,
+      arrow: true,
+    })
+    instance.show()
+
+    jest.runAllTimers()
+
+    expect(instance.popperChildren.arrow.style.margin).toBe('0px')
+
+    instance.hide()
+    instance.set({ followCursor: false })
+    instance.show()
+
+    expect(instance.popperChildren.arrow.style.margin).toBe('')
+  })
+
+  it('"initial" on touch devices', () => {
+    enableTouchEnvironment()
+
+    const instance = tippy(h(), {
+      followCursor: 'initial',
+      arrow: true,
+    })
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...first, bubbles: true }),
+    )
+
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    followCursorTrueMatches({ clientY: 0, clientX: 0 })
+
+    disableTouchEnvironment()
   })
 })

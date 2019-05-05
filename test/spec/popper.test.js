@@ -1,5 +1,5 @@
 import { h, cleanDocumentBody } from '../utils'
-import tippy from '../../src/index'
+import tippy from '../../src'
 import { defaultProps } from '../../src/props'
 import {
   createPopperElement,

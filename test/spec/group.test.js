@@ -1,4 +1,4 @@
-import tippy from '../../src/index'
+import tippy from '../../src'
 import group from '../../src/group'
 import { h, cleanDocumentBody } from '../utils'
 
@@ -34,5 +34,13 @@ describe('group', () => {
     group(instances, { delay: 400 })
     instances[0].show()
     expect(instances[0].props.delay).toEqual([0, 400])
+  })
+
+  it('uses first instance delay prop if delay is not specified', () => {
+    const refs = [h(), h()]
+    const instances = tippy(refs, { delay: 100 })
+    instances[1].set({ delay: 0 })
+    group(instances)
+    expect(instances[1].props.delay).toBe(100)
   })
 })

@@ -15,3 +15,6 @@ global.Promise = require('promise')
 
 global.nativeRequestAnimationFrame = requestAnimationFrame
 global.requestAnimationFrame = cb => cb()
+
+// Only relevant for bindGlobalEventListeners.test.js
+Object.defineProperty(window.navigator, 'platform', { value: 'iPhone' })

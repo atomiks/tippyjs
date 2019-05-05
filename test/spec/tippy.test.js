@@ -1,6 +1,6 @@
 import { h, hasTippy, cleanDocumentBody } from '../utils'
 import { defaultProps } from '../../src/props'
-import tippy, { autoInit } from '../../src/index'
+import tippy, { autoInit } from '../../src'
 
 afterEach(cleanDocumentBody)
 
