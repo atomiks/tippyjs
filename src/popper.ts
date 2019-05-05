@@ -183,6 +183,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   popper.className = POPPER_CLASS
   popper.id = `__NAMESPACE_PREFIX__-${id}`
   popper.style.zIndex = '' + props.zIndex
+
   if (props.role) {
     popper.setAttribute('role', props.role)
   }
@@ -240,6 +241,7 @@ export function updatePopperElement(
   tooltip.setAttribute('data-animation', nextProps.animation)
   tooltip.style.maxWidth =
     nextProps.maxWidth + (typeof nextProps.maxWidth === 'number' ? 'px' : '')
+
   if (nextProps.role) {
     popper.setAttribute('role', nextProps.role)
   } else {

@@ -34,7 +34,9 @@ export function closestCallback(
     if (callback(element)) {
       return element
     }
+
     element = element.parentElement
   }
+
   return null
 }

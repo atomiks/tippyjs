@@ -39,6 +39,7 @@ export function onDocumentMouseMove(): void {
 
 export function onWindowBlur(): void {
   const { activeElement }: { activeElement: any } = document
+
   if (activeElement && activeElement.blur && activeElement._tippy) {
     activeElement.blur()
   }

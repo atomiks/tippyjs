@@ -11,6 +11,7 @@ export function injectCSS(css: string): void {
     style.setAttribute('data-__NAMESPACE_PREFIX__-stylesheet', '')
     const head = document.head
     const { firstChild } = head
+
     if (firstChild) {
       head.insertBefore(style, firstChild)
     } else {

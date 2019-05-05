@@ -39,9 +39,11 @@ function tippy(targets: Targets, options?: Options): Instance | Instance[] {
   const instances = getArrayOfElements(targets).reduce<Instance[]>(
     (acc, reference) => {
       const instance = reference && createTippy(reference, props)
+
       if (instance) {
         acc.push(instance)
       }
+
       return acc
     },
     [],
@@ -74,11 +76,13 @@ tippy.group = group
 export function autoInit(): void {
   arrayFrom(document.querySelectorAll('[data-tippy]')).forEach(el => {
     const content = el.getAttribute('data-tippy')
+
     if (content) {
       tippy(el, { content })
     }
   })
 }
+
 if (isBrowser) {
   setTimeout(autoInit)
 }

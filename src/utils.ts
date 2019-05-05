@@ -68,6 +68,7 @@ export function getValue(value: any, index: number, defaultValue: any): any {
     const v = value[index]
     return v == null ? defaultValue : v
   }
+
   return value
 }
 
@@ -76,6 +77,7 @@ export function getValue(value: any, index: number, defaultValue: any): any {
  */
 export function debounce(fn: Function, ms: number): () => void {
   let timeoutId: number
+
   return function() {
     clearTimeout(timeoutId)
     // @ts-ignore

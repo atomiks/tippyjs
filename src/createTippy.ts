@@ -603,6 +603,7 @@ export default function createTippy(
     const supportsTouch = 'ontouchstart' in window
     const isTouchEvent = includes(event.type, 'touch')
     const { touchHold } = instance.props
+
     return (
       (supportsTouch && isUsingTouch && touchHold && !isTouchEvent) ||
       (isUsingTouch && !touchHold && isTouchEvent)
@@ -636,12 +637,14 @@ export default function createTippy(
         if (data.flipped) {
           instance.popperInstance!.options.placement = data.placement
         }
+
         setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
       }
 
       // Apply all of the popper's attributes to the tootip node as well.
       // Allows users to avoid using the .tippy-popper selector for themes.
       tooltip.setAttribute(PLACEMENT_ATTRIBUTE, data.placement)
+
       if (data.attributes[OUT_OF_BOUNDARIES_ATTRIBUTE] !== false) {
         tooltip.setAttribute(OUT_OF_BOUNDARIES_ATTRIBUTE, '')
       } else {
@@ -790,6 +793,7 @@ export default function createTippy(
       if (arrow) {
         arrow.style.margin = '0'
       }
+
       if (lastMouseMoveEvent) {
         positionVirtualReferenceNearCursor(lastMouseMoveEvent)
       }
@@ -804,6 +808,7 @@ export default function createTippy(
       instance.props.followCursor === 'initial'
     ) {
       positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+
       if (arrow) {
         arrow.style.margin = '0'
       }
@@ -860,6 +865,7 @@ export default function createTippy(
       if (!instance.popperInstance) {
         createPopperInstance()
       }
+
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
