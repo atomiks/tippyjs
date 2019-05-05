@@ -34,7 +34,6 @@
     "dev": "parcel demo/index.html -d .devserver --open",
     "build": "node rollup.build.js && bundlesize",
     "test": "jest --coverage",
-    "test:browser": "parcel test/browser/index.html -d .devserver --open",
     "check-types": "tsc",
     "lint": "eslint --report-unused-disable-directives .",
     "clean": "rimraf umd esm themes coverage .devserver .cache ./index.css",

@@ -177,6 +177,44 @@ describe('delay', () => {
     jest.advanceTimersByTime(delay[1])
     expect(state.isVisible).toBe(false)
   })
+
+  it('instance does not hide if cursor returned after leaving before delay finished', () => {
+    const instance = tippy(h(), { delay: 100, interactive: true })
+    instance.reference.dispatchEvent(new Event('mouseenter'))
+
+    jest.advanceTimersByTime(100)
+
+    instance.popper.dispatchEvent(new Event('mouseleave'))
+    document.body.dispatchEvent(
+      new MouseEvent('mousemove', {
+        bubbles: true,
+        clientX: 1000,
+        clientY: 1000,
+      }),
+    )
+    expect(instance.state.isVisible).toBe(true)
+
+    jest.advanceTimersByTime(99)
+
+    instance.popper.dispatchEvent(new Event('mouseenter'))
+
+    jest.advanceTimersByTime(100)
+
+    expect(instance.state.isVisible).toBe(true)
+    instance.popper.dispatchEvent(new Event('mouseleave'))
+    document.body.dispatchEvent(
+      new MouseEvent('mousemove', {
+        bubbles: true,
+        clientX: 1000,
+        clientY: 1000,
+      }),
+    )
+
+    jest.advanceTimersByTime(101)
+
+    instance.popper.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(false)
+  })
 })
 
 describe('content', () => {
@@ -456,19 +494,6 @@ describe('zIndex', () => {
   it('sets the z-index CSS property on the popper', () => {
     const { popper } = tippy(h(), { zIndex: 82190 })
     expect(popper.style.zIndex).toBe('82190')
-  })
-})
-
-describe('followCursor', () => {
-  it('follows the mouse cursor', () => {
-    const instance = tippy(h(), { followCursor: true })
-    instance.show(0)
-    document.dispatchEvent(
-      new Event('mousemove', {
-        clientX: 55,
-        clientY: 55,
-      }),
-    )
   })
 })
 
@@ -1011,6 +1036,17 @@ describe('hideOnClick', () => {
     expect(instance.state.isVisible).toBe(false)
   })
 
+  it('false: does not hide if reference element was clicked', () => {
+    const instance = tippy(h(), { hideOnClick: false })
+    instance.show()
+    instance.popperChildren.tooltip.dispatchEvent(
+      new Event('click', { bubbles: true }),
+    )
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(new Event('click', { bubbles: true }))
+    expect(instance.state.isVisible).toBe(true)
+  })
+
   it('false: never hides if trigger is `click`', () => {
     const instance = tippy(h(), {
       trigger: 'click',
@@ -1035,5 +1071,213 @@ describe('hideOnClick', () => {
     expect(instance.state.isVisible).toBe(true)
     instance.reference.dispatchEvent(new Event('click', { bubbles: true }))
     expect(instance.state.isVisible).toBe(false)
+  })
+})
+
+describe('followCursor', () => {
+  const first = { clientX: 317, clientY: 119 }
+  const second = { clientX: 500, clientY: 1000 }
+  let rect
+
+  function followCursorTrueMatches(event) {
+    expect(rect.left).toBe(event.clientX)
+    expect(rect.right).toBe(event.clientX)
+    expect(rect.top).toBe(event.clientY)
+    expect(rect.bottom).toBe(event.clientY)
+  }
+
+  it('true: follows both axes', () => {
+    const instance = tippy(h(), { followCursor: true, showOnInit: true })
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...first, bubbles: true }),
+    )
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    followCursorTrueMatches(first)
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...second, bubbles: true }),
+    )
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    followCursorTrueMatches(second)
+  })
+
+  it('"horizontal": follows x-axis', () => {
+    const instance = tippy(h(), {
+      followCursor: 'horizontal',
+      showOnInit: true,
+    })
+    const referenceRect = instance.reference.getBoundingClientRect()
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...first, bubbles: true }),
+    )
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    expect(rect.left).toBe(first.clientX)
+    expect(rect.right).toBe(first.clientX)
+    expect(rect.top).toBe(referenceRect.top)
+    expect(rect.bottom).toBe(referenceRect.bottom)
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...second, bubbles: true }),
+    )
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    expect(rect.left).toBe(second.clientX)
+    expect(rect.right).toBe(second.clientX)
+    expect(rect.top).toBe(referenceRect.top)
+    expect(rect.bottom).toBe(referenceRect.bottom)
+  })
+
+  it('"vertical": follows y-axis', () => {
+    const instance = tippy(h(), {
+      followCursor: 'vertical',
+      showOnInit: true,
+    })
+    const referenceRect = instance.reference.getBoundingClientRect()
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...first, bubbles: true }),
+    )
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    expect(rect.left).toBe(referenceRect.left)
+    expect(rect.right).toBe(referenceRect.right)
+    expect(rect.top).toBe(first.clientY)
+    expect(rect.bottom).toBe(first.clientY)
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...second, bubbles: true }),
+    )
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    expect(rect.left).toBe(referenceRect.left)
+    expect(rect.right).toBe(referenceRect.right)
+    expect(rect.top).toBe(second.clientY)
+    expect(rect.bottom).toBe(second.clientY)
+  })
+
+  it('"initial": only follows once', () => {
+    const instance = tippy(h(), {
+      followCursor: 'initial',
+      showOnInit: true,
+    })
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...first, bubbles: true }),
+    )
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    expect(rect.left).toBe(first.clientX)
+    expect(rect.right).toBe(first.clientX)
+    expect(rect.top).toBe(first.clientY)
+    expect(rect.bottom).toBe(first.clientY)
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...second, bubbles: true }),
+    )
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    expect(rect.left).toBe(first.clientX)
+    expect(rect.right).toBe(first.clientX)
+    expect(rect.top).toBe(first.clientY)
+    expect(rect.bottom).toBe(first.clientY)
+  })
+
+  it('is at correct position after a delay', () => {
+    const instance = tippy(h(), {
+      followCursor: true,
+      showOnInit: true,
+      delay: 100,
+    })
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...first, bubbles: true }),
+    )
+
+    jest.advanceTimersByTime(100)
+
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    followCursorTrueMatches(first)
+  })
+
+  it('is at correct position after a content update', () => {
+    const instance = tippy(h(), {
+      followCursor: true,
+      showOnInit: true,
+    })
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...first, bubbles: true }),
+    )
+
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    followCursorTrueMatches(first)
+
+    instance.setContent('x')
+
+    jest.runAllTimers()
+
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    followCursorTrueMatches(first)
+  })
+
+  it('respects popperOptions.modifiers.preventOverflow.padding', () => {
+    const padding = 500
+    const instance = tippy(h(), {
+      followCursor: true,
+      showOnInit: true,
+      popperOptions: {
+        modifiers: {
+          preventOverflow: {
+            padding,
+          },
+        },
+      },
+    })
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...first, bubbles: true }),
+    )
+
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    expect(rect.left).toBe(padding)
+    expect(rect.right).toBe(padding)
+    expect(rect.top).toBe(first.clientY)
+    expect(rect.bottom).toBe(first.clientY)
+  })
+
+  it('does not continue to follow if interactive: true and cursor is over popper', () => {
+    const instance = tippy(h(), {
+      followCursor: 'horizontal',
+      interactive: true,
+      showOnInit: true,
+    })
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(
+      new MouseEvent('mousemove', { ...first, bubbles: true }),
+    )
+
+    const referenceRect = instance.reference.getBoundingClientRect()
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+
+    instance.popper.dispatchEvent(
+      new MouseEvent('mousemove', { ...second, bubbles: true }),
+    )
+    expect(rect.left).toBe(first.clientX)
+    expect(rect.right).toBe(first.clientX)
+    expect(rect.top).toBe(referenceRect.top)
+    expect(rect.bottom).toBe(referenceRect.bottom)
   })
 })
