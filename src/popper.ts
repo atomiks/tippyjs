@@ -6,7 +6,7 @@ import {
   BasicPlacement,
 } from './types'
 import { arrayFrom } from './ponyfills'
-import { innerHTML, div, isReferenceElement } from './utils'
+import { innerHTML, div, isReferenceElement, isRealElement } from './utils'
 import { isUCBrowser } from './browser'
 import {
   POPPER_CLASS,
@@ -28,7 +28,7 @@ import {
  * Sets the innerHTML of an element
  */
 export function setInnerHTML(element: Element, html: string | Element): void {
-  element[innerHTML()] = html instanceof Element ? html[innerHTML()] : html
+  element[innerHTML()] = isRealElement(html) ? html[innerHTML()] : html
 }
 
 /**
@@ -38,7 +38,7 @@ export function setContent(
   contentEl: PopperChildren['content'],
   props: Props,
 ): void {
-  if (props.content instanceof Element) {
+  if (isRealElement(props.content)) {
     setInnerHTML(contentEl, '')
     contentEl.appendChild(props.content)
   } else if (typeof props.content !== 'function') {
