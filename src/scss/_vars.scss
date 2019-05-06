@@ -1,4 +1,4 @@
-$namespace-prefix: '__NAMESPACE_PREFIX__';
+$namespace-prefix: '__NAMESPACE_PREFIX__' !default;
 $placements: 'top', 'bottom', 'left', 'right';
 $origins: bottom, top, right, left;
 $backdrop-origins: 0% 25%, 0% -50%, 50% 0%, -50% 0%;
