@@ -148,7 +148,7 @@ export default function createTippy(
   if (
     props.a11y &&
     !props.target &&
-    !canReceiveFocus(getEventListenersTarget() as Element)
+    !canReceiveFocus(getEventListenersTarget())
   ) {
     getEventListenersTarget().setAttribute('tabindex', '0')
   }

@@ -139,7 +139,7 @@ export function setFlipModifierEnabled(modifiers: any[], value: any): void {
  * Determines if an element can receive focus
  * Always returns true for virtual objects
  */
-export function canReceiveFocus(element: Element): boolean {
+export function canReceiveFocus(element: Element | VirtualReference): boolean {
   return isRealElement(element)
     ? matches.call(
         element,
