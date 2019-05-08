@@ -47,7 +47,8 @@
   },
   "browserslist": [
     "> 0.25%",
-    "not dead"
+    "not dead",
+    "not safari < 8"
   ],
   "bundlesize": [
     {
