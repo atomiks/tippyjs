@@ -10,15 +10,14 @@ function Singleton() {
   const hideTimeoutRef = useRef()
 
   useEffect(() => {
-    instanceRef.current = tippy(
+    const instance = tippy(
       {},
       {
         arrow: true,
         animation: 'fade',
-        updateDuration: 500,
+        duration: [300, 100],
+        updateDuration: 600,
         onMount(instance) {
-          instance.popper.style.transitionTimingFunction =
-            'cubic-bezier(.23,1.42,.16,.96)'
           requestAnimationFrame(() => {
             instance.popperChildren.arrow.style.transitionDuration = '250ms'
           })
@@ -28,6 +27,15 @@ function Singleton() {
         },
       },
     )
+
+    instance.popper.style.transitionTimingFunction =
+      'cubic-bezier(.23,1.42,.16,.96)'
+
+    instanceRef.current = instance
+
+    return () => {
+      instance.destroy()
+    }
   }, [])
 
   function clearTimeouts() {
@@ -38,17 +46,31 @@ function Singleton() {
   function show(event) {
     const instance = instanceRef.current
     const { currentTarget } = event
+    let deferred
+
+    function setContent() {
+      instance.setContent(currentTarget.getAttribute('data-tippy-content'))
+    }
 
     instance.reference.getBoundingClientRect = () => {
       return currentTarget.getBoundingClientRect()
     }
 
-    instance.setContent(currentTarget.getAttribute('data-tippy-content'))
+    // Hiding, but not unmounted yet
+    deferred = instance.state.isMounted && !instance.state.isVisible
+
+    if (!deferred) {
+      setContent()
+    }
 
     clearTimeouts()
 
     if (!instance.state.isVisible) {
       showTimeoutRef.current = setTimeout(() => {
+        if (deferred) {
+          setContent()
+        }
+
         instance.show()
       }, 200)
     }
@@ -62,7 +84,7 @@ function Singleton() {
     if (instance.state.isVisible) {
       hideTimeoutRef.current = setTimeout(() => {
         instance.hide()
-      }, 500)
+      }, 800)
     }
   }
 
