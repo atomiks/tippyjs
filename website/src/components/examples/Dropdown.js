@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Tippy from '../Tippy'
 import { Button } from '../Framework'
@@ -10,7 +10,7 @@ const List = styled.div`
   text-align: left;
 `
 
-const Reaction = styled.button.attrs({ role: 'menuitem' })`
+const Reaction = styled.button`
   background: none;
   border: none;
   font-size: 22px;
@@ -30,7 +30,9 @@ const Text = styled.p`
   color: #777;
 `
 
-function Dropdown({ text }) {
+function Dropdown({ text = 'Dropdown' }) {
+  const [ariaExpanded, setAriaExpanded] = useState('false')
+
   return (
     <Tippy
       content={
@@ -66,30 +68,22 @@ function Dropdown({ text }) {
           </List>
         </>
       }
-      interactive={true}
       aria={null}
+      interactive={true}
+      arrow={true}
       animateFill={false}
-      placement="bottom"
       distance={7}
+      placement="bottom"
       animation="fade"
       theme="light-border dropdown"
       trigger="click"
-      arrow={true}
       appendTo="parent"
-      onMount={instance => {
-        instance.reference.setAttribute('aria-expanded', 'true')
-      }}
-      onHide={instance => {
-        instance.reference.setAttribute('aria-expanded', 'false')
-      }}
+      onMount={() => setAriaExpanded('true')}
+      onHide={() => setAriaExpanded('false')}
     >
-      <Button aria-expanded="false">{text}</Button>
+      <Button aria-expanded={ariaExpanded}>{text}</Button>
     </Tippy>
   )
-}
-
-Dropdown.defaultProps = {
-  text: 'Dropdown',
 }
 
 export default Dropdown

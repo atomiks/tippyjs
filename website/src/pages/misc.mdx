@@ -183,8 +183,8 @@ small elements, this can be a bit much, especially if the tippy has an arrow.
 
 You need to:
 
-- Target each different basic placement in `x-placement` (`top`, `bottom`,
-  `left`, `right`)
+- Target each different basic placement in `x-placement`: `top`, `bottom`,
+  `left`, `right`
 - Target the two visibility states in `data-state`: `visible` and `hidden`
 - Use your own animation name in `data-animation`
 
@@ -444,26 +444,20 @@ button.addEventListener('mouseleave', () => {
 ### Virtual elements
 
 In some cases you may need to use a virtual element instead of a real DOM
-element. Pass a plain object with the following properties in:
+element. Pass a plain object with a `getBoundingClientRect` method in:
 
 ```js
-const virtualElement = {
-  getBoundingClientRect() {
-    return {
-      width: 0,
-      height: 0,
-      top: 100,
-      right: 100,
-      bottom: 100,
-      left: 100,
-    }
-  },
-  clientWidth: 0,
-  clientHeight: 0,
-}
-
-tippy(virtualElement)
+tippy({
+  getBoundingClientRect: () => ({
+    width: 0,
+    height: 0,
+    top: 100,
+    right: 100,
+    bottom: 100,
+    left: 100,
+  }),
+})
 ```
 
-Change the numbers to suit your needs. Popper.js uses these properties to
-position the tippy.
+Change the numbers to suit your needs. Popper.js uses `getBoundingClientRect()`
+to position the tippy.

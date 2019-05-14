@@ -7,6 +7,8 @@ index: 0
 import Tippy from '../components/Tippy'
 import { Button, Demo, Link } from '../components/Framework'
 import Dropdown from '../components/examples/Dropdown'
+import Singleton from '../components/examples/Singleton'
+import Nesting from '../components/examples/Nesting'
 
 Tippy.js is a highly customizable tooltip and popover library powered by
 Popper.js. It's compatible with IE11+, about 99% of desktop users and 97% of
@@ -357,6 +359,22 @@ tippy('line', {
   arrow: true,
 })
 ```
+
+### Singleton
+
+Use a single tooltip for many different reference elements.
+
+<Demo>
+  <Singleton />
+</Demo>
+
+### Nesting
+
+Tippys can be nested within other ones.
+
+<Demo>
+  <Nesting />
+</Demo>
 
 ### Multiple
 

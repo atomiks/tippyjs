@@ -308,8 +308,8 @@ export default createGlobalStyle`
   }
 
   blockquote {
-    color: #5b36df;
-    border-left: 5px solid;
+    color: #828fa1;
+    border-left: 5px solid #ced4dd;
     margin: 0;
     padding-left: 15px;
   }

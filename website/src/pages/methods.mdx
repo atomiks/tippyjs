@@ -4,35 +4,30 @@ path: /methods/
 index: 6
 ---
 
+### Instance methods
+
 Methods on instances allow you to control the tippy programmatically. See the
 [Tippy Instance](/tippy-instance/) page for details on accessing an instance.
 
-### Show the tippy
+#### show
 
 Programmatically show the tippy at any time:
 
 ```js
-instance.show()
+instance.show() // Default
+instance.show(0) // 0ms transition duration
 ```
 
-### Hide the tippy
+#### hide
 
 Programmatically hide the tippy at any time:
 
 ```js
-instance.hide()
+instance.hide() // Default
+instance.hide(500) // 500ms transition duration
 ```
 
-For both the `show()` and `hide()` methods, you can pass a number in as an
-argument to use as the animation duration. This will override the instance's
-option.
-
-```js
-instance.show(1000) // 1000ms
-instance.hide(0) // 0ms
-```
-
-### Disable the tippy
+#### disable
 
 Temporarily prevent a tippy from showing or hiding:
 
@@ -40,13 +35,35 @@ Temporarily prevent a tippy from showing or hiding:
 instance.disable()
 ```
 
-Re-enable it with this method:
+#### enable
+
+Re-enable a tippy:
 
 ```js
 instance.enable()
 ```
 
-### Destroy the tippy
+#### set
+
+You can update any option after the instance has been created. Pass an object of
+new options in:
+
+```js
+instance.set({
+  arrow: true,
+  animation: 'scale',
+})
+```
+
+#### setContent
+
+Updating the `content` option has its own method as a shortcut:
+
+```js
+instance.setContent('New content')
+```
+
+#### destroy
 
 To permanently destroy and clean up the instance, use this method:
 
@@ -64,20 +81,39 @@ may have been created too.
 instance.destroy(true)
 ```
 
-### Update the tippy
+### Static methods
 
-You can update any option after the instance has been created using the `set()`
-method. Pass an object of new options in:
+Static methods belong to the `tippy` module function rather than a tippy
+instance.
+
+#### setDefaults
+
+Set the default options for each new instance:
 
 ```js
-instance.set({
-  arrow: true,
-  animation: 'scale',
+tippy.setDefaults({
+  // Options
 })
+
+// Access the current defaults
+tippy.defaults
 ```
 
-There is also a shortcut for updating the content:
+#### hideAll
+
+Hide all visible tippys on the document:
 
 ```js
-instance.setContent('New content')
+// Use each tippy's own duration
+tippy.hideAll()
+// Hide them all instantly
+tippy.hideAll({ duration: 0 })
+// Hide them all except a particular one
+tippy.hideAll({ exclude: tippyInstance })
+tippy.hideAll({ exclude: referenceElement })
 ```
+
+#### group
+
+Used to improve UX for elements near each other when their tooltips have a
+`delay`. Learn about [`tippy.group()` here](/misc#groups).

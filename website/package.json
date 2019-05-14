@@ -8,7 +8,7 @@
     "@mdx-js/mdx": "^0.20.3",
     "@mdx-js/tag": "^0.20.3",
     "@reach/skip-nav": "^0.1.2",
-    "@tippy.js/react": "^2.1.2",
+    "@tippy.js/react": "^2.2.0",
     "animate.css": "^3.7.0",
     "babel-plugin-styled-components": "^1.10.0",
     "elastic-scroll-polyfill": "^2.0.0",
@@ -36,8 +36,7 @@
     "react-dom": "^16.8.1",
     "react-feather": "^1.1.5",
     "react-helmet": "^5.2.0",
-    "rehype-react": "^3.1.0",
-    "styled-components": "^4.1.3"
+    "rehype-react": "^3.1.0"
   },
   "keywords": [
     "gatsby"
@@ -55,7 +54,8 @@
     "@mdx-js/loader": "^0.18.2",
     "gh-pages": "^2.0.1",
     "loader-utils": "^1.2.3",
-    "prettier": "^1.16.3"
+    "prettier": "^1.16.3",
+    "styled-components": "^4.2.0"
   },
   "repository": {
     "type": "git",
