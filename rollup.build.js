@@ -1,4 +1,4 @@
-/* eslint-disable no-console, @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require('fs')
 const pkg = require('./package.json')
 const { rollup } = require('rollup')
