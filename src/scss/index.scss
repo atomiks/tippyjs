@@ -8,6 +8,7 @@
 
 .#{$namespace-prefix}-popper {
   pointer-events: none;
+  max-width: calc(100% - 8px);
 }
 
 .#{$namespace-prefix}-tooltip {
