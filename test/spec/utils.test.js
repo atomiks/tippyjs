@@ -6,27 +6,6 @@ jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
 
-describe('isBareVirtualElement', () => {
-  it('returns true for a plain object', () => {
-    expect(Utils.isBareVirtualElement({})).toBe(true)
-  })
-
-  it('returns false for other object types', () => {
-    expect(Utils.isBareVirtualElement([])).toBe(false)
-    expect(Utils.isBareVirtualElement(function() {})).toBe(false)
-    expect(Utils.isBareVirtualElement(h('div')))
-  })
-
-  it('returns false for primitive values', () => {
-    expect(Utils.isBareVirtualElement('')).toBe(false)
-    expect(Utils.isBareVirtualElement(Symbol())).toBe(false)
-    expect(Utils.isBareVirtualElement(0)).toBe(false)
-    expect(Utils.isBareVirtualElement(undefined)).toBe(false)
-    expect(Utils.isBareVirtualElement(null)).toBe(false)
-    expect(Utils.isBareVirtualElement(true)).toBe(false)
-  })
-})
-
 describe('getArrayOfElements', () => {
   it('returns an empty array with no arguments', () => {
     expect(Array.isArray(Utils.getArrayOfElements())).toBe(true)

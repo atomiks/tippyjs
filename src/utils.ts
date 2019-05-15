@@ -1,26 +1,8 @@
-import {
-  Options,
-  Props,
-  ReferenceElement,
-  Targets,
-  VirtualReference,
-} from './types'
+import { Options, Props, ReferenceElement, Targets } from './types'
 import { arrayFrom, matches } from './ponyfills'
 import { isUCBrowser } from './browser'
 import { getDataAttributeOptions } from './reference'
 import { POPPER_SELECTOR } from './constants'
-
-/**
- * Determines if a value is a "bare" virtual element (before mutations done
- * by `polyfillElementPrototypeProperties()`). JSDOM elements show up as
- * [object Object], we can check if the value is "element-like" if it has
- * `addEventListener`
- */
-export function isBareVirtualElement(value: any): boolean {
-  return (
-    {}.toString.call(value) === '[object Object]' && !value.addEventListener
-  )
-}
 
 /**
  * Determines if the value is a reference element
@@ -110,7 +92,7 @@ export function isRealElement(value: any): value is Element {
 /**
  * Determines if the value is singular-like
  */
-export function isSingular(value: any): value is VirtualReference | Element {
+export function isSingular(value: any): value is Element {
   return !!(value && hasOwnProperty(value, 'isVirtual')) || isRealElement(value)
 }
 
@@ -175,7 +157,7 @@ export function setVisibilityState(
  * disabling conflicting options where necessary
  */
 export function evaluateProps(
-  reference: ReferenceElement | VirtualReference,
+  reference: ReferenceElement,
   props: Props,
 ): Props {
   const out = {

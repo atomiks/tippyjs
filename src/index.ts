@@ -4,16 +4,10 @@ import { defaultProps } from './props'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
 import group from './group'
-import { polyfillElementPrototypeProperties } from './reference'
 import { arrayFrom } from './ponyfills'
 import { hideAll } from './popper'
-import {
-  isSingular,
-  isBareVirtualElement,
-  getArrayOfElements,
-  validateOptions,
-} from './utils'
-import { Options, Props, Instance, Targets, VirtualReference } from './types'
+import { isSingular, getArrayOfElements, validateOptions } from './utils'
+import { Options, Props, Instance, Targets } from './types'
 
 let globalEventListenersBound = false
 
@@ -31,12 +25,6 @@ function tippy(targets: Targets, options?: Options): Instance | Instance[] {
   }
 
   const props: Props = { ...defaultProps, ...options }
-
-  // If they are specifying a virtual positioning reference, we need to polyfill
-  // some native DOM props
-  if (isBareVirtualElement(targets)) {
-    polyfillElementPrototypeProperties(targets as VirtualReference)
-  }
 
   const instances = getArrayOfElements(targets).reduce<Instance[]>(
     (acc, reference) => {

@@ -92,12 +92,12 @@ describe('createPopperElement', () => {
   it('sets the `id` property correctly', () => {
     const id = 1829
     const popper = createPopperElement(id, defaultProps)
-    expect(popper.id).toBe(`__NAMESPACE_PREFIX__-${id}`)
+    expect(getChildren(popper).tooltip.id).toBe(`__NAMESPACE_PREFIX__-${id}`)
   })
 
   it('sets the `role` attribute correctly', () => {
     const popper = createPopperElement(1, defaultProps)
-    expect(popper.getAttribute('role')).toBe('tooltip')
+    expect(getChildren(popper).tooltip.getAttribute('role')).toBe('tooltip')
   })
 
   it('sets the className property correctly', () => {
@@ -283,7 +283,6 @@ describe('updatePopperElement', () => {
       interactive: true,
     }
     updatePopperElement(popper, defaultProps, newProps)
-    expect(popper.getAttribute('tabindex')).toBe('-1')
     expect(getChildren(popper).tooltip.hasAttribute('data-interactive')).toBe(
       true,
     )
@@ -291,7 +290,6 @@ describe('updatePopperElement', () => {
       ...newProps,
       interactive: false,
     })
-    expect(popper.getAttribute('tabindex')).toBe(null)
     expect(getChildren(popper).tooltip.hasAttribute('data-interactive')).toBe(
       false,
     )
@@ -349,21 +347,17 @@ describe('updatePopperElement', () => {
 
 describe('addInteractive', () => {
   it('adds interactive attributes', () => {
-    const popper = div()
     const tooltip = div()
-    addInteractive(popper, tooltip)
-    expect(popper.getAttribute('tabindex')).toBe('-1')
+    addInteractive(tooltip)
     expect(tooltip.hasAttribute('data-interactive')).toBe(true)
   })
 })
 
 describe('removeInteractive', () => {
   it('removes interactive attributes', () => {
-    const popper = div()
     const tooltip = div()
-    addInteractive(popper, tooltip)
-    removeInteractive(popper, tooltip)
-    expect(popper.getAttribute('tabindex')).toBe(null)
+    addInteractive(tooltip)
+    removeInteractive(tooltip)
     expect(tooltip.hasAttribute('data-interactive')).toBe(false)
   })
 })

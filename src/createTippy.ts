@@ -7,7 +7,6 @@ import {
   Instance,
   Content,
   Listener,
-  VirtualReference,
   Placement,
 } from './types'
 import { isIE } from './browser'
@@ -48,7 +47,7 @@ let idCounter = 1
  * prefixed with `_`.
  */
 export default function createTippy(
-  reference: ReferenceElement | VirtualReference,
+  reference: ReferenceElement,
   collectionProps: Props,
 ): Instance | null {
   const props = evaluateProps(reference, collectionProps)
@@ -181,7 +180,7 @@ export default function createTippy(
   /**
    * Returns correct target used for event listeners
    */
-  function getEventListenersTarget(): ReferenceElement | VirtualReference {
+  function getEventListenersTarget(): ReferenceElement {
     return instance.props.triggerTarget || reference
   }
 

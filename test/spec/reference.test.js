@@ -1,8 +1,5 @@
 import { h, cleanDocumentBody } from '../utils'
-import {
-  getDataAttributeOptions,
-  polyfillElementPrototypeProperties,
-} from '../../src/reference'
+import { getDataAttributeOptions } from '../../src/reference'
 
 afterEach(cleanDocumentBody)
 
@@ -72,21 +69,5 @@ describe('getDataAttributeOptions', () => {
     expect(() => getDataAttributeOptions(ref)).not.toThrow()
     ref.setAttribute('data-tippy-content', '{')
     expect(() => getDataAttributeOptions(ref)).not.toThrow()
-  })
-})
-
-describe('polyfillElementPrototypeProperties', () => {
-  it('polyfills all needed props/methods', () => {
-    const ref = {}
-    polyfillElementPrototypeProperties(ref)
-    ref.removeEventListener()
-    ref.addEventListener()
-    ref.getAttribute()
-    ref.removeAttribute()
-    ref.setAttribute()
-    ref.hasAttribute()
-    ref.classList.add()
-    ref.classList.remove()
-    ref.classList.contains()
   })
 })

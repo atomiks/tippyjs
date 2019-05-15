@@ -38,22 +38,6 @@ describe('tippy', () => {
   it('handles falsy reference', () => {
     tippy([null])
   })
-
-  it('polyfills a plain object as the virtual positioning reference', () => {
-    const ref = tippy({}).reference
-    expect(ref.isVirtual).toBe(true)
-    expect(ref.classList).toBeDefined()
-    expect(ref.attributes).toBeDefined()
-    expect(typeof ref.addEventListener).toBe('function')
-    expect(typeof ref.removeEventListener).toBe('function')
-    expect(typeof ref.setAttribute).toBe('function')
-    expect(typeof ref.removeAttribute).toBe('function')
-    expect(typeof ref.getAttribute).toBe('function')
-    expect(typeof ref.hasAttribute).toBe('function')
-    expect(typeof ref.classList.add).toBe('function')
-    expect(typeof ref.classList.remove).toBe('function')
-    expect(typeof ref.classList.contains).toBe('function')
-  })
 })
 
 describe('tippy.setDefaults()', () => {

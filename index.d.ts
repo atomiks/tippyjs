@@ -6,7 +6,7 @@ export type Placement = Popper.Placement
 
 export type Content = string | Element | ((ref: Element) => Element | string)
 
-export type Targets = string | Element | Element[] | NodeList | VirtualReference
+export type Targets = string | Element | Element[] | NodeList
 
 export interface ReferenceElement extends Element {
   _tippy?: Instance
@@ -14,30 +14,6 @@ export interface ReferenceElement extends Element {
 
 export interface PopperElement extends HTMLDivElement {
   _tippy?: Instance
-}
-
-export interface VirtualReference extends Popper.ReferenceObject {
-  _tippy?: Instance
-  parentNode?: Element
-  contains(): void
-  setAttribute(key: string, value: any): void
-  getAttribute(key: string): string
-  removeAttribute(key: string): void
-  hasAttribute(key: string): boolean
-  addEventListener(): void
-  removeEventListener(): void
-  attributes: {
-    [key: string]: any
-  }
-  classList: {
-    add(key: string): void
-    remove(key: string): void
-    contains(key: string): boolean
-    classNames: {
-      [key: string]: boolean
-    }
-    [key: string]: any
-  }
 }
 
 export interface PopperInstance extends Popper {
@@ -109,7 +85,7 @@ export interface Instance {
   popperChildren: PopperChildren
   popperInstance: PopperInstance | null
   props: Props
-  reference: ReferenceElement | VirtualReference
+  reference: ReferenceElement
   set(options: Options): void
   setContent(content: Content): void
   show(duration?: number): void
