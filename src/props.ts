@@ -1,7 +1,6 @@
 import { Props } from './types'
 
 export const defaultProps: Props = {
-  a11y: true,
   allowHTML: true,
   animateFill: true,
   animation: 'shift-away',

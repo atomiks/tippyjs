@@ -23,27 +23,6 @@ tippy.setDefaults({
   delay: 0,
 })
 
-describe('a11y', () => {
-  it('false: it does not add `tabindex` attribute if ref is not focusable', () => {
-    const ref = h()
-    tippy(ref, { a11y: false })
-    expect(ref.hasAttribute('tabindex')).toBe(false)
-  })
-
-  it('true: it does add `tabindex` attribute if ref is not focusable', () => {
-    const ref = h()
-    tippy(ref, { a11y: true })
-    expect(ref.getAttribute('tabindex')).toBe('0')
-  })
-
-  it('true: it does not add `tabindex` attribute to already-focusable elements', () => {
-    const a = h('a')
-    a.href = '#'
-    tippy(a, { a11y: true })
-    expect(a.hasAttribute('tabindex')).toBe(false)
-  })
-})
-
 describe('allowHTML', () => {
   it('false: it does not allow html content inside tooltip', () => {
     const ref = h()

@@ -47,7 +47,6 @@ export interface PopperInstance extends Popper {
 }
 
 export interface Props {
-  a11y: boolean
   allowHTML: boolean
   animateFill: boolean
   animation: 'fade' | 'scale' | 'shift-toward' | 'perspective' | 'shift-away'

@@ -39,7 +39,6 @@ import {
   includes,
   invokeWithArgsOrReturn,
   setFlipModifierEnabled,
-  canReceiveFocus,
   validateOptions,
   evaluateProps,
   setTransitionDuration,
@@ -142,15 +141,6 @@ export default function createTippy(
 
   if (props.showOnInit) {
     scheduleShow()
-  }
-
-  // Ensure the event listeners target can receive focus
-  if (
-    props.a11y &&
-    !props.target &&
-    !canReceiveFocus(getEventListenersTarget())
-  ) {
-    getEventListenersTarget().setAttribute('tabindex', '0')
   }
 
   // Prevent a tippy with a delay from hiding if the cursor left then returned

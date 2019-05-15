@@ -200,62 +200,6 @@ describe('setFlipModifierEnabled', () => {
   })
 })
 
-describe('canReceiveFocus', () => {
-  it('returns true for a[href]', () => {
-    const a = h('a')
-    a.href = '#'
-    expect(Utils.canReceiveFocus(a)).toBe(true)
-  })
-
-  it('returns true for area[href]', () => {
-    const area = h('area')
-    area.href = '#'
-    expect(Utils.canReceiveFocus(area)).toBe(true)
-  })
-
-  it('returns true for input', () => {
-    const input = h('input')
-    expect(Utils.canReceiveFocus(input)).toBe(true)
-  })
-
-  it('returns true for textarea', () => {
-    const textarea = h('textarea')
-    expect(Utils.canReceiveFocus(textarea)).toBe(true)
-  })
-
-  it('returns true for select', () => {
-    const select = h('select')
-    expect(Utils.canReceiveFocus(select)).toBe(true)
-  })
-
-  it('returns true for iframe', () => {
-    const iframe = h('iframe')
-    expect(Utils.canReceiveFocus(iframe)).toBe(true)
-  })
-
-  it('returns true for [tabindex]', () => {
-    const div = h('div')
-    div.tabIndex = '0'
-    expect(Utils.canReceiveFocus(div)).toBe(true)
-  })
-
-  it('returns false for [disabled]', () => {
-    const ref = h('div')
-    ref.setAttribute('disabled', 'disabled')
-    expect(Utils.canReceiveFocus(ref)).toBe(false)
-  })
-
-  it('returns false for other elements', () => {
-    const other = h('span')
-    expect(Utils.canReceiveFocus(other)).toBe(false)
-  })
-
-  it('does not throw an error if given a virtual reference', () => {
-    const ref = {}
-    expect(Utils.canReceiveFocus(ref)).toBe(true)
-  })
-})
-
 describe('div', () => {
   it('creates and returns a div element', () => {
     const d = Utils.div()
