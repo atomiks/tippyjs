@@ -144,9 +144,7 @@ export default function createTippy(
       instance.state.isVisible &&
       lastTriggerEventType === 'mouseenter'
     ) {
-      // We don't want props.onTrigger() to be called here, since the `event`
-      // object is not related to the reference element
-      scheduleShow(event, true)
+      clearDelayTimeouts()
     }
   })
   popper.addEventListener('mouseleave', () => {
@@ -814,10 +812,7 @@ export default function createTippy(
   /**
    * Setup before show() is invoked (delays, etc.)
    */
-  function scheduleShow(
-    event?: Event,
-    shouldAvoidCallingOnTrigger?: boolean,
-  ): void {
+  function scheduleShow(event?: Event): void {
     clearDelayTimeouts()
 
     if (instance.state.isVisible) {
@@ -831,7 +826,7 @@ export default function createTippy(
 
     isScheduledToShow = true
 
-    if (event && !shouldAvoidCallingOnTrigger) {
+    if (event) {
       instance.props.onTrigger(instance, event)
     }
 
