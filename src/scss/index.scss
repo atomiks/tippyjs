@@ -6,7 +6,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.tippy-popper {
+.#{$namespace-prefix}-popper {
   pointer-events: none;
 }
 
