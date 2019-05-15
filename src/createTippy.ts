@@ -431,8 +431,6 @@ export default function createTippy(
           left: isVertical ? rect.left : x,
           right: isVertical ? rect.right : x,
         }),
-        clientWidth: 0,
-        clientHeight: 0,
       }
 
       instance.popperInstance!.scheduleUpdate()
