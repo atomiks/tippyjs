@@ -6,13 +6,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.#{$namespace-prefix}-popper {
-  transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
-  max-width: calc(100% - 8px);
-  pointer-events: none;
-  outline: 0;
-}
-
 .#{$namespace-prefix}-tooltip {
   position: relative;
   color: white;

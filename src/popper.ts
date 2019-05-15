@@ -173,6 +173,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   const popper = div()
   popper.className = POPPER_CLASS
   popper.style.zIndex = '' + props.zIndex
+  popper.style.maxWidth = 'calc(100% - 8px)'
 
   const tooltip = div()
 
