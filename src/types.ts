@@ -102,15 +102,6 @@ export interface Instance {
   }
 }
 
-export interface GroupedInstance extends Instance {
-  _originalProps: Props
-}
-
-export interface GroupOptions {
-  delay?: number | [number, number]
-  duration?: number | [number, number]
-}
-
 export interface PopperChildren {
   tooltip: HTMLDivElement
   content: HTMLDivElement
@@ -135,7 +126,6 @@ export interface Tippy {
   (targets: Targets, options?: Props): Instance | Instance[]
   readonly defaults: Props
   readonly version: string
-  group(instances: Instance[], options?: GroupOptions): void
   hideAll(options?: HideAllOptions): void
   setDefaults(options: Props): void
 }

@@ -3,7 +3,6 @@ import { isBrowser } from './browser'
 import { defaultProps } from './props'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
-import group from './group'
 import { arrayFrom } from './ponyfills'
 import { hideAll } from './popper'
 import { isSingular, getArrayOfElements, validateOptions } from './utils'
@@ -58,7 +57,6 @@ tippy.setDefaults = (partialDefaults: Options) => {
   })
 }
 tippy.hideAll = hideAll
-tippy.group = group
 
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
