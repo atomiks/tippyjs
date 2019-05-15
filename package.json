@@ -46,7 +46,7 @@
     "testRegex": "./test/.*.test.js$"
   },
   "browserslist": [
-    "> 0.25%",
+    "> 0.5%",
     "not dead",
     "not safari < 8"
   ],
