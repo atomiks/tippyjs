@@ -373,6 +373,16 @@ describe('arrowType', () => {
     })
     expect(popperChildren.arrow.matches(ROUND_ARROW_SELECTOR)).toBe(true)
   })
+
+  it('other: custom shape', () => {
+    const svg = '<svg viewBox="0 0 20 8"><path></path></svg>'
+    const { popperChildren } = tippy(h(), {
+      arrow: true,
+      arrowType: svg,
+    })
+    expect(popperChildren.arrow.matches(ROUND_ARROW_SELECTOR)).toBe(true)
+    expect(popperChildren.arrow.innerHTML).toBe(svg)
+  })
 })
 
 describe('theme', () => {

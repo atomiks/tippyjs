@@ -410,7 +410,7 @@ describe('getChildren', () => {
 
 describe('createArrowElement', () => {
   it('returns a sharp arrow by default', () => {
-    const arrow = createArrowElement()
+    const arrow = createArrowElement(defaultProps.arrowType)
     expect(arrow.matches(ARROW_SELECTOR)).toBe(true)
   })
 

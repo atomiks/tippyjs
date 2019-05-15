@@ -29,7 +29,7 @@ export interface Props {
   appendTo: 'parent' | Element | ((ref: Element) => Element)
   aria: 'describedby' | 'labelledby' | null
   arrow: boolean
-  arrowType: 'sharp' | 'round'
+  arrowType: 'sharp' | 'round' | string
   boundary: 'scrollParent' | 'window' | 'viewport' | HTMLElement
   content: Content
   delay: number | [number, number]
