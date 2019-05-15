@@ -166,7 +166,7 @@ export default function createTippy(
   /**
    * Cleans up old listeners
    */
-  function cleanupOldMouseListeners(): void {
+  function cleanupInteractiveMouseListeners(): void {
     document.body.removeEventListener('mouseleave', scheduleHide)
     document.removeEventListener('mousemove', onMouseMove)
   }
@@ -514,7 +514,7 @@ export default function createTippy(
         instance.props,
       )
     ) {
-      cleanupOldMouseListeners()
+      cleanupInteractiveMouseListeners()
       scheduleHide()
     }
   }
@@ -980,7 +980,7 @@ export default function createTippy(
 
     addTriggersToReference()
 
-    cleanupOldMouseListeners()
+    cleanupInteractiveMouseListeners()
 
     updatePopperElement(popper, prevProps, nextProps)
     instance.popperChildren = getChildren(popper)
