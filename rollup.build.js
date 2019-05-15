@@ -83,6 +83,7 @@ const PLUGIN_CONFIGS = {
     ...COMMON_PLUGINS,
     PLUGINS.css,
   ],
+  css: [PLUGINS.babel, ...COMMON_PLUGINS, PLUGINS.css],
 }
 
 function createPluginSCSS(output) {
@@ -177,23 +178,27 @@ async function build() {
 
   console.log(blue('\n⏳ Building CSS themes...'))
 
-  for (const theme of fs.readdirSync('./build/themes')) {
-    const filenameWithoutJSExtension = theme.replace('.js', '')
-    const filenameWithCSSExtension = theme.replace('.js', '.css')
-    const outputFile = `./themes/${filenameWithCSSExtension}`
+  for (const folder of ['themes', 'animations']) {
+    for (const file of fs.readdirSync(`./build/${folder}`)) {
+      const filenameWithoutJSExtension = file.replace('.js', '')
+      const filenameWithCSSExtension = file.replace('.js', '.css')
+      const outputFile = `./${folder}/${filenameWithCSSExtension}`
 
-    const config = createRollupConfig(
-      `themes/${filenameWithoutJSExtension}`,
-      PLUGIN_CONFIGS.bundle.concat(createPluginSCSS(outputFile)),
-    )
-    const bundle = await rollup(config)
-    await bundle.write({
-      ...BASE_OUTPUT_CONFIG,
-      format: 'umd',
-      sourcemap: false,
-      file: outputFile,
-    })
+      const config = createRollupConfig(
+        `${folder}/${filenameWithoutJSExtension}`,
+        PLUGIN_CONFIGS.css.concat(createPluginSCSS(outputFile)),
+      )
+      const bundle = await rollup(config)
+      await bundle.write({
+        ...BASE_OUTPUT_CONFIG,
+        format: 'umd',
+        sourcemap: false,
+        file: 'index.js',
+      })
+    }
   }
+
+  fs.unlinkSync('./index.js')
 
   console.log(green('✓ Themes\n'))
 }

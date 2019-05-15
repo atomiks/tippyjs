@@ -56,28 +56,6 @@
         }
       }
 
-      [data-animation='shift-toward'] {
-        &[data-state='visible'] {
-          @include enter-transform($placement, 'fade');
-        }
-        &[data-state='hidden'] {
-          opacity: 0;
-          @include leave-transform($placement, 'shift-toward');
-        }
-      }
-
-      [data-animation='perspective'] {
-        transform-origin: nth($origins, index($placements, $placement));
-
-        &[data-state='visible'] {
-          @include enter-transform($placement, 'perspective');
-        }
-        &[data-state='hidden'] {
-          opacity: 0;
-          @include leave-transform($placement, 'perspective');
-        }
-      }
-
       [data-animation='fade'] {
         &[data-state='visible'] {
           @include enter-transform($placement, 'fade');
@@ -95,18 +73,6 @@
         &[data-state='hidden'] {
           opacity: 0;
           @include leave-transform($placement, 'shift-away');
-        }
-      }
-
-      [data-animation='scale'] {
-        transform-origin: nth($origins, index($placements, $placement));
-
-        &[data-state='visible'] {
-          @include enter-transform($placement, 'scale');
-        }
-        &[data-state='hidden'] {
-          opacity: 0;
-          @include leave-transform($placement, 'scale');
         }
       }
     }

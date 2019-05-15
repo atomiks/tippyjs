@@ -1,0 +1,18 @@
+@import '../_mixins.scss';
+@import '../_vars.scss';
+
+.#{$namespace-prefix}-popper {
+  @each $placement in $placements {
+    &[x-placement^='#{$placement}'] {
+      [data-animation='shift-toward'] {
+        &[data-state='visible'] {
+          @include enter-transform($placement, 'fade');
+        }
+        &[data-state='hidden'] {
+          opacity: 0;
+          @include leave-transform($placement, 'shift-toward');
+        }
+      }
+    }
+  }
+}
