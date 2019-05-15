@@ -5,7 +5,7 @@
   background-color: rgba(0, 0, 0, 0.7);
 
   @each $placement in $placements {
-    &[x-placement^='#{$placement}'] {
+    &[data-placement^='#{$placement}'] {
       .#{$namespace-prefix}-arrow {
         @include arrow($placement, 7px, rgba(0, 0, 0, 0.7));
       }

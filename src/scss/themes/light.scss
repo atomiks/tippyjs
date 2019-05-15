@@ -9,7 +9,7 @@
   background-color: white;
 
   @each $placement in $placements {
-    &[x-placement^='#{$placement}'] {
+    &[data-placement^='#{$placement}'] {
       .#{$namespace-prefix}-arrow {
         @include arrow($placement, 8px, white);
       }

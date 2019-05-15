@@ -10,7 +10,7 @@ $color: #505355;
   font-weight: 600;
 
   @each $placement in $placements {
-    &[x-placement^='#{$placement}'] {
+    &[data-placement^='#{$placement}'] {
       .#{$namespace-prefix}-arrow {
         @include arrow($placement, 8px, $color);
       }

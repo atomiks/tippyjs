@@ -40,7 +40,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
     }
   }
 
-  &[x-placement^='top'] {
+  &[data-placement^='top'] {
     .#{$namespace-prefix}-roundarrow::after {
       top: 1px;
       transform: rotate(180deg);
@@ -60,7 +60,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
     }
   }
 
-  &[x-placement^='bottom'] {
+  &[data-placement^='bottom'] {
     .#{$namespace-prefix}-roundarrow::after {
       top: -1px;
     }
@@ -79,7 +79,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
     }
   }
 
-  &[x-placement^='left'] {
+  &[data-placement^='left'] {
     .#{$namespace-prefix}-roundarrow::after {
       left: 1px;
       top: 0;
@@ -100,7 +100,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
     }
   }
 
-  &[x-placement^='right'] {
+  &[data-placement^='right'] {
     .#{$namespace-prefix}-roundarrow::after {
       left: -1px;
       top: 0;
@@ -121,8 +121,8 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
     }
   }
 
-  &[x-placement^='top'],
-  &[x-placement^='bottom'] {
+  &[data-placement^='top'],
+  &[data-placement^='bottom'] {
     .#{$namespace-prefix}-arrow,
     .#{$namespace-prefix}-roundarrow {
       transform: translateX(-1px);
@@ -138,8 +138,8 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
     }
   }
 
-  &[x-placement^='left'],
-  &[x-placement^='right'] {
+  &[data-placement^='left'],
+  &[data-placement^='right'] {
     .#{$namespace-prefix}-arrow,
     .#{$namespace-prefix}-roundarrow {
       transform: translateY(-1px);
