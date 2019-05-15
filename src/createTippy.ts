@@ -37,6 +37,8 @@ import {
 } from './utils'
 
 let idCounter = 1
+// Workaround for IE11's lack of new MouseEvent constructor
+let mouseMoveListeners: ((event: MouseEvent) => void)[] = []
 
 /**
  * Creates and returns a Tippy object. We're using a closure pattern instead of
@@ -163,11 +165,12 @@ export default function createTippy(
   }
 
   /**
-   * Cleans up old listeners
+   * Cleans up interactive mouse listeners
    */
   function cleanupInteractiveMouseListeners(): void {
     document.body.removeEventListener('mouseleave', scheduleHide)
     document.removeEventListener('mousemove', onMouseMove)
+    mouseMoveListeners = mouseMoveListeners.filter(l => l !== onMouseMove)
   }
 
   /**
@@ -432,6 +435,11 @@ export default function createTippy(
 
       if (event instanceof MouseEvent) {
         lastMouseMoveEvent = event
+
+        // If scrolling, `mouseenter` events can be fired if the cursor lands
+        // over a new target, but `mousemove` events don't get fired. This causes
+        // interactive tooltips to get stuck open until the cursor is moved
+        mouseMoveListeners.forEach(listener => listener(event))
       }
     }
 
@@ -489,6 +497,8 @@ export default function createTippy(
     if (instance.props.interactive) {
       document.body.addEventListener('mouseleave', scheduleHide)
       document.addEventListener('mousemove', onMouseMove)
+      mouseMoveListeners.push(onMouseMove)
+
       return
     }
 
