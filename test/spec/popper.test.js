@@ -15,7 +15,6 @@ import {
   setInnerHTML,
   setContent,
   isCursorOutsideInteractiveBorder,
-  getOffsetDistanceInPx,
   getBasicPlacement,
   updateTheme,
 } from '../../src/popper'
@@ -610,24 +609,6 @@ describe('isCursorOutsideInteractiveBorder', () => {
         isCursorOutsideInteractiveBorder('right', popperRect, coords, options),
       ).toBe(true)
     })
-  })
-})
-
-describe('getOffsetDistanceInPx', () => {
-  it('returns 0px by default', () => {
-    expect(getOffsetDistanceInPx(defaultProps.distance)).toBe('0px')
-  })
-
-  it('returns -10px if the distance is 20', () => {
-    expect(getOffsetDistanceInPx(20)).toBe('-10px')
-  })
-
-  it('returns 5px if the distance is 5', () => {
-    expect(getOffsetDistanceInPx(5)).toBe('5px')
-  })
-
-  it('returns 18px if the distance is -8', () => {
-    expect(getOffsetDistanceInPx(-8)).toBe('18px')
   })
 })
 

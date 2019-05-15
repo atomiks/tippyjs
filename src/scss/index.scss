@@ -6,6 +6,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+.tippy-popper {
+  pointer-events: none;
+}
+
 .#{$namespace-prefix}-tooltip {
   position: relative;
   color: white;
@@ -18,6 +22,8 @@
 
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
+      @include placement-offset($placement);
+
       .#{$namespace-prefix}-backdrop {
         border-radius: nth(
           $backdrop-border-radii,

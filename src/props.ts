@@ -40,7 +40,7 @@ export const defaultProps: Props = {
   size: 'regular',
   sticky: false,
   target: '',
-  theme: 'dark',
+  theme: '',
   touch: true,
   touchHold: false,
   trigger: 'mouseenter focus',

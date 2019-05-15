@@ -21,7 +21,6 @@ import {
   getBasicPlacement,
   updateTransitionEndListener,
   isCursorOutsideInteractiveBorder,
-  getOffsetDistanceInPx,
   reflow,
 } from './popper'
 import {
@@ -654,10 +653,8 @@ export default function createTippy(
 
       const basicPlacement = getBasicPlacement(currentPlacement)
       const styles = tooltip.style
-
-      // Account for the `distance` offset
       styles.top = styles.bottom = styles.left = styles.right = ''
-      styles[basicPlacement] = getOffsetDistanceInPx(instance.props.distance)
+      styles[basicPlacement] = -instance.props.distance + 'px'
 
       const padding =
         preventOverflowModifier && preventOverflowModifier.padding !== undefined
