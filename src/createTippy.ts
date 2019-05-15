@@ -10,7 +10,7 @@ import {
   Placement,
 } from './types'
 import { isIE } from './browser'
-import { closest, closestCallback, arrayFrom } from './ponyfills'
+import { closestCallback } from './ponyfills'
 import { PASSIVE, PADDING } from './constants'
 import { isUsingTouch } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
@@ -34,7 +34,6 @@ import {
   evaluateProps,
   setTransitionDuration,
   setVisibilityState,
-  isRealElement,
 } from './utils'
 
 let idCounter = 1
@@ -299,7 +298,7 @@ export default function createTippy(
    * Adds event listeners to the reference based on the `trigger` prop
    */
   function addTriggersToReference(): void {
-    if (instance.props.touchHold && !instance.props.target) {
+    if (instance.props.touchHold) {
       on('touchstart', onTrigger, PASSIVE)
       on('touchend', onMouseLeave as EventListener, PASSIVE)
     }
@@ -312,32 +311,14 @@ export default function createTippy(
           return
         }
 
-        // Non-delegates
-        if (!instance.props.target) {
-          on(eventType, onTrigger)
-          switch (eventType) {
-            case 'mouseenter':
-              on('mouseleave', onMouseLeave as EventListener)
-              break
-            case 'focus':
-              on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
-              break
-          }
-        } else {
-          // Delegates
-          switch (eventType) {
-            case 'mouseenter':
-              on('mouseover', onDelegateShow)
-              on('mouseout', onDelegateHide)
-              break
-            case 'focus':
-              on('focusin', onDelegateShow)
-              on('focusout', onDelegateHide)
-              break
-            case 'click':
-              on(eventType, onDelegateShow)
-              break
-          }
+        on(eventType, onTrigger)
+        switch (eventType) {
+          case 'mouseenter':
+            on('mouseleave', onMouseLeave as EventListener)
+            break
+          case 'focus':
+            on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
+            break
         }
       })
   }
@@ -439,28 +420,6 @@ export default function createTippy(
   }
 
   /**
-   * Creates the tippy instance for a delegate when it's been triggered
-   */
-  function createDelegateChildTippy(event?: Event): void {
-    if (event) {
-      const targetEl: ReferenceElement | null = closest(
-        event.target as Element,
-        instance.props.target,
-      )
-
-      if (targetEl && !targetEl._tippy) {
-        createTippy(targetEl, {
-          ...instance.props,
-          content: invokeWithArgsOrReturn(collectionProps.content, [targetEl]),
-          appendTo: collectionProps.appendTo,
-          target: '',
-          showOnInit: true,
-        })
-      }
-    }
-  }
-
-  /**
    * Event listener invoked upon trigger
    */
   function onTrigger(event: Event): void {
@@ -553,24 +512,6 @@ export default function createTippy(
     }
 
     scheduleHide()
-  }
-
-  /**
-   * Event listener invoked when a child target is triggered
-   */
-  function onDelegateShow(event: Event): void {
-    if (closest(event.target as Element, instance.props.target)) {
-      scheduleShow(event)
-    }
-  }
-
-  /**
-   * Event listener invoked when a child target should hide
-   */
-  function onDelegateHide(event: Event): void {
-    if (closest(event.target as Element, instance.props.target)) {
-      scheduleHide()
-    }
   }
 
   /**
@@ -816,11 +757,6 @@ export default function createTippy(
 
     if (instance.state.isVisible) {
       return
-    }
-
-    // Is a delegate, create an instance for the child target
-    if (instance.props.target) {
-      return createDelegateChildTippy(event)
     }
 
     isScheduledToShow = true
@@ -1159,7 +1095,7 @@ export default function createTippy(
   /**
    * Destroys the tooltip
    */
-  function destroy(destroyTargetInstances?: boolean): void {
+  function destroy(): void {
     if (instance.state.isDestroyed) {
       return
     }
@@ -1173,17 +1109,6 @@ export default function createTippy(
     removeTriggersFromReference()
 
     delete reference._tippy
-
-    const { target } = instance.props
-    if (target && destroyTargetInstances && isRealElement(reference)) {
-      arrayFrom(reference.querySelectorAll(target)).forEach(
-        (child: ReferenceElement) => {
-          if (child._tippy) {
-            child._tippy.destroy()
-          }
-        },
-      )
-    }
 
     if (instance.popperInstance) {
       instance.popperInstance.destroy()

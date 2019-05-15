@@ -40,7 +40,6 @@ export const defaultProps: Props = {
   showOnInit: false,
   size: 'regular',
   sticky: false,
-  target: '',
   theme: '',
   touch: true,
   touchHold: false,

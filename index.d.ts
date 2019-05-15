@@ -62,7 +62,6 @@ export interface Props {
   showOnInit: boolean
   size: 'small' | 'regular' | 'large'
   sticky: boolean
-  target: string
   theme: 'dark' | 'light' | 'light-border' | 'google' | string
   touch: boolean
   touchHold: boolean

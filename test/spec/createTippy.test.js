@@ -110,17 +110,6 @@ describe('instance.destroy', () => {
     instance.destroy()
     expect(ref._tippy).toBeDefined()
   })
-
-  it('destroys target instances if `true` is passed as an argument', () => {
-    const ref = h()
-    const p = document.createElement('p')
-    ref.append(p)
-    createTippy(ref, { ...defaultProps, target: 'p' })
-    p._tippy = createTippy(p, defaultProps)
-    expect(p._tippy).toBeDefined()
-    ref._tippy.destroy(true)
-    expect(p._tippy).toBeUndefined()
-  })
 })
 
 describe('instance.show', () => {

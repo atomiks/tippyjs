@@ -1,14 +1,14 @@
 import { Options, Props, ReferenceElement, Targets } from './types'
-import { arrayFrom, matches } from './ponyfills'
+import { arrayFrom } from './ponyfills'
 import { isUCBrowser } from './browser'
 import { getDataAttributeOptions } from './reference'
-import { POPPER_SELECTOR } from './constants'
+import { POPPER_CLASS } from './constants'
 
 /**
  * Determines if the value is a reference element
  */
 export function isReferenceElement(value: any): value is ReferenceElement {
-  return !!value._tippy && !matches.call(value, POPPER_SELECTOR)
+  return !!(value && value._tippy && value.className !== POPPER_CLASS)
 }
 
 /**
