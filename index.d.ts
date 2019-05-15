@@ -52,7 +52,7 @@ export interface Props {
   onHidden(instance: Instance): void
   onHide(instance: Instance): void | false
   onMount(instance: Instance): void
-  onMouseMove(instance: Instance, event: MouseEvent): void
+  onMouseMove(instance: Instance, event: MouseEvent): void | false
   onShow(instance: Instance): void | false
   onShown(instance: Instance): void
   onTrigger(instance: Instance, event: Event): void
