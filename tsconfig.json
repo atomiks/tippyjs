@@ -5,7 +5,7 @@
     "resolveJsonModule": true,
     "strict": true,
     "noUnusedLocals": true,
-    "types": []
+    "types": ["node"]
   },
   "include": ["src/**/*", "index.d.ts"]
 }
