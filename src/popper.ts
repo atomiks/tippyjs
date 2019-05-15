@@ -109,22 +109,14 @@ export function createBackdropElement(): HTMLDivElement {
 /**
  * Adds interactive-related attributes
  */
-export function addInteractive(
-  popper: PopperElement,
-  tooltip: PopperChildren['tooltip'],
-): void {
-  popper.setAttribute('tabindex', '-1')
+export function addInteractive(tooltip: PopperChildren['tooltip']): void {
   tooltip.setAttribute('data-interactive', '')
 }
 
 /**
  * Removes interactive-related attributes
  */
-export function removeInteractive(
-  popper: PopperElement,
-  tooltip: PopperChildren['tooltip'],
-): void {
-  popper.removeAttribute('tabindex')
+export function removeInteractive(tooltip: PopperChildren['tooltip']): void {
   tooltip.removeAttribute('data-interactive')
 }
 
@@ -180,15 +172,12 @@ export function updateTheme(
 export function createPopperElement(id: number, props: Props): PopperElement {
   const popper = div()
   popper.className = POPPER_CLASS
-  popper.id = `__NAMESPACE_PREFIX__-${id}`
   popper.style.zIndex = '' + props.zIndex
 
-  if (props.role) {
-    popper.setAttribute('role', props.role)
-  }
-
   const tooltip = div()
+
   tooltip.className = TOOLTIP_CLASS
+  tooltip.id = `__NAMESPACE_PREFIX__-${id}`
   tooltip.style.maxWidth =
     props.maxWidth + (typeof props.maxWidth === 'number' ? 'px' : '')
   tooltip.setAttribute('data-size', props.size)
@@ -196,12 +185,16 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   tooltip.setAttribute('data-state', 'hidden')
   updateTheme(tooltip, 'add', props.theme)
 
+  if (props.role) {
+    tooltip.setAttribute('role', props.role)
+  }
+
   const content = div()
   content.className = CONTENT_CLASS
   content.setAttribute('data-state', 'hidden')
 
   if (props.interactive) {
-    addInteractive(popper, tooltip)
+    addInteractive(tooltip)
   }
 
   if (props.arrow) {
@@ -236,15 +229,16 @@ export function updatePopperElement(
   const { tooltip, content, backdrop, arrow } = getChildren(popper)
 
   popper.style.zIndex = '' + nextProps.zIndex
+
   tooltip.setAttribute('data-size', nextProps.size)
   tooltip.setAttribute('data-animation', nextProps.animation)
   tooltip.style.maxWidth =
     nextProps.maxWidth + (typeof nextProps.maxWidth === 'number' ? 'px' : '')
 
   if (nextProps.role) {
-    popper.setAttribute('role', nextProps.role)
+    tooltip.setAttribute('role', nextProps.role)
   } else {
-    popper.removeAttribute('role')
+    tooltip.removeAttribute('role')
   }
 
   if (prevProps.content !== nextProps.content) {
@@ -278,9 +272,9 @@ export function updatePopperElement(
 
   // interactive
   if (!prevProps.interactive && nextProps.interactive) {
-    addInteractive(popper, tooltip)
+    addInteractive(tooltip)
   } else if (prevProps.interactive && !nextProps.interactive) {
-    removeInteractive(popper, tooltip)
+    removeInteractive(tooltip)
   }
 
   // inertia
