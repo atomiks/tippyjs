@@ -118,22 +118,6 @@ describe('getValue', () => {
   })
 })
 
-describe('debounce', () => {
-  it('works as expected', () => {
-    const fn = jest.fn()
-    const debouncedFn = Utils.debounce(fn, 50)
-    debouncedFn()
-    expect(fn).toHaveBeenCalledTimes(0)
-    jest.advanceTimersByTime(40)
-    expect(fn).toHaveBeenCalledTimes(0)
-    debouncedFn()
-    jest.advanceTimersByTime(40)
-    expect(fn).toHaveBeenCalledTimes(0)
-    jest.advanceTimersByTime(10)
-    expect(fn).toHaveBeenCalledTimes(1)
-  })
-})
-
 describe('getModifier', () => {
   it('returns an object nested in `modifiers` object without errors', () => {
     expect(Utils.getModifier({}, 'flip')).toBe(undefined)

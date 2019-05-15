@@ -55,19 +55,6 @@ export function getValue(value: any, index: number, defaultValue: any): any {
 }
 
 /**
- * Debounce utility
- */
-export function debounce(fn: Function, ms: number): () => void {
-  let timeoutId: number
-
-  return function() {
-    clearTimeout(timeoutId)
-    // @ts-ignore
-    timeoutId = setTimeout(() => fn.apply(this, arguments), ms)
-  }
-}
-
-/**
  * Prevents errors from being thrown while accessing nested modifier objects
  * in `popperOptions`
  */

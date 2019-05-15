@@ -11,7 +11,7 @@ import {
 } from './types'
 import { isIE } from './browser'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
-import { PASSIVE, PADDING, POPPER_SELECTOR } from './constants'
+import { PASSIVE, PADDING } from './constants'
 import { isUsingTouch } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
@@ -25,7 +25,6 @@ import {
 } from './popper'
 import {
   hasOwnProperty,
-  debounce,
   getValue,
   getModifier,
   includes,
@@ -78,10 +77,6 @@ export default function createTippy(
     right: number
     [key: string]: number
   }
-  let debouncedOnMouseMove =
-    props.interactiveDebounce > 0
-      ? debounce(onMouseMove, props.interactiveDebounce)
-      : onMouseMove
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   const id = idCounter++
@@ -149,9 +144,11 @@ export default function createTippy(
   })
   popper.addEventListener('mouseleave', () => {
     if (instance.props.interactive && lastTriggerEventType === 'mouseenter') {
-      document.addEventListener('mousemove', debouncedOnMouseMove)
+      document.addEventListener('mousemove', onMouseMove)
     }
   })
+
+  props.onCreate(instance)
 
   return instance
 
@@ -171,7 +168,7 @@ export default function createTippy(
    */
   function cleanupOldMouseListeners(): void {
     document.body.removeEventListener('mouseleave', scheduleHide)
-    document.removeEventListener('mousemove', debouncedOnMouseMove)
+    document.removeEventListener('mousemove', onMouseMove)
   }
 
   /**
@@ -496,14 +493,16 @@ export default function createTippy(
    * hide
    */
   function onMouseMove(event: MouseEvent): void {
-    const isCursorOverPopper =
-      closest(event.target as Element, POPPER_SELECTOR) === popper
-    const isCursorOverReference = closestCallback(
+    const isCursorOverReferenceOrPopper = closestCallback(
       event.target as Element,
-      (el: Element) => el === reference,
+      (el: Element) => el === reference || el === popper,
     )
 
-    if (isCursorOverPopper || isCursorOverReference) {
+    if (isCursorOverReferenceOrPopper) {
+      return
+    }
+
+    if (instance.props.onMouseMove(instance, event) === false) {
       return
     }
 
@@ -530,7 +529,7 @@ export default function createTippy(
 
     if (instance.props.interactive) {
       document.body.addEventListener('mouseleave', scheduleHide)
-      document.addEventListener('mousemove', debouncedOnMouseMove)
+      document.addEventListener('mousemove', onMouseMove)
       return
     }
 
@@ -980,10 +979,6 @@ export default function createTippy(
     addTriggersToReference()
 
     cleanupOldMouseListeners()
-    debouncedOnMouseMove = debounce(
-      onMouseMove,
-      options.interactiveDebounce || 0,
-    )
 
     updatePopperElement(popper, prevProps, nextProps)
     instance.popperChildren = getChildren(popper)
