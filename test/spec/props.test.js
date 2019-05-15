@@ -910,7 +910,7 @@ describe('aria', () => {
     const tip = tippy(ref, { aria: 'labelledby', duration: 0 })
     tip.show()
     jest.runAllTimers()
-    expect(ref.getAttribute('aria-labelledby')).toBe(tip.popper.id)
+    expect(ref.getAttribute('aria-labelledby')).toBe('' + tip.id)
   })
 
   it('removes the attribute on hide', () => {

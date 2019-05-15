@@ -1089,7 +1089,7 @@ export default function createTippy(
         if (instance.props.aria) {
           getEventListenersTarget().setAttribute(
             `aria-${instance.props.aria}`,
-            popper.id,
+            '' + id,
           )
         }
 
