@@ -46,62 +46,58 @@ export interface PopperInstance extends Popper {
   modifiers: { name: string; padding: object | number }[]
 }
 
-export interface Options {
-  a11y?: boolean
-  allowHTML?: boolean
-  animateFill?: boolean
-  animation?: 'fade' | 'scale' | 'shift-toward' | 'perspective' | 'shift-away'
-  appendTo?: 'parent' | Element | ((ref: Element) => Element)
-  aria?: 'describedby' | 'labelledby' | null
-  arrow?: boolean
-  arrowType?: 'sharp' | 'round'
-  boundary?: 'scrollParent' | 'window' | 'viewport' | HTMLElement
-  content?: Content
-  delay?: number | [number, number]
-  distance?: number
-  duration?: number | [number, number]
-  flip?: boolean
-  flipBehavior?: 'flip' | Placement[]
-  flipOnUpdate?: boolean
-  followCursor?: boolean | 'vertical' | 'horizontal' | 'initial'
-  hideOnClick?: boolean | 'toggle'
-  ignoreAttributes?: boolean
-  inertia?: boolean
-  interactive?: boolean
-  interactiveBorder?: number
-  interactiveDebounce?: number
-  lazy?: boolean
-  maxWidth?: number | string
-  multiple?: boolean
-  offset?: number | string
-  onHidden?(instance: Instance): void
-  onHide?(instance: Instance): void | false
-  onMount?(instance: Instance): void
-  onShow?(instance: Instance): void | false
-  onShown?(instance: Instance): void
-  onTrigger?(instance: Instance, event: Event): void
-  placement?: Placement
-  popperOptions?: Popper.PopperOptions
-  role?: string
-  showOnInit?: boolean
-  size?: 'small' | 'regular' | 'large'
-  sticky?: boolean
-  target?: string
-  theme?: 'dark' | 'light' | 'light-border' | 'google' | string
-  touch?: boolean
-  touchHold?: boolean
-  trigger?: string
-  triggerTarget?: Element | null
-  updateDuration?: number
-  wait?: ((instance: Instance, event?: Event) => void) | null
-  zIndex?: number
+export interface Props {
+  a11y: boolean
+  allowHTML: boolean
+  animateFill: boolean
+  animation: 'fade' | 'scale' | 'shift-toward' | 'perspective' | 'shift-away'
+  appendTo: 'parent' | Element | ((ref: Element) => Element)
+  aria: 'describedby' | 'labelledby' | null
+  arrow: boolean
+  arrowType: 'sharp' | 'round'
+  boundary: 'scrollParent' | 'window' | 'viewport' | HTMLElement
+  content: Content
+  delay: number | [number, number]
+  distance: number
+  duration: number | [number, number]
+  flip: boolean
+  flipBehavior: 'flip' | Placement[]
+  flipOnUpdate: boolean
+  followCursor: boolean | 'vertical' | 'horizontal' | 'initial'
+  hideOnClick: boolean | 'toggle'
+  ignoreAttributes: boolean
+  inertia: boolean
+  interactive: boolean
+  interactiveBorder: number
+  interactiveDebounce: number
+  lazy: boolean
+  maxWidth: number | string
+  multiple: boolean
+  offset: number | string
+  onHidden(instance: Instance): void
+  onHide(instance: Instance): void | false
+  onMount(instance: Instance): void
+  onShow(instance: Instance): void | false
+  onShown(instance: Instance): void
+  onTrigger(instance: Instance, event: Event): void
+  placement: Placement
+  popperOptions: Popper.PopperOptions
+  role: string
+  showOnInit: boolean
+  size: 'small' | 'regular' | 'large'
+  sticky: boolean
+  target: string
+  theme: 'dark' | 'light' | 'light-border' | 'google' | string
+  touch: boolean
+  touchHold: boolean
+  trigger: string
+  triggerTarget: Element | null
+  updateDuration: number
+  wait: ((instance: Instance, event?: Event) => void) | null
+  zIndex: number
 }
 
-/**
- * @deprecated
- * Use `Options` instead.
- */
-export type Props = Options
+export type Options = Partial<Props>
 
 export interface Instance {
   clearDelayTimeouts(): void
