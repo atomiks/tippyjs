@@ -34,6 +34,7 @@ import {
   evaluateProps,
   setTransitionDuration,
   setVisibilityState,
+  debounce,
 } from './utils'
 
 let idCounter = 1
@@ -78,6 +79,7 @@ export default function createTippy(
     right: number
     [key: string]: number
   }
+  let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce)
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   const id = idCounter++
@@ -145,7 +147,7 @@ export default function createTippy(
   })
   popper.addEventListener('mouseleave', () => {
     if (instance.props.interactive && lastTriggerEventType === 'mouseenter') {
-      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mousemove', debouncedOnMouseMove)
     }
   })
 
@@ -169,8 +171,10 @@ export default function createTippy(
    */
   function cleanupInteractiveMouseListeners(): void {
     document.body.removeEventListener('mouseleave', scheduleHide)
-    document.removeEventListener('mousemove', onMouseMove)
-    mouseMoveListeners = mouseMoveListeners.filter(l => l !== onMouseMove)
+    document.removeEventListener('mousemove', debouncedOnMouseMove)
+    mouseMoveListeners = mouseMoveListeners.filter(
+      listener => listener !== debouncedOnMouseMove,
+    )
   }
 
   /**
@@ -469,10 +473,6 @@ export default function createTippy(
       return
     }
 
-    if (instance.props.onMouseMove(instance, event) === false) {
-      return
-    }
-
     if (
       isCursorOutsideInteractiveBorder(
         getBasicPlacement(currentPlacement),
@@ -496,8 +496,8 @@ export default function createTippy(
 
     if (instance.props.interactive) {
       document.body.addEventListener('mouseleave', scheduleHide)
-      document.addEventListener('mousemove', onMouseMove)
-      mouseMoveListeners.push(onMouseMove)
+      document.addEventListener('mousemove', debouncedOnMouseMove)
+      mouseMoveListeners.push(debouncedOnMouseMove)
 
       return
     }
@@ -927,6 +927,7 @@ export default function createTippy(
     addTriggersToReference()
 
     cleanupInteractiveMouseListeners()
+    debouncedOnMouseMove = debounce(onMouseMove, nextProps.interactiveDebounce)
 
     updatePopperElement(popper, prevProps, nextProps)
     instance.popperChildren = getChildren(popper)

@@ -610,41 +610,6 @@ describe('onCreate', () => {
   })
 })
 
-describe('onMouseMove', () => {
-  it('is called during the internal onMouseMove handler', () => {
-    let called = false
-    const instance = tippy(h(), {
-      onMouseMove() {
-        called = true
-        return false
-      },
-      interactive: true,
-    })
-    instance.show()
-    jest.runAllTimers()
-    instance.reference.dispatchEvent(new Event('mouseleave'))
-    document.dispatchEvent(
-      new MouseEvent('mousemove', {
-        clientX: 1000,
-        clientY: 1000,
-      }),
-    )
-    expect(instance.state.isVisible).toBe(true)
-    expect(called).toBe(true)
-    instance.hide()
-    instance.set({ onMouseMove() {} })
-    instance.show()
-    instance.reference.dispatchEvent(new Event('mouseleave'))
-    document.dispatchEvent(
-      new MouseEvent('mousemove', {
-        clientX: 1000,
-        clientY: 1000,
-      }),
-    )
-    expect(instance.state.isVisible).toBe(false)
-  })
-})
-
 describe('wait', () => {
   it('waits until the user manually shows the tooltip', () => {
     const ref = h()

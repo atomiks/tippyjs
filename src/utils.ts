@@ -173,3 +173,26 @@ export function validateOptions(
     }
   })
 }
+
+/**
+ * Debounce utility. To avoid bloating bundle size, we're only passing 1 argument
+ * here, a more generic function would pass all arguments. Only `onMouseMove` uses
+ * this which takes the event object for now.
+ */
+export function debounce<T>(
+  fn: (arg: T) => void,
+  ms: number,
+): (arg: T) => void {
+  // Avoid wrapping in `setTimeout` if ms is 0 anyway
+  if (ms === 0) {
+    return fn
+  }
+
+  let timeout: any
+
+  return function(arg): void {
+    clearTimeout(timeout)
+    // @ts-ignore
+    timeout = setTimeout(() => fn.call(this, arg), ms)
+  }
+}

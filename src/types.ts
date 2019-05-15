@@ -47,6 +47,7 @@ export interface Props {
   inertia: boolean
   interactive: boolean
   interactiveBorder: number
+  interactiveDebounce: number
   lazy: boolean
   maxWidth: number | string
   multiple: boolean
@@ -55,7 +56,6 @@ export interface Props {
   onHidden(instance: Instance): void
   onHide(instance: Instance): void | false
   onMount(instance: Instance): void
-  onMouseMove(instance: Instance, event: MouseEvent): void | false
   onShow(instance: Instance): void | false
   onShown(instance: Instance): void
   onTrigger(instance: Instance, event: Event): void

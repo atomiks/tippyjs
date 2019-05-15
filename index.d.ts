@@ -44,6 +44,7 @@ export interface Props {
   inertia: boolean
   interactive: boolean
   interactiveBorder: number
+  interactiveDebounce: number
   lazy: boolean
   maxWidth: number | string
   multiple: boolean
