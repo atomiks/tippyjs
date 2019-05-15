@@ -25,18 +25,11 @@ const NAMESPACE_PREFIX = process.env.NAMESPACE || 'tippy'
 
 const extensions = ['.js', '.ts']
 
-const plugins = {
-  babel: babel({
-    exclude: 'node_modules/**',
-    extensions,
-  }),
-  replace: replace({
-    __NAMESPACE_PREFIX__: NAMESPACE_PREFIX,
-  }),
-  minify: terser(),
-  resolve: resolve({ extensions }),
-  css: cssOnly({ output: false }),
-  json: json(),
+const FILENAMES = {
+  base: 'tippy.js',
+  baseMin: 'tippy.min.js',
+  bundle: 'tippy.bundle.js',
+  bundleMin: 'tippy.bundle.min.js',
 }
 
 const BASE_OUTPUT_CONFIG = {
@@ -44,107 +37,162 @@ const BASE_OUTPUT_CONFIG = {
   globals: { 'popper.js': 'Popper' },
   sourcemap: true,
 }
-const BASE_PLUGINS = [plugins.replace, plugins.resolve, plugins.json]
 
-const pluginConfigs = {
-  index: [plugins.babel, ...BASE_PLUGINS],
-  indexMinify: [plugins.babel, ...BASE_PLUGINS, plugins.minify],
-  all: [plugins.babel, ...BASE_PLUGINS, plugins.css],
-  allMinify: [plugins.babel, ...BASE_PLUGINS, plugins.minify, plugins.css],
+const PLUGINS = {
+  babel: babel({
+    exclude: 'node_modules/**',
+    extensions,
+  }),
+  replaceNamespace: replace({
+    __NAMESPACE_PREFIX__: NAMESPACE_PREFIX,
+  }),
+  replaceEnv: replace({
+    'process.env.NODE_ENV': JSON.stringify('production'),
+  }),
+  replaceEnvUMD: replace({
+    'process.env.NODE_ENV': JSON.stringify('development'),
+  }),
+  minify: terser(),
+  resolve: resolve({ extensions }),
+  css: cssOnly({ output: false }),
+  json: json(),
 }
 
-const createPluginSCSS = output => {
+const COMMON_PLUGINS = [PLUGINS.replaceNamespace, PLUGINS.resolve, PLUGINS.json]
+
+const PLUGIN_CONFIGS = {
+  base: [PLUGINS.babel, ...COMMON_PLUGINS],
+  baseMin: [
+    PLUGINS.babel,
+    PLUGINS.replaceEnv,
+    ...COMMON_PLUGINS,
+    PLUGINS.minify,
+  ],
+  bundle: [PLUGINS.babel, ...COMMON_PLUGINS, PLUGINS.css],
+  bundleMin: [
+    PLUGINS.babel,
+    PLUGINS.replaceEnv,
+    ...COMMON_PLUGINS,
+    PLUGINS.minify,
+    PLUGINS.css,
+  ],
+  umdBase: [PLUGINS.babel, PLUGINS.replaceEnvUMD, ...COMMON_PLUGINS],
+  umdBundle: [
+    PLUGINS.babel,
+    PLUGINS.replaceEnvUMD,
+    ...COMMON_PLUGINS,
+    PLUGINS.css,
+  ],
+}
+
+function createPluginSCSS(output) {
   return sass({
     output,
     options: {
       data: `$namespace-prefix: ${NAMESPACE_PREFIX};`,
     },
-    processor: css =>
-      postcss([autoprefixer, cssnano])
+    processor(css) {
+      return postcss([autoprefixer, cssnano])
         .process(css, { from: undefined })
-        .then(result => result.css),
+        .then(result => result.css)
+    },
   })
 }
 
-const createRollupConfigWithoutPlugins = input => plugins => ({
-  input,
-  plugins,
-  external: ['popper.js'],
-})
-
-const createPreparedOutputConfig = format => (file, { min = false } = {}) => {
-  const isCSS = ['css', 'themes'].includes(format)
+function createRollupConfig(inputFile, plugins) {
   return {
-    ...BASE_OUTPUT_CONFIG,
-    format: isCSS ? 'umd' : format,
-    sourcemap: !isCSS,
-    file: format === 'css' ? 'index.js' : `./${format}/${file}`,
-    banner: min ? undefined : BANNER,
+    input: `./build/${inputFile}.js`,
+    external: ['popper.js'],
+    plugins,
   }
 }
 
-const getRollupConfigs = {
-  css: createRollupConfigWithoutPlugins('./build/css.js'),
-  index: createRollupConfigWithoutPlugins('./build/index.js'),
-  all: createRollupConfigWithoutPlugins('./build/all.js'),
-}
-
-const getOutputConfigs = {
-  bundle: [
-    createPreparedOutputConfig('umd'),
-    createPreparedOutputConfig('esm'),
-  ],
-  css: createPreparedOutputConfig('css'),
-  theme: createPreparedOutputConfig('themes'),
-}
-
-const build = async () => {
+async function build() {
   console.log(blue('⏳ Building bundles...'))
 
-  const preCSSBundle = await rollup(
-    getRollupConfigs.css(createPluginSCSS('./index.css')),
+  // Create `./index.css` first
+  const cssConfig = createRollupConfig(
+    'css',
+    PLUGIN_CONFIGS.bundle.concat(createPluginSCSS('./index.css')),
   )
-  await preCSSBundle.write(getOutputConfigs.css('./index.js'))
+  const cssBundle = await rollup(cssConfig)
+  await cssBundle.write({
+    ...BASE_OUTPUT_CONFIG,
+    sourcemap: false,
+    format: 'umd',
+    file: './index.js',
+  })
   fs.unlinkSync('./index.js')
 
-  console.log('CSS done')
-
-  const bundles = {
-    index: await rollup(getRollupConfigs.index(pluginConfigs.index)),
-    indexMin: await rollup(getRollupConfigs.index(pluginConfigs.indexMinify)),
-    all: await rollup(getRollupConfigs.all(pluginConfigs.all)),
-    allMin: await rollup(getRollupConfigs.all(pluginConfigs.allMinify)),
+  const cjs = {
+    format: 'cjs',
+    configs: {
+      base: await rollup(createRollupConfig('base', PLUGIN_CONFIGS.base)),
+      bundle: await rollup(createRollupConfig('bundle', PLUGIN_CONFIGS.bundle)),
+    },
   }
 
-  // Standard UMD + ESM
-  for (const getOutputConfig of getOutputConfigs.bundle) {
-    const outputConfigs = {
-      index: getOutputConfig('index.js'),
-      indexMin: getOutputConfig('index.min.js', { min: true }),
-      all: getOutputConfig('index.all.js'),
-      allMin: getOutputConfig('index.all.min.js', { min: true }),
-    }
-
-    bundles.index.write(outputConfigs.index)
-    bundles.indexMin.write(outputConfigs.indexMin)
-    bundles.all.write(outputConfigs.all)
-    bundles.allMin.write(outputConfigs.allMin)
+  const esm = {
+    format: 'esm',
+    configs: {
+      base: await rollup(createRollupConfig('base', PLUGIN_CONFIGS.base)),
+      baseMin: await rollup(createRollupConfig('base', PLUGIN_CONFIGS.baseMin)),
+      bundle: await rollup(createRollupConfig('bundle', PLUGIN_CONFIGS.bundle)),
+      bundleMin: await rollup(
+        createRollupConfig('bundle', PLUGIN_CONFIGS.bundleMin),
+      ),
+    },
   }
+
+  const umd = {
+    format: 'umd',
+    configs: {
+      base: await rollup(createRollupConfig('base', PLUGIN_CONFIGS.umdBase)),
+      baseMin: await rollup(createRollupConfig('base', PLUGIN_CONFIGS.baseMin)),
+      bundle: await rollup(
+        createRollupConfig('bundle', PLUGIN_CONFIGS.umdBundle),
+      ),
+      bundleMin: await rollup(
+        createRollupConfig('bundle', PLUGIN_CONFIGS.bundleMin),
+      ),
+    },
+  }
+
+  const formats = [cjs, esm, umd]
+
+  formats.forEach(formatObject => {
+    const { format } = formatObject
+
+    Object.entries(formatObject.configs).forEach(([type, bundle]) => {
+      bundle.write({
+        ...BASE_OUTPUT_CONFIG,
+        format,
+        file: `./${format}/${FILENAMES[type]}`,
+        banner: type.includes('Min') ? undefined : BANNER,
+      })
+    })
+  })
 
   console.log(green('Bundles complete'))
 
   console.log(blue('\n⏳ Building CSS themes...'))
 
   for (const theme of fs.readdirSync('./build/themes')) {
-    const preparedThemeConfig = createRollupConfigWithoutPlugins(
-      `./build/themes/${theme}`,
+    const filenameWithoutJSExtension = theme.replace('.js', '')
+    const filenameWithCSSExtension = theme.replace('.js', '.css')
+    const outputFile = `./themes/${filenameWithCSSExtension}`
+
+    const config = createRollupConfig(
+      `themes/${filenameWithoutJSExtension}`,
+      PLUGIN_CONFIGS.bundle.concat(createPluginSCSS(outputFile)),
     )
-    const outputFile = `./themes/${theme.replace('.js', '.css')}`
-    const bundle = await rollup(
-      preparedThemeConfig(createPluginSCSS(outputFile)),
-    )
-    await bundle.write(getOutputConfigs.theme(theme))
-    fs.unlinkSync(`./themes/${theme}`)
+    const bundle = await rollup(config)
+    await bundle.write({
+      ...BASE_OUTPUT_CONFIG,
+      format: 'umd',
+      sourcemap: false,
+      file: outputFile,
+    })
   }
 
   console.log(green('✓ Themes\n'))
