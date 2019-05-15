@@ -304,18 +304,20 @@ describe('evaluateProps', () => {
 
 describe('validateOptions', () => {
   it('does nothing if valid options were passed', () => {
-    expect(() =>
-      Utils.validateOptions(
-        { arrow: true, arrowType: 'round' },
-        { arrow: false, arrowType: 'sharp' },
-      ),
-    ).not.toThrow()
+    const spy = jest.spyOn(console, 'warn')
+    Utils.validateOptions(
+      { arrow: true, arrowType: 'round' },
+      { arrow: false, arrowType: 'sharp' },
+    )
+    expect(spy).toHaveBeenCalledTimes(0)
+    spy.mockRestore()
   })
 
   it('throws with the correct message if invalid options were passed', () => {
-    expect(() =>
-      Utils.validateOptions({ intractive: true }, { interactive: false }),
-    ).toThrow('[tippy]: `intractive` is not a valid option')
+    const spy = jest.spyOn(console, 'warn')
+    Utils.validateOptions({ intractive: true }, { interactive: false })
+    expect(spy).toHaveBeenCalledTimes(1)
+    spy.mockRestore()
   })
 })
 

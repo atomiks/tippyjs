@@ -21,7 +21,9 @@ let globalEventListenersBound = false
  * Exported module
  */
 function tippy(targets: Targets, options?: Options): Instance | Instance[] {
-  validateOptions(options || {}, defaultProps)
+  if (process.env.NODE_ENV !== 'production') {
+    validateOptions(options, defaultProps)
+  }
 
   if (!globalEventListenersBound) {
     bindGlobalEventListeners()

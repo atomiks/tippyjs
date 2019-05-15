@@ -25,19 +25,14 @@ describe('tippy', () => {
     })
   })
 
-  it('throws an error if invalid option(s) are supplied', () => {
-    expect(() => {
-      tippy(h(), {
-        placement: 'top',
-        _someInvalidOption: true,
-      })
-    }).toThrow()
-
-    expect(() => {
-      tippy(h(), {
-        placement: 'top',
-      })
-    }).not.toThrow()
+  it('warns if invalid option(s) are supplied', () => {
+    const spy = jest.spyOn(console, 'warn')
+    tippy(h(), {
+      placement: 'top',
+      _someInvalidOption: true,
+    })
+    expect(spy).toHaveBeenCalledTimes(1)
+    spy.mockRestore()
   })
 
   it('handles falsy reference', () => {

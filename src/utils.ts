@@ -207,10 +207,13 @@ export function evaluateProps(
 /**
  * Validates an object of options with the valid default props object
  */
-export function validateOptions(options: Options, defaultProps: Props): void {
+export function validateOptions(
+  options: Options = {},
+  defaultProps: Props,
+): void {
   Object.keys(options).forEach(option => {
     if (!hasOwnProperty(defaultProps, option)) {
-      throw new Error(`[tippy]: \`${option}\` is not a valid option`)
+      console.warn(`[tippy.js] \`${option}\` is not a valid option`)
     }
   })
 }

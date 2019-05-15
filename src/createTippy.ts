@@ -68,8 +68,8 @@ export default function createTippy(
   /* ======================= 🔒 Private members 🔒 ======================= */
   let lastTriggerEventType: string
   let lastMouseMoveEvent: MouseEvent
-  let showTimeoutId: number
-  let hideTimeoutId: number
+  let showTimeoutId: any
+  let hideTimeoutId: any
   let animationFrameId: number
   let isScheduledToShow = false
   let currentParentNode: Element
@@ -972,10 +972,21 @@ export default function createTippy(
    * Sets new props for the instance and redraws the tooltip
    */
   function set(options: Options): void {
-    // Backwards-compatible after TypeScript change
-    options = options || {}
+    if (process.env.NODE_ENV !== 'production') {
+      if (instance.state.isDestroyed) {
+        console.warn(
+          '[tippy.js] `set()` was called on a destroyed instance. This is a no-op but indicates a potential memory leak.',
+        )
+      }
+    }
 
-    validateOptions(options, defaultProps)
+    if (instance.state.isDestroyed) {
+      return
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      validateOptions(options, defaultProps)
+    }
 
     removeTriggersFromReference()
 
@@ -1042,6 +1053,14 @@ export default function createTippy(
       (defaultProps.duration as [number, number])[1],
     ),
   ): void {
+    if (process.env.NODE_ENV !== 'production') {
+      if (instance.state.isDestroyed) {
+        console.warn(
+          '[tippy.js] `show()` was called on a destroyed instance. This is a no-op, but indicates a potential memory leak.',
+        )
+      }
+    }
+
     if (
       instance.state.isDestroyed ||
       !instance.state.isEnabled ||
@@ -1123,6 +1142,14 @@ export default function createTippy(
       (defaultProps.duration as [number, number])[1],
     ),
   ): void {
+    if (process.env.NODE_ENV !== 'production') {
+      if (instance.state.isDestroyed) {
+        console.warn(
+          '[tippy.js] `hide()` was called on a destroyed instance. This is a no-op, but indicates a potential memory leak.',
+        )
+      }
+    }
+
     if (instance.state.isDestroyed || !instance.state.isEnabled) {
       return
     }
