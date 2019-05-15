@@ -4,6 +4,7 @@
 /.devserver
 node_modules
 /index.css
+/cjs
 /umd
 /esm
 /themes

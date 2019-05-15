@@ -1,5 +1,6 @@
 node_modules
 coverage
+cjs
 esm
 umd
 website

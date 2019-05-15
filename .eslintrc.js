@@ -21,5 +21,6 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/array-type': 'off',
+    'no-console': 'off',
   },
 }
