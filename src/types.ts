@@ -43,6 +43,9 @@ export interface VirtualReference extends Popper.ReferenceObject {
 export interface PopperInstance extends Popper {
   reference: ReferenceElement | VirtualReference
   popper: PopperElement
+  data: {
+    placement: Placement
+  }
   modifiers: { name: string; padding: object | number }[]
 }
 

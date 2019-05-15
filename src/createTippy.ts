@@ -8,16 +8,11 @@ import {
   Content,
   Listener,
   VirtualReference,
+  Placement,
 } from './types'
 import { isIE } from './browser'
 import { closest, closestCallback, arrayFrom } from './ponyfills'
-import {
-  PASSIVE,
-  PADDING,
-  PLACEMENT_ATTRIBUTE,
-  OUT_OF_BOUNDARIES_ATTRIBUTE,
-  POPPER_SELECTOR,
-} from './constants'
+import { PASSIVE, PADDING, POPPER_SELECTOR } from './constants'
 import { isUsingTouch } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
@@ -71,6 +66,7 @@ export default function createTippy(
   let animationFrameId: number
   let isScheduledToShow = false
   let currentParentNode: Element
+  let currentPlacement: Placement = props.placement
   let previousPlacement: string
   let wasVisibleDuringPreviousUpdate = false
   let hasMountCallbackRun = false
@@ -391,7 +387,7 @@ export default function createTippy(
 
     // Ensure virtual reference is padded to prevent tooltip from overflowing.
     // Seems to be a Popper.js issue
-    const placement = getBasicPlacement(popper)
+    const placement = getBasicPlacement(currentPlacement)
     const isVerticalPlacement = includes(['top', 'bottom'], placement)
     const isHorizontalPlacement = includes(['left', 'right'], placement)
     const padding = { ...currentComputedPadding }
@@ -519,7 +515,7 @@ export default function createTippy(
 
     if (
       isCursorOutsideInteractiveBorder(
-        getBasicPlacement(popper),
+        getBasicPlacement(currentPlacement),
         popper.getBoundingClientRect(),
         event,
         instance.props,
@@ -622,6 +618,8 @@ export default function createTippy(
     )
 
     function applyMutations(data: Popper.Data): void {
+      currentPlacement = data.placement
+
       if (instance.props.flip && !instance.props.flipOnUpdate) {
         if (data.flipped) {
           instance.popperInstance!.options.placement = data.placement
@@ -630,21 +628,20 @@ export default function createTippy(
         setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
       }
 
-      // Apply all of the popper's attributes to the tootip node as well.
-      // Allows users to avoid using the .tippy-popper selector for themes.
-      tooltip.setAttribute(PLACEMENT_ATTRIBUTE, data.placement)
-
-      if (data.attributes[OUT_OF_BOUNDARIES_ATTRIBUTE] !== false) {
-        tooltip.setAttribute(OUT_OF_BOUNDARIES_ATTRIBUTE, '')
+      // Apply all of the popper's attributes to the tootip node instead
+      popper.removeAttribute('x-placement')
+      tooltip.setAttribute('data-placement', currentPlacement)
+      if (data.attributes['x-out-of-boundaries'] !== false) {
+        tooltip.setAttribute('data-out-of-boundaries', '')
       } else {
-        tooltip.removeAttribute(OUT_OF_BOUNDARIES_ATTRIBUTE)
+        tooltip.removeAttribute('data-out-of-boundaries')
       }
 
       // Prevents a transition when changing placements (while tippy is visible)
       // for scroll/resize updates
       if (
         previousPlacement &&
-        previousPlacement !== data.placement &&
+        previousPlacement !== currentPlacement &&
         wasVisibleDuringPreviousUpdate
       ) {
         tooltip.style.transition = 'none'
@@ -652,10 +649,11 @@ export default function createTippy(
           tooltip.style.transition = ''
         })
       }
-      previousPlacement = data.placement
+
+      previousPlacement = currentPlacement
       wasVisibleDuringPreviousUpdate = instance.state.isVisible
 
-      const basicPlacement = getBasicPlacement(popper)
+      const basicPlacement = getBasicPlacement(currentPlacement)
       const styles = tooltip.style
 
       // Account for the `distance` offset
@@ -717,16 +715,16 @@ export default function createTippy(
         },
       },
       onCreate(data: Popper.Data) {
-        runMountCallback()
         applyMutations(data)
+        runMountCallback()
 
         if (popperOptions && popperOptions.onCreate) {
           popperOptions.onCreate(data)
         }
       },
       onUpdate(data: Popper.Data) {
-        runMountCallback()
         applyMutations(data)
+        runMountCallback()
 
         if (popperOptions && popperOptions.onUpdate) {
           popperOptions.onUpdate(data)

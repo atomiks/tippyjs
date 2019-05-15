@@ -4,6 +4,7 @@ import {
   PopperChildren,
   HideAllOptions,
   BasicPlacement,
+  Placement,
 } from './types'
 import { arrayFrom } from './ponyfills'
 import { innerHTML, div, isReferenceElement, isRealElement } from './utils'
@@ -21,7 +22,6 @@ import {
   CONTENT_SELECTOR,
   ARROW_SELECTOR,
   ROUND_ARROW_SELECTOR,
-  PLACEMENT_ATTRIBUTE,
 } from './constants'
 
 /**
@@ -150,9 +150,8 @@ export function updateTransitionEndListener(
 /**
  * Returns the popper's placement, ignoring shifting (top-start, etc)
  */
-export function getBasicPlacement(popper: PopperElement): BasicPlacement {
-  const fullPlacement = popper.getAttribute(PLACEMENT_ATTRIBUTE)
-  return (fullPlacement ? fullPlacement.split('-')[0] : '') as BasicPlacement
+export function getBasicPlacement(placement: Placement): BasicPlacement {
+  return placement.split('-')[0] as BasicPlacement
 }
 
 /**

@@ -11,9 +11,20 @@
   max-width: calc(100% - 8px);
   pointer-events: none;
   outline: 0;
+}
+
+.#{$namespace-prefix}-tooltip {
+  position: relative;
+  color: white;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  padding: 0.3125rem 0.5625rem;
+  line-height: 1.4;
+  text-align: center;
+  background-color: #333;
 
   @each $placement in $placements {
-    &[x-placement^='#{$placement}'] {
+    &[data-placement^='#{$placement}'] {
       .#{$namespace-prefix}-backdrop {
         border-radius: nth(
           $backdrop-border-radii,
@@ -56,7 +67,7 @@
         }
       }
 
-      [data-animation='fade'] {
+      &[data-animation='fade'] {
         &[data-state='visible'] {
           @include enter-transform($placement, 'fade');
         }
@@ -66,7 +77,7 @@
         }
       }
 
-      [data-animation='shift-away'] {
+      &[data-animation='shift-away'] {
         &[data-state='visible'] {
           @include enter-transform($placement, 'fade');
         }
@@ -77,17 +88,6 @@
       }
     }
   }
-}
-
-.#{$namespace-prefix}-tooltip {
-  position: relative;
-  color: white;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-  padding: 0.3125rem 0.5625rem;
-  line-height: 1.4;
-  text-align: center;
-  background-color: #333;
 
   &[data-size='small'] {
     padding: 0.1875rem 0.375rem;

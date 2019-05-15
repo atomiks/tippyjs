@@ -637,7 +637,7 @@ describe('getOffsetDistanceInPx', () => {
   })
 })
 
-describe('getPopperPlacement', () => {
+describe('getBasicPlacement', () => {
   it('returns the base value without shifting', () => {
     const allPlacements = ['top', 'bottom', 'left', 'right'].reduce(
       (acc, basePlacement) => [
@@ -648,16 +648,13 @@ describe('getPopperPlacement', () => {
     )
 
     allPlacements.forEach(placement => {
-      const popper = h('div')
-      popper.setAttribute('x-placement', placement)
-      expect(getBasicPlacement(popper).endsWith('-start')).toBe(false)
-      expect(getBasicPlacement(popper).endsWith('-end')).toBe(false)
+      expect(getBasicPlacement(placement).endsWith('-start')).toBe(false)
+      expect(getBasicPlacement(placement).endsWith('-end')).toBe(false)
     })
   })
 
   it('returns an empty string if there is no placement', () => {
-    const popper = h('div')
-    expect(getBasicPlacement(popper)).toBe('')
+    expect(getBasicPlacement('')).toBe('')
   })
 })
 
