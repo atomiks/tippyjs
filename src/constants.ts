@@ -11,7 +11,6 @@ export const OUT_OF_BOUNDARIES_ATTRIBUTE = 'x-out-of-boundaries'
 
 // Classes
 export const IOS_CLASS = `__NAMESPACE_PREFIX__-iOS`
-export const ACTIVE_CLASS = `__NAMESPACE_PREFIX__-active`
 export const POPPER_CLASS = `__NAMESPACE_PREFIX__-popper`
 export const TOOLTIP_CLASS = `__NAMESPACE_PREFIX__-tooltip`
 export const CONTENT_CLASS = `__NAMESPACE_PREFIX__-content`

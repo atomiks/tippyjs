@@ -16,7 +16,6 @@ import {
   PADDING,
   PLACEMENT_ATTRIBUTE,
   OUT_OF_BOUNDARIES_ATTRIBUTE,
-  ACTIVE_CLASS,
   POPPER_SELECTOR,
 } from './constants'
 import { isUsingTouch } from './bindGlobalEventListeners'
@@ -1075,10 +1074,6 @@ export default function createTippy(
     popper.style.visibility = 'visible'
     instance.state.isVisible = true
 
-    if (instance.props.interactive) {
-      getEventListenersTarget().classList.add(ACTIVE_CLASS)
-    }
-
     // Prevent a transition if the popper is at the opposite placement
     const transitionableElements = getTransitionableElements()
     setTransitionDuration(transitionableElements.concat(popper), 0)
@@ -1154,10 +1149,6 @@ export default function createTippy(
     instance.state.isVisible = false
     instance.state.isShown = false
     wasVisibleDuringPreviousUpdate = false
-
-    if (instance.props.interactive) {
-      getEventListenersTarget().classList.remove(ACTIVE_CLASS)
-    }
 
     const transitionableElements = getTransitionableElements()
     setTransitionDuration(transitionableElements, duration)

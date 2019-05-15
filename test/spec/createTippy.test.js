@@ -148,18 +148,6 @@ describe('instance.show', () => {
     )
   })
 
-  it('adds .tippy-active class if interactive', () => {
-    instance = createTippy(h(), {
-      ...defaultProps,
-      interactive: true,
-    })
-    instance.show()
-    jest.runAllTimers()
-    expect(
-      instance.reference.classList.contains('__NAMESPACE_PREFIX__-active'),
-    ).toBe(true)
-  })
-
   it('does not show tooltip if the reference has a `disabled` attribute', () => {
     const ref = h()
     ref.setAttribute('disabled', 'disabled')

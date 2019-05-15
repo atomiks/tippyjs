@@ -7,12 +7,7 @@ import {
 } from '../utils'
 import tippy from '../../src'
 import { getChildren } from '../../src/popper'
-import {
-  ACTIVE_CLASS,
-  ARROW_CLASS,
-  ARROW_SELECTOR,
-  ROUND_ARROW_SELECTOR,
-} from '../../src/constants'
+import { ARROW_SELECTOR, ROUND_ARROW_SELECTOR } from '../../src/constants'
 
 jest.useFakeTimers()
 
@@ -320,15 +315,6 @@ describe('interactive', () => {
     instance.show()
     instance.popperChildren.tooltip.dispatchEvent(new Event('click'))
     expect(instance.state.isVisible).toBe(true)
-  })
-
-  it('true: toggles `tippy-active` class on the reference', () => {
-    const ref = h()
-    const instance = tippy(ref, { interactive: true })
-    instance.show()
-    expect(ref.classList.contains(ACTIVE_CLASS)).toBe(true)
-    instance.hide()
-    expect(ref.classList.contains(ACTIVE_CLASS)).toBe(false)
   })
 
   it('false: tippy is hidden when clicked', () => {
