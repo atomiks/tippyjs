@@ -4,8 +4,15 @@
   "description": "Highly customizable tooltip and popover library",
   "main": "./cjs/tippy.bundle.js",
   "module": "./esm/tippy.bundle.js",
-  "unpkg": "./umd/tippy.bundle.min.js",
+  "unpkg": "./iife/tippy.bundle.min.js",
   "types": "index.d.ts",
+  "sideEffects": [
+    "./cjs/tippy.bundle.js",
+    "./cjs/tippy.bundle.min.js",
+    "./esm/tippy.bundle.js",
+    "./esm/tippy.bundle.min.js",
+    "*.css"
+  ],
   "author": "atomiks",
   "contributors": [
     "Brett Zamir"
@@ -20,9 +27,11 @@
     "tippy.js"
   ],
   "files": [
-    "umd",
-    "esm",
-    "themes",
+    "cjs/",
+    "iife/",
+    "esm/",
+    "animations/",
+    "themes/",
     "index.css",
     "index.d.ts"
   ],
@@ -32,11 +41,11 @@
   },
   "scripts": {
     "dev": "parcel demo/index.html -d .devserver --open",
-    "build": "node rollup.build.js && bundlesize",
+    "build": "node rollup.css.js && rollup --config && bundlesize",
     "test": "jest --coverage --silent",
     "check-types": "tsc",
     "lint": "eslint --report-unused-disable-directives .",
-    "clean": "rimraf cjs umd esm themes coverage .devserver .cache ./index.css",
+    "clean": "rimraf cjs iife esm themes coverage .devserver .cache ./index.css",
     "prepare": "npm run clean && npm run build"
   },
   "jest": {
@@ -52,12 +61,12 @@
   ],
   "bundlesize": [
     {
-      "path": "./esm/tippy.min.js",
-      "maxSize": "7 kB"
+      "path": "./iife/tippy.min.js",
+      "maxSize": "5.5 kB"
     },
     {
       "path": "./index.css",
-      "maxSize": "2 kB"
+      "maxSize": "1.25 kB"
     }
   ],
   "husky": {

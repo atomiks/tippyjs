@@ -5,7 +5,7 @@
 node_modules
 /index.css
 /cjs
-/umd
+/iife
 /esm
 /themes
 /animations
