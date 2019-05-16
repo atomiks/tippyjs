@@ -60,9 +60,9 @@ export default function createTippy(
   /* ======================= 🔒 Private members 🔒 ======================= */
   let lastTriggerEventType: string
   let lastMouseMoveEvent: MouseEvent
-  let showTimeoutId: any
-  let hideTimeoutId: any
-  let animationFrameId: number
+  let showTimeout: any
+  let hideTimeout: any
+  let animationFrame: number
   let isScheduledToShow = false
   let currentParentNode: Element
   let currentPlacement: Placement = props.placement
@@ -779,7 +779,7 @@ export default function createTippy(
     const delay = getValue(instance.props.delay, 0, defaultProps.delay)
 
     if (delay) {
-      showTimeoutId = setTimeout(() => {
+      showTimeout = setTimeout(() => {
         show()
       }, delay)
     } else {
@@ -802,7 +802,7 @@ export default function createTippy(
     const delay = getValue(instance.props.delay, 1, defaultProps.delay)
 
     if (delay) {
-      hideTimeoutId = setTimeout(() => {
+      hideTimeout = setTimeout(() => {
         if (instance.state.isVisible) {
           hide()
         }
@@ -810,7 +810,7 @@ export default function createTippy(
     } else {
       // Fixes a `transitionend` problem when it fires 1 frame too
       // late sometimes, we don't want hide() to be called.
-      animationFrameId = requestAnimationFrame(() => {
+      animationFrame = requestAnimationFrame(() => {
         hide()
       })
     }
@@ -868,9 +868,9 @@ export default function createTippy(
    * Clears pending timeouts related to the `delay` prop if any
    */
   function clearDelayTimeouts(): void {
-    clearTimeout(showTimeoutId)
-    clearTimeout(hideTimeoutId)
-    cancelAnimationFrame(animationFrameId)
+    clearTimeout(showTimeout)
+    clearTimeout(hideTimeout)
+    cancelAnimationFrame(animationFrame)
   }
 
   /**
