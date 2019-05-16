@@ -171,9 +171,15 @@ export function validateOptions(
 ): void {
   Object.keys(options).forEach(option => {
     if (!hasOwnProperty(defaultProps, option)) {
-      console.warn(
-        `[tippy.js WARNING] \`${option}\` is not a valid option. You may have spelled it incorrectly. View all of the valid options here: https://atomiks.github.io/tippyjs/all-options/`,
-      )
+      if (option === 'target') {
+        console.warn(
+          '[tippy.js WARNING] The `target` option was removed in v5 and replaced with `tippy.delegate()` in a separate file (tippy-addons.js).',
+        )
+      } else {
+        console.warn(
+          `[tippy.js WARNING] \`${option}\` is not a valid option. You may have spelled it incorrectly. View all of the valid options here: https://atomiks.github.io/tippyjs/all-options/`,
+        )
+      }
     }
   })
 }
