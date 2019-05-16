@@ -1,7 +1,7 @@
 @import '../_mixins.scss';
 @import '../_vars.scss';
 
-.#{$namespace-prefix}-tooltip.translucent-theme {
+.#{$namespace-prefix}-tooltip.#{$namespace-prefix}-translucent-theme {
   background-color: rgba(0, 0, 0, 0.7);
 
   @each $placement in $placements {

@@ -3,7 +3,7 @@
 
 $color: #505355;
 
-.#{$namespace-prefix}-tooltip.google-theme {
+.#{$namespace-prefix}-tooltip.#{$namespace-prefix}-google-theme {
   background-color: $color;
   padding: 0.25rem 0.4375rem;
   font-size: 0.8125rem;
