@@ -66,8 +66,6 @@ export default function createTippy(
   let isScheduledToShow = false
   let currentParentNode: Element
   let currentPlacement: Placement = props.placement
-  let previousPlacement: string
-  let wasVisibleDuringPreviousUpdate = false
   let hasMountCallbackRun = false
   let currentMountCallback: () => void
   let currentTransitionEndListener: (event: TransitionEvent) => void
@@ -583,22 +581,6 @@ export default function createTippy(
         tooltip.removeAttribute('data-out-of-boundaries')
       }
 
-      // Prevents a transition when changing placements (while tippy is visible)
-      // for scroll/resize updates
-      if (
-        previousPlacement &&
-        previousPlacement !== currentPlacement &&
-        wasVisibleDuringPreviousUpdate
-      ) {
-        tooltip.style.transition = 'none'
-        requestAnimationFrame(() => {
-          tooltip.style.transition = ''
-        })
-      }
-
-      previousPlacement = currentPlacement
-      wasVisibleDuringPreviousUpdate = instance.state.isVisible
-
       const basicPlacement = getBasicPlacement(currentPlacement)
       const styles = tooltip.style
       styles.top = styles.bottom = styles.left = styles.right = ''
@@ -1079,7 +1061,6 @@ export default function createTippy(
     popper.style.visibility = 'hidden'
     instance.state.isVisible = false
     instance.state.isShown = false
-    wasVisibleDuringPreviousUpdate = false
 
     const transitionableElements = getTransitionableElements()
     setTransitionDuration(transitionableElements, duration)
