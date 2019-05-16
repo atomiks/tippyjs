@@ -124,7 +124,7 @@ export default [
     external: ['popper.js', '..'],
     output: {
       ...commonIIFEOutputOptions,
-      name: 'tippyAddons',
+      name: '__tippyAddons__',
       globals: { ...commonIIFEOutputOptions.globals, '..': 'tippy' },
       file: 'iife/tippy-addons.js',
     },
@@ -135,7 +135,7 @@ export default [
     external: ['popper.js', '..'],
     output: {
       ...commonIIFEOutputOptions,
-      name: 'tippyAddons',
+      name: '__tippyAddons__',
       globals: { ...commonIIFEOutputOptions.globals, '..': 'tippy' },
       file: 'iife/tippy-addons.min.js',
     },
@@ -144,7 +144,7 @@ export default [
     input: {
       tippy: 'build/base.js',
       'tippy.bundle': 'build/bundle.js',
-      'tippy-addons': 'build/addons.js',
+      'tippy-addons': 'build/addons-pure.js',
     },
     plugins: PLUGIN_CONFIGS.bundle,
     external: ['popper.js'],
@@ -167,7 +167,7 @@ export default [
     input: {
       'tippy.min': 'build/base.js',
       'tippy.bundle.min': 'build/bundle.js',
-      'tippy-addons.min': 'build/addons.js',
+      'tippy-addons.min': 'build/addons-pure.js',
     },
     plugins: PLUGIN_CONFIGS.bundleMin,
     external: ['popper.js'],
