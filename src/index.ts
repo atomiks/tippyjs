@@ -50,14 +50,12 @@ function tippy(
   return targets ? (isRealElement(targets) ? instances[0] : instances) : null
 }
 
-/**
- * Static props
- */
 tippy.version = version
 tippy.defaults = defaultProps
+tippy.hideAll = hideAll
 
 /**
- * Static methods
+ * Mutates the defaultProps object by setting the props specified
  */
 tippy.setDefaults = (partialDefaults: Options) => {
   Object.keys(partialDefaults).forEach(key => {
@@ -65,7 +63,6 @@ tippy.setDefaults = (partialDefaults: Options) => {
     defaultProps[key] = partialDefaults[key]
   })
 }
-tippy.hideAll = hideAll
 
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
