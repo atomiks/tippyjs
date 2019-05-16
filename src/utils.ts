@@ -22,9 +22,8 @@ export function hasOwnProperty(obj: object, key: string): boolean {
  * Returns an array of elements based on the value
  */
 export function getArrayOfElements(value: Targets): Element[] {
-  if (isSingular(value)) {
-    // TODO: VirtualReference is not compatible to type Element
-    return [value as Element]
+  if (isRealElement(value)) {
+    return [value]
   }
 
   if (value instanceof NodeList) {
@@ -74,13 +73,6 @@ export function includes(a: any[] | string, b: any): boolean {
  */
 export function isRealElement(value: any): value is Element {
   return value instanceof Element
-}
-
-/**
- * Determines if the value is singular-like
- */
-export function isSingular(value: any): value is Element {
-  return !!(value && hasOwnProperty(value, 'isVirtual')) || isRealElement(value)
 }
 
 /**

@@ -5,7 +5,7 @@ import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
 import { arrayFrom } from './ponyfills'
 import { hideAll } from './popper'
-import { isSingular, getArrayOfElements, validateOptions } from './utils'
+import { isRealElement, getArrayOfElements, validateOptions } from './utils'
 import { Options, Props, Instance, Targets } from './types'
 
 let globalEventListenersBound = false
@@ -13,8 +13,17 @@ let globalEventListenersBound = false
 /**
  * Exported module
  */
-function tippy(targets: Targets, options?: Options): Instance | Instance[] {
+function tippy(
+  targets: Targets,
+  options?: Options,
+): Instance | Instance[] | null {
   if (process.env.NODE_ENV !== 'production') {
+    if (!targets) {
+      console.warn(
+        `[tippy.js] \`tippy()\` received ${targets} (an invalid falsy argument) as its targets argument`,
+      )
+    }
+
     validateOptions(options, defaultProps)
   }
 
@@ -38,7 +47,7 @@ function tippy(targets: Targets, options?: Options): Instance | Instance[] {
     [],
   )
 
-  return isSingular(targets) ? instances[0] : instances
+  return targets ? (isRealElement(targets) ? instances[0] : instances) : null
 }
 
 /**

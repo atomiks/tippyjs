@@ -38,6 +38,14 @@ describe('tippy', () => {
   it('handles falsy reference', () => {
     tippy([null])
   })
+
+  it('returns null if passed a falsy Target type', () => {
+    expect(tippy(null)).toBe(null)
+    expect(tippy(undefined)).toBe(null)
+    expect(tippy(false)).toBe(null)
+    expect(tippy(0)).toBe(null)
+    expect(tippy('')).toBe(null)
+  })
 })
 
 describe('tippy.setDefaults()', () => {

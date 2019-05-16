@@ -37,13 +37,6 @@ describe('getArrayOfElements', () => {
     expect(arr.length).toBe(1)
   })
 
-  it('returns an array of length 1 if the value is a polyfilled virtual element', () => {
-    const ref = { isVirtual: true }
-    const arr = Utils.getArrayOfElements(ref)
-    expect(arr[0]).toBe(ref)
-    expect(arr.length).toBe(1)
-  })
-
   it('returns an array if given a NodeList', () => {
     const ref = h()
     const arr = Utils.getArrayOfElements(
