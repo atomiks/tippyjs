@@ -140,7 +140,7 @@ export default function createTippy(
       instance.state.isVisible &&
       lastTriggerEventType === 'mouseenter'
     ) {
-      clearDelayTimeouts()
+      instance.clearDelayTimeouts()
     }
   })
   popper.addEventListener('mouseleave', () => {
@@ -745,7 +745,7 @@ export default function createTippy(
    * Setup before show() is invoked (delays, etc.)
    */
   function scheduleShow(event?: Event): void {
-    clearDelayTimeouts()
+    instance.clearDelayTimeouts()
 
     if (event) {
       instance.props.onTrigger(instance, event)
@@ -780,10 +780,10 @@ export default function createTippy(
 
     if (delay) {
       showTimeout = setTimeout(() => {
-        show()
+        instance.show()
       }, delay)
     } else {
-      show()
+      instance.show()
     }
   }
 
@@ -791,7 +791,7 @@ export default function createTippy(
    * Setup before hide() is invoked (delays, etc.)
    */
   function scheduleHide(event: Event): void {
-    clearDelayTimeouts()
+    instance.clearDelayTimeouts()
 
     instance.props.onUntrigger(instance, event)
 
@@ -806,14 +806,14 @@ export default function createTippy(
     if (delay) {
       hideTimeout = setTimeout(() => {
         if (instance.state.isVisible) {
-          hide()
+          instance.hide()
         }
       }, delay)
     } else {
       // Fixes a `transitionend` problem when it fires 1 frame too
       // late sometimes, we don't want hide() to be called.
       animationFrame = requestAnimationFrame(() => {
-        hide()
+        instance.hide()
       })
     }
   }
@@ -846,8 +846,8 @@ export default function createTippy(
     }
 
     if (instance.props.hideOnClick === true) {
-      clearDelayTimeouts()
-      hide()
+      instance.clearDelayTimeouts()
+      instance.hide()
     }
   }
 
@@ -944,7 +944,7 @@ export default function createTippy(
    * Shortcut for .set({ content: newContent })
    */
   function setContent(content: Content): void {
-    set({ content })
+    instance.set({ content })
   }
 
   /**
@@ -1097,7 +1097,7 @@ export default function createTippy(
     // If the popper is currently mounted to the DOM, we want to ensure it gets
     // hidden and unmounted instantly upon destruction
     if (instance.state.isMounted) {
-      hide(0)
+      instance.hide(0)
     }
 
     removeTriggersFromReference()
