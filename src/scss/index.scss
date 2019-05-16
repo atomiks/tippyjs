@@ -1,5 +1,7 @@
 @import './_mixins.scss';
 @import './_vars.scss';
+@import './animations/fade.scss';
+@import './animations/shift-away.scss';
 
 .#{$namespace-prefix}-iOS {
   cursor: pointer !important;
@@ -64,26 +66,6 @@
         &[data-state='hidden'] {
           @include backdrop-transform-leave($placement);
           opacity: 0;
-        }
-      }
-
-      &[data-animation='fade'] {
-        &[data-state='visible'] {
-          @include enter-transform($placement, 'fade');
-        }
-        &[data-state='hidden'] {
-          opacity: 0;
-          @include enter-transform($placement, 'fade');
-        }
-      }
-
-      &[data-animation='shift-away'] {
-        &[data-state='visible'] {
-          @include enter-transform($placement, 'fade');
-        }
-        &[data-state='hidden'] {
-          opacity: 0;
-          @include leave-transform($placement, 'shift-away');
         }
       }
     }

@@ -1,18 +1,13 @@
-@import '../_mixins.scss';
-@import '../_vars.scss';
+@import './_mixins.scss';
+@import './_vars.scss';
 
 .#{$namespace-prefix}-tooltip {
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      &[data-animation='scale'] {
+      &[data-animation='fade'] {
         transform-origin: nth($origins, index($placements, $placement));
 
-        &[data-state='visible'] {
-          transform: scale(1);
-        }
-
         &[data-state='hidden'] {
-          transform: scale(0.5);
           opacity: 0;
         }
       }
