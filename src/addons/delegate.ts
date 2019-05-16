@@ -1,6 +1,13 @@
 import { Targets, Options, Instance } from '../types'
 import tippy from '..'
 
+interface ListenerObj {
+  element: Element
+  eventType: string
+  listener: EventListener
+  options: boolean | object
+}
+
 /**
  * Creates a delegate instance that controls the creation of tippy instances
  * for child elements (`target` CSS selector).
@@ -14,7 +21,7 @@ export default function delegate(
     ...options,
     trigger: 'manual',
   })
-  let listeners = []
+  let listeners: ListenerObj[] = []
 
   function onTrigger(event: Event) {
     if (event.target) {
@@ -35,7 +42,7 @@ export default function delegate(
     eventType: string,
     listener: EventListener,
     options: object | boolean = false,
-  ) {
+  ): void {
     element.addEventListener(eventType, listener, options)
     listeners.push({
       element,
@@ -45,7 +52,7 @@ export default function delegate(
     })
   }
 
-  function addEventListeners(instance: Instance) {
+  function addEventListeners(instance: Instance): void {
     const { reference } = instance
     instance.props.trigger
       .trim()
@@ -67,23 +74,37 @@ export default function delegate(
       })
   }
 
+  function removeEventListeners(listeners: ListenerObj[]): void {
+    listeners.forEach(
+      ({ element, eventType, listener, options }: ListenerObj) => {
+        element.removeEventListener(eventType, listener, options)
+      },
+    )
+    listeners = []
+  }
+
+  function applyMutations(instance: Instance): void {
+    const originalDestroy = instance.destroy
+    instance.destroy = () => {
+      removeEventListeners(listeners)
+      originalDestroy()
+    }
+
+    addEventListeners(instance)
+
+    instance.set({
+      trigger: options.trigger || tippy.defaults.trigger,
+      onShow,
+    })
+  }
+
   if (instanceOrInstances) {
     if (Array.isArray(instanceOrInstances)) {
       const instances = instanceOrInstances
-      instances.forEach(instance => {
-        instance.set({
-          trigger: options.trigger || tippy.defaults.trigger,
-          onShow,
-        })
-        addEventListeners(instance)
-      })
+      instances.forEach(applyMutations)
     } else {
       const instance = instanceOrInstances
-      instance.set({
-        trigger: options.trigger || tippy.defaults.trigger,
-        onShow,
-      })
-      addEventListeners(instance)
+      applyMutations(instance)
     }
   }
 
