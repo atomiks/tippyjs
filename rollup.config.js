@@ -76,6 +76,7 @@ const commonIIFEOutputOptions = {
   format: 'iife',
   name: 'tippy',
   esModule: false,
+  sourcemap: true,
 }
 
 export default [
@@ -152,11 +153,13 @@ export default [
         dir: 'esm',
         format: 'esm',
         banner: BANNER,
+        sourcemap: true,
       },
       {
         dir: 'cjs',
         format: 'cjs',
         banner: BANNER,
+        sourcemap: true,
       },
     ],
   },
@@ -173,11 +176,13 @@ export default [
         dir: 'esm',
         format: 'esm',
         banner: BANNER,
+        sourcemap: true,
       },
       {
         dir: 'cjs',
         format: 'cjs',
         banner: BANNER,
+        sourcemap: true,
       },
     ],
   },
