@@ -59,6 +59,7 @@ export interface Props {
   onShow(instance: Instance): void | false
   onShown(instance: Instance): void
   onTrigger(instance: Instance, event: Event): void
+  onUntrigger(instance: Instance, event: Event): void
   placement: Placement
   popperOptions: Popper.PopperOptions
   role: string

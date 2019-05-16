@@ -451,7 +451,7 @@ export default function createTippy(
       instance.props.hideOnClick !== false &&
       instance.state.isVisible
     ) {
-      scheduleHide()
+      scheduleHide(event)
     } else {
       scheduleShow(event)
     }
@@ -480,7 +480,7 @@ export default function createTippy(
       )
     ) {
       cleanupInteractiveMouseListeners()
-      scheduleHide()
+      scheduleHide(event)
     }
   }
 
@@ -500,7 +500,7 @@ export default function createTippy(
       return
     }
 
-    scheduleHide()
+    scheduleHide(event)
   }
 
   /**
@@ -519,7 +519,7 @@ export default function createTippy(
       return
     }
 
-    scheduleHide()
+    scheduleHide(event)
   }
 
   /**
@@ -747,15 +747,15 @@ export default function createTippy(
   function scheduleShow(event?: Event): void {
     clearDelayTimeouts()
 
+    if (event) {
+      instance.props.onTrigger(instance, event)
+    }
+
     if (instance.state.isVisible) {
       return
     }
 
     isScheduledToShow = true
-
-    if (event) {
-      instance.props.onTrigger(instance, event)
-    }
 
     if (instance.props.wait) {
       return instance.props.wait(instance, event)
@@ -790,8 +790,10 @@ export default function createTippy(
   /**
    * Setup before hide() is invoked (delays, etc.)
    */
-  function scheduleHide(): void {
+  function scheduleHide(event: Event): void {
     clearDelayTimeouts()
+
+    instance.props.onUntrigger(instance, event)
 
     if (!instance.state.isVisible) {
       return removeFollowCursorListener()
