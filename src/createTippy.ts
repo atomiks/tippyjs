@@ -880,7 +880,7 @@ export default function createTippy(
     if (process.env.NODE_ENV !== 'production') {
       if (instance.state.isDestroyed) {
         console.warn(
-          '[tippy.js] `set()` was called on a destroyed instance. This is a no-op but indicates a potential memory leak.',
+          '[tippy.js WARNING] `set()` was called on a destroyed instance. This is a no-op but indicates a potential memory leak.',
         )
       }
     }
@@ -958,7 +958,7 @@ export default function createTippy(
     if (process.env.NODE_ENV !== 'production') {
       if (instance.state.isDestroyed) {
         console.warn(
-          '[tippy.js] `show()` was called on a destroyed instance. This is a no-op, but indicates a potential memory leak.',
+          '[tippy.js WARNING] `show()` was called on a destroyed instance. This is a no-op, but indicates a potential memory leak.',
         )
       }
     }
@@ -1043,7 +1043,7 @@ export default function createTippy(
     if (process.env.NODE_ENV !== 'production') {
       if (instance.state.isDestroyed) {
         console.warn(
-          '[tippy.js] `hide()` was called on a destroyed instance. This is a no-op, but indicates a potential memory leak.',
+          '[tippy.js WARNING] `hide()` was called on a destroyed instance. This is a no-op, but indicates a potential memory leak.',
         )
       }
     }
