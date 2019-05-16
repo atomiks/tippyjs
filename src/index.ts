@@ -20,7 +20,7 @@ function tippy(
   if (process.env.NODE_ENV !== 'production') {
     if (!targets) {
       console.warn(
-        `[tippy.js] \`tippy()\` received ${targets} (an invalid falsy argument) as its targets argument`,
+        `[tippy.js WARNING] \`tippy()\` was passed \`${targets}\` (an invalid falsy argument) as its targets argument`,
       )
     }
 
