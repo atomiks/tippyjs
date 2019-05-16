@@ -86,7 +86,17 @@ export function innerHTML(): 'innerHTML' {
  * Evaluates a function if one, or returns the value
  */
 export function invokeWithArgsOrReturn(value: any, args: any[]): any {
-  return typeof value === 'function' ? value.apply(null, args) : value
+  const toReturn = typeof value === 'function' ? value.apply(null, args) : value
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (!(toReturn instanceof Element) && typeof value === 'function') {
+      console.warn(
+        '[tippy.js WARNING] `appendTo` function did not return an Element',
+      )
+    }
+  }
+
+  return toReturn
 }
 
 /**
