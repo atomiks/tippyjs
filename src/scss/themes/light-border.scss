@@ -17,7 +17,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   }
 
   .#{$namespace-prefix}-arrow,
-  .#{$namespace-prefix}-roundarrow {
+  .#{$namespace-prefix}-svgArrow {
     &::after,
     &::before {
       content: '';
@@ -26,7 +26,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
     }
   }
 
-  .#{$namespace-prefix}-roundarrow {
+  .#{$namespace-prefix}-svgArrow {
     fill: white;
 
     &::after {
@@ -41,7 +41,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   }
 
   &[data-placement^='top'] {
-    .#{$namespace-prefix}-roundarrow::after {
+    .#{$namespace-prefix}-svgArrow::after {
       top: 1px;
       transform: rotate(180deg);
     }
@@ -61,7 +61,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   }
 
   &[data-placement^='bottom'] {
-    .#{$namespace-prefix}-roundarrow::after {
+    .#{$namespace-prefix}-svgArrow::after {
       top: -1px;
     }
 
@@ -80,7 +80,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   }
 
   &[data-placement^='left'] {
-    .#{$namespace-prefix}-roundarrow::after {
+    .#{$namespace-prefix}-svgArrow::after {
       left: 1px;
       top: 0;
       transform: rotate(90deg);
@@ -101,7 +101,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   }
 
   &[data-placement^='right'] {
-    .#{$namespace-prefix}-roundarrow::after {
+    .#{$namespace-prefix}-svgArrow::after {
       left: -1px;
       top: 0;
       transform: rotate(-90deg);
@@ -124,7 +124,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   &[data-placement^='top'],
   &[data-placement^='bottom'] {
     .#{$namespace-prefix}-arrow,
-    .#{$namespace-prefix}-roundarrow {
+    .#{$namespace-prefix}-svgArrow {
       transform: translateX(-1px);
     }
 
@@ -141,7 +141,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   &[data-placement^='left'],
   &[data-placement^='right'] {
     .#{$namespace-prefix}-arrow,
-    .#{$namespace-prefix}-roundarrow {
+    .#{$namespace-prefix}-svgArrow {
       transform: translateY(-1px);
     }
 

@@ -34,15 +34,15 @@
         );
       }
 
-      .#{$namespace-prefix}-roundarrow {
+      .#{$namespace-prefix}-svgArrow {
         @include arrow-position($placement, 7px, true);
-        @include roundarrow-transform-origin($placement);
+        @include svgArrow-transform-origin($placement);
         @include arrow-margin($placement);
 
         svg {
           position: absolute;
           left: 0;
-          @include roundarrow-transform($placement);
+          @include svgArrow-transform($placement);
         }
       }
 
@@ -105,13 +105,13 @@
 }
 
 .#{$namespace-prefix}-arrow,
-.#{$namespace-prefix}-roundarrow {
+.#{$namespace-prefix}-svgArrow {
   position: absolute;
   width: 0;
   height: 0;
 }
 
-.#{$namespace-prefix}-roundarrow {
+.#{$namespace-prefix}-svgArrow {
   width: 18px;
   height: 7px;
   fill: #333;

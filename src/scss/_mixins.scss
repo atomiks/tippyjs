@@ -56,14 +56,14 @@
   }
 }
 
-@mixin arrow-position($placement, $width, $isRoundArrow) {
+@mixin arrow-position($placement, $width, $issvgArrow) {
   @if ($placement == 'top') {
     bottom: -$width;
   } @else if ($placement == 'bottom') {
     top: -$width;
   }
 
-  @if ($isRoundArrow) {
+  @if ($issvgArrow) {
     @if ($placement == 'left') {
       right: -$width * 2 + 2px;
     } @else if ($placement == 'right') {
@@ -88,7 +88,7 @@
   }
 }
 
-@mixin roundarrow-transform($placement) {
+@mixin svgArrow-transform($placement) {
   @if ($placement == 'top') {
     transform: rotate(180deg);
   } @else if ($placement == 'bottom') {
@@ -112,7 +112,7 @@
   }
 }
 
-@mixin roundarrow-transform-origin($placement) {
+@mixin svgArrow-transform-origin($placement) {
   @if ($placement == 'top') {
     transform-origin: 50% 0%;
   } @else if ($placement == 'bottom') {
