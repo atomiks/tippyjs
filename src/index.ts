@@ -54,6 +54,16 @@ tippy.version = version
 tippy.defaults = defaultProps
 tippy.hideAll = hideAll
 
+if (process.env.NODE_ENV !== 'production') {
+  tippy.group = () => {
+    console.warn(
+      '[tippy.js WARNING] `tippy.group()` was removed in v5 and replaced by ' +
+        '`singleton()`. Read more: ' +
+        'https://atomiks.github.io/tippyjs/singleton/',
+    )
+  }
+}
+
 /**
  * Mutates the defaultProps object by setting the props specified
  */
