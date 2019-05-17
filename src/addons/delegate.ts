@@ -17,6 +17,17 @@ export default function delegate(
   targets: Targets,
   { target, ...options }: Options & { target: string },
 ): Instance | Instance[] | null {
+  if (process.env.NODE_ENV !== 'production') {
+    if (!target) {
+      console.error(
+        '[tippy.js ERROR] You must specify a `target` option ' +
+          'indicating the CSS selector string matching the target elements ' +
+          'that should receive a tippy.',
+      )
+      return null
+    }
+  }
+
   const instanceOrInstances = tippy(targets, {
     ...options,
     trigger: 'manual',
