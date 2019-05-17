@@ -197,6 +197,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   }
 
   if (props.arrow) {
+    tooltip.setAttribute('data-arrow', '')
     tooltip.appendChild(createArrowElement(props.arrowType))
   }
 
@@ -259,8 +260,10 @@ export function updatePopperElement(
   // arrow
   if (!prevProps.arrow && nextProps.arrow) {
     tooltip.appendChild(createArrowElement(nextProps.arrowType))
+    tooltip.setAttribute('data-arrow', '')
   } else if (prevProps.arrow && !nextProps.arrow) {
     tooltip.removeChild(arrow!)
+    tooltip.removeAttribute('data-arrow')
   }
 
   // arrowType

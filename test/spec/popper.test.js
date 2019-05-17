@@ -250,6 +250,27 @@ describe('updatePopperElement', () => {
     }
   })
 
+  it('sets arrow attribute', () => {
+    {
+      const popper = createPopperElement(1, defaultProps)
+      updatePopperElement(popper, defaultProps, {
+        ...defaultProps,
+        arrow: true,
+      })
+      expect(getChildren(popper).tooltip.hasAttribute('data-arrow')).toBe(true)
+    }
+
+    {
+      const props = { ...defaultProps, arrow: true }
+      const popper = createPopperElement(1, props)
+      updatePopperElement(popper, props, {
+        ...defaultProps,
+        arrow: false,
+      })
+      expect(getChildren(popper).tooltip.hasAttribute('data-arrow')).toBe(false)
+    }
+  })
+
   it('sets new arrow element type', () => {
     {
       const popper = createPopperElement(1, defaultProps)

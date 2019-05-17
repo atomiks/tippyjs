@@ -22,6 +22,7 @@
   line-height: 1.4;
   text-align: center;
   background-color: #333;
+  overflow: hidden;
 
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
@@ -79,8 +80,11 @@
     font-size: 1rem;
   }
 
+  &[data-arrow] {
+    overflow: visible;
+  }
+
   &[data-animatefill] {
-    overflow: hidden;
     background-color: transparent;
   }
 
