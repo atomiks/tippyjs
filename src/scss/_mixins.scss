@@ -1,15 +1,3 @@
-@mixin placement-offset($placement) {
-  @if ($placement == 'top') {
-    top: -10px;
-  } @else if ($placement == 'bottom') {
-    bottom: -10px;
-  } @else if ($placement == 'left') {
-    left: -10px;
-  } @else if ($placement == 'right') {
-    right: -10px;
-  }
-}
-
 @mixin backdrop-transform-enter($placement) {
   $scale: 1;
   @if ($placement == 'top') {
