@@ -134,7 +134,7 @@ export default function createTippy(
 
   // Prevent a tippy with a delay from hiding if the cursor left then returned
   // before it started hiding
-  popper.addEventListener('mouseenter', (event: MouseEvent) => {
+  popper.addEventListener('mouseenter', () => {
     if (
       instance.props.interactive &&
       instance.state.isVisible &&
