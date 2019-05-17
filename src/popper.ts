@@ -181,22 +181,12 @@ export function updateTheme(
 export function createPopperElement(id: number, props: Props): PopperElement {
   const popper = div()
   popper.className = POPPER_CLASS
-  popper.style.zIndex = '' + props.zIndex
-  popper.style.transitionTimingFunction = props.updateTimingFunction
 
   const tooltip = div()
   tooltip.className = TOOLTIP_CLASS
   tooltip.id = `__NAMESPACE_PREFIX__-${id}`
-  tooltip.style.maxWidth =
-    props.maxWidth + (typeof props.maxWidth === 'number' ? 'px' : '')
-  tooltip.setAttribute('data-size', props.size)
-  tooltip.setAttribute('data-animation', props.animation)
-  tooltip.setAttribute('data-state', 'hidden')
-  updateTheme(tooltip, 'add', props.theme)
 
-  if (props.role) {
-    tooltip.setAttribute('role', props.role)
-  }
+  updateTheme(tooltip, 'add', props.theme)
 
   const content = div()
   content.className = CONTENT_CLASS
@@ -223,6 +213,8 @@ export function createPopperElement(id: number, props: Props): PopperElement {
 
   tooltip.appendChild(content)
   popper.appendChild(tooltip)
+
+  updatePopperElement(popper, props, props)
 
   return popper
 }
