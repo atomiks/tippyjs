@@ -182,6 +182,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   const popper = div()
   popper.className = POPPER_CLASS
   popper.style.zIndex = '' + props.zIndex
+  popper.style.transitionTimingFunction = props.updateTimingFunction
 
   const tooltip = div()
   tooltip.className = TOOLTIP_CLASS
@@ -237,6 +238,7 @@ export function updatePopperElement(
   const { tooltip, content, backdrop, arrow } = getChildren(popper)
 
   popper.style.zIndex = '' + nextProps.zIndex
+  popper.style.transitionTimingFunction = nextProps.updateTimingFunction
 
   tooltip.setAttribute('data-size', nextProps.size)
   tooltip.setAttribute('data-animation', nextProps.animation)

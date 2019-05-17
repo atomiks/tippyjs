@@ -47,6 +47,7 @@ export const defaultProps: Props = {
   trigger: 'mouseenter focus',
   triggerTarget: null,
   updateDuration: 0,
+  updateTimingFunction: 'cubic-bezier(0.165,0.84,0.44,1)',
   wait: null,
   zIndex: 9999,
 }
