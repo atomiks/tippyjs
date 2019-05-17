@@ -174,8 +174,8 @@ export function validateOptions(
       if (option === 'target') {
         console.warn(
           '[tippy.js WARNING] The `target` option was removed in v5 and ' +
-            'replaced with `tippy.delegate()` in a separate file ' +
-            '(tippy-addons.js).',
+            'replaced by the `delegate()` method. Read more here: ' +
+            'https//atomiks.github.io/tippyjs/event-delegation/',
         )
       } else {
         console.warn(
