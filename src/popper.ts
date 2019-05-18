@@ -7,13 +7,8 @@ import {
   Placement,
 } from './types'
 import { arrayFrom } from './ponyfills'
-import {
-  innerHTML,
-  div,
-  isReferenceElement,
-  isRealElement,
-  getTransitionEndEventName,
-} from './utils'
+import { innerHTML, div, isReferenceElement, isRealElement } from './utils'
+import { isUCBrowser } from './browser'
 import {
   POPPER_CLASS,
   TOOLTIP_CLASS,
@@ -142,9 +137,13 @@ export function updateTransitionEndListener(
   action: 'add' | 'remove',
   listener: (event: TransitionEvent) => void,
 ): void {
+  const eventName =
+    isUCBrowser && document.body.style.webkitTransition !== undefined
+      ? 'webkitTransitionEnd'
+      : 'transitionend'
   tooltip[
     (action + 'EventListener') as 'addEventListener' | 'removeEventListener'
-  ](getTransitionEndEventName(), listener as EventListener)
+  ](eventName, listener as EventListener)
 }
 
 /**
@@ -231,7 +230,6 @@ export function updatePopperElement(
   const { tooltip, content, backdrop, arrow } = getChildren(popper)
 
   popper.style.zIndex = '' + nextProps.zIndex
-  popper.style.transitionTimingFunction = nextProps.updateTimingFunction
 
   tooltip.setAttribute('data-size', nextProps.size)
   tooltip.setAttribute('data-animation', nextProps.animation)

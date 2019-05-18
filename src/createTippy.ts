@@ -581,6 +581,29 @@ export default function createTippy(
         tooltip.removeAttribute('data-out-of-boundaries')
       }
 
+      // Popper.js uses `top/left` properties for the arrow element, but when
+      // the arrow transitions it looks jerky, so we need to use `translate3d`
+      // instead.
+      // Avoid doing this by default because it breaks user-defined `transform`
+      // styles on the arrow, for example `scale` is useful to change the
+      // arrow's size or proportion. If they want to transition the tippy's
+      // dimensions, they will need to change the border-* properties and/or use
+      // a custom SVG arrow in order to change its size.
+      if (arrow && instance.transitionDimensions) {
+        const arrowStyles = arrow.style
+        const { left, top } = data.arrowStyles
+
+        if (left) {
+          arrowStyles.top = ''
+          arrowStyles.left = '0'
+          arrowStyles.transform = `translate3d(${left}px,0,0)`
+        } else {
+          arrowStyles.left = ''
+          arrowStyles.top = '0'
+          arrowStyles.transform = `translate3d(0,${top}px,0)`
+        }
+      }
+
       const basicPlacement = getBasicPlacement(currentPlacement)
       const styles = tooltip.style
       styles.top = styles.bottom = styles.left = styles.right = ''

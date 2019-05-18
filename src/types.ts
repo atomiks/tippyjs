@@ -72,7 +72,6 @@ export interface Props {
   trigger: string
   triggerTarget: Element | null
   updateDuration: number
-  updateTimingFunction: string
   wait: ((instance: Instance, event?: Event) => void) | null
   zIndex: number
 }
@@ -80,7 +79,6 @@ export interface Props {
 export type Options = Partial<Props>
 
 export interface Instance {
-  __dimensions?: [number, number]
   clearDelayTimeouts(): void
   destroy(): void
   disable(): void

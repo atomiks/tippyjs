@@ -239,15 +239,3 @@ export function debounce<T>(
     timeout = setTimeout(() => fn.call(this, arg), ms)
   }
 }
-
-/**
- * UC Browser hasn't adopted the `transitionend` event despite supporting
- * unprefixed transitions...
- */
-export function getTransitionEndEventName():
-  | 'transitionend'
-  | 'webkitTransitionEnd' {
-  return isUCBrowser && document.body.style.webkitTransition !== undefined
-    ? 'webkitTransitionEnd'
-    : 'transitionend'
-}
