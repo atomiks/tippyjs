@@ -184,6 +184,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   const tooltip = div()
   tooltip.className = TOOLTIP_CLASS
   tooltip.id = `__NAMESPACE_PREFIX__-${id}`
+  tooltip.setAttribute('data-state', 'hidden')
 
   updateTheme(tooltip, 'add', props.theme)
 

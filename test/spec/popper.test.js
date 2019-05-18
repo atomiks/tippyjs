@@ -166,6 +166,13 @@ describe('createPopperElement', () => {
       getChildren(popper).tooltip.classList.contains('firetruck-theme'),
     ).toBe(true)
   })
+
+  it('sets [data-state="hidden"] on tooltip and content elements', () => {
+    const popper = createPopperElement(1, defaultProps)
+    const { tooltip, content } = getChildren(popper)
+    expect(tooltip.getAttribute('data-state')).toBe('hidden')
+    expect(content.getAttribute('data-state')).toBe('hidden')
+  })
 })
 
 describe('updatePopperElement', () => {
