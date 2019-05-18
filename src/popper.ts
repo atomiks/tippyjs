@@ -7,8 +7,13 @@ import {
   Placement,
 } from './types'
 import { arrayFrom } from './ponyfills'
-import { innerHTML, div, isReferenceElement, isRealElement } from './utils'
-import { isUCBrowser } from './browser'
+import {
+  innerHTML,
+  div,
+  isReferenceElement,
+  isRealElement,
+  getTransitionEndEventName,
+} from './utils'
 import {
   POPPER_CLASS,
   TOOLTIP_CLASS,
@@ -137,15 +142,9 @@ export function updateTransitionEndListener(
   action: 'add' | 'remove',
   listener: (event: TransitionEvent) => void,
 ): void {
-  // UC Browser hasn't adopted the `transitionend` event despite supporting
-  // unprefixed transitions...
-  const eventName =
-    isUCBrowser && document.body.style.webkitTransition !== undefined
-      ? 'webkitTransitionEnd'
-      : 'transitionend'
   tooltip[
     (action + 'EventListener') as 'addEventListener' | 'removeEventListener'
-  ](eventName, listener as EventListener)
+  ](getTransitionEndEventName(), listener as EventListener)
 }
 
 /**
