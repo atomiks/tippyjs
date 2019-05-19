@@ -10,11 +10,11 @@ export default function singleton(
   tippyInstances: Instance[],
   options?: Options,
 ) {
-  const props: Props = { ...(tippy.defaults as Props), ...options }
+  const props: Props = { ...tippy.defaults, ...options }
   const singletonInstance = tippy(
     document.createElement('div'),
     options,
-  ) as Instance
+  ) as Instance // we know the instance is not `null`
 
   let showTimeout: any
   let hideTimeout: any
@@ -35,7 +35,7 @@ export default function singleton(
           props.onTrigger(instance, event)
         }
 
-        singletonInstance.setContent(instance.props.content)
+        singletonInstance.set(instance.props)
         singletonInstance.reference.getBoundingClientRect = () => {
           return instance.reference.getBoundingClientRect()
         }

@@ -76,7 +76,8 @@ export function isRealElement(value: any): value is Element {
 }
 
 /**
- * Firefox extensions don't allow setting .innerHTML directly, this will trick it
+ * Firefox extensions don't allow setting .innerHTML directly, this will trick
+ * it
  */
 export function innerHTML(): 'innerHTML' {
   return 'innerHTML'
@@ -163,9 +164,9 @@ export function evaluateProps(
 }
 
 /**
- * Debounce utility. To avoid bloating bundle size, we're only passing 1 argument
- * here, a more generic function would pass all arguments. Only `onMouseMove` uses
- * this which takes the event object for now.
+ * Debounce utility. To avoid bloating bundle size, we're only passing 1
+ * argument here, a more generic function would pass all arguments. Only
+ * `onMouseMove` uses this which takes the event object for now.
  */
 export function debounce<T>(
   fn: (arg: T) => void,

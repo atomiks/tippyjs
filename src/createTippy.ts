@@ -439,8 +439,9 @@ export default function createTippy(
         lastMouseMoveEvent = event
 
         // If scrolling, `mouseenter` events can be fired if the cursor lands
-        // over a new target, but `mousemove` events don't get fired. This causes
-        // interactive tooltips to get stuck open until the cursor is moved
+        // over a new target, but `mousemove` events don't get fired. This
+        // causes interactive tooltips to get stuck open until the cursor is
+        // moved
         mouseMoveListeners.forEach(listener => listener(event))
       }
     }
