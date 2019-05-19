@@ -7,10 +7,6 @@
       &[data-animation='scale'] {
         transform-origin: nth($origins, index($placements, $placement));
 
-        &[data-state='visible'] {
-          transform: scale(1);
-        }
-
         &[data-state='hidden'] {
           transform: scale(0.5);
           opacity: 0;

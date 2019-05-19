@@ -1,18 +1,6 @@
 @import './_mixins.scss';
 @import './_vars.scss';
 
-@mixin visible-transform($placement) {
-  @if ($placement == 'top') {
-    transform: translateY(0);
-  } @else if ($placement == 'bottom') {
-    transform: translateY(0);
-  } @else if ($placement == 'left') {
-    transform: translateX(0);
-  } @else if ($placement == 'right') {
-    transform: translateX(0);
-  }
-}
-
 @mixin hidden-transform($placement) {
   @if ($placement == 'top') {
     transform: translateY(10px);
@@ -29,17 +17,14 @@
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
       &[data-animation='shift-away'] {
-        transform-origin: nth($origins, index($placements, $placement));
-
-        &[data-state='visible'] {
-          @include visible-transform($placement);
-        }
-
         &[data-state='hidden'] {
           @include hidden-transform($placement);
-          opacity: 0;
         }
       }
     }
+  }
+
+  &[data-state='hidden'] {
+    opacity: 0;
   }
 }

@@ -2,15 +2,7 @@
 @import './_vars.scss';
 
 .#{$namespace-prefix}-tooltip {
-  @each $placement in $placements {
-    &[data-placement^='#{$placement}'] {
-      &[data-animation='fade'] {
-        transform-origin: nth($origins, index($placements, $placement));
-
-        &[data-state='hidden'] {
-          opacity: 0;
-        }
-      }
-    }
+  &[data-state='hidden'] {
+    opacity: 0;
   }
 }

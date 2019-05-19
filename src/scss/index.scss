@@ -42,7 +42,6 @@
 
         &[data-state='hidden'] {
           @include backdrop-transform-leave($placement);
-          opacity: 0;
         }
       }
 
@@ -51,17 +50,7 @@
         @include arrow-margin($placement);
         @include arrow-position($placement, 7px, true);
 
-        &[data-state='hidden'] {
-          opacity: 0;
-
-          &[data-animatefill] {
-            transform: scale(0.25);
-          }
-        }
-
         svg {
-          position: absolute;
-          left: 0;
           @include svgArrow-transform($placement);
         }
       }
@@ -71,14 +60,6 @@
         @include arrow-margin($placement);
         @include arrow-transform-origin($placement, 7px);
         @include arrow-position($placement, 7px, false);
-
-        &[data-state='hidden'] {
-          opacity: 0;
-
-          &[data-animatefill] {
-            transform: scale(0.25);
-          }
-        }
       }
     }
   }
@@ -122,8 +103,10 @@
 .#{$namespace-prefix}-arrow,
 .#{$namespace-prefix}-svgArrow {
   position: absolute;
-  width: 0;
-  height: 0;
+
+  &[data-state='hidden'] {
+    opacity: 0;
+  }
 }
 
 .#{$namespace-prefix}-svgArrow {
@@ -131,6 +114,11 @@
   height: 7px;
   fill: #333;
   pointer-events: none;
+
+  svg {
+    position: absolute;
+    left: 0;
+  }
 }
 
 .#{$namespace-prefix}-backdrop {
@@ -143,6 +131,10 @@
   z-index: -1;
   transition: all cubic-bezier(0.46, 0.1, 0.52, 0.98);
   backface-visibility: hidden;
+
+  &[data-state='hidden'] {
+    opacity: 0;
+  }
 
   &::after {
     content: '';
@@ -159,9 +151,6 @@
   transition-property: opacity;
   will-change: opacity;
 
-  &[data-state='visible'] {
-    opacity: 1;
-  }
   &[data-state='hidden'] {
     opacity: 0;
   }
