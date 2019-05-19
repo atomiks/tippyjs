@@ -108,10 +108,10 @@ export function createArrowElement(
 /**
  * Creates a backdrop element and returns it
  */
-export function createBackdropElement(): HTMLDivElement {
+export function createBackdropElement(isVisible: boolean): HTMLDivElement {
   const backdrop = div()
   backdrop.className = BACKDROP_CLASS
-  backdrop.setAttribute('data-state', 'hidden')
+  backdrop.setAttribute('data-state', isVisible ? 'visible' : 'hidden')
   return backdrop
 }
 
@@ -201,7 +201,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   }
 
   if (props.animateFill) {
-    tooltip.appendChild(createBackdropElement())
+    tooltip.appendChild(createBackdropElement(false))
     tooltip.setAttribute('data-animatefill', '')
   }
 
@@ -214,7 +214,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   tooltip.appendChild(content)
   popper.appendChild(tooltip)
 
-  updatePopperElement(popper, props, props)
+  updatePopperElement(popper, props, props, false)
 
   return popper
 }
@@ -226,6 +226,7 @@ export function updatePopperElement(
   popper: PopperElement,
   prevProps: Props,
   nextProps: Props,
+  isVisible: boolean,
 ): void {
   const { tooltip, content, backdrop, arrow } = getChildren(popper)
 
@@ -248,7 +249,7 @@ export function updatePopperElement(
 
   // animateFill
   if (!prevProps.animateFill && nextProps.animateFill) {
-    tooltip.appendChild(createBackdropElement())
+    tooltip.appendChild(createBackdropElement(isVisible))
     tooltip.setAttribute('data-animatefill', '')
   } else if (prevProps.animateFill && !nextProps.animateFill) {
     tooltip.removeChild(backdrop!)
