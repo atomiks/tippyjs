@@ -41,7 +41,7 @@ export const defaultProps: Props = {
   showOnInit: false,
   size: 'regular',
   sticky: false,
-  theme: '',
+  theme: 'tippy-dark',
   touch: true,
   touchHold: false,
   trigger: 'mouseenter focus',

@@ -36,6 +36,7 @@ export default function singleton(
         }
 
         singletonInstance.set(instance.props)
+
         singletonInstance.reference.getBoundingClientRect = () => {
           return instance.reference.getBoundingClientRect()
         }
