@@ -44,14 +44,14 @@
   }
 }
 
-@mixin arrow-position($placement, $width, $issvgArrow) {
+@mixin arrow-position($placement, $width, $isSvgArrow) {
   @if ($placement == 'top') {
     bottom: -$width;
   } @else if ($placement == 'bottom') {
     top: -$width;
   }
 
-  @if ($issvgArrow) {
+  @if ($isSvgArrow) {
     @if ($placement == 'left') {
       right: -$width * 2 + 2px;
     } @else if ($placement == 'right') {
@@ -88,23 +88,23 @@
   }
 }
 
-@mixin arrow-transform-origin($placement) {
+@mixin arrow-transform-origin($placement, $size) {
   @if ($placement == 'top') {
     transform-origin: 50% 0%;
   } @else if ($placement == 'bottom') {
-    transform-origin: 50% 100%;
+    transform-origin: 50% $size;
   } @else if ($placement == 'left') {
     transform-origin: 0% 50%;
   } @else if ($placement == 'right') {
-    transform-origin: 100% 50%;
+    transform-origin: $size 50%;
   }
 }
 
-@mixin svgArrow-transform-origin($placement) {
+@mixin svgArrow-transform-origin($placement, $size) {
   @if ($placement == 'top') {
     transform-origin: 50% 0%;
   } @else if ($placement == 'bottom') {
-    transform-origin: 50% 100%;
+    transform-origin: 50% $size;
   } @else if ($placement == 'left') {
     transform-origin: 33.33333333% 50%;
   } @else if ($placement == 'right') {

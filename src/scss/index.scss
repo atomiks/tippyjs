@@ -19,7 +19,6 @@
   color: white;
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  padding: 0.3125rem 0.5625rem;
   line-height: 1.4;
   text-align: center;
   background-color: #333;
@@ -28,34 +27,12 @@
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
       .#{$namespace-prefix}-backdrop {
-        border-radius: nth(
-          $backdrop-border-radii,
-          index($placements, $placement)
-        );
-      }
-
-      .#{$namespace-prefix}-svgArrow {
-        @include arrow-position($placement, 7px, true);
-        @include svgArrow-transform-origin($placement);
-        @include arrow-margin($placement);
-
-        svg {
-          position: absolute;
-          left: 0;
-          @include svgArrow-transform($placement);
-        }
-      }
-
-      .#{$namespace-prefix}-arrow {
-        @include arrow($placement, 8px, #333);
-        @include arrow-position($placement, 7px, false);
-        @include arrow-margin($placement);
-        @include arrow-transform-origin($placement);
-      }
-
-      .#{$namespace-prefix}-backdrop {
         transform-origin: nth(
           $backdrop-origins,
+          index($placements, $placement)
+        );
+        border-radius: nth(
+          $backdrop-border-radii,
           index($placements, $placement)
         );
 
@@ -66,6 +43,41 @@
         &[data-state='hidden'] {
           @include backdrop-transform-leave($placement);
           opacity: 0;
+        }
+      }
+
+      .#{$namespace-prefix}-svgArrow {
+        @include svgArrow-transform-origin($placement, 7px);
+        @include arrow-margin($placement);
+        @include arrow-position($placement, 7px, true);
+
+        &[data-state='hidden'] {
+          opacity: 0;
+
+          &[data-animatefill] {
+            transform: scale(0.25);
+          }
+        }
+
+        svg {
+          position: absolute;
+          left: 0;
+          @include svgArrow-transform($placement);
+        }
+      }
+
+      .#{$namespace-prefix}-arrow {
+        @include arrow($placement, 8px, #333);
+        @include arrow-margin($placement);
+        @include arrow-transform-origin($placement, 7px);
+        @include arrow-position($placement, 7px, false);
+
+        &[data-state='hidden'] {
+          opacity: 0;
+
+          &[data-animatefill] {
+            transform: scale(0.25);
+          }
         }
       }
     }
@@ -137,6 +149,10 @@
     float: left;
     padding-top: 100%;
   }
+}
+
+.#{$namespace-prefix}-content {
+  padding: 0.3125rem 0.5625rem;
 }
 
 .#{$namespace-prefix}-backdrop + .#{$namespace-prefix}-content {
