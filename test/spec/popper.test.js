@@ -23,7 +23,7 @@ import {
   POPPER_SELECTOR,
   BACKDROP_SELECTOR,
   ARROW_SELECTOR,
-  ROUND_ARROW_SELECTOR,
+  SVG_ARROW_SELECTOR,
 } from '../../src/constants'
 
 tippy.setDefaults({ duration: 0, delay: 0 })
@@ -287,7 +287,7 @@ describe('updatePopperElement', () => {
         arrowType: 'round',
       })
       expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
-      expect(popper.querySelector(ROUND_ARROW_SELECTOR)).not.toBe(null)
+      expect(popper.querySelector(SVG_ARROW_SELECTOR)).not.toBe(null)
     }
 
     {
@@ -296,10 +296,10 @@ describe('updatePopperElement', () => {
       const newProps = { ...defaultProps, arrowType: 'sharp', arrow: true }
       updatePopperElement(popper, props, newProps)
       expect(popper.querySelector(ARROW_SELECTOR)).not.toBe(null)
-      expect(popper.querySelector(ROUND_ARROW_SELECTOR)).toBe(null)
+      expect(popper.querySelector(SVG_ARROW_SELECTOR)).toBe(null)
       updatePopperElement(popper, newProps, defaultProps)
       expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
-      expect(popper.querySelector(ROUND_ARROW_SELECTOR)).toBe(null)
+      expect(popper.querySelector(SVG_ARROW_SELECTOR)).toBe(null)
     }
   })
 
@@ -444,7 +444,7 @@ describe('createArrowElement', () => {
 
   it('returns a round arrow if "round" is passed as argument', () => {
     const roundArrow = createArrowElement('round')
-    expect(roundArrow.matches(ROUND_ARROW_SELECTOR)).toBe(true)
+    expect(roundArrow.matches(SVG_ARROW_SELECTOR)).toBe(true)
   })
 })
 

@@ -11,7 +11,7 @@ export const TOOLTIP_CLASS = `__NAMESPACE_PREFIX__-tooltip`
 export const CONTENT_CLASS = `__NAMESPACE_PREFIX__-content`
 export const BACKDROP_CLASS = `__NAMESPACE_PREFIX__-backdrop`
 export const ARROW_CLASS = `__NAMESPACE_PREFIX__-arrow`
-export const ROUND_ARROW_CLASS = `__NAMESPACE_PREFIX__-svgArrow`
+export const SVG_ARROW_CLASS = `__NAMESPACE_PREFIX__-svgArrow`
 
 // Selectors
 export const POPPER_SELECTOR = `.${POPPER_CLASS}`
@@ -19,4 +19,4 @@ export const TOOLTIP_SELECTOR = `.${TOOLTIP_CLASS}`
 export const CONTENT_SELECTOR = `.${CONTENT_CLASS}`
 export const BACKDROP_SELECTOR = `.${BACKDROP_CLASS}`
 export const ARROW_SELECTOR = `.${ARROW_CLASS}`
-export const ROUND_ARROW_SELECTOR = `.${ROUND_ARROW_CLASS}`
+export const SVG_ARROW_SELECTOR = `.${SVG_ARROW_CLASS}`

@@ -15,13 +15,13 @@ import {
   BACKDROP_CLASS,
   CONTENT_CLASS,
   ARROW_CLASS,
-  ROUND_ARROW_CLASS,
+  SVG_ARROW_CLASS,
   POPPER_SELECTOR,
   TOOLTIP_SELECTOR,
   BACKDROP_SELECTOR,
   CONTENT_SELECTOR,
   ARROW_SELECTOR,
-  ROUND_ARROW_SELECTOR,
+  SVG_ARROW_SELECTOR,
 } from './constants'
 
 /**
@@ -59,7 +59,7 @@ export function getChildren(popper: PopperElement): PopperChildren {
     content: popper.querySelector(CONTENT_SELECTOR) as HTMLDivElement,
     arrow:
       popper.querySelector(ARROW_SELECTOR) ||
-      popper.querySelector(ROUND_ARROW_SELECTOR),
+      popper.querySelector(SVG_ARROW_SELECTOR),
   }
 }
 
@@ -86,7 +86,7 @@ export function createArrowElement(
   const arrow = div()
 
   if (arrowType !== 'sharp') {
-    arrow.className = ROUND_ARROW_CLASS
+    arrow.className = SVG_ARROW_CLASS
 
     // Use the built-in round SVG shape
     if (arrowType === 'round') {

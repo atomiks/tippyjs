@@ -7,7 +7,7 @@ import {
 } from '../utils'
 import tippy from '../../src'
 import { getChildren } from '../../src/popper'
-import { ARROW_SELECTOR, ROUND_ARROW_SELECTOR } from '../../src/constants'
+import { ARROW_SELECTOR, SVG_ARROW_SELECTOR } from '../../src/constants'
 
 jest.useFakeTimers()
 
@@ -371,7 +371,7 @@ describe('arrowType', () => {
       arrow: true,
       arrowType: 'round',
     })
-    expect(popperChildren.arrow.matches(ROUND_ARROW_SELECTOR)).toBe(true)
+    expect(popperChildren.arrow.matches(SVG_ARROW_SELECTOR)).toBe(true)
   })
 
   it('other: custom shape', () => {
@@ -380,7 +380,7 @@ describe('arrowType', () => {
       arrow: true,
       arrowType: svg,
     })
-    expect(popperChildren.arrow.matches(ROUND_ARROW_SELECTOR)).toBe(true)
+    expect(popperChildren.arrow.matches(SVG_ARROW_SELECTOR)).toBe(true)
     expect(popperChildren.arrow.innerHTML).toBe(svg)
   })
 })
