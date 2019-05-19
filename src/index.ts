@@ -5,7 +5,8 @@ import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
 import { arrayFrom } from './ponyfills'
 import { hideAll } from './popper'
-import { isRealElement, getArrayOfElements, validateOptions } from './utils'
+import { isRealElement, getArrayOfElements } from './utils'
+import { validateTargets, validateOptions } from './validation'
 import { Options, Props, Instance, Targets } from './types'
 
 let globalEventListenersBound = false
@@ -18,15 +19,7 @@ function tippy(
   options?: Options,
 ): Instance | Instance[] | null {
   if (process.env.NODE_ENV !== 'production') {
-    if (!targets) {
-      console.warn(
-        '[tippy.js WARNING] `tippy()` was passed ' +
-          targets +
-          ' (an invalid falsy argument) as its targets argument. Valid types ' +
-          'are: String (CSS selector), Element, Element[], or NodeList.',
-      )
-    }
-
+    validateTargets(targets)
     validateOptions(options, defaultProps)
   }
 
