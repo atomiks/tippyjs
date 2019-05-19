@@ -61,6 +61,10 @@
   ],
   "bundlesize": [
     {
+      "path": "./iife/tippy.bundle.min.js",
+      "maxSize": "6.75 kB"
+    },
+    {
       "path": "./iife/tippy.min.js",
       "maxSize": "5.5 kB"
     },
