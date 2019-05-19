@@ -64,7 +64,6 @@ export default function createTippy(
   let hideTimeout: any
   let animationFrame: number
   let isScheduledToShow = false
-  let currentParentNode: Element
   let currentPlacement: Placement = props.placement
   let hasMountCallbackRun = false
   let currentMountCallback: () => void
@@ -244,8 +243,8 @@ export default function createTippy(
     onTransitionEnd(duration, () => {
       if (
         !instance.state.isVisible &&
-        currentParentNode &&
-        currentParentNode.contains(popper)
+        popper.parentNode &&
+        popper.parentNode.contains(popper)
       ) {
         callback()
       }
@@ -742,13 +741,13 @@ export default function createTippy(
 
     const { appendTo } = instance.props
 
-    currentParentNode =
+    const parentNode =
       appendTo === 'parent'
         ? reference.parentNode
         : invokeWithArgsOrReturn(appendTo, [reference])
 
-    if (!currentParentNode.contains(popper)) {
-      currentParentNode.appendChild(popper)
+    if (!parentNode.contains(popper)) {
+      parentNode.appendChild(popper)
       instance.props.onMount(instance)
       instance.state.isMounted = true
     }
@@ -1096,7 +1095,7 @@ export default function createTippy(
       instance.popperInstance!.disableEventListeners()
       instance.popperInstance!.options.placement = instance.props.placement
 
-      currentParentNode.removeChild(popper)
+      popper.parentNode!.removeChild(popper)
       instance.props.onHidden(instance)
       instance.state.isMounted = false
     })
