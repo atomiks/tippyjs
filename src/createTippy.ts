@@ -30,12 +30,12 @@ import {
   includes,
   invokeWithArgsOrReturn,
   setFlipModifierEnabled,
-  validateOptions,
   evaluateProps,
   setTransitionDuration,
   setVisibilityState,
   debounce,
 } from './utils'
+import { validateOptions } from './validation'
 
 let idCounter = 1
 // Workaround for IE11's lack of new MouseEvent constructor
@@ -560,6 +560,7 @@ export default function createTippy(
     )
 
     function applyMutations(data: Popper.Data): void {
+      const previousPlacement = currentPlacement
       currentPlacement = data.placement
 
       if (instance.props.flip && !instance.props.flipOnUpdate) {
@@ -570,7 +571,7 @@ export default function createTippy(
         setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
       }
 
-      // Apply all of the popper's attributes to the tootip node instead
+      // Apply Popper's `x-*` attributes to the tooltip with `data-*`
       popper.removeAttribute('x-placement')
       popper.removeAttribute('x-out-of-boundaries')
 
@@ -581,33 +582,15 @@ export default function createTippy(
         tooltip.removeAttribute('data-out-of-boundaries')
       }
 
-      // Popper.js uses `top/left` properties for the arrow element, but when
-      // the arrow transitions it looks jerky, so we need to use `translate3d`
-      // instead.
-      // Avoid doing this by default because it breaks user-defined `transform`
-      // styles on the arrow, for example `scale` is useful to change the
-      // arrow's size or proportion. If they want to transition the tippy's
-      // dimensions, they will need to change the border-* properties and/or use
-      // a custom SVG arrow in order to change its size.
-      if (arrow && instance.transitionDimensions) {
-        const arrowStyles = arrow.style
-        const { left, top } = data.arrowStyles
-
-        if (left) {
-          arrowStyles.top = ''
-          arrowStyles.left = '0'
-          arrowStyles.transform = `translate3d(${left}px,0,0)`
-        } else {
-          arrowStyles.left = ''
-          arrowStyles.top = '0'
-          arrowStyles.transform = `translate3d(0,${top}px,0)`
-        }
-      }
-
+      // Apply the `distance` prop
       const basicPlacement = getBasicPlacement(currentPlacement)
-      const styles = tooltip.style
-      styles.top = styles.bottom = styles.left = styles.right = ''
-      styles[basicPlacement] = -instance.props.distance + 'px'
+      const tooltipStyles = tooltip.style
+
+      tooltipStyles.top = ''
+      tooltipStyles.bottom = ''
+      tooltipStyles.left = ''
+      tooltipStyles.right = ''
+      tooltipStyles[basicPlacement] = -instance.props.distance + 'px'
 
       const padding =
         preventOverflowModifier && preventOverflowModifier.padding !== undefined
@@ -632,6 +615,12 @@ export default function createTippy(
       )[0].padding = computedPadding
 
       currentComputedPadding = computedPadding
+
+      // The `distance` offset needs to be re-considered by Popper.js if the
+      // placement changed
+      if (currentPlacement !== previousPlacement) {
+        instance.popperInstance!.update()
+      }
     }
 
     const config = {
