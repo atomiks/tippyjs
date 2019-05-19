@@ -1106,6 +1106,13 @@ export default function createTippy(
    */
   function destroy(): void {
     if (instance.state.isDestroyed) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          '[tippy.js WARNING] `destroy()` was called on an already-destroyed ' +
+            'instance. This is a no-op but indicates a potential memory leak.',
+        )
+      }
+
       return
     }
 
