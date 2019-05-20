@@ -61,8 +61,8 @@ export function validateOptions(
  */
 export function validateTargets(targets: Targets): void {
   if (!targets) {
-    console.warn(
-      '[tippy.js WARNING] `tippy()` was passed ' +
+    console.error(
+      '[tippy.js ERROR] `tippy()` was passed ' +
         targets +
         ' (an invalid falsy argument) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
@@ -73,10 +73,10 @@ export function validateTargets(targets: Targets): void {
     Object.prototype.toString.call(targets) === '[object Object]' &&
     !(targets as any).addEventListener
   ) {
-    console.warn(
-      '[tippy.js WARNING] `tippy()` was passed a plain object (virtual ' +
-        'reference element) which is no longer supported. Instead, pass a ' +
-        'placeholder element like `document.createElement("div")',
+    console.error(
+      '[tippy.js ERROR] `tippy()` was passed a plain object (virtual ' +
+        'reference element) which is no longer supported in v5. Instead, ' +
+        'pass a placeholder element like `document.createElement("div")',
     )
   }
 }
