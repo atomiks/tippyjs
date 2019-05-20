@@ -17,7 +17,9 @@
   &[data-animation='shift-toward'] {
     @each $placement in $placements {
       &[data-placement^='#{$placement}'] {
-        @include hidden-transform($placement);
+        &[data-state='hidden'] {
+          @include hidden-transform($placement);
+        }
       }
     }
 
