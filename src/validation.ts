@@ -57,7 +57,7 @@ export function validateOptions(
 }
 
 /**
- * Validates an object of options with the valid default props object
+ * Validates the `targets` value passed to `tippy()`
  */
 export function validateTargets(targets: Targets): void {
   if (!targets) {
