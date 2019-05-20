@@ -44,7 +44,11 @@ export default function delegate(
     }
   }
 
-  function onShow(): void | false {
+  function onShow(instance: Instance): void | false {
+    if (options.onShow) {
+      options.onShow(instance)
+    }
+
     return false
   }
 
