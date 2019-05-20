@@ -40,7 +40,8 @@ export default function singleton(
           props.onTrigger(instance, event)
         }
 
-        singletonInstance.set(instance.props)
+        const { onShow, ...otherOptions } = instance.props
+        singletonInstance.set(otherOptions)
 
         singletonInstance.reference.getBoundingClientRect = () => {
           return instance.reference.getBoundingClientRect()
