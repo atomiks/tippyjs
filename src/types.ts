@@ -28,7 +28,7 @@ export interface PopperInstance extends Popper {
 export interface Props {
   allowHTML: boolean
   animateFill: boolean
-  animation: 'fade' | 'scale' | 'shift-toward' | 'perspective' | 'shift-away'
+  animation: 'fade' | 'shift-away' | string
   appendTo: 'parent' | Element | ((ref: Element) => Element)
   aria: 'describedby' | 'labelledby' | null
   arrow: boolean
@@ -66,7 +66,7 @@ export interface Props {
   showOnInit: boolean
   size: 'small' | 'regular' | 'large'
   sticky: boolean
-  theme: 'dark' | 'light' | 'light-border' | 'google' | string
+  theme: string
   touch: boolean
   touchHold: boolean
   trigger: string
@@ -115,11 +115,11 @@ export interface HideAllOptions {
 }
 
 export interface Tippy {
-  (targets: Targets, options?: Props): Instance | Instance[]
+  (targets: Targets, options?: Props): Instance | Instance[] | null
   readonly defaults: Props
   readonly version: string
   hideAll(options?: HideAllOptions): void
-  setDefaults(options: Props): void
+  setDefaults(partialDefaults: Options): void
 }
 
 declare const tippy: Tippy
