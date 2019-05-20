@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * CSS transitions to change width/height layout of a tippy element.
  *

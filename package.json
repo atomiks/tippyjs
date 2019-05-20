@@ -44,7 +44,7 @@
     "build": "node rollup.pre-build.js && rollup --config && bundlesize",
     "test": "jest --coverage --silent",
     "check-types": "tsc",
-    "lint": "eslint --report-unused-disable-directives .",
+    "lint": "eslint --report-unused-disable-directives . --ext .ts,.js",
     "clean": "rimraf cjs iife esm themes coverage .devserver .cache ./index.css /index.d.ts",
     "prepare": "npm run clean && npm run build"
   },
@@ -81,7 +81,7 @@
   "lint-staged": {
     "src/**/*.ts": [
       "jest --findRelatedTests",
-      "eslint",
+      "eslint . --ext .ts,.js",
       "git add"
     ],
     "{build,src,test,website/src}/**/*.{ts,js,json,css,scss,md}": [

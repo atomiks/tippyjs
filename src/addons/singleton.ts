@@ -9,7 +9,7 @@ import { getValue } from '../utils'
 export default function singleton(
   tippyInstances: Instance[],
   options?: Options,
-) {
+): Instance {
   const props: Props = { ...tippy.defaults, ...options }
   const singletonInstance = tippy(
     document.createElement('div'),
@@ -19,54 +19,58 @@ export default function singleton(
   let showTimeout: any
   let hideTimeout: any
 
-  function clearTimeouts() {
+  function clearTimeouts(): void {
     clearTimeout(showTimeout)
     clearTimeout(hideTimeout)
   }
 
-  tippyInstances.forEach(instance => {
-    instance.set({
-      ...options,
-      delay: 0,
-      onShow(instance) {
-        if (props.onShow) {
-          props.onShow(instance)
-        }
-
-        return false
-      },
-      onTrigger(instance, event) {
-        if (props.onTrigger) {
-          props.onTrigger(instance, event)
-        }
-
-        const otherOptions = { ...instance.props }
-        delete otherOptions.onShow
-        singletonInstance.set(otherOptions)
-
-        singletonInstance.reference.getBoundingClientRect = () => {
-          return instance.reference.getBoundingClientRect()
-        }
-
-        clearTimeouts()
-        showTimeout = setTimeout(() => {
-          if (!singletonInstance.state.isVisible) {
-            singletonInstance.show()
+  tippyInstances.forEach(
+    (instance): void => {
+      instance.set({
+        ...options,
+        delay: 0,
+        onShow(instance): false {
+          if (props.onShow) {
+            props.onShow(instance)
           }
-        }, getValue(props.delay, 0, tippy.defaults.delay))
-      },
-      onUntrigger(instance, event) {
-        if (props.onUntrigger) {
-          props.onUntrigger(instance, event)
-        }
 
-        clearTimeouts()
-        hideTimeout = setTimeout(() => {
-          singletonInstance.hide()
-        }, getValue(props.delay, 1, tippy.defaults.delay))
-      },
-    })
-  })
+          return false
+        },
+        onTrigger(instance, event): void {
+          if (props.onTrigger) {
+            props.onTrigger(instance, event)
+          }
+
+          const otherOptions = { ...instance.props }
+          delete otherOptions.onShow
+          singletonInstance.set(otherOptions)
+
+          singletonInstance.reference.getBoundingClientRect = ():
+            | DOMRect
+            | ClientRect => {
+            return instance.reference.getBoundingClientRect()
+          }
+
+          clearTimeouts()
+          showTimeout = setTimeout((): void => {
+            if (!singletonInstance.state.isVisible) {
+              singletonInstance.show()
+            }
+          }, getValue(props.delay, 0, tippy.defaults.delay))
+        },
+        onUntrigger(instance, event): void {
+          if (props.onUntrigger) {
+            props.onUntrigger(instance, event)
+          }
+
+          clearTimeouts()
+          hideTimeout = setTimeout((): void => {
+            singletonInstance.hide()
+          }, getValue(props.delay, 1, tippy.defaults.delay))
+        },
+      })
+    },
+  )
 
   return singletonInstance
 }

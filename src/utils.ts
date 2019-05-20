@@ -87,24 +87,14 @@ export function innerHTML(): 'innerHTML' {
  * Evaluates a function if one, or returns the value
  */
 export function invokeWithArgsOrReturn(value: any, args: any[]): any {
-  const toReturn = typeof value === 'function' ? value.apply(null, args) : value
-
-  if (process.env.NODE_ENV !== 'production') {
-    if (!(toReturn instanceof Element) && typeof value === 'function') {
-      console.warn(
-        '[tippy.js WARNING] `appendTo` function did not return an Element',
-      )
-    }
-  }
-
-  return toReturn
+  return typeof value === 'function' ? value.apply(null, args) : value
 }
 
 /**
  * Sets a popperInstance `flip` modifier's enabled state
  */
 export function setFlipModifierEnabled(modifiers: any[], value: any): void {
-  modifiers.filter(m => m.name === 'flip')[0].enabled = value
+  modifiers.filter((m): boolean => m.name === 'flip')[0].enabled = value
 }
 
 /**
@@ -121,11 +111,13 @@ export function setTransitionDuration(
   els: (HTMLDivElement | null)[],
   value: number,
 ): void {
-  els.forEach(el => {
-    if (el) {
-      el.style.transitionDuration = `${value}ms`
-    }
-  })
+  els.forEach(
+    (el): void => {
+      if (el) {
+        el.style.transitionDuration = `${value}ms`
+      }
+    },
+  )
 }
 
 /**
@@ -135,11 +127,13 @@ export function setVisibilityState(
   els: (HTMLDivElement | null)[],
   state: 'visible' | 'hidden',
 ): void {
-  els.forEach(el => {
-    if (el) {
-      el.setAttribute('data-state', state)
-    }
-  })
+  els.forEach(
+    (el): void => {
+      if (el) {
+        el.setAttribute('data-state', state)
+      }
+    },
+  )
 }
 
 /**
@@ -182,6 +176,6 @@ export function debounce<T>(
   return function(arg): void {
     clearTimeout(timeout)
     // @ts-ignore
-    timeout = setTimeout(() => fn.call(this, arg), ms)
+    timeout = setTimeout((): void => fn.call(this, arg), ms)
   }
 }

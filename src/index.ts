@@ -31,7 +31,7 @@ function tippy(
   const props: Props = { ...defaultProps, ...options }
 
   const instances = getArrayOfElements(targets).reduce<Instance[]>(
-    (acc, reference) => {
+    (acc, reference): Instance[] => {
       const instance = reference && createTippy(reference, props)
 
       if (instance) {
@@ -51,7 +51,8 @@ tippy.defaults = defaultProps
 tippy.hideAll = hideAll
 
 if (process.env.NODE_ENV !== 'production') {
-  tippy.group = () => {
+  tippy.group = (): void => {
+    /* eslint-disable-next-line no-console */
     console.warn(
       '[tippy.js WARNING] `tippy.group()` was removed in v5 and replaced by ' +
         '`singleton()`. Read more: ' +
@@ -63,24 +64,28 @@ if (process.env.NODE_ENV !== 'production') {
 /**
  * Mutates the defaultProps object by setting the props specified
  */
-tippy.setDefaults = (partialDefaults: Options) => {
-  Object.keys(partialDefaults).forEach(key => {
-    // @ts-ignore
-    defaultProps[key] = partialDefaults[key]
-  })
+tippy.setDefaults = (partialDefaults: Options): void => {
+  Object.keys(partialDefaults).forEach(
+    (key): void => {
+      // @ts-ignore
+      defaultProps[key] = partialDefaults[key]
+    },
+  )
 }
 
 /**
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
  */
 export function autoInit(): void {
-  arrayFrom(document.querySelectorAll('[data-tippy]')).forEach(el => {
-    const content = el.getAttribute('data-tippy')
+  arrayFrom(document.querySelectorAll('[data-tippy]')).forEach(
+    (el): void => {
+      const content = el.getAttribute('data-tippy')
 
-    if (content) {
-      tippy(el, { content })
-    }
-  })
+      if (content) {
+        tippy(el, { content })
+      }
+    },
+  )
 }
 
 if (isBrowser) {

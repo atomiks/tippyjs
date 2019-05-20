@@ -2,5 +2,6 @@ node_modules
 coverage
 cjs
 esm
-umd
+iife
 website
+demo

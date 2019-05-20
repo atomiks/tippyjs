@@ -22,6 +22,7 @@ export default function delegate(
 
   if (process.env.NODE_ENV !== 'production') {
     if (!target) {
+      /* eslint-disable no-console */
       console.error(
         '[tippy.js ERROR] You must specify a `target` option ' +
           'indicating the CSS selector string matching the target elements ' +
@@ -37,7 +38,7 @@ export default function delegate(
   })
   let listeners: ListenerObj[] = []
 
-  function onTrigger(event: Event) {
+  function onTrigger(event: Event): void {
     if (event.target) {
       const targetNode = (event.target as Element).closest(target)
 
@@ -75,26 +76,28 @@ export default function delegate(
     instance.props.trigger
       .trim()
       .split(' ')
-      .forEach(eventType => {
-        switch (eventType) {
-          case 'mouseenter': {
-            on(reference, 'mouseover', onTrigger)
-            break
+      .forEach(
+        (eventType): void => {
+          switch (eventType) {
+            case 'mouseenter': {
+              on(reference, 'mouseover', onTrigger)
+              break
+            }
+            case 'focus': {
+              on(reference, 'focusin', onTrigger)
+              break
+            }
+            case 'click': {
+              on(reference, 'click', onTrigger)
+            }
           }
-          case 'focus': {
-            on(reference, 'focusin', onTrigger)
-            break
-          }
-          case 'click': {
-            on(reference, 'click', onTrigger)
-          }
-        }
-      })
+        },
+      )
   }
 
   function removeEventListeners(listeners: ListenerObj[]): void {
     listeners.forEach(
-      ({ element, eventType, listener, options }: ListenerObj) => {
+      ({ element, eventType, listener, options }: ListenerObj): void => {
         element.removeEventListener(eventType, listener, options)
       },
     )
@@ -103,7 +106,7 @@ export default function delegate(
 
   function applyMutations(instance: Instance): void {
     const originalDestroy = instance.destroy
-    instance.destroy = () => {
+    instance.destroy = (): void => {
       removeEventListeners(listeners)
       originalDestroy()
     }

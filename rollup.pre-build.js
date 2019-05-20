@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require('fs')
-const pkg = require('./package.json')
 const { rollup } = require('rollup')
 const babel = require('rollup-plugin-babel')
 const sass = require('rollup-plugin-sass')
@@ -11,7 +10,6 @@ const resolve = require('rollup-plugin-node-resolve')
 const json = require('rollup-plugin-json')
 const cssOnly = require('rollup-plugin-css-only')
 const replace = require('rollup-plugin-replace')
-const { green, blue } = require('colorette')
 
 const NAMESPACE_PREFIX = process.env.NAMESPACE || 'tippy'
 

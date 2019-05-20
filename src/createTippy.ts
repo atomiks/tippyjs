@@ -138,20 +138,26 @@ export default function createTippy(
 
   // Prevent a tippy with a delay from hiding if the cursor left then returned
   // before it started hiding
-  popper.addEventListener('mouseenter', () => {
-    if (
-      instance.props.interactive &&
-      instance.state.isVisible &&
-      lastTriggerEventType === 'mouseenter'
-    ) {
-      instance.clearDelayTimeouts()
-    }
-  })
-  popper.addEventListener('mouseleave', () => {
-    if (instance.props.interactive && lastTriggerEventType === 'mouseenter') {
-      document.addEventListener('mousemove', debouncedOnMouseMove)
-    }
-  })
+  popper.addEventListener(
+    'mouseenter',
+    (): void => {
+      if (
+        instance.props.interactive &&
+        instance.state.isVisible &&
+        lastTriggerEventType === 'mouseenter'
+      ) {
+        instance.clearDelayTimeouts()
+      }
+    },
+  )
+  popper.addEventListener(
+    'mouseleave',
+    (): void => {
+      if (instance.props.interactive && lastTriggerEventType === 'mouseenter') {
+        document.addEventListener('mousemove', debouncedOnMouseMove)
+      }
+    },
+  )
 
   props.onCreate(instance)
 
@@ -175,7 +181,7 @@ export default function createTippy(
     document.body.removeEventListener('mouseleave', scheduleHide)
     document.removeEventListener('mousemove', debouncedOnMouseMove)
     mouseMoveListeners = mouseMoveListeners.filter(
-      listener => listener !== debouncedOnMouseMove,
+      (listener): boolean => listener !== debouncedOnMouseMove,
     )
   }
 
@@ -245,15 +251,18 @@ export default function createTippy(
    * Invokes a callback once the tooltip has fully transitioned out
    */
   function onTransitionedOut(duration: number, callback: () => void): void {
-    onTransitionEnd(duration, () => {
-      if (
-        !instance.state.isVisible &&
-        popper.parentNode &&
-        popper.parentNode.contains(popper)
-      ) {
-        callback()
-      }
-    })
+    onTransitionEnd(
+      duration,
+      (): void => {
+        if (
+          !instance.state.isVisible &&
+          popper.parentNode &&
+          popper.parentNode.contains(popper)
+        ) {
+          callback()
+        }
+      },
+    )
   }
 
   /**
@@ -315,30 +324,38 @@ export default function createTippy(
     instance.props.trigger
       .trim()
       .split(' ')
-      .forEach(eventType => {
-        if (eventType === 'manual') {
-          return
-        }
+      .forEach(
+        (eventType): void => {
+          if (eventType === 'manual') {
+            return
+          }
 
-        on(eventType, onTrigger)
-        switch (eventType) {
-          case 'mouseenter':
-            on('mouseleave', onMouseLeave as EventListener)
-            break
-          case 'focus':
-            on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
-            break
-        }
-      })
+          on(eventType, onTrigger)
+          switch (eventType) {
+            case 'mouseenter':
+              on('mouseleave', onMouseLeave as EventListener)
+              break
+            case 'focus':
+              on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
+              break
+          }
+        },
+      )
   }
 
   /**
    * Removes event listeners from the reference
    */
   function removeTriggersFromReference(): void {
-    listeners.forEach(({ eventType, handler, options }: Listener) => {
-      getEventListenersTarget().removeEventListener(eventType, handler, options)
-    })
+    listeners.forEach(
+      ({ eventType, handler, options }: Listener): void => {
+        getEventListenersTarget().removeEventListener(
+          eventType,
+          handler,
+          options,
+        )
+      },
+    )
     listeners = []
   }
 
@@ -404,13 +421,13 @@ export default function createTippy(
     // over the reference element
     const isCursorOverReference = closestCallback(
       event.target as Element,
-      (el: Element) => el === reference,
+      (el: Element): boolean => el === reference,
     )
 
     if (isCursorOverReference || !instance.props.interactive) {
       instance.popperInstance!.reference = {
         ...instance.popperInstance!.reference,
-        getBoundingClientRect: () => ({
+        getBoundingClientRect: (): DOMRect | ClientRect => ({
           width: 0,
           height: 0,
           top: isHorizontal ? rect.top : y,
@@ -446,7 +463,7 @@ export default function createTippy(
         // over a new target, but `mousemove` events don't get fired. This
         // causes interactive tooltips to get stuck open until the cursor is
         // moved
-        mouseMoveListeners.forEach(listener => listener(event))
+        mouseMoveListeners.forEach((listener): void => listener(event))
       }
     }
 
@@ -469,7 +486,7 @@ export default function createTippy(
   function onMouseMove(event: MouseEvent): void {
     const isCursorOverReferenceOrPopper = closestCallback(
       event.target as Element,
-      (el: Element) => el === reference || el === popper,
+      (el: Element): boolean => el === reference || el === popper,
     )
 
     if (isCursorOverReferenceOrPopper) {
@@ -616,7 +633,7 @@ export default function createTippy(
         : (padding[basicPlacement] || 0) + instance.props.distance
 
       instance.popperInstance!.modifiers.filter(
-        m => m.name === 'preventOverflow',
+        (m): boolean => m.name === 'preventOverflow',
       )[0].padding = computedPadding
 
       currentComputedPadding = computedPadding
@@ -657,7 +674,7 @@ export default function createTippy(
           ...getModifier(popperOptions, 'offset'),
         },
       },
-      onCreate(data: Popper.Data) {
+      onCreate(data: Popper.Data): void {
         applyMutations(data)
         runMountCallback()
 
@@ -665,7 +682,7 @@ export default function createTippy(
           popperOptions.onCreate(data)
         }
       },
-      onUpdate(data: Popper.Data) {
+      onUpdate(data: Popper.Data): void {
         applyMutations(data)
         runMountCallback()
 
@@ -796,7 +813,7 @@ export default function createTippy(
     const delay = getValue(instance.props.delay, 0, defaultProps.delay)
 
     if (delay) {
-      showTimeout = setTimeout(() => {
+      showTimeout = setTimeout((): void => {
         instance.show()
       }, delay)
     } else {
@@ -821,7 +838,7 @@ export default function createTippy(
     const delay = getValue(instance.props.delay, 1, defaultProps.delay)
 
     if (delay) {
-      hideTimeout = setTimeout(() => {
+      hideTimeout = setTimeout((): void => {
         if (instance.state.isVisible) {
           instance.hide()
         }
@@ -829,9 +846,11 @@ export default function createTippy(
     } else {
       // Fixes a `transitionend` problem when it fires 1 frame too
       // late sometimes, we don't want hide() to be called.
-      animationFrame = requestAnimationFrame(() => {
-        instance.hide()
-      })
+      animationFrame = requestAnimationFrame(
+        (): void => {
+          instance.hide()
+        },
+      )
     }
   }
 
@@ -898,6 +917,7 @@ export default function createTippy(
   function set(options: Options): void {
     if (process.env.NODE_ENV !== 'production') {
       if (instance.state.isDestroyed) {
+        /* eslint-disable-next-line no-console */
         console.warn(
           '[tippy.js WARNING] `set()` was called on a destroyed instance. ' +
             'This is a no-op but indicates a potential memory leak.',
@@ -936,11 +956,13 @@ export default function createTippy(
 
     if (instance.popperInstance) {
       if (
-        POPPER_INSTANCE_DEPENDENCIES.some(prop => {
-          return (
-            hasOwnProperty(options, prop) && options[prop] !== prevProps[prop]
-          )
-        })
+        POPPER_INSTANCE_DEPENDENCIES.some(
+          (prop): boolean => {
+            return (
+              hasOwnProperty(options, prop) && options[prop] !== prevProps[prop]
+            )
+          },
+        )
       ) {
         instance.popperInstance.destroy()
         createPopperInstance()
@@ -977,6 +999,7 @@ export default function createTippy(
   ): void {
     if (process.env.NODE_ENV !== 'production') {
       if (instance.state.isDestroyed) {
+        /* eslint-disable-next-line no-console */
         console.warn(
           '[tippy.js WARNING] `show()` was called on a destroyed instance. ' +
             'This is a no-op but indicates a potential memory leak.',
@@ -1012,7 +1035,7 @@ export default function createTippy(
     const transitionableElements = getTransitionableElements()
     setTransitionDuration(transitionableElements.concat(popper), 0)
 
-    currentMountCallback = () => {
+    currentMountCallback = (): void => {
       if (!instance.state.isVisible) {
         return
       }
@@ -1035,17 +1058,20 @@ export default function createTippy(
       setTransitionDuration(transitionableElements, duration)
       setVisibilityState(transitionableElements, 'visible')
 
-      onTransitionedIn(duration, () => {
-        if (instance.props.aria) {
-          getEventListenersTarget().setAttribute(
-            `aria-${instance.props.aria}`,
-            instance.popperChildren.tooltip.id,
-          )
-        }
+      onTransitionedIn(
+        duration,
+        (): void => {
+          if (instance.props.aria) {
+            getEventListenersTarget().setAttribute(
+              `aria-${instance.props.aria}`,
+              instance.popperChildren.tooltip.id,
+            )
+          }
 
-        instance.props.onShown(instance)
-        instance.state.isShown = true
-      })
+          instance.props.onShown(instance)
+          instance.state.isShown = true
+        },
+      )
     }
 
     mount()
@@ -1063,6 +1089,7 @@ export default function createTippy(
   ): void {
     if (process.env.NODE_ENV !== 'production') {
       if (instance.state.isDestroyed) {
+        /* eslint-disable-next-line no-console */
         console.warn(
           '[tippy.js WARNING] `hide()` was called on a destroyed instance. ' +
             'This is a no-op but indicates a potential memory leak.',
@@ -1088,22 +1115,27 @@ export default function createTippy(
     setTransitionDuration(transitionableElements, duration)
     setVisibilityState(transitionableElements, 'hidden')
 
-    onTransitionedOut(duration, () => {
-      if (!isScheduledToShow) {
-        removeFollowCursorListener()
-      }
+    onTransitionedOut(
+      duration,
+      (): void => {
+        if (!isScheduledToShow) {
+          removeFollowCursorListener()
+        }
 
-      if (instance.props.aria) {
-        getEventListenersTarget().removeAttribute(`aria-${instance.props.aria}`)
-      }
+        if (instance.props.aria) {
+          getEventListenersTarget().removeAttribute(
+            `aria-${instance.props.aria}`,
+          )
+        }
 
-      instance.popperInstance!.disableEventListeners()
-      instance.popperInstance!.options.placement = instance.props.placement
+        instance.popperInstance!.disableEventListeners()
+        instance.popperInstance!.options.placement = instance.props.placement
 
-      popper.parentNode!.removeChild(popper)
-      instance.props.onHidden(instance)
-      instance.state.isMounted = false
-    })
+        popper.parentNode!.removeChild(popper)
+        instance.props.onHidden(instance)
+        instance.state.isMounted = false
+      },
+    )
   }
 
   /**
@@ -1112,6 +1144,7 @@ export default function createTippy(
   function destroy(): void {
     if (instance.state.isDestroyed) {
       if (process.env.NODE_ENV !== 'production') {
+        /* eslint-disable-next-line no-console */
         console.warn(
           '[tippy.js WARNING] `destroy()` was called on an already-destroyed ' +
             'instance. This is a no-op but indicates a potential memory leak.',
