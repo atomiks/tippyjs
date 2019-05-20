@@ -15,8 +15,11 @@ interface ListenerObj {
  */
 export default function delegate(
   targets: Targets,
-  { target, ...options }: Options & { target: string },
+  options: Options & { target: string },
 ): Instance | Instance[] | null {
+  const { target } = options
+  delete options.target
+
   if (process.env.NODE_ENV !== 'production') {
     if (!target) {
       console.error(
