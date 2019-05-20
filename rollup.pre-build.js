@@ -64,16 +64,9 @@ function createRollupConfig(inputFile, plugins) {
   }
 }
 
-/*
-/**!
-* @file ${name}
-* @version ${pkg.version}
-* @license MIT
-* @copyright 2017-${new Date().getFullYear()} atomiks
-*/
-
 async function build() {
-  console.log(blue('⏳ Building bundles...'))
+  // Create `index.d.ts` file from `src/types.ts`
+  fs.copyFileSync('./src/types.ts', './index.d.ts')
 
   // Create `./index.css` first
   const cssConfig = createRollupConfig(

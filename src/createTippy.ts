@@ -6,7 +6,6 @@ import {
   Options,
   Instance,
   Content,
-  Listener,
   Placement,
 } from './types'
 import { isIE } from './browser'
@@ -36,6 +35,12 @@ import {
   debounce,
 } from './utils'
 import { validateOptions } from './validation'
+
+interface Listener {
+  eventType: string
+  handler: EventListenerOrEventListenerObject
+  options: boolean | object
+}
 
 let idCounter = 1
 // Workaround for IE11's lack of new MouseEvent constructor

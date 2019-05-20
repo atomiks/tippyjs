@@ -114,14 +114,6 @@ export interface HideAllOptions {
   exclude?: Instance | ReferenceElement
 }
 
-export interface Listener {
-  eventType: string
-  handler: EventListenerOrEventListenerObject
-  options: boolean | object
-}
-
-export type TriggerListener = (event: MouseEvent | FocusEvent) => void
-
 export interface Tippy {
   (targets: Targets, options?: Props): Instance | Instance[]
   readonly defaults: Props
