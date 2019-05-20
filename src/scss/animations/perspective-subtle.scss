@@ -3,32 +3,32 @@
 
 @mixin visible-transform($placement) {
   @if ($placement == 'top') {
-    transform: perspective(700px) rotateX(0);
+    transform: perspective(700px);
   } @else if ($placement == 'bottom') {
-    transform: perspective(700px) rotateX(0);
+    transform: perspective(700px);
   } @else if ($placement == 'left') {
-    transform: perspective(700px) rotateY(0);
+    transform: perspective(700px);
   } @else if ($placement == 'right') {
-    transform: perspective(700px) rotateY(0);
+    transform: perspective(700px);
   }
 }
 
 @mixin hidden-transform($placement) {
   @if ($placement == 'top') {
-    transform: perspective(700px) translateY(8px) rotateX(60deg);
+    transform: perspective(700px) translateY(5px) rotateX(30deg);
   } @else if ($placement == 'bottom') {
-    transform: perspective(700px) translateY(-8px) rotateX(-60deg);
+    transform: perspective(700px) translateY(-5px) rotateX(-30deg);
   } @else if ($placement == 'left') {
-    transform: perspective(700px) translateX(8px) rotateY(-60deg);
+    transform: perspective(700px) translateX(5px) rotateY(-30deg);
   } @else if ($placement == 'right') {
-    transform: perspective(700px) translateX(-8px) rotateY(60deg);
+    transform: perspective(700px) translateX(-5px) rotateY(30deg);
   }
 }
 
 .#{$namespace-prefix}-tooltip {
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      &[data-animation='perspective'] {
+      &[data-animation='perspective-subtle'] {
         transform-origin: nth($origins, index($placements, $placement));
 
         &[data-state='visible'] {

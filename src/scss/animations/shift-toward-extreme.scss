@@ -3,20 +3,20 @@
 
 @mixin hidden-transform($placement) {
   @if ($placement == 'top') {
-    transform: translateY(-5px);
+    transform: translateY(-20px);
   } @else if ($placement == 'bottom') {
-    transform: translateY(5px);
+    transform: translateY(20px);
   } @else if ($placement == 'left') {
-    transform: translateX(-5px);
+    transform: translateX(-20px);
   } @else if ($placement == 'right') {
-    transform: translateX(5px);
+    transform: translateX(20px);
   }
 }
 
 .#{$namespace-prefix}-tooltip {
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      &[data-animation='subtle-shift-toward'] {
+      &[data-animation='shift-toward-extreme'] {
         &[data-state='hidden'] {
           @include hidden-transform($placement);
           opacity: 0;

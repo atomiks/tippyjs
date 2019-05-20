@@ -1,22 +1,22 @@
-@import './_mixins.scss';
-@import './_vars.scss';
+@import '../_mixins.scss';
+@import '../_vars.scss';
 
 @mixin hidden-transform($placement) {
   @if ($placement == 'top') {
-    transform: translateY(5px);
+    transform: translateY(20px);
   } @else if ($placement == 'bottom') {
-    transform: translateY(-5px);
+    transform: translateY(-20px);
   } @else if ($placement == 'left') {
-    transform: translateX(5px);
+    transform: translateX(20px);
   } @else if ($placement == 'right') {
-    transform: translateX(-5px);
+    transform: translateX(-20px);
   }
 }
 
 .#{$namespace-prefix}-tooltip {
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      &[data-animation='subtle-shift-away'] {
+      &[data-animation='shift-away-extreme'] {
         &[data-state='hidden'] {
           @include hidden-transform($placement);
           opacity: 0;
