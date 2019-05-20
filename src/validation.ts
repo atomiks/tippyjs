@@ -15,7 +15,7 @@ export function validateOptions(
         if (option === 'target') {
           console.warn(
             '[tippy.js WARNING] The `target` option was removed in v5 and ' +
-              'replaced by the `delegate()` method. Read more here: ' +
+              'replaced with the `delegate()` method. Read more here: ' +
               'https//atomiks.github.io/tippyjs/event-delegation/',
           )
         } else {
@@ -39,7 +39,7 @@ export function validateOptions(
               '[tippy.js WARNING] The default theme `' +
                 options[option] +
                 '` in v5 must include the prefix `__NAMESPACE_PREFIX__`, i.e. ' +
-                '"tippy-' +
+                '"__NAMESPACE_PREFIX__-' +
                 options[option] +
                 '" instead of "' +
                 options[option] +
@@ -50,7 +50,7 @@ export function validateOptions(
           if (options[option] === 'google') {
             console.warn(
               '[tippy.js WARNING] The default theme `google` was renamed to ' +
-                '`tippy-material` in v5.',
+                '`__NAMESPACE_PREFIX__-material` in v5.',
             )
           }
         }
