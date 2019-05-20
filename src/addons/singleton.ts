@@ -25,11 +25,16 @@ export default function singleton(
   }
 
   tippyInstances.forEach(instance => {
-    instance.popper.style.display = 'none'
-
     instance.set({
       ...options,
       delay: 0,
+      onShow(instance) {
+        if (props.onShow) {
+          props.onShow(instance)
+        }
+
+        return false
+      },
       onTrigger(instance, event) {
         if (props.onTrigger) {
           props.onTrigger(instance, event)
