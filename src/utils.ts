@@ -175,7 +175,8 @@ export function debounce<T>(
 
   return function(arg): void {
     clearTimeout(timeout)
-    // @ts-ignore
-    timeout = setTimeout((): void => fn.call(this, arg), ms)
+    timeout = setTimeout((): void => {
+      fn(arg)
+    }, ms)
   }
 }
