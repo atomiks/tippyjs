@@ -173,7 +173,7 @@ export function debounce<T>(
 
   let timeout: any
 
-  return function(arg): void {
+  return (arg): void => {
     clearTimeout(timeout)
     timeout = setTimeout((): void => {
       fn(arg)
