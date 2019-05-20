@@ -2,16 +2,16 @@
 @import '../_vars.scss';
 
 .#{$namespace-prefix}-tooltip {
-  @each $placement in $placements {
-    &[data-placement^='#{$placement}'] {
-      &[data-animation='scale'] {
+  &[data-animation='scale'] {
+    @each $placement in $placements {
+      &[data-placement^='#{$placement}'] {
         transform-origin: nth($origins, index($placements, $placement));
-
-        &[data-state='hidden'] {
-          transform: scale(0.5);
-          opacity: 0;
-        }
       }
+    }
+
+    &[data-state='hidden'] {
+      transform: scale(0.5);
+      opacity: 0;
     }
   }
 }

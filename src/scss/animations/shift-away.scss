@@ -19,12 +19,9 @@
       &[data-animation='shift-away'] {
         &[data-state='hidden'] {
           @include hidden-transform($placement);
+          opacity: 0;
         }
       }
     }
-  }
-
-  &[data-state='hidden'] {
-    opacity: 0;
   }
 }

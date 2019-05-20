@@ -2,7 +2,9 @@
 @import './_vars.scss';
 
 .#{$namespace-prefix}-tooltip {
-  &[data-state='hidden'] {
-    opacity: 0;
+  &[data-animation='fade'] {
+    &[data-state='hidden'] {
+      opacity: 0;
+    }
   }
 }
