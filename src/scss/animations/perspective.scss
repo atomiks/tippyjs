@@ -3,13 +3,13 @@
 
 @mixin visible-transform($placement) {
   @if ($placement == 'top') {
-    transform: perspective(700px) rotateX(0);
+    transform: perspective(700px);
   } @else if ($placement == 'bottom') {
-    transform: perspective(700px) rotateX(0);
+    transform: perspective(700px);
   } @else if ($placement == 'left') {
-    transform: perspective(700px) rotateY(0);
+    transform: perspective(700px);
   } @else if ($placement == 'right') {
-    transform: perspective(700px) rotateY(0);
+    transform: perspective(700px);
   }
 }
 
@@ -26,9 +26,9 @@
 }
 
 .#{$namespace-prefix}-tooltip {
-  @each $placement in $placements {
-    &[data-placement^='#{$placement}'] {
-      &[data-animation='perspective'] {
+  &[data-animation='perspective'] {
+    @each $placement in $placements {
+      &[data-placement^='#{$placement}'] {
         transform-origin: nth($origins, index($placements, $placement));
 
         &[data-state='visible'] {
@@ -37,9 +37,12 @@
 
         &[data-state='hidden'] {
           @include hidden-transform($placement);
-          opacity: 0;
         }
       }
+    }
+
+    &[data-state='hidden'] {
+      opacity: 0;
     }
   }
 }

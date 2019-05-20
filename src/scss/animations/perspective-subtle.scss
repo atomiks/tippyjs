@@ -26,9 +26,9 @@
 }
 
 .#{$namespace-prefix}-tooltip {
-  @each $placement in $placements {
-    &[data-placement^='#{$placement}'] {
-      &[data-animation='perspective-subtle'] {
+  &[data-animation='perspective-subtle'] {
+    @each $placement in $placements {
+      &[data-placement^='#{$placement}'] {
         transform-origin: nth($origins, index($placements, $placement));
 
         &[data-state='visible'] {
@@ -37,9 +37,12 @@
 
         &[data-state='hidden'] {
           @include hidden-transform($placement);
-          opacity: 0;
         }
       }
+    }
+
+    &[data-state='hidden'] {
+      opacity: 0;
     }
   }
 }
