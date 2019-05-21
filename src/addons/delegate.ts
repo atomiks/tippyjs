@@ -17,43 +17,36 @@ export default function delegate(
   targets: Targets,
   options: Options & { target: string },
 ): Instance | Instance[] | null {
-  const { target } = options
-  delete options.target
-
   if (process.env.NODE_ENV !== 'production') {
-    if (!target) {
-      /* eslint-disable no-console */
-      console.error(
+    if (!options || !options.target) {
+      throw new Error(
         '[tippy.js ERROR] You must specify a `target` option ' +
           'indicating the CSS selector string matching the target elements ' +
           'that should receive a tippy.',
       )
-      return null
     }
   }
 
-  const instanceOrInstances = tippy(targets, {
-    ...options,
-    trigger: 'manual',
-  })
   let listeners: ListenerObj[] = []
+  let childTippyInstances: Instance[] = []
+
+  const { target } = options
+  delete options.target
+
+  const instanceOrInstances = tippy(targets, options)
 
   function onTrigger(event: Event): void {
     if (event.target) {
       const targetNode = (event.target as Element).closest(target)
 
       if (targetNode) {
-        tippy(targetNode, { ...options, showOnInit: true })
+        const instance = tippy(targetNode, { ...options, showOnInit: true })
+
+        if (instance) {
+          childTippyInstances = childTippyInstances.concat(instance)
+        }
       }
     }
-  }
-
-  function onShow(instance: Instance): void | false {
-    if (options.onShow) {
-      options.onShow(instance)
-    }
-
-    return false
   }
 
   function on(
@@ -106,17 +99,21 @@ export default function delegate(
 
   function applyMutations(instance: Instance): void {
     const originalDestroy = instance.destroy
-    instance.destroy = (): void => {
+    instance.destroy = (shouldDestroyChildInstances: boolean = false): void => {
+      if (shouldDestroyChildInstances) {
+        childTippyInstances.forEach(instance => {
+          instance.destroy()
+        })
+      }
+      childTippyInstances = []
+
       removeEventListeners(listeners)
       originalDestroy()
     }
 
     addEventListeners(instance)
 
-    instance.set({
-      trigger: options.trigger || tippy.defaults.trigger,
-      onShow,
-    })
+    instance.set({ trigger: 'manual' })
   }
 
   if (instanceOrInstances) {
