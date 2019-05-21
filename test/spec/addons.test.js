@@ -79,24 +79,6 @@ describe('singleton', () => {
     expect(options.onUntrigger).toHaveBeenCalledWith(ref._tippy, untriggerEvent)
   })
 
-  it('allows `onShow`, `onTrigger`, and `onUntrigger` to be updated', () => {
-    const options = {
-      onShow: jest.fn(),
-      onTrigger: jest.fn(),
-      onUntrigger: jest.fn(),
-    }
-    const triggerEvent = new MouseEvent('mouseenter', { bubbles: true })
-    const untriggerEvent = new MouseEvent('mouseleave', { bubbles: true })
-    const refs = [h(), h()]
-    const ref = refs[0]
-    singleton(tippy(refs, options))
-    ref.dispatchEvent(triggerEvent)
-    ref.dispatchEvent(untriggerEvent)
-    expect(options.onShow).toHaveBeenCalledWith(ref._tippy)
-    expect(options.onTrigger).toHaveBeenCalledWith(ref._tippy, triggerEvent)
-    expect(options.onUntrigger).toHaveBeenCalledWith(ref._tippy, untriggerEvent)
-  })
-
   it('throws if not passed an array', () => {
     expect(() => {
       singleton(null)
