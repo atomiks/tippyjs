@@ -18,6 +18,12 @@ export function validateOptions(
               'replaced with the `delegate()` method. Read more here: ' +
               'https//atomiks.github.io/tippyjs/event-delegation/',
           )
+        } else if (option === 'a11y') {
+          console.warn(
+            '[tippy.js WARNING] The `a11y` option was removed in v5. Make ' +
+              'sure the element you are giving a tippy to is natively ' +
+              'focusable, such as <button> or <input>, not <div> or <span>.',
+          )
         } else {
           console.warn(
             '[tippy.js WARNING] `' +
