@@ -1,5 +1,6 @@
 import { h, hasTippy, cleanDocumentBody } from '../utils'
 import { defaultProps } from '../../src/props'
+import { POPPER_SELECTOR } from '../../src/constants'
 import tippy, { autoInit } from '../../src'
 
 afterEach(cleanDocumentBody)
@@ -53,6 +54,54 @@ describe('tippy.setDefaults()', () => {
     const newPlacement = 'bottom-end'
     tippy.setDefaults({ placement: newPlacement })
     expect(defaultProps.placement).toBe(newPlacement)
+  })
+})
+
+describe('tippy.hideAll()', () => {
+  it('hides all tippys on the document, ignoring `hideOnClick`', () => {
+    const options = { showOnInit: true, hideOnClick: false }
+    const instances = [...Array(3)].map(() => tippy(h(), options))
+    instances.forEach(instance => {
+      expect(instance.state.isVisible).toBe(true)
+    })
+    tippy.hideAll()
+    instances.forEach(instance => {
+      expect(instance.state.isVisible).toBe(false)
+    })
+  })
+
+  it('respects `duration` option', () => {
+    const options = { showOnInit: true, duration: 100 }
+    const instances = [...Array(3)].map(() => tippy(h(), options))
+    tippy.hideAll({ duration: 0 })
+    instances.forEach(instance => {
+      expect(instance.state.isMounted).toBe(false)
+    })
+  })
+
+  it('respects `exclude` option', () => {
+    const options = { showOnInit: true }
+    const instances = [...Array(3)].map(() => tippy(h(), options))
+    tippy.hideAll({ exclude: instances[0] })
+    instances.forEach(instance => {
+      expect(instance.state.isVisible).toBe(
+        instance === instances[0] ? true : false,
+      )
+    })
+  })
+
+  it('respects `exclude` option as type ReferenceElement for multiple tippys', () => {
+    const options = { showOnInit: true, multiple: true }
+    const ref = h()
+    tippy(ref, options)
+    tippy(ref, options)
+    tippy.hideAll({ exclude: ref })
+    const instances = [...document.querySelectorAll(POPPER_SELECTOR)].map(
+      popper => popper._tippy,
+    )
+    instances.forEach(instance => {
+      expect(instance.state.isVisible).toBe(true)
+    })
   })
 })
 

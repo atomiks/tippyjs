@@ -4,10 +4,17 @@ import { defaultProps } from './props'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
 import { arrayFrom } from './ponyfills'
-import { hideAll } from './popper'
-import { isRealElement, getArrayOfElements } from './utils'
+import { isRealElement, getArrayOfElements, isReferenceElement } from './utils'
 import { validateTargets, validateOptions } from './validation'
-import { Options, Props, Instance, Targets } from './types'
+import { POPPER_SELECTOR } from './constants'
+import {
+  Options,
+  Props,
+  Instance,
+  Targets,
+  PopperElement,
+  HideAllOptions,
+} from './types'
 
 let globalEventListenersBound = false
 
@@ -48,18 +55,6 @@ function tippy(
 
 tippy.version = version
 tippy.defaults = defaultProps
-tippy.hideAll = hideAll
-
-if (process.env.NODE_ENV !== 'production') {
-  tippy.group = (): void => {
-    /* eslint-disable-next-line no-console */
-    console.warn(
-      '[tippy.js WARNING] `tippy.group()` was removed in v5 and replaced by ' +
-        '`singleton()`. Read more: ' +
-        'https://atomiks.github.io/tippyjs/singleton/',
-    )
-  }
-}
 
 /**
  * Mutates the defaultProps object by setting the props specified
@@ -71,6 +66,44 @@ tippy.setDefaults = (partialDefaults: Options): void => {
       defaultProps[key] = partialDefaults[key]
     },
   )
+}
+
+/**
+ * Hides all visible poppers on the document
+ */
+tippy.hideAll = ({
+  exclude: excludedReferenceOrInstance,
+  duration,
+}: HideAllOptions = {}): void => {
+  arrayFrom(document.querySelectorAll(POPPER_SELECTOR)).forEach(
+    (popper: PopperElement): void => {
+      const instance = popper._tippy
+
+      if (instance) {
+        let isExcluded = false
+        if (excludedReferenceOrInstance) {
+          isExcluded = isReferenceElement(excludedReferenceOrInstance)
+            ? instance.reference === excludedReferenceOrInstance
+            : popper === excludedReferenceOrInstance.popper
+        }
+
+        if (!isExcluded) {
+          instance.hide(duration)
+        }
+      }
+    },
+  )
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  tippy.group = (): void => {
+    /* eslint-disable-next-line no-console */
+    console.warn(
+      '[tippy.js WARNING] `tippy.group()` was removed in v5 and replaced by ' +
+        '`singleton()`. Read more: ' +
+        'https://atomiks.github.io/tippyjs/singleton/',
+    )
+  }
 }
 
 /**

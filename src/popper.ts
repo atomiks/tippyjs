@@ -2,12 +2,10 @@ import {
   PopperElement,
   Props,
   PopperChildren,
-  HideAllOptions,
   BasicPlacement,
   Placement,
 } from './types'
-import { arrayFrom } from './ponyfills'
-import { innerHTML, div, isReferenceElement, isRealElement } from './utils'
+import { innerHTML, div, isRealElement } from './utils'
 import { isUCBrowser } from './browser'
 import {
   POPPER_CLASS,
@@ -16,7 +14,6 @@ import {
   CONTENT_CLASS,
   ARROW_CLASS,
   SVG_ARROW_CLASS,
-  POPPER_SELECTOR,
   TOOLTIP_SELECTOR,
   BACKDROP_SELECTOR,
   CONTENT_SELECTOR,
@@ -295,33 +292,6 @@ export function updatePopperElement(
     updateTheme(tooltip, 'remove', prevProps.theme)
     updateTheme(tooltip, 'add', nextProps.theme)
   }
-}
-
-/**
- * Hides all visible poppers on the document
- */
-export function hideAll({
-  exclude: excludedReferenceOrInstance,
-  duration,
-}: HideAllOptions = {}): void {
-  arrayFrom(document.querySelectorAll(POPPER_SELECTOR)).forEach(
-    (popper: PopperElement): void => {
-      const instance = popper._tippy
-
-      if (instance) {
-        let isExcluded = false
-        if (excludedReferenceOrInstance) {
-          isExcluded = isReferenceElement(excludedReferenceOrInstance)
-            ? instance.reference === excludedReferenceOrInstance
-            : popper === excludedReferenceOrInstance.popper
-        }
-
-        if (!isExcluded) {
-          instance.hide(duration)
-        }
-      }
-    },
-  )
 }
 
 /**

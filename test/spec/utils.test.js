@@ -1,6 +1,7 @@
 import { h, cleanDocumentBody, IDENTIFIER } from '../utils'
 import { defaultProps } from '../../src/props'
 import * as Utils from '../../src/utils'
+import tippy from '../../src'
 
 jest.useFakeTimers()
 
@@ -254,5 +255,16 @@ describe('setVisibilityState', () => {
     expect(els[0].getAttribute('data-state')).toBe('hidden')
     expect(els[1].getAttribute('data-state')).toBe('hidden')
     expect(els[3].getAttribute('data-state')).toBe('hidden')
+  })
+})
+
+describe('isReferenceElement', () => {
+  it('correctly determines if a value is a reference element', () => {
+    const instance = tippy(h())
+    expect(Utils.isReferenceElement(document.createElement('div'))).toBe(false)
+    expect(Utils.isReferenceElement(instance.reference)).toBe(true)
+    expect(Utils.isReferenceElement(instance.popper)).toBe(false)
+    instance.popper.classList.add('other')
+    expect(Utils.isReferenceElement(instance.popper)).toBe(false)
   })
 })
