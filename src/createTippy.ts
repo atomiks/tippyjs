@@ -89,6 +89,9 @@ export default function createTippy(
   const popperChildren = getChildren(popper)
   const popperInstance: PopperInstance | null = null
 
+  // These two elements are static
+  const { tooltip, content } = popperChildren
+
   const state = {
     // Is the instance currently enabled?
     isEnabled: true,
@@ -229,11 +232,7 @@ export default function createTippy(
   }
 
   function getTransitionableElements(): (HTMLDivElement | null)[] {
-    return [
-      instance.popperChildren.tooltip,
-      instance.popperChildren.backdrop,
-      instance.popperChildren.content,
-    ]
+    return [tooltip, content, instance.popperChildren.backdrop]
   }
 
   function makeSticky(): void {
@@ -272,8 +271,6 @@ export default function createTippy(
   }
 
   function onTransitionEnd(duration: number, callback: () => void): void {
-    const { tooltip } = instance.popperChildren
-
     /**
      * Listener added as the `transitionend` handler
      */
@@ -525,7 +522,7 @@ export default function createTippy(
 
   function createPopperInstance(): void {
     const { popperOptions } = instance.props
-    const { tooltip, arrow } = instance.popperChildren
+    const { arrow } = instance.popperChildren
     const preventOverflowModifier = getModifier(
       popperOptions,
       'preventOverflow',
@@ -962,7 +959,7 @@ export default function createTippy(
           if (instance.props.aria) {
             getEventListenersTarget().setAttribute(
               `aria-${instance.props.aria}`,
-              instance.popperChildren.tooltip.id,
+              tooltip.id,
             )
           }
 
