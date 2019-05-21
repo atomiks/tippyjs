@@ -115,7 +115,7 @@ export interface HideAllOptions {
 }
 
 export interface Tippy {
-  (targets: Targets, options?: Props): Instance | Instance[] | null
+  (targets: Targets, options?: Options): Instance | Instance[] | null
   readonly defaults: Props
   readonly version: string
   hideAll(options?: HideAllOptions): void
