@@ -3,9 +3,8 @@
 
 $color: #505355;
 
-.#{$namespace-prefix}-tooltip.#{$namespace-prefix}-google-theme {
+.#{$namespace-prefix}-tooltip.#{$namespace-prefix}-material-theme {
   background-color: $color;
-  padding: 0.25rem 0.4375rem;
   font-size: 0.8125rem;
   font-weight: 600;
 
@@ -15,6 +14,10 @@ $color: #505355;
         @include arrow($placement, 8px, $color);
       }
     }
+  }
+
+  .#{$namespace-prefix}-content {
+    padding: 0.25rem 0.4375rem;
   }
 
   .#{$namespace-prefix}-backdrop {
