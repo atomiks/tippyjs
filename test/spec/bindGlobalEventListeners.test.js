@@ -6,12 +6,12 @@ import { IOS_CLASS } from '../../src/constants'
 
 afterEach(cleanDocumentBody)
 
-describe('onDocumentTouch', () => {
+describe('onDocumentTouchStart', () => {
   it('sets isUsingTouch to `true` and adds tippy-iOS class to body', () => {
     const bodyClass = document.body.classList
     expect(bodyClass.contains(IOS_CLASS)).toBe(false)
-    Listeners.onDocumentTouch()
-    Listeners.onDocumentTouch()
+    Listeners.onDocumentTouchStart()
+    Listeners.onDocumentTouchStart()
     expect(Listeners.isUsingTouch).toBe(true)
     expect(bodyClass.contains(IOS_CLASS)).toBe(true)
   })

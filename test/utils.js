@@ -1,6 +1,6 @@
 import {
-  onDocumentTouch,
   onDocumentMouseMove,
+  onDocumentTouchStart,
 } from '../src/bindGlobalEventListeners'
 
 export const IDENTIFIER = '__tippy'
@@ -36,7 +36,7 @@ export const withTestOptions = options => ({
 
 export function enableTouchEnvironment() {
   window.ontouchstart = true
-  onDocumentTouch()
+  onDocumentTouchStart()
 }
 
 export function disableTouchEnvironment() {
