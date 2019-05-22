@@ -129,7 +129,7 @@ describe('tippy.group()', () => {
     tippy.group()
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] `tippy.group()` was removed in v5 and replaced by ' +
-        '`singleton()`. Read more: ' +
+        '`createSingleton()`. Read more: ' +
         'https://atomiks.github.io/tippyjs/singleton/',
     )
   })

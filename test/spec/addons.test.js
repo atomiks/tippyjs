@@ -1,4 +1,4 @@
-import singleton from '../../src/addons/singleton'
+import createSingleton from '../../src/addons/createSingleton'
 import delegate from '../../src/addons/delegate'
 import tippy from '../../src'
 import { h, cleanDocumentBody } from '../utils'
@@ -12,10 +12,10 @@ jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
 
-describe('singleton', () => {
+describe('createSingleton', () => {
   it('shows when a tippy instance reference is triggered', () => {
     const refs = [h(), h()]
-    const singletonInstance = singleton(tippy(refs))
+    const singletonInstance = createSingleton(tippy(refs))
     refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
     jest.runAllTimers()
     expect(singletonInstance.state.isVisible).toBe(true)
@@ -23,7 +23,7 @@ describe('singleton', () => {
 
   it('does not show the original tippy instance', () => {
     const refs = [h(), h()]
-    singleton(tippy(refs))
+    createSingleton(tippy(refs))
     refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
     jest.runAllTimers()
     expect(refs[0]._tippy.state.isVisible).toBe(false)
@@ -32,7 +32,7 @@ describe('singleton', () => {
   it('uses the relevant tippy instance props', () => {
     const configs = [{ arrow: true }, { duration: 1000 }]
     const instances = configs.map(options => tippy(h(), options))
-    const singletonInstance = singleton(instances)
+    const singletonInstance = createSingleton(instances)
     instances[0].reference.dispatchEvent(new MouseEvent('mouseenter'), {
       bubbles: true,
     })
@@ -48,7 +48,7 @@ describe('singleton', () => {
 
   it('uses `delay` correctly', () => {
     const refs = [h(), h()]
-    const singletonInstance = singleton(tippy(refs), { delay: 1000 })
+    const singletonInstance = createSingleton(tippy(refs), { delay: 1000 })
     refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
     jest.advanceTimersByTime(999)
     expect(singletonInstance.state.isVisible).toBe(false)
@@ -71,7 +71,7 @@ describe('singleton', () => {
     const untriggerEvent = new MouseEvent('mouseleave', { bubbles: true })
     const refs = [h(), h()]
     const ref = refs[0]
-    singleton(tippy(refs, options))
+    createSingleton(tippy(refs, options))
     ref.dispatchEvent(triggerEvent)
     ref.dispatchEvent(untriggerEvent)
     expect(options.onShow).toHaveBeenCalledWith(ref._tippy)
@@ -81,9 +81,9 @@ describe('singleton', () => {
 
   it('throws if not passed an array', () => {
     expect(() => {
-      singleton(null)
+      createSingleton(null)
     }).toThrow(
-      '[tippy.js ERROR] First argument to `singleton()` must ' +
+      '[tippy.js ERROR] First argument to `createSingleton()` must ' +
         'be an array of tippy instances. The passed value was `' +
         null +
         '`',
@@ -92,9 +92,9 @@ describe('singleton', () => {
 
   it('throws if passed a single instance', () => {
     expect(() => {
-      singleton(tippy(h()))
+      createSingleton(tippy(h()))
     }).toThrow(
-      '[tippy.js ERROR] First argument to `singleton()` must ' +
+      '[tippy.js ERROR] First argument to `createSingleton()` must ' +
         'be an *array* of tippy instances. The passed value was a ' +
         '*single* tippy instance.',
     )
@@ -102,7 +102,7 @@ describe('singleton', () => {
 
   it('does not prevent updating `onShow`, `onTrigger`, and `onUntrigger`', () => {
     const instances = tippy([h()])
-    singleton(instances)
+    createSingleton(instances)
     const onShowSpy = jest.fn()
     const onTriggerSpy = jest.fn()
     const onUntriggerSpy = jest.fn()

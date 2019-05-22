@@ -6,7 +6,7 @@ import { getValue } from '../utils'
  * Re-uses a single tippy element for many different tippy instances.
  * Replaces v4's `tippy.group()`.
  */
-export default function singleton(
+export default function createSingleton(
   tippyInstances: Instance[],
   options: { delay: number | [number, number] } = { delay: 0 },
 ): Instance {
@@ -14,7 +14,7 @@ export default function singleton(
     if (!Array.isArray(tippyInstances)) {
       if (!tippyInstances) {
         throw new Error(
-          '[tippy.js ERROR] First argument to `singleton()` must ' +
+          '[tippy.js ERROR] First argument to `createSingleton()` must ' +
             'be an array of tippy instances. The passed value was `' +
             tippyInstances +
             '`',
@@ -22,7 +22,7 @@ export default function singleton(
         // @ts-ignore
       } else if (tippyInstances.reference && tippyInstances.reference._tippy) {
         throw new Error(
-          '[tippy.js ERROR] First argument to `singleton()` must ' +
+          '[tippy.js ERROR] First argument to `createSingleton()` must ' +
             'be an *array* of tippy instances. The passed value was a ' +
             '*single* tippy instance.',
         )
