@@ -8,7 +8,7 @@ import {
   isRealElement,
   getArrayOfElements,
   isReferenceElement,
-  warn,
+  warnWhen,
 } from './utils'
 import { validateTargets, validateOptions } from './validation'
 import { POPPER_SELECTOR } from './constants'
@@ -30,7 +30,7 @@ function tippy(
   targets: Targets,
   options?: Options,
 ): Instance | Instance[] | null {
-  if (process.env.NODE_ENV !== 'production') {
+  if (__DEV__) {
     validateTargets(targets)
     validateOptions(options)
   }
@@ -44,10 +44,10 @@ function tippy(
 
   const elements = getArrayOfElements(targets)
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (__DEV__) {
     const isSingleContentElement = isRealElement(props.content)
     const isMoreThanOneReferenceElement = elements.length > 1
-    warn(
+    warnWhen(
       isSingleContentElement && isMoreThanOneReferenceElement,
       '`tippy()` was passed a targets argument that will create more than ' +
         'one tippy instance, but only a single element was supplied as the ' +
@@ -114,9 +114,9 @@ tippy.hideAll = ({
   )
 }
 
-if (process.env.NODE_ENV !== 'production') {
+if (__DEV__) {
   tippy.group = (): void => {
-    warn(
+    warnWhen(
       true,
       '`tippy.group()` was removed in v5 and replaced ' +
         'with `createSingleton()`. Read more: ' +

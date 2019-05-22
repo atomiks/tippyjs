@@ -10,7 +10,7 @@ export default function createSingleton(
   tippyInstances: Instance[],
   options: { delay: number | [number, number] } = { delay: 0 },
 ): Instance {
-  if (process.env.NODE_ENV !== 'production') {
+  if (__DEV__) {
     if (!Array.isArray(tippyInstances)) {
       if (!tippyInstances) {
         throw new Error(

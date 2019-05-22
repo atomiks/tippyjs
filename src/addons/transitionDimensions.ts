@@ -136,7 +136,7 @@ export default function transitionDimensions(
   useFade = false,
   fadeDuration = 200,
 ): (effectCallback: () => void) => void {
-  if (process.env.NODE_ENV !== 'production') {
+  if (__DEV__) {
     if (instance.transitionDimensions) {
       throw new Error(
         '[tippy.js ERROR] Cannot call `transitionDimensions()` more than once',

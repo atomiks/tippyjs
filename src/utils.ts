@@ -184,7 +184,7 @@ export function debounce<T>(
 /**
  * Helpful wrapper around `console.warn()`
  */
-export function warn(condition: boolean, message: string): void {
+export function warnWhen(condition: boolean, message: string): void {
   if (condition) {
     /* eslint-disable-next-line no-console */
     console.warn(`[tippy.js WARNING] ${message}`)

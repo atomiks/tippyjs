@@ -17,7 +17,7 @@ export default function delegate(
   targets: Targets,
   options: Options & { target: string },
 ): Instance | Instance[] | null {
-  if (process.env.NODE_ENV !== 'production') {
+  if (__DEV__) {
     if (!options || !options.target) {
       throw new Error(
         '[tippy.js ERROR] You must specify a `target` option ' +

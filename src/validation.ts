@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Options, Targets } from './types'
-import { hasOwnProperty, includes, warn } from './utils'
+import { hasOwnProperty, includes, warnWhen } from './utils'
 import { defaultProps } from './props'
 
 /**
@@ -21,21 +21,21 @@ export function validateOptions(options: Options = {}): void {
         includes(['dark', 'light', 'light-border', 'translucent'], value)
       const didPassGoogleTheme = option === 'theme' && value === 'google'
 
-      warn(
+      warnWhen(
         didPassTargetOption,
         'The `target` option was removed in v5 and ' +
           'replaced with the `delegate()` method. Read more here: ' +
           'https//atomiks.github.io/tippyjs/event-delegation/',
       )
 
-      warn(
+      warnWhen(
         didPassA11yOption,
         'The `a11y` option was removed in v5. Make ' +
           'sure the element you are giving a tippy to is natively ' +
           'focusable, such as <button> or <input>, not <div> or <span>.',
       )
 
-      warn(
+      warnWhen(
         didPassOtherUnknownOption,
         '`' +
           option +
@@ -44,7 +44,7 @@ export function validateOptions(options: Options = {}): void {
           'here: https://atomiks.github.io/tippyjs/all-options/',
       )
 
-      warn(
+      warnWhen(
         didPassOldThemeName,
         'The default theme `' +
           value +
@@ -56,7 +56,7 @@ export function validateOptions(options: Options = {}): void {
           '".',
       )
 
-      warn(
+      warnWhen(
         didPassGoogleTheme,
         'The default theme `google` was renamed to ' +
           '`__NAMESPACE_PREFIX__-material` in v5.',
@@ -74,7 +74,7 @@ export function validateTargets(targets: Targets): void {
     Object.prototype.toString.call(targets) === '[object Object]' &&
     !(targets as any).addEventListener
 
-  warn(
+  warnWhen(
     didPassFalsyValue,
     '`tippy()` was passed `' +
       targets +
@@ -82,7 +82,7 @@ export function validateTargets(targets: Targets): void {
       'String (CSS selector), Element, Element[], or NodeList.',
   )
 
-  warn(
+  warnWhen(
     didPassPlainObject,
     '`tippy()` was passed a plain object (virtual ' +
       'reference element) which is no longer supported in v5. Instead, pass ' +
