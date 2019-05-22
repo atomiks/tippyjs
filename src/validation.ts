@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Options, Targets } from './types'
 import { hasOwnProperty, includes, warnWhen } from './utils'
 import { defaultProps } from './props'

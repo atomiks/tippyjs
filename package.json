@@ -81,7 +81,7 @@
   "lint-staged": {
     "src/**/*.ts": [
       "jest --findRelatedTests",
-      "eslint . --ext .ts,.js",
+      "eslint --report-unused-disable-directives . --ext .ts,.js",
       "git add"
     ],
     "{build,src,test,website/src}/**/*.{ts,js,json,css,scss,md}": [
