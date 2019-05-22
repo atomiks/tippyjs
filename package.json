@@ -41,6 +41,9 @@
   },
   "scripts": {
     "dev": "parcel demo/index.html -d .devserver --open",
+    "dev:flip": "parcel demo/flip/index.html -d .devserver --open",
+    "dev:themes": "parcel demo/themes/index.html -d .devserver --open",
+    "dev:animations": "parcel demo/animations/index.html -d .devserver --open",
     "build": "node rollup.pre-build.js && rollup --config && bundlesize",
     "test": "jest --coverage --silent",
     "check-types": "tsc",
