@@ -122,3 +122,15 @@ describe('auto-init', () => {
     expect(hasTippy(reference)).toBe(false)
   })
 })
+
+describe('tippy.group()', () => {
+  it('should warn', () => {
+    const spy = jest.spyOn(console, 'warn')
+    tippy.group()
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] `tippy.group()` was removed in v5 and replaced by ' +
+        '`singleton()`. Read more: ' +
+        'https://atomiks.github.io/tippyjs/singleton/',
+    )
+  })
+})
