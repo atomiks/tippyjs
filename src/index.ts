@@ -4,7 +4,12 @@ import { defaultProps } from './props'
 import createTippy from './createTippy'
 import bindGlobalEventListeners from './bindGlobalEventListeners'
 import { arrayFrom } from './ponyfills'
-import { isRealElement, getArrayOfElements, isReferenceElement } from './utils'
+import {
+  isRealElement,
+  getArrayOfElements,
+  isReferenceElement,
+  warn,
+} from './utils'
 import { validateTargets, validateOptions } from './validation'
 import { POPPER_SELECTOR } from './constants'
 import {
@@ -37,7 +42,21 @@ function tippy(
 
   const props: Props = { ...defaultProps, ...options }
 
-  const instances = getArrayOfElements(targets).reduce<Instance[]>(
+  const elements = getArrayOfElements(targets)
+
+  if (process.env.NODE_ENV !== 'production') {
+    const isSingleContentElement = isRealElement(props.content)
+    const isMoreThanOneReferenceElement = elements.length > 1
+    warn(
+      isSingleContentElement && isMoreThanOneReferenceElement,
+      '`tippy()` was passed a targets argument that will create more than ' +
+        'one tippy instance, but only a single element was supplied as the ' +
+        '`content` option. Use a function that returns a cloned version of ' +
+        'the element instead, or pass the .innerHTML of the template element.',
+    )
+  }
+
+  const instances = elements.reduce<Instance[]>(
     (acc, reference): Instance[] => {
       const instance = reference && createTippy(reference, props)
 
@@ -97,10 +116,10 @@ tippy.hideAll = ({
 
 if (process.env.NODE_ENV !== 'production') {
   tippy.group = (): void => {
-    /* eslint-disable-next-line no-console */
-    console.warn(
-      '[tippy.js WARNING] `tippy.group()` was removed in v5 and replaced by ' +
-        '`createSingleton()`. Read more: ' +
+    warn(
+      true,
+      '`tippy.group()` was removed in v5 and replaced ' +
+        'with `createSingleton()`. Read more: ' +
         'https://atomiks.github.io/tippyjs/singleton/',
     )
   }

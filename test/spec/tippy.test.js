@@ -47,6 +47,20 @@ describe('tippy', () => {
     expect(tippy(0)).toBe(null)
     expect(tippy('')).toBe(null)
   })
+
+  it('warns if passed a single content element for many different references', () => {
+    const spy = jest.spyOn(console, 'warn')
+    const targets = [h(), h()]
+    tippy(targets, { content: document.createElement('div') })
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] ' +
+        '`tippy()` was passed a targets argument that will create more than ' +
+        'one tippy instance, but only a single element was supplied as the ' +
+        '`content` option. Use a function that returns a cloned version of ' +
+        'the element instead, or pass the .innerHTML of the template element.',
+    )
+    spy.mockRestore()
+  })
 })
 
 describe('tippy.setDefaults()', () => {
@@ -128,8 +142,8 @@ describe('tippy.group()', () => {
     const spy = jest.spyOn(console, 'warn')
     tippy.group()
     expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] `tippy.group()` was removed in v5 and replaced by ' +
-        '`createSingleton()`. Read more: ' +
+      '[tippy.js WARNING] `tippy.group()` was removed in v5 and replaced ' +
+        'with `createSingleton()`. Read more: ' +
         'https://atomiks.github.io/tippyjs/singleton/',
     )
   })

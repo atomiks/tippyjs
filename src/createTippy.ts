@@ -33,6 +33,7 @@ import {
   setTransitionDuration,
   setVisibilityState,
   debounce,
+  warn,
 } from './utils'
 import { validateOptions } from './validation'
 
@@ -817,13 +818,11 @@ export default function createTippy(
 
   function set(options: Options): void {
     if (process.env.NODE_ENV !== 'production') {
-      if (instance.state.isDestroyed) {
-        /* eslint-disable-next-line no-console */
-        console.warn(
-          '[tippy.js WARNING] `set()` was called on a destroyed instance. ' +
-            'This is a no-op but indicates a potential memory leak.',
-        )
-      }
+      warn(
+        instance.state.isDestroyed,
+        '`set()` was called on a destroyed instance. ' +
+          'This is a no-op but indicates a potential memory leak.',
+      )
     }
 
     if (instance.state.isDestroyed) {
@@ -893,13 +892,11 @@ export default function createTippy(
     ),
   ): void {
     if (process.env.NODE_ENV !== 'production') {
-      if (instance.state.isDestroyed) {
-        /* eslint-disable-next-line no-console */
-        console.warn(
-          '[tippy.js WARNING] `show()` was called on a destroyed instance. ' +
-            'This is a no-op but indicates a potential memory leak.',
-        )
-      }
+      warn(
+        instance.state.isDestroyed,
+        '`show()` was called on a destroyed instance. ' +
+          'This is a no-op but indicates a potential memory leak.',
+      )
     }
 
     if (
@@ -980,13 +977,11 @@ export default function createTippy(
     ),
   ): void {
     if (process.env.NODE_ENV !== 'production') {
-      if (instance.state.isDestroyed) {
-        /* eslint-disable-next-line no-console */
-        console.warn(
-          '[tippy.js WARNING] `hide()` was called on a destroyed instance. ' +
-            'This is a no-op but indicates a potential memory leak.',
-        )
-      }
+      warn(
+        instance.state.isDestroyed,
+        '`hide()` was called on a destroyed instance. ' +
+          'This is a no-op but indicates a potential memory leak.',
+      )
     }
 
     if (instance.state.isDestroyed || !instance.state.isEnabled) {
@@ -1031,15 +1026,15 @@ export default function createTippy(
   }
 
   function destroy(): void {
-    if (instance.state.isDestroyed) {
-      if (process.env.NODE_ENV !== 'production') {
-        /* eslint-disable-next-line no-console */
-        console.warn(
-          '[tippy.js WARNING] `destroy()` was called on an already-destroyed ' +
-            'instance. This is a no-op but indicates a potential memory leak.',
-        )
-      }
+    if (process.env.NODE_ENV !== 'production') {
+      warn(
+        instance.state.isDestroyed,
+        '`destroy()` was called on an already-destroyed ' +
+          'instance. This is a no-op but indicates a potential memory leak.',
+      )
+    }
 
+    if (instance.state.isDestroyed) {
       return
     }
 

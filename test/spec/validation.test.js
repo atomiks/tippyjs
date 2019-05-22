@@ -41,7 +41,7 @@ describe('validateOptions', () => {
   })
 
   it('recognizes old `theme` values', () => {
-    const themes = ['dark', 'light', 'light-border', 'translucent', 'google']
+    const themes = ['dark', 'light', 'light-border', 'translucent']
     themes.forEach(theme => {
       validateOptions({ theme })
       expect(spy).toHaveBeenCalledWith(
@@ -72,7 +72,7 @@ describe('validateTargets', () => {
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] `tippy()` was passed `' +
         null +
-        '` (an invalid falsy argument) as its targets argument. Valid types ' +
+        '` (an invalid falsy value) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
 
@@ -80,7 +80,7 @@ describe('validateTargets', () => {
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] `tippy()` was passed `' +
         false +
-        '` (an invalid falsy argument) as its targets argument. Valid types ' +
+        '` (an invalid falsy value) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
 
@@ -88,7 +88,7 @@ describe('validateTargets', () => {
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] `tippy()` was passed `' +
         undefined +
-        '` (an invalid falsy argument) as its targets argument. Valid types ' +
+        '` (an invalid falsy value) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
 
@@ -96,7 +96,7 @@ describe('validateTargets', () => {
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] `tippy()` was passed `' +
         0 +
-        '` (an invalid falsy argument) as its targets argument. Valid types ' +
+        '` (an invalid falsy value) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
 
@@ -104,7 +104,7 @@ describe('validateTargets', () => {
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] `tippy()` was passed `' +
         '' +
-        '` (an invalid falsy argument) as its targets argument. Valid types ' +
+        '` (an invalid falsy value) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
   })
