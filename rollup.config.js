@@ -71,7 +71,7 @@ const BANNER = `/**!
 * MIT License
 */`
 
-const commonIIFEOutputOptions = {
+const COMMON_IIFE_OUTPUT_OPTIONS = {
   globals: { 'popper.js': 'Popper' },
   format: 'iife',
   name: 'tippy',
@@ -85,7 +85,7 @@ export default [
     plugins: PLUGIN_CONFIGS.iifeBase,
     external: ['popper.js'],
     output: {
-      ...commonIIFEOutputOptions,
+      ...COMMON_IIFE_OUTPUT_OPTIONS,
       file: 'iife/tippy.js',
       banner: BANNER,
     },
@@ -95,7 +95,7 @@ export default [
     plugins: PLUGIN_CONFIGS.iifeBundle,
     external: ['popper.js'],
     output: {
-      ...commonIIFEOutputOptions,
+      ...COMMON_IIFE_OUTPUT_OPTIONS,
       file: 'iife/tippy.bundle.js',
       banner: BANNER,
     },
@@ -105,7 +105,7 @@ export default [
     plugins: PLUGIN_CONFIGS.iifeBaseMin,
     external: ['popper.js'],
     output: {
-      ...commonIIFEOutputOptions,
+      ...COMMON_IIFE_OUTPUT_OPTIONS,
       file: 'iife/tippy.min.js',
     },
   },
@@ -114,7 +114,7 @@ export default [
     plugins: PLUGIN_CONFIGS.iifeBundleMin,
     external: ['popper.js'],
     output: {
-      ...commonIIFEOutputOptions,
+      ...COMMON_IIFE_OUTPUT_OPTIONS,
       file: 'iife/tippy.bundle.min.js',
     },
   },
@@ -123,9 +123,9 @@ export default [
     plugins: PLUGIN_CONFIGS.iifeBase,
     external: ['popper.js', '..'],
     output: {
-      ...commonIIFEOutputOptions,
+      ...COMMON_IIFE_OUTPUT_OPTIONS,
       name: '__tippyAddons__',
-      globals: { ...commonIIFEOutputOptions.globals, '..': 'tippy' },
+      globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
       file: 'iife/tippy-addons.js',
     },
   },
@@ -134,9 +134,9 @@ export default [
     plugins: PLUGIN_CONFIGS.iifeBaseMin,
     external: ['popper.js', '..'],
     output: {
-      ...commonIIFEOutputOptions,
+      ...COMMON_IIFE_OUTPUT_OPTIONS,
       name: '__tippyAddons__',
-      globals: { ...commonIIFEOutputOptions.globals, '..': 'tippy' },
+      globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
       file: 'iife/tippy-addons.min.js',
     },
   },
