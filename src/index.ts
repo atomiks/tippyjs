@@ -27,7 +27,7 @@ function tippy(
 ): Instance | Instance[] | null {
   if (process.env.NODE_ENV !== 'production') {
     validateTargets(targets)
-    validateOptions(options, defaultProps)
+    validateOptions(options)
   }
 
   if (!globalEventListenersBound) {

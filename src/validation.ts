@@ -1,14 +1,12 @@
 /* eslint-disable no-console */
-import { Options, Props, Targets } from './types'
+import { Options, Targets } from './types'
 import { hasOwnProperty, includes } from './utils'
+import { defaultProps } from './props'
 
 /**
- * Validates an object of options with the valid default props object
+ * Validates options with the valid `defaultProps` object
  */
-export function validateOptions(
-  options: Options = {},
-  defaultProps: Props,
-): void {
+export function validateOptions(options: Options = {}): void {
   Object.keys(options).forEach(
     (option): void => {
       if (!hasOwnProperty(defaultProps, option)) {
@@ -70,10 +68,10 @@ export function validateOptions(
  */
 export function validateTargets(targets: Targets): void {
   if (!targets) {
-    console.error(
-      '[tippy.js ERROR] `tippy()` was passed ' +
+    console.warn(
+      '[tippy.js WARNING] `tippy()` was passed `' +
         targets +
-        ' (an invalid falsy argument) as its targets argument. Valid types ' +
+        '` (an invalid falsy argument) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
   }
@@ -82,10 +80,10 @@ export function validateTargets(targets: Targets): void {
     Object.prototype.toString.call(targets) === '[object Object]' &&
     !(targets as any).addEventListener
   ) {
-    console.error(
-      '[tippy.js ERROR] `tippy()` was passed a plain object (virtual ' +
+    console.warn(
+      '[tippy.js WARNING] `tippy()` was passed a plain object (virtual ' +
         'reference element) which is no longer supported in v5. Instead, ' +
-        'pass a placeholder element like `document.createElement("div")',
+        'pass a placeholder element like `document.createElement("div")`',
     )
   }
 }

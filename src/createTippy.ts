@@ -831,7 +831,7 @@ export default function createTippy(
     }
 
     if (process.env.NODE_ENV !== 'production') {
-      validateOptions(options, defaultProps)
+      validateOptions(options)
     }
 
     removeTriggersFromEventListenersTarget()
