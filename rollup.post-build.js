@@ -32,7 +32,7 @@ DIRS.forEach(dir => {
 
         // Access the chunk file from the root directory folder
         const newFileContents = fileContents.replace(CHUNK_FILENAME_RE, match =>
-          match.replace('./', `../${dir}/`),
+          match.replace('./', `../../${dir}/`),
         )
 
         if (!fs.existsSync(newDir)) {
