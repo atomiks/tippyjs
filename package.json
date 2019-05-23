@@ -30,6 +30,7 @@
     "cjs/",
     "iife/",
     "esm/",
+    "addons/",
     "animations/",
     "themes/",
     "index.css",
