@@ -1,5 +1,8 @@
 {
-  "sideEffects": false,
+  "name": "tippy-addons",
+  "private": true,
   "main": "./cjs/tippy-addons.js",
-  "module": "./esm/tippy-addons.js"
+  "module": "./esm/tippy-addons.js",
+  "types": "index.d.ts",
+  "sideEffects": false
 }
