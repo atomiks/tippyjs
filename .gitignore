@@ -10,4 +10,5 @@ node_modules
 /themes
 /animations
 /index.d.ts
-/addons
+/addons/cjs
+/addons/esm

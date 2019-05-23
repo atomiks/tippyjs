@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "main": "./cjs/tippy-addons.js",
+  "module": "./esm/tippy-addons.js"
+}
