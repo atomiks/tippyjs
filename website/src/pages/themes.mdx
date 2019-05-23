@@ -1,7 +1,7 @@
 ---
 title: Themes
 path: /themes/
-index: 8
+index: 6
 ---
 
 import { Button, Demo } from '../components/Framework'
@@ -12,53 +12,53 @@ their appearance!
 
 ### Default themes
 
-To use the `light`, `light-border`, `google` themes shown in the demo, you must
-import them since they are separate from the main CSS file.
+To use the `light`, `light-border`, or `material` themes shown in the demo, you
+must import them since they are separate from the main CSS file.
 
 Only import the themes you actually use to conserve size and/or HTTP requests.
 
-#### CDN
+Node:
+
+```js
+import 'tippy.js/themes/light.css'
+import 'tippy.js/themes/light-border.css'
+import 'tippy.js/themes/material.css'
+import 'tippy.js/themes/translucent.css'
+```
+
+Browser:
 
 <!-- prettier-ignore -->
 ```html
 <head>
   <link 
     rel="stylesheet" 
-    href="https://unpkg.com/tippy.js@4/themes/light.css" 
+    href="https://unpkg.com/tippy.js@5/themes/light.css" 
   />
   <link
     rel="stylesheet"
-    href="https://unpkg.com/tippy.js@4/themes/light-border.css"
+    href="https://unpkg.com/tippy.js@5/themes/light-border.css"
   />
   <link
     rel="stylesheet"
-    href="https://unpkg.com/tippy.js@4/themes/google.css"
+    href="https://unpkg.com/tippy.js@5/themes/material.css"
   />
   <link
     rel="stylesheet"
-    href="https://unpkg.com/tippy.js@4/themes/translucent.css"
+    href="https://unpkg.com/tippy.js@5/themes/translucent.css"
   />
 </head>
 ```
 
-#### Package managers
-
-```js
-import 'tippy.js/themes/light.css'
-import 'tippy.js/themes/light-border.css'
-import 'tippy.js/themes/google.css'
-import 'tippy.js/themes/translucent.css'
-```
-
 ### Tippy elements
 
-To learn how to create a theme, it's helpful to understand the structure of a
-tippy element:
+To learn how to create a theme, it's helpful to understand the basic structure
+of a tippy element:
 
 <!-- prettier-ignore -->
 ```html
 <div class="tippy-popper">
-  <div class="tippy-tooltip" x-placement="top">
+  <div class="tippy-tooltip" data-placement="top">
     <div class="tippy-content">
       My content
     </div>
@@ -133,30 +133,30 @@ There are two types of arrows built-in: traditional CSS arrows (using the
 `border` trick), and a custom round SVG arrow.
 
 To style the default (sharp) CSS arrow, you'll need to target each different
-base placement (using the `x-placement` attribute on `.tippy-tooltip` element)
-and apply it to the `.tippy-arrow` element:
+base placement (using the `data-placement` attribute on `.tippy-tooltip`
+element) and apply it to the `.tippy-arrow` element:
 
 ```css
-.tippy-tooltip.tomato-theme[x-placement^='top'] .tippy-arrow {
+.tippy-tooltip.tomato-theme[data-placement^='top'] .tippy-arrow {
   border-top-color: tomato;
 }
-.tippy-tooltip.tomato-theme[x-placement^='bottom'] .tippy-arrow {
+.tippy-tooltip.tomato-theme[data-placement^='bottom'] .tippy-arrow {
   border-bottom-color: tomato;
 }
-.tippy-tooltip.tomato-theme[x-placement^='left'] .tippy-arrow {
+.tippy-tooltip.tomato-theme[data-placement^='left'] .tippy-arrow {
   border-left-color: tomato;
 }
-.tippy-tooltip.tomato-theme[x-placement^='right'] .tippy-arrow {
+.tippy-tooltip.tomato-theme[data-placement^='right'] .tippy-arrow {
   border-right-color: tomato;
 }
 ```
 
 To color the SVG arrow, it's as simple as specifying the `fill` and targeting
-`.tippy-roundarrow`:
+`.tippy-svgArrow`:
 
 <!-- prettier-ignore -->
 ```css
-.tippy-tooltip.tomato-theme .tippy-roundarrow {
+.tippy-tooltip.tomato-theme .tippy-svgArrow {
   fill: tomato;
 }
 ```

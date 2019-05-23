@@ -280,7 +280,7 @@ export default createGlobalStyle`
   hr {
     border: none;
     border-top: 1px solid rgba(0, 16, 64, 0.15);
-    margin-top: 5px;
+    margin: 50px 0;
   }
 
   [data-reach-skip-link] {

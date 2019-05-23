@@ -1,7 +1,7 @@
 ---
 title: AJAX
 path: /ajax/
-index: 9
+index: 11
 ---
 
 import Tippy from '../components/Tippy'
@@ -9,16 +9,9 @@ import Ajax from '../components/examples/Ajax'
 import AjaxSmooth from '../components/examples/AjaxSmooth'
 import { Demo, Button } from '../components/Framework'
 
-Initiating AJAX requests is facilitated by lifecycle functions:
-
-- `onShow()`
-- `onMount()`
-- `onShown()`
-- `onHide()`
-- `onHidden()`
-
-This allows you to do very powerful things. For example, let's say you wanted to
-show a new image inside a tooltip each time it gets shown:
+Initiating AJAX requests is facilitated by lifecycle hooks. This allows you to
+do very powerful things. For example, let's say you wanted to show a new image
+inside a tooltip each time it gets shown:
 
 <Demo>
   <Ajax>Hover for a new image</Ajax>
@@ -193,10 +186,4 @@ hides and resets back to `Loading...`, both of which appear "buggy".
 Currently, the image instantly replaces the `Loading...` text without any smooth
 transition. How do we make it so the tooltip smoothly transitions in height?
 
-<Demo>
-  <AjaxSmooth />
-</Demo>
-
-To look at example code solving this dynamically (i.e. not knowing the height of
-the image or initial size of the tooltip) view the
-[CodePen demo](https://codepen.io/atomiks/pen/LgjMbW).
+[See the Animations page for details](/animations#dimensions-transition).

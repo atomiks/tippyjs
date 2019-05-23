@@ -138,6 +138,11 @@ class Nav extends Component {
     window.addEventListener('resize', this.handleResize)
     window.addEventListener('mousedown', this.handleOutsideClick, true)
     this.handleResize()
+
+    // TODO: Scroll the container so the currently active link is visible
+    // this.ref.current.scrollTop = document
+    //   .querySelector('[aria-current]')
+    //   .getBoundingClientRect().top
   }
 
   componentWillUnmount() {

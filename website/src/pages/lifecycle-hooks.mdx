@@ -1,0 +1,115 @@
+---
+title: Lifecycle Hooks
+path: /lifecycle-hooks/
+index: 10
+---
+
+Lifecycle hooks provide a way to run code in response to a certain part of a
+tippy's lifecycle.
+
+They are listed here in the usual order in which they occur. Every lifecycle
+hook takes the `instance` as its first argument.
+
+#### onCreate
+
+Executed a single time when a tippy is first created.
+
+```js
+tippy('button', {
+  onCreate(instance) {
+    // ...
+  },
+})
+```
+
+#### onTrigger
+
+Executed when a tippy is triggered by a DOM event (e.g. mouseenter, focus,
+click), but before it starts to show.
+
+```js
+tippy('button', {
+  onTrigger(instance, event) {
+    // ...
+  },
+})
+```
+
+#### onShow
+
+Executed when a tippy begins to show, but before it gets mounted to the DOM.
+
+You can return `false` to cancel the tippy from showing.
+
+```js
+tippy('button', {
+  onShow(instance) {
+    // ...
+    return false // cancels it
+  },
+})
+```
+
+#### onMount
+
+Executed when the tippy element is mounted to the DOM.
+
+```js
+tippy('button', {
+  onMount(instance) {
+    // ...
+  },
+})
+```
+
+#### onShown
+
+Executed when a tippy has fully transitioned in.
+
+```js
+tippy('button', {
+  onShown(instance) {
+    // ...
+  },
+})
+```
+
+#### onUntrigger
+
+Executed when a tippy was triggered by a DOM event (e.g. mouseleave, blur,
+click), but before it starts to hide.
+
+```js
+tippy('button', {
+  onUntrigger(instance, event) {
+    // ...
+  },
+})
+```
+
+#### onHide
+
+Executed when a tippy begins to hide and transition out.
+
+You can return `false` to cancel the tippy from hiding.
+
+```js
+tippy('button', {
+  onHide(instance) {
+    // ...
+    return false // cancels it
+  },
+})
+```
+
+#### onHidden
+
+Executed when a tippy has fully transitioned out and unmounted from the DOM.
+
+```js
+tippy('button', {
+  onHidden(instance) {
+    // ...
+  },
+})
+```

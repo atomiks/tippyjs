@@ -11,7 +11,7 @@ tags in your document:
 
 ```html
 <script src="https://unpkg.com/popper.js@1"></script>
-<script src="https://unpkg.com/tippy.js@4"></script>
+<script src="https://unpkg.com/tippy.js@5"></script>
 ```
 
 Place them at the very bottom of the `<body>`, ensuring they are placed before
@@ -41,13 +41,11 @@ import tippy from 'tippy.js'
 
 ### Package
 
-You can view its contents here: https://unpkg.com/tippy.js@4/
+You can view its contents here: https://unpkg.com/tippy.js@5/
 
-`umd` is used by the browser and Node.js, and `esm` by module bundlers.
-
-- `index.all.js` = JS + CSS injected into `<head>`
-- `index.js` = JS alone
-- `index.css` = CSS alone
+- `tippy.bundle.js` = Main JS + Main CSS injected into `<head>` (default)
+- `tippy.js` = Main JS
+- `index.css` = Main CSS
 
 ### Frameworks
 

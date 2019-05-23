@@ -101,17 +101,13 @@ a tippy.
 
 ### ⚠️ SVG in IE11
 
-If you need to support SVG elements in IE11, you will need to include polyfills
-for `Element.prototype.classList` and `SVGElement.prototype.contains`.
+If you need to support SVG elements in IE11, you will need to include a polyfill
+for `SVGElement.prototype.contains`.
 
-The easiest fix is to include these scripts in your document before Tippy's
-scripts:
+The polyfill is small:
 
-```html
-<script src="https://polyfill.io/v3/polyfill.min.js?features=Element.prototype.classList"></script>
-<script>
-  if (!SVGElement.prototype.contains) {
-    SVGElement.prototype.contains = HTMLDivElement.prototype.contains
-  }
-</script>
+```js
+if (!SVGElement.prototype.contains) {
+  SVGElement.prototype.contains = HTMLDivElement.prototype.contains
+}
 ```
