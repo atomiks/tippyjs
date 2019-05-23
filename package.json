@@ -44,7 +44,7 @@
     "dev:flip": "parcel demo/flip/index.html -d .devserver --open",
     "dev:themes": "parcel demo/themes/index.html -d .devserver --open",
     "dev:animations": "parcel demo/animations/index.html -d .devserver --open",
-    "build": "node rollup.pre-build && rollup --config && node rollup.post-build && bundlesize",
+    "build": "node rollup.pre-build && rollup --config && bundlesize",
     "test": "jest --coverage --silent",
     "check-types": "tsc",
     "lint": "eslint --report-unused-disable-directives . --ext .ts,.js",

@@ -142,48 +142,66 @@ export default [
   },
   {
     input: {
-      tippy: 'build/base.js',
-      'tippy.bundle': 'build/bundle.js',
-      'tippy-addons': 'build/addons-pure.js',
+      'esm/tippy': 'build/base.js',
+      'esm/tippy.bundle': 'build/bundle.js',
+      'addons/esm/tippy-addons': 'build/addons-pure.js',
     },
     plugins: PLUGIN_CONFIGS.bundle,
     external: ['popper.js'],
-    output: [
-      {
-        dir: 'esm',
-        format: 'esm',
-        banner: BANNER,
-        sourcemap: true,
-      },
-      {
-        dir: 'cjs',
-        format: 'cjs',
-        banner: BANNER,
-        sourcemap: true,
-      },
-    ],
+    output: {
+      format: 'esm',
+      dir: './',
+      banner: BANNER,
+      sourcemap: true,
+      chunkFileNames: 'esm/[name]-[hash].js',
+    },
   },
   {
     input: {
-      'tippy.min': 'build/base.js',
-      'tippy.bundle.min': 'build/bundle.js',
-      'tippy-addons.min': 'build/addons-pure.js',
+      'cjs/tippy.min': 'build/base.js',
+      'cjs/tippy.bundle.min': 'build/bundle.js',
+      'addons/cjs/tippy-addons': 'build/addons-pure.js',
+    },
+    plugins: PLUGIN_CONFIGS.bundle,
+    external: ['popper.js'],
+    output: {
+      format: 'cjs',
+      dir: './',
+      banner: BANNER,
+      sourcemap: true,
+      chunkFileNames: 'cjs/[name]-[hash].js',
+    },
+  },
+  {
+    input: {
+      'esm/tippy.min': 'build/base.js',
+      'esm/tippy.bundle.min': 'build/bundle.js',
+      'addons/esm/tippy-addons.min': 'build/addons-pure.js',
     },
     plugins: PLUGIN_CONFIGS.bundleMin,
     external: ['popper.js'],
-    output: [
-      {
-        dir: 'esm',
-        format: 'esm',
-        banner: BANNER,
-        sourcemap: true,
-      },
-      {
-        dir: 'cjs',
-        format: 'cjs',
-        banner: BANNER,
-        sourcemap: true,
-      },
-    ],
+    output: {
+      format: 'esm',
+      dir: './',
+      banner: BANNER,
+      sourcemap: true,
+      chunkFileNames: 'esm/[name]-[hash].js',
+    },
+  },
+  {
+    input: {
+      'cjs/tippy.min': 'build/base.js',
+      'cjs/tippy.bundle.min': 'build/bundle.js',
+      'addons/cjs/tippy-addons.min': 'build/addons-pure.js',
+    },
+    plugins: PLUGIN_CONFIGS.bundleMin,
+    external: ['popper.js'],
+    output: {
+      format: 'cjs',
+      dir: './',
+      banner: BANNER,
+      sourcemap: true,
+      chunkFileNames: 'cjs/[name]-[hash].js',
+    },
   },
 ]
