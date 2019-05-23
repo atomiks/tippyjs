@@ -158,8 +158,8 @@ export default [
   },
   {
     input: {
-      'cjs/tippy.min': 'build/base.js',
-      'cjs/tippy.bundle.min': 'build/bundle.js',
+      'cjs/tippy': 'build/base.js',
+      'cjs/tippy.bundle': 'build/bundle.js',
       'addons/cjs/tippy-addons': 'build/addons-pure.js',
     },
     plugins: PLUGIN_CONFIGS.bundle,
