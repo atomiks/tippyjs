@@ -23,6 +23,9 @@
   "keywords": [
     "tooltip",
     "popover",
+    "popper",
+    "dropdown",
+    "popup",
     "tippy",
     "tippy.js"
   ],
