@@ -1,7 +1,8 @@
-node_modules
-coverage
-cjs
-esm
-iife
-website
-demo
+/node_modules
+/coverage
+/cjs
+/esm
+/iife
+/website
+/demo
+/addons
