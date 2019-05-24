@@ -408,17 +408,16 @@ export default function createTippy(
     )
 
     if (isCursorOverReference || !instance.props.interactive) {
-      instance.popperInstance!.reference = {
-        ...instance.popperInstance!.reference,
-        getBoundingClientRect: (): DOMRect | ClientRect => ({
-          width: 0,
-          height: 0,
-          top: isHorizontal ? rect.top : y,
-          bottom: isHorizontal ? rect.bottom : y,
-          left: isVertical ? rect.left : x,
-          right: isVertical ? rect.right : x,
-        }),
-      }
+      instance.popperInstance!.reference.getBoundingClientRect = ():
+        | DOMRect
+        | ClientRect => ({
+        width: 0,
+        height: 0,
+        top: isHorizontal ? rect.top : y,
+        bottom: isHorizontal ? rect.bottom : y,
+        left: isVertical ? rect.left : x,
+        right: isVertical ? rect.right : x,
+      })
 
       instance.popperInstance!.scheduleUpdate()
     }
