@@ -120,5 +120,18 @@ export default function createSingleton(
     originalSet(options)
   }
 
+  const originalDestroy = singletonInstance.destroy
+  singletonInstance.destroy = (
+    shouldDestroyPassedInstances: boolean = true,
+  ) => {
+    if (shouldDestroyPassedInstances) {
+      tippyInstances.forEach(instance => {
+        instance.destroy()
+      })
+    }
+
+    originalDestroy()
+  }
+
   return singletonInstance
 }

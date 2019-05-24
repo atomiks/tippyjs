@@ -99,7 +99,7 @@ export default function delegate(
 
   function applyMutations(instance: Instance): void {
     const originalDestroy = instance.destroy
-    instance.destroy = (shouldDestroyChildInstances: boolean = false): void => {
+    instance.destroy = (shouldDestroyChildInstances: boolean = true): void => {
       if (shouldDestroyChildInstances) {
         childTippyInstances.forEach(
           (instance): void => {

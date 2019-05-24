@@ -158,6 +158,24 @@ describe('createSingleton', () => {
     jest.advanceTimersByTime(500)
     expect(singletonInstance.state.isVisible).toBe(false)
   })
+
+  it('destroys the passed instances by default', () => {
+    const tippyInstances = tippy([h(), h()])
+    const singletonInstance = createSingleton(tippyInstances)
+    singletonInstance.destroy()
+    tippyInstances.forEach(instance => {
+      expect(instance.state.isDestroyed).toBe(true)
+    })
+  })
+
+  it('does not destroy the passed instances if passed `false`', () => {
+    const tippyInstances = tippy([h(), h()])
+    const singletonInstance = createSingleton(tippyInstances)
+    singletonInstance.destroy(false)
+    tippyInstances.forEach(instance => {
+      expect(instance.state.isDestroyed).toBe(false)
+    })
+  })
 })
 
 describe('delegate', () => {
@@ -227,11 +245,19 @@ describe('delegate', () => {
     expect(button._tippy).toBeUndefined()
   })
 
-  it('can destroy child instances if passed `true` as an argument', () => {
+  it('destroys child instances by default too', () => {
     const button = h('button')
     const instance = delegate(document.body, { target: 'button' })
     button.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
-    instance.destroy(true)
+    instance.destroy()
     expect(button._tippy).toBeUndefined()
+  })
+
+  it('does not destroy child instances if passed `false`', () => {
+    const button = h('button')
+    const instance = delegate(document.body, { target: 'button' })
+    button.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
+    instance.destroy(false)
+    expect(button._tippy).toBeDefined()
   })
 })
