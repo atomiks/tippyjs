@@ -159,7 +159,6 @@ describe('instance.hide', () => {
     instance = createTippy(h(), defaultProps)
     instance.hide()
     expect(instance.state.isVisible).toBe(false)
-    instance.destroy()
   })
 
   it('removes the popper element from the DOM after hiding', () => {
@@ -181,7 +180,6 @@ describe('instance.hide', () => {
     instance.show(0)
     instance.hide(9)
     expect(instance.popperChildren.tooltip.style.transitionDuration).toBe('9ms')
-    instance.destroy()
   })
 
   it('bails out if already hidden', () => {
@@ -202,7 +200,6 @@ describe('instance.enable', () => {
     instance = createTippy(h(), defaultProps)
     instance.enable()
     expect(instance.state.isEnabled).toBe(true)
-    instance.destroy()
   })
 
   it('allows a tippy to be shown', () => {
@@ -210,7 +207,6 @@ describe('instance.enable', () => {
     instance.enable()
     instance.show()
     expect(instance.state.isVisible).toBe(true)
-    instance.destroy()
   })
 })
 
@@ -219,7 +215,6 @@ describe('instance.disable', () => {
     instance = createTippy(h(), defaultProps)
     instance.disable()
     expect(instance.state.isEnabled).toBe(false)
-    instance.destroy()
   })
 
   it('disallows a tippy to be shown', () => {
@@ -227,7 +222,6 @@ describe('instance.disable', () => {
     instance.disable()
     instance.show()
     expect(instance.state.isVisible).toBe(false)
-    instance.destroy()
   })
 })
 
