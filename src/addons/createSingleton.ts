@@ -8,7 +8,7 @@ import { getValue } from '../utils'
  */
 export default function createSingleton(
   tippyInstances: Instance[],
-  options: { delay: number | [number, number] } = { delay: 0 },
+  optionalProps: { delay: number | [number, number] } = { delay: 0 },
 ): Instance {
   if (__DEV__) {
     if (!Array.isArray(tippyInstances)) {
@@ -31,7 +31,7 @@ export default function createSingleton(
   }
 
   const singletonInstance = tippy(document.createElement('div')) as Instance
-  let { delay } = options
+  let { delay } = optionalProps
 
   let showTimeout: any
   let hideTimeout: any
@@ -51,7 +51,7 @@ export default function createSingleton(
         clearTimeouts()
       }
 
-      instance.set({
+      instance.setProps({
         delay: 0,
         onShow(instance): false {
           onShow(instance)
@@ -60,11 +60,11 @@ export default function createSingleton(
         onTrigger(instance, event): void {
           onTrigger(instance, event)
 
-          const options = { ...instance.props }
-          delete options.onShow
-          delete options.delay
+          const props = { ...instance.props }
+          delete props.onShow
+          delete props.delay
 
-          singletonInstance.set(options)
+          singletonInstance.setProps(props)
 
           singletonInstance.reference.getBoundingClientRect = ():
             | DOMRect
@@ -86,7 +86,7 @@ export default function createSingleton(
           } else {
             showTimeout = setTimeout((): void => {
               singletonInstance.show()
-            }, getValue(delay, 0, tippy.defaults.delay))
+            }, getValue(delay, 0, tippy.defaultProps.delay))
           }
         },
         onUntrigger(instance, event): void {
@@ -95,39 +95,41 @@ export default function createSingleton(
           clearTimeouts()
           hideTimeout = setTimeout((): void => {
             singletonInstance.hide()
-          }, getValue(delay, 1, tippy.defaults.delay))
+          }, getValue(delay, 1, tippy.defaultProps.delay))
         },
       })
 
       // Ensure the lifecycles functions are updateable
-      const originalSet = instance.set
-      instance.set = (options): void => {
+      const originalSetProps = instance.setProps
+      instance.setProps = (partialProps): void => {
         // Delay can't be updated
-        delete options.delay
+        delete partialProps.delay
 
-        originalSet(options)
+        originalSetProps(partialProps)
 
-        onShow = options.onShow || onShow
-        onTrigger = options.onTrigger || onTrigger
-        onUntrigger = options.onUntrigger || onUntrigger
+        onShow = partialProps.onShow || onShow
+        onTrigger = partialProps.onTrigger || onTrigger
+        onUntrigger = partialProps.onUntrigger || onUntrigger
       }
     },
   )
 
-  const originalSet = singletonInstance.set
-  singletonInstance.set = (options): void => {
-    delay = options.delay !== undefined ? options.delay : delay
-    originalSet(options)
+  const originalSetProps = singletonInstance.setProps
+  singletonInstance.setProps = (partialProps): void => {
+    delay = partialProps.delay !== undefined ? partialProps.delay : delay
+    originalSetProps(partialProps)
   }
 
   const originalDestroy = singletonInstance.destroy
   singletonInstance.destroy = (
     shouldDestroyPassedInstances: boolean = true,
-  ) => {
+  ): void => {
     if (shouldDestroyPassedInstances) {
-      tippyInstances.forEach(instance => {
-        instance.destroy()
-      })
+      tippyInstances.forEach(
+        (instance): void => {
+          instance.destroy()
+        },
+      )
     }
 
     originalDestroy()

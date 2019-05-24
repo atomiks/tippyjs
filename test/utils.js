@@ -28,10 +28,10 @@ export function h(nodeName = 'div', attributes = {}) {
   return el
 }
 
-export const withTestOptions = options => ({
+export const withTestProps = props => ({
   lazy: false,
   content: 'content',
-  ...options,
+  ...props,
 })
 
 export function enableTouchEnvironment() {

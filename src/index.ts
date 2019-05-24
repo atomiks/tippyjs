@@ -10,10 +10,9 @@ import {
   isReferenceElement,
   warnWhen,
 } from './utils'
-import { validateTargets, validateOptions } from './validation'
+import { validateTargets, validateProps } from './validation'
 import { POPPER_SELECTOR } from './constants'
 import {
-  Options,
   Props,
   Instance,
   Targets,
@@ -28,11 +27,11 @@ let globalEventListenersBound = false
  */
 function tippy(
   targets: Targets,
-  options?: Options,
+  optionalProps?: Partial<Props>,
 ): Instance | Instance[] | null {
   if (__DEV__) {
     validateTargets(targets)
-    validateOptions(options)
+    validateProps(optionalProps)
   }
 
   if (!globalEventListenersBound) {
@@ -40,7 +39,7 @@ function tippy(
     globalEventListenersBound = true
   }
 
-  const props: Props = { ...defaultProps, ...options }
+  const props: Props = { ...defaultProps, ...optionalProps }
 
   const elements = getArrayOfElements(targets)
 
@@ -73,16 +72,16 @@ function tippy(
 }
 
 tippy.version = version
-tippy.defaults = defaultProps
+tippy.defaultProps = defaultProps
 
 /**
  * Mutates the defaultProps object by setting the props specified
  */
-tippy.setDefaults = (partialDefaults: Options): void => {
-  Object.keys(partialDefaults).forEach(
+tippy.setDefaultProps = (partialProps: Partial<Props>): void => {
+  Object.keys(partialProps).forEach(
     (key): void => {
       // @ts-ignore
-      defaultProps[key] = partialDefaults[key]
+      defaultProps[key] = partialProps[key]
     },
   )
 }
@@ -123,6 +122,24 @@ if (__DEV__) {
         'https://atomiks.github.io/tippyjs/addons#singleton',
     )
   }
+
+  tippy.setDefaults = (): void => {
+    warnWhen(
+      true,
+      '`tippy.setDefaults()` was renamed to `tippy.setDefaultProps()` in v5.',
+    )
+  }
+
+  Object.defineProperty(tippy, 'defaults', {
+    get(): void {
+      warnWhen(
+        true,
+        'The `tippy.defaults` property was renamed to `tippy.defaultProps` ' +
+          'in v5.',
+      )
+      return undefined
+    },
+  })
 }
 
 /**

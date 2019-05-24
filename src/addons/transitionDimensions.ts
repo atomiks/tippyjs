@@ -11,7 +11,7 @@
  * to transition a tippy element's dimensions and position on the page.
  */
 
-import { Instance, Options } from '../types'
+import { Instance, Props } from '../types'
 
 interface DimensionsInstance extends Instance {
   __dimensions?: {
@@ -144,20 +144,20 @@ export default function transitionDimensions(
     }
   }
 
-  const originalSet = instance.set
+  const originalSet = instance.setProps
 
   instance.transitionDimensions = true
-  instance.set = set
+  instance.setProps = setProps
 
   const opacity = useFade ? '0' : '1'
   const duration = useFade ? fadeDuration : 0
 
-  function set(options: Options, effectCallback?: () => void) {
+  function setProps(partialProps: Partial<Props>, effectCallback?: () => void) {
     if (instance.state.isMounted) {
       recordDimensions(instance)
 
       fade(opacity, instance, duration, () => {
-        originalSet(options)
+        originalSet(partialProps)
 
         if (effectCallback) {
           effectCallback()
@@ -168,11 +168,11 @@ export default function transitionDimensions(
         })
       })
     } else {
-      originalSet(options)
+      originalSet(partialProps)
     }
   }
 
   return (effectCallback: () => void) => {
-    set({}, effectCallback)
+    setProps({}, effectCallback)
   }
 }

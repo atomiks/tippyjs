@@ -3,7 +3,6 @@ import {
   ReferenceElement,
   PopperInstance,
   Props,
-  Options,
   Instance,
   Content,
   Placement,
@@ -35,7 +34,7 @@ import {
   debounce,
   warnWhen,
 } from './utils'
-import { validateOptions } from './validation'
+import { validateProps } from './validation'
 
 interface Listener {
   eventType: string
@@ -117,7 +116,7 @@ export default function createTippy(
     state,
     // methods
     clearDelayTimeouts,
-    set,
+    setProps,
     setContent,
     show,
     hide,
@@ -822,7 +821,7 @@ export default function createTippy(
     cancelAnimationFrame(animationFrame)
   }
 
-  function set(options: Options): void {
+  function setProps(partialProps: Partial<Props>): void {
     if (__DEV__) {
       warnWhen(
         instance.state.isDestroyed,
@@ -836,7 +835,7 @@ export default function createTippy(
     }
 
     if (__DEV__) {
-      validateOptions(options)
+      validateProps(partialProps)
     }
 
     removeTriggersFromEventListenersTarget()
@@ -844,11 +843,14 @@ export default function createTippy(
     const prevProps = instance.props
     const nextProps = evaluateProps(reference, {
       ...instance.props,
-      ...options,
+      ...partialProps,
       ignoreAttributes: true,
     })
-    nextProps.ignoreAttributes = hasOwnProperty(options, 'ignoreAttributes')
-      ? options.ignoreAttributes || false
+    nextProps.ignoreAttributes = hasOwnProperty(
+      partialProps,
+      'ignoreAttributes',
+    )
+      ? partialProps.ignoreAttributes || false
       : prevProps.ignoreAttributes
     instance.props = nextProps
 
@@ -865,7 +867,8 @@ export default function createTippy(
         POPPER_INSTANCE_DEPENDENCIES.some(
           (prop): boolean => {
             return (
-              hasOwnProperty(options, prop) && options[prop] !== prevProps[prop]
+              hasOwnProperty(partialProps, prop) &&
+              partialProps[prop] !== prevProps[prop]
             )
           },
         )
@@ -887,7 +890,7 @@ export default function createTippy(
   }
 
   function setContent(content: Content): void {
-    instance.set({ content })
+    instance.setProps({ content })
   }
 
   function show(

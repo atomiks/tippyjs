@@ -3,7 +3,7 @@ import delegate from '../../src/addons/delegate'
 import tippy from '../../src'
 import { h, cleanDocumentBody } from '../utils'
 
-tippy.setDefaults({
+tippy.setDefaultProps({
   duration: 0,
   delay: 0,
 })
@@ -31,7 +31,7 @@ describe('createSingleton', () => {
 
   it('uses the relevant tippy instance props', () => {
     const configs = [{ arrow: true }, { duration: 1000 }]
-    const instances = configs.map(options => tippy(h(), options))
+    const instances = configs.map(props => tippy(h(), props))
     const singletonInstance = createSingleton(instances)
     instances[0].reference.dispatchEvent(new MouseEvent('mouseenter'), {
       bubbles: true,
@@ -78,8 +78,8 @@ describe('createSingleton', () => {
     expect(singletonInstance.state.isVisible).toBe(false)
   })
 
-  it('preserves original `onShow`, `onTrigger`, and `onUntrigger` options', () => {
-    const options = {
+  it('preserves original `onShow`, `onTrigger`, and `onUntrigger` props', () => {
+    const props = {
       onShow: jest.fn(),
       onTrigger: jest.fn(),
       onUntrigger: jest.fn(),
@@ -88,12 +88,12 @@ describe('createSingleton', () => {
     const untriggerEvent = new MouseEvent('mouseleave', { bubbles: true })
     const refs = [h(), h()]
     const ref = refs[0]
-    createSingleton(tippy(refs, options))
+    createSingleton(tippy(refs, props))
     ref.dispatchEvent(triggerEvent)
     ref.dispatchEvent(untriggerEvent)
-    expect(options.onShow).toHaveBeenCalledWith(ref._tippy)
-    expect(options.onTrigger).toHaveBeenCalledWith(ref._tippy, triggerEvent)
-    expect(options.onUntrigger).toHaveBeenCalledWith(ref._tippy, untriggerEvent)
+    expect(props.onShow).toHaveBeenCalledWith(ref._tippy)
+    expect(props.onTrigger).toHaveBeenCalledWith(ref._tippy, triggerEvent)
+    expect(props.onUntrigger).toHaveBeenCalledWith(ref._tippy, untriggerEvent)
   })
 
   it('throws if not passed an array', () => {
@@ -124,7 +124,7 @@ describe('createSingleton', () => {
     const onTriggerSpy = jest.fn()
     const onUntriggerSpy = jest.fn()
     const [instance] = instances
-    instance.set({
+    instance.setProps({
       onShow: onShowSpy,
       onTrigger: onTriggerSpy,
       onUntrigger: onUntriggerSpy,
@@ -135,7 +135,7 @@ describe('createSingleton', () => {
     instance.reference.dispatchEvent(new Event('mouseleave'))
     expect(onUntriggerSpy).toHaveBeenCalled()
     // And re-uses the same if not updated
-    instance.set({})
+    instance.setProps({})
     instance.reference.dispatchEvent(new Event('mouseenter'))
     expect(onTriggerSpy).toHaveBeenCalled()
     expect(onShowSpy).toHaveBeenCalled()
@@ -146,7 +146,7 @@ describe('createSingleton', () => {
   it('can update the `delay` option', () => {
     const refs = [h(), h()]
     const singletonInstance = createSingleton(tippy(refs), { delay: 1000 })
-    singletonInstance.set({ delay: 500 })
+    singletonInstance.setProps({ delay: 500 })
     refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
     jest.advanceTimersByTime(499)
     expect(singletonInstance.state.isVisible).toBe(false)
@@ -224,11 +224,11 @@ describe('delegate', () => {
     delegate(null, { target: 'button' })
   })
 
-  it('throws if passed falsy `target` option', () => {
+  it('throws if passed falsy `target` prop', () => {
     const message =
-      '[tippy.js ERROR] You must specify a `target` option ' +
-      'indicating the CSS selector string matching the target elements ' +
-      'that should receive a tippy.'
+      '[tippy.js ERROR] You must specify a `target` prop indicating the CSS ' +
+      'selector string matching the target elements that should receive a ' +
+      'tippy.'
     expect(() => {
       delegate(document.body)
     }).toThrow(message)

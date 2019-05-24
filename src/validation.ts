@@ -1,46 +1,46 @@
-import { Options, Targets } from './types'
+import { Props, Targets } from './types'
 import { hasOwnProperty, includes, warnWhen } from './utils'
 import { defaultProps } from './props'
 
 /**
- * Validates options with the valid `defaultProps` object
+ * Validates props with the valid `defaultProps` object
  */
-export function validateOptions(options: Options = {}): void {
-  Object.keys(options).forEach(
-    (option): void => {
-      const value = (options as any)[option]
-      const didPassTargetOption = option === 'target'
-      const didPassA11yOption = option === 'a11y'
-      const didPassOtherUnknownOption =
-        !hasOwnProperty(defaultProps, option) &&
-        option !== 'target' &&
-        option !== 'a11y'
+export function validateProps(partialProps: Partial<Props> = {}): void {
+  Object.keys(partialProps).forEach(
+    (prop): void => {
+      const value = (partialProps as any)[prop]
+      const didPassTargetprop = prop === 'target'
+      const didPassA11yprop = prop === 'a11y'
+      const didPassOtherUnknownprop =
+        !hasOwnProperty(defaultProps, prop) &&
+        prop !== 'target' &&
+        prop !== 'a11y'
       const didPassOldThemeName =
-        option === 'theme' &&
+        prop === 'theme' &&
         includes(['dark', 'light', 'light-border', 'translucent'], value)
-      const didPassGoogleTheme = option === 'theme' && value === 'google'
+      const didPassGoogleTheme = prop === 'theme' && value === 'google'
 
       warnWhen(
-        didPassTargetOption,
-        'The `target` option was removed in v5 and ' +
+        didPassTargetprop,
+        'The `target` prop was removed in v5 and ' +
           'replaced with the `delegate()` method. Read more here: ' +
           'https//atomiks.github.io/tippyjs/addons#event-delegation',
       )
 
       warnWhen(
-        didPassA11yOption,
-        'The `a11y` option was removed in v5. Make ' +
+        didPassA11yprop,
+        'The `a11y` prop was removed in v5. Make ' +
           'sure the element you are giving a tippy to is natively ' +
           'focusable, such as <button> or <input>, not <div> or <span>.',
       )
 
       warnWhen(
-        didPassOtherUnknownOption,
+        didPassOtherUnknownprop,
         '`' +
-          option +
-          '` is not a valid option. You ' +
-          'may have spelled it incorrectly. View all of the valid options ' +
-          'here: https://atomiks.github.io/tippyjs/all-options/',
+          prop +
+          '` is not a valid prop. You ' +
+          'may have spelled it incorrectly. View all of the valid props ' +
+          'here: https://atomiks.github.io/tippyjs/all-props/',
       )
 
       warnWhen(

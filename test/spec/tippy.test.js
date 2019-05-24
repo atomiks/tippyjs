@@ -15,7 +15,7 @@ describe('tippy', () => {
     expect(Array.isArray(tippy([h(), h()]))).toBe(true)
   })
 
-  it('merges the default props with the supplied options', () => {
+  it('merges the default props with the supplied props', () => {
     expect(
       tippy(h(), {
         placement: 'bottom-end',
@@ -26,11 +26,11 @@ describe('tippy', () => {
     })
   })
 
-  it('warns if invalid option(s) are supplied', () => {
+  it('warns if invalid props(s) are supplied', () => {
     const spy = jest.spyOn(console, 'warn')
     tippy(h(), {
       placement: 'top',
-      _someInvalidOption: true,
+      _someInvalidProp: true,
     })
     expect(spy).toHaveBeenCalledTimes(1)
     spy.mockRestore()
@@ -63,18 +63,18 @@ describe('tippy', () => {
   })
 })
 
-describe('tippy.setDefaults()', () => {
+describe('tippy.setDefaultProps()', () => {
   it('changes the default props applied to instances', () => {
     const newPlacement = 'bottom-end'
-    tippy.setDefaults({ placement: newPlacement })
+    tippy.setDefaultProps({ placement: newPlacement })
     expect(defaultProps.placement).toBe(newPlacement)
   })
 })
 
 describe('tippy.hideAll()', () => {
   it('hides all tippys on the document, ignoring `hideOnClick`', () => {
-    const options = { showOnInit: true, hideOnClick: false }
-    const instances = [...Array(3)].map(() => tippy(h(), options))
+    const props = { showOnInit: true, hideOnClick: false }
+    const instances = [...Array(3)].map(() => tippy(h(), props))
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(true)
     })
@@ -85,8 +85,8 @@ describe('tippy.hideAll()', () => {
   })
 
   it('respects `duration` option', () => {
-    const options = { showOnInit: true, duration: 100 }
-    const instances = [...Array(3)].map(() => tippy(h(), options))
+    const props = { showOnInit: true, duration: 100 }
+    const instances = [...Array(3)].map(() => tippy(h(), props))
     tippy.hideAll({ duration: 0 })
     instances.forEach(instance => {
       expect(instance.state.isMounted).toBe(false)
@@ -94,8 +94,8 @@ describe('tippy.hideAll()', () => {
   })
 
   it('respects `exclude` option', () => {
-    const options = { showOnInit: true }
-    const instances = [...Array(3)].map(() => tippy(h(), options))
+    const props = { showOnInit: true }
+    const instances = [...Array(3)].map(() => tippy(h(), props))
     tippy.hideAll({ exclude: instances[0] })
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(
@@ -105,10 +105,10 @@ describe('tippy.hideAll()', () => {
   })
 
   it('respects `exclude` option as type ReferenceElement for multiple tippys', () => {
-    const options = { showOnInit: true, multiple: true }
+    const props = { showOnInit: true, multiple: true }
     const ref = h()
-    tippy(ref, options)
-    tippy(ref, options)
+    tippy(ref, props)
+    tippy(ref, props)
     tippy.hideAll({ exclude: ref })
     const instances = [...document.querySelectorAll(POPPER_SELECTOR)].map(
       popper => popper._tippy,
@@ -146,5 +146,30 @@ describe('tippy.group()', () => {
         'with `createSingleton()`. Read more here: ' +
         'https://atomiks.github.io/tippyjs/addons#singleton',
     )
+    spy.mockRestore()
+  })
+})
+
+describe('tippy.setDefaults()', () => {
+  it('should warn', () => {
+    const spy = jest.spyOn(console, 'warn')
+    tippy.setDefaults({})
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] `tippy.setDefaults()` was renamed to ' +
+        '`tippy.setDefaultProps()` in v5.',
+    )
+    spy.mockRestore()
+  })
+})
+
+describe('tippy.defaults', () => {
+  it('should warn', () => {
+    const spy = jest.spyOn(console, 'warn')
+    tippy.defaults
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] The `tippy.defaults` property was renamed to ' +
+        '`tippy.defaultProps` in v5.',
+    )
+    spy.mockRestore()
   })
 })

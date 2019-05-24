@@ -7,7 +7,7 @@ import { POPPER_SELECTOR } from '../../src/constants'
 
 jest.useFakeTimers()
 
-tippy.setDefaults({
+tippy.setDefaultProps({
   duration: 0,
   delay: 0,
 })
@@ -36,9 +36,10 @@ describe('createTippy', () => {
     expect(instance.popperInstance).toBeDefined()
     expect(instance.popperChildren).toBeDefined()
     expect(instance.popperInstance).toBeDefined()
+    expect(instance.props).toBeDefined()
     expect(instance.state).toBeDefined()
     expect(instance.clearDelayTimeouts).toBeDefined()
-    expect(instance.set).toBeDefined()
+    expect(instance.setProps).toBeDefined()
     expect(instance.setContent).toBeDefined()
     expect(instance.show).toBeDefined()
     expect(instance.hide).toBeDefined()
@@ -230,7 +231,7 @@ describe('instance.set', () => {
     instance = createTippy(h(), defaultProps)
     expect(instance.props.arrow).toBe(defaultProps.arrow)
     expect(instance.props.duration).toBe(defaultProps.duration)
-    instance.set({ arrow: !defaultProps.arrow, duration: 82 })
+    instance.setProps({ arrow: !defaultProps.arrow, duration: 82 })
     expect(instance.props.arrow).toBe(!defaultProps.arrow)
     expect(instance.props.duration).toBe(82)
   })
@@ -240,7 +241,7 @@ describe('instance.set', () => {
     expect(
       instance.popper.querySelector('.__NAMESPACE_PREFIX__-arrow'),
     ).toBeNull()
-    instance.set({ arrow: true })
+    instance.setProps({ arrow: true })
     expect(
       instance.popper.querySelector('.__NAMESPACE_PREFIX__-arrow'),
     ).not.toBeNull()
@@ -249,7 +250,7 @@ describe('instance.set', () => {
   it('popperChildren property is updated to reflect the new popper element', () => {
     instance = createTippy(h(), defaultProps)
     expect(instance.popperChildren.arrow).toBeNull()
-    instance.set({ arrow: true })
+    instance.setProps({ arrow: true })
     expect(instance.popperChildren.arrow).not.toBeNull()
   })
 
@@ -258,20 +259,20 @@ describe('instance.set', () => {
       ...defaultProps,
       lazy: false,
     })
-    instance.set({ arrow: true })
+    instance.setProps({ arrow: true })
     expect(instance.popperInstance.popper).toBe(instance.popper)
   })
 
   it('popper._tippy is defined with the correct instance', () => {
     instance = createTippy(h(), defaultProps)
-    instance.set({ arrow: true })
+    instance.setProps({ arrow: true })
     expect(instance.popper._tippy).toBe(instance)
   })
 
   it('changing `trigger` or `touchHold` changes listeners', () => {
     const ref = h()
     instance = createTippy(ref, defaultProps)
-    instance.set({ trigger: 'click' })
+    instance.setProps({ trigger: 'click' })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(false)
     ref.dispatchEvent(new Event('click'))
@@ -282,7 +283,7 @@ describe('instance.set', () => {
     instance = createTippy(h(), defaultProps)
     instance.show()
     const previousPopperInstance = instance.popperInstance
-    instance.set(defaultProps)
+    instance.setProps(defaultProps)
     expect(instance.popperInstance).toBe(previousPopperInstance)
   })
 
@@ -290,7 +291,7 @@ describe('instance.set', () => {
     instance = createTippy(h(), defaultProps)
     instance.show()
     const previousPopperInstance = instance.popperInstance
-    instance.set({ ...defaultProps, placement: 'bottom' })
+    instance.setProps({ ...defaultProps, placement: 'bottom' })
     expect(instance.popperInstance).not.toBe(previousPopperInstance)
   })
 })

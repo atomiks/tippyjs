@@ -1,7 +1,7 @@
 import { Props, ReferenceElement, Targets } from './types'
 import { arrayFrom } from './ponyfills'
 import { isUCBrowser } from './browser'
-import { getDataAttributeOptions } from './reference'
+import { getDataAttributeProps } from './reference'
 import { POPPER_CLASS } from './constants'
 
 /**
@@ -137,8 +137,8 @@ export function setVisibilityState(
 }
 
 /**
- * Evaluates the props object by merging data attributes and
- * disabling conflicting options where necessary
+ * Evaluates the props object by merging data attributes and disabling
+ * conflicting props where necessary
  */
 export function evaluateProps(
   reference: ReferenceElement,
@@ -147,7 +147,7 @@ export function evaluateProps(
   const out = {
     ...props,
     content: invokeWithArgsOrReturn(props.content, [reference]),
-    ...(props.ignoreAttributes ? {} : getDataAttributeOptions(reference)),
+    ...(props.ignoreAttributes ? {} : getDataAttributeProps(reference)),
   }
 
   if (out.arrow || isUCBrowser) {

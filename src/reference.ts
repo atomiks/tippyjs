@@ -1,4 +1,4 @@
-import { Props, ReferenceElement, Options } from './types'
+import { Props, ReferenceElement } from './types'
 import { defaultProps } from './props'
 
 const keys = Object.keys(defaultProps)
@@ -6,8 +6,8 @@ const keys = Object.keys(defaultProps)
 /**
  * Returns an object of optional props from data-tippy-* attributes
  */
-export function getDataAttributeOptions(reference: ReferenceElement): Props {
-  return keys.reduce((acc: any, key): Options => {
+export function getDataAttributeProps(reference: ReferenceElement): Props {
+  return keys.reduce((acc: any, key): Partial<Props> => {
     const valueAsString = (
       reference.getAttribute(`data-tippy-${key}`) || ''
     ).trim()

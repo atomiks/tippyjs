@@ -1,7 +1,7 @@
 import {
   h,
   cleanDocumentBody,
-  withTestOptions,
+  withTestProps,
   enableTouchEnvironment,
   disableTouchEnvironment,
 } from '../utils'
@@ -13,7 +13,7 @@ jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
 
-tippy.setDefaults({
+tippy.setDefaultProps({
   duration: 0,
   delay: 0,
 })
@@ -32,7 +32,7 @@ describe('allowHTML', () => {
     const ref = h()
     const { popper } = tippy(
       ref,
-      withTestOptions({
+      withTestProps({
         content: '<strong>content</strong>',
         allowHTML: true,
       }),
@@ -46,7 +46,7 @@ describe('placement', () => {
     const ref = h()
     const { popperInstance } = tippy(
       ref,
-      withTestOptions({ placement: 'left-end' }),
+      withTestProps({ placement: 'left-end' }),
     )
     expect(popperInstance.options.placement).toBe('left-end')
   })
@@ -230,13 +230,13 @@ describe('content', () => {
     expect(instance.popperChildren.content.textContent).toBe('test')
   })
 
-  it('works as a function with instance.set() / instance.setContent()', () => {
+  it('works as a function with instance.setProps() / instance.setContent()', () => {
     const instance = tippy(h('div', { title: 'test' }), {
       content(reference) {
         return reference.getAttribute('title')
       },
     })
-    instance.set({
+    instance.setProps({
       content() {
         return 'set'
       },
@@ -413,30 +413,30 @@ describe('role', () => {
 
   it('is updated correctly by .set()', () => {
     const instance = tippy(h(), { role: 'tooltip' })
-    instance.set({ role: 'menu' })
+    instance.setProps({ role: 'menu' })
     expect(instance.popperChildren.tooltip.getAttribute('role')).toBe('menu')
-    instance.set({ role: null })
+    instance.setProps({ role: null })
     expect(instance.popperChildren.tooltip.hasAttribute('role')).toBe(false)
   })
 })
 
 describe('flip', () => {
   it('true: sets flip to enabled in the popperInstance', () => {
-    const { popperInstance } = tippy(h(), withTestOptions({ flip: true }))
+    const { popperInstance } = tippy(h(), withTestProps({ flip: true }))
     expect(popperInstance.modifiers.find(m => m.name === 'flip').enabled).toBe(
       true,
     )
   })
 
   it('false: sets flip to disabled in the popperInstance', () => {
-    const { popperInstance } = tippy(h(), withTestOptions({ flip: false }))
+    const { popperInstance } = tippy(h(), withTestProps({ flip: false }))
     expect(popperInstance.modifiers.find(m => m.name === 'flip').enabled).toBe(
       false,
     )
   })
 
   it('does not change after mounting', () => {
-    const instance = tippy(h(), withTestOptions({ flip: false, duration: 0 }))
+    const instance = tippy(h(), withTestProps({ flip: false, duration: 0 }))
     instance.show()
     expect(
       instance.popperInstance.modifiers.find(m => m.name === 'flip').enabled,
@@ -448,7 +448,7 @@ describe('flipBehavior', () => {
   it('sets the value in the popperInstance', () => {
     const { popperInstance } = tippy(
       h(),
-      withTestOptions({ flipBehavior: ['top', 'bottom', 'left'] }),
+      withTestProps({ flipBehavior: ['top', 'bottom', 'left'] }),
     )
     expect(
       popperInstance.modifiers.find(m => m.name === 'flip').behavior,
@@ -951,11 +951,11 @@ describe('triggerTarget', () => {
     expect(instance.state.isVisible).toBe(true)
   })
 
-  it('updates accordingly with instance.set()', () => {
+  it('updates accordingly with instance.setProps()', () => {
     const node = h('div')
     const node2 = h('button')
     const instance = tippy(h(), { triggerTarget: node })
-    instance.set({ triggerTarget: node2 })
+    instance.setProps({ triggerTarget: node2 })
     node.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(false)
     node2.dispatchEvent(new Event('mouseenter'))
@@ -1252,7 +1252,7 @@ describe('followCursor', () => {
     expect(instance.popperChildren.arrow.style.margin).toBe('0px')
 
     instance.hide()
-    instance.set({ followCursor: false })
+    instance.setProps({ followCursor: false })
     instance.show()
 
     expect(instance.popperChildren.arrow.style.margin).toBe('')

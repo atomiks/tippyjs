@@ -1,4 +1,4 @@
-import { Targets, Options, Instance } from '../types'
+import { Targets, Instance, Props } from '../types'
 import tippy from '..'
 
 interface ListenerObj {
@@ -11,18 +11,18 @@ interface ListenerObj {
 /**
  * Creates a delegate instance that controls the creation of tippy instances
  * for child elements (`target` CSS selector).
- * Port of v4's `target` option to a separate function.
+ * Port of v4's `target` prop to a separate function.
  */
 export default function delegate(
   targets: Targets,
-  options: Options & { target: string },
+  props: Props & { target: string },
 ): Instance | Instance[] | null {
   if (__DEV__) {
-    if (!options || !options.target) {
+    if (!props || !props.target) {
       throw new Error(
-        '[tippy.js ERROR] You must specify a `target` option ' +
-          'indicating the CSS selector string matching the target elements ' +
-          'that should receive a tippy.',
+        '[tippy.js ERROR] You must specify a `target` prop indicating the ' +
+          'CSS selector string matching the target elements that should ' +
+          'receive a tippy.',
       )
     }
   }
@@ -30,17 +30,17 @@ export default function delegate(
   let listeners: ListenerObj[] = []
   let childTippyInstances: Instance[] = []
 
-  const { target } = options
-  delete options.target
+  const { target } = props
+  delete props.target
 
-  const instanceOrInstances = tippy(targets, options)
+  const instanceOrInstances = tippy(targets, props)
 
   function onTrigger(event: Event): void {
     if (event.target) {
       const targetNode = (event.target as Element).closest(target)
 
       if (targetNode) {
-        const instance = tippy(targetNode, { ...options, showOnInit: true })
+        const instance = tippy(targetNode, { ...props, showOnInit: true })
 
         if (instance) {
           childTippyInstances = childTippyInstances.concat(instance)
@@ -115,7 +115,7 @@ export default function delegate(
 
     addEventListeners(instance)
 
-    instance.set({ trigger: 'manual' })
+    instance.setProps({ trigger: 'manual' })
   }
 
   if (instanceOrInstances) {

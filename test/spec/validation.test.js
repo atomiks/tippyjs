@@ -1,4 +1,4 @@
-import { validateOptions, validateTargets } from '../../src/validation'
+import { validateProps, validateTargets } from '../../src/validation'
 
 let spy
 
@@ -10,31 +10,31 @@ afterEach(() => {
   spy.mockRestore()
 })
 
-describe('validateOptions', () => {
-  it('recognizes an unknown option', () => {
-    validateOptions({ __unknown: true })
+describe('validateProps', () => {
+  it('recognizes an unknown prop', () => {
+    validateProps({ __unknown: true })
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] `' +
         '__unknown' +
-        '` is not a valid option. You ' +
-        'may have spelled it incorrectly. View all of the valid options ' +
-        'here: https://atomiks.github.io/tippyjs/all-options/',
+        '` is not a valid prop. You ' +
+        'may have spelled it incorrectly. View all of the valid props ' +
+        'here: https://atomiks.github.io/tippyjs/all-props/',
     )
   })
 
-  it('recognizes the old `target` option', () => {
-    validateOptions({ target: 'button' })
+  it('recognizes the old `target` prop', () => {
+    validateProps({ target: 'button' })
     expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] The `target` option was removed in v5 and ' +
+      '[tippy.js WARNING] The `target` prop was removed in v5 and ' +
         'replaced with the `delegate()` method. Read more here: ' +
         'https//atomiks.github.io/tippyjs/addons#event-delegation',
     )
   })
 
-  it('recognizes the old `a11y` option', () => {
-    validateOptions({ a11y: true })
+  it('recognizes the old `a11y` prop', () => {
+    validateProps({ a11y: true })
     expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] The `a11y` option was removed in v5. Make ' +
+      '[tippy.js WARNING] The `a11y` prop was removed in v5. Make ' +
         'sure the element you are giving a tippy to is natively ' +
         'focusable, such as <button> or <input>, not <div> or <span>.',
     )
@@ -43,7 +43,7 @@ describe('validateOptions', () => {
   it('recognizes old `theme` values', () => {
     const themes = ['dark', 'light', 'light-border', 'translucent']
     themes.forEach(theme => {
-      validateOptions({ theme })
+      validateProps({ theme })
       expect(spy).toHaveBeenCalledWith(
         '[tippy.js WARNING] The default theme `' +
           theme +
@@ -58,7 +58,7 @@ describe('validateOptions', () => {
   })
 
   it('recognizes the old `material` theme', () => {
-    validateOptions({ theme: 'google' })
+    validateProps({ theme: 'google' })
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] The default theme `google` was renamed to ' +
         '`__NAMESPACE_PREFIX__-material` in v5.',

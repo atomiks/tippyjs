@@ -1,13 +1,13 @@
-import { Instance, Targets, Options } from '..'
+import { Instance, Targets, Props } from '..'
 
 export type Delegate = (
   targets: Targets,
-  options: Options & { target: string },
+  partialProps: Partial<Props> & { target: string },
 ) => Instance | Instance[] | null
 
 export type CreateSingleton = (
   tippyInstances: Instance[],
-  options?: { delay: number | [number, number] },
+  props?: { delay: number | [number, number] },
 ) => Instance
 
 declare const delegate: Delegate

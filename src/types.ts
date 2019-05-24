@@ -76,8 +76,6 @@ export interface Props {
   zIndex: number
 }
 
-export type Options = Partial<Props>
-
 export interface Instance {
   clearDelayTimeouts(): void
   destroy(): void
@@ -90,7 +88,7 @@ export interface Instance {
   popperInstance: PopperInstance | null
   props: Props
   reference: ReferenceElement
-  set(options: Options): void
+  setProps(partialProps: Partial<Props>): void
   setContent(content: Content): void
   show(duration?: number, shouldPreventPopperTransition?: boolean): void
   state: {
@@ -115,11 +113,11 @@ export interface HideAllOptions {
 }
 
 export interface Tippy {
-  (targets: Targets, options?: Options): Instance | Instance[] | null
+  (targets: Targets, props?: Partial<Props>): Instance | Instance[] | null
   readonly defaults: Props
   readonly version: string
   hideAll(options?: HideAllOptions): void
-  setDefaults(partialDefaults: Options): void
+  setDefaultProps(partialProps: Partial<Props>): void
 }
 
 declare const tippy: Tippy

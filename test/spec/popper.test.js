@@ -25,7 +25,7 @@ import {
   SVG_ARROW_SELECTOR,
 } from '../../src/constants'
 
-tippy.setDefaults({ duration: 0, delay: 0 })
+tippy.setDefaultProps({ duration: 0, delay: 0 })
 
 afterEach(cleanDocumentBody)
 
@@ -447,7 +447,7 @@ describe('setInnerHTML', () => {
 })
 
 describe('isCursorOutsideInteractiveBorder', () => {
-  const options = { interactiveBorder: 5, distance: 10 }
+  const props = { interactiveBorder: 5, distance: 10 }
   const popperRect = { top: 100, left: 100, right: 110, bottom: 110 }
 
   it('no popper placement returns true', () => {
@@ -465,7 +465,7 @@ describe('isCursorOutsideInteractiveBorder', () => {
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('top', popperRect, coords, options),
+        isCursorOutsideInteractiveBorder('top', popperRect, coords, props),
       ).toBe(false)
     })
   })
@@ -483,7 +483,7 @@ describe('isCursorOutsideInteractiveBorder', () => {
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('top', popperRect, coords, options),
+        isCursorOutsideInteractiveBorder('top', popperRect, coords, props),
       ).toBe(true)
     })
   })
@@ -499,7 +499,7 @@ describe('isCursorOutsideInteractiveBorder', () => {
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('bottom', popperRect, coords, options),
+        isCursorOutsideInteractiveBorder('bottom', popperRect, coords, props),
       ).toBe(false)
     })
   })
@@ -517,7 +517,7 @@ describe('isCursorOutsideInteractiveBorder', () => {
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('bottom', popperRect, coords, options),
+        isCursorOutsideInteractiveBorder('bottom', popperRect, coords, props),
       ).toBe(true)
     })
   })
@@ -533,7 +533,7 @@ describe('isCursorOutsideInteractiveBorder', () => {
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('left', popperRect, coords, options),
+        isCursorOutsideInteractiveBorder('left', popperRect, coords, props),
       ).toBe(false)
     })
   })
@@ -551,7 +551,7 @@ describe('isCursorOutsideInteractiveBorder', () => {
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('left', popperRect, coords, options),
+        isCursorOutsideInteractiveBorder('left', popperRect, coords, props),
       ).toBe(true)
     })
   })
@@ -567,7 +567,7 @@ describe('isCursorOutsideInteractiveBorder', () => {
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('right', popperRect, coords, options),
+        isCursorOutsideInteractiveBorder('right', popperRect, coords, props),
       ).toBe(false)
     })
   })
@@ -585,7 +585,7 @@ describe('isCursorOutsideInteractiveBorder', () => {
 
     mockEvents.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('right', popperRect, coords, options),
+        isCursorOutsideInteractiveBorder('right', popperRect, coords, props),
       ).toBe(true)
     })
   })

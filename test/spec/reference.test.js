@@ -1,29 +1,27 @@
 import { h, cleanDocumentBody } from '../utils'
-import { getDataAttributeOptions } from '../../src/reference'
+import { getDataAttributeProps } from '../../src/reference'
 
 afterEach(cleanDocumentBody)
 
-describe('getDataAttributeOptions', () => {
+describe('getDataAttributeProps', () => {
   it('uses data-tippy-content', () => {
     const ref = h()
     ref.setAttribute('data-tippy-content', 'test')
-    expect(getDataAttributeOptions(ref).content).toBe('test')
+    expect(getDataAttributeProps(ref).content).toBe('test')
   })
 
   it('does not parse data-tippy-content', () => {
     const ref = h()
     ref.setAttribute('data-tippy-content', '[Hello')
-    expect(getDataAttributeOptions(ref).content).toBe('[Hello')
+    expect(getDataAttributeProps(ref).content).toBe('[Hello')
     ref.setAttribute('data-tippy-content', '3333333333333333333333333')
-    expect(getDataAttributeOptions(ref).content).toBe(
-      '3333333333333333333333333',
-    )
+    expect(getDataAttributeProps(ref).content).toBe('3333333333333333333333333')
   })
 
-  it('returns the attribute options', () => {
+  it('returns the attribute props', () => {
     const ref = h()
     ref.setAttribute('data-tippy-arrowType', 'round')
-    expect(getDataAttributeOptions(ref)).toEqual({
+    expect(getDataAttributeProps(ref)).toEqual({
       arrowType: 'round',
     })
   })
@@ -33,7 +31,7 @@ describe('getDataAttributeOptions', () => {
     ref.setAttribute('data-tippy-interactive', 'true')
     ref.setAttribute('data-tippy-animateFill', 'false')
 
-    expect(getDataAttributeOptions(ref)).toEqual({
+    expect(getDataAttributeProps(ref)).toEqual({
       interactive: true,
       animateFill: false,
     })
@@ -44,7 +42,7 @@ describe('getDataAttributeOptions', () => {
     ref.setAttribute('data-tippy-delay', '129')
     ref.setAttribute('data-tippy-duration', '111')
 
-    expect(getDataAttributeOptions(ref)).toEqual({
+    expect(getDataAttributeProps(ref)).toEqual({
       delay: 129,
       duration: 111,
     })
@@ -56,7 +54,7 @@ describe('getDataAttributeOptions', () => {
     ref.setAttribute('data-tippy-duration', '[0, 999]')
     ref.setAttribute('data-tippy-popperOptions', '{ "placement": "right" }')
 
-    expect(getDataAttributeOptions(ref)).toEqual({
+    expect(getDataAttributeProps(ref)).toEqual({
       delay: [100, 255],
       duration: [0, 999],
       popperOptions: { placement: 'right' },
@@ -66,8 +64,8 @@ describe('getDataAttributeOptions', () => {
   it('does not break if content begins with [ or {', () => {
     const ref = h()
     ref.setAttribute('data-tippy-content', '[')
-    expect(() => getDataAttributeOptions(ref)).not.toThrow()
+    expect(() => getDataAttributeProps(ref)).not.toThrow()
     ref.setAttribute('data-tippy-content', '{')
-    expect(() => getDataAttributeOptions(ref)).not.toThrow()
+    expect(() => getDataAttributeProps(ref)).not.toThrow()
   })
 })
