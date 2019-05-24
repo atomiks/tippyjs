@@ -890,6 +890,7 @@ export default function createTippy(
       0,
       (defaultProps.duration as [number, number])[1],
     ),
+    shouldPreventPopperTransition: boolean = true,
   ): void {
     if (__DEV__) {
       warnWhen(
@@ -930,9 +931,15 @@ export default function createTippy(
     popper.style.visibility = 'visible'
     instance.state.isVisible = true
 
-    // Prevent a transition if the popper is at the opposite placement
+    // Prevent a transition of the popper from its previous position and of the
+    // elements at a different placement.
     const transitionableElements = getTransitionableElements()
-    setTransitionDuration(transitionableElements.concat(popper), 0)
+    setTransitionDuration(
+      shouldPreventPopperTransition
+        ? transitionableElements.concat(popper)
+        : transitionableElements,
+      0,
+    )
 
     currentMountCallback = (): void => {
       if (!instance.state.isVisible) {

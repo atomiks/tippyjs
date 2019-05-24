@@ -101,9 +101,11 @@ export default function delegate(
     const originalDestroy = instance.destroy
     instance.destroy = (shouldDestroyChildInstances: boolean = false): void => {
       if (shouldDestroyChildInstances) {
-        childTippyInstances.forEach(instance => {
-          instance.destroy()
-        })
+        childTippyInstances.forEach(
+          (instance): void => {
+            instance.destroy()
+          },
+        )
       }
       childTippyInstances = []
 

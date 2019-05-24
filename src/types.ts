@@ -92,7 +92,7 @@ export interface Instance {
   reference: ReferenceElement
   set(options: Options): void
   setContent(content: Content): void
-  show(duration?: number): void
+  show(duration?: number, shouldPreventPopperTransition?: boolean): void
   state: {
     isEnabled: boolean
     isVisible: boolean
