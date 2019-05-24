@@ -558,6 +558,7 @@ describe('onHide', () => {
   it('is called on hide, passed the instance as an argument', () => {
     const spy = jest.fn()
     const instance = tippy(h(), { onHide: spy })
+    instance.show()
     instance.hide()
     expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toBeCalledWith(instance)

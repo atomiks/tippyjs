@@ -144,6 +144,14 @@ describe('instance.show', () => {
     instance.show()
     expect(instance.state.isVisible).toBe(false)
   })
+
+  it('bails out if already visible', () => {
+    const spy = jest.fn()
+    instance = createTippy(h(), { ...defaultProps, onShow: spy })
+    instance.show()
+    instance.show()
+    expect(spy).toHaveBeenCalledTimes(1)
+  })
 })
 
 describe('instance.hide', () => {
@@ -174,6 +182,18 @@ describe('instance.hide', () => {
     instance.hide(9)
     expect(instance.popperChildren.tooltip.style.transitionDuration).toBe('9ms')
     instance.destroy()
+  })
+
+  it('bails out if already hidden', () => {
+    const spy = jest.fn()
+    instance = createTippy(h(), { ...defaultProps, onHide: spy })
+    instance.hide()
+    instance.hide()
+    expect(spy).toHaveBeenCalledTimes(0)
+    instance.show()
+    instance.hide()
+    instance.hide()
+    expect(spy).toHaveBeenCalledTimes(1)
   })
 })
 

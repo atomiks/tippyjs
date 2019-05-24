@@ -899,10 +899,17 @@ export default function createTippy(
       )
     }
 
+    // Early bail-out
+    const isAlreadyVisible = instance.state.isVisible
+    const isDestroyed = instance.state.isDestroyed
+    const isDisabled = !instance.state.isEnabled
+    const isUsingTouchAndTouchDisabled = isUsingTouch && !instance.props.touch
+
     if (
-      instance.state.isDestroyed ||
-      !instance.state.isEnabled ||
-      (isUsingTouch && !instance.props.touch)
+      isAlreadyVisible ||
+      isDestroyed ||
+      isDisabled ||
+      isUsingTouchAndTouchDisabled
     ) {
       return
     }
@@ -984,7 +991,12 @@ export default function createTippy(
       )
     }
 
-    if (instance.state.isDestroyed || !instance.state.isEnabled) {
+    // Early bail-out
+    const isAlreadyHidden = !instance.state.isVisible
+    const isDestroyed = instance.state.isDestroyed
+    const isDisabled = !instance.state.isEnabled
+
+    if (isAlreadyHidden || isDestroyed || isDisabled) {
       return
     }
 
