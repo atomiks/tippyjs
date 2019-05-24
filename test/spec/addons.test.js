@@ -46,13 +46,30 @@ describe('createSingleton', () => {
     expect(singletonInstance.props.duration).toBe(1000)
   })
 
-  it('uses `delay` correctly', () => {
+  it('uses `delay: number` correctly', () => {
     const refs = [h(), h()]
     const singletonInstance = createSingleton(tippy(refs), { delay: 1000 })
     refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
     jest.advanceTimersByTime(999)
     expect(singletonInstance.state.isVisible).toBe(false)
     jest.advanceTimersByTime(1000)
+    expect(singletonInstance.state.isVisible).toBe(true)
+    refs[0].dispatchEvent(new MouseEvent('mouseleave'), { bubbles: true })
+    jest.advanceTimersByTime(999)
+    expect(singletonInstance.state.isVisible).toBe(true)
+    jest.advanceTimersByTime(1000)
+    expect(singletonInstance.state.isVisible).toBe(false)
+  })
+
+  it('uses `delay: [number, number]` correctly', () => {
+    const refs = [h(), h()]
+    const singletonInstance = createSingleton(tippy(refs), {
+      delay: [500, 1000],
+    })
+    refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
+    jest.advanceTimersByTime(499)
+    expect(singletonInstance.state.isVisible).toBe(false)
+    jest.advanceTimersByTime(500)
     expect(singletonInstance.state.isVisible).toBe(true)
     refs[0].dispatchEvent(new MouseEvent('mouseleave'), { bubbles: true })
     jest.advanceTimersByTime(999)
