@@ -12,3 +12,4 @@ node_modules
 /index.d.ts
 /addons/cjs
 /addons/esm
+/addons/iife

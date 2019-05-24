@@ -126,7 +126,7 @@ export default [
       ...COMMON_IIFE_OUTPUT_OPTIONS,
       name: '__tippyAddons__',
       globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
-      file: 'iife/tippy-addons.js',
+      file: 'addons/iife/tippy-addons.js',
     },
   },
   {
@@ -137,7 +137,7 @@ export default [
       ...COMMON_IIFE_OUTPUT_OPTIONS,
       name: '__tippyAddons__',
       globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
-      file: 'iife/tippy-addons.min.js',
+      file: 'addons/iife/tippy-addons.min.js',
     },
   },
   {
