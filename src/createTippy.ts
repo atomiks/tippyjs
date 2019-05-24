@@ -556,10 +556,10 @@ export default function createTippy(
       const basicPlacement = getBasicPlacement(currentPlacement)
       const tooltipStyles = tooltip.style
 
-      tooltipStyles.top = ''
-      tooltipStyles.bottom = ''
-      tooltipStyles.left = ''
-      tooltipStyles.right = ''
+      tooltipStyles.top = '0'
+      tooltipStyles.bottom = '0'
+      tooltipStyles.left = '0'
+      tooltipStyles.right = '0'
       tooltipStyles[basicPlacement] = -instance.props.distance + 'px'
 
       const padding =
