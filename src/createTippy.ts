@@ -999,7 +999,9 @@ export default function createTippy(
     }
 
     // Early bail-out
-    const isAlreadyHidden = !instance.state.isVisible
+    // We're checking `isMounted` instead if `isVisible` so that `destroy()`'s
+    // instance.hide(0) call is not ignored (to unmount the tippy instantly)
+    const isAlreadyHidden = !instance.state.isMounted
     const isDestroyed = instance.state.isDestroyed
     const isDisabled = !instance.state.isEnabled
 
@@ -1057,11 +1059,7 @@ export default function createTippy(
       return
     }
 
-    // If the popper is currently mounted to the DOM, we want to ensure it gets
-    // hidden and unmounted instantly upon destruction
-    if (instance.state.isMounted) {
-      instance.hide(0)
-    }
+    instance.hide(0)
 
     removeTriggersFromEventListenersTarget()
 
