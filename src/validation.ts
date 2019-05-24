@@ -24,7 +24,7 @@ export function validateOptions(options: Options = {}): void {
         didPassTargetOption,
         'The `target` option was removed in v5 and ' +
           'replaced with the `delegate()` method. Read more here: ' +
-          'https//atomiks.github.io/tippyjs/event-delegation/',
+          'https//atomiks.github.io/tippyjs/addons#event-delegation',
       )
 
       warnWhen(

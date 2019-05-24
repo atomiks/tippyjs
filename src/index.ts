@@ -118,9 +118,9 @@ if (__DEV__) {
   tippy.group = (): void => {
     warnWhen(
       true,
-      '`tippy.group()` was removed in v5 and replaced ' +
-        'with `createSingleton()`. Read more: ' +
-        'https://atomiks.github.io/tippyjs/singleton/',
+      '`tippy.group()` was removed in v5 and replaced with ' +
+        '`createSingleton()`. Read more here: ' +
+        'https://atomiks.github.io/tippyjs/addons#singleton',
     )
   }
 }
