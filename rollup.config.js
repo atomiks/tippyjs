@@ -153,7 +153,7 @@ export default [
       dir: './',
       banner: BANNER,
       sourcemap: true,
-      chunkFileNames: 'esm/[name]-[hash].js',
+      chunkFileNames: 'esm/tippy.chunk.js',
     },
   },
   {
@@ -169,7 +169,7 @@ export default [
       dir: './',
       banner: BANNER,
       sourcemap: true,
-      chunkFileNames: 'cjs/[name]-[hash].js',
+      chunkFileNames: 'cjs/tippy.chunk.js',
     },
   },
   {
@@ -185,7 +185,7 @@ export default [
       dir: './',
       banner: BANNER,
       sourcemap: true,
-      chunkFileNames: 'esm/[name]-[hash].js',
+      chunkFileNames: 'esm/tippy.chunk.min.js',
     },
   },
   {
@@ -201,7 +201,7 @@ export default [
       dir: './',
       banner: BANNER,
       sourcemap: true,
-      chunkFileNames: 'cjs/[name]-[hash].js',
+      chunkFileNames: 'cjs/tippy.chunk.min.js',
     },
   },
 ]
