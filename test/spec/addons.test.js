@@ -125,6 +125,22 @@ describe('createSingleton', () => {
     instance.reference.dispatchEvent(new Event('mouseleave'))
     expect(onUntriggerSpy).toHaveBeenCalled()
   })
+
+  it('can update the `delay` option', () => {
+    const refs = [h(), h()]
+    const singletonInstance = createSingleton(tippy(refs), { delay: 1000 })
+    singletonInstance.set({ delay: 500 })
+    refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
+    jest.advanceTimersByTime(499)
+    expect(singletonInstance.state.isVisible).toBe(false)
+    jest.advanceTimersByTime(500)
+    expect(singletonInstance.state.isVisible).toBe(true)
+    refs[0].dispatchEvent(new MouseEvent('mouseleave'), { bubbles: true })
+    jest.advanceTimersByTime(499)
+    expect(singletonInstance.state.isVisible).toBe(true)
+    jest.advanceTimersByTime(500)
+    expect(singletonInstance.state.isVisible).toBe(false)
+  })
 })
 
 describe('delegate', () => {

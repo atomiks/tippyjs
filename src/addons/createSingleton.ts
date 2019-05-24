@@ -31,6 +31,7 @@ export default function createSingleton(
   }
 
   const singletonInstance = tippy(document.createElement('div')) as Instance
+  let { delay } = options
 
   let showTimeout: any
   let hideTimeout: any
@@ -72,7 +73,7 @@ export default function createSingleton(
           clearTimeouts()
           showTimeout = setTimeout((): void => {
             singletonInstance.show()
-          }, getValue(options.delay, 0, tippy.defaults.delay))
+          }, getValue(delay, 0, tippy.defaults.delay))
         },
         onUntrigger(instance, event): void {
           onUntrigger(instance, event)
@@ -80,7 +81,7 @@ export default function createSingleton(
           clearTimeouts()
           hideTimeout = setTimeout((): void => {
             singletonInstance.hide()
-          }, getValue(options.delay, 1, tippy.defaults.delay))
+          }, getValue(delay, 1, tippy.defaults.delay))
         },
       })
 
@@ -98,6 +99,13 @@ export default function createSingleton(
       }
     },
   )
+
+  const originalSet = singletonInstance.set
+
+  singletonInstance.set = options => {
+    delay = options.delay || delay
+    originalSet(options)
+  }
 
   return singletonInstance
 }
