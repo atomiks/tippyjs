@@ -176,6 +176,14 @@ export default function createTippy(
     )
   }
 
+  function getIsVerticalPlacement(): boolean {
+    return includes(['top', 'bottom'], getBasicPlacement(currentPlacement))
+  }
+
+  function getIsOppositePlacement(): boolean {
+    return includes(['bottom', 'right'], getBasicPlacement(currentPlacement))
+  }
+
   function removeFollowCursorListener(): void {
     document.removeEventListener(
       'mousemove',
@@ -366,17 +374,13 @@ export default function createTippy(
 
     // Ensure virtual reference is padded to prevent tooltip from overflowing.
     // Seems to be a Popper.js issue
-    const placement = getBasicPlacement(currentPlacement)
-    const isVerticalPlacement = includes(['top', 'bottom'], placement)
-    const isHorizontalPlacement = includes(['left', 'right'], placement)
     const padding = { ...currentComputedPadding }
+    const isVerticalPlacement = getIsVerticalPlacement()
 
     if (isVerticalPlacement) {
       padding.left = getCorrectedPadding('left')
       padding.right = getCorrectedPadding('right')
-    }
-
-    if (isHorizontalPlacement) {
+    } else {
       padding.top = getCorrectedPadding('top')
       padding.bottom = getCorrectedPadding('bottom')
     }
@@ -386,13 +390,13 @@ export default function createTippy(
 
     // Top / left boundary
     let x = isVerticalPlacement ? Math.max(padding.left, clientX) : clientX
-    let y = isHorizontalPlacement ? Math.max(padding.top, clientY) : clientY
+    let y = !isVerticalPlacement ? Math.max(padding.top, clientY) : clientY
 
     // Bottom / right boundary
     if (isVerticalPlacement && x > padding.right) {
       x = Math.min(clientX, window.innerWidth - padding.right)
     }
-    if (isHorizontalPlacement && y > padding.bottom) {
+    if (!isVerticalPlacement && y > padding.bottom) {
       y = Math.min(clientY, window.innerHeight - padding.bottom)
     }
 
@@ -556,11 +560,13 @@ export default function createTippy(
       const basicPlacement = getBasicPlacement(currentPlacement)
       const tooltipStyles = tooltip.style
 
-      tooltipStyles.top = '0'
-      tooltipStyles.bottom = '0'
-      tooltipStyles.left = '0'
-      tooltipStyles.right = '0'
-      tooltipStyles[basicPlacement] = -instance.props.distance + 'px'
+      tooltipStyles.top = ''
+      tooltipStyles.bottom = ''
+      tooltipStyles.left = ''
+      tooltipStyles.right = ''
+      tooltipStyles[
+        getIsVerticalPlacement() ? 'top' : 'left'
+      ] = `${(getIsOppositePlacement() ? 1 : -1) * instance.props.distance}px`
 
       const padding =
         preventOverflowModifier && preventOverflowModifier.padding !== undefined
