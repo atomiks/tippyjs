@@ -168,7 +168,15 @@ export default function createTippy(
   return instance
 
   /* ======================= 🔒 Private methods 🔒 ======================= */
-  function isInFollowCursorMode(): boolean {
+  function getIsVerticalPlacement(): boolean {
+    return includes(['top', 'bottom'], getBasicPlacement(currentPlacement))
+  }
+
+  function getIsOppositePlacement(): boolean {
+    return includes(['bottom', 'right'], getBasicPlacement(currentPlacement))
+  }
+
+  function getIsInFollowCursorMode(): boolean {
     return (
       instance.props.followCursor &&
       !isUsingTouch &&
@@ -176,12 +184,8 @@ export default function createTippy(
     )
   }
 
-  function getIsVerticalPlacement(): boolean {
-    return includes(['top', 'bottom'], getBasicPlacement(currentPlacement))
-  }
-
-  function getIsOppositePlacement(): boolean {
-    return includes(['bottom', 'right'], getBasicPlacement(currentPlacement))
+  function getTransitionableElements(): (HTMLDivElement | null)[] {
+    return [tooltip, content, instance.popperChildren.backdrop]
   }
 
   function removeFollowCursorListener(): void {
@@ -238,10 +242,6 @@ export default function createTippy(
 
   function removeDocumentClickListener(): void {
     document.removeEventListener('click', onDocumentClick, true)
-  }
-
-  function getTransitionableElements(): (HTMLDivElement | null)[] {
-    return [tooltip, content, instance.popperChildren.backdrop]
   }
 
   function makeSticky(): void {
@@ -664,8 +664,9 @@ export default function createTippy(
   function mount(): void {
     hasMountCallbackRun = false
 
+    const isInFollowCursorMode = getIsInFollowCursorMode()
     const shouldEnableListeners =
-      !isInFollowCursorMode() &&
+      !isInFollowCursorMode &&
       !(instance.props.followCursor === 'initial' && isUsingTouch)
 
     if (!instance.popperInstance) {
@@ -675,7 +676,7 @@ export default function createTippy(
         instance.popperInstance!.enableEventListeners()
       }
     } else {
-      if (!isInFollowCursorMode()) {
+      if (!isInFollowCursorMode) {
         instance.popperInstance.scheduleUpdate()
 
         if (shouldEnableListeners) {
@@ -695,7 +696,7 @@ export default function createTippy(
     instance.popperInstance!.reference = reference
     const { arrow } = instance.popperChildren
 
-    if (isInFollowCursorMode()) {
+    if (isInFollowCursorMode) {
       if (arrow) {
         arrow.style.margin = '0'
       }
@@ -756,7 +757,7 @@ export default function createTippy(
     // upon mount.
     // Edge case: if the tooltip is still mounted, but then scheduleShow() is
     // called, it causes a jump.
-    if (isInFollowCursorMode() && !instance.state.isMounted) {
+    if (getIsInFollowCursorMode() && !instance.state.isMounted) {
       if (!instance.popperInstance) {
         createPopperInstance()
       }
@@ -953,7 +954,7 @@ export default function createTippy(
       }
 
       // Double update will apply correct mutations
-      if (!isInFollowCursorMode()) {
+      if (!getIsInFollowCursorMode()) {
         instance.popperInstance!.update()
       }
 
