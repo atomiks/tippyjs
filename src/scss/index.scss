@@ -85,7 +85,7 @@
   &[data-interactive] {
     pointer-events: auto;
 
-    path {
+    .#{$namespace-prefix}-svgArrow path {
       pointer-events: auto;
     }
   }
