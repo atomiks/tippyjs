@@ -1,4 +1,4 @@
-import Popper from 'popper.js'
+import Popper, { ReferenceObject } from 'popper.js'
 
 export type BasicPlacement = 'top' | 'bottom' | 'left' | 'right'
 
@@ -17,7 +17,7 @@ export interface PopperElement extends HTMLDivElement {
 }
 
 export interface PopperInstance extends Popper {
-  reference: ReferenceElement
+  reference: ReferenceElement | ReferenceObject
   popper: PopperElement
   data: {
     placement: Placement
