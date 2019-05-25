@@ -43,7 +43,7 @@ export default function createSingleton(
 
   tippyInstances.forEach(
     (instance): void => {
-      let { onShow, onTrigger, onUntrigger } = instance.props
+      let { onTrigger, onUntrigger } = instance.props
 
       const originalClearDelayTimeouts = instance.clearDelayTimeouts
       instance.clearDelayTimeouts = (): void => {
@@ -53,15 +53,13 @@ export default function createSingleton(
 
       instance.setProps({
         delay: 0,
-        onShow(instance): false {
-          onShow(instance)
-          return false
-        },
+        // wait() will prevent this instance's tippy from ever showing (to use
+        // the singleton tippy instead)
+        wait() {},
         onTrigger(instance, event): void {
           onTrigger(instance, event)
 
           const props = { ...instance.props }
-          delete props.onShow
           delete props.delay
 
           singletonInstance.setProps(props)
@@ -102,12 +100,12 @@ export default function createSingleton(
       // Ensure the lifecycles functions are updateable
       const originalSetProps = instance.setProps
       instance.setProps = (partialProps): void => {
-        // Delay can't be updated
+        // `delay` and `wait` can't be updated
         delete partialProps.delay
+        delete partialProps.wait
 
         originalSetProps(partialProps)
 
-        onShow = partialProps.onShow || onShow
         onTrigger = partialProps.onTrigger || onTrigger
         onUntrigger = partialProps.onUntrigger || onUntrigger
       }

@@ -78,9 +78,8 @@ describe('createSingleton', () => {
     expect(singletonInstance.state.isVisible).toBe(false)
   })
 
-  it('preserves original `onShow`, `onTrigger`, and `onUntrigger` props', () => {
+  it('preserves original `onTrigger`, and `onUntrigger` props', () => {
     const props = {
-      onShow: jest.fn(),
       onTrigger: jest.fn(),
       onUntrigger: jest.fn(),
     }
@@ -91,7 +90,6 @@ describe('createSingleton', () => {
     createSingleton(tippy(refs, props))
     ref.dispatchEvent(triggerEvent)
     ref.dispatchEvent(untriggerEvent)
-    expect(props.onShow).toHaveBeenCalledWith(ref._tippy)
     expect(props.onTrigger).toHaveBeenCalledWith(ref._tippy, triggerEvent)
     expect(props.onUntrigger).toHaveBeenCalledWith(ref._tippy, untriggerEvent)
   })
@@ -117,28 +115,24 @@ describe('createSingleton', () => {
     )
   })
 
-  it('does not prevent updating `onShow`, `onTrigger`, and `onUntrigger`', () => {
+  it('does not prevent updating `onTrigger`, and `onUntrigger`', () => {
     const instances = tippy([h()])
     createSingleton(instances)
-    const onShowSpy = jest.fn()
     const onTriggerSpy = jest.fn()
     const onUntriggerSpy = jest.fn()
     const [instance] = instances
     instance.setProps({
-      onShow: onShowSpy,
       onTrigger: onTriggerSpy,
       onUntrigger: onUntriggerSpy,
     })
     instance.reference.dispatchEvent(new Event('mouseenter'))
     expect(onTriggerSpy).toHaveBeenCalled()
-    expect(onShowSpy).toHaveBeenCalled()
     instance.reference.dispatchEvent(new Event('mouseleave'))
     expect(onUntriggerSpy).toHaveBeenCalled()
     // And re-uses the same if not updated
     instance.setProps({})
     instance.reference.dispatchEvent(new Event('mouseenter'))
     expect(onTriggerSpy).toHaveBeenCalled()
-    expect(onShowSpy).toHaveBeenCalled()
     instance.reference.dispatchEvent(new Event('mouseleave'))
     expect(onUntriggerSpy).toHaveBeenCalled()
   })
