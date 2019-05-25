@@ -13,6 +13,13 @@ import 'animate.css/source/attention_seekers/wobble.css'
 import 'focus-visible'
 import elasticScroll from 'elastic-scroll-polyfill'
 import { toKebabCase } from './src/utils'
+import redirects from './src/redirects'
+
+function redirect() {
+  if (redirects.has(window.location.pathname)) {
+    window.location.replace(redirects.get(window.location.pathname))
+  }
+}
 
 function addDataLabelToTdElements() {
   const labels = Array.from(document.querySelectorAll('th')).map(
@@ -62,4 +69,8 @@ export function onRouteUpdate() {
   addElasticScrollingToCodeBlocks()
   highlightDeprecatedOptions()
   autoLinkHeaders()
+}
+
+export function onClientEntry() {
+  redirect()
 }
