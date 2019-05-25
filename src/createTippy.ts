@@ -553,9 +553,6 @@ export default function createTippy(
       }
 
       // Apply Popper's `x-*` attributes to the tooltip with `data-*`
-      popper.removeAttribute('x-placement')
-      popper.removeAttribute('x-out-of-boundaries')
-
       tooltip.setAttribute('data-placement', currentPlacement)
       if (data.attributes['x-out-of-boundaries'] !== false) {
         tooltip.setAttribute('data-out-of-boundaries', '')
