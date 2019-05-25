@@ -43,6 +43,12 @@ export default function createSingleton(
 
   tippyInstances.forEach(
     (instance): void => {
+      // To prevent bugs with `hideOnClick`, we need to let the original tippy
+      // instance also go through its lifecycle (i.e. be mounted to the DOM as
+      // well). To prevent it from being seen/overlayed over the singleton
+      // tippy, we can set its opacity to 0
+      instance.popper.style.opacity = '0'
+
       let { onTrigger, onUntrigger } = instance.props
 
       const originalClearDelayTimeouts = instance.clearDelayTimeouts
@@ -53,9 +59,6 @@ export default function createSingleton(
 
       instance.setProps({
         delay: 0,
-        // wait() will prevent this instance's tippy from ever showing (to use
-        // the singleton tippy instead)
-        wait() {},
         onTrigger(instance, event): void {
           onTrigger(instance, event)
 
@@ -100,9 +103,8 @@ export default function createSingleton(
       // Ensure the lifecycles functions are updateable
       const originalSetProps = instance.setProps
       instance.setProps = (partialProps): void => {
-        // `delay` and `wait` can't be updated
+        // `delay` can't be updated
         delete partialProps.delay
-        delete partialProps.wait
 
         originalSetProps(partialProps)
 

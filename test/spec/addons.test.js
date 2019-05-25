@@ -21,12 +21,13 @@ describe('createSingleton', () => {
     expect(singletonInstance.state.isVisible).toBe(true)
   })
 
-  it('does not show the original tippy instance', () => {
+  it('does not visibly show the original tippy element (opacity of 0)', () => {
     const refs = [h(), h()]
     createSingleton(tippy(refs))
     refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
     jest.runAllTimers()
-    expect(refs[0]._tippy.state.isVisible).toBe(false)
+    expect(refs[0]._tippy.state.isVisible).toBe(true)
+    expect(refs[0]._tippy.popper.style.opacity).toBe('0')
   })
 
   it('uses the relevant tippy instance props', () => {
