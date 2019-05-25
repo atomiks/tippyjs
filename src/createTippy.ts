@@ -703,33 +703,29 @@ export default function createTippy(
     instance.popperInstance!.reference = reference
     const { arrow } = instance.popperChildren
 
-    if (isInFollowCursorMode) {
+    if (
+      isInFollowCursorMode ||
+      // Allows `followCursor: 'initial'` on touch devices
+      (isUsingTouch &&
+        lastMouseMoveEvent &&
+        instance.props.followCursor === 'initial')
+    ) {
       if (arrow) {
         arrow.style.margin = '0'
       }
 
       if (lastMouseMoveEvent) {
-        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+        // TODO: If the tippy also has `updateDuration`, it transitions from
+        // the initial placement to the cursor point
+        requestAnimationFrame(() => {
+          positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+        })
       }
     } else if (arrow) {
       arrow.style.margin = ''
     }
 
-    // Allow followCursor: 'initial' on touch devices
-    if (
-      isUsingTouch &&
-      lastMouseMoveEvent &&
-      instance.props.followCursor === 'initial'
-    ) {
-      positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-
-      if (arrow) {
-        arrow.style.margin = '0'
-      }
-    }
-
     const { appendTo } = instance.props
-
     const parentNode =
       appendTo === 'parent'
         ? reference.parentNode
