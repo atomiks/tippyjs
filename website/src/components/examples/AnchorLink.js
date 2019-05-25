@@ -28,43 +28,40 @@ function AnchorLink({ smart }) {
   }
 
   useEffect(() => {
-    const instance = tippy(
-      {},
-      {
-        ...sharedOptions,
-        triggerTarget: ref.current,
-        onTrigger(instance, { type, clientX, clientY }) {
-          instance._lastTriggerEventType = type
+    const instance = tippy(document.createElement('div'), {
+      ...sharedOptions,
+      triggerTarget: ref.current,
+      onTrigger(instance, { type, clientX, clientY }) {
+        instance._lastTriggerEventType = type
 
-          if (type === 'mouseenter') {
-            const LINE_HEIGHT = 24
-            const rect = ref.current.getBoundingClientRect()
-            const cursorPoint = Math.round(clientY - rect.top)
-            const lineIndex = Math.floor(cursorPoint / LINE_HEIGHT)
-            const top = rect.top + lineIndex * LINE_HEIGHT
-            const bottom = top + LINE_HEIGHT
+        if (type === 'mouseenter') {
+          const LINE_HEIGHT = 24
+          const rect = ref.current.getBoundingClientRect()
+          const cursorPoint = Math.round(clientY - rect.top)
+          const lineIndex = Math.floor(cursorPoint / LINE_HEIGHT)
+          const top = rect.top + lineIndex * LINE_HEIGHT
+          const bottom = top + LINE_HEIGHT
 
-            instance.reference.getBoundingClientRect = () => ({
-              width: 0,
-              height: bottom - top,
-              top,
-              bottom,
-              left: clientX,
-              right: clientX,
-            })
-          } else {
-            instance.reference.getBoundingClientRect = () => {
-              return ref.current.getBoundingClientRect()
-            }
+          instance.reference.getBoundingClientRect = () => ({
+            width: 0,
+            height: bottom - top,
+            top,
+            bottom,
+            left: clientX,
+            right: clientX,
+          })
+        } else {
+          instance.reference.getBoundingClientRect = () => {
+            return ref.current.getBoundingClientRect()
           }
-        },
-        onMount(instance) {
-          if (instance._lastTriggerEventType === 'mouseenter') {
-            instance.popperInstance.disableEventListeners()
-          }
-        },
+        }
       },
-    )
+      onMount(instance) {
+        if (instance._lastTriggerEventType === 'mouseenter') {
+          instance.popperInstance.disableEventListeners()
+        }
+      },
+    })
     return () => {
       instance.destroy()
     }

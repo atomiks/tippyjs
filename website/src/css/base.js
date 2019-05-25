@@ -111,7 +111,7 @@ export default createGlobalStyle`
 
   h3 {
     font-size: 1.728rem;
-    margin-top: 2.5rem;
+    margin-top: 3rem;
     padding-right: 30px;
 
     ${MEDIA.md} {

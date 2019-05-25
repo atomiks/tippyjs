@@ -7,8 +7,8 @@ index: 3
 import Tippy from '../components/Tippy'
 import { Button } from '../components/Framework'
 
-As seen in the demo, the `tippy()` function takes an object of options as a
-second argument to customize the tooltips:
+As seen in the demo, the `tippy()` function takes an object of optional props as
+a second argument to customize the tooltips being created:
 
 ```js
 tippy('button', {
@@ -19,7 +19,7 @@ tippy('button', {
 })
 ```
 
-You can also specify options on the element using data attributes:
+You can also specify props on the element using data attributes:
 
 ```html
 <button
@@ -34,8 +34,8 @@ You can also specify options on the element using data attributes:
 
 Note that only JSON values are valid in attributes.
 
-It can be useful to use the function for "global" settings and choose attributes
-for individual settings here and there:
+It can be useful to use the function for "global" config and choose attributes
+for individual config here and there:
 
 ```html
 <button>Default</button>
@@ -44,21 +44,21 @@ for individual settings here and there:
 ```
 
 ```js
-// Global settings for all <button>s
+// Global config for all <button>s
 tippy('button', {
   content: 'global content',
   animation: 'fade',
 })
 ```
 
-### Default options
+### Default props
 
-Often you don't want to specify options over and over again when initializing
-tooltips. You can set the default options for every tooltip with the
-`tippy.setDefaults()` method:
+Often you don't want to specify props over and over again when initializing
+tooltips. You can set the default props for every tooltip with the
+`tippy.setDefaultProps()` method:
 
 ```js
-tippy.setDefaults({
+tippy.setDefaultProps({
   animation: 'fade',
   arrow: true,
 })
@@ -70,8 +70,8 @@ auto-initialized tooltips:
 ```html
 <!-- script links here -->
 <script>
-  tippy.setDefaults({
-    // Your options here
+  tippy.setDefaultProps({
+    // Your props here
   })
 </script>
 ```

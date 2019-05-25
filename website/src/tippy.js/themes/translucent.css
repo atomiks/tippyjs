@@ -1,0 +1,32 @@
+.tippy-tooltip.tippy-translucent-theme {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.tippy-tooltip.tippy-translucent-theme[data-placement^='top'] .tippy-arrow {
+  border-top: 7px solid rgba(0, 0, 0, 0.7);
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
+}
+.tippy-tooltip.tippy-translucent-theme[data-placement^='bottom'] .tippy-arrow {
+  border-bottom: 7px solid rgba(0, 0, 0, 0.7);
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
+}
+.tippy-tooltip.tippy-translucent-theme[data-placement^='left'] .tippy-arrow {
+  border-left: 7px solid rgba(0, 0, 0, 0.7);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+.tippy-tooltip.tippy-translucent-theme[data-placement^='right'] .tippy-arrow {
+  border-right: 7px solid rgba(0, 0, 0, 0.7);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+.tippy-tooltip.tippy-translucent-theme .tippy-backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.tippy-tooltip.tippy-translucent-theme .tippy-svgArrow {
+  fill: rgba(0, 0, 0, 0.7);
+}
+.tippy-tooltip.tippy-translucent-theme[data-animatefill] {
+  background-color: transparent;
+}

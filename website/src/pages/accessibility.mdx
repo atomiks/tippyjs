@@ -46,7 +46,7 @@ In your HTML, the element should have its own wrapper element (e.g. `div` or
 </div>
 ```
 
-When initializing the tooltip, the following options are recommended:
+When initializing the tooltip, the following props are recommended:
 
 ```js
 tippy('button', {
@@ -101,9 +101,9 @@ is currently on the reference element.
     duration={[300, 200]}
     onTrigger={(instance, event) => {
       if (event.type === 'focus') {
-        instance.set({ delay: 0, duration: [200, 150] })
+        instance.setProps({ delay: 0, duration: [200, 150] })
       } else {
-        instance.set({ delay: 500, duration: [300, 200] })
+        instance.setProps({ delay: 500, duration: [300, 200] })
       }
     }}
   >
@@ -122,9 +122,9 @@ tippy('button', {
     // If the tippy was triggered by a `focus` event (e.g keyboard navigation)
     // then set `delay: 0` and reduce the duration a bit.
     if (event.type === 'focus') {
-      instance.set({ delay: 0, duration: [200, 150] })
+      instance.setProps({ delay: 0, duration: [200, 150] })
     } else {
-      instance.set({ delay, duration })
+      instance.setProps({ delay, duration })
     }
   },
 })

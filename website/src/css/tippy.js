@@ -13,19 +13,10 @@ export default createGlobalStyle`
     }
   }
 
-  .tippy-popper[x-placement^='top'] .tippy-tooltip.ajax-theme {
-    top: auto !important;
-    bottom: 0;
-  }
-  .tippy-popper[x-placement^='bottom'] .tippy-tooltip.ajax-theme {
-    bottom: auto !important;
-    top: 0;
-  }
-
-  .tippy-popper[x-placement^='top'] .tippy-tooltip.tomato-theme .tippy-arrow {
+  .tippy-tooltip.tomato-theme[data-placement^='top'] .tippy-arrow {
     border-top-color: tomato;
   }
-  .tippy-popper[x-placement^='bottom'] .tippy-tooltip.tomato-theme .tippy-arrow {
+  .tippy-tooltip.tomato-theme[data-placement^='top'] .tippy-arrow {
     border-bottom-color: tomato;
   }
 
@@ -42,7 +33,7 @@ export default createGlobalStyle`
       background: tomato;
     }
 
-    .tippy-roundarrow {
+    .tippy-svgArrow {
       fill: tomato;
     }
   }

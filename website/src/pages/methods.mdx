@@ -45,11 +45,11 @@ instance.enable()
 
 #### set
 
-You can update any option after the instance has been created. Pass an object of
-new options in:
+You can update any prop after the instance has been created. Pass an object of
+new props in:
 
 ```js
-instance.set({
+instance.setProps({
   arrow: true,
   animation: 'scale',
 })
@@ -57,7 +57,7 @@ instance.set({
 
 #### setContent
 
-Updating the `content` option has its own method as a shortcut:
+Updating the `content` prop has its own method as a shortcut:
 
 ```js
 instance.setContent('New content')
@@ -86,17 +86,17 @@ instance.destroy(true)
 Static methods belong to the `tippy` module function rather than a tippy
 instance.
 
-#### setDefaults
+#### setDefaultProps
 
-Set the default options for each new instance:
+Set the default props for each new instance:
 
 ```js
-tippy.setDefaults({
-  // Options
+tippy.setDefaultProps({
+  // Props
 })
 
-// Access the current defaults
-tippy.defaults
+// Access the current default props
+tippy.defaultProps
 ```
 
 #### hideAll

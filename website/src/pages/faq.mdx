@@ -9,29 +9,6 @@ index: 15
 It's a theme I made called
 [Moonlight](https://github.com/atomiks/moonlight-vscode-theme)!
 
-### Why is there a blue outline around my element?
-
-You may notice a blue outline around your reference element. The blue outline is
-called a focus ring; it lets keyboard users know which element on the page is
-currently in focus. Most natively focusable elements have this ring by default,
-but Tippy adds an attribute to the element so that it can receive focus if it
-natively cannot, so that keyboard users (e.g. blind users) can access the
-tooltip without using a mouse.
-
-Recommended: only apply the tooltip to natively focusable elements like
-`<button>` or `<input>`, otherwise use the `focus-visible` polyfill:
-https://github.com/WICG/focus-visible. This will remove the outline for mouse
-users but keep it visible for keyboard users.
-
-If your tooltip is **non-essential** (only acts as enhancement), then you can
-disable the `a11y` option:
-
-```js
-tippy('div', {
-  a11y: false,
-})
-```
-
 ### I can't click things inside the tooltip
 
 To enable interactivity, set the `interactive` option to `true`.
@@ -83,7 +60,7 @@ const instances = tippy('.example', {
 // When clicking the theme toggle button, you can do this:
 const newTheme = 'whatever'
 instances.forEach(instance => {
-  instance.set({ theme: newTheme })
+  instance.setProps({ theme: newTheme })
 })
 ```
 
@@ -116,15 +93,17 @@ something like this at the very top of your scripts before any calls to
 
 ```js
 function withTitleAttributeContent(tippy) {
-  return (targets, options = {}) => {
+  return (targets, optionalProps = {}) => {
     return tippy(targets, {
-      ...options,
+      ...optionalProps,
       content(reference) {
-        if (options.content) {
-          return options.content
+        if (optionalProps.content) {
+          return optionalProps.content
         }
+
         const title = reference.getAttribute('title')
         reference.removeAttribute('title')
+
         return title
       },
     })

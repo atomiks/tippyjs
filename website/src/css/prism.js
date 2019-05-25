@@ -180,7 +180,8 @@ export default createGlobalStyle`
   }
 
   .token.dom,
-  .token.class-name {
+  .token.class-name,
+  .token.console {
     color: #ffc777;
   }
 

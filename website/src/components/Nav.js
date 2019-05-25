@@ -7,6 +7,7 @@ import X from 'react-feather/dist/icons/x'
 import ElasticScroll from './ElasticScroll'
 import TextGradient from './TextGradient'
 import { version } from '../../../package.json'
+import redirects from '../redirects'
 
 const Navbar = styled.nav`
   display: ${props => (props.isMounted ? 'block' : 'none')};
@@ -174,13 +175,15 @@ class Nav extends Component {
             <StaticQuery
               query={allMdxQuery}
               render={data => {
-                return sortPagesByIndex(data.allMdx.edges).map(({ node }) => (
-                  <ListItem key={node.frontmatter.path}>
-                    <Link to={node.frontmatter.path}>
-                      {node.frontmatter.title}
-                    </Link>
-                  </ListItem>
-                ))
+                return sortPagesByIndex(data.allMdx.edges)
+                  .filter(({ node }) => !redirects.has(node.frontmatter.path))
+                  .map(({ node }) => (
+                    <ListItem key={node.frontmatter.path}>
+                      <Link to={node.frontmatter.path}>
+                        {node.frontmatter.title}
+                      </Link>
+                    </ListItem>
+                  ))
               }}
             />
           </List>

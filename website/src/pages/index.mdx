@@ -21,8 +21,10 @@ Given an element on the page...
 <button id="myButton">My Button</button>
 ```
 
-We can give it many different types of tooltips. Let's explore some of the
-options below!
+We can give it many different types of tooltips. Let's explore some of them
+below!
+
+---
 
 ### Default
 
@@ -40,6 +42,8 @@ tippy('#myButton', {
 })
 ```
 
+---
+
 ### Placement
 
 Tooltips can be placed in four different ways in relation to the reference
@@ -50,7 +54,7 @@ suffix `-start` or `-end`.
   <Tippy placement="top">
     <Button>Top</Button>
   </Tippy>
-  <Tippy placement="bottom">
+  <Tippy placement="bottom" trigger="click">
     <Button>Bottom</Button>
   </Tippy>
   <Tippy placement="left">
@@ -73,6 +77,8 @@ tippy('#myButton', {
 })
 ```
 
+---
+
 ### Arrows
 
 Tooltips can have an arrow that points toward the reference element. The size
@@ -94,6 +100,8 @@ tippy('#myButton', {
   animation: 'fade',
 })
 ```
+
+---
 
 ### Animations
 
@@ -134,7 +142,6 @@ effect has been disabled in these examples (`animateFill: false`).
     onHidden={instance => {
       instance.popperChildren.tooltip.classList.remove('rubberBand', 'animated')
     }}
-    distance={20}
   >
     <Button>Animate.css: rubberBand</Button>
   </Tippy>
@@ -150,7 +157,6 @@ effect has been disabled in these examples (`animateFill: false`).
     onHidden={instance => {
       instance.popperChildren.tooltip.classList.remove('tada', 'animated')
     }}
-    distance={20}
   >
     <Button>Animate.css: tada</Button>
   </Tippy>
@@ -163,31 +169,35 @@ tippy('#myButton', {
 })
 ```
 
+---
+
 ### Themes
 
 Tooltips can have custom styling. There are a few themes that come with the
 package available under `themes/`.
 
 <Demo>
-  <Tippy theme="dark" animateFill={false}>
+  <Tippy theme="tippy-dark" animateFill={false}>
     <Button>Dark</Button>
   </Tippy>
-  <Tippy theme="light" animateFill={false}>
+  <Tippy theme="tippy-light" animateFill={false}>
     <Button>Light</Button>
   </Tippy>
-  <Tippy theme="light-border" animateFill={false}>
+  <Tippy theme="tippy-light-border" animateFill={false}>
     <Button>Light-border</Button>
   </Tippy>
-  <Tippy theme="google" animateFill={false}>
+  <Tippy theme="tippy-material" animateFill={false}>
     <Button>Google</Button>
   </Tippy>
 </Demo>
 
 ```js
 tippy('#myButton', {
-  theme: 'light', // or 'light-border', 'google', ...
+  theme: 'tippy-light', // or 'tippy-light-border', 'tippy-google', ...
 })
 ```
+
+---
 
 ### Triggers
 
@@ -225,6 +235,8 @@ tippy('#myButton', {
 })
 ```
 
+---
+
 ### HTML Content
 
 Tooltips can contain HTML.
@@ -247,6 +259,8 @@ tippy('#myButton', {
   content: '<strong>Bolded <span style="color: aqua;">content</span></strong>',
 })
 ```
+
+---
 
 ### Duration
 
@@ -292,6 +306,8 @@ tippy('#myButton', {
 })
 ```
 
+---
+
 ### Follow Cursor
 
 Tooltips can follow the mouse cursor and abide by a certain axis. Additionally,
@@ -335,6 +351,8 @@ tippy('#myButton', {
 })
 ```
 
+---
+
 ### SVGs
 
 Tooltips can be placed on SVG nodes, where `followCursor: 'initial'` becomes
@@ -360,6 +378,8 @@ tippy('line', {
 })
 ```
 
+---
+
 ### Singleton
 
 Use a single tooltip for many different reference elements.
@@ -367,6 +387,15 @@ Use a single tooltip for many different reference elements.
 <Demo>
   <Singleton />
 </Demo>
+
+```js
+import { createSingleton } from 'tippy.js/addons'
+
+const instances = tippy('button', { updateDuration: 400 })
+createSingleton(instances, { delay: [400, 800] })
+```
+
+---
 
 ### Nesting
 
@@ -376,15 +405,41 @@ Tippys can be nested within other ones.
   <Nesting />
 </Demo>
 
+```js
+const content = document.createElement('div')
+
+for (let i = 0; i < 3; i++) {
+  const button = document.createElement('button')
+  button.textContent = 'Text'
+  content.appendChild(button)
+
+  tippy(button, {
+    content: "I'm a Tippy tooltip!",
+    arrow: true,
+    animation: 'fade',
+  })
+}
+
+tippy('#myButton', {
+  content,
+  arrow: true,
+  theme: 'tippy-light-border',
+})
+
+// Note: Some extra logic is required to handle some other edge cases
+```
+
+---
+
 ### Multiple
 
 Attach many tippys to a single element.
 
 <Demo>
-  <Tippy content="Left" flip={false} placement="left" multiple>
-    <Tippy content="Bottom" flip={false} placement="bottom" multiple>
-      <Tippy content="Right" flip={false} placement="right" multiple>
-        <Tippy content="Top" flip={false} multiple>
+  <Tippy content="Left" flip={false} placement="left">
+    <Tippy content="Bottom" flip={false} placement="bottom">
+      <Tippy content="Right" flip={false} placement="right">
+        <Tippy content="Top" flip={false}>
           <Button
             style={{
               transform: 'translateX(-50%)',

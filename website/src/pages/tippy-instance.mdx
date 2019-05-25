@@ -4,8 +4,8 @@ path: /tippy-instance/
 index: 8
 ---
 
-The Tippy instance is an individual tooltip object. It has a bunch of properties
-and methods that contain information and functionality to manipulate the tooltip
+A tippy instance is an individual tippy object. It has a bunch of properties and
+methods that contain information and functionality to manipulate the tippy
 programmatically.
 
 ### Accessing an instance
@@ -64,28 +64,9 @@ setTimeout(() => {
 
 ### Shape and properties
 
-`instance` is a plain object with these properties:
+`instance` is a plain object. It's best to log it out yourself and investigate
+in DevTools:
 
 ```js
-{
-  id: 1, // 1 to Infinity, used for `aria-describedby` attribute
-  reference: HTMLButtonElement, // <button>
-  popper: HTMLDivElement, // <div class="tippy-popper">...</div>
-  popperChildren: { // Child elements of the parent popper element
-    tooltip: HTMLDivElement, // <div class="tippy-tooltip">...</div>
-    content: HTMLDivElement, // <div class="tippy-content">...</div>
-    arrow: null | HTMLDivElement, // <div class="tippy-arrow"></div>
-    backdrop: null | HTMLDivElement, // <div class="tippy-backdrop"></div>
-  },
-  popperInstance: null, // Instance is lazily created
-  props: { ... }, // Instance props + attribute options merged together
-  state: {
-    isDestroyed: false, // Has the instance been destroyed?
-    isEnabled: true, // Is the tippy enabled (can show or hide)?
-    isVisible: false, // Is the tippy currently showing (and not transitioning out)?
-    isMounted: false, // Is the tippy currently mounted to the DOM?
-    isShown: false, // Is the tippy fully shown after finishing transitioning in?
-  },
-  // This object also contains methods. You'll learn in the next section.
-}
+console.log(instance)
 ```

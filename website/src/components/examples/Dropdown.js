@@ -30,11 +30,17 @@ const Text = styled.p`
   color: #777;
 `
 
+const DropdownTippy = styled(Tippy)`
+  hr {
+    margin: 5px 0 10px;
+  }
+`
+
 function Dropdown({ text = 'Dropdown' }) {
   const [ariaExpanded, setAriaExpanded] = useState('false')
 
   return (
-    <Tippy
+    <DropdownTippy
       content={
         <>
           <Text>Pick your reaction</Text>
@@ -75,14 +81,14 @@ function Dropdown({ text = 'Dropdown' }) {
       distance={7}
       placement="bottom"
       animation="fade"
-      theme="light-border dropdown"
+      theme="tippy-light-border dropdown"
       trigger="click"
       appendTo="parent"
       onMount={() => setAriaExpanded('true')}
       onHide={() => setAriaExpanded('false')}
     >
       <Button aria-expanded={ariaExpanded}>{text}</Button>
-    </Tippy>
+    </DropdownTippy>
   )
 }
 
