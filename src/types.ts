@@ -88,8 +88,8 @@ export interface Instance {
   popperInstance: PopperInstance | null
   props: Props
   reference: ReferenceElement
-  setProps(partialProps: Partial<Props>): void
   setContent(content: Content): void
+  setProps(partialProps: Partial<Props>): void
   show(duration?: number, shouldPreventPopperTransition?: boolean): void
   state: {
     isEnabled: boolean
