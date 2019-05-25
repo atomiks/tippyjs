@@ -226,7 +226,7 @@ describe('instance.disable', () => {
   })
 })
 
-describe('instance.set', () => {
+describe('instance.setProps', () => {
   it('sets the new props by merging them with the current instance', () => {
     instance = createTippy(h(), defaultProps)
     expect(instance.props.arrow).toBe(defaultProps.arrow)
@@ -293,6 +293,18 @@ describe('instance.set', () => {
     const previousPopperInstance = instance.popperInstance
     instance.setProps({ ...defaultProps, placement: 'bottom' })
     expect(instance.popperInstance).not.toBe(previousPopperInstance)
+  })
+})
+
+describe('instance.set', () => {
+  it('should warn', () => {
+    const spy = jest.spyOn(console, 'warn')
+    instance = createTippy(h(), defaultProps)
+    instance.set({})
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] `set()` was renamed to `setProps()` in v5.',
+    )
+    spy.mockRestore()
   })
 })
 

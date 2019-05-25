@@ -125,6 +125,13 @@ export default function createTippy(
     destroy,
   }
 
+  if (__DEV__) {
+    // @ts-ignore
+    instance.set = (): void => {
+      warnWhen(true, '`set()` was renamed to `setProps()` in v5.')
+    }
+  }
+
   /* ==================== Initial instance mutations =================== */
   reference._tippy = instance
   popper._tippy = instance
