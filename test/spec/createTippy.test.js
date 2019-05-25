@@ -78,7 +78,7 @@ describe('createTippy', () => {
   })
 })
 
-describe('instance.destroy', () => {
+describe('instance.destroy()', () => {
   it('sets state.isDestroyed to `true`', () => {
     instance = createTippy(h(), defaultProps)
     instance.destroy()
@@ -113,7 +113,7 @@ describe('instance.destroy', () => {
   })
 })
 
-describe('instance.show', () => {
+describe('instance.show()', () => {
   it('changes state.isVisible to `true`', () => {
     instance = createTippy(h(), defaultProps)
     instance.show()
@@ -155,7 +155,7 @@ describe('instance.show', () => {
   })
 })
 
-describe('instance.hide', () => {
+describe('instance.hide()', () => {
   it('changes state.isVisible to false', () => {
     instance = createTippy(h(), defaultProps)
     instance.hide()
@@ -196,7 +196,7 @@ describe('instance.hide', () => {
   })
 })
 
-describe('instance.enable', () => {
+describe('instance.enable()', () => {
   it('sets state.isEnabled to `true`', () => {
     instance = createTippy(h(), defaultProps)
     instance.enable()
@@ -226,7 +226,7 @@ describe('instance.disable', () => {
   })
 })
 
-describe('instance.setProps', () => {
+describe('instance.setProps()', () => {
   it('sets the new props by merging them with the current instance', () => {
     instance = createTippy(h(), defaultProps)
     expect(instance.props.arrow).toBe(defaultProps.arrow)
@@ -296,7 +296,7 @@ describe('instance.setProps', () => {
   })
 })
 
-describe('instance.set', () => {
+describe('instance.set()', () => {
   it('should warn', () => {
     const spy = jest.spyOn(console, 'warn')
     instance = createTippy(h(), defaultProps)
@@ -308,7 +308,7 @@ describe('instance.set', () => {
   })
 })
 
-describe('instance.setContent', () => {
+describe('instance.setContent()', () => {
   it('works like set({ content: newContent })', () => {
     instance = createTippy(h(), defaultProps)
     const content = 'Hello!'
