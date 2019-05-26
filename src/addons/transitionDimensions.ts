@@ -12,6 +12,7 @@
  */
 
 import { Instance, Props } from '../types'
+import { throwErrorWhen } from '../utils'
 
 interface DimensionsInstance extends Instance {
   __dimensions?: {
@@ -137,11 +138,10 @@ export default function transitionDimensions(
   fadeDuration = 200,
 ): (effectCallback: () => void) => void {
   if (__DEV__) {
-    if (instance.transitionDimensions) {
-      throw new Error(
-        '[tippy.js ERROR] Cannot call `transitionDimensions()` more than once',
-      )
-    }
+    throwErrorWhen(
+      !!instance.transitionDimensions,
+      'Cannot call `transitionDimensions()` more than once',
+    )
   }
 
   const originalSet = instance.setProps
