@@ -1,33 +1,51 @@
 import { Instance } from '../types'
 import tippy from '..'
-import { getValue } from '../utils'
+import { getValue, throwErrorWhen, hasOwnProperty } from '../utils'
+
+interface InstanceMaybePartOfSingleton extends Instance {
+  __singleton__?: boolean
+}
 
 /**
  * Re-uses a single tippy element for many different tippy instances.
  * Replaces v4's `tippy.group()`.
  */
 export default function createSingleton(
-  tippyInstances: Instance[],
+  tippyInstances: InstanceMaybePartOfSingleton[],
   optionalProps: { delay: number | [number, number] } = { delay: 0 },
 ): Instance {
   if (__DEV__) {
     if (!Array.isArray(tippyInstances)) {
-      if (!tippyInstances) {
-        throw new Error(
-          '[tippy.js ERROR] First argument to `createSingleton()` must ' +
-            'be an array of tippy instances. The passed value was `' +
-            tippyInstances +
-            '`',
-        )
+      throwErrorWhen(
+        !tippyInstances,
+        'First argument to `createSingleton()` must be an array of tippy ' +
+          'instances. The passed value was `' +
+          tippyInstances +
+          '`',
+      )
+
+      throwErrorWhen(
         // @ts-ignore
-      } else if (tippyInstances.reference && tippyInstances.reference._tippy) {
-        throw new Error(
-          '[tippy.js ERROR] First argument to `createSingleton()` must ' +
-            'be an *array* of tippy instances. The passed value was a ' +
-            '*single* tippy instance.',
-        )
-      }
+        tippyInstances.reference && tippyInstances.reference._tippy,
+        'First argument to `createSingleton()` must be an *array* of tippy ' +
+          'instances. The passed value was a *single* tippy instance.',
+      )
     }
+
+    const isAnyInstancePartOfExistingSingleton = tippyInstances.some(instance =>
+      hasOwnProperty(instance, '__singleton__'),
+    )
+
+    throwErrorWhen(
+      isAnyInstancePartOfExistingSingleton,
+      'The passed tippy instance(s) are already part of an existing ' +
+        'singleton instance. Make sure you destroy the previous singleton ' +
+        'before calling `createSingleton()` again.',
+    )
+
+    tippyInstances.forEach(instance => {
+      instance.__singleton__ = true
+    })
   }
 
   const singletonInstance = tippy(document.createElement('div')) as Instance
@@ -137,6 +155,10 @@ export default function createSingleton(
           onTrigger,
           onUntrigger,
         })
+
+        if (__DEV__) {
+          delete instance.__singleton__
+        }
 
         if (shouldDestroyPassedInstances) {
           instance.destroy()

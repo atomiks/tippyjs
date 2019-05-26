@@ -190,3 +190,12 @@ export function warnWhen(condition: boolean, message: string): void {
     console.warn(`[tippy.js WARNING] ${message}`)
   }
 }
+
+/**
+ * Helpful wrapper around thrown errors
+ */
+export function throwErrorWhen(condition: boolean, message: string): void {
+  if (condition) {
+    throw new Error(`[tippy.js ERROR] ${message}`)
+  }
+}

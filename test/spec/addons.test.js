@@ -116,6 +116,27 @@ describe('createSingleton', () => {
     )
   })
 
+  it('throws if any passed instance is part of an existing singleton', () => {
+    expect(() => {
+      const instances = tippy([h(), h()])
+      createSingleton(instances)
+      createSingleton(instances)
+    }).toThrow(
+      '[tippy.js ERROR] The passed tippy instance(s) are already part of an ' +
+        'existing singleton instance. Make sure you destroy the previous ' +
+        'singleton before calling `createSingleton()` again.',
+    )
+  })
+
+  it('does not throw if any passed instance is not part of an existing singleton', () => {
+    expect(() => {
+      const instances = tippy([h(), h()])
+      const singleton = createSingleton(instances)
+      singleton.destroy()
+      createSingleton(instances)
+    }).not.toThrow()
+  })
+
   it('does not prevent updating `onTrigger`, and `onUntrigger`', () => {
     const instances = tippy([h()])
     createSingleton(instances)
