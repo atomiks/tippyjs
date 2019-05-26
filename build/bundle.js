@@ -1,5 +1,5 @@
-import css from '../index.css'
-import tippy from '../src/index.ts'
+import css from '../tippy.css'
+import tippy from '../src'
 import { injectCSS } from '../src/css'
 
 injectCSS(css)

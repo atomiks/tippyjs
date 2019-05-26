@@ -3,7 +3,7 @@
 /coverage
 /.devserver
 node_modules
-/index.css
+/tippy.css
 /cjs
 /iife
 /esm

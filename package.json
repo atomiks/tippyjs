@@ -36,7 +36,7 @@
     "addons/",
     "animations/",
     "themes/",
-    "index.css",
+    "tippy.css",
     "index.d.ts"
   ],
   "repository": {
@@ -52,7 +52,7 @@
     "test": "jest --coverage --silent",
     "check-types": "tsc",
     "lint": "eslint --report-unused-disable-directives . --ext .ts,.js",
-    "clean": "rimraf addons/{cjs,esm,iife} cjs iife esm themes coverage .devserver .cache ./index.css ./index.d.ts",
+    "clean": "rimraf addons/{cjs,esm,iife} cjs iife esm themes coverage .devserver .cache ./tippy.css ./index.d.ts",
     "prepare": "npm run clean && npm run build"
   },
   "jest": {
@@ -76,7 +76,7 @@
       "maxSize": "5.5 kB"
     },
     {
-      "path": "./index.css",
+      "path": "./tippy.css",
       "maxSize": "1.25 kB"
     }
   ],

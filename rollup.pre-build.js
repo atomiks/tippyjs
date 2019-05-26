@@ -66,10 +66,10 @@ async function build() {
   // Create `index.d.ts` file from `src/types.ts`
   fs.copyFileSync('./src/types.ts', './index.d.ts')
 
-  // Create `./index.css` first
+  // Create `./tippy.css` first
   const cssConfig = createRollupConfig(
     'css',
-    PLUGIN_CONFIG.concat(createPluginSCSS('./index.css')),
+    PLUGIN_CONFIG.concat(createPluginSCSS('./tippy.css')),
   )
   const cssBundle = await rollup(cssConfig)
   await cssBundle.write({
