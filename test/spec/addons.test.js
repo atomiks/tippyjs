@@ -171,6 +171,15 @@ describe('createSingleton', () => {
       expect(instance.state.isDestroyed).toBe(false)
     })
   })
+
+  it('does not throw maximum call stack error due to stale lifecycle hooks', () => {
+    const tippyInstances = tippy([h(), h()])
+    const singletonInstance = createSingleton(tippyInstances)
+    singletonInstance.destroy(false)
+    const [instance] = tippyInstances
+    createSingleton(tippyInstances)
+    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+  })
 })
 
 describe('delegate', () => {

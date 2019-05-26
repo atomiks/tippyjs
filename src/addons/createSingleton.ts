@@ -35,6 +35,8 @@ export default function createSingleton(
 
   let showTimeout: any
   let hideTimeout: any
+  let onTrigger: (instance: Instance, event: Event) => void
+  let onUntrigger: (instance: Instance, event: Event) => void
 
   function clearTimeouts(): void {
     clearTimeout(showTimeout)
@@ -49,7 +51,8 @@ export default function createSingleton(
       // tippy, we can set its opacity to 0
       instance.popper.style.opacity = '0'
 
-      let { onTrigger, onUntrigger } = instance.props
+      onTrigger = instance.props.onTrigger
+      onUntrigger = instance.props.onUntrigger
 
       const originalClearDelayTimeouts = instance.clearDelayTimeouts
       instance.clearDelayTimeouts = (): void => {
@@ -124,13 +127,22 @@ export default function createSingleton(
   singletonInstance.destroy = (
     shouldDestroyPassedInstances: boolean = true,
   ): void => {
-    if (shouldDestroyPassedInstances) {
-      tippyInstances.forEach(
-        (instance): void => {
+    tippyInstances.forEach(
+      (instance): void => {
+        // Reset the original lifecycle hooks to prevent stack overflow if
+        // calling again.
+        // Note: users must always destroy the singleton instance before calling
+        // `createSingleton()` again on the same instances.
+        instance.setProps({
+          onTrigger,
+          onUntrigger,
+        })
+
+        if (shouldDestroyPassedInstances) {
           instance.destroy()
-        },
-      )
-    }
+        }
+      },
+    )
 
     originalDestroy()
   }
