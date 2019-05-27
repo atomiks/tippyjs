@@ -102,6 +102,11 @@
   }
 }
 
+.#{$namespace-prefix}-arrow {
+  border-color: transparent;
+  border-style: solid;
+}
+
 .#{$namespace-prefix}-arrow,
 .#{$namespace-prefix}-svgArrow {
   position: absolute;

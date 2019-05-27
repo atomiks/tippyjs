@@ -26,21 +26,17 @@
 
 @mixin arrow($placement, $width, $color) {
   @if ($placement == 'top') {
-    border-top: $width solid $color;
-    border-right: $width solid transparent;
-    border-left: $width solid transparent;
+    border-width: $width $width 0;
+    border-top-color: $color;
   } @else if ($placement == 'bottom') {
-    border-bottom: $width solid $color;
-    border-right: $width solid transparent;
-    border-left: $width solid transparent;
+    border-width: 0 $width $width;
+    border-bottom-color: $color;
   } @else if ($placement == 'left') {
-    border-left: $width solid $color;
-    border-top: $width solid transparent;
-    border-bottom: $width solid transparent;
+    border-width: $width 0 $width $width;
+    border-left-color: $color;
   } @else if ($placement == 'right') {
-    border-right: $width solid $color;
-    border-top: $width solid transparent;
-    border-bottom: $width solid transparent;
+    border-width: $width $width $width 0;
+    border-right-color: $color;
   }
 }
 
