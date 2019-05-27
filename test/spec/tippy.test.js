@@ -6,10 +6,6 @@ import tippy, { autoInit } from '../../src'
 afterEach(cleanDocumentBody)
 
 describe('tippy', () => {
-  it('can be called with no arguments without throwing errors', () => {
-    tippy()
-  })
-
   it('returns the expected object', () => {
     expect(typeof tippy(h())).toBe('object')
     expect(Array.isArray(tippy([h(), h()]))).toBe(true)
@@ -36,16 +32,17 @@ describe('tippy', () => {
     spy.mockRestore()
   })
 
-  it('handles falsy reference', () => {
-    tippy([null])
+  it('handles falsy reference in an array', () => {
+    tippy([null, false, 0, undefined])
   })
 
-  it('returns null if passed a falsy Target type', () => {
-    expect(tippy(null)).toBe(null)
-    expect(tippy(undefined)).toBe(null)
-    expect(tippy(false)).toBe(null)
-    expect(tippy(0)).toBe(null)
-    expect(tippy('')).toBe(null)
+  it('throws if passed falsy Target type', () => {
+    expect(() => tippy(null)).toThrow()
+    expect(() => tippy(undefined)).toThrow()
+    expect(() => tippy(false)).toThrow()
+    expect(() => tippy(0)).toThrow()
+    expect(() => tippy(NaN)).toThrow()
+    expect(() => tippy('')).toThrow()
   })
 
   it('warns if passed a single content element for many different references', () => {

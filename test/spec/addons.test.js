@@ -245,8 +245,8 @@ describe('delegate', () => {
     instance.destroy()
   })
 
-  it('ignores if delegate target is falsy', () => {
-    delegate(null, { target: 'button' })
+  it('throws if delegate target is falsy', () => {
+    expect(() => delegate(null, { target: 'button' })).toThrow()
   })
 
   it('throws if passed falsy `target` prop', () => {

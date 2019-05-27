@@ -68,51 +68,66 @@ describe('validateProps', () => {
 
 describe('validateTargets', () => {
   it('recognizes a falsy target', () => {
-    validateTargets(null)
-    expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] `tippy()` was passed `' +
+    expect(() => {
+      validateTargets(null)
+    }).toThrow(
+      '[tippy.js ERROR] `tippy()` was passed `' +
         null +
         '` (an invalid falsy value) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
 
-    validateTargets(false)
-    expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] `tippy()` was passed `' +
+    expect(() => {
+      validateTargets(false)
+    }).toThrow(
+      '[tippy.js ERROR] `tippy()` was passed `' +
         false +
         '` (an invalid falsy value) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
 
-    validateTargets(undefined)
-    expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] `tippy()` was passed `' +
+    expect(() => {
+      validateTargets(undefined)
+    }).toThrow(
+      '[tippy.js ERROR] `tippy()` was passed `' +
         undefined +
         '` (an invalid falsy value) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
 
-    validateTargets(0)
-    expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] `tippy()` was passed `' +
+    expect(() => {
+      validateTargets(0)
+    }).toThrow(
+      '[tippy.js ERROR] `tippy()` was passed `' +
         0 +
         '` (an invalid falsy value) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
 
-    validateTargets('')
-    expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] `tippy()` was passed `' +
+    expect(() => {
+      validateTargets('')
+    }).toThrow(
+      '[tippy.js ERROR] `tippy()` was passed `' +
         '' +
+        '` (an invalid falsy value) as its targets argument. Valid types ' +
+        'are: String (CSS selector), Element, Element[], or NodeList.',
+    )
+
+    expect(() => {
+      validateTargets(NaN)
+    }).toThrow(
+      '[tippy.js ERROR] `tippy()` was passed `' +
+        NaN +
         '` (an invalid falsy value) as its targets argument. Valid types ' +
         'are: String (CSS selector), Element, Element[], or NodeList.',
     )
   })
 
   it('recognizes a plain object', () => {
-    validateTargets({})
-    expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] `tippy()` was passed a plain object (virtual ' +
+    expect(() => {
+      validateTargets({})
+    }).toThrow(
+      '[tippy.js ERROR] `tippy()` was passed a plain object (virtual ' +
         'reference element) which is no longer supported in v5. Instead, ' +
         'pass a placeholder element like `document.createElement("div")`',
     )

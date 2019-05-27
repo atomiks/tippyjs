@@ -1,5 +1,5 @@
 import { Props, Targets } from './types'
-import { hasOwnProperty, includes, warnWhen } from './utils'
+import { hasOwnProperty, includes, warnWhen, throwErrorWhen } from './utils'
 import { defaultProps } from './props'
 
 /**
@@ -73,7 +73,7 @@ export function validateTargets(targets: Targets): void {
     Object.prototype.toString.call(targets) === '[object Object]' &&
     !(targets as any).addEventListener
 
-  warnWhen(
+  throwErrorWhen(
     didPassFalsyValue,
     '`tippy()` was passed `' +
       targets +
@@ -81,7 +81,7 @@ export function validateTargets(targets: Targets): void {
       'String (CSS selector), Element, Element[], or NodeList.',
   )
 
-  warnWhen(
+  throwErrorWhen(
     didPassPlainObject,
     '`tippy()` was passed a plain object (virtual ' +
       'reference element) which is no longer supported in v5. Instead, pass ' +
