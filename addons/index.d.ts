@@ -3,7 +3,7 @@ import { Instance, Targets, Props } from '..'
 export type Delegate = (
   targets: Targets,
   partialProps: Partial<Props> & { target: string },
-) => Instance | Instance[] | null
+) => Instance | Instance[]
 
 export type CreateSingleton = (
   tippyInstances: Instance[],

@@ -28,7 +28,7 @@ let globalEventListenersBound = false
 function tippy(
   targets: Targets,
   optionalProps?: Partial<Props>,
-): Instance | Instance[] | null {
+): Instance | Instance[] {
   if (__DEV__) {
     validateTargets(targets)
     validateProps(optionalProps)
@@ -68,7 +68,7 @@ function tippy(
     [],
   )
 
-  return targets ? (isRealElement(targets) ? instances[0] : instances) : null
+  return isRealElement(targets) ? instances[0] : instances
 }
 
 tippy.version = version
