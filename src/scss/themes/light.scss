@@ -23,8 +23,4 @@
   .#{$namespace-prefix}-svgArrow {
     fill: white;
   }
-
-  &[data-animatefill] {
-    background-color: transparent;
-  }
 }

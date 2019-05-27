@@ -79,7 +79,9 @@
   }
 
   &[data-animatefill] {
-    background-color: transparent;
+    // Declared with !important so that custom themes don't need to specify
+    // this property.
+    background-color: transparent !important;
   }
 
   &[data-interactive] {

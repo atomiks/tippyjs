@@ -19,8 +19,4 @@
   .#{$namespace-prefix}-svgArrow {
     fill: rgba(0, 0, 0, 0.7);
   }
-
-  &[data-animatefill] {
-    background-color: transparent;
-  }
 }

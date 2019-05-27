@@ -28,10 +28,6 @@ $color: #505355;
     fill: $color;
   }
 
-  &[data-animatefill] {
-    background-color: transparent;
-  }
-
   &[data-size='small'] {
     font-size: 0.75rem;
     padding: 0.1875rem 0.375rem;
