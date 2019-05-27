@@ -239,6 +239,13 @@ export default function createTippy(
     if (instance.props.hideOnClick === true) {
       instance.clearDelayTimeouts()
       instance.hide()
+
+      // The listener gets added in `scheduleShow()`, but this may be hiding it
+      // before it shows, and hide()'s early bail-out behavior can prevent it
+      // from being cleaned up
+      if (!instance.state.isMounted) {
+        removeDocumentClickListener()
+      }
     }
   }
 
