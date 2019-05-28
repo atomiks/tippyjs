@@ -1,1 +1,1 @@
-import '../../src/scss/animations/shift-toward-extreme.scss'
+import '../../src/scss/animations/scale-extreme.scss'

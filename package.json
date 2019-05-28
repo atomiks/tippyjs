@@ -52,7 +52,7 @@
     "test": "jest --coverage --silent",
     "check-types": "tsc",
     "lint": "eslint --report-unused-disable-directives . --ext .ts,.js",
-    "clean": "rimraf addons/{cjs,esm,iife} cjs iife esm themes coverage .devserver .cache ./tippy.css ./index.d.ts",
+    "clean": "rimraf addons/{cjs,esm,iife} cjs iife esm themes animations coverage .devserver .cache ./tippy.css ./index.d.ts",
     "prepare": "npm run clean && npm run build"
   },
   "jest": {
