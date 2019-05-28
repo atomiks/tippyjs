@@ -71,6 +71,7 @@ export default function createTippy(
   let isScheduledToShow = false
   let currentPlacement: Placement = props.placement
   let hasMountCallbackRun = false
+  let didHideDueToDocumentMouseDown = false
   let currentMountCallback: () => void
   let currentTransitionEndListener: (event: TransitionEvent) => void
   let listeners: Listener[] = []
@@ -213,7 +214,7 @@ export default function createTippy(
     return instance.props.triggerTarget || reference
   }
 
-  function onDocumentClick(event: MouseEvent): void {
+  function onDocumentMouseDown(event: MouseEvent): void {
     // Clicked on interactive popper
     if (
       instance.props.interactive &&
@@ -240,21 +241,28 @@ export default function createTippy(
       instance.clearDelayTimeouts()
       instance.hide()
 
+      // `mousedown` event is fired right before `focus`. This lets a tippy with
+      // `focus` trigger know that it should not show
+      didHideDueToDocumentMouseDown = true
+      setTimeout(() => {
+        didHideDueToDocumentMouseDown = false
+      })
+
       // The listener gets added in `scheduleShow()`, but this may be hiding it
       // before it shows, and hide()'s early bail-out behavior can prevent it
       // from being cleaned up
       if (!instance.state.isMounted) {
-        removeDocumentClickListener()
+        removeDocumentMouseDownListener()
       }
     }
   }
 
-  function addDocumentClickListener(): void {
-    document.addEventListener('click', onDocumentClick, true)
+  function addDocumentMouseDownListener(): void {
+    document.addEventListener('mousedown', onDocumentMouseDown, true)
   }
 
-  function removeDocumentClickListener(): void {
-    document.removeEventListener('click', onDocumentClick, true)
+  function removeDocumentMouseDownListener(): void {
+    document.removeEventListener('mousedown', onDocumentMouseDown, true)
   }
 
   function makeSticky(): void {
@@ -328,6 +336,15 @@ export default function createTippy(
     if (instance.props.touchHold) {
       on('touchstart', onTrigger, PASSIVE)
       on('touchend', onMouseLeave as EventListener, PASSIVE)
+    }
+
+    // `click` for keyboard. Mouse uses `mousedown` (onDocumentMouseDown)
+    if (!includes(instance.props.trigger, 'click')) {
+      on('click', () => {
+        if (instance.props.hideOnClick === true) {
+          instance.hide()
+        }
+      })
     }
 
     instance.props.trigger
@@ -443,7 +460,11 @@ export default function createTippy(
   }
 
   function onTrigger(event: Event): void {
-    if (!instance.state.isEnabled || isEventListenerStopped(event)) {
+    if (
+      didHideDueToDocumentMouseDown ||
+      !instance.state.isEnabled ||
+      isEventListenerStopped(event)
+    ) {
       return
     }
 
@@ -772,7 +793,7 @@ export default function createTippy(
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
-    addDocumentClickListener()
+    addDocumentMouseDownListener()
 
     const delay = getValue(instance.props.delay, 0, defaultProps.delay)
 
@@ -946,7 +967,7 @@ export default function createTippy(
       return
     }
 
-    addDocumentClickListener()
+    addDocumentMouseDownListener()
 
     popper.style.visibility = 'visible'
     instance.state.isVisible = true
@@ -1033,7 +1054,7 @@ export default function createTippy(
       return
     }
 
-    removeDocumentClickListener()
+    removeDocumentMouseDownListener()
 
     popper.style.visibility = 'hidden'
     instance.state.isVisible = false

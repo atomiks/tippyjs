@@ -321,7 +321,7 @@ describe('interactive', () => {
     const instance = tippy(h(), { interactive: false })
     instance.show()
     instance.popperChildren.tooltip.dispatchEvent(
-      new Event('click', { bubbles: true }),
+      new MouseEvent('mousedown', { bubbles: true }),
     )
     expect(instance.state.isVisible).toBe(false)
   })
@@ -964,10 +964,13 @@ describe('triggerTarget', () => {
 })
 
 describe('hideOnClick', () => {
+  const mousedownEvent = new MouseEvent('mousedown', { bubbles: true })
+  const clickEvent = new MouseEvent('click', { bubbles: true })
+
   it('true: hides if reference element was clicked', () => {
     const instance = tippy(h(), { hideOnClick: true })
     instance.show()
-    document.dispatchEvent(new Event('click'), { target: instance.reference })
+    instance.reference.dispatchEvent(mousedownEvent)
     expect(instance.state.isVisible).toBe(false)
   })
 
@@ -977,9 +980,8 @@ describe('hideOnClick', () => {
       interactive: true,
     })
     instance.show()
-    instance.popperChildren.tooltip.dispatchEvent(
-      new Event('click', { bubbles: true }),
-    )
+    instance.popperChildren.tooltip.dispatchEvent(mousedownEvent)
+    instance.popperChildren.tooltip.dispatchEvent(clickEvent)
     expect(instance.state.isVisible).toBe(true)
   })
 
@@ -989,20 +991,16 @@ describe('hideOnClick', () => {
       interactive: false,
     })
     instance.show()
-    instance.popperChildren.tooltip.dispatchEvent(
-      new Event('click', { bubbles: true }),
-    )
+    instance.popperChildren.tooltip.dispatchEvent(mousedownEvent)
+    instance.popperChildren.tooltip.dispatchEvent(clickEvent)
     expect(instance.state.isVisible).toBe(false)
   })
 
   it('false: does not hide if reference element was clicked', () => {
     const instance = tippy(h(), { hideOnClick: false })
     instance.show()
-    instance.popperChildren.tooltip.dispatchEvent(
-      new Event('click', { bubbles: true }),
-    )
-    expect(instance.state.isVisible).toBe(true)
-    instance.reference.dispatchEvent(new Event('click', { bubbles: true }))
+    instance.reference.dispatchEvent(mousedownEvent)
+    instance.reference.dispatchEvent(clickEvent)
     expect(instance.state.isVisible).toBe(true)
   })
 
@@ -1012,11 +1010,12 @@ describe('hideOnClick', () => {
       hideOnClick: false,
     })
     instance.show()
-    instance.popperChildren.tooltip.dispatchEvent(
-      new Event('click', { bubbles: true }),
-    )
-    instance.reference.dispatchEvent(new Event('click', { bubbles: true }))
-    document.body.dispatchEvent(new Event('click', { bubbles: true }))
+    instance.popperChildren.tooltip.dispatchEvent(mousedownEvent)
+    instance.popperChildren.tooltip.dispatchEvent(clickEvent)
+    instance.reference.dispatchEvent(mousedownEvent)
+    instance.reference.dispatchEvent(clickEvent)
+    document.body.dispatchEvent(mousedownEvent)
+    document.body.dispatchEvent(clickEvent)
     expect(instance.state.isVisible).toBe(true)
   })
 
@@ -1026,9 +1025,13 @@ describe('hideOnClick', () => {
       hideOnClick: 'toggle',
     })
     instance.show()
-    document.body.dispatchEvent(new Event('click', { bubbles: true }))
+    document.body.dispatchEvent(mousedownEvent)
+    document.body.dispatchEvent(clickEvent)
+    instance.popperChildren.tooltip.dispatchEvent(mousedownEvent)
+    instance.popperChildren.tooltip.dispatchEvent(clickEvent)
     expect(instance.state.isVisible).toBe(true)
-    instance.reference.dispatchEvent(new Event('click', { bubbles: true }))
+    instance.reference.dispatchEvent(mousedownEvent)
+    instance.reference.dispatchEvent(clickEvent)
     expect(instance.state.isVisible).toBe(false)
   })
 })
