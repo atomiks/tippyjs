@@ -244,9 +244,11 @@ export default function createTippy(
       // `mousedown` event is fired right before `focus`. This lets a tippy with
       // `focus` trigger know that it should not show
       didHideDueToDocumentMouseDown = true
-      setTimeout(() => {
-        didHideDueToDocumentMouseDown = false
-      })
+      setTimeout(
+        (): void => {
+          didHideDueToDocumentMouseDown = false
+        },
+      )
 
       // The listener gets added in `scheduleShow()`, but this may be hiding it
       // before it shows, and hide()'s early bail-out behavior can prevent it
@@ -340,11 +342,14 @@ export default function createTippy(
 
     // `click` for keyboard. Mouse uses `mousedown` (onDocumentMouseDown)
     if (!includes(instance.props.trigger, 'click')) {
-      on('click', () => {
-        if (instance.props.hideOnClick === true) {
-          instance.hide()
-        }
-      })
+      on(
+        'click',
+        (): void => {
+          if (instance.props.hideOnClick === true) {
+            instance.hide()
+          }
+        },
+      )
     }
 
     instance.props.trigger
@@ -742,9 +747,11 @@ export default function createTippy(
       if (lastMouseMoveEvent) {
         // TODO: If the tippy also has `updateDuration`, it transitions from
         // the initial placement to the cursor point
-        requestAnimationFrame(() => {
-          positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-        })
+        requestAnimationFrame(
+          (): void => {
+            positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+          },
+        )
       }
     } else if (arrow) {
       arrow.style.margin = ''

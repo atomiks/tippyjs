@@ -32,8 +32,8 @@ export default function createSingleton(
       )
     }
 
-    const isAnyInstancePartOfExistingSingleton = tippyInstances.some(instance =>
-      hasOwnProperty(instance, '__singleton__'),
+    const isAnyInstancePartOfExistingSingleton = tippyInstances.some(
+      (instance): boolean => hasOwnProperty(instance, '__singleton__'),
     )
 
     throwErrorWhen(
@@ -43,9 +43,11 @@ export default function createSingleton(
         'before calling `createSingleton()` again.',
     )
 
-    tippyInstances.forEach(instance => {
-      instance.__singleton__ = true
-    })
+    tippyInstances.forEach(
+      (instance): void => {
+        instance.__singleton__ = true
+      },
+    )
   }
 
   const singletonInstance = tippy(document.createElement('div')) as Instance
