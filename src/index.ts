@@ -20,8 +20,6 @@ import {
   HideAllOptions,
 } from './types'
 
-let globalEventListenersBound = false
-
 /**
  * Exported module
  */
@@ -34,10 +32,7 @@ function tippy(
     validateProps(optionalProps)
   }
 
-  if (!globalEventListenersBound) {
-    bindGlobalEventListeners()
-    globalEventListenersBound = true
-  }
+  bindGlobalEventListeners()
 
   const props: Props = { ...defaultProps, ...optionalProps }
 
