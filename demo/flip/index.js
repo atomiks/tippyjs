@@ -37,12 +37,6 @@ btn.onclick = () => {
 
   flipper.recordBeforeUpdate()
 
-  tooltip.style.transitionDuration = '0ms'
-  content.style.transitionDuration = '0ms'
-  if (arrow) {
-    arrow.style.transitionDuration = '0ms'
-  }
-
   isExpanded = !isExpanded
 
   tooltip.style.width = isExpanded ? '' : `${originalWidth}px`
@@ -64,12 +58,13 @@ const instance = tippy(button, {
   animateFill: false,
   animation: 'fade',
   trigger: 'click',
-  distance: 8,
+  distance: 40,
   flipOnUpdate: true,
-  theme: 'google',
+  flipBehavior: ['right', 'bottom'],
   onMount() {
     window.addEventListener('resize', onResize)
 
+    // Set the original dimensions before the image was expanded
     if (!originalWidth) {
       originalWidth = tooltip.offsetWidth
       originalHeight = tooltip.offsetHeight
@@ -81,19 +76,22 @@ const instance = tippy(button, {
   onHidden() {
     window.removeEventListener('resize', onResize)
 
-    tooltip.style.transform = ''
-    content.style.transform = ''
+    const elements = [tooltip, content, arrow]
+    elements.forEach(element => {
+      if (element) {
+        element.style.transform = ''
+      }
+    })
   },
   popperOptions: {
     onCreate(data) {
-      prevTranslate3d = currentTranslate3d = parseTranslate3d(
-        data.styles.transform,
-      )
+      prevOffsets = currentOffsets = parseTranslate3d(data.styles.transform)
     },
     onUpdate(data) {
       wasInterrupted = true
-      prevTranslate3d = currentTranslate3d
+      prevOffsets = currentOffsets
 
+      // `react-flip-toolkit` adds this
       if (arrow) {
         arrow.style.transformOrigin = ''
       }
@@ -101,18 +99,17 @@ const instance = tippy(button, {
       // We need to parse it because Popper rounds the values but doesn't
       // expose the rounded values for us...
       const translate3d = parseTranslate3d(data.styles.transform)
+      // Make sure `currentOffsets` runs after the `onSpringUpdate` tick
       requestAnimationFrame(() => {
-        currentTranslate3d = translate3d
+        currentOffsets = translate3d
       })
 
-      const { x, y } = isResizing
-        ? translate3d
-        : tweenTranslate3d || prevTranslate3d
+      const { x, y } = tweenOffsets || prevOffsets
 
       // If update was scheduled due to resize. As far as I can tell, scrolling
       // doesn't cause much of an issue?
       if (isResizing) {
-        tweenTranslate3d = translate3d
+        tweenOffsets = translate3d
       } else {
         // Safari needs it due to onSpringUpdate and popper's .update()
         // running in different ticks, leading to 1 frame glitch
@@ -135,34 +132,42 @@ function onResize() {
 const { tooltip, content, arrow } = instance.popperChildren
 
 tooltip.style.textAlign = 'left'
+// Very first transition is jerky otherwise.
 content.style.willChange = 'transform'
 
-const flipper = new ReactFlipToolkitCore({
-  element: instance.popper,
+const elements = [tooltip, content, arrow]
+elements.forEach(element => {
+  if (element) {
+    element.style.transitionProperty = 'visibility, opacity, top, left'
+  }
 })
 
-let prevTranslate3d
-let currentTranslate3d
-let tweenTranslate3d
+const flipper = new ReactFlipToolkitCore({ element: instance.popper })
+
+let prevOffsets
+let currentOffsets
+let tweenOffsets
 let wasInterrupted
 
 flipper.addFlipped({
   element: tooltip,
   flipId: 'tootlip',
   spring: 'veryGentle',
+  // We need to ensure the popper's translation animation is in concert with the
+  // dimensions spring animation so it stays perfectly positioned throughout
   onSpringUpdate(value) {
-    if (wasInterrupted && tweenTranslate3d) {
-      prevTranslate3d = tweenTranslate3d
+    if (wasInterrupted && tweenOffsets) {
+      prevOffsets = tweenOffsets
       wasInterrupted = false
     }
 
-    const { x: prevX, y: prevY } = prevTranslate3d
-    const { x: currentX, y: currentY } = currentTranslate3d
+    const { x: prevX, y: prevY } = prevOffsets
+    const { x: currentX, y: currentY } = currentOffsets
 
     const x = prevX - value * (prevX - currentX)
     const y = prevY - value * (prevY - currentY)
 
-    tweenTranslate3d = { x, y }
+    tweenOffsets = { x, y }
 
     instance.popper.style.transform = `translate3d(${x}px, ${y}px, 0)`
   },
