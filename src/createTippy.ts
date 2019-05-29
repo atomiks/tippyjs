@@ -597,10 +597,8 @@ export default function createTippy(
       const basicPlacement = getBasicPlacement(currentPlacement)
       const tooltipStyles = tooltip.style
 
-      tooltipStyles.top = ''
-      tooltipStyles.bottom = ''
-      tooltipStyles.left = ''
-      tooltipStyles.right = ''
+      tooltipStyles.top = '0'
+      tooltipStyles.left = '0'
       tooltipStyles[
         getIsVerticalPlacement() ? 'top' : 'left'
       ] = `${(getIsOppositePlacement() ? 1 : -1) * instance.props.distance}px`
