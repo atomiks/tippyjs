@@ -33,6 +33,7 @@ import {
   setVisibilityState,
   debounce,
   warnWhen,
+  isRealElement,
 } from './utils'
 import { validateProps } from './validation'
 
@@ -387,13 +388,6 @@ export default function createTippy(
     listeners = []
   }
 
-  function getCorrectedPadding(placement: string): number {
-    return instance.props.arrow
-      ? currentComputedPadding[placement] +
-          (instance.props.arrowType === 'round' ? 18 : 16)
-      : currentComputedPadding[placement]
-  }
-
   function positionVirtualReferenceNearCursor(event: MouseEvent): void {
     const { clientX, clientY } = (lastMouseMoveEvent = event)
 
@@ -409,31 +403,51 @@ export default function createTippy(
 
     // Ensure virtual reference is padded to prevent tooltip from overflowing.
     // Seems to be a Popper.js issue
+    // TODO: Remove the following later if Popper.js changes/fixes the
+    // behavior. See https://github.com/FezVrasta/popper.js/issues/708
+    // =============================== START FIX ===============================
     const padding = { ...currentComputedPadding }
     const isVerticalPlacement = getIsVerticalPlacement()
 
-    if (isVerticalPlacement) {
-      padding.left = getCorrectedPadding('left')
-      padding.right = getCorrectedPadding('right')
-    } else {
-      padding.top = getCorrectedPadding('top')
-      padding.bottom = getCorrectedPadding('bottom')
+    function getCorrectedPadding(placement: string): number {
+      const measure = isVerticalPlacement ? 'offsetWidth' : 'offsetHeight'
+      return (
+        currentComputedPadding[placement] +
+        instance.popperChildren.arrow![measure]
+      )
     }
 
-    // TODO: Remove the following later if Popper.js changes/fixes the
-    // behavior
-
-    // Top / left boundary
-    let x = isVerticalPlacement ? Math.max(padding.left, clientX) : clientX
-    let y = !isVerticalPlacement ? Math.max(padding.top, clientY) : clientY
-
-    // Bottom / right boundary
-    if (isVerticalPlacement && x > padding.right) {
-      x = Math.min(clientX, window.innerWidth - padding.right)
+    if (instance.props.arrow) {
+      if (isVerticalPlacement) {
+        padding.left = getCorrectedPadding('left')
+        padding.right = getCorrectedPadding('right')
+      } else {
+        padding.top = getCorrectedPadding('top')
+        padding.bottom = getCorrectedPadding('bottom')
+      }
     }
-    if (!isVerticalPlacement && y > padding.bottom) {
-      y = Math.min(clientY, window.innerHeight - padding.bottom)
-    }
+
+    const { boundary } = instance.props
+    const boundaryRect = isRealElement(boundary)
+      ? boundary.getBoundingClientRect()
+      : boundary === 'window'
+      ? popper.ownerDocument!.documentElement.getBoundingClientRect()
+      : {
+          // 'viewport'
+          top: 0,
+          left: 0,
+          right: window.innerWidth,
+          bottom: window.innerHeight,
+        }
+    const x = Math.min(
+      Math.max(boundaryRect.left + padding.left, clientX),
+      boundaryRect.right - padding.right,
+    )
+    const y = Math.min(
+      Math.max(boundaryRect.top + padding.top, clientY),
+      boundaryRect.bottom - padding.bottom,
+    )
+    // ================================ END FIX ================================
 
     // If the instance is interactive, avoid updating the position unless it's
     // over the reference element

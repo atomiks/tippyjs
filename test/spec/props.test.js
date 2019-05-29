@@ -1037,8 +1037,20 @@ describe('hideOnClick', () => {
 })
 
 describe('followCursor', () => {
+  // NOTE: Jest's simulated window dimensions are 1024 x 768. These values
+  // should be within that
   const first = { clientX: 317, clientY: 119 }
-  const second = { clientX: 500, clientY: 1000 }
+  const second = { clientX: 240, clientY: 500 }
+
+  const firstMouseMoveEvent = new MouseEvent('mousemove', {
+    ...first,
+    bubbles: true,
+  })
+  const secondMouseMoveEvent = new MouseEvent('mousemove', {
+    ...second,
+    bubbles: true,
+  })
+
   let rect
 
   function followCursorTrueMatches(event) {
@@ -1053,15 +1065,11 @@ describe('followCursor', () => {
 
     jest.runAllTimers()
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...first, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
     rect = instance.popperInstance.reference.getBoundingClientRect()
     followCursorTrueMatches(first)
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...second, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(secondMouseMoveEvent)
     rect = instance.popperInstance.reference.getBoundingClientRect()
     followCursorTrueMatches(second)
   })
@@ -1075,18 +1083,15 @@ describe('followCursor', () => {
 
     jest.runAllTimers()
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...first, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
     rect = instance.popperInstance.reference.getBoundingClientRect()
+
     expect(rect.left).toBe(first.clientX)
     expect(rect.right).toBe(first.clientX)
     expect(rect.top).toBe(referenceRect.top)
     expect(rect.bottom).toBe(referenceRect.bottom)
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...second, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(secondMouseMoveEvent)
     rect = instance.popperInstance.reference.getBoundingClientRect()
     expect(rect.left).toBe(second.clientX)
     expect(rect.right).toBe(second.clientX)
@@ -1103,18 +1108,14 @@ describe('followCursor', () => {
 
     jest.runAllTimers()
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...first, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
     rect = instance.popperInstance.reference.getBoundingClientRect()
     expect(rect.left).toBe(referenceRect.left)
     expect(rect.right).toBe(referenceRect.right)
     expect(rect.top).toBe(first.clientY)
     expect(rect.bottom).toBe(first.clientY)
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...second, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(secondMouseMoveEvent)
     rect = instance.popperInstance.reference.getBoundingClientRect()
     expect(rect.left).toBe(referenceRect.left)
     expect(rect.right).toBe(referenceRect.right)
@@ -1130,18 +1131,14 @@ describe('followCursor', () => {
 
     jest.runAllTimers()
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...first, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
     rect = instance.popperInstance.reference.getBoundingClientRect()
     expect(rect.left).toBe(first.clientX)
     expect(rect.right).toBe(first.clientX)
     expect(rect.top).toBe(first.clientY)
     expect(rect.bottom).toBe(first.clientY)
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...second, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(secondMouseMoveEvent)
     rect = instance.popperInstance.reference.getBoundingClientRect()
     expect(rect.left).toBe(first.clientX)
     expect(rect.right).toBe(first.clientX)
@@ -1158,9 +1155,7 @@ describe('followCursor', () => {
 
     jest.runAllTimers()
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...first, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
 
     jest.advanceTimersByTime(100)
 
@@ -1176,9 +1171,7 @@ describe('followCursor', () => {
 
     jest.runAllTimers()
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...first, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
 
     rect = instance.popperInstance.reference.getBoundingClientRect()
     followCursorTrueMatches(first)
@@ -1207,15 +1200,13 @@ describe('followCursor', () => {
 
     jest.runAllTimers()
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...first, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
 
     rect = instance.popperInstance.reference.getBoundingClientRect()
     expect(rect.left).toBe(padding)
     expect(rect.right).toBe(padding)
-    expect(rect.top).toBe(first.clientY)
-    expect(rect.bottom).toBe(first.clientY)
+    expect(rect.top).toBe(window.innerHeight - padding)
+    expect(rect.bottom).toBe(window.innerHeight - padding)
   })
 
   it('does not continue to follow if interactive: true and cursor is over popper', () => {
@@ -1227,16 +1218,12 @@ describe('followCursor', () => {
 
     jest.runAllTimers()
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...first, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
 
     const referenceRect = instance.reference.getBoundingClientRect()
     rect = instance.popperInstance.reference.getBoundingClientRect()
 
-    instance.popper.dispatchEvent(
-      new MouseEvent('mousemove', { ...second, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(secondMouseMoveEvent)
     expect(rect.left).toBe(first.clientX)
     expect(rect.right).toBe(first.clientX)
     expect(rect.top).toBe(referenceRect.top)
@@ -1272,9 +1259,7 @@ describe('followCursor', () => {
     jest.runAllTimers()
 
     instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', { ...first, bubbles: true }),
-    )
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
 
     rect = instance.popperInstance.reference.getBoundingClientRect()
     followCursorTrueMatches({ clientY: 0, clientX: 0 })
