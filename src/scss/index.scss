@@ -23,6 +23,7 @@
   text-align: center;
   background-color: #333;
   overflow: hidden;
+  transition-property: visibility, opacity, transform;
 
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {

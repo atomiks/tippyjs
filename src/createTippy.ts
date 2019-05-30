@@ -910,8 +910,6 @@ export default function createTippy(
     cleanupInteractiveMouseListeners()
     debouncedOnMouseMove = debounce(onMouseMove, nextProps.interactiveDebounce)
 
-    setTransitionDuration(getTransitionableElements(), 0)
-
     updatePopperElement(popper, prevProps, nextProps, instance.state.isVisible)
     instance.popperChildren = getChildren(popper)
 
