@@ -128,10 +128,12 @@ export default function createTippy(
   }
 
   if (__DEV__) {
-    // @ts-ignore
-    instance.set = (): void => {
-      warnWhen(true, '`set()` was renamed to `setProps()` in v5.')
-    }
+    Object.defineProperty(instance, 'set', {
+      value(): void {
+        warnWhen(true, '`set()` was renamed to `setProps()` in v5.')
+      },
+      enumerable: false,
+    })
   }
 
   /* ==================== Initial instance mutations =================== */
