@@ -6,13 +6,8 @@ import bindGlobalEventListeners, {
   currentInput,
 } from './bindGlobalEventListeners'
 import { arrayFrom } from './ponyfills'
-import {
-  isRealElement,
-  getArrayOfElements,
-  isReferenceElement,
-  warnWhen,
-} from './utils'
-import { validateTargets, validateProps } from './validation'
+import { isRealElement, getArrayOfElements, isReferenceElement } from './utils'
+import { warnWhen, validateTargets, validateProps } from './validation'
 import { POPPER_SELECTOR } from './constants'
 import {
   Props,

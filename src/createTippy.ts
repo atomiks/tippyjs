@@ -32,10 +32,9 @@ import {
   setTransitionDuration,
   setVisibilityState,
   debounce,
-  warnWhen,
   isRealElement,
 } from './utils'
-import { validateProps } from './validation'
+import { warnWhen, validateProps } from './validation'
 
 interface Listener {
   eventType: string

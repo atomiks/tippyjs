@@ -1,6 +1,28 @@
 import { Props, Targets } from './types'
-import { hasOwnProperty, includes, warnWhen, throwErrorWhen } from './utils'
+import { hasOwnProperty, includes } from './utils'
 import { defaultProps } from './props'
+
+/**
+ * Helpful wrapper around `console.warn()`.
+ * TODO: Should we use a cache so it only warns a single time and not spam the
+ * console? (Need to consider hot reloading and invalidation though). Chrome
+ * already batches warnings as well.
+ */
+export function warnWhen(condition: boolean, message: string): void {
+  if (condition) {
+    /* eslint-disable-next-line no-console */
+    console.warn(`[tippy.js WARNING] ${message}`)
+  }
+}
+
+/**
+ * Helpful wrapper around thrown errors
+ */
+export function throwErrorWhen(condition: boolean, message: string): void {
+  if (condition) {
+    throw new Error(`[tippy.js ERROR] ${message}`)
+  }
+}
 
 /**
  * Validates props with the valid `defaultProps` object

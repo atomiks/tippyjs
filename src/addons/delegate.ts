@@ -1,6 +1,6 @@
 import { Targets, Instance, Props } from '../types'
 import tippy from '..'
-import { throwErrorWhen } from '../utils'
+import { throwErrorWhen } from '../validation'
 
 interface ListenerObj {
   element: Element

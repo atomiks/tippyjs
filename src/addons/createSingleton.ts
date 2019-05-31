@@ -1,6 +1,7 @@
 import { Instance } from '../types'
 import tippy from '..'
-import { getValue, throwErrorWhen, hasOwnProperty } from '../utils'
+import { getValue, hasOwnProperty } from '../utils'
+import { throwErrorWhen } from '../validation'
 
 interface InstanceMaybePartOfSingleton extends Instance {
   __singleton__?: boolean

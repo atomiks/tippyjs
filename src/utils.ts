@@ -180,22 +180,3 @@ export function debounce<T>(
     }, ms)
   }
 }
-
-/**
- * Helpful wrapper around `console.warn()`
- */
-export function warnWhen(condition: boolean, message: string): void {
-  if (condition) {
-    /* eslint-disable-next-line no-console */
-    console.warn(`[tippy.js WARNING] ${message}`)
-  }
-}
-
-/**
- * Helpful wrapper around thrown errors
- */
-export function throwErrorWhen(condition: boolean, message: string): void {
-  if (condition) {
-    throw new Error(`[tippy.js ERROR] ${message}`)
-  }
-}
