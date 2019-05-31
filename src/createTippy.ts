@@ -348,7 +348,7 @@ export default function createTippy(
       on(
         'click',
         (): void => {
-          if (instance.props.hideOnClick === true) {
+          if (!currentInput.isTouch && instance.props.hideOnClick === true) {
             instance.hide()
           }
         },
