@@ -183,6 +183,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   tooltip.className = TOOLTIP_CLASS
   tooltip.id = `__NAMESPACE_PREFIX__-${id}`
   tooltip.setAttribute('data-state', 'hidden')
+  tooltip.setAttribute('tabindex', '-1')
 
   updateTheme(tooltip, 'add', props.theme)
 

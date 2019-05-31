@@ -558,6 +558,7 @@ export default function createTippy(
       return
     }
 
+    // If focus was moved to within the popper
     if (
       instance.props.interactive &&
       event.relatedTarget &&
