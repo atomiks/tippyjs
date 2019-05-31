@@ -1120,6 +1120,8 @@ export default function createTippy(
       return
     }
 
+    // `destroy()`'s `hide()` call should not be ignored
+    instance.enable()
     instance.hide(0)
 
     removeTriggersFromEventListenersTarget()

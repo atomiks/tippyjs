@@ -111,6 +111,14 @@ describe('instance.destroy()', () => {
     instance.destroy()
     expect(ref._tippy).toBeDefined()
   })
+
+  it('still unmounts the tippy if the instance is disabled', () => {
+    instance = createTippy(h(), defaultProps)
+    instance.show()
+    instance.disable()
+    instance.destroy()
+    expect(instance.state.isMounted).toBe(false)
+  })
 })
 
 describe('instance.show()', () => {
