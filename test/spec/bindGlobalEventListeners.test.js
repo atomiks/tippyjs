@@ -7,13 +7,21 @@ import { IOS_CLASS } from '../../src/constants'
 afterEach(cleanDocumentBody)
 
 describe('onDocumentTouchStart', () => {
-  it('sets isUsingTouch to `true` and adds tippy-iOS class to body', () => {
+  it('sets input.touch to `true` and adds tippy-iOS class to body', () => {
     const bodyClass = document.body.classList
     expect(bodyClass.contains(IOS_CLASS)).toBe(false)
     Listeners.onDocumentTouchStart()
     Listeners.onDocumentTouchStart()
-    expect(Listeners.isUsingTouch).toBe(true)
+    expect(Listeners.currentInput.isTouch).toBe(true)
     expect(bodyClass.contains(IOS_CLASS)).toBe(true)
+  })
+
+  it('is undone if two consecutive mousemove events are fired', () => {
+    // NOTE: this is dependent on the previous test
+    Listeners.onDocumentMouseMove()
+    Listeners.onDocumentMouseMove()
+    expect(Listeners.currentInput.isTouch).toBe(false)
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(true)
   })
 })
 

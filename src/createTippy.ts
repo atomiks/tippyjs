@@ -10,7 +10,7 @@ import {
 import { isIE } from './browser'
 import { closestCallback } from './ponyfills'
 import { PASSIVE, PADDING } from './constants'
-import { isUsingTouch } from './bindGlobalEventListeners'
+import { currentInput } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
   createPopperElement,
@@ -189,7 +189,7 @@ export default function createTippy(
   function getIsInFollowCursorMode(): boolean {
     return (
       instance.props.followCursor &&
-      !isUsingTouch &&
+      !currentInput.isTouch &&
       lastTriggerEventType !== 'focus'
     )
   }
@@ -228,7 +228,7 @@ export default function createTippy(
 
     // Clicked on the event listeners target
     if (getEventListenersTarget().contains(event.target as Element)) {
-      if (isUsingTouch) {
+      if (currentInput.isTouch) {
         return
       }
 
@@ -576,8 +576,8 @@ export default function createTippy(
     const { touchHold } = instance.props
 
     return (
-      (supportsTouch && isUsingTouch && touchHold && !isTouchEvent) ||
-      (isUsingTouch && !touchHold && isTouchEvent)
+      (supportsTouch && currentInput.isTouch && touchHold && !isTouchEvent) ||
+      (currentInput.isTouch && !touchHold && isTouchEvent)
     )
   }
 
@@ -718,7 +718,7 @@ export default function createTippy(
     const isInFollowCursorMode = getIsInFollowCursorMode()
     const shouldEnableListeners =
       !isInFollowCursorMode &&
-      !(instance.props.followCursor === 'initial' && isUsingTouch)
+      !(instance.props.followCursor === 'initial' && currentInput.isTouch)
 
     if (!instance.popperInstance) {
       createPopperInstance()
@@ -750,7 +750,7 @@ export default function createTippy(
     if (
       isInFollowCursorMode ||
       // Allows `followCursor: 'initial'` on touch devices
-      (isUsingTouch &&
+      (currentInput.isTouch &&
         lastMouseMoveEvent &&
         instance.props.followCursor === 'initial')
     ) {
@@ -964,13 +964,14 @@ export default function createTippy(
     const isAlreadyVisible = instance.state.isVisible
     const isDestroyed = instance.state.isDestroyed
     const isDisabled = !instance.state.isEnabled
-    const isUsingTouchAndTouchDisabled = isUsingTouch && !instance.props.touch
+    const isTouchAndTouchDisabled =
+      currentInput.isTouch && !instance.props.touch
 
     if (
       isAlreadyVisible ||
       isDestroyed ||
       isDisabled ||
-      isUsingTouchAndTouchDisabled
+      isTouchAndTouchDisabled
     ) {
       return
     }

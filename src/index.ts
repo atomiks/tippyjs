@@ -2,7 +2,9 @@ import { version } from '../package.json'
 import { isBrowser } from './browser'
 import { defaultProps } from './props'
 import createTippy from './createTippy'
-import bindGlobalEventListeners from './bindGlobalEventListeners'
+import bindGlobalEventListeners, {
+  currentInput,
+} from './bindGlobalEventListeners'
 import { arrayFrom } from './ponyfills'
 import {
   isRealElement,
@@ -68,6 +70,7 @@ function tippy(
 
 tippy.version = version
 tippy.defaultProps = defaultProps
+tippy.currentInput = currentInput
 
 /**
  * Mutates the defaultProps object by setting the props specified

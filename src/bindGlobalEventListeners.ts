@@ -1,21 +1,21 @@
 import { isIOS } from './browser'
 import { PASSIVE, IOS_CLASS } from './constants'
 
-export let isUsingTouch = false
+export const currentInput = { isTouch: false }
 let lastMouseMoveTime = 0
 
 /**
  * When a `touchstart` event is fired, it's assumed the user is using touch
  * input. We'll bind a `mousemove` event listener to listen for mouse input in
- * the future. This way, the `isUsingTouch` variable is fully dynamic and will
- * handle hybrid devices that use a mix of touch + mouse input.
+ * the future. This way, the `isTouch` property is fully dynamic and will handle
+ * hybrid devices that use a mix of touch + mouse input.
  */
 export function onDocumentTouchStart(): void {
-  if (isUsingTouch) {
+  if (currentInput.isTouch) {
     return
   }
 
-  isUsingTouch = true
+  currentInput.isTouch = true
 
   if (isIOS) {
     document.body.classList.add(IOS_CLASS)
@@ -35,7 +35,7 @@ export function onDocumentMouseMove(): void {
   const now = performance.now()
 
   if (now - lastMouseMoveTime < 20) {
-    isUsingTouch = false
+    currentInput.isTouch = false
 
     document.removeEventListener('mousemove', onDocumentMouseMove)
 
