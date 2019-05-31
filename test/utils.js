@@ -15,7 +15,7 @@ export function hasTippy(el) {
   return !!el._tippy
 }
 
-export function h(nodeName = 'div', attributes = {}) {
+export function h(nodeName = 'button', attributes = {}) {
   const el = document.createElement(nodeName)
   el.className = IDENTIFIER
 

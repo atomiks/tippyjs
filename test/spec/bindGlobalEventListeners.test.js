@@ -1,4 +1,4 @@
-import { cleanDocumentBody } from '../utils'
+import { cleanDocumentBody, h } from '../utils'
 
 import tippy from '../../src'
 import * as Listeners from '../../src/bindGlobalEventListeners'
@@ -26,16 +26,22 @@ describe('onDocumentTouchStart', () => {
 })
 
 describe('onWindowBlur', () => {
-  it('blurs reference elements', () => {
-    const ref = document.createElement('button')
-    tippy(ref, { content: 'content' })
-    document.body.append(ref)
-    let called = false
-    ref.addEventListener('blur', () => {
-      called = true
-    })
-    ref.focus()
+  it('does not blur reference element if the tippy is visible', () => {
+    const instance = tippy(h(), { trigger: 'manual' })
+    const spy = jest.fn()
+    instance.reference.addEventListener('blur', spy)
+    instance.reference.focus()
+    instance.show()
     Listeners.onWindowBlur()
-    expect(called).toBe(true)
+    expect(spy).not.toHaveBeenCalled()
+  })
+
+  it('does blur reference element if the tippy is not visible', () => {
+    const instance = tippy(h(), { trigger: 'manual' })
+    const spy = jest.fn()
+    instance.reference.addEventListener('blur', spy)
+    instance.reference.focus()
+    Listeners.onWindowBlur()
+    expect(spy).toHaveBeenCalled()
   })
 })
