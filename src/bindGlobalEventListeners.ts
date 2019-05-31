@@ -55,7 +55,6 @@ export function onDocumentMouseMove(): void {
  */
 export function onWindowBlur(): void {
   const { activeElement }: { activeElement: any } = document
-
   const instance = activeElement._tippy
 
   if (
