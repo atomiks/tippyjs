@@ -53,8 +53,10 @@ describe('tippy', () => {
       '[tippy.js WARNING] ' +
         '`tippy()` was passed a targets argument that will create more than ' +
         'one tippy instance, but only a single element was supplied as the ' +
-        '`content` option. Use a function that returns a cloned version of ' +
-        'the element instead, or pass the .innerHTML of the template element.',
+        '`content` prop. This means the content will only be appended to the ' +
+        'last tippy element of the list. Instead, use a function that ' +
+        'returns a cloned version of the element instead, or pass the ' +
+        '.innerHTML of the element.',
     )
     spy.mockRestore()
   })
