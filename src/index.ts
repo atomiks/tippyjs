@@ -112,21 +112,27 @@ tippy.hideAll = ({
 }
 
 if (__DEV__) {
-  tippy.group = (): void => {
-    warnWhen(
-      true,
-      '`tippy.group()` was removed in v5 and replaced with ' +
-        '`createSingleton()`. Read more here: ' +
-        'https://atomiks.github.io/tippyjs/addons#singleton',
-    )
-  }
+  Object.defineProperty(tippy, 'group', {
+    value: (): void => {
+      warnWhen(
+        true,
+        '`tippy.group()` was removed in v5 and replaced with ' +
+          '`createSingleton()`. Read more here: ' +
+          'https://atomiks.github.io/tippyjs/addons#singleton',
+      )
+    },
+    enumerable: false,
+  })
 
-  tippy.setDefaults = (): void => {
-    warnWhen(
-      true,
-      '`tippy.setDefaults()` was renamed to `tippy.setDefaultProps()` in v5.',
-    )
-  }
+  Object.defineProperty(tippy, 'setDefaults', {
+    value: (): void => {
+      warnWhen(
+        true,
+        '`tippy.setDefaults()` was renamed to `tippy.setDefaultProps()` in v5.',
+      )
+    },
+    enumerable: false,
+  })
 
   Object.defineProperty(tippy, 'defaults', {
     get(): void {
@@ -137,6 +143,7 @@ if (__DEV__) {
       )
       return undefined
     },
+    enumerable: false,
   })
 }
 
