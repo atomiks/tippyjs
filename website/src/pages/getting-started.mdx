@@ -4,7 +4,27 @@ path: /getting-started/
 index: 1
 ---
 
-### Option 1: CDN
+The package is available on npm:
+
+```bash
+# npm
+npm i tippy.js
+
+# Yarn
+yarn add tippy.js
+```
+
+In your application, import the `tippy` module:
+
+```js
+import tippy from 'tippy.js'
+```
+
+This assumes you're using a module bundler like webpack or Parcel. When
+deploying for production, your minifier should remove the development warnings
+and error messages.
+
+### Script tags via CDN
 
 Tippy uses `popper.js` as a dependency for positioning. Include these script
 tags in your document:
@@ -15,37 +35,35 @@ tags in your document:
 ```
 
 Place them at the very bottom of the `<body>`, ensuring they are placed before
-your own scripts.
+your own scripts. The version numbers after `@` are important, make sure they
+don't get removed! They indicate the major version and won't have breaking
+changes when new versions get released.
 
-The version numbers after `@` are important, make sure they don't get removed!
-They indicate the major version and won't have breaking changes when new
-versions get released.
+#### Development version
 
-### Option 2: Package Manager
+While developing, it's recommended to use the development file which includes
+helpful warnings and error messages when something goes wrong:
 
-Install using either npm or Yarn:
-
-```bash
-# npm
-npm i tippy.js
-
-# Yarn
-yarn add tippy.js
+```html
+<script src="https://unpkg.com/popper.js@1"></script>
+<script src="https://unpkg.com/tippy.js@5/iife/tippy.bundle.js"></script>
 ```
 
-Then, import the `tippy` module:
+When you're finished developing (or deploying for production), you can remove
+everything after `@5` (the production file as listed before).
 
-```js
-import tippy from 'tippy.js'
-```
+### CSS
 
-### Package
+Tippy includes a 1 kB CSS stylesheet by default. When including the script link
+above, the CSS stylesheet is injected into its own `<style>` tag in `<head>`. If
+for some reason you cannot use this, you can include the CSS separately in a
+`<link>` tag.
 
-You can view its contents here: https://unpkg.com/tippy.js@5/
+View the package contents here: https://unpkg.com/tippy.js@5/
 
 - `tippy.bundle.js` = Main JS + Main CSS injected into `<head>` (default)
-- `tippy.js` = Main JS
-- `index.css` = Main CSS
+- `tippy.js` = Main JS only
+- `tippy.css` = Main CSS only
 
 ### Frameworks
 

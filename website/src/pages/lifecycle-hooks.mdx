@@ -8,7 +8,7 @@ Lifecycle hooks provide a way to run code in response to a certain part of a
 tippy's lifecycle.
 
 They are listed here in the usual order in which they occur. Every lifecycle
-hook takes the `instance` as its first argument.
+hook takes the [`instance`](/tippy-instance) as its first argument.
 
 #### onCreate
 
@@ -39,7 +39,7 @@ tippy('button', {
 
 Executed when a tippy begins to show, but before it gets mounted to the DOM.
 
-You can return `false` to cancel the tippy from showing.
+You can optionally return `false` to cancel the tippy from showing.
 
 ```js
 tippy('button', {
@@ -76,7 +76,7 @@ tippy('button', {
 
 #### onUntrigger
 
-Executed when a tippy was triggered by a DOM event (e.g. mouseleave, blur,
+Executed when a tippy was untriggered by a DOM event (e.g. mouseleave, blur,
 click), but before it starts to hide.
 
 ```js
@@ -91,7 +91,7 @@ tippy('button', {
 
 Executed when a tippy begins to hide and transition out.
 
-You can return `false` to cancel the tippy from hiding.
+You can optionally return `false` to cancel the tippy from hiding.
 
 ```js
 tippy('button', {

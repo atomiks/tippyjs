@@ -73,27 +73,15 @@ Prism.languages.javascript.constant = [
   },
 ]
 
-Prism.languages.javascript.string = [
-  {
-    pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*(?=\1)/,
-    lookbehind: true,
+Prism.languages.javascript.string = {
+  pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
+  greedy: true,
+  inside: {
+    punctuation: /^["']|["']$/,
   },
-  {
-    pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*(?=\1)/,
-    alias: 'quote',
-  },
-  {
-    pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*(["'])/,
-    lookbehind: true,
-    alias: 'quote',
-  },
-]
+}
 
 Prism.languages.insertBefore('javascript', 'keyword', {
-  quote: {
-    pattern: /['"`]/,
-    alias: 'punctuation',
-  },
   parameter: [
     {
       pattern: /(function(?:\s+[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*)?\s*\(\s*)[^\s()][^()]*?(?=\s*\))/,

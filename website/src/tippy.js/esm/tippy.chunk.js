@@ -31,8 +31,7 @@ var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
 var ua = isBrowser ? navigator.userAgent : ''
 var isIE = /MSIE |Trident\//.test(ua)
 var isUCBrowser = /UCBrowser\//.test(ua)
-var isIOS =
-  isBrowser && /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream
+var isIOS = isBrowser && /iPhone|iPad|iPod/.test(navigator.platform)
 
 var defaultProps = {
   allowHTML: true,
@@ -146,21 +145,23 @@ var BACKDROP_SELECTOR = '.'.concat(BACKDROP_CLASS)
 var ARROW_SELECTOR = '.'.concat(ARROW_CLASS)
 var SVG_ARROW_SELECTOR = '.'.concat(SVG_ARROW_CLASS)
 
-var isUsingTouch = false
+var currentInput = {
+  isTouch: false,
+}
 var lastMouseMoveTime = 0
 /**
  * When a `touchstart` event is fired, it's assumed the user is using touch
  * input. We'll bind a `mousemove` event listener to listen for mouse input in
- * the future. This way, the `isUsingTouch` variable is fully dynamic and will
- * handle hybrid devices that use a mix of touch + mouse input.
+ * the future. This way, the `isTouch` property is fully dynamic and will handle
+ * hybrid devices that use a mix of touch + mouse input.
  */
 
 function onDocumentTouchStart() {
-  if (isUsingTouch) {
+  if (currentInput.isTouch) {
     return
   }
 
-  isUsingTouch = true
+  currentInput.isTouch = true
 
   if (isIOS) {
     document.body.classList.add(IOS_CLASS)
@@ -180,7 +181,7 @@ function onDocumentMouseMove() {
   var now = performance.now()
 
   if (now - lastMouseMoveTime < 20) {
-    isUsingTouch = false
+    currentInput.isTouch = false
     document.removeEventListener('mousemove', onDocumentMouseMove)
 
     if (!isIOS) {
@@ -200,8 +201,14 @@ function onDocumentMouseMove() {
 function onWindowBlur() {
   var _document = document,
     activeElement = _document.activeElement
+  var instance = activeElement._tippy
 
-  if (activeElement && activeElement.blur && activeElement._tippy) {
+  if (
+    activeElement &&
+    activeElement.blur &&
+    instance &&
+    !instance.state.isVisible
+  ) {
     activeElement.blur()
   }
 }
@@ -408,16 +415,6 @@ function debounce(fn, ms) {
     }, ms)
   }
 }
-/**
- * Helpful wrapper around `console.warn()`
- */
-
-function warnWhen(condition, message) {
-  if (condition) {
-    /* eslint-disable-next-line no-console */
-    console.warn('[tippy.js WARNING] '.concat(message))
-  }
-}
 
 /**
  * Sets the innerHTML of an element
@@ -531,7 +528,7 @@ function updateTransitionEndListener(tooltip, action, listener) {
  * Returns the popper's placement, ignoring shifting (top-start, etc)
  */
 
-function getBasicPlacement(placement) {
+function getBasePlacement(placement) {
   return placement.split('-')[0]
 }
 /**
@@ -561,6 +558,7 @@ function createPopperElement(id, props) {
   tooltip.className = TOOLTIP_CLASS
   tooltip.id = 'tippy-'.concat(id)
   tooltip.setAttribute('data-state', 'hidden')
+  tooltip.setAttribute('tabindex', '-1')
   updateTheme(tooltip, 'add', props.theme)
   var content = div()
   content.className = CONTENT_CLASS
@@ -701,6 +699,28 @@ function isCursorOutsideInteractiveBorder(
 }
 
 /**
+ * Helpful wrapper around `console.warn()`.
+ * TODO: Should we use a cache so it only warns a single time and not spam the
+ * console? (Need to consider hot reloading and invalidation though). Chrome
+ * already batches warnings as well.
+ */
+
+function warnWhen(condition, message) {
+  if (condition) {
+    /* eslint-disable-next-line no-console */
+    console.warn('[tippy.js WARNING] '.concat(message))
+  }
+}
+/**
+ * Helpful wrapper around thrown errors
+ */
+
+function throwErrorWhen(condition, message) {
+  if (condition) {
+    throw new Error('[tippy.js ERROR] '.concat(message))
+  }
+}
+/**
  * Validates props with the valid `defaultProps` object
  */
 
@@ -719,6 +739,8 @@ function validateProps() {
       prop === 'theme' &&
       includes(['dark', 'light', 'light-border', 'translucent'], value)
     var didPassGoogleTheme = prop === 'theme' && value === 'google'
+    var didSpecifyPlacementInPopperOptions =
+      prop === 'popperOptions' && value && hasOwnProperty(value, 'placement')
     warnWhen(
       didPassTargetprop,
       'The `target` prop was removed in v5 and ' +
@@ -754,6 +776,11 @@ function validateProps() {
       didPassGoogleTheme,
       'The default theme `google` was renamed to ' + '`tippy-material` in v5.',
     )
+    warnWhen(
+      didSpecifyPlacementInPopperOptions,
+      'Specifying `placement` in `popperOptions` is not supported. Use the ' +
+        'base-level `placement` prop instead.',
+    )
   })
 }
 /**
@@ -765,14 +792,14 @@ function validateTargets(targets) {
   var didPassPlainObject =
     Object.prototype.toString.call(targets) === '[object Object]' &&
     !targets.addEventListener
-  warnWhen(
+  throwErrorWhen(
     didPassFalsyValue,
     '`tippy()` was passed `' +
       targets +
       '` (an invalid falsy value) as its targets argument. Valid types are: ' +
       'String (CSS selector), Element, Element[], or NodeList.',
   )
-  warnWhen(
+  throwErrorWhen(
     didPassPlainObject,
     '`tippy()` was passed a plain object (virtual ' +
       'reference element) which is no longer supported in v5. Instead, pass ' +
@@ -805,6 +832,7 @@ function createTippy(reference, collectionProps) {
   var isScheduledToShow = false
   var currentPlacement = props.placement
   var hasMountCallbackRun = false
+  var didHideDueToDocumentMouseDown = false
   var currentMountCallback
   var currentTransitionEndListener
   var listeners = []
@@ -849,8 +877,18 @@ function createTippy(reference, collectionProps) {
     enable: enable,
     disable: disable,
     destroy: destroy,
-    /* ==================== Initial instance mutations =================== */
   }
+
+  if (process.env.NODE_ENV !== 'production') {
+    Object.defineProperty(instance, 'set', {
+      value: function value() {
+        warnWhen(true, '`set()` was renamed to `setProps()` in v5.')
+      },
+      enumerable: false,
+    })
+  }
+  /* ==================== Initial instance mutations =================== */
+
   reference._tippy = instance
   popper._tippy = instance
   addTriggersToEventListenersTarget()
@@ -883,19 +921,15 @@ function createTippy(reference, collectionProps) {
   /* ======================= 🔒 Private methods 🔒 ======================= */
 
   function getIsVerticalPlacement() {
-    return includes(['top', 'bottom'], getBasicPlacement(currentPlacement))
+    return includes(['top', 'bottom'], getBasePlacement(currentPlacement))
   }
 
   function getIsOppositePlacement() {
-    return includes(['bottom', 'right'], getBasicPlacement(currentPlacement))
+    return includes(['bottom', 'right'], getBasePlacement(currentPlacement))
   }
 
   function getIsInFollowCursorMode() {
-    return (
-      instance.props.followCursor &&
-      !isUsingTouch &&
-      lastTriggerEventType !== 'focus'
-    )
+    return instance.props.followCursor && lastTriggerEventType !== 'focus'
   }
 
   function getTransitionableElements() {
@@ -921,14 +955,14 @@ function createTippy(reference, collectionProps) {
     return instance.props.triggerTarget || reference
   }
 
-  function onDocumentClick(event) {
+  function onDocumentMouseDown(event) {
     // Clicked on interactive popper
     if (instance.props.interactive && popper.contains(event.target)) {
       return
     } // Clicked on the event listeners target
 
     if (getEventListenersTarget().contains(event.target)) {
-      if (isUsingTouch) {
+      if (currentInput.isTouch) {
         return
       }
 
@@ -942,16 +976,28 @@ function createTippy(reference, collectionProps) {
 
     if (instance.props.hideOnClick === true) {
       instance.clearDelayTimeouts()
-      instance.hide()
+      instance.hide() // `mousedown` event is fired right before `focus`. This lets a tippy with
+      // `focus` trigger know that it should not show
+
+      didHideDueToDocumentMouseDown = true
+      setTimeout(function() {
+        didHideDueToDocumentMouseDown = false
+      }) // The listener gets added in `scheduleShow()`, but this may be hiding it
+      // before it shows, and hide()'s early bail-out behavior can prevent it
+      // from being cleaned up
+
+      if (!instance.state.isMounted) {
+        removeDocumentMouseDownListener()
+      }
     }
   }
 
-  function addDocumentClickListener() {
-    document.addEventListener('click', onDocumentClick, true)
+  function addDocumentMouseDownListener() {
+    document.addEventListener('mousedown', onDocumentMouseDown, true)
   }
 
-  function removeDocumentClickListener() {
-    document.removeEventListener('click', onDocumentClick, true)
+  function removeDocumentMouseDownListener() {
+    document.removeEventListener('mousedown', onDocumentMouseDown, true)
   }
 
   function makeSticky() {
@@ -1022,6 +1068,14 @@ function createTippy(reference, collectionProps) {
     if (instance.props.touchHold) {
       on('touchstart', onTrigger, PASSIVE)
       on('touchend', onMouseLeave, PASSIVE)
+    } // `click` for keyboard. Mouse uses `mousedown` (onDocumentMouseDown)
+
+    if (!includes(instance.props.trigger, 'click')) {
+      on('click', function() {
+        if (!currentInput.isTouch && instance.props.hideOnClick === true) {
+          instance.hide()
+        }
+      })
     }
 
     instance.props.trigger
@@ -1056,80 +1110,63 @@ function createTippy(reference, collectionProps) {
     listeners = []
   }
 
-  function getCorrectedPadding(placement) {
-    return instance.props.arrow
-      ? currentComputedPadding[placement] +
-          (instance.props.arrowType === 'round' ? 18 : 16)
-      : currentComputedPadding[placement]
-  }
-
   function positionVirtualReferenceNearCursor(event) {
     var _lastMouseMoveEvent = (lastMouseMoveEvent = event),
-      clientX = _lastMouseMoveEvent.clientX,
-      clientY = _lastMouseMoveEvent.clientY // Gets set once popperInstance `onCreate` has been called
+      x = _lastMouseMoveEvent.clientX,
+      y = _lastMouseMoveEvent.clientY // Gets set once popperInstance `onCreate` has been called
 
     if (!currentComputedPadding) {
       return
-    }
-
-    var rect = reference.getBoundingClientRect()
-    var followCursor = instance.props.followCursor
-    var isHorizontal = followCursor === 'horizontal'
-    var isVertical = followCursor === 'vertical' // Ensure virtual reference is padded to prevent tooltip from overflowing.
-    // Seems to be a Popper.js issue
-
-    var padding = _extends({}, currentComputedPadding)
-
-    var isVerticalPlacement = getIsVerticalPlacement()
-
-    if (isVerticalPlacement) {
-      padding.left = getCorrectedPadding('left')
-      padding.right = getCorrectedPadding('right')
-    } else {
-      padding.top = getCorrectedPadding('top')
-      padding.bottom = getCorrectedPadding('bottom')
-    } // TODO: Remove the following later if Popper.js changes/fixes the
-    // behavior
-    // Top / left boundary
-
-    var x = isVerticalPlacement ? Math.max(padding.left, clientX) : clientX
-    var y = !isVerticalPlacement ? Math.max(padding.top, clientY) : clientY // Bottom / right boundary
-
-    if (isVerticalPlacement && x > padding.right) {
-      x = Math.min(clientX, window.innerWidth - padding.right)
-    }
-
-    if (!isVerticalPlacement && y > padding.bottom) {
-      y = Math.min(clientY, window.innerHeight - padding.bottom)
     } // If the instance is interactive, avoid updating the position unless it's
     // over the reference element
 
     var isCursorOverReference = closestCallback(event.target, function(el) {
       return el === reference
     })
+    var rect = reference.getBoundingClientRect()
+    var followCursor = instance.props.followCursor
+    var isHorizontal = followCursor === 'horizontal'
+    var isVertical = followCursor === 'vertical' // The virtual reference needs some size to prevent itself from overflowing
+
+    var fakeSize = 100
+    var halfFakeSize = fakeSize / 2
+    var isVerticalPlacement = getIsVerticalPlacement()
+    var verticalIncrease = isVerticalPlacement ? 0 : halfFakeSize
+    var horizontalIncrease = isVerticalPlacement ? halfFakeSize : 0
 
     if (isCursorOverReference || !instance.props.interactive) {
-      instance.popperInstance.reference.getBoundingClientRect = function() {
-        return {
-          width: 0,
-          height: 0,
-          top: isHorizontal ? rect.top : y,
-          bottom: isHorizontal ? rect.bottom : y,
-          left: isVertical ? rect.left : x,
-          right: isVertical ? rect.right : x,
-        }
+      instance.popperInstance.reference = {
+        // These `clientWidth` values don't get used by Popper.js if they are 0
+        clientWidth: 0,
+        clientHeight: 0,
+        getBoundingClientRect: function getBoundingClientRect() {
+          return {
+            width: isVerticalPlacement ? fakeSize : 0,
+            height: isVerticalPlacement ? 0 : fakeSize,
+            top: (isHorizontal ? rect.top : y) - verticalIncrease,
+            bottom: (isHorizontal ? rect.bottom : y) + verticalIncrease,
+            left: (isVertical ? rect.left : x) - horizontalIncrease,
+            right: (isVertical ? rect.right : x) + horizontalIncrease,
+          }
+        },
       }
-
       instance.popperInstance.scheduleUpdate()
     }
 
-    if (followCursor === 'initial' && instance.state.isVisible) {
+    if (
+      currentInput.isTouch ||
+      (followCursor === 'initial' && instance.state.isVisible)
+    ) {
       removeFollowCursorListener()
     }
   }
 
   function onTrigger(event) {
-    if (!instance.state.isEnabled || isEventListenerStopped(event)) {
+    if (
+      didHideDueToDocumentMouseDown ||
+      !instance.state.isEnabled ||
+      isEventListenerStopped(event)
+    ) {
       return
     }
 
@@ -1172,7 +1209,7 @@ function createTippy(reference, collectionProps) {
 
     if (
       isCursorOutsideInteractiveBorder(
-        getBasicPlacement(currentPlacement),
+        getBasePlacement(currentPlacement),
         popper.getBoundingClientRect(),
         event,
         instance.props,
@@ -1201,7 +1238,7 @@ function createTippy(reference, collectionProps) {
   function onBlur(event) {
     if (event.target !== getEventListenersTarget()) {
       return
-    }
+    } // If focus was moved to within the popper
 
     if (
       instance.props.interactive &&
@@ -1219,8 +1256,8 @@ function createTippy(reference, collectionProps) {
     var isTouchEvent = includes(event.type, 'touch')
     var touchHold = instance.props.touchHold
     return (
-      (supportsTouch && isUsingTouch && touchHold && !isTouchEvent) ||
-      (isUsingTouch && !touchHold && isTouchEvent)
+      (supportsTouch && currentInput.isTouch && touchHold && !isTouchEvent) ||
+      (currentInput.isTouch && !touchHold && isTouchEvent)
     )
   }
 
@@ -1241,8 +1278,6 @@ function createTippy(reference, collectionProps) {
         setFlipModifierEnabled(instance.popperInstance.modifiers, false)
       } // Apply Popper's `x-*` attributes to the tooltip with `data-*`
 
-      popper.removeAttribute('x-placement')
-      popper.removeAttribute('x-out-of-boundaries')
       tooltip.setAttribute('data-placement', currentPlacement)
 
       if (data.attributes['x-out-of-boundaries'] !== false) {
@@ -1251,12 +1286,10 @@ function createTippy(reference, collectionProps) {
         tooltip.removeAttribute('data-out-of-boundaries')
       } // Apply the `distance` prop
 
-      var basicPlacement = getBasicPlacement(currentPlacement)
+      var BasePlacement = getBasePlacement(currentPlacement)
       var tooltipStyles = tooltip.style
-      tooltipStyles.top = ''
-      tooltipStyles.bottom = ''
-      tooltipStyles.left = ''
-      tooltipStyles.right = ''
+      tooltipStyles.top = '0'
+      tooltipStyles.left = '0'
       tooltipStyles[getIsVerticalPlacement() ? 'top' : 'left'] = ''.concat(
         (getIsOppositePlacement() ? 1 : -1) * instance.props.distance,
         'px',
@@ -1277,9 +1310,9 @@ function createTippy(reference, collectionProps) {
         !isPaddingNumber && padding,
       )
 
-      computedPadding[basicPlacement] = isPaddingNumber
+      computedPadding[BasePlacement] = isPaddingNumber
         ? padding + instance.props.distance
-        : (padding[basicPlacement] || 0) + instance.props.distance
+        : (padding[BasePlacement] || 0) + instance.props.distance
       instance.popperInstance.modifiers.filter(function(m) {
         return m.name === 'preventOverflow'
       })[0].padding = computedPadding
@@ -1363,23 +1396,17 @@ function createTippy(reference, collectionProps) {
   function mount() {
     hasMountCallbackRun = false
     var isInFollowCursorMode = getIsInFollowCursorMode()
-    var shouldEnableListeners =
-      !isInFollowCursorMode &&
-      !(instance.props.followCursor === 'initial' && isUsingTouch)
 
     if (!instance.popperInstance) {
       createPopperInstance()
 
-      if (shouldEnableListeners) {
+      if (!isInFollowCursorMode) {
         instance.popperInstance.enableEventListeners()
       }
     } else {
       if (!isInFollowCursorMode) {
         instance.popperInstance.scheduleUpdate()
-
-        if (shouldEnableListeners) {
-          instance.popperInstance.enableEventListeners()
-        }
+        instance.popperInstance.enableEventListeners()
       }
 
       setFlipModifierEnabled(
@@ -1391,30 +1418,13 @@ function createTippy(reference, collectionProps) {
     // Update the reference back to the real DOM element
 
     instance.popperInstance.reference = reference
-    var arrow = instance.popperChildren.arrow
 
-    if (isInFollowCursorMode) {
-      if (arrow) {
-        arrow.style.margin = '0'
-      }
-
-      if (lastMouseMoveEvent) {
+    if (isInFollowCursorMode && lastMouseMoveEvent) {
+      // TODO: If the tippy also has `updateDuration`, it transitions from
+      // the initial placement to the cursor point
+      requestAnimationFrame(function() {
         positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-      }
-    } else if (arrow) {
-      arrow.style.margin = ''
-    } // Allow followCursor: 'initial' on touch devices
-
-    if (
-      isUsingTouch &&
-      lastMouseMoveEvent &&
-      instance.props.followCursor === 'initial'
-    ) {
-      positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-
-      if (arrow) {
-        arrow.style.margin = '0'
-      }
+      })
     }
 
     var appendTo = instance.props.appendTo
@@ -1459,7 +1469,7 @@ function createTippy(reference, collectionProps) {
       document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
     }
 
-    addDocumentClickListener()
+    addDocumentMouseDownListener()
     var delay = getValue(instance.props.delay, 0, defaultProps.delay)
 
     if (delay) {
@@ -1547,16 +1557,8 @@ function createTippy(reference, collectionProps) {
     addTriggersToEventListenersTarget()
     cleanupInteractiveMouseListeners()
     debouncedOnMouseMove = debounce(onMouseMove, nextProps.interactiveDebounce)
-
-    content.style.transitionDelay = '0s'
-    tooltip.style.transitionProperty = 'opacity, background, transform'
-
     updatePopperElement(popper, prevProps, nextProps, instance.state.isVisible)
     instance.popperChildren = getChildren(popper)
-
-    requestAnimationFrame(() => {
-      tooltip.style.transitionProperty = ''
-    })
 
     if (instance.popperInstance) {
       if (
@@ -1608,13 +1610,13 @@ function createTippy(reference, collectionProps) {
     var isAlreadyVisible = instance.state.isVisible
     var isDestroyed = instance.state.isDestroyed
     var isDisabled = !instance.state.isEnabled
-    var isUsingTouchAndTouchDisabled = isUsingTouch && !instance.props.touch
+    var isTouchAndTouchDisabled = currentInput.isTouch && !instance.props.touch
 
     if (
       isAlreadyVisible ||
       isDestroyed ||
       isDisabled ||
-      isUsingTouchAndTouchDisabled
+      isTouchAndTouchDisabled
     ) {
       return
     } // Standardize `disabled` behavior across browsers.
@@ -1629,7 +1631,7 @@ function createTippy(reference, collectionProps) {
       return
     }
 
-    addDocumentClickListener()
+    addDocumentMouseDownListener()
     popper.style.visibility = 'visible'
     instance.state.isVisible = true // Prevent a transition of the popper from its previous position and of the
     // elements at a different placement.
@@ -1707,7 +1709,7 @@ function createTippy(reference, collectionProps) {
       return
     }
 
-    removeDocumentClickListener()
+    removeDocumentMouseDownListener()
     popper.style.visibility = 'hidden'
     instance.state.isVisible = false
     instance.state.isShown = false
@@ -1744,10 +1746,10 @@ function createTippy(reference, collectionProps) {
 
     if (instance.state.isDestroyed) {
       return
-    }
+    } // `destroy()`'s `hide()` call should not be ignored
 
+    instance.enable()
     instance.hide(0)
-
     removeTriggersFromEventListenersTarget()
     delete reference._tippy
 
@@ -1759,21 +1761,16 @@ function createTippy(reference, collectionProps) {
   }
 }
 
-var globalEventListenersBound = false
 /**
  * Exported module
  */
-
 function tippy(targets, optionalProps) {
   if (process.env.NODE_ENV !== 'production') {
     validateTargets(targets)
     validateProps(optionalProps)
   }
 
-  if (!globalEventListenersBound) {
-    bindGlobalEventListeners()
-    globalEventListenersBound = true
-  }
+  bindGlobalEventListeners()
 
   var props = _extends({}, defaultProps, optionalProps)
 
@@ -1786,8 +1783,10 @@ function tippy(targets, optionalProps) {
       isSingleContentElement && isMoreThanOneReferenceElement,
       '`tippy()` was passed a targets argument that will create more than ' +
         'one tippy instance, but only a single element was supplied as the ' +
-        '`content` option. Use a function that returns a cloned version of ' +
-        'the element instead, or pass the .innerHTML of the template element.',
+        '`content` prop. This means the content will only be appended to the ' +
+        'last tippy element of the list. Instead, use a function that ' +
+        'returns a cloned version of the element instead, or pass the ' +
+        '.innerHTML of the element.',
     )
   }
 
@@ -1800,11 +1799,12 @@ function tippy(targets, optionalProps) {
 
     return acc
   }, [])
-  return targets ? (isRealElement(targets) ? instances[0] : instances) : null
+  return isRealElement(targets) ? instances[0] : instances
 }
 
 tippy.version = version
 tippy.defaultProps = defaultProps
+tippy.currentInput = currentInput
 /**
  * Mutates the defaultProps object by setting the props specified
  */
@@ -1847,22 +1847,26 @@ tippy.hideAll = function() {
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  tippy.group = function() {
-    warnWhen(
-      true,
-      '`tippy.group()` was removed in v5 and replaced with ' +
-        '`createSingleton()`. Read more here: ' +
-        'https://atomiks.github.io/tippyjs/addons#singleton',
-    )
-  }
-
-  tippy.setDefaults = function() {
-    warnWhen(
-      true,
-      '`tippy.setDefaults()` was renamed to `tippy.setDefaultProps()` in v5.',
-    )
-  }
-
+  Object.defineProperty(tippy, 'group', {
+    value: function value() {
+      warnWhen(
+        true,
+        '`tippy.group()` was removed in v5 and replaced with ' +
+          '`createSingleton()`. Read more here: ' +
+          'https://atomiks.github.io/tippyjs/addons#singleton',
+      )
+    },
+    enumerable: false,
+  })
+  Object.defineProperty(tippy, 'setDefaults', {
+    value: function value() {
+      warnWhen(
+        true,
+        '`tippy.setDefaults()` was renamed to `tippy.setDefaultProps()` in v5.',
+      )
+    },
+    enumerable: false,
+  })
   Object.defineProperty(tippy, 'defaults', {
     get: function get() {
       warnWhen(
@@ -1872,6 +1876,7 @@ if (process.env.NODE_ENV !== 'production') {
       )
       return undefined
     },
+    enumerable: false,
   })
 }
 /**
@@ -1894,5 +1899,12 @@ if (isBrowser) {
   setTimeout(autoInit)
 }
 
-export { tippy as a, isBrowser as b, _extends as c, getValue as d }
+export {
+  tippy as a,
+  isBrowser as b,
+  throwErrorWhen as c,
+  _extends as d,
+  hasOwnProperty as e,
+  getValue as f,
+}
 //# sourceMappingURL=tippy.chunk.js.map

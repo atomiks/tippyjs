@@ -6,31 +6,24 @@
   background-color: #fff;
 }
 .tippy-tooltip.tippy-light-theme[data-placement^='top'] .tippy-arrow {
-  border-top: 8px solid #fff;
-  border-right: 8px solid transparent;
-  border-left: 8px solid transparent;
+  border-width: 8px 8px 0;
+  border-top-color: #fff;
 }
 .tippy-tooltip.tippy-light-theme[data-placement^='bottom'] .tippy-arrow {
-  border-bottom: 8px solid #fff;
-  border-right: 8px solid transparent;
-  border-left: 8px solid transparent;
+  border-width: 0 8px 8px;
+  border-bottom-color: #fff;
 }
 .tippy-tooltip.tippy-light-theme[data-placement^='left'] .tippy-arrow {
-  border-left: 8px solid #fff;
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
+  border-width: 8px 0 8px 8px;
+  border-left-color: #fff;
 }
 .tippy-tooltip.tippy-light-theme[data-placement^='right'] .tippy-arrow {
-  border-right: 8px solid #fff;
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
+  border-width: 8px 8px 8px 0;
+  border-right-color: #fff;
 }
 .tippy-tooltip.tippy-light-theme .tippy-backdrop {
   background-color: #fff;
 }
 .tippy-tooltip.tippy-light-theme .tippy-svgArrow {
   fill: #fff;
-}
-.tippy-tooltip.tippy-light-theme[data-animatefill] {
-  background-color: transparent;
 }

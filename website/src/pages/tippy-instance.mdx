@@ -10,28 +10,37 @@ programmatically.
 
 ### Accessing an instance
 
-If you pass an element or virtual element to `tippy()`, the instance is directly
-returned:
+`tippy()` is a generic constructor to **create** tippy instances. It either
+returns the tippy instance directly, or returns an array of them.
+
+#### Element
+
+If passing an element directly, the instance is directly returned:
 
 ```js
 const button = document.querySelector('button')
-const instance = tippy(button)
+const instance = tippy(button) // type Instance
 ```
 
-If you're passing a CSS selector string, NodeList, or an array of elements, then
+#### String, NodeList, Element[]
+
+If passing a CSS selector `String`, `NodeList`, or an array of `Element`s, then
 an array of instances get returned (since potentially many instances can be
 created):
 
 ```js
-const instances = tippy('.btn') // Array
+const instances = tippy('button') // type Instance[] (array)
 ```
 
-### `_tippy` property
+#### `_tippy` property
+
+If you need to access the instance later, this property can be useful if you
+didn't assign the instance(s) to a variable.
 
 Both the reference element and the popper element have the instance attached as
 the `_tippy` property.
 
-Reference element:
+##### Reference element:
 
 ```js
 const button = document.querySelector('button')
@@ -39,7 +48,7 @@ tippy(button)
 const instance = button._tippy
 ```
 
-Popper element (parent of tooltip):
+##### Popper element (parent of tooltip):
 
 ```js
 const popper = document.querySelector('.tippy-popper')
@@ -49,7 +58,7 @@ const instance = popper._tippy
 This is especially useful when listening to events on the tooltip and you need
 to find which reference element it's associated with.
 
-### Auto-initialization
+#### Auto-initialization
 
 If you're using auto-initialization (`data-tippy` attribute), and you need to
 access the instance immediately at runtime, make sure you wrap access in

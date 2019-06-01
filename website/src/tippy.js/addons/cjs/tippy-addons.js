@@ -17,13 +17,11 @@ require('popper.js')
  */
 function delegate(targets, props) {
   if (process.env.NODE_ENV !== 'production') {
-    if (!props || !props.target) {
-      throw new Error(
-        '[tippy.js ERROR] You must specify a `target` prop indicating the ' +
-          'CSS selector string matching the target elements that should ' +
-          'receive a tippy.',
-      )
-    }
+    __chunk_1.throwErrorWhen(
+      !props || !props.target,
+      'You must specify a `target` prop indicating the CSS selector string ' +
+        'matching the target elements that should receive a tippy.',
+    )
   }
 
   var listeners = []
@@ -139,7 +137,6 @@ function delegate(targets, props) {
  * Re-uses a single tippy element for many different tippy instances.
  * Replaces v4's `tippy.group()`.
  */
-
 function createSingleton(tippyInstances) {
   var optionalProps =
     arguments.length > 1 && arguments[1] !== undefined
@@ -150,21 +147,35 @@ function createSingleton(tippyInstances) {
 
   if (process.env.NODE_ENV !== 'production') {
     if (!Array.isArray(tippyInstances)) {
-      if (!tippyInstances) {
-        throw new Error(
-          '[tippy.js ERROR] First argument to `createSingleton()` must ' +
-            'be an array of tippy instances. The passed value was `' +
-            tippyInstances +
-            '`',
-        ) // @ts-ignore
-      } else if (tippyInstances.reference && tippyInstances.reference._tippy) {
-        throw new Error(
-          '[tippy.js ERROR] First argument to `createSingleton()` must ' +
-            'be an *array* of tippy instances. The passed value was a ' +
-            '*single* tippy instance.',
-        )
-      }
+      __chunk_1.throwErrorWhen(
+        !tippyInstances,
+        'First argument to `createSingleton()` must be an array of tippy ' +
+          'instances. The passed value was `' +
+          tippyInstances +
+          '`',
+      )
+      __chunk_1.throwErrorWhen(
+        // @ts-ignore
+        tippyInstances.reference && tippyInstances.reference._tippy,
+        'First argument to `createSingleton()` must be an *array* of tippy ' +
+          'instances. The passed value was a *single* tippy instance.',
+      )
     }
+
+    var isAnyInstancePartOfExistingSingleton = tippyInstances.some(function(
+      instance,
+    ) {
+      return __chunk_1.hasOwnProperty(instance, '__singleton__')
+    })
+    __chunk_1.throwErrorWhen(
+      isAnyInstancePartOfExistingSingleton,
+      'The passed tippy instance(s) are already part of an existing ' +
+        'singleton instance. Make sure you destroy the previous singleton ' +
+        'before calling `createSingleton()` again.',
+    )
+    tippyInstances.forEach(function(instance) {
+      instance.__singleton__ = true
+    })
   }
 
   var singletonInstance = __chunk_1.tippy(document.createElement('div'))
@@ -172,16 +183,23 @@ function createSingleton(tippyInstances) {
   var showTimeout
   var hideTimeout
 
+  var _onTrigger
+
+  var _onUntrigger
+
   function clearTimeouts() {
     clearTimeout(showTimeout)
     clearTimeout(hideTimeout)
   }
 
   tippyInstances.forEach(function(instance) {
-    var _instance$props = instance.props,
-      _onShow = _instance$props.onShow,
-      _onTrigger = _instance$props.onTrigger,
-      _onUntrigger = _instance$props.onUntrigger
+    // To prevent bugs with `hideOnClick`, we need to let the original tippy
+    // instance also go through its lifecycle (i.e. be mounted to the DOM as
+    // well). To prevent it from being seen/overlayed over the singleton
+    // tippy, we can set its opacity to 0
+    instance.popper.style.opacity = '0'
+    _onTrigger = instance.props.onTrigger
+    _onUntrigger = instance.props.onUntrigger
     var originalClearDelayTimeouts = instance.clearDelayTimeouts
 
     instance.clearDelayTimeouts = function() {
@@ -191,17 +209,11 @@ function createSingleton(tippyInstances) {
 
     instance.setProps({
       delay: 0,
-      onShow: function onShow(instance) {
-        _onShow(instance)
-
-        return false
-      },
       onTrigger: function onTrigger(instance, event) {
         _onTrigger(instance, event)
 
         var props = __chunk_1._extends({}, instance.props)
 
-        delete props.onShow
         delete props.delay
         singletonInstance.setProps(props)
 
@@ -239,10 +251,9 @@ function createSingleton(tippyInstances) {
     var originalSetProps = instance.setProps
 
     instance.setProps = function(partialProps) {
-      // Delay can't be updated
+      // `delay` can't be updated
       delete partialProps.delay
       originalSetProps(partialProps)
-      _onShow = partialProps.onShow || _onShow
       _onTrigger = partialProps.onTrigger || _onTrigger
       _onUntrigger = partialProps.onUntrigger || _onUntrigger
     }
@@ -259,13 +270,24 @@ function createSingleton(tippyInstances) {
   singletonInstance.destroy = function() {
     var shouldDestroyPassedInstances =
       arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true
-
-    if (shouldDestroyPassedInstances) {
-      tippyInstances.forEach(function(instance) {
-        instance.destroy()
+    tippyInstances.forEach(function(instance) {
+      // Reset the original lifecycle hooks to prevent stack overflow if
+      // calling again.
+      // Note: users must always destroy the singleton instance before calling
+      // `createSingleton()` again on the same instances.
+      instance.setProps({
+        onTrigger: _onTrigger,
+        onUntrigger: _onUntrigger,
       })
-    }
 
+      if (process.env.NODE_ENV !== 'production') {
+        delete instance.__singleton__
+      }
+
+      if (shouldDestroyPassedInstances) {
+        instance.destroy()
+      }
+    })
     originalDestroy()
   }
 

@@ -52,4 +52,40 @@ export default createGlobalStyle`
       transition-timing-function: cubic-bezier(0.54, 100, 0.2, 0.26);
     }
   }
+
+  .tippy-tooltip.large-arrow-theme .tippy-arrow {
+    transform: scale(1.75);
+  }
+
+  .tippy-tooltip.small-arrow-theme .tippy-arrow {
+    transform: scale(0.75);
+  }
+
+  .tippy-tooltip.wide-arrow-theme .tippy-arrow {
+    transform: scaleX(1.5);
+  }
+
+  .tippy-tooltip.narrow-arrow-theme .tippy-arrow {
+    transform: scale(0.6, 1.2);
+  }
+
+  .tippy-tooltip.gradient-theme {
+    background: linear-gradient(130deg, #507bf4,#ff8bcb);
+    box-shadow: 0px 5px 11px #c9a0ff;
+    font-weight: bold;
+  }
+
+  .tippy-tooltip.retro-theme {
+    background: beige;
+    border: 2px solid tomato;
+    color: tomato;
+    font-weight: bold;
+  }
+
+  .tippy-tooltip.forest-theme {
+    background: linear-gradient(90deg,#9fe597, #cce581);
+    color: #683b33;
+    font-weight: bold;
+  }
+
 `

@@ -25,19 +25,60 @@ var __tippyAddons__ = (function(exports, tippy$1) {
   }
 
   /**
+   * Ponyfill for Array.from - converts iterable values to an array
+   */
+
+  var isBrowser =
+    typeof window !== 'undefined' && typeof document !== 'undefined'
+  var ua = isBrowser ? navigator.userAgent : ''
+  var isIE = /MSIE |Trident\//.test(ua)
+  var isUCBrowser = /UCBrowser\//.test(ua)
+  var isIOS = isBrowser && /iPhone|iPad|iPod/.test(navigator.platform)
+
+  // Passive event listener config
+
+  /**
+   * Safe .hasOwnProperty check, for prototype-less objects
+   */
+
+  function hasOwnProperty(obj, key) {
+    return {}.hasOwnProperty.call(obj, key)
+  }
+  /**
+   * Returns a value at a given index depending on if it's an array or number
+   */
+
+  function getValue(value, index, defaultValue) {
+    if (Array.isArray(value)) {
+      var v = value[index]
+      return v == null ? defaultValue : v
+    }
+
+    return value
+  }
+
+  /**
+   * Helpful wrapper around thrown errors
+   */
+
+  function throwErrorWhen(condition, message) {
+    if (condition) {
+      throw new Error('[tippy.js ERROR] '.concat(message))
+    }
+  }
+
+  /**
    * Creates a delegate instance that controls the creation of tippy instances
    * for child elements (`target` CSS selector).
    * Port of v4's `target` prop to a separate function.
    */
   function delegate(targets, props) {
     {
-      if (!props || !props.target) {
-        throw new Error(
-          '[tippy.js ERROR] You must specify a `target` prop indicating the ' +
-            'CSS selector string matching the target elements that should ' +
-            'receive a tippy.',
-        )
-      }
+      throwErrorWhen(
+        !props || !props.target,
+        'You must specify a `target` prop indicating the CSS selector string ' +
+          'matching the target elements that should receive a tippy.',
+      )
     }
 
     var listeners = []
@@ -154,37 +195,9 @@ var __tippyAddons__ = (function(exports, tippy$1) {
   }
 
   /**
-   * Ponyfill for Array.from - converts iterable values to an array
-   */
-
-  var isBrowser =
-    typeof window !== 'undefined' && typeof document !== 'undefined'
-  var ua = isBrowser ? navigator.userAgent : ''
-  var isIE = /MSIE |Trident\//.test(ua)
-  var isUCBrowser = /UCBrowser\//.test(ua)
-  var isIOS =
-    isBrowser && /iPhone|iPad|iPod/.test(navigator.platform) && !window.MSStream
-
-  // Passive event listener config
-
-  /**
-   * Returns a value at a given index depending on if it's an array or number
-   */
-
-  function getValue(value, index, defaultValue) {
-    if (Array.isArray(value)) {
-      var v = value[index]
-      return v == null ? defaultValue : v
-    }
-
-    return value
-  }
-
-  /**
    * Re-uses a single tippy element for many different tippy instances.
    * Replaces v4's `tippy.group()`.
    */
-
   function createSingleton(tippyInstances) {
     var optionalProps =
       arguments.length > 1 && arguments[1] !== undefined
@@ -195,24 +208,35 @@ var __tippyAddons__ = (function(exports, tippy$1) {
 
     {
       if (!Array.isArray(tippyInstances)) {
-        if (!tippyInstances) {
-          throw new Error(
-            '[tippy.js ERROR] First argument to `createSingleton()` must ' +
-              'be an array of tippy instances. The passed value was `' +
-              tippyInstances +
-              '`',
-          ) // @ts-ignore
-        } else if (
-          tippyInstances.reference &&
-          tippyInstances.reference._tippy
-        ) {
-          throw new Error(
-            '[tippy.js ERROR] First argument to `createSingleton()` must ' +
-              'be an *array* of tippy instances. The passed value was a ' +
-              '*single* tippy instance.',
-          )
-        }
+        throwErrorWhen(
+          !tippyInstances,
+          'First argument to `createSingleton()` must be an array of tippy ' +
+            'instances. The passed value was `' +
+            tippyInstances +
+            '`',
+        )
+        throwErrorWhen(
+          // @ts-ignore
+          tippyInstances.reference && tippyInstances.reference._tippy,
+          'First argument to `createSingleton()` must be an *array* of tippy ' +
+            'instances. The passed value was a *single* tippy instance.',
+        )
       }
+
+      var isAnyInstancePartOfExistingSingleton = tippyInstances.some(function(
+        instance,
+      ) {
+        return hasOwnProperty(instance, '__singleton__')
+      })
+      throwErrorWhen(
+        isAnyInstancePartOfExistingSingleton,
+        'The passed tippy instance(s) are already part of an existing ' +
+          'singleton instance. Make sure you destroy the previous singleton ' +
+          'before calling `createSingleton()` again.',
+      )
+      tippyInstances.forEach(function(instance) {
+        instance.__singleton__ = true
+      })
     }
 
     var singletonInstance = tippy$1(document.createElement('div'))
@@ -220,16 +244,23 @@ var __tippyAddons__ = (function(exports, tippy$1) {
     var showTimeout
     var hideTimeout
 
+    var _onTrigger
+
+    var _onUntrigger
+
     function clearTimeouts() {
       clearTimeout(showTimeout)
       clearTimeout(hideTimeout)
     }
 
     tippyInstances.forEach(function(instance) {
-      var _instance$props = instance.props,
-        _onShow = _instance$props.onShow,
-        _onTrigger = _instance$props.onTrigger,
-        _onUntrigger = _instance$props.onUntrigger
+      // To prevent bugs with `hideOnClick`, we need to let the original tippy
+      // instance also go through its lifecycle (i.e. be mounted to the DOM as
+      // well). To prevent it from being seen/overlayed over the singleton
+      // tippy, we can set its opacity to 0
+      instance.popper.style.opacity = '0'
+      _onTrigger = instance.props.onTrigger
+      _onUntrigger = instance.props.onUntrigger
       var originalClearDelayTimeouts = instance.clearDelayTimeouts
 
       instance.clearDelayTimeouts = function() {
@@ -239,17 +270,11 @@ var __tippyAddons__ = (function(exports, tippy$1) {
 
       instance.setProps({
         delay: 0,
-        onShow: function onShow(instance) {
-          _onShow(instance)
-
-          return false
-        },
         onTrigger: function onTrigger(instance, event) {
           _onTrigger(instance, event)
 
           var props = _extends({}, instance.props)
 
-          delete props.onShow
           delete props.delay
           singletonInstance.setProps(props)
 
@@ -287,10 +312,9 @@ var __tippyAddons__ = (function(exports, tippy$1) {
       var originalSetProps = instance.setProps
 
       instance.setProps = function(partialProps) {
-        // Delay can't be updated
+        // `delay` can't be updated
         delete partialProps.delay
         originalSetProps(partialProps)
-        _onShow = partialProps.onShow || _onShow
         _onTrigger = partialProps.onTrigger || _onTrigger
         _onUntrigger = partialProps.onUntrigger || _onUntrigger
       }
@@ -307,13 +331,24 @@ var __tippyAddons__ = (function(exports, tippy$1) {
     singletonInstance.destroy = function() {
       var shouldDestroyPassedInstances =
         arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true
-
-      if (shouldDestroyPassedInstances) {
-        tippyInstances.forEach(function(instance) {
-          instance.destroy()
+      tippyInstances.forEach(function(instance) {
+        // Reset the original lifecycle hooks to prevent stack overflow if
+        // calling again.
+        // Note: users must always destroy the singleton instance before calling
+        // `createSingleton()` again on the same instances.
+        instance.setProps({
+          onTrigger: _onTrigger,
+          onUntrigger: _onUntrigger,
         })
-      }
 
+        {
+          delete instance.__singleton__
+        }
+
+        if (shouldDestroyPassedInstances) {
+          instance.destroy()
+        }
+      })
       originalDestroy()
     }
 

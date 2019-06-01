@@ -11,8 +11,9 @@ import Tippy from '../components/Tippy'
 ### Use natively focusable elements
 
 Tooltips should only be applied to natively focusable elements like `<button>`
-or `<input>`. Some screenreader software will not announce the tooltip on an
-element like `<div>`.
+or `<input>`. Some screenreader software may not announce the tooltip on an
+element like `<div>`, even if you add a `tabindex="0"` attribute on it so that
+it can receive focus.
 
 ### Non-interactive tooltips are accessible by default
 

@@ -6,6 +6,7 @@ index: 6
 
 import { Button, Demo } from '../components/Framework'
 import Tippy from '../components/Tippy'
+import Image from '../components/Image'
 
 Tippy is highly themeable through CSS. The sky is the limit when it comes to
 their appearance!
@@ -50,6 +51,13 @@ Browser:
 </head>
 ```
 
+```js
+// All of these included themes must be prefixed with `tippy-`
+tippy('button', {
+  theme: 'tippy-light',
+})
+```
+
 ### Tippy elements
 
 To learn how to create a theme, it's helpful to understand the basic structure
@@ -88,6 +96,17 @@ Depending on the options supplied, there will exist other elements inside it:
 </div>
 ```
 
+#### Browser DevTools
+
+It's highly recommended you inspect a tippy element via your browser's DevTools.
+An easy way to do this is to give it a `click` trigger so that it stays visible
+when focus is switched to the DevTools window.
+
+The tippy element by default gets appended to the very end of the `<body>`, so
+you should scroll down the elements panel.
+
+<Image name="browser-devtools-tippy-element.jpg" />
+
 ### Creating a theme
 
 Themes are created by including a class on the `tippy-tooltip` element as part
@@ -105,9 +124,9 @@ this by creating our own theme called `tomato`.
 }
 ```
 
-The backdrop element is the background "filling" effect that's enabled by
-default. You should color the background of both the tooltip and the backdrop.
-Ensure the tooltip's background is transparent if `animateFill: true`.
+The `.tippy-backdrop` element is the background "filling" effect that's enabled
+by default. You should color the background of both the tooltip and the
+backdrop.
 
 To apply the theme, specify a `theme` option without the `-theme` suffix:
 
@@ -166,10 +185,11 @@ To color the SVG arrow, it's as simple as specifying the `fill` and targeting
   </Tippy>
 </Demo>
 
-#### Changing the arrow size
+### Changing the arrow size
 
-If you would like to increase or decrease the arrow's size, you can use
-`transform: scale()`:
+#### Option 1: `transform: scale()`
+
+This is the easiest technique and works for most cases:
 
 ```css
 .tippy-tooltip.tomato-theme .tippy-arrow {
@@ -177,12 +197,27 @@ If you would like to increase or decrease the arrow's size, you can use
 }
 ```
 
+#### Option 2: Pixel increase
+
+If your tippy theme has a `border` (e.g. the included `light-border` theme),
+then the `transform: scale()` technique distorts the border width of the arrow.
+Instead, you will need to change the size of the arrow in pixels directly.
+
+You will also need to change the size of the border pesudo-elements (`::before`
+and `::after`) as well. It's recommended to investigate the CSS of the arrow via
+DevTools.
+
+```css
+.tippy-tooltip.tomato-theme[data-placement^='top'] .tippy-arrow {
+  border-width: 12px 12px 0;
+  border-top-color: tomato;
+}
+
+/* And so on for each placement... */
+```
+
 <Demo>
   <Tippy theme="tomato scaled-arrow" arrow>
     <Button>Scaled arrow</Button>
   </Tippy>
 </Demo>
-
-If you're using a bordered theme like `light-border` included in the package,
-then you should avoid using `scale`, because the 1px border also gets scaled,
-leading to distortion.

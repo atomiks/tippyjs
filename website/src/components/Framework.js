@@ -130,8 +130,7 @@ export const Button = styled.button`
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   padding: 8px 16px;
   border-radius: 4px;
-  margin-right: 8px;
-  margin-bottom: 8px;
+  margin: ${props => (props.marginless ? '0' : '0 8px 8px 0')};
   transition: opacity 0.2s;
 
   &:hover {

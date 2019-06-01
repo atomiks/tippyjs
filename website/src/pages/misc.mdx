@@ -22,84 +22,65 @@ though it were attached to a block:
 
 If this is a problem (e.g. with interactivity), there is a way to solve it.
 Additionally, this makes the tooltip appear right above the mouse cursor,
-similar to the `followCursor` option:
+similar to the `followCursor` prop:
 
 <Demo style={{ paddingBottom: 20 }}>
   <AnchorLink smart />
 </Demo>
 
-It requires using a [virtual positioning reference](#virtual-elements). See the
+It requires using a custom `getBoundingClientRect()`. See the
 [CodePen demo](https://codepen.io/atomiks/pen/GeBoyW?editors=0010).
+
+#### Custom position
+
+Expanding on the above, you can overwrite an element's `getBoundingClientRect`
+method, which Popper.js uses to position the tippy. This can be overwritten at
+any time.
+
+```js
+const positioningElement = document.createElement('div')
+positioningElement.getBoundingClientRect = () => ({
+  width: 0,
+  height: 20,
+  top: 200,
+  right: 200,
+  bottom: 220,
+  left: 200,
+})
+
+tippy(positioningElement, {
+  content: 'tooltip',
+  triggerTarget: triggerElement, // See `Different trigger target` section below
+})
+```
+
+A positioning element should not be appended to the DOM, so that its
+`clientWidth` and `clientHeight` values are 0. If they are not 0, unexpected
+positioning will occur.
 
 ---
 
 ### Scrollable containers
 
-Here are 3 common solutions. Note that no solution is completely ideal in all
-situations - it depends on the UI. In each of these, if you want the tippy to be
-clipped by the scrolling area, use `appendTo: "parent"`. If the tippy is large
-then this may be undesirable.
+While scrolling the container, the reference element can leave the boundary
+view, meaning the tippy will appear to be attached to nothing. You can hide the
+tippy to prevent it from being seen:
 
-<Demo>
-  <Scroller type="Unintrusive" boundary />
-</Demo>
-
-With this technique, the tooltip acts like it does on the document normally. It
-gets clipped by the scrolling area and does not attempt to position itself to be
-fully visible (but will still flip).
-
-```js
-tippy('#unintrusive-example', {
-  boundary: 'window',
-  appendTo: 'parent',
-  popperOptions: {
-    modifiers: {
-      flip: {
-        boundariesElement: 'scrollParent',
-      },
-    },
-  },
-})
+```css
+.tippy-tooltip[data-out-of-boundaries] {
+  display: none;
+}
 ```
 
-<Demo>
-  <Scroller type="Flip on update" flipOnUpdate />
-</Demo>
+This may not be ideal in all cases. You can include this attribute only on a
+theme if necessary.
 
-With this technique, the tooltip attempts to reposition itself to be visible to
-the user at all times. Sometimes this can be a little overly intrusive, though.
+Other cases:
 
-```js
-tippy('#scroll-flipping-example', {
-  appendTo: 'parent',
-  flipOnUpdate: true,
-  // Leave this out if you want flipping to occur based on the
-  // viewport rather than the container
-  popperOptions: {
-    modifiers: {
-      flip: {
-        boundariesElement: 'scrollParent',
-      },
-    },
-  },
-})
-```
-
-<Demo>
-  <Scroller type="Hide on scroll" hideOnScroll />
-</Demo>
-
-With this technique, the tooltip hides instantly whenever the user starts
-scrolling. In addition, it initially positions itself to be as visible as
-possible within the scrolling area.
-
-```js
-const instance = tippy(document.querySelector('#hide-on-scroll-example'))
-const container = document.querySelector('#scrollable-container')
-container.addEventListener('scroll', () => {
-  instance.hide(0)
-})
-```
+- If you want the tippy to be clipped by the scrolling container, use the props
+  `appendTo: 'parent'` and `boundary: scrollingContainer`.
+- Consider the prop `flipOnUpdate: true` if you want the tippy to flip to best
+  fit in view while the container is being scrolled.
 
 ---
 
@@ -112,7 +93,7 @@ listeners) target. For example:
   <TriggerTarget />
 </Demo>
 
-For this, you can utilize the `triggerTarget` option:
+For this, you can utilize the `triggerTarget` prop:
 
 ```js
 const innerOrangeSpanElement = document.querySelector('span')
@@ -139,27 +120,32 @@ click event.
 Depending on your use case, one of these will be preferred, so user agent
 checking may be needed.
 
-If neither behavior is preferred, consider using the `touchHold` option which
+If neither behavior is preferred, consider using the `touchHold` prop which
 allows the user to see the tooltip while pressing and holding the button, but
 won't fire a click event unless the click appears to be intentional.
+
+#### Setup
 
 ```js
 const button = document.querySelector('button')
 const isIOS = /iPhone|iPad|iPod/.test(navigator.platform)
+```
 
-/*========================================================
-A: Use `touchHold: true`
-========================================================*/
+#### A: Use `touchHold: true`
+
+```js
 tippy(button, {
   touchHold: true,
 })
+```
 
-/*========================================================
-B: Make iOS behave like Android (single tap to click)
-========================================================*/
+#### B: Make iOS behave like Android (single tap to click)
+
+```js
 button.addEventListener('click', () => {
   // Your logic
 })
+
 tippy(button, {
   onShow() {
     if (isIOS) {
@@ -167,24 +153,36 @@ tippy(button, {
     }
   },
 })
+```
 
-/*========================================================
-C: Make Android behave like iOS (double tap to click)
-========================================================*/
-// Useful function for dynamically determining the input type:
-// https://github.com/30-seconds/30-seconds-of-code#onuserinputchange
-let isUsingTouch = false
-onUserInputChange(type => {
-  isUsingTouch = type === 'touch'
-})
+#### C: Make Android behave like iOS (double tap to click)
+
+Tippy has a useful static property `tippy.currentInput`. This is a mutable
+object whose properties change depending on the user's current input. Currently,
+it has a single property called `isTouch`, which is a boolean flag determining
+if the user is currently using touch input. This is a dynamic value because of
+hybrid devices which can use a mix of mouse and touch input.
+
+```js
+function emulateIOS(listener) {
+  let clicks = 0
+
+  return function() {
+    clicks++
+
+    if (clicks === 2 || isIOS || !tippy.currentInput.isTouch) {
+      clicks = 0
+      listener.apply(this, arguments)
+    }
+  }
+}
 
 const instance = tippy(button)
-
-button.addEventListener('click', () => {
-  if (isIOS || !isUsingTouch ? true : instance.state.isShown) {
-    // Your logic
-  }
+const onClick = emulateIOS(() => {
+  // Your logic
 })
+
+button.addEventListener('click', onClick)
 ```
 
 ---
@@ -211,28 +209,5 @@ button.addEventListener('mousemove', () => {
 button.addEventListener('mouseleave', () => {
   clearTimeout(timeout)
   instance.hide()
-})
-```
-
----
-
-### Custom position
-
-You can overwrite an element's `getBoundingClientRect` method, which Popper.js
-uses to position the tippy. This can be overwritten at any time.
-
-```js
-const placeholderElement = document.createElement('div')
-placeholderElement.getBoundingClientRect = () => ({
-  width: 0,
-  height: 20,
-  top: 200,
-  right: 200,
-  bottom: 220,
-  left: 200,
-})
-
-tippy(placeholderElement, {
-  content: 'tooltip',
 })
 ```

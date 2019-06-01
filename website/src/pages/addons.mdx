@@ -5,7 +5,7 @@ index: 13
 ---
 
 import Tippy, { TippySingleton } from '../components/Tippy'
-import { Button } from '../components/Framework'
+import { Demo, Button } from '../components/Framework'
 
 Addons are external functionality added to Tippy.js that don't need to belong in
 the core library. This means users who don't need this functionality aren't
@@ -37,7 +37,7 @@ Your markup should have a structure like this example:
 
 Pass a `targets` argument to the `delegate()` addon function (the same type the
 `tippy()` function can accept) which represents the parent element(s) that
-should act as a delegate, and a `target` option representing a CSS selector that
+should act as a delegate, and a `target` prop representing a CSS selector that
 should match the child elements which should receive a tippy.
 
 Node:
@@ -117,7 +117,7 @@ This allows two things:
 #### Usage
 
 Pass an **array** of tippy instances to the `createSingleton` addon function,
-and a `delay` option:
+and a `delay` prop:
 
 Node:
 
@@ -140,12 +140,12 @@ Browser:
 </script>
 ```
 
-Note that the only option `createSingleton` accepts at this time is `delay`. It
-can take the same values as `tippy()`'s `delay` option.
+Note that the only prop `createSingleton` accepts at this time is `delay`. It
+can take the same values as `tippy()`'s `delay` prop.
 
 #### Smooth transitions
 
-Utilize the `updateDuration` option, which is the transition duration between
+Utilize the `updateDuration` prop, which is the transition duration between
 position updates of the tippy element:
 
 ```js
@@ -172,35 +172,37 @@ The interesting thing about `createSingleton()` is that it's fully dynamic. This
 means the singleton tippy can have its props changed while it's showing as it
 moves to the next target.
 
-<TippySingleton delay={[200, 400]}>
-  <Tippy content="Hello!" updateDuration={400}>
-    <Button>Text</Button>
-  </Tippy>
-  <Tippy
-    content="Hello, there!"
-    animation="scale"
-    theme="tippy-light"
-    updateDuration={400}
-    animateFill={false}
-  >
-    <Button>Text</Button>
-  </Tippy>
-  <Tippy
-    content="Hmmm..."
-    animation="fade"
-    theme="tippy-light-border"
-    updateDuration={400}
-    animateFill={false}
-  >
-    <Button>Text</Button>
-  </Tippy>
-  <Tippy
-    content="007"
-    animation="perspective"
-    theme="tippy-material"
-    updateDuration={400}
-    animateFill={false}
-  >
-    <Button>Text</Button>
-  </Tippy>
-</TippySingleton>
+<Demo>
+  <TippySingleton delay={[200, 400]}>
+    <Tippy content="Hello!" updateDuration={400} animateFill={false}>
+      <Button>Text</Button>
+    </Tippy>
+    <Tippy
+      content="Hello, there!"
+      animation="scale"
+      theme="tippy-light"
+      updateDuration={400}
+      animateFill={false}
+    >
+      <Button>Text</Button>
+    </Tippy>
+    <Tippy
+      content="Hmmm..."
+      animation="fade"
+      theme="tippy-light-border"
+      updateDuration={400}
+      animateFill={false}
+    >
+      <Button>Text</Button>
+    </Tippy>
+    <Tippy
+      content="007"
+      animation="perspective"
+      theme="tippy-material"
+      updateDuration={400}
+      animateFill={false}
+    >
+      <Button>Text</Button>
+    </Tippy>
+  </TippySingleton>
+</Demo>

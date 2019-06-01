@@ -86,29 +86,30 @@ tippy('button', {
 The `title` attribute should be removed once you have its content so the
 browser's default tooltip isn't displayed along with the tippy.
 
-With the beauty of higher-order functions, you can "enhance" the base tippy
-function with new functionality. To add this behavior by default, you can do
-something like this at the very top of your scripts before any calls to
-`tippy()`:
+It's recommended to create a new proxy (wrapper) function to extend the base
+`tippy()` module's functionality.
 
 ```js
-function withTitleAttributeContent(tippy) {
-  return (targets, optionalProps = {}) => {
-    return tippy(targets, {
-      ...optionalProps,
-      content(reference) {
-        if (optionalProps.content) {
-          return optionalProps.content
-        }
+// You can call this whatever you want
+function tippy2(targets, optionalProps) {
+  return tippy(targets, {
+    ...optionalProps,
+    content(reference) {
+      if (optionalProps.content) {
+        return optionalProps.content
+      }
 
-        const title = reference.getAttribute('title')
-        reference.removeAttribute('title')
+      const title = reference.getAttribute('title')
+      reference.removeAttribute('title')
 
-        return title
-      },
-    })
-  }
+      return title
+    },
+  })
 }
 
-window.tippy = withTitleAttributeContent(tippy)
+// Everywhere in your application
+tippy2('button') // <button title="Hello world" /> now works!
 ```
+
+Note that the above `tippy2` function does not take into consideration the
+`setProps()` method. There are some edge cases you should look out for.

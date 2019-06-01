@@ -5,30 +5,44 @@ index: 0
 ---
 
 import Tippy from '../components/Tippy'
-import { Button, Demo, Link } from '../components/Framework'
+import { Button, Demo, Link, Row, Col } from '../components/Framework'
+import { ALL_PLACEMENTS, EXTRA_ANIMATIONS } from '../utils'
 import Dropdown from '../components/examples/Dropdown'
 import Singleton from '../components/examples/Singleton'
 import Nesting from '../components/examples/Nesting'
+import Multiple from '../components/examples/Multiple'
 
 Tippy.js is a highly customizable tooltip and popover library powered by
-Popper.js. It's compatible with IE11+, about 99% of desktop users and 97% of
-mobile users. It can be used to create simple static text tooltips, or complex
-HTML popovers that utilize AJAX.
+Popper.js. You can use Tippy.js to create simple static text tooltips, or
+complex interactive HTML popovers that utilize AJAX.
 
-Given an element on the page...
+Its purpose is to provide a complete set of features when dealing with a range
+of different "popper" elements such as tooltips, popovers, dropdowns, and more,
+while handling the basic structure and customization of these elements for you.
+The API is designed to be simple and easy to use with sensible defaults while
+also giving you full control where needed.
+
+It's compatible with IE11+, about 99% of desktop users and 97% of mobile users.
+Tippy.js also works very well on touch devices, and handles edge cases related
+to hybrid devices and iOS that you may have encountered in other libraries.
+
+---
+
+### Exploring Tippy's features
+
+Given an element on the document...
 
 ```html
 <button id="myButton">My Button</button>
 ```
 
-We can give it many different types of tooltips. Let's explore some of them
-below!
-
----
+We can give it many different types of tippy tooltips. Let's explore some of
+them below!
 
 ### Default
 
-The default tooltip looks like this. It has a nifty background fill animation!
+The default tippy tooltip looks like this. It has a nifty background fill
+animation!
 
 <Demo>
   <Tippy>
@@ -42,62 +56,87 @@ tippy('#myButton', {
 })
 ```
 
+By default, a tippy is triggered by either `mouseenter` or `focus` events so
+they appear when hovered, focused via keyboard navigation, or tapped when using
+a touch device.
+
 ---
 
 ### Placement
 
-Tooltips can be placed in four different ways in relation to the reference
-element. Additionally, the tooltip can be shifted along the axis using the
-suffix `-start` or `-end`.
+Tooltips can be placed in four base ways in relation to the reference element.
+Additionally, the tooltip can be shifted along the axis using the suffix
+`-start` or `-end`.
 
 <Demo>
-  <Tippy placement="top">
-    <Button>Top</Button>
-  </Tippy>
-  <Tippy placement="bottom" trigger="click">
-    <Button>Bottom</Button>
-  </Tippy>
-  <Tippy placement="left">
-    <Button>Left</Button>
-  </Tippy>
-  <Tippy placement="right">
-    <Button>Right</Button>
-  </Tippy>
-  <Tippy placement="top-start">
-    <Button>Top-Start</Button>
-  </Tippy>
-  <Tippy placement="top-end">
-    <Button>Top-End</Button>
-  </Tippy>
+  <Row>
+    {ALL_PLACEMENTS.map((placement, i) => (
+      <Col key={placement} base={6} md={4} lg={6} xl={4}>
+        <Tippy
+          key={placement}
+          content="Tooltip"
+          placement={placement}
+          flip={false}
+        >
+          <Button
+            style={{
+              display: 'inline-block',
+              width: '100%',
+              height: 50,
+              margin: '10px 0',
+            }}
+          >
+            {placement}
+          </Button>
+        </Tippy>
+      </Col>
+    ))}
+  </Row>
 </Demo>
 
 ```js
 tippy('#myButton', {
-  placement: 'bottom', // or 'left', 'right', ...
+  placement: 'bottom',
 })
 ```
+
+If a tippy cannot fit within its desired placement, it will flip to the opposite
+placement if there is not enough space. In the above examples, flipping has been
+disabled to demonstrate each placement properly.
 
 ---
 
 ### Arrows
 
 Tooltips can have an arrow that points toward the reference element. The size
-and proportion can also be modified with CSS.
+and proportion can also be modified with CSS. Getting even more advanced, you
+can use any type of SVG shape as the arrow, like a speech bubble shape.
 
 <Demo>
   <Tippy arrow animation="fade">
-    <Button>Default arrow</Button>
+    <Button>Default</Button>
   </Tippy>
-  <Tippy arrow arrowType="round" animation="fade">
-    <Button>Round arrow</Button>
+  <Tippy arrow animation="fade" arrowType="round" animation="fade">
+    <Button>Round</Button>
+  </Tippy>
+  <Tippy arrow animation="fade" theme="large-arrow" distance={16}>
+    <Button>Large</Button>
+  </Tippy>
+  <Tippy arrow animation="fade" theme="small-arrow" distance={8}>
+    <Button>Small</Button>
+  </Tippy>
+  <Tippy arrow animation="fade" theme="wide-arrow">
+    <Button>Wide</Button>
+  </Tippy>
+  <Tippy arrow animation="fade" theme="narrow-arrow">
+    <Button>Narrow</Button>
   </Tippy>
 </Demo>
 
 ```js
 tippy('#myButton', {
   arrow: true,
-  arrowType: 'round', // or 'sharp' (default)
-  animation: 'fade',
+  arrowType: 'round', // omit for the default sharp arrow
 })
 ```
 
@@ -108,28 +147,76 @@ tippy('#myButton', {
 Tooltips can have different types of transition animations. Note, the filling
 effect has been disabled in these examples (`animateFill: false`).
 
+#### Default animations
+
+These animations are included in the main default CSS file.
+
 <Demo>
-  <Tippy animation="shift-away" animateFill={false}>
-    <Button>Shift-away</Button>
-  </Tippy>
-  <Tippy animation="shift-toward" animateFill={false}>
-    <Button>Shift-toward</Button>
-  </Tippy>
-  <Tippy animation="scale" animateFill={false}>
-    <Button>Scale</Button>
-  </Tippy>
-  <Tippy animation="fade" animateFill={false}>
-    <Button>Fade</Button>
-  </Tippy>
-  <Tippy animation="perspective" animateFill={false}>
-    <Button>Perspective</Button>
-  </Tippy>
-  <Tippy animateFill={false} duration={[450, 200]} inertia>
-    <Button>Shift with inertia</Button>
-  </Tippy>
-  <Tippy animation="scale" animateFill={false} duration={[450, 200]} inertia>
-    <Button>Scale with inertia</Button>
-  </Tippy>
+  {['fade', 'shift-away'].map(animation => (
+    <Tippy key={animation} animation={animation} animateFill={false}>
+      <Button>{animation}</Button>
+    </Tippy>
+  ))}
+</Demo>
+
+```js
+tippy('#myButton', {
+  animateFill: false,
+  animation: 'fade',
+})
+```
+
+#### Extra included animations
+
+These animations are included in the package and can be imported separately.
+
+<Demo>
+  <Row>
+    {EXTRA_ANIMATIONS.map(animation => (
+      <Col key={animation} base={12} xs={6} md={4} lg={6} xl={4}>
+        <Tippy animation={animation} animateFill={false}>
+          <Button
+            style={{
+              width: '100%',
+              margin: '10px 0',
+              height: 50,
+            }}
+          >
+            {animation}
+          </Button>
+        </Tippy>
+      </Col>
+    ))}
+  </Row>
+</Demo>
+
+#### Inertia / slingshot elastic effect
+
+The CSS transition-timing-function can be modified, by default it's subtle and
+looks like this:
+
+<Demo>
+  {EXTRA_ANIMATIONS.filter(animation => animation.includes('scale')).map(
+    animation => (
+      <Tippy
+        key={animation}
+        animation={animation}
+        animateFill={false}
+        inertia={true}
+        duration={[450, 175]}
+      >
+        <Button>{animation}</Button>
+      </Tippy>
+    ),
+  )}
+</Demo>
+
+#### CSS keyframe animations
+
+Getting more advanced, you can use actual CSS animations (`@keyframes` rules),
+for example using the `animate.css` package:
+
+<Demo>
   <Tippy
     animation="fade"
     animateFill={false}
@@ -143,7 +230,7 @@ effect has been disabled in these examples (`animateFill: false`).
       instance.popperChildren.tooltip.classList.remove('rubberBand', 'animated')
     }}
   >
-    <Button>Animate.css: rubberBand</Button>
+    <Button>rubberBand</Button>
   </Tippy>
   <Tippy
     animation="fade"
@@ -158,44 +245,59 @@ effect has been disabled in these examples (`animateFill: false`).
       instance.popperChildren.tooltip.classList.remove('tada', 'animated')
     }}
   >
-    <Button>Animate.css: tada</Button>
+    <Button>tada</Button>
   </Tippy>
 </Demo>
 
-```js
-tippy('#myButton', {
-  animateFill: false,
-  animation: 'scale', // or 'shift-toward', 'fade', ...
-})
-```
+#### JavaScript spring animations
+
+Animation libraries like `animejs` can also be integrated.
 
 ---
 
 ### Themes
 
-Tooltips can have custom styling. There are a few themes that come with the
-package available under `themes/`.
+Tooltips can have custom styling.
+
+#### Default theme
+
+The dark theme is default (`#333` background color):
 
 <Demo>
-  <Tippy theme="tippy-dark" animateFill={false}>
-    <Button>Dark</Button>
+  <Tippy animateFill={false}>
+    <Button>Default</Button>
   </Tippy>
-  <Tippy theme="tippy-light" animateFill={false}>
-    <Button>Light</Button>
-  </Tippy>
-  <Tippy theme="tippy-light-border" animateFill={false}>
-    <Button>Light-border</Button>
-  </Tippy>
-  <Tippy theme="tippy-material" animateFill={false}>
-    <Button>Google</Button>
-  </Tippy>
+</Demo>
+
+#### Included themes
+
+These themes are included in the package and can be imported separately.
+
+<Demo>
+  {['light', 'light-border', 'material', 'translucent'].map(theme => (
+    <Tippy key={theme} theme={`tippy-${theme}`} animateFill={false}>
+      <Button>{`tippy-${theme}`}</Button>
+    </Tippy>
+  ))}
 </Demo>
 
 ```js
 tippy('#myButton', {
-  theme: 'tippy-light', // or 'tippy-light-border', 'tippy-google', ...
+  theme: 'tippy-light',
 })
 ```
+
+#### Custom themes
+
+You can apply any CSS to a tippy via a theme.
+
+<Demo>
+  {['gradient', 'retro', 'forest'].map(theme => (
+    <Tippy key={theme} theme={theme} animateFill={false}>
+      <Button>{theme}</Button>
+    </Tippy>
+  ))}
+</Demo>
 
 ---
 
@@ -217,6 +319,8 @@ tippy('#myButton', {
   trigger: 'click', // or 'focus'
 })
 ```
+
+---
 
 ### Interactivity
 
@@ -283,6 +387,8 @@ tippy('#myButton', {
   duration: 0,
 })
 ```
+
+---
 
 ### Delay
 
@@ -382,17 +488,44 @@ tippy('line', {
 
 ### Singleton
 
-Use a single tooltip for many different reference elements.
+Use a single tooltip for many different reference elements. This allows you to
+"group" tooltips with a shared timer to improve UX when elements near each other
+have tooltips with a `delay` prop.
+
+Non-singleton tippy with `delay: 500`:
 
 <Demo>
   <Singleton />
 </Demo>
 
+Singleton tippy to group each tippy's `delay: 500`:
+
+<Demo>
+  <Singleton group />
+</Demo>
+
+Singleton tippy with a transition:
+
+<Demo>
+  <Singleton group transition />
+</Demo>
+
 ```js
 import { createSingleton } from 'tippy.js/addons'
 
-const instances = tippy('button', { updateDuration: 400 })
-createSingleton(instances, { delay: [400, 800] })
+const instances = []
+const buttons = document.querySelectorAll('button')
+
+for (let i = 0; i < buttons.length; i++) {
+  instances.push(
+    tippy(buttons[i], {
+      content: `Tooltip ${i + 1}`,
+      updateDuration: 400,
+    }),
+  )
+}
+
+createSingleton(instances, { delay: [300, 600] })
 ```
 
 ---
@@ -436,39 +569,29 @@ tippy('#myButton', {
 Attach many tippys to a single element.
 
 <Demo>
-  <Tippy content="Left" flip={false} placement="left">
-    <Tippy content="Bottom" flip={false} placement="bottom">
-      <Tippy content="Right" flip={false} placement="right">
-        <Tippy content="Top" flip={false}>
-          <Button
-            style={{
-              transform: 'translateX(-50%)',
-              left: '50%',
-              position: 'relative',
-            }}
-          >
-            Multiple
-          </Button>
-        </Tippy>
-      </Tippy>
-    </Tippy>
-  </Tippy>
+  <Multiple />
 </Demo>
 
 ```js
-tippy('#myButton', {
-  content: 'Left',
-  placement: 'left',
-  multiple: true,
-})
+const placements = ['top', 'bottom', 'left', 'right']
 
-tippy('#myButton', {
-  content: 'Right',
-  placement: 'right',
-  multiple: true,
-})
-
-// ...
+placements
+  .reduce(
+    (acc, basePlacement) =>
+      acc.concat(
+        basePlacement,
+        `${basePlacement}-start`,
+        `${basePlacement}-end`,
+      ),
+    [],
+  )
+  .forEach(placement => {
+    tippy('#square', {
+      content: placement,
+      placement,
+      multiple: true,
+    })
+  })
 ```
 
 <br />

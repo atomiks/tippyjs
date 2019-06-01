@@ -57,7 +57,7 @@ export default createGlobalStyle`
 
   code.language-text {
     background: #eeeefa;
-    color: #333;
+    color: inherit;
     font-weight: bold;
     padding: 0.2em 0.4em;
     border-radius: 4px;
@@ -67,7 +67,8 @@ export default createGlobalStyle`
 
   .token.important,
   .token.atrule,
-  .token.keyword {
+  .token.keyword,
+  .token.attribute {
     color: #c3a2ff;
   }
 

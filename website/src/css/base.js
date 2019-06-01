@@ -131,7 +131,9 @@ export default createGlobalStyle`
 
   h5 {
     font-size: 1.44rem;
+    margin-top: 2rem;
     color: #666c80;
+    font-weight: 500;
   }
 
   .link-icon {

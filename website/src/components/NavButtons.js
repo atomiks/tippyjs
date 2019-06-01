@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, graphql, StaticQuery } from 'gatsby'
 import styled from 'styled-components'
 import { MEDIA, Flex } from './Framework'
-import { sortPagesByIndex } from '../utils'
+import { sortActivePages } from '../utils'
 import ArrowRight from 'react-feather/dist/icons/arrow-right'
 import ArrowLeft from 'react-feather/dist/icons/arrow-left'
 import Theme from '../css/theme'
@@ -71,7 +71,7 @@ function NavButtons({ next }) {
       <StaticQuery
         query={allMdxQuery}
         render={data => {
-          const links = sortPagesByIndex(data.allMdx.edges).map(
+          const links = sortActivePages(data.allMdx.edges).map(
             ({ node }) => node,
           )
           const nextLink = links[next]

@@ -43,7 +43,7 @@ Re-enable a tippy:
 instance.enable()
 ```
 
-#### set
+#### setProps
 
 You can update any prop after the instance has been created. Pass an object of
 new props in:
@@ -72,14 +72,6 @@ instance.destroy()
 ```
 
 The `_tippy` property is deleted from the reference element upon destruction.
-
-If you're destroying a delegate instance (i.e., one you created with the
-`target` option), pass `true` as an argument to destroy all child instances that
-may have been created too.
-
-```js
-instance.destroy(true)
-```
 
 ### Static methods
 

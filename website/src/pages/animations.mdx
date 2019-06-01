@@ -4,12 +4,15 @@ path: /animations/
 index: 7
 ---
 
+import { Demo } from '../components/Framework'
+import DimensionsTransition from '../components/examples/DimensionsTransition'
+
 Tippy elements use a simple CSS transition by default. The main CSS file
 includes two animations: `fade` and `shift-away`.
 
 ### Usage
 
-Pass the animation name (string) as the `animation` option:
+Pass the animation name (string) as the `animation` prop:
 
 ```js
 tippy('button', {
@@ -77,7 +80,7 @@ tippy('button', {
 
 ### Inertia
 
-There's an option named `inertia` that adds an elastic inertial effect to the
+There's an prop named `inertia` that adds an elastic inertial effect to the
 tippy, which is a limited CSS-only way to mimic spring physics.
 
 ```js
@@ -86,7 +89,7 @@ tippy('button', {
 })
 ```
 
-You can customize this option in your CSS:
+You can customize this prop in your CSS:
 
 ```css
 .tippy-tooltip[data-inertia][data-state='visible'] {
@@ -184,16 +187,22 @@ tippy('button', {
 
 ### Dimensions transition
 
-> ⚠️ **Highly experimental code.** There is no simple wrapper API available for
-> this as I've only recently started working on it.
-
 While a tippy is showing, the content inside of it may change. How do you
 smoothly transition its dimensions? By default, it instantly changes size when
 the content is updated. It turns out this is quite complex to do, but possible.
 
-We're going to need the help of an external library that allows
-[FLIP](https://medium.com/outsystems-experts/flip-your-60-fps-animations-flip-em-good-372281598865)
-animations, which is a highly performant technique to make layout transitions
-happen at 60 FPS.
+#### Partially dynamic
 
-[View code here](TODO).
+View the [CodePen demo](https://codepen.io/atomiks/pen/LgjMbW).
+
+#### Fully dynamic
+
+<Demo>
+  <DimensionsTransition />
+</Demo>
+
+Code: TBD
+
+Edge cases need to be worked out first. Highly experimental and buggy at this
+stage. There is no API wrapper for this yet as it's only being recently
+developed.
