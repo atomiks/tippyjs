@@ -2,7 +2,7 @@ import {
   PopperElement,
   Props,
   PopperChildren,
-  BasicPlacement,
+  BasePlacement,
   Placement,
 } from './types'
 import { innerHTML, div, isRealElement } from './utils'
@@ -146,8 +146,8 @@ export function updateTransitionEndListener(
 /**
  * Returns the popper's placement, ignoring shifting (top-start, etc)
  */
-export function getBasicPlacement(placement: Placement): BasicPlacement {
-  return placement.split('-')[0] as BasicPlacement
+export function getBasePlacement(placement: Placement): BasePlacement {
+  return placement.split('-')[0] as BasePlacement
 }
 
 /**
@@ -300,7 +300,7 @@ export function updatePopperElement(
  * region
  */
 export function isCursorOutsideInteractiveBorder(
-  popperPlacement: BasicPlacement,
+  popperPlacement: BasePlacement,
   popperRect: ClientRect,
   event: MouseEvent,
   props: Props,

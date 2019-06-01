@@ -14,7 +14,7 @@ import {
   setInnerHTML,
   setContent,
   isCursorOutsideInteractiveBorder,
-  getBasicPlacement,
+  getBasePlacement,
   updateTheme,
 } from '../../src/popper'
 import { div } from '../../src/utils'
@@ -591,7 +591,7 @@ describe('isCursorOutsideInteractiveBorder', () => {
   })
 })
 
-describe('getBasicPlacement', () => {
+describe('getBasePlacement', () => {
   it('returns the base value without shifting', () => {
     const allPlacements = ['top', 'bottom', 'left', 'right'].reduce(
       (acc, basePlacement) => [
@@ -602,13 +602,13 @@ describe('getBasicPlacement', () => {
     )
 
     allPlacements.forEach(placement => {
-      expect(getBasicPlacement(placement).endsWith('-start')).toBe(false)
-      expect(getBasicPlacement(placement).endsWith('-end')).toBe(false)
+      expect(getBasePlacement(placement).endsWith('-start')).toBe(false)
+      expect(getBasePlacement(placement).endsWith('-end')).toBe(false)
     })
   })
 
   it('returns an empty string if there is no placement', () => {
-    expect(getBasicPlacement('')).toBe('')
+    expect(getBasePlacement('')).toBe('')
   })
 })
 

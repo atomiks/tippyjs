@@ -16,7 +16,7 @@ import {
   createPopperElement,
   updatePopperElement,
   getChildren,
-  getBasicPlacement,
+  getBasePlacement,
   updateTransitionEndListener,
   isCursorOutsideInteractiveBorder,
   reflow,
@@ -177,11 +177,11 @@ export default function createTippy(
 
   /* ======================= 🔒 Private methods 🔒 ======================= */
   function getIsVerticalPlacement(): boolean {
-    return includes(['top', 'bottom'], getBasicPlacement(currentPlacement))
+    return includes(['top', 'bottom'], getBasePlacement(currentPlacement))
   }
 
   function getIsOppositePlacement(): boolean {
-    return includes(['bottom', 'right'], getBasicPlacement(currentPlacement))
+    return includes(['bottom', 'right'], getBasePlacement(currentPlacement))
   }
 
   function getIsInFollowCursorMode(): boolean {
@@ -484,7 +484,7 @@ export default function createTippy(
 
     if (
       isCursorOutsideInteractiveBorder(
-        getBasicPlacement(currentPlacement),
+        getBasePlacement(currentPlacement),
         popper.getBoundingClientRect(),
         event,
         instance.props,
@@ -568,7 +568,7 @@ export default function createTippy(
       }
 
       // Apply the `distance` prop
-      const basicPlacement = getBasicPlacement(currentPlacement)
+      const BasePlacement = getBasePlacement(currentPlacement)
       const tooltipStyles = tooltip.style
 
       tooltipStyles.top = '0'
@@ -591,9 +591,9 @@ export default function createTippy(
         ...(!isPaddingNumber && padding),
       }
 
-      computedPadding[basicPlacement] = isPaddingNumber
+      computedPadding[BasePlacement] = isPaddingNumber
         ? padding + instance.props.distance
-        : (padding[basicPlacement] || 0) + instance.props.distance
+        : (padding[BasePlacement] || 0) + instance.props.distance
 
       instance.popperInstance!.modifiers.filter(
         (m): boolean => m.name === 'preventOverflow',

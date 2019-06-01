@@ -6,7 +6,7 @@ import {
   disableTouchEnvironment,
 } from '../utils'
 import tippy from '../../src'
-import { getChildren, getBasicPlacement } from '../../src/popper'
+import { getChildren, getBasePlacement } from '../../src/popper'
 import { ARROW_SELECTOR, SVG_ARROW_SELECTOR } from '../../src/constants'
 
 jest.useFakeTimers()
@@ -1062,7 +1062,7 @@ describe('followCursor', () => {
 
   function matches(receivedRect) {
     const isVerticalPlacement = ['top', 'bottom'].includes(
-      getBasicPlacement(instance.popper.getAttribute('x-placement')),
+      getBasePlacement(instance.popper.getAttribute('x-placement')),
     )
     const verticalIncrease = isVerticalPlacement ? 0 : halfFakeSize
     const horizontalIncrease = isVerticalPlacement ? halfFakeSize : 0

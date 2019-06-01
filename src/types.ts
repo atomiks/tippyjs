@@ -1,6 +1,6 @@
 import Popper, { ReferenceObject } from 'popper.js'
 
-export type BasicPlacement = 'top' | 'bottom' | 'left' | 'right'
+export type BasePlacement = 'top' | 'bottom' | 'left' | 'right'
 
 export type Placement = Popper.Placement
 
