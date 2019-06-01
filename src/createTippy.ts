@@ -32,7 +32,6 @@ import {
   setTransitionDuration,
   setVisibilityState,
   debounce,
-  isRealElement,
 } from './utils'
 import { warnWhen, validateProps } from './validation'
 
@@ -186,11 +185,7 @@ export default function createTippy(
   }
 
   function getIsInFollowCursorMode(): boolean {
-    return (
-      instance.props.followCursor &&
-      !currentInput.isTouch &&
-      lastTriggerEventType !== 'focus'
-    )
+    return instance.props.followCursor && lastTriggerEventType !== 'focus'
   }
 
   function getTransitionableElements(): (HTMLDivElement | null)[] {
@@ -390,65 +385,12 @@ export default function createTippy(
   }
 
   function positionVirtualReferenceNearCursor(event: MouseEvent): void {
-    const { clientX, clientY } = (lastMouseMoveEvent = event)
+    const { clientX: x, clientY: y } = (lastMouseMoveEvent = event)
 
     // Gets set once popperInstance `onCreate` has been called
     if (!currentComputedPadding) {
       return
     }
-
-    const rect = reference.getBoundingClientRect()
-    const { followCursor } = instance.props
-    const isHorizontal = followCursor === 'horizontal'
-    const isVertical = followCursor === 'vertical'
-
-    // Ensure virtual reference is padded to prevent tooltip from overflowing.
-    // Seems to be a Popper.js issue
-    // TODO: Remove the following later if Popper.js changes/fixes the
-    // behavior. See https://github.com/FezVrasta/popper.js/issues/708
-    // =============================== START FIX ===============================
-    const padding = { ...currentComputedPadding }
-    const isVerticalPlacement = getIsVerticalPlacement()
-
-    function getCorrectedPadding(placement: string): number {
-      const measure = isVerticalPlacement ? 'offsetWidth' : 'offsetHeight'
-      return (
-        currentComputedPadding[placement] +
-        instance.popperChildren.arrow![measure]
-      )
-    }
-
-    if (instance.props.arrow) {
-      if (isVerticalPlacement) {
-        padding.left = getCorrectedPadding('left')
-        padding.right = getCorrectedPadding('right')
-      } else {
-        padding.top = getCorrectedPadding('top')
-        padding.bottom = getCorrectedPadding('bottom')
-      }
-    }
-
-    const { boundary } = instance.props
-    const boundaryRect = isRealElement(boundary)
-      ? boundary.getBoundingClientRect()
-      : boundary === 'window'
-      ? popper.ownerDocument!.documentElement.getBoundingClientRect()
-      : {
-          // 'viewport'
-          top: 0,
-          left: 0,
-          right: window.innerWidth,
-          bottom: window.innerHeight,
-        }
-    const x = Math.min(
-      Math.max(boundaryRect.left + padding.left, clientX),
-      boundaryRect.right - padding.right,
-    )
-    const y = Math.min(
-      Math.max(boundaryRect.top + padding.top, clientY),
-      boundaryRect.bottom - padding.bottom,
-    )
-    // ================================ END FIX ================================
 
     // If the instance is interactive, avoid updating the position unless it's
     // over the reference element
@@ -457,24 +399,40 @@ export default function createTippy(
       (el: Element): boolean => el === reference,
     )
 
+    const rect = reference.getBoundingClientRect()
+    const { followCursor } = instance.props
+    const isHorizontal = followCursor === 'horizontal'
+    const isVertical = followCursor === 'vertical'
+
+    // The virtual reference needs some size to prevent itself from overflowing
+    const fakeSize = 100
+    const halfFakeSize = fakeSize / 2
+    const isVerticalPlacement = getIsVerticalPlacement()
+    const verticalIncrease = isVerticalPlacement ? 0 : halfFakeSize
+    const horizontalIncrease = isVerticalPlacement ? halfFakeSize : 0
+
     if (isCursorOverReference || !instance.props.interactive) {
       instance.popperInstance!.reference = {
+        // These `clientWidth` values don't get used by Popper.js if they are 0
         clientWidth: 0,
         clientHeight: 0,
         getBoundingClientRect: (): DOMRect | ClientRect => ({
-          width: 0,
-          height: 0,
-          top: isHorizontal ? rect.top : y,
-          bottom: isHorizontal ? rect.bottom : y,
-          left: isVertical ? rect.left : x,
-          right: isVertical ? rect.right : x,
+          width: isVerticalPlacement ? fakeSize : 0,
+          height: isVerticalPlacement ? 0 : fakeSize,
+          top: (isHorizontal ? rect.top : y) - verticalIncrease,
+          bottom: (isHorizontal ? rect.bottom : y) + verticalIncrease,
+          left: (isVertical ? rect.left : x) - horizontalIncrease,
+          right: (isVertical ? rect.right : x) + horizontalIncrease,
         }),
       }
 
       instance.popperInstance!.scheduleUpdate()
     }
 
-    if (followCursor === 'initial' && instance.state.isVisible) {
+    if (
+      currentInput.isTouch ||
+      (followCursor === 'initial' && instance.state.isVisible)
+    ) {
       removeFollowCursorListener()
     }
   }
@@ -716,23 +674,17 @@ export default function createTippy(
     hasMountCallbackRun = false
 
     const isInFollowCursorMode = getIsInFollowCursorMode()
-    const shouldEnableListeners =
-      !isInFollowCursorMode &&
-      !(instance.props.followCursor === 'initial' && currentInput.isTouch)
 
     if (!instance.popperInstance) {
       createPopperInstance()
 
-      if (shouldEnableListeners) {
+      if (!isInFollowCursorMode) {
         instance.popperInstance!.enableEventListeners()
       }
     } else {
       if (!isInFollowCursorMode) {
         instance.popperInstance.scheduleUpdate()
-
-        if (shouldEnableListeners) {
-          instance.popperInstance.enableEventListeners()
-        }
+        instance.popperInstance.enableEventListeners()
       }
 
       setFlipModifierEnabled(
@@ -745,30 +697,15 @@ export default function createTippy(
     // positioned incorrectly if triggered by `focus` afterwards.
     // Update the reference back to the real DOM element
     instance.popperInstance!.reference = reference
-    const { arrow } = instance.popperChildren
 
-    if (
-      isInFollowCursorMode ||
-      // Allows `followCursor: 'initial'` on touch devices
-      (currentInput.isTouch &&
-        lastMouseMoveEvent &&
-        instance.props.followCursor === 'initial')
-    ) {
-      if (arrow) {
-        arrow.style.margin = '0'
-      }
-
-      if (lastMouseMoveEvent) {
-        // TODO: If the tippy also has `updateDuration`, it transitions from
-        // the initial placement to the cursor point
-        requestAnimationFrame(
-          (): void => {
-            positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-          },
-        )
-      }
-    } else if (arrow) {
-      arrow.style.margin = ''
+    if (isInFollowCursorMode && lastMouseMoveEvent) {
+      // TODO: If the tippy also has `updateDuration`, it transitions from
+      // the initial placement to the cursor point
+      requestAnimationFrame(
+        (): void => {
+          positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+        },
+      )
     }
 
     const { appendTo } = instance.props
