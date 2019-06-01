@@ -64,6 +64,14 @@ describe('validateProps', () => {
         '`__NAMESPACE_PREFIX__-material` in v5.',
     )
   })
+
+  it('recognizes specifying `placement` in `popperOptions`', () => {
+    validateProps({ popperOptions: { placement: 'auto' } })
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] Specifying `placement` in `popperOptions` is not ' +
+        'supported. Use the base-level `placement` prop instead.',
+    )
+  })
 })
 
 describe('validateTargets', () => {

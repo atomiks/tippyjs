@@ -41,6 +41,8 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
         prop === 'theme' &&
         includes(['dark', 'light', 'light-border', 'translucent'], value)
       const didPassGoogleTheme = prop === 'theme' && value === 'google'
+      const didSpecifyPlacementInPopperOptions =
+        prop === 'popperOptions' && value && hasOwnProperty(value, 'placement')
 
       warnWhen(
         didPassTargetprop,
@@ -81,6 +83,12 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
         didPassGoogleTheme,
         'The default theme `google` was renamed to ' +
           '`__NAMESPACE_PREFIX__-material` in v5.',
+      )
+
+      warnWhen(
+        didSpecifyPlacementInPopperOptions,
+        'Specifying `placement` in `popperOptions` is not supported. Use the ' +
+          'base-level `placement` prop instead.',
       )
     },
   )
