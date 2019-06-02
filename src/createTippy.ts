@@ -414,7 +414,7 @@ export default function createTippy(
 
     if (isCursorOverReference || !instance.props.interactive) {
       instance.popperInstance!.reference = {
-        // These `clientWidth` values don't get used by Popper.js if they are 0
+        // These `client` values don't get used by Popper.js if they are 0
         clientWidth: 0,
         clientHeight: 0,
         getBoundingClientRect: (): DOMRect | ClientRect => ({
@@ -427,7 +427,7 @@ export default function createTippy(
         }),
       }
 
-      instance.popperInstance!.scheduleUpdate()
+      instance.popperInstance!.update()
     }
 
     if (
@@ -671,32 +671,31 @@ export default function createTippy(
   }
 
   function mount(): void {
+    // The mounting callback (`currentMountCallback`) is only run due to a
+    // popperInstance update/create
     hasMountCallbackRun = false
 
     const isInFollowCursorMode = getIsInFollowCursorMode()
 
-    if (!instance.popperInstance) {
+    if (instance.popperInstance) {
+      setFlipModifierEnabled(
+        instance.popperInstance.modifiers,
+        instance.props.flip,
+      )
+
+      if (!isInFollowCursorMode) {
+        instance.popperInstance!.reference = reference
+        instance.popperInstance.enableEventListeners()
+      }
+
+      instance.popperInstance.scheduleUpdate()
+    } else {
       createPopperInstance()
 
       if (!isInFollowCursorMode) {
         instance.popperInstance!.enableEventListeners()
       }
-    } else {
-      if (!isInFollowCursorMode) {
-        instance.popperInstance.scheduleUpdate()
-        instance.popperInstance.enableEventListeners()
-      }
-
-      setFlipModifierEnabled(
-        instance.popperInstance.modifiers,
-        instance.props.flip,
-      )
     }
-
-    // If the instance previously had followCursor behavior, it will be
-    // positioned incorrectly if triggered by `focus` afterwards.
-    // Update the reference back to the real DOM element
-    instance.popperInstance!.reference = reference
   }
 
   function scheduleShow(event?: Event): void {
@@ -922,18 +921,6 @@ export default function createTippy(
         return
       }
 
-      const isInFollowCursorMode = getIsInFollowCursorMode()
-
-      if (isInFollowCursorMode && lastMouseMoveEvent) {
-        // TODO: If the tippy also has `updateDuration`, it transitions from
-        // the initial placement to the cursor point
-        requestAnimationFrame(
-          (): void => {
-            positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-          },
-        )
-      }
-
       const { appendTo } = instance.props
       const parentNode =
         appendTo === 'parent'
@@ -946,40 +933,51 @@ export default function createTippy(
         instance.state.isMounted = true
       }
 
-      reflow(popper)
+      const isInFollowCursorMode = getIsInFollowCursorMode()
 
-      // Double update will apply correct mutations
-      if (!isInFollowCursorMode) {
-        instance.popperInstance!.update()
+      if (isInFollowCursorMode && lastMouseMoveEvent) {
+        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
       }
 
-      if (instance.popperChildren.backdrop) {
-        instance.popperChildren.content.style.transitionDelay =
-          Math.round(duration / 12) + 'ms'
-      }
+      // `positionVirtualReferenceNearCursor` calls `.update()` - we need to
+      // wait for the next tick otherwise it can use the wrong placement's
+      // animation if it flipped
+      requestAnimationFrame(() => {
+        reflow(popper)
 
-      if (instance.props.sticky) {
-        makeSticky()
-      }
+        // Double update will apply correct mutations
+        if (!isInFollowCursorMode) {
+          instance.popperInstance!.update()
+        }
 
-      setTransitionDuration([popper], instance.props.updateDuration)
-      setTransitionDuration(transitionableElements, duration)
-      setVisibilityState(transitionableElements, 'visible')
+        if (instance.popperChildren.backdrop) {
+          instance.popperChildren.content.style.transitionDelay =
+            Math.round(duration / 12) + 'ms'
+        }
 
-      onTransitionedIn(
-        duration,
-        (): void => {
-          if (instance.props.aria) {
-            getEventListenersTarget().setAttribute(
-              `aria-${instance.props.aria}`,
-              tooltip.id,
-            )
-          }
+        if (instance.props.sticky) {
+          makeSticky()
+        }
 
-          instance.props.onShown(instance)
-          instance.state.isShown = true
-        },
-      )
+        setTransitionDuration([popper], instance.props.updateDuration)
+        setTransitionDuration(transitionableElements, duration)
+        setVisibilityState(transitionableElements, 'visible')
+
+        onTransitionedIn(
+          duration,
+          (): void => {
+            if (instance.props.aria) {
+              getEventListenersTarget().setAttribute(
+                `aria-${instance.props.aria}`,
+                tooltip.id,
+              )
+            }
+
+            instance.props.onShown(instance)
+            instance.state.isShown = true
+          },
+        )
+      })
     }
 
     mount()
