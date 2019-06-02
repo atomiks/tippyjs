@@ -34,16 +34,17 @@ const placements = ['top', 'bottom', 'left', 'right']
 animations.forEach(animation => {
   const h1 = document.createElement('h1')
   h1.textContent = animation
-  container.append(h1)
+  container.appendChild(h1)
 
   placements.forEach(placement => {
     const button = document.createElement('button')
     button.textContent = placement
-    container.append(button)
+    container.appendChild(button)
 
     tippy(button, {
       content: 'Tooltip',
       animateFill: false,
+      duration: 2000,
       animation,
       placement,
     })

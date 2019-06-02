@@ -6,15 +6,15 @@ const container = document.querySelector('.container')
 const button = document.createElement('button')
 button.style.transform = 'translate(100px, 300px)'
 button.textContent = 'Reference'
-container.append(button)
+container.appendChild(button)
 
 const tippyContent = document.createElement('div')
 const btn = document.createElement('button')
 const wrapper = document.createElement('div')
 const img = document.createElement('img')
 
-tippyContent.append(btn)
-tippyContent.append(wrapper)
+tippyContent.appendChild(btn)
+tippyContent.appendChild(wrapper)
 
 img.src =
   'https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60'
@@ -40,9 +40,9 @@ btn.onclick = () => {
 
   flipper.recordBeforeUpdate()
 
-  Object.values(instance.popperChildren).forEach(element => {
-    if (element) {
-      element.style.transitionDuration = '0ms'
+  Object.keys(instance.popperChildren).forEach(key => {
+    if (instance.popperChildren[key]) {
+      instance.popperChildren[key].style.transitionDuration = '0ms'
     }
   })
 

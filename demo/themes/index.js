@@ -17,16 +17,14 @@ const arrowTypes = ['sharp', 'round']
 themes.forEach(theme => {
   const h1 = document.createElement('h1')
   h1.textContent = theme
-  container.append(h1)
+  container.appendChild(h1)
 
   placements.forEach(placement => {
     arrows.forEach(arrow => {
       arrowTypes.forEach(arrowType => {
         const button = document.createElement('button')
         button.textContent = 'Button'
-        container.append(button)
-
-        console.log(theme)
+        container.appendChild(button)
 
         tippy(button, {
           content: 'Tooltip',

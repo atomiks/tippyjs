@@ -5,7 +5,7 @@ const container = document.querySelector('.container')
 
 const button = document.createElement('button')
 button.textContent = 'Reference'
-container.append(button)
+container.appendChild(button)
 
 tippy(button, {
   content: 'Tooltip',
