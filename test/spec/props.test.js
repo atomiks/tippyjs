@@ -593,9 +593,9 @@ describe('onTrigger', () => {
     expect(spy).toHaveBeenCalledWith(instance, event)
   })
 
-  it('is not called without an event to pass (showOnInit)', () => {
+  it('is not called without an event to pass (showOnCreate)', () => {
     const spy = jest.fn()
-    tippy(h(), { onTrigger: spy, showOnInit: true })
+    tippy(h(), { onTrigger: spy, showOnCreate: true })
     expect(spy).not.toHaveBeenCalled()
   })
 })
@@ -822,9 +822,9 @@ describe('boundary', () => {
   })
 })
 
-describe('showOnInit', () => {
+describe('showOnCreate', () => {
   it('shows the tooltip on init', () => {
-    const instance = tippy(h(), { showOnInit: true })
+    const instance = tippy(h(), { showOnCreate: true })
     expect(instance.state.isVisible).toBe(true)
   })
 })
@@ -1074,7 +1074,7 @@ describe('followCursor', () => {
   }
 
   it('true: follows both axes', () => {
-    instance = tippy(h(), { followCursor: true, showOnInit: true })
+    instance = tippy(h(), { followCursor: true, showOnCreate: true })
 
     jest.runAllTimers()
 
@@ -1100,7 +1100,7 @@ describe('followCursor', () => {
   it('"horizontal": follows x-axis', () => {
     instance = tippy(h(), {
       followCursor: 'horizontal',
-      showOnInit: true,
+      showOnCreate: true,
     })
     const referenceRect = instance.reference.getBoundingClientRect()
 
@@ -1129,7 +1129,7 @@ describe('followCursor', () => {
   it('"vertical": follows y-axis', () => {
     instance = tippy(h(), {
       followCursor: 'vertical',
-      showOnInit: true,
+      showOnCreate: true,
     })
     const referenceRect = instance.reference.getBoundingClientRect()
 
@@ -1157,7 +1157,7 @@ describe('followCursor', () => {
   it('"initial": only follows once', () => {
     instance = tippy(h(), {
       followCursor: 'initial',
-      showOnInit: true,
+      showOnCreate: true,
     })
 
     jest.runAllTimers()
@@ -1184,7 +1184,7 @@ describe('followCursor', () => {
   it('is at correct position after a delay', () => {
     instance = tippy(h(), {
       followCursor: true,
-      showOnInit: true,
+      showOnCreate: true,
       delay: 100,
     })
 
@@ -1206,7 +1206,7 @@ describe('followCursor', () => {
   it('is at correct position after a content update', () => {
     instance = tippy(h(), {
       followCursor: true,
-      showOnInit: true,
+      showOnCreate: true,
     })
 
     jest.runAllTimers()
@@ -1238,7 +1238,7 @@ describe('followCursor', () => {
     instance = tippy(h(), {
       followCursor: 'horizontal',
       interactive: true,
-      showOnInit: true,
+      showOnCreate: true,
     })
 
     jest.runAllTimers()
@@ -1263,7 +1263,7 @@ describe('followCursor', () => {
 
     instance = tippy(h(), {
       followCursor: true,
-      showOnInit: true,
+      showOnCreate: true,
       flip: false,
     })
 

@@ -28,7 +28,7 @@ themes.forEach(theme => {
 
         tippy(button, {
           content: 'Tooltip',
-          showOnInit: true,
+          showOnCreate: true,
           theme,
           placement,
           arrow,

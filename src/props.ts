@@ -38,7 +38,7 @@ export const defaultProps: Props = {
   placement: 'top',
   popperOptions: {},
   role: 'tooltip',
-  showOnInit: false,
+  showOnCreate: false,
   size: 'regular',
   sticky: false,
   theme: '__NAMESPACE_PREFIX__-dark',

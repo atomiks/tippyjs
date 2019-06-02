@@ -72,7 +72,7 @@ describe('tippy.setDefaultProps()', () => {
 
 describe('tippy.hideAll()', () => {
   it('hides all tippys on the document, ignoring `hideOnClick`', () => {
-    const props = { showOnInit: true, hideOnClick: false }
+    const props = { showOnCreate: true, hideOnClick: false }
     const instances = [...Array(3)].map(() => tippy(h(), props))
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(true)
@@ -84,7 +84,7 @@ describe('tippy.hideAll()', () => {
   })
 
   it('respects `duration` option', () => {
-    const props = { showOnInit: true, duration: 100 }
+    const props = { showOnCreate: true, duration: 100 }
     const instances = [...Array(3)].map(() => tippy(h(), props))
     tippy.hideAll({ duration: 0 })
     instances.forEach(instance => {
@@ -93,7 +93,7 @@ describe('tippy.hideAll()', () => {
   })
 
   it('respects `exclude` option', () => {
-    const props = { showOnInit: true }
+    const props = { showOnCreate: true }
     const instances = [...Array(3)].map(() => tippy(h(), props))
     tippy.hideAll({ exclude: instances[0] })
     instances.forEach(instance => {
@@ -104,7 +104,7 @@ describe('tippy.hideAll()', () => {
   })
 
   it('respects `exclude` option as type ReferenceElement for multiple tippys', () => {
-    const props = { showOnInit: true, multiple: true }
+    const props = { showOnCreate: true, multiple: true }
     const ref = h()
     tippy(ref, props)
     tippy(ref, props)

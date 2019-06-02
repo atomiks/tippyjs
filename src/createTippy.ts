@@ -144,7 +144,7 @@ export default function createTippy(
     createPopperInstance()
   }
 
-  if (props.showOnInit) {
+  if (props.showOnCreate) {
     scheduleShow()
   }
 

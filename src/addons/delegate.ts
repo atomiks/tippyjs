@@ -39,7 +39,7 @@ export default function delegate(
       const targetNode = (event.target as Element).closest(target)
 
       if (targetNode) {
-        const instance = tippy(targetNode, { ...props, showOnInit: true })
+        const instance = tippy(targetNode, { ...props, showOnCreate: true })
 
         if (instance) {
           childTippyInstances = childTippyInstances.concat(instance)

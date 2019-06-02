@@ -63,7 +63,7 @@ export interface Props {
   placement: Placement
   popperOptions: Popper.PopperOptions
   role: string
-  showOnInit: boolean
+  showOnCreate: boolean
   size: 'small' | 'regular' | 'large'
   sticky: boolean
   theme: string
