@@ -320,6 +320,7 @@ describe('interactive', () => {
   it('false: tippy is hidden when clicked', () => {
     const instance = tippy(h(), { interactive: false })
     instance.show()
+    jest.runAllTimers()
     instance.popperChildren.tooltip.dispatchEvent(
       new MouseEvent('mousedown', { bubbles: true }),
     )
@@ -567,6 +568,7 @@ describe('onHide', () => {
   it('prevents the the tooltip from hiding if it returns `false`', () => {
     const instance = tippy(h(), { onHide: () => false })
     instance.show()
+    jest.runAllTimers()
     instance.hide()
     expect(instance.state.isVisible).toBe(true)
   })
@@ -577,6 +579,7 @@ describe('onHidden', () => {
     const spy = jest.fn()
     const instance = tippy(h(), { onHidden: spy, duration: 0 })
     instance.show()
+    jest.runAllTimers()
     instance.hide()
     jest.runAllTimers()
     expect(spy.mock.calls.length).toBe(1)
@@ -991,6 +994,7 @@ describe('hideOnClick', () => {
       interactive: false,
     })
     instance.show()
+    jest.runAllTimers()
     instance.popperChildren.tooltip.dispatchEvent(mousedownEvent)
     instance.popperChildren.tooltip.dispatchEvent(clickEvent)
     expect(instance.state.isVisible).toBe(false)

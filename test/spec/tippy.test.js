@@ -3,6 +3,8 @@ import { defaultProps } from '../../src/props'
 import { POPPER_SELECTOR } from '../../src/constants'
 import tippy, { autoInit } from '../../src'
 
+jest.useFakeTimers()
+
 afterEach(cleanDocumentBody)
 
 describe('tippy', () => {
@@ -84,9 +86,7 @@ describe('tippy.hideAll()', () => {
   it('hides all tippys on the document, ignoring `hideOnClick`', () => {
     const props = { showOnCreate: true, hideOnClick: false }
     const instances = [...Array(3)].map(() => tippy(h(), props))
-    instances.forEach(instance => {
-      expect(instance.state.isVisible).toBe(true)
-    })
+    jest.runAllTimers()
     tippy.hideAll()
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(false)
@@ -96,6 +96,7 @@ describe('tippy.hideAll()', () => {
   it('respects `duration` option', () => {
     const props = { showOnCreate: true, duration: 100 }
     const instances = [...Array(3)].map(() => tippy(h(), props))
+    jest.runAllTimers()
     tippy.hideAll({ duration: 0 })
     instances.forEach(instance => {
       expect(instance.state.isMounted).toBe(false)
@@ -105,6 +106,7 @@ describe('tippy.hideAll()', () => {
   it('respects `exclude` option', () => {
     const props = { showOnCreate: true }
     const instances = [...Array(3)].map(() => tippy(h(), props))
+    jest.runAllTimers()
     tippy.hideAll({ exclude: instances[0] })
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(

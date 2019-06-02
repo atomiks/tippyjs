@@ -131,6 +131,7 @@ describe('instance.show()', () => {
   it('mounts the popper to the DOM', () => {
     instance = createTippy(h(), defaultProps)
     instance.show()
+    jest.runAllTimers()
     expect(document.querySelector(POPPER_SELECTOR)).toBe(instance.popper)
   })
 
@@ -175,6 +176,7 @@ describe('instance.hide()', () => {
       ...defaultProps,
     })
     instance.show(0)
+    jest.runAllTimers()
     expect(document.querySelector(POPPER_SELECTOR)).toBe(instance.popper)
     instance.hide(0)
     jest.runAllTimers()

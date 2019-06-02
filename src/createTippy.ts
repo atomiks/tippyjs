@@ -67,6 +67,7 @@ export default function createTippy(
   let showTimeout: any
   let hideTimeout: any
   let animationFrame: number
+  let isBeingDestroyed = false
   let isScheduledToShow = false
   let currentPlacement: Placement = props.placement
   let hasMountCallbackRun = false
@@ -665,7 +666,6 @@ export default function createTippy(
   function runMountCallback(): void {
     if (!hasMountCallbackRun && currentMountCallback) {
       hasMountCallbackRun = true
-      reflow(popper)
       currentMountCallback()
     }
   }
@@ -697,28 +697,6 @@ export default function createTippy(
     // positioned incorrectly if triggered by `focus` afterwards.
     // Update the reference back to the real DOM element
     instance.popperInstance!.reference = reference
-
-    if (isInFollowCursorMode && lastMouseMoveEvent) {
-      // TODO: If the tippy also has `updateDuration`, it transitions from
-      // the initial placement to the cursor point
-      requestAnimationFrame(
-        (): void => {
-          positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-        },
-      )
-    }
-
-    const { appendTo } = instance.props
-    const parentNode =
-      appendTo === 'parent'
-        ? reference.parentNode
-        : invokeWithArgsOrReturn(appendTo, [reference])
-
-    if (!parentNode.contains(popper)) {
-      parentNode.appendChild(popper)
-      instance.props.onMount(instance)
-      instance.state.isMounted = true
-    }
   }
 
   function scheduleShow(event?: Event): void {
@@ -944,8 +922,34 @@ export default function createTippy(
         return
       }
 
+      const isInFollowCursorMode = getIsInFollowCursorMode()
+
+      if (isInFollowCursorMode && lastMouseMoveEvent) {
+        // TODO: If the tippy also has `updateDuration`, it transitions from
+        // the initial placement to the cursor point
+        requestAnimationFrame(
+          (): void => {
+            positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+          },
+        )
+      }
+
+      const { appendTo } = instance.props
+      const parentNode =
+        appendTo === 'parent'
+          ? reference.parentNode
+          : invokeWithArgsOrReturn(appendTo, [reference])
+
+      if (!parentNode.contains(popper)) {
+        parentNode.appendChild(popper)
+        instance.props.onMount(instance)
+        instance.state.isMounted = true
+      }
+
+      reflow(popper)
+
       // Double update will apply correct mutations
-      if (!getIsInFollowCursorMode()) {
+      if (!isInFollowCursorMode) {
         instance.popperInstance!.update()
       }
 
@@ -997,11 +1001,9 @@ export default function createTippy(
     }
 
     // Early bail-out
-    // We're checking `isMounted` instead if `isVisible` so that `destroy()`'s
-    // instance.hide(0) call is not ignored (to unmount the tippy instantly)
-    const isAlreadyHidden = !instance.state.isMounted
+    const isAlreadyHidden = !instance.state.isVisible && !isBeingDestroyed
     const isDestroyed = instance.state.isDestroyed
-    const isDisabled = !instance.state.isEnabled
+    const isDisabled = !instance.state.isEnabled && !isBeingDestroyed
 
     if (isAlreadyHidden || isDestroyed || isDisabled) {
       return
@@ -1057,8 +1059,8 @@ export default function createTippy(
       return
     }
 
-    // `destroy()`'s `hide()` call should not be ignored
-    instance.enable()
+    isBeingDestroyed = true
+
     instance.hide(0)
 
     removeTriggersFromEventListenersTarget()
@@ -1069,6 +1071,7 @@ export default function createTippy(
       instance.popperInstance.destroy()
     }
 
+    isBeingDestroyed = false
     instance.state.isDestroyed = true
   }
 }
