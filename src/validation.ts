@@ -33,10 +33,12 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
       const value = (partialProps as any)[prop]
       const didPassTargetprop = prop === 'target'
       const didPassA11yprop = prop === 'a11y'
+      const didPassShowOnInitProp = prop === 'showOnInit'
       const didPassOtherUnknownprop =
         !hasOwnProperty(defaultProps, prop) &&
-        prop !== 'target' &&
-        prop !== 'a11y'
+        !didPassTargetprop &&
+        !didPassA11yprop &&
+        !didPassShowOnInitProp
       const didPassOldThemeName =
         prop === 'theme' &&
         includes(['dark', 'light', 'light-border', 'translucent'], value)
@@ -56,6 +58,11 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
         'The `a11y` prop was removed in v5. Make ' +
           'sure the element you are giving a tippy to is natively ' +
           'focusable, such as <button> or <input>, not <div> or <span>.',
+      )
+
+      warnWhen(
+        didPassShowOnInitProp,
+        'The `showOnInit` prop was renamed to `showOnCreate` in v5.',
       )
 
       warnWhen(

@@ -40,6 +40,14 @@ describe('validateProps', () => {
     )
   })
 
+  it('recognizes the old `showOnInit` prop', () => {
+    validateProps({ showOnInit: true })
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] ' +
+        'The `showOnInit` prop was renamed to `showOnCreate` in v5.',
+    )
+  })
+
   it('recognizes old `theme` values', () => {
     const themes = ['dark', 'light', 'light-border', 'translucent']
     themes.forEach(theme => {
