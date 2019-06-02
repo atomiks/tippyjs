@@ -568,7 +568,7 @@ export default function createTippy(
       }
 
       // Apply the `distance` prop
-      const BasePlacement = getBasePlacement(currentPlacement)
+      const basePlacement = getBasePlacement(currentPlacement)
       const tooltipStyles = tooltip.style
 
       tooltipStyles.top = '0'
@@ -591,9 +591,9 @@ export default function createTippy(
         ...(!isPaddingNumber && padding),
       }
 
-      computedPadding[BasePlacement] = isPaddingNumber
+      computedPadding[basePlacement] = isPaddingNumber
         ? padding + instance.props.distance
-        : (padding[BasePlacement] || 0) + instance.props.distance
+        : (padding[basePlacement] || 0) + instance.props.distance
 
       instance.popperInstance!.modifiers.filter(
         (m): boolean => m.name === 'preventOverflow',

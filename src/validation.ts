@@ -31,13 +31,13 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
   Object.keys(partialProps).forEach(
     (prop): void => {
       const value = (partialProps as any)[prop]
-      const didPassTargetprop = prop === 'target'
-      const didPassA11yprop = prop === 'a11y'
+      const didPassTargetProp = prop === 'target'
+      const didPassA11yProp = prop === 'a11y'
       const didPassShowOnInitProp = prop === 'showOnInit'
-      const didPassOtherUnknownprop =
+      const didPassOtherUnknownProp =
         !hasOwnProperty(defaultProps, prop) &&
-        !didPassTargetprop &&
-        !didPassA11yprop &&
+        !didPassTargetProp &&
+        !didPassA11yProp &&
         !didPassShowOnInitProp
       const didPassOldThemeName =
         prop === 'theme' &&
@@ -47,14 +47,14 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
         prop === 'popperOptions' && value && hasOwnProperty(value, 'placement')
 
       warnWhen(
-        didPassTargetprop,
+        didPassTargetProp,
         'The `target` prop was removed in v5 and ' +
           'replaced with the `delegate()` method. Read more here: ' +
           'https//atomiks.github.io/tippyjs/addons#event-delegation',
       )
 
       warnWhen(
-        didPassA11yprop,
+        didPassA11yProp,
         'The `a11y` prop was removed in v5. Make ' +
           'sure the element you are giving a tippy to is natively ' +
           'focusable, such as <button> or <input>, not <div> or <span>.',
@@ -66,7 +66,7 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
       )
 
       warnWhen(
-        didPassOtherUnknownprop,
+        didPassOtherUnknownProp,
         '`' +
           prop +
           '` is not a valid prop. You ' +
