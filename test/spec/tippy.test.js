@@ -68,6 +68,16 @@ describe('tippy.setDefaultProps()', () => {
     tippy.setDefaultProps({ placement: newPlacement })
     expect(defaultProps.placement).toBe(newPlacement)
   })
+
+  it('is validated', () => {
+    const spy = jest.spyOn(console, 'warn')
+    tippy.setDefaultProps({ showOnInit: true })
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] ' +
+        'The `showOnInit` prop was renamed to `showOnCreate` in v5.',
+    )
+    spy.mockRestore()
+  })
 })
 
 describe('tippy.hideAll()', () => {

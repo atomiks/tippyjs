@@ -68,4 +68,16 @@ describe('getDataAttributeProps', () => {
     ref.setAttribute('data-tippy-content', '{')
     expect(() => getDataAttributeProps(ref)).not.toThrow()
   })
+
+  it('is validated', () => {
+    const spy = jest.spyOn(console, 'warn')
+    const ref = h()
+    ref.setAttribute('data-tippy-theme', 'google')
+    getDataAttributeProps(ref)
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] The default theme `google` was renamed to ' +
+        '`__NAMESPACE_PREFIX__-material` in v5.',
+    )
+    spy.mockRestore()
+  })
 })

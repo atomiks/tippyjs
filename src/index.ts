@@ -73,6 +73,10 @@ tippy.currentInput = currentInput
  * Mutates the defaultProps object by setting the props specified
  */
 tippy.setDefaultProps = (partialProps: Partial<Props>): void => {
+  if (__DEV__) {
+    validateProps(partialProps)
+  }
+
   Object.keys(partialProps).forEach(
     (key): void => {
       // @ts-ignore
