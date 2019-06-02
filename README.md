@@ -38,7 +38,7 @@ yarn add tippy.js
 
 ```html
 <script src="https://unpkg.com/popper.js@1"></script>
-<script src="https://unpkg.com/tippy.js@4"></script>
+<script src="https://unpkg.com/tippy.js@5"></script>
 ```
 
 ### Modern ES modules in the browser
@@ -46,7 +46,7 @@ yarn add tippy.js
 ```html
 <script type="module">
   // Uses latest popper.js (unminified code)
-  import tippy from 'https://unpkg.com/tippy.js@4?module'
+  import tippy from 'https://unpkg.com/tippy.js@5?module'
 </script>
 ```
 
