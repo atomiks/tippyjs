@@ -193,6 +193,10 @@ export default function createTippy(
     return [tooltip, content, instance.popperChildren.backdrop]
   }
 
+  function getEventListenersTarget(): ReferenceElement {
+    return instance.props.triggerTarget || reference
+  }
+
   function removeFollowCursorListener(): void {
     document.removeEventListener(
       'mousemove',
@@ -206,10 +210,6 @@ export default function createTippy(
     mouseMoveListeners = mouseMoveListeners.filter(
       (listener): boolean => listener !== debouncedOnMouseMove,
     )
-  }
-
-  function getEventListenersTarget(): ReferenceElement {
-    return instance.props.triggerTarget || reference
   }
 
   function onDocumentMouseDown(event: MouseEvent): void {
@@ -890,7 +890,7 @@ export default function createTippy(
       return
     }
 
-    // Standardize `disabled` behavior across browsers.
+    // Normalize `disabled` behavior across browsers.
     // Firefox allows events on disabled elements, but Chrome doesn't.
     // Using a wrapper element (i.e. <span>) is recommended.
     if (getEventListenersTarget().hasAttribute('disabled')) {
