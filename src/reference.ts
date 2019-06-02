@@ -1,6 +1,5 @@
-import { Props, ReferenceElement } from './types'
+import { ReferenceElement, Props } from './types'
 import { defaultProps } from './props'
-import { validateProps } from './validation'
 
 const keys = Object.keys(defaultProps)
 
@@ -29,10 +28,6 @@ export function getDataAttributeProps(reference: ReferenceElement): Props {
 
     return acc
   }, {})
-
-  if (__DEV__) {
-    validateProps(props)
-  }
 
   return props
 }
