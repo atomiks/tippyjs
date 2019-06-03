@@ -73,6 +73,7 @@ export default function createTippy(
   let showTimeoutId: number
   let hideTimeoutId: number
   let animationFrameId: number
+  let startTransitionAnimationFrameId: number
   let isScheduledToShow = false
   let isBeingDestroyed = false
   let previousPlacement: string
@@ -1030,7 +1031,7 @@ export default function createTippy(
       }
 
       // Wait for the next tick
-      requestAnimationFrame(() => {
+      startTransitionAnimationFrameId = requestAnimationFrame(() => {
         reflow(popper)
 
         if (instance.popperChildren.backdrop) {
@@ -1086,6 +1087,8 @@ export default function createTippy(
     if (instance.props.onHide(instance) === false && !isBeingDestroyed) {
       return
     }
+
+    cancelAnimationFrame(startTransitionAnimationFrameId)
 
     removeDocumentClickListener()
 
