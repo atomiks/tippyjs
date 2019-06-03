@@ -407,14 +407,18 @@ export default function createTippy(
       getBasicPlacement(popper),
     )
     const fullPlacement = popper.getAttribute(PLACEMENT_ATTRIBUTE)
-    const isVariation = !!(fullPlacement ? fullPlacement.split('-')[1] : false)
+    const isVariation = fullPlacement ? !!fullPlacement.split('-')[1] : false
     const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
     const halfSize = size / 2
     const verticalIncrease = isVerticalPlacement
       ? 0
-      : halfSize + (isVariation ? halfSize : 0)
+      : isVariation
+      ? size
+      : halfSize
     const horizontalIncrease = isVerticalPlacement
-      ? halfSize + (isVariation ? halfSize : 0)
+      ? isVariation
+        ? size
+        : halfSize
       : 0
 
     if (isCursorOverReference || !instance.props.interactive) {
