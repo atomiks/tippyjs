@@ -72,6 +72,7 @@ export default function createTippy(
   let hideTimeoutId: number
   let animationFrameId: number
   let isScheduledToShow = false
+  let isBeingDestroyed = false
   let previousPlacement: string
   let wasVisibleDuringPreviousUpdate = false
   let hasMountCallbackRun = false
@@ -1068,11 +1069,14 @@ export default function createTippy(
       (defaultProps.duration as [number, number])[1],
     ),
   ): void {
-    if (instance.state.isDestroyed || !instance.state.isEnabled) {
+    if (
+      instance.state.isDestroyed ||
+      (!instance.state.isEnabled && !isBeingDestroyed)
+    ) {
       return
     }
 
-    if (instance.props.onHide(instance) === false) {
+    if (instance.props.onHide(instance) === false && !isBeingDestroyed) {
       return
     }
 
@@ -1117,6 +1121,8 @@ export default function createTippy(
       return
     }
 
+    isBeingDestroyed = true
+
     // If the popper is currently mounted to the DOM, we want to ensure it gets
     // hidden and unmounted instantly upon destruction
     if (instance.state.isMounted) {
@@ -1142,6 +1148,7 @@ export default function createTippy(
       instance.popperInstance.destroy()
     }
 
+    isBeingDestroyed = false
     instance.state.isDestroyed = true
   }
 }
