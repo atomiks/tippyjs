@@ -72,7 +72,7 @@ export default function createTippy(
   let lastMouseMoveEvent: MouseEvent
   let showTimeoutId: number
   let hideTimeoutId: number
-  let animationFrameId: number
+  let scheduleHideAnimationFrameId: number
   let startTransitionAnimationFrameId: number
   let isScheduledToShow = false
   let isBeingDestroyed = false
@@ -838,7 +838,7 @@ export default function createTippy(
     } else {
       // Fixes a `transitionend` problem when it fires 1 frame too
       // late sometimes, we don't want hide() to be called.
-      animationFrameId = requestAnimationFrame(() => {
+      scheduleHideAnimationFrameId = requestAnimationFrame(() => {
         hide()
       })
     }
@@ -898,7 +898,7 @@ export default function createTippy(
   function clearDelayTimeouts(): void {
     clearTimeout(showTimeoutId)
     clearTimeout(hideTimeoutId)
-    cancelAnimationFrame(animationFrameId)
+    cancelAnimationFrame(scheduleHideAnimationFrameId)
   }
 
   /**
