@@ -119,6 +119,15 @@ describe('instance.destroy()', () => {
     instance.destroy()
     expect(instance.state.isMounted).toBe(false)
   })
+
+  it('still unmounts the tippy if the instance is disabled', () => {
+    instance = createTippy(h(), defaultProps)
+    instance.show()
+    jest.runAllTimers()
+    instance.disable()
+    instance.destroy()
+    expect(instance.state.isMounted).toBe(false)
+  })
 })
 
 describe('instance.show()', () => {
@@ -189,6 +198,7 @@ describe('instance.hide()', () => {
       duration: 100,
     })
     instance.show(0)
+    jest.runAllTimers()
     instance.hide(9)
     expect(instance.popperChildren.tooltip.style.transitionDuration).toBe('9ms')
   })
