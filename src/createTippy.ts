@@ -937,18 +937,14 @@ export default function createTippy(
 
       if (isInFollowCursorMode && lastMouseMoveEvent) {
         positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+      } else if (!isInFollowCursorMode) {
+        // Double update will apply correct mutations
+        instance.popperInstance!.update()
       }
 
-      // `positionVirtualReferenceNearCursor` calls `.update()` - we need to
-      // wait for the next tick otherwise it can use the wrong placement's
-      // animation if it flipped
+      // Wait for the next tick
       requestAnimationFrame(() => {
         reflow(popper)
-
-        // Double update will apply correct mutations
-        if (!isInFollowCursorMode) {
-          instance.popperInstance!.update()
-        }
 
         if (instance.popperChildren.backdrop) {
           instance.popperChildren.content.style.transitionDelay =
