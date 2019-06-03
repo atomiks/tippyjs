@@ -73,15 +73,26 @@ export function getValue(value: any, index: number, defaultValue: any): any {
 }
 
 /**
- * Debounce utility
+ * Debounce utility. To avoid bloating bundle size, we're only passing 1
+ * argument here, a more generic function would pass all arguments. Only
+ * `onMouseMove` uses this which takes the event object for now.
  */
-export function debounce(fn: Function, ms: number): () => void {
-  let timeoutId: number
+export function debounce<T>(
+  fn: (arg: T) => void,
+  ms: number,
+): (arg: T) => void {
+  // Avoid wrapping in `setTimeout` if ms is 0 anyway
+  if (ms === 0) {
+    return fn
+  }
 
-  return function() {
-    clearTimeout(timeoutId)
-    // @ts-ignore
-    timeoutId = setTimeout(() => fn.apply(this, arguments), ms)
+  let timeout: any
+
+  return (arg): void => {
+    clearTimeout(timeout)
+    timeout = setTimeout((): void => {
+      fn(arg)
+    }, ms)
   }
 }
 

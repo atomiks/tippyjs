@@ -48,6 +48,8 @@ import {
 } from './utils'
 
 let idCounter = 1
+// Workaround for IE11's lack of new MouseEvent constructor
+let mouseMoveListeners: ((event: MouseEvent) => void)[] = []
 
 /**
  * Creates and returns a Tippy object. We're using a closure pattern instead of
@@ -86,10 +88,7 @@ export default function createTippy(
     right: number
     [key: string]: number
   }
-  let debouncedOnMouseMove =
-    props.interactiveDebounce > 0
-      ? debounce(onMouseMove, props.interactiveDebounce)
-      : onMouseMove
+  let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce)
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   const id = idCounter++
@@ -186,11 +185,14 @@ export default function createTippy(
   }
 
   /**
-   * Cleans up old listeners
+   * Cleans up interactive mouse listeners
    */
-  function cleanupOldMouseListeners(): void {
+  function cleanupInteractiveMouseListeners(): void {
     document.body.removeEventListener('mouseleave', scheduleHide)
     document.removeEventListener('mousemove', debouncedOnMouseMove)
+    mouseMoveListeners = mouseMoveListeners.filter(
+      (listener): boolean => listener !== debouncedOnMouseMove,
+    )
   }
 
   /**
@@ -467,6 +469,12 @@ export default function createTippy(
 
       if (event instanceof MouseEvent) {
         lastMouseMoveEvent = event
+
+        // If scrolling, `mouseenter` events can be fired if the cursor lands
+        // over a new target, but `mousemove` events don't get fired. This
+        // causes interactive tooltips to get stuck open until the cursor is
+        // moved
+        mouseMoveListeners.forEach((listener): void => listener(event))
       }
     }
 
@@ -506,7 +514,7 @@ export default function createTippy(
         instance.props,
       )
     ) {
-      cleanupOldMouseListeners()
+      cleanupInteractiveMouseListeners()
       scheduleHide()
     }
   }
@@ -522,6 +530,8 @@ export default function createTippy(
     if (instance.props.interactive) {
       document.body.addEventListener('mouseleave', scheduleHide)
       document.addEventListener('mousemove', debouncedOnMouseMove)
+      mouseMoveListeners.push(debouncedOnMouseMove)
+
       return
     }
 
@@ -914,11 +924,8 @@ export default function createTippy(
 
     addTriggersToReference()
 
-    cleanupOldMouseListeners()
-    debouncedOnMouseMove = debounce(
-      onMouseMove,
-      options.interactiveDebounce || 0,
-    )
+    cleanupInteractiveMouseListeners()
+    debouncedOnMouseMove = debounce(onMouseMove, nextProps.interactiveDebounce)
 
     updatePopperElement(popper, prevProps, nextProps)
     instance.popperChildren = getChildren(popper)
