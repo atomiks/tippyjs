@@ -27,6 +27,8 @@ import {
   ROUND_ARROW_SELECTOR,
 } from '../../src/constants'
 
+jest.useFakeTimers()
+
 tippy.setDefaults({ duration: 0, delay: 0 })
 
 afterEach(cleanDocumentBody)
@@ -38,6 +40,7 @@ describe('hideAll', () => {
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(true)
     })
+    jest.runAllTimers()
     hideAll()
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(false)
@@ -47,6 +50,7 @@ describe('hideAll', () => {
   it('respects `duration` option', () => {
     const options = { showOnInit: true, duration: 100 }
     const instances = [...Array(3)].map(() => tippy(h(), options))
+    jest.runAllTimers()
     hideAll({ duration: 0 })
     instances.forEach(instance => {
       expect(instance.state.isMounted).toBe(false)
@@ -56,6 +60,7 @@ describe('hideAll', () => {
   it('respects `exclude` option', () => {
     const options = { showOnInit: true }
     const instances = [...Array(3)].map(() => tippy(h(), options))
+    jest.runAllTimers()
     hideAll({ exclude: instances[0] })
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(
@@ -69,6 +74,7 @@ describe('hideAll', () => {
     const ref = h()
     tippy(ref, options)
     tippy(ref, options)
+    jest.runAllTimers()
     hideAll({ exclude: ref })
     const instances = [...document.querySelectorAll(POPPER_SELECTOR)].map(
       popper => popper._tippy,

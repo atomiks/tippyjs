@@ -72,7 +72,6 @@ export default function createTippy(
   let hideTimeoutId: number
   let animationFrameId: number
   let isScheduledToShow = false
-  let currentParentNode: Element
   let previousPlacement: string
   let wasVisibleDuringPreviousUpdate = false
   let hasMountCallbackRun = false
@@ -226,13 +225,14 @@ export default function createTippy(
   }
 
   /**
-   * Determines if the instance is in `followCursor` mode
+   * Determines if the instance is in `followCursor` mode.
+   * NOTE: in v5, touch devices will use `initial` behavior no matter the value.
    */
-  function hasFollowCursorBehavior(): boolean {
+  function getIsInLooseFollowCursorMode(): boolean {
+    const { followCursor } = instance.props
     return (
-      instance.props.followCursor &&
-      !isUsingTouch &&
-      lastTriggerEventType !== 'focus'
+      (followCursor && lastTriggerEventType !== 'focus') ||
+      (isUsingTouch && followCursor === 'initial')
     )
   }
 
@@ -262,8 +262,8 @@ export default function createTippy(
     onTransitionEnd(duration, () => {
       if (
         !instance.state.isVisible &&
-        currentParentNode &&
-        currentParentNode.contains(popper)
+        popper.parentNode &&
+        popper.parentNode.contains(popper)
       ) {
         callback()
       }
@@ -375,86 +375,55 @@ export default function createTippy(
   }
 
   /**
-   * Returns corrected preventOverflow padding if the instance has an arrow
-   */
-  function getCorrectedPadding(placement: string): number {
-    return instance.props.arrow
-      ? currentComputedPadding[placement] +
-          (instance.props.arrowType === 'round' ? 18 : 16)
-      : currentComputedPadding[placement]
-  }
-
-  /**
    * Positions the virtual reference near the cursor
    */
   function positionVirtualReferenceNearCursor(event: MouseEvent): void {
-    const { clientX, clientY } = (lastMouseMoveEvent = event)
+    const { clientX: x, clientY: y } = (lastMouseMoveEvent = event)
 
     // Gets set once popperInstance `onCreate` has been called
     if (!currentComputedPadding) {
       return
     }
 
+    // If the instance is interactive, avoid updating the position unless it's
+    // over the reference element
+    const isCursorOverReference = closestCallback(
+      event.target as Element,
+      (el: Element): boolean => el === reference,
+    )
+
     const rect = reference.getBoundingClientRect()
     const { followCursor } = instance.props
     const isHorizontal = followCursor === 'horizontal'
     const isVertical = followCursor === 'vertical'
 
-    // Ensure virtual reference is padded to prevent tooltip from overflowing.
-    // Seems to be a Popper.js issue
-    const placement = getBasicPlacement(popper)
-    const isVerticalPlacement = includes(['top', 'bottom'], placement)
-    const isHorizontalPlacement = includes(['left', 'right'], placement)
-    const padding = { ...currentComputedPadding }
-
-    if (isVerticalPlacement) {
-      padding.left = getCorrectedPadding('left')
-      padding.right = getCorrectedPadding('right')
-    }
-
-    if (isHorizontalPlacement) {
-      padding.top = getCorrectedPadding('top')
-      padding.bottom = getCorrectedPadding('bottom')
-    }
-
-    // TODO: Remove the following later if Popper.js changes/fixes the
-    // behavior
-
-    // Top / left boundary
-    let x = isVerticalPlacement ? Math.max(padding.left, clientX) : clientX
-    let y = isHorizontalPlacement ? Math.max(padding.top, clientY) : clientY
-
-    // Bottom / right boundary
-    if (isVerticalPlacement && x > padding.right) {
-      x = Math.min(clientX, window.innerWidth - padding.right)
-    }
-    if (isHorizontalPlacement && y > padding.bottom) {
-      y = Math.min(clientY, window.innerHeight - padding.bottom)
-    }
-
-    // If the instance is interactive, avoid updating the position unless it's
-    // over the reference element
-    const isCursorOverReference = closestCallback(
-      event.target as Element,
-      (el: Element) => el === reference,
+    // The virtual reference needs some size to prevent itself from overflowing
+    const fakeSize = 100
+    const halfFakeSize = fakeSize / 2
+    const isVerticalPlacement = includes(
+      ['top', 'bottom'],
+      getBasicPlacement(popper),
     )
+    const verticalIncrease = isVerticalPlacement ? 0 : halfFakeSize
+    const horizontalIncrease = isVerticalPlacement ? halfFakeSize : 0
 
     if (isCursorOverReference || !instance.props.interactive) {
       instance.popperInstance!.reference = {
         ...instance.popperInstance!.reference,
-        getBoundingClientRect: () => ({
-          width: 0,
-          height: 0,
-          top: isHorizontal ? rect.top : y,
-          bottom: isHorizontal ? rect.bottom : y,
-          left: isVertical ? rect.left : x,
-          right: isVertical ? rect.right : x,
-        }),
+        // These `client` values don't get used by Popper.js if they are 0
         clientWidth: 0,
         clientHeight: 0,
+        getBoundingClientRect: (): DOMRect | ClientRect => ({
+          width: isVerticalPlacement ? fakeSize : 0,
+          height: isVerticalPlacement ? 0 : fakeSize,
+          top: (isHorizontal ? rect.top : y) - verticalIncrease,
+          bottom: (isHorizontal ? rect.bottom : y) + verticalIncrease,
+          left: (isVertical ? rect.left : x) - horizontalIncrease,
+          right: (isVertical ? rect.right : x) + horizontalIncrease,
+        }),
       }
 
-      instance.popperInstance!.scheduleUpdate()
+      instance.popperInstance!.update()
     }
 
     if (followCursor === 'initial' && instance.state.isVisible) {
@@ -616,7 +585,6 @@ export default function createTippy(
   function runMountCallback(): void {
     if (!hasMountCallbackRun && currentMountCallback) {
       hasMountCallbackRun = true
-      reflow(popper)
       currentMountCallback()
     }
   }
@@ -728,16 +696,16 @@ export default function createTippy(
         },
       },
       onCreate(data: Popper.Data) {
-        runMountCallback()
         applyMutations(data)
+        runMountCallback()
 
         if (popperOptions && popperOptions.onCreate) {
           popperOptions.onCreate(data)
         }
       },
       onUpdate(data: Popper.Data) {
-        runMountCallback()
         applyMutations(data)
+        runMountCallback()
 
         if (popperOptions && popperOptions.onUpdate) {
           popperOptions.onUpdate(data)
@@ -758,73 +726,26 @@ export default function createTippy(
   function mount(): void {
     hasMountCallbackRun = false
 
-    const shouldEnableListeners =
-      !hasFollowCursorBehavior() &&
-      !(instance.props.followCursor === 'initial' && isUsingTouch)
+    const isInLooseFollowCursorMode = getIsInLooseFollowCursorMode()
 
-    if (!instance.popperInstance) {
-      createPopperInstance()
-
-      if (shouldEnableListeners) {
-        instance.popperInstance!.enableEventListeners()
-      }
-    } else {
-      if (!hasFollowCursorBehavior()) {
-        instance.popperInstance.scheduleUpdate()
-
-        if (shouldEnableListeners) {
-          instance.popperInstance.enableEventListeners()
-        }
-      }
-
+    if (instance.popperInstance) {
       setFlipModifierEnabled(
         instance.popperInstance.modifiers,
         instance.props.flip,
       )
-    }
 
-    // If the instance previously had followCursor behavior, it will be
-    // positioned incorrectly if triggered by `focus` afterwards.
-    // Update the reference back to the real DOM element
-    instance.popperInstance!.reference = reference
-    const { arrow } = instance.popperChildren
-
-    if (hasFollowCursorBehavior()) {
-      if (arrow) {
-        arrow.style.margin = '0'
+      if (!isInLooseFollowCursorMode) {
+        instance.popperInstance.reference = reference
+        instance.popperInstance.enableEventListeners()
       }
 
-      if (lastMouseMoveEvent) {
-        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+      instance.popperInstance.scheduleUpdate()
+    } else {
+      createPopperInstance()
+
+      if (!isInLooseFollowCursorMode) {
+        instance.popperInstance!.enableEventListeners()
       }
-    } else if (arrow) {
-      arrow.style.margin = ''
-    }
-
-    // Allow followCursor: 'initial' on touch devices
-    if (
-      isUsingTouch &&
-      lastMouseMoveEvent &&
-      instance.props.followCursor === 'initial'
-    ) {
-      positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-
-      if (arrow) {
-        arrow.style.margin = '0'
-      }
-    }
-
-    const { appendTo } = instance.props
-
-    currentParentNode =
-      appendTo === 'parent'
-        ? reference.parentNode
-        : invokeWithArgsOrReturn(appendTo, [reference])
-
-    if (!currentParentNode.contains(popper)) {
-      currentParentNode.appendChild(popper)
-      instance.props.onMount(instance)
-      instance.state.isMounted = true
     }
   }
 
@@ -861,7 +782,7 @@ export default function createTippy(
     // upon mount.
     // Edge case: if the tooltip is still mounted, but then scheduleShow() is
     // called, it causes a jump.
-    if (hasFollowCursorBehavior() && !instance.state.isMounted) {
+    if (getIsInLooseFollowCursorMode() && !instance.state.isMounted) {
       if (!instance.popperInstance) {
         createPopperInstance()
       }
@@ -1074,39 +995,63 @@ export default function createTippy(
     const transitionableElements = getTransitionableElements()
     setTransitionDuration(transitionableElements.concat(popper), 0)
 
-    currentMountCallback = () => {
+    currentMountCallback = (): void => {
       if (!instance.state.isVisible) {
         return
       }
 
-      // Double update will apply correct mutations
-      if (!hasFollowCursorBehavior()) {
+      const { appendTo } = instance.props
+      const parentNode =
+        appendTo === 'parent'
+          ? reference.parentNode
+          : invokeWithArgsOrReturn(appendTo, [reference])
+
+      if (!parentNode.contains(popper)) {
+        parentNode.appendChild(popper)
+        instance.props.onMount(instance)
+        instance.state.isMounted = true
+      }
+
+      const isInLooseFollowCursorMode = getIsInLooseFollowCursorMode()
+
+      if (isInLooseFollowCursorMode && lastMouseMoveEvent) {
+        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+      } else if (!isInLooseFollowCursorMode) {
+        // Double update will apply correct mutations
         instance.popperInstance!.update()
       }
 
-      if (instance.popperChildren.backdrop) {
-        instance.popperChildren.content.style.transitionDelay =
-          Math.round(duration / 12) + 'ms'
-      }
+      // Wait for the next tick
+      requestAnimationFrame(() => {
+        reflow(popper)
 
-      if (instance.props.sticky) {
-        makeSticky()
-      }
-
-      setTransitionDuration([popper], instance.props.updateDuration)
-      setTransitionDuration(transitionableElements, duration)
-      setVisibilityState(transitionableElements, 'visible')
-
-      onTransitionedIn(duration, () => {
-        if (instance.props.aria) {
-          getEventListenersTarget().setAttribute(
-            `aria-${instance.props.aria}`,
-            popper.id,
-          )
+        if (instance.popperChildren.backdrop) {
+          instance.popperChildren.content.style.transitionDelay =
+            Math.round(duration / 12) + 'ms'
         }
 
-        instance.props.onShown(instance)
-        instance.state.isShown = true
+        if (instance.props.sticky) {
+          makeSticky()
+        }
+
+        setTransitionDuration([popper], instance.props.updateDuration)
+        setTransitionDuration(transitionableElements, duration)
+        setVisibilityState(transitionableElements, 'visible')
+
+        onTransitionedIn(
+          duration,
+          (): void => {
+            if (instance.props.aria) {
+              getEventListenersTarget().setAttribute(
+                `aria-${instance.props.aria}`,
+                popper.id,
+              )
+            }
+
+            instance.props.onShown(instance)
+            instance.state.isShown = true
+          },
+        )
       })
     }
 
@@ -1158,7 +1103,7 @@ export default function createTippy(
       instance.popperInstance!.disableEventListeners()
       instance.popperInstance!.options.placement = instance.props.placement
 
-      currentParentNode.removeChild(popper)
+      popper.parentNode!.removeChild(popper)
       instance.props.onHidden(instance)
       instance.state.isMounted = false
     })
