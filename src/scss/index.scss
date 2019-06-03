@@ -141,7 +141,7 @@
   &[data-interactive] {
     pointer-events: auto;
 
-    path {
+    .#{$namespace-prefix}-roundarrow path {
       pointer-events: auto;
     }
   }
