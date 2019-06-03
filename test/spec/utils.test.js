@@ -153,6 +153,21 @@ describe('debounce', () => {
     jest.advanceTimersByTime(10)
     expect(fn).toHaveBeenCalledTimes(1)
   })
+
+  it('is called with arguments', () => {
+    const fn = jest.fn()
+    const ms = 50
+    const debouncedFn = Utils.debounce(fn, ms)
+    debouncedFn('string')
+    jest.advanceTimersByTime(ms)
+    expect(fn).toHaveBeenCalledWith('string')
+  })
+
+  it('does not wrap with new function if ms = 0', () => {
+    const fn = jest.fn()
+    const debouncedFn = Utils.debounce(fn, 0)
+    expect(debouncedFn).toBe(fn)
+  })
 })
 
 describe('getModifier', () => {

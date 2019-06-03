@@ -121,6 +121,15 @@ describe('instance.destroy', () => {
     ref._tippy.destroy(true)
     expect(p._tippy).toBeUndefined()
   })
+
+  it('still unmounts the tippy if the instance is disabled', () => {
+    instance = createTippy(h(), defaultProps)
+    instance.show()
+    jest.runAllTimers()
+    instance.disable()
+    instance.destroy()
+    expect(instance.state.isMounted).toBe(false)
+  })
 })
 
 describe('instance.show', () => {
@@ -133,6 +142,7 @@ describe('instance.show', () => {
   it('mounts the popper to the DOM', () => {
     instance = createTippy(h(), defaultProps)
     instance.show()
+    jest.runAllTimers()
     expect(document.querySelector(POPPER_SELECTOR)).toBe(instance.popper)
   })
 
@@ -182,6 +192,7 @@ describe('instance.hide', () => {
       ...defaultProps,
     })
     instance.show(0)
+    jest.runAllTimers()
     expect(document.querySelector(POPPER_SELECTOR)).toBe(instance.popper)
     instance.hide(0)
     jest.runAllTimers()
@@ -194,6 +205,7 @@ describe('instance.hide', () => {
       duration: 100,
     })
     instance.show(0)
+    jest.runAllTimers()
     instance.hide(9)
     expect(instance.popperChildren.tooltip.style.transitionDuration).toBe('9ms')
     instance.destroy()
