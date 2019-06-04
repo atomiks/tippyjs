@@ -1047,8 +1047,8 @@ describe('followCursor', () => {
   // should be within that
   const first = { clientX: 317, clientY: 119 }
   const second = { clientX: 240, clientY: 500 }
-  const fakeSize = 100
-  const halfFakeSize = fakeSize / 2
+  const size = 0
+  const halfSize = size / 2
 
   const firstMouseMoveEvent = new MouseEvent('mousemove', {
     ...first,
@@ -1070,8 +1070,8 @@ describe('followCursor', () => {
     const isVerticalPlacement = ['top', 'bottom'].includes(
       getBasePlacement(instance.popper.getAttribute('x-placement')),
     )
-    const verticalIncrease = isVerticalPlacement ? 0 : halfFakeSize
-    const horizontalIncrease = isVerticalPlacement ? halfFakeSize : 0
+    const verticalIncrease = isVerticalPlacement ? 0 : halfSize
+    const horizontalIncrease = isVerticalPlacement ? halfSize : 0
 
     expect(rect.left).toBe(receivedRect.left - horizontalIncrease)
     expect(rect.right).toBe(receivedRect.right + horizontalIncrease)
