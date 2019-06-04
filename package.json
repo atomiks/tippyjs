@@ -108,7 +108,7 @@
     "autoprefixer": "^9.5.0",
     "babel-jest": "^24.5.0",
     "babel-plugin-dev-expression": "^0.2.1",
-    "bundlesize": "^0.17.0",
+    "bundlesize": "^0.17.2",
     "colorette": "^1.0.7",
     "cssnano": "^4.1.10",
     "eslint": "^5.12.0",
