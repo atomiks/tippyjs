@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest a feature for Tippy.js
 title: ''
-labels: enhancement
+labels: "\U0001F48E enhancement"
 assignees: ''
 
 ---
