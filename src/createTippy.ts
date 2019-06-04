@@ -66,7 +66,8 @@ export default function createTippy(
   let lastMouseMoveEvent: MouseEvent
   let showTimeout: any
   let hideTimeout: any
-  let animationFrame: number
+  let scheduleHideAnimationFrame: number
+  let startTransitionAnimationFrame: number
   let isBeingDestroyed = false
   let isScheduledToShow = false
   let currentPlacement: Placement = props.placement
@@ -775,7 +776,7 @@ export default function createTippy(
     } else {
       // Fixes a `transitionend` problem when it fires 1 frame too
       // late sometimes, we don't want hide() to be called.
-      animationFrame = requestAnimationFrame(
+      scheduleHideAnimationFrame = requestAnimationFrame(
         (): void => {
           instance.hide()
         },
@@ -795,7 +796,7 @@ export default function createTippy(
   function clearDelayTimeouts(): void {
     clearTimeout(showTimeout)
     clearTimeout(hideTimeout)
-    cancelAnimationFrame(animationFrame)
+    cancelAnimationFrame(scheduleHideAnimationFrame)
   }
 
   function setProps(partialProps: Partial<Props>): void {
@@ -955,7 +956,7 @@ export default function createTippy(
       }
 
       // Wait for the next tick
-      requestAnimationFrame(() => {
+      startTransitionAnimationFrame = requestAnimationFrame(() => {
         reflow(popper)
 
         if (instance.popperChildren.backdrop) {
@@ -1018,6 +1019,8 @@ export default function createTippy(
     if (instance.props.onHide(instance) === false && !isBeingDestroyed) {
       return
     }
+
+    cancelAnimationFrame(startTransitionAnimationFrame)
 
     removeDocumentMouseDownListener()
 
