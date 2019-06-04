@@ -402,14 +402,24 @@ export default function createTippy(
     const isVertical = followCursor === 'vertical'
 
     // The virtual reference needs some size to prevent itself from overflowing
-    const fakeSize = 100
-    const halfFakeSize = fakeSize / 2
     const isVerticalPlacement = includes(
       ['top', 'bottom'],
       getBasicPlacement(popper),
     )
-    const verticalIncrease = isVerticalPlacement ? 0 : halfFakeSize
-    const horizontalIncrease = isVerticalPlacement ? halfFakeSize : 0
+    const fullPlacement = popper.getAttribute(PLACEMENT_ATTRIBUTE)
+    const isVariation = fullPlacement ? !!fullPlacement.split('-')[1] : false
+    const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
+    const halfSize = size / 2
+    const verticalIncrease = isVerticalPlacement
+      ? 0
+      : isVariation
+      ? size
+      : halfSize
+    const horizontalIncrease = isVerticalPlacement
+      ? isVariation
+        ? size
+        : halfSize
+      : 0
 
     if (isCursorOverReference || !instance.props.interactive) {
       instance.popperInstance!.reference = {
@@ -418,8 +428,8 @@ export default function createTippy(
         clientWidth: 0,
         clientHeight: 0,
         getBoundingClientRect: (): DOMRect | ClientRect => ({
-          width: isVerticalPlacement ? fakeSize : 0,
-          height: isVerticalPlacement ? 0 : fakeSize,
+          width: isVerticalPlacement ? size : 0,
+          height: isVerticalPlacement ? 0 : size,
           top: (isHorizontal ? rect.top : y) - verticalIncrease,
           bottom: (isHorizontal ? rect.bottom : y) + verticalIncrease,
           left: (isVertical ? rect.left : x) - horizontalIncrease,
