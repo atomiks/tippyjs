@@ -2,7 +2,7 @@
 name: Question
 about: Ask a general question about Tippy.js
 title: ''
-labels: question
+labels: "\U0001F4A1 question"
 assignees: ''
 
 ---
