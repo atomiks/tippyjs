@@ -48,11 +48,11 @@ describe('validateProps', () => {
     )
   })
 
-  it('recognizes the old `material` theme', () => {
+  it('recognizes the old `google` theme', () => {
     validateProps({ theme: 'google' })
     expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] The default theme `google` was renamed to ' +
-        '`__NAMESPACE_PREFIX__-material` in v5.',
+      '[tippy.js WARNING] The included theme `google` was renamed to ' +
+        '`material` in v5.',
     )
   })
 

@@ -73,8 +73,7 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
 
       warnWhen(
         didPassGoogleTheme,
-        'The default theme `google` was renamed to ' +
-          '`__NAMESPACE_PREFIX__-material` in v5.',
+        'The included theme `google` was renamed to `material` in v5.',
       )
 
       warnWhen(

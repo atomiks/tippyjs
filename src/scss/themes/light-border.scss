@@ -5,7 +5,7 @@ $transparentLight: rgba(0, 8, 16, 0.08);
 $transparentDark: rgba(0, 8, 16, 0.15);
 $transparentDarker: rgba(0, 8, 16, 0.2);
 
-.#{$namespace-prefix}-tooltip.#{$namespace-prefix}-light-border-theme {
+.#{$namespace-prefix}-tooltip.light-border-theme {
   background-color: white;
   background-clip: padding-box;
   border: 1px solid $transparentDark;
