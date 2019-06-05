@@ -621,4 +621,10 @@ describe('updateTheme', () => {
     updateTheme(div, 'remove', theme)
     expect(div.className).toBe('')
   })
+
+  it('does not add a `-theme` class if the theme is an empty string', () => {
+    const div = document.createElement('div')
+    updateTheme(div, 'add', '')
+    expect(div.className).toBe('')
+  })
 })

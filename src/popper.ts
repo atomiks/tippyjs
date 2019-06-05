@@ -167,7 +167,9 @@ export function updateTheme(
 ): void {
   theme.split(' ').forEach(
     (name): void => {
-      tooltip.classList[action](name + '-theme')
+      if (name) {
+        tooltip.classList[action](`${name}-theme`)
+      }
     },
   )
 }

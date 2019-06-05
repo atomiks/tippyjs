@@ -48,23 +48,6 @@ describe('validateProps', () => {
     )
   })
 
-  it('recognizes old `theme` values', () => {
-    const themes = ['dark', 'light', 'light-border', 'translucent']
-    themes.forEach(theme => {
-      validateProps({ theme })
-      expect(spy).toHaveBeenCalledWith(
-        '[tippy.js WARNING] The default theme `' +
-          theme +
-          '` in v5 must include the prefix `__NAMESPACE_PREFIX__`, i.e. ' +
-          '"__NAMESPACE_PREFIX__-' +
-          theme +
-          '" instead of "' +
-          theme +
-          '".',
-      )
-    })
-  })
-
   it('recognizes the old `material` theme', () => {
     validateProps({ theme: 'google' })
     expect(spy).toHaveBeenCalledWith(

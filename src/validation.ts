@@ -1,5 +1,5 @@
 import { Props, Targets } from './types'
-import { hasOwnProperty, includes } from './utils'
+import { hasOwnProperty } from './utils'
 import { defaultProps } from './props'
 
 /**
@@ -39,9 +39,6 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
         !didPassTargetProp &&
         !didPassA11yProp &&
         !didPassShowOnInitProp
-      const didPassOldThemeName =
-        prop === 'theme' &&
-        includes(['dark', 'light', 'light-border', 'translucent'], value)
       const didPassGoogleTheme = prop === 'theme' && value === 'google'
       const didSpecifyPlacementInPopperOptions =
         prop === 'popperOptions' && value && hasOwnProperty(value, 'placement')
@@ -72,18 +69,6 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
           '` is not a valid prop. You ' +
           'may have spelled it incorrectly. View all of the valid props ' +
           'here: https://atomiks.github.io/tippyjs/all-props/',
-      )
-
-      warnWhen(
-        didPassOldThemeName,
-        'The default theme `' +
-          value +
-          '` in v5 must include the prefix `__NAMESPACE_PREFIX__`, i.e. ' +
-          '"__NAMESPACE_PREFIX__-' +
-          value +
-          '" instead of "' +
-          value +
-          '".',
       )
 
       warnWhen(
