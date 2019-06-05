@@ -12,6 +12,7 @@ const cssOnly = require('rollup-plugin-css-only')
 const replace = require('rollup-plugin-replace')
 
 const NAMESPACE_PREFIX = process.env.NAMESPACE || 'tippy'
+const THEME = process.env.THEME
 
 const BASE_OUTPUT_CONFIG = {
   name: 'tippy',
@@ -40,12 +41,16 @@ const PLUGIN_CONFIG = [
   PLUGINS.css,
 ]
 
-function createPluginSCSS(output) {
+function createPluginSCSS(output, shouldInjectNodeEnvTheme = false) {
+  let data = `$namespace-prefix: ${NAMESPACE_PREFIX};`
+
+  if (shouldInjectNodeEnvTheme && THEME) {
+    data += `@import './themes/${THEME}.scss';`
+  }
+
   return sass({
     output,
-    options: {
-      data: `$namespace-prefix: ${NAMESPACE_PREFIX};`,
-    },
+    options: { data },
     processor(css) {
       return postcss([autoprefixer, cssnano])
         .process(css, { from: undefined })
@@ -69,7 +74,7 @@ async function build() {
   // Create `./tippy.css` first
   const cssConfig = createRollupConfig(
     'css',
-    PLUGIN_CONFIG.concat(createPluginSCSS('./tippy.css')),
+    PLUGIN_CONFIG.concat(createPluginSCSS('./tippy.css', true)),
   )
   const cssBundle = await rollup(cssConfig)
   await cssBundle.write({
