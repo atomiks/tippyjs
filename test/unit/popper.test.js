@@ -25,8 +25,6 @@ import {
   SVG_ARROW_SELECTOR,
 } from '../../src/constants'
 
-tippy.setDefaultProps({ duration: 0, delay: 0 })
-
 afterEach(cleanDocumentBody)
 
 describe('createPopperElement', () => {
