@@ -7,9 +7,7 @@ import '../../src/scss/themes/translucent.scss'
 
 const container = document.querySelector('.container')
 
-const themes = ['dark', 'light', 'light-border', 'material', 'translucent'].map(
-  name => `__NAMESPACE_PREFIX__-${name}`,
-)
+const themes = ['dark', 'light', 'light-border', 'material', 'translucent']
 const placements = ['top', 'bottom', 'left', 'right']
 const arrows = [false, true]
 const arrowTypes = ['sharp', 'round']
