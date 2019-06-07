@@ -275,8 +275,8 @@ These themes are included in the package and can be imported separately.
 
 <Demo>
   {['light', 'light-border', 'material', 'translucent'].map(theme => (
-    <Tippy key={theme} theme={`tippy-${theme}`} animateFill={false}>
-      <Button>{`tippy-${theme}`}</Button>
+    <Tippy key={theme} theme={theme} animateFill={false}>
+      <Button>{theme}</Button>
     </Tippy>
   ))}
 </Demo>

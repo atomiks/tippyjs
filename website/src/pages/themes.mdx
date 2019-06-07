@@ -52,9 +52,8 @@ Browser:
 ```
 
 ```js
-// All of these included themes must be prefixed with `tippy-`
 tippy('button', {
-  theme: 'tippy-light',
+  theme: 'light',
 })
 ```
 
@@ -86,7 +85,7 @@ Depending on the options supplied, there will exist other elements inside it:
 <!-- prettier-ignore -->
 ```html
 <div class="tippy-popper">
-  <div class="tippy-tooltip">
+  <div class="tippy-tooltip" data-placement="top">
     <div class="tippy-backdrop"></div> <!-- animateFill: true -->
     <div class="tippy-arrow"></div> <!-- arrow: true -->
     <div class="tippy-content">
