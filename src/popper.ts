@@ -183,6 +183,9 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   popper.className = POPPER_CLASS
   popper.id = `__NAMESPACE_PREFIX__-${id}`
   popper.style.zIndex = '' + props.zIndex
+  popper.style.position = 'absolute'
+  popper.style.top = '0'
+  popper.style.left = '0'
 
   if (props.role) {
     popper.setAttribute('role', props.role)
