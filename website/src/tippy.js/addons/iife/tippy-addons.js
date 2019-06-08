@@ -63,7 +63,7 @@ var __tippyAddons__ = (function(exports, tippy$1) {
 
   function throwErrorWhen(condition, message) {
     if (condition) {
-      throw new Error('[tippy.js ERROR] '.concat(message))
+      throw new Error('[tippy.js ERROR] ' + message)
     }
   }
 
@@ -95,7 +95,7 @@ var __tippyAddons__ = (function(exports, tippy$1) {
           var instance = tippy$1(
             targetNode,
             _extends({}, props, {
-              showOnInit: true,
+              showOnCreate: true,
             }),
           )
 

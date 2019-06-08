@@ -1,5 +1,5 @@
 /**!
- * tippy.js v5.0.0-alpha.0
+ * tippy.js v5.0.0-alpha.1
  * (c) 2017-2019 atomiks
  * MIT License
  */
@@ -25,7 +25,7 @@ function _extends() {
   return _extends.apply(this, arguments)
 }
 
-var version = '5.0.0-alpha.0'
+var version = '5.0.0-alpha.1'
 
 var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
 var ua = isBrowser ? navigator.userAgent : ''
@@ -73,10 +73,10 @@ var defaultProps = {
   placement: 'top',
   popperOptions: {},
   role: 'tooltip',
-  showOnInit: false,
+  showOnCreate: false,
   size: 'regular',
   sticky: false,
-  theme: 'tippy-dark',
+  theme: '',
   touch: true,
   touchHold: false,
   trigger: 'mouseenter focus',
@@ -138,12 +138,12 @@ var BACKDROP_CLASS = 'tippy-backdrop'
 var ARROW_CLASS = 'tippy-arrow'
 var SVG_ARROW_CLASS = 'tippy-svgArrow' // Selectors
 
-var POPPER_SELECTOR = '.'.concat(POPPER_CLASS)
-var TOOLTIP_SELECTOR = '.'.concat(TOOLTIP_CLASS)
-var CONTENT_SELECTOR = '.'.concat(CONTENT_CLASS)
-var BACKDROP_SELECTOR = '.'.concat(BACKDROP_CLASS)
-var ARROW_SELECTOR = '.'.concat(ARROW_CLASS)
-var SVG_ARROW_SELECTOR = '.'.concat(SVG_ARROW_CLASS)
+var POPPER_SELECTOR = '.' + POPPER_CLASS
+var TOOLTIP_SELECTOR = '.' + TOOLTIP_CLASS
+var CONTENT_SELECTOR = '.' + CONTENT_CLASS
+var BACKDROP_SELECTOR = '.' + BACKDROP_CLASS
+var ARROW_SELECTOR = '.' + ARROW_CLASS
+var SVG_ARROW_SELECTOR = '.' + SVG_ARROW_CLASS
 
 var currentInput = {
   isTouch: false,
@@ -227,9 +227,9 @@ var keys = Object.keys(defaultProps)
  */
 
 function getDataAttributeProps(reference) {
-  return keys.reduce(function(acc, key) {
+  var props = keys.reduce(function(acc, key) {
     var valueAsString = (
-      reference.getAttribute('data-tippy-'.concat(key)) || ''
+      reference.getAttribute('data-tippy-' + key) || ''
     ).trim()
 
     if (!valueAsString) {
@@ -248,6 +248,7 @@ function getDataAttributeProps(reference) {
 
     return acc
   }, {})
+  return props
 }
 
 /**
@@ -359,7 +360,7 @@ function div() {
 function setTransitionDuration(els, value) {
   els.forEach(function(el) {
     if (el) {
-      el.style.transitionDuration = ''.concat(value, 'ms')
+      el.style.transitionDuration = value + 'ms'
     }
   })
 }
@@ -544,7 +545,9 @@ function reflow(popper) {
 
 function updateTheme(tooltip, action, theme) {
   theme.split(' ').forEach(function(name) {
-    tooltip.classList[action](name + '-theme')
+    if (name) {
+      tooltip.classList[action](name + '-theme')
+    }
   })
 }
 /**
@@ -556,7 +559,7 @@ function createPopperElement(id, props) {
   popper.className = POPPER_CLASS
   var tooltip = div()
   tooltip.className = TOOLTIP_CLASS
-  tooltip.id = 'tippy-'.concat(id)
+  tooltip.id = 'tippy-' + id
   tooltip.setAttribute('data-state', 'hidden')
   tooltip.setAttribute('tabindex', '-1')
   updateTheme(tooltip, 'add', props.theme)
@@ -708,7 +711,7 @@ function isCursorOutsideInteractiveBorder(
 function warnWhen(condition, message) {
   if (condition) {
     /* eslint-disable-next-line no-console */
-    console.warn('[tippy.js WARNING] '.concat(message))
+    console.warn('[tippy.js WARNING] ' + message)
   }
 }
 /**
@@ -717,7 +720,7 @@ function warnWhen(condition, message) {
 
 function throwErrorWhen(condition, message) {
   if (condition) {
-    throw new Error('[tippy.js ERROR] '.concat(message))
+    throw new Error('[tippy.js ERROR] ' + message)
   }
 }
 /**
@@ -729,32 +732,35 @@ function validateProps() {
     arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {}
   Object.keys(partialProps).forEach(function(prop) {
     var value = partialProps[prop]
-    var didPassTargetprop = prop === 'target'
-    var didPassA11yprop = prop === 'a11y'
-    var didPassOtherUnknownprop =
+    var didPassTargetProp = prop === 'target'
+    var didPassA11yProp = prop === 'a11y'
+    var didPassShowOnInitProp = prop === 'showOnInit'
+    var didPassOtherUnknownProp =
       !hasOwnProperty(defaultProps, prop) &&
-      prop !== 'target' &&
-      prop !== 'a11y'
-    var didPassOldThemeName =
-      prop === 'theme' &&
-      includes(['dark', 'light', 'light-border', 'translucent'], value)
+      !didPassTargetProp &&
+      !didPassA11yProp &&
+      !didPassShowOnInitProp
     var didPassGoogleTheme = prop === 'theme' && value === 'google'
     var didSpecifyPlacementInPopperOptions =
       prop === 'popperOptions' && value && hasOwnProperty(value, 'placement')
     warnWhen(
-      didPassTargetprop,
+      didPassTargetProp,
       'The `target` prop was removed in v5 and ' +
         'replaced with the `delegate()` method. Read more here: ' +
         'https//atomiks.github.io/tippyjs/addons#event-delegation',
     )
     warnWhen(
-      didPassA11yprop,
+      didPassA11yProp,
       'The `a11y` prop was removed in v5. Make ' +
         'sure the element you are giving a tippy to is natively ' +
         'focusable, such as <button> or <input>, not <div> or <span>.',
     )
     warnWhen(
-      didPassOtherUnknownprop,
+      didPassShowOnInitProp,
+      'The `showOnInit` prop was renamed to `showOnCreate` in v5.',
+    )
+    warnWhen(
+      didPassOtherUnknownProp,
       '`' +
         prop +
         '` is not a valid prop. You ' +
@@ -762,19 +768,8 @@ function validateProps() {
         'here: https://atomiks.github.io/tippyjs/all-props/',
     )
     warnWhen(
-      didPassOldThemeName,
-      'The default theme `' +
-        value +
-        '` in v5 must include the prefix `tippy`, i.e. ' +
-        '"tippy-' +
-        value +
-        '" instead of "' +
-        value +
-        '".',
-    )
-    warnWhen(
       didPassGoogleTheme,
-      'The default theme `google` was renamed to ' + '`tippy-material` in v5.',
+      'The included theme `google` was renamed to `material` in v5.',
     )
     warnWhen(
       didSpecifyPlacementInPopperOptions,
@@ -828,7 +823,9 @@ function createTippy(reference, collectionProps) {
   var lastMouseMoveEvent
   var showTimeout
   var hideTimeout
-  var animationFrame
+  var scheduleHideAnimationFrame
+  var startTransitionAnimationFrame
+  var isBeingDestroyed = false
   var isScheduledToShow = false
   var currentPlacement = props.placement
   var hasMountCallbackRun = false
@@ -897,7 +894,7 @@ function createTippy(reference, collectionProps) {
     createPopperInstance()
   }
 
-  if (props.showOnInit) {
+  if (props.showOnCreate) {
     scheduleShow()
   } // Prevent a tippy with a delay from hiding if the cursor left then returned
   // before it started hiding
@@ -936,6 +933,10 @@ function createTippy(reference, collectionProps) {
     return [tooltip, content, instance.popperChildren.backdrop]
   }
 
+  function getEventListenersTarget() {
+    return instance.props.triggerTarget || reference
+  }
+
   function removeFollowCursorListener() {
     document.removeEventListener(
       'mousemove',
@@ -949,10 +950,6 @@ function createTippy(reference, collectionProps) {
     mouseMoveListeners = mouseMoveListeners.filter(function(listener) {
       return listener !== debouncedOnMouseMove
     })
-  }
-
-  function getEventListenersTarget() {
-    return instance.props.triggerTarget || reference
   }
 
   function onDocumentMouseDown(event) {
@@ -1128,21 +1125,33 @@ function createTippy(reference, collectionProps) {
     var isHorizontal = followCursor === 'horizontal'
     var isVertical = followCursor === 'vertical' // The virtual reference needs some size to prevent itself from overflowing
 
-    var fakeSize = 100
-    var halfFakeSize = fakeSize / 2
-    var isVerticalPlacement = getIsVerticalPlacement()
-    var verticalIncrease = isVerticalPlacement ? 0 : halfFakeSize
-    var horizontalIncrease = isVerticalPlacement ? halfFakeSize : 0
+    var isVerticalPlacement = includes(
+      ['top', 'bottom'],
+      getBasePlacement(currentPlacement),
+    )
+    var isVariation = !!currentPlacement.split('-')[1]
+    var size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
+    var halfSize = size / 2
+    var verticalIncrease = isVerticalPlacement
+      ? 0
+      : isVariation
+      ? size
+      : halfSize
+    var horizontalIncrease = isVerticalPlacement
+      ? isVariation
+        ? size
+        : halfSize
+      : 0
 
     if (isCursorOverReference || !instance.props.interactive) {
       instance.popperInstance.reference = {
-        // These `clientWidth` values don't get used by Popper.js if they are 0
+        // These `client` values don't get used by Popper.js if they are 0
         clientWidth: 0,
         clientHeight: 0,
         getBoundingClientRect: function getBoundingClientRect() {
           return {
-            width: isVerticalPlacement ? fakeSize : 0,
-            height: isVerticalPlacement ? 0 : fakeSize,
+            width: isVerticalPlacement ? size : 0,
+            height: isVerticalPlacement ? 0 : size,
             top: (isHorizontal ? rect.top : y) - verticalIncrease,
             bottom: (isHorizontal ? rect.bottom : y) + verticalIncrease,
             left: (isVertical ? rect.left : x) - horizontalIncrease,
@@ -1150,7 +1159,7 @@ function createTippy(reference, collectionProps) {
           }
         },
       }
-      instance.popperInstance.scheduleUpdate()
+      instance.popperInstance.update()
     }
 
     if (
@@ -1286,14 +1295,12 @@ function createTippy(reference, collectionProps) {
         tooltip.removeAttribute('data-out-of-boundaries')
       } // Apply the `distance` prop
 
-      var BasePlacement = getBasePlacement(currentPlacement)
+      var basePlacement = getBasePlacement(currentPlacement)
       var tooltipStyles = tooltip.style
       tooltipStyles.top = '0'
       tooltipStyles.left = '0'
-      tooltipStyles[getIsVerticalPlacement() ? 'top' : 'left'] = ''.concat(
-        (getIsOppositePlacement() ? 1 : -1) * instance.props.distance,
-        'px',
-      )
+      tooltipStyles[getIsVerticalPlacement() ? 'top' : 'left'] =
+        (getIsOppositePlacement() ? 1 : -1) * instance.props.distance + 'px'
       var padding =
         preventOverflowModifier && preventOverflowModifier.padding !== undefined
           ? preventOverflowModifier.padding
@@ -1310,9 +1317,9 @@ function createTippy(reference, collectionProps) {
         !isPaddingNumber && padding,
       )
 
-      computedPadding[BasePlacement] = isPaddingNumber
+      computedPadding[basePlacement] = isPaddingNumber
         ? padding + instance.props.distance
-        : (padding[BasePlacement] || 0) + instance.props.distance
+        : (padding[basePlacement] || 0) + instance.props.distance
       instance.popperInstance.modifiers.filter(function(m) {
         return m.name === 'preventOverflow'
       })[0].padding = computedPadding
@@ -1388,55 +1395,34 @@ function createTippy(reference, collectionProps) {
   function runMountCallback() {
     if (!hasMountCallbackRun && currentMountCallback) {
       hasMountCallbackRun = true
-      reflow(popper)
       currentMountCallback()
     }
   }
 
   function mount() {
+    // The mounting callback (`currentMountCallback`) is only run due to a
+    // popperInstance update/create
     hasMountCallbackRun = false
     var isInFollowCursorMode = getIsInFollowCursorMode()
 
-    if (!instance.popperInstance) {
+    if (instance.popperInstance) {
+      setFlipModifierEnabled(
+        instance.popperInstance.modifiers,
+        instance.props.flip,
+      )
+
+      if (!isInFollowCursorMode) {
+        instance.popperInstance.reference = reference
+        instance.popperInstance.enableEventListeners()
+      }
+
+      instance.popperInstance.scheduleUpdate()
+    } else {
       createPopperInstance()
 
       if (!isInFollowCursorMode) {
         instance.popperInstance.enableEventListeners()
       }
-    } else {
-      if (!isInFollowCursorMode) {
-        instance.popperInstance.scheduleUpdate()
-        instance.popperInstance.enableEventListeners()
-      }
-
-      setFlipModifierEnabled(
-        instance.popperInstance.modifiers,
-        instance.props.flip,
-      )
-    } // If the instance previously had followCursor behavior, it will be
-    // positioned incorrectly if triggered by `focus` afterwards.
-    // Update the reference back to the real DOM element
-
-    instance.popperInstance.reference = reference
-
-    if (isInFollowCursorMode && lastMouseMoveEvent) {
-      // TODO: If the tippy also has `updateDuration`, it transitions from
-      // the initial placement to the cursor point
-      requestAnimationFrame(function() {
-        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-      })
-    }
-
-    var appendTo = instance.props.appendTo
-    var parentNode =
-      appendTo === 'parent'
-        ? reference.parentNode
-        : invokeWithArgsOrReturn(appendTo, [reference])
-
-    if (!parentNode.contains(popper)) {
-      parentNode.appendChild(popper)
-      instance.props.onMount(instance)
-      instance.state.isMounted = true
     }
   }
 
@@ -1501,7 +1487,7 @@ function createTippy(reference, collectionProps) {
     } else {
       // Fixes a `transitionend` problem when it fires 1 frame too
       // late sometimes, we don't want hide() to be called.
-      animationFrame = requestAnimationFrame(function() {
+      scheduleHideAnimationFrame = requestAnimationFrame(function() {
         instance.hide()
       })
     }
@@ -1519,7 +1505,7 @@ function createTippy(reference, collectionProps) {
   function clearDelayTimeouts() {
     clearTimeout(showTimeout)
     clearTimeout(hideTimeout)
-    cancelAnimationFrame(animationFrame)
+    cancelAnimationFrame(scheduleHideAnimationFrame)
   }
 
   function setProps(partialProps) {
@@ -1619,7 +1605,7 @@ function createTippy(reference, collectionProps) {
       isTouchAndTouchDisabled
     ) {
       return
-    } // Standardize `disabled` behavior across browsers.
+    } // Normalize `disabled` behavior across browsers.
     // Firefox allows events on disabled elements, but Chrome doesn't.
     // Using a wrapper element (i.e. <span>) is recommended.
 
@@ -1647,34 +1633,55 @@ function createTippy(reference, collectionProps) {
     currentMountCallback = function currentMountCallback() {
       if (!instance.state.isVisible) {
         return
-      } // Double update will apply correct mutations
+      }
 
-      if (!getIsInFollowCursorMode()) {
+      var appendTo = instance.props.appendTo
+      var parentNode =
+        appendTo === 'parent'
+          ? reference.parentNode
+          : invokeWithArgsOrReturn(appendTo, [reference])
+
+      if (!parentNode.contains(popper)) {
+        parentNode.appendChild(popper)
+        instance.props.onMount(instance)
+        instance.state.isMounted = true
+      }
+
+      var isInFollowCursorMode = getIsInFollowCursorMode()
+
+      if (isInFollowCursorMode && lastMouseMoveEvent) {
+        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
+      } else if (!isInFollowCursorMode) {
+        // Double update will apply correct mutations
         instance.popperInstance.update()
-      }
+      } // Wait for the next tick
 
-      if (instance.popperChildren.backdrop) {
-        instance.popperChildren.content.style.transitionDelay =
-          Math.round(duration / 12) + 'ms'
-      }
+      startTransitionAnimationFrame = requestAnimationFrame(function() {
+        reflow(popper)
 
-      if (instance.props.sticky) {
-        makeSticky()
-      }
-
-      setTransitionDuration([popper], instance.props.updateDuration)
-      setTransitionDuration(transitionableElements, duration)
-      setVisibilityState(transitionableElements, 'visible')
-      onTransitionedIn(duration, function() {
-        if (instance.props.aria) {
-          getEventListenersTarget().setAttribute(
-            'aria-'.concat(instance.props.aria),
-            tooltip.id,
-          )
+        if (instance.popperChildren.backdrop) {
+          instance.popperChildren.content.style.transitionDelay =
+            Math.round(duration / 12) + 'ms'
         }
 
-        instance.props.onShown(instance)
-        instance.state.isShown = true
+        if (instance.props.sticky) {
+          makeSticky()
+        }
+
+        setTransitionDuration([popper], instance.props.updateDuration)
+        setTransitionDuration(transitionableElements, duration)
+        setVisibilityState(transitionableElements, 'visible')
+        onTransitionedIn(duration, function() {
+          if (instance.props.aria) {
+            getEventListenersTarget().setAttribute(
+              'aria-' + instance.props.aria,
+              tooltip.id,
+            )
+          }
+
+          instance.props.onShown(instance)
+          instance.state.isShown = true
+        })
       })
     }
 
@@ -1694,21 +1701,20 @@ function createTippy(reference, collectionProps) {
           'This is a no-op but indicates a potential memory leak.',
       )
     } // Early bail-out
-    // We're checking `isMounted` instead if `isVisible` so that `destroy()`'s
-    // instance.hide(0) call is not ignored (to unmount the tippy instantly)
 
-    var isAlreadyHidden = !instance.state.isMounted
+    var isAlreadyHidden = !instance.state.isVisible && !isBeingDestroyed
     var isDestroyed = instance.state.isDestroyed
-    var isDisabled = !instance.state.isEnabled
+    var isDisabled = !instance.state.isEnabled && !isBeingDestroyed
 
     if (isAlreadyHidden || isDestroyed || isDisabled) {
       return
     }
 
-    if (instance.props.onHide(instance) === false) {
+    if (instance.props.onHide(instance) === false && !isBeingDestroyed) {
       return
     }
 
+    cancelAnimationFrame(startTransitionAnimationFrame)
     removeDocumentMouseDownListener()
     popper.style.visibility = 'hidden'
     instance.state.isVisible = false
@@ -1722,9 +1728,7 @@ function createTippy(reference, collectionProps) {
       }
 
       if (instance.props.aria) {
-        getEventListenersTarget().removeAttribute(
-          'aria-'.concat(instance.props.aria),
-        )
+        getEventListenersTarget().removeAttribute('aria-' + instance.props.aria)
       }
 
       instance.popperInstance.disableEventListeners()
@@ -1746,9 +1750,9 @@ function createTippy(reference, collectionProps) {
 
     if (instance.state.isDestroyed) {
       return
-    } // `destroy()`'s `hide()` call should not be ignored
+    }
 
-    instance.enable()
+    isBeingDestroyed = true
     instance.hide(0)
     removeTriggersFromEventListenersTarget()
     delete reference._tippy
@@ -1757,6 +1761,7 @@ function createTippy(reference, collectionProps) {
       instance.popperInstance.destroy()
     }
 
+    isBeingDestroyed = false
     instance.state.isDestroyed = true
   }
 }
@@ -1810,6 +1815,10 @@ tippy.currentInput = currentInput
  */
 
 tippy.setDefaultProps = function(partialProps) {
+  if (process.env.NODE_ENV !== 'production') {
+    validateProps(partialProps)
+  }
+
   Object.keys(partialProps).forEach(function(key) {
     // @ts-ignore
     defaultProps[key] = partialProps[key]
@@ -1900,11 +1909,11 @@ if (isBrowser) {
 }
 
 export {
-  tippy as a,
-  isBrowser as b,
-  throwErrorWhen as c,
-  _extends as d,
-  hasOwnProperty as e,
-  getValue as f,
+  _extends as _,
+  throwErrorWhen as a,
+  getValue as g,
+  hasOwnProperty as h,
+  isBrowser as i,
+  tippy as t,
 }
 //# sourceMappingURL=tippy.chunk.js.map

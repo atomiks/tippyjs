@@ -1,14 +1,14 @@
 /**!
- * tippy.js v5.0.0-alpha.0
+ * tippy.js v5.0.0-alpha.1
  * (c) 2017-2019 atomiks
  * MIT License
  */
 import {
-  c as throwErrorWhen,
-  a as tippy,
-  d as _extends,
-  e as hasOwnProperty,
-  f as getValue,
+  a as throwErrorWhen,
+  t as tippy,
+  _ as _extends,
+  h as hasOwnProperty,
+  g as getValue,
 } from '../../esm/tippy.chunk.js'
 import 'popper.js'
 
@@ -40,7 +40,7 @@ function delegate(targets, props) {
         var instance = tippy(
           targetNode,
           _extends({}, props, {
-            showOnInit: true,
+            showOnCreate: true,
           }),
         )
 

@@ -1,5 +1,5 @@
 /**!
- * tippy.js v5.0.0-alpha.0
+ * tippy.js v5.0.0-alpha.1
  * (c) 2017-2019 atomiks
  * MIT License
  */
@@ -38,7 +38,7 @@ function delegate(targets, props) {
         var instance = __chunk_1.tippy(
           targetNode,
           __chunk_1._extends({}, props, {
-            showOnInit: true,
+            showOnCreate: true,
           }),
         )
 

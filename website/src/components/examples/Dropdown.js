@@ -81,7 +81,7 @@ function Dropdown({ text = 'Dropdown' }) {
       distance={7}
       placement="bottom"
       animation="fade"
-      theme="tippy-light-border dropdown"
+      theme="light-border dropdown"
       trigger="click"
       appendTo="parent"
       onMount={() => setAriaExpanded('true')}

@@ -10,7 +10,7 @@ function Nesting() {
 
   return (
     <Tippy
-      theme="tippy-light-border"
+      theme="light-border"
       interactive={true}
       arrow={true}
       onCreate={instance => (parentInstanceRef.current = instance)}

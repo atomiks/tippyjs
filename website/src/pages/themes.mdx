@@ -80,7 +80,7 @@ A tippy is essentially three nested `div`s.
 - `tippy-tooltip` is the actual tooltip node.
 - `tippy-content` is the content node.
 
-Depending on the options supplied, there will exist other elements inside it:
+Depending on the props supplied, there will exist other elements inside it:
 
 <!-- prettier-ignore -->
 ```html
@@ -127,7 +127,7 @@ The `.tippy-backdrop` element is the background "filling" effect that's enabled
 by default. You should color the background of both the tooltip and the
 backdrop.
 
-To apply the theme, specify a `theme` option without the `-theme` suffix:
+To apply the theme, specify a `theme` prop without the `-theme` suffix:
 
 ```js
 tippy('button', {
