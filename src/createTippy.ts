@@ -73,7 +73,6 @@ export default function createTippy(
   let showTimeoutId: number
   let hideTimeoutId: number
   let scheduleHideAnimationFrameId: number
-  let startTransitionAnimationFrameId: number
   let isScheduledToShow = false
   let isBeingDestroyed = false
   let previousPlacement: string
@@ -607,6 +606,7 @@ export default function createTippy(
   function runMountCallback(): void {
     if (!hasMountCallbackRun && currentMountCallback) {
       hasMountCallbackRun = true
+      reflow(popper)
       currentMountCallback()
     }
   }
@@ -768,6 +768,18 @@ export default function createTippy(
       if (!isInLooseFollowCursorMode) {
         instance.popperInstance!.enableEventListeners()
       }
+    }
+
+    const { appendTo } = instance.props
+    const parentNode =
+      appendTo === 'parent'
+        ? reference.parentNode
+        : invokeWithArgsOrReturn(appendTo, [reference])
+
+    if (!parentNode.contains(popper)) {
+      parentNode.appendChild(popper)
+      instance.props.onMount(instance)
+      instance.state.isMounted = true
     }
   }
 
@@ -1019,18 +1031,6 @@ export default function createTippy(
         return
       }
 
-      const { appendTo } = instance.props
-      const parentNode =
-        appendTo === 'parent'
-          ? reference.parentNode
-          : invokeWithArgsOrReturn(appendTo, [reference])
-
-      if (!parentNode.contains(popper)) {
-        parentNode.appendChild(popper)
-        instance.props.onMount(instance)
-        instance.state.isMounted = true
-      }
-
       const isInLooseFollowCursorMode = getIsInLooseFollowCursorMode()
 
       if (isInLooseFollowCursorMode && lastMouseMoveEvent) {
@@ -1040,38 +1040,33 @@ export default function createTippy(
         instance.popperInstance!.update()
       }
 
-      // Wait for the next tick
-      startTransitionAnimationFrameId = requestAnimationFrame(() => {
-        reflow(popper)
+      if (instance.popperChildren.backdrop) {
+        instance.popperChildren.content.style.transitionDelay =
+          Math.round(duration / 12) + 'ms'
+      }
 
-        if (instance.popperChildren.backdrop) {
-          instance.popperChildren.content.style.transitionDelay =
-            Math.round(duration / 12) + 'ms'
-        }
+      if (instance.props.sticky) {
+        makeSticky()
+      }
 
-        if (instance.props.sticky) {
-          makeSticky()
-        }
+      setTransitionDuration([popper], instance.props.updateDuration)
+      setTransitionDuration(transitionableElements, duration)
+      setVisibilityState(transitionableElements, 'visible')
 
-        setTransitionDuration([popper], instance.props.updateDuration)
-        setTransitionDuration(transitionableElements, duration)
-        setVisibilityState(transitionableElements, 'visible')
+      onTransitionedIn(
+        duration,
+        (): void => {
+          if (instance.props.aria) {
+            getEventListenersTarget().setAttribute(
+              `aria-${instance.props.aria}`,
+              popper.id,
+            )
+          }
 
-        onTransitionedIn(
-          duration,
-          (): void => {
-            if (instance.props.aria) {
-              getEventListenersTarget().setAttribute(
-                `aria-${instance.props.aria}`,
-                popper.id,
-              )
-            }
-
-            instance.props.onShown(instance)
-            instance.state.isShown = true
-          },
-        )
-      })
+          instance.props.onShown(instance)
+          instance.state.isShown = true
+        },
+      )
     }
 
     mount()
@@ -1097,8 +1092,6 @@ export default function createTippy(
     if (instance.props.onHide(instance) === false && !isBeingDestroyed) {
       return
     }
-
-    cancelAnimationFrame(startTransitionAnimationFrameId)
 
     removeDocumentClickListener()
 
