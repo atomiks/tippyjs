@@ -180,6 +180,9 @@ export function updateTheme(
 export function createPopperElement(id: number, props: Props): PopperElement {
   const popper = div()
   popper.className = POPPER_CLASS
+  popper.style.position = 'absolute'
+  popper.style.top = '0'
+  popper.style.left = '0'
 
   const tooltip = div()
   tooltip.className = TOOLTIP_CLASS
