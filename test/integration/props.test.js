@@ -926,8 +926,6 @@ describe('sticky', () => {
       })
     instance.show()
 
-    jest.runAllTimers()
-
     expect(calls).toBe(1)
 
     requestAnimationFrame(() => {
