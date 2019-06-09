@@ -955,10 +955,12 @@ export default function createTippy(
         instance.popperInstance!.update()
       }
 
-      if (instance.popperChildren.backdrop) {
-        instance.popperChildren.content.style.transitionDelay =
-          Math.round(duration / 12) + 'ms'
-      }
+      // The content should fade in after the backdrop has mostly filled the
+      // tooltip element. `clip-path` is the other alternative but is not well-
+      // supported and is buggy on some devices.
+      content.style.transitionDelay = instance.popperChildren.backdrop
+        ? `${Math.round(duration / 12)}ms`
+        : ''
 
       if (instance.props.sticky) {
         makeSticky()
