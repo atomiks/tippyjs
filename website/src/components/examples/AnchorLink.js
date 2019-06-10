@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
-import TippyBase, { tippy } from '../Tippy'
+import Tippy, { tippy } from '../Tippy'
 import { MEDIA } from '../Framework'
 
 const Wrapper = styled.div`
@@ -9,12 +9,6 @@ const Wrapper = styled.div`
 
   ${MEDIA.md} {
     max-width: 400px;
-  }
-`
-
-const Tippy = styled(TippyBase)`
-  .tippy-arrow {
-    margin: 0;
   }
 `
 
@@ -28,43 +22,32 @@ function AnchorLink({ smart }) {
   }
 
   useEffect(() => {
-    const instance = tippy(
-      {},
-      {
-        ...sharedOptions,
-        triggerTarget: ref.current,
-        onTrigger(instance, { type, clientX, clientY }) {
-          instance._lastTriggerEventType = type
+    const anchor = ref.current
+    const virtualReference = {}
 
-          if (type === 'mouseenter') {
-            const LINE_HEIGHT = 24
-            const rect = ref.current.getBoundingClientRect()
-            const cursorPoint = Math.round(clientY - rect.top)
-            const lineIndex = Math.floor(cursorPoint / LINE_HEIGHT)
-            const top = rect.top + lineIndex * LINE_HEIGHT
-            const bottom = top + LINE_HEIGHT
+    const instance = tippy(virtualReference, {
+      ...sharedOptions,
+      triggerTarget: anchor,
+      onTrigger(instance, { type, clientY }) {
+        instance._lastTriggerEventType = type
 
-            instance.reference.getBoundingClientRect = () => ({
-              width: 0,
-              height: bottom - top,
-              top,
-              bottom,
-              left: clientX,
-              right: clientX,
-            })
-          } else {
-            instance.reference.getBoundingClientRect = () => {
-              return ref.current.getBoundingClientRect()
-            }
-          }
-        },
-        onMount(instance) {
-          if (instance._lastTriggerEventType === 'mouseenter') {
-            instance.popperInstance.disableEventListeners()
-          }
-        },
+        const rects = Array.from(anchor.getClientRects())
+        const rect = rects.filter(
+          rect =>
+            clientY >= Math.floor(rect.top) &&
+            clientY <= Math.ceil(rect.bottom),
+        )[0]
+
+        virtualReference.getBoundingClientRect = () => {
+          return type === 'mouseenter' ? rect : anchor.getBoundingClientRect()
+        }
       },
-    )
+      onMount(instance) {
+        if (instance._lastTriggerEventType === 'mouseenter') {
+          instance.popperInstance.disableEventListeners()
+        }
+      },
+    })
     return () => {
       instance.destroy()
     }
