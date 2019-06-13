@@ -200,6 +200,18 @@ describe('createSingleton', () => {
     const [instance] = tippyInstances
     createSingleton(tippyInstances)
     instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    expect(instance.state.isVisible).toBe(true)
+  })
+
+  it('restores original state when destroyed', () => {
+    const tippyInstances = tippy([h(), h()])
+    const prevInstanceProps = tippyInstances.map(instance => instance.props)
+    const singletonInstance = createSingleton(tippyInstances)
+    singletonInstance.destroy(false)
+    tippyInstances.forEach((instance, i) => {
+      const { props } = instance
+      expect({ ...props, ...prevInstanceProps[i] }).toEqual(props)
+    })
   })
 })
 

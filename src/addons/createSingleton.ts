@@ -1,10 +1,16 @@
-import { Instance } from '../types'
+import { Instance, Props } from '../types'
 import tippy from '..'
 import { getValue, hasOwnProperty } from '../utils'
 import { throwErrorWhen } from '../validation'
 
-interface InstanceMaybePartOfSingleton extends Instance {
-  __singleton__?: boolean
+interface SingletonInstance extends Instance {
+  __singleton__: boolean
+  __originalSetProps__: Instance['setProps']
+  __originalProps__: {
+    delay: Props['delay']
+    onTrigger(instance: Instance, event: Event): void
+    onUntrigger(instance: Instance, event: Event): void
+  }
 }
 
 /**
@@ -12,7 +18,7 @@ interface InstanceMaybePartOfSingleton extends Instance {
  * Replaces v4's `tippy.group()`.
  */
 export default function createSingleton(
-  tippyInstances: InstanceMaybePartOfSingleton[],
+  tippyInstances: SingletonInstance[],
   optionalProps: { delay: number | [number, number] } = { delay: 0 },
 ): Instance {
   if (__DEV__) {
@@ -46,7 +52,11 @@ export default function createSingleton(
 
     tippyInstances.forEach(
       (instance): void => {
-        instance.__singleton__ = true
+        Object.defineProperty(instance, '__singleton__', {
+          value: true,
+          enumerable: false,
+          configurable: true,
+        })
       },
     )
   }
@@ -56,8 +66,6 @@ export default function createSingleton(
 
   let showTimeout: any
   let hideTimeout: any
-  let onTrigger: (instance: Instance, event: Event) => void
-  let onUntrigger: (instance: Instance, event: Event) => void
 
   function clearTimeouts(): void {
     clearTimeout(showTimeout)
@@ -66,14 +74,17 @@ export default function createSingleton(
 
   tippyInstances.forEach(
     (instance): void => {
+      instance.__originalProps__ = {
+        delay: instance.props.delay,
+        onTrigger: instance.props.onTrigger,
+        onUntrigger: instance.props.onUntrigger,
+      }
+
       // To prevent bugs with `hideOnClick`, we need to let the original tippy
       // instance also go through its lifecycle (i.e. be mounted to the DOM as
       // well). To prevent it from being seen/overlayed over the singleton
       // tippy, we can set its opacity to 0
       instance.popper.style.opacity = '0'
-
-      onTrigger = instance.props.onTrigger
-      onUntrigger = instance.props.onUntrigger
 
       const originalClearDelayTimeouts = instance.clearDelayTimeouts
       instance.clearDelayTimeouts = (): void => {
@@ -83,8 +94,8 @@ export default function createSingleton(
 
       instance.setProps({
         delay: 0,
-        onTrigger(instance, event): void {
-          onTrigger(instance, event)
+        onTrigger(_, event): void {
+          instance.__originalProps__.onTrigger(instance, event)
 
           const props = { ...instance.props }
           delete props.delay
@@ -98,6 +109,7 @@ export default function createSingleton(
           }
 
           clearTimeouts()
+
           // Edge case: if the tippy is currently hiding (but still mounted and
           // visible due to its opacity), it will slide to the new reference
           // element but fully to fade out before fading back in.
@@ -114,8 +126,8 @@ export default function createSingleton(
             }, getValue(delay, 0, tippy.defaultProps.delay))
           }
         },
-        onUntrigger(instance, event): void {
-          onUntrigger(instance, event)
+        onUntrigger(_, event): void {
+          instance.__originalProps__.onUntrigger(instance, event)
 
           clearTimeouts()
           hideTimeout = setTimeout((): void => {
@@ -124,16 +136,22 @@ export default function createSingleton(
         },
       })
 
-      // Ensure the lifecycles functions are updateable
-      const originalSetProps = instance.setProps
+      // Ensure the lifecycle functions can be updated
+      instance.__originalSetProps__ = instance.setProps
       instance.setProps = (partialProps): void => {
-        // `delay` can't be updated
+        if (partialProps.onTrigger) {
+          instance.__originalProps__.onTrigger = partialProps.onTrigger
+        }
+
+        if (partialProps.onUntrigger) {
+          instance.__originalProps__.onUntrigger = partialProps.onUntrigger
+        }
+
         delete partialProps.delay
+        delete partialProps.onTrigger
+        delete partialProps.onUntrigger
 
-        originalSetProps(partialProps)
-
-        onTrigger = partialProps.onTrigger || onTrigger
-        onUntrigger = partialProps.onUntrigger || onUntrigger
+        instance.__originalSetProps__(partialProps)
       }
     },
   )
@@ -150,14 +168,11 @@ export default function createSingleton(
   ): void => {
     tippyInstances.forEach(
       (instance): void => {
-        // Reset the original lifecycle hooks to prevent stack overflow if
-        // calling again.
-        // Note: users must always destroy the singleton instance before calling
-        // `createSingleton()` again on the same instances.
-        instance.setProps({
-          onTrigger,
-          onUntrigger,
-        })
+        // Restore the instances to their original state
+        instance.setProps = instance.__originalSetProps__
+        instance.setProps(instance.__originalProps__)
+        delete instance.__originalProps__
+        delete instance.__originalSetProps__
 
         if (__DEV__) {
           delete instance.__singleton__
