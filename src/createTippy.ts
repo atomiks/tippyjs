@@ -689,6 +689,19 @@ export default function createTippy(
     hasMountCallbackRun = false
 
     const isInFollowCursorMode = getIsInFollowCursorMode()
+    const { appendTo } = instance.props
+    const parentNode =
+      appendTo === 'parent'
+        ? reference.parentNode
+        : invokeWithArgsOrReturn(appendTo, [reference])
+
+    // The popper element needs to exist on the DOM before its position can be
+    // updated as Popper.js needs to read its dimensions
+    if (!parentNode.contains(popper)) {
+      parentNode.appendChild(popper)
+      instance.props.onMount(instance)
+      instance.state.isMounted = true
+    }
 
     if (instance.popperInstance) {
       setFlipModifierEnabled(
@@ -697,29 +710,19 @@ export default function createTippy(
       )
 
       if (!isInFollowCursorMode) {
-        instance.popperInstance!.reference = reference
+        instance.popperInstance.reference = reference
         instance.popperInstance.enableEventListeners()
       }
 
+      // Mounting callback invoked in `onUpdate`
       instance.popperInstance.scheduleUpdate()
     } else {
+      // Mounting callback invoked in `onCreate`
       createPopperInstance()
 
       if (!isInFollowCursorMode) {
         instance.popperInstance!.enableEventListeners()
       }
-    }
-
-    const { appendTo } = instance.props
-    const parentNode =
-      appendTo === 'parent'
-        ? reference.parentNode
-        : invokeWithArgsOrReturn(appendTo, [reference])
-
-    if (!parentNode.contains(popper)) {
-      parentNode.appendChild(popper)
-      instance.props.onMount(instance)
-      instance.state.isMounted = true
     }
   }
 
