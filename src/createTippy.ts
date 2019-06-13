@@ -775,7 +775,10 @@ export default function createTippy(
     instance.props.onUntrigger(instance, event)
 
     if (!instance.state.isVisible) {
-      return removeFollowCursorListener()
+      removeDocumentMouseDownListener()
+      removeFollowCursorListener()
+
+      return
     }
 
     isScheduledToShow = false
