@@ -9,8 +9,8 @@ import React, {
   Children,
 } from 'react'
 import { createPortal } from 'react-dom'
-import tippy from './esm/tippy.bundle.js'
-import { createSingleton, delegate } from './addons'
+import tippy from '../../../'
+import { createSingleton, delegate } from '../../../addons'
 
 function _extends() {
   _extends =
