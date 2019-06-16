@@ -28,11 +28,11 @@ export interface PopperInstance extends Popper {
 export interface Props {
   allowHTML: boolean
   animateFill: boolean
-  animation: 'fade' | 'shift-away' | string
+  animation: string
   appendTo: 'parent' | Element | ((ref: Element) => Element)
   aria: 'describedby' | 'labelledby' | null
   arrow: boolean
-  arrowType: 'sharp' | 'round' | string
+  arrowType: string
   boundary: 'scrollParent' | 'window' | 'viewport' | HTMLElement
   content: Content
   delay: number | [number, number]
