@@ -8,8 +8,8 @@ interface SingletonInstance extends Instance {
   __originalSetProps__: Instance['setProps']
   __originalProps__: {
     delay: Props['delay']
-    onTrigger(instance: Instance, event: Event): void
-    onUntrigger(instance: Instance, event: Event): void
+    onTrigger: Props['onTrigger']
+    onUntrigger: Props['onUntrigger']
   }
 }
 
