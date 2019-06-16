@@ -61,7 +61,7 @@ function createPluginSCSS(output, shouldInjectNodeEnvTheme = false) {
 
 function createRollupConfig(inputFile, plugins) {
   return {
-    input: `./build/${inputFile}.js`,
+    input: `./build/${inputFile}`,
     external: ['popper.js'],
     plugins,
   }
@@ -73,7 +73,7 @@ async function build() {
 
   // Create `./tippy.css` first
   const cssConfig = createRollupConfig(
-    'css',
+    'css.js',
     PLUGIN_CONFIG.concat(createPluginSCSS('./tippy.css', true)),
   )
   const cssBundle = await rollup(cssConfig)
@@ -86,13 +86,12 @@ async function build() {
   fs.unlinkSync('./index.js')
 
   for (const folder of ['themes', 'animations']) {
-    for (const file of fs.readdirSync(`./build/${folder}`)) {
-      const filenameWithoutJSExtension = file.replace('.js', '')
-      const filenameWithCSSExtension = file.replace('.js', '.css')
+    for (const filename of fs.readdirSync(`./build/${folder}`)) {
+      const filenameWithCSSExtension = filename.replace('.js', '.css')
       const outputFile = `./${folder}/${filenameWithCSSExtension}`
 
       const config = createRollupConfig(
-        `${folder}/${filenameWithoutJSExtension}`,
+        `${folder}/${filename}`,
         PLUGIN_CONFIG.concat(createPluginSCSS(outputFile)),
       )
       const bundle = await rollup(config)
