@@ -5,6 +5,7 @@ import {
   Props,
   Instance,
   Content,
+  Placement,
 } from './types'
 import { isIE } from './browser'
 import { closestCallback } from './ponyfills'
@@ -31,6 +32,7 @@ import {
   setTransitionDuration,
   setVisibilityState,
   debounce,
+  getVirtualOffsets,
 } from './utils'
 import { warnWhen, validateProps } from './validation'
 
@@ -70,6 +72,7 @@ export default function createTippy(
   let isScheduledToShow = false
   let hasMountCallbackRun = false
   let didHideDueToDocumentMouseDown = false
+  let normalizedPlacement: Placement
   let currentMountCallback: () => void
   let currentTransitionEndListener: (event: TransitionEvent) => void
   let listeners: Listener[] = []
@@ -392,7 +395,7 @@ export default function createTippy(
   }
 
   function positionVirtualReferenceNearCursor(event: MouseEvent): void {
-    const { clientX: x, clientY: y } = (lastMouseMoveEvent = event)
+    const { clientX, clientY } = (lastMouseMoveEvent = event)
 
     // Gets set once popperInstance `onCreate` has been called
     if (!currentComputedPadding) {
@@ -410,25 +413,10 @@ export default function createTippy(
     const { followCursor } = instance.props
     const isHorizontal = followCursor === 'horizontal'
     const isVertical = followCursor === 'vertical'
+    const isVerticalPlacement = getIsVerticalPlacement()
 
     // The virtual reference needs some size to prevent itself from overflowing
-    const isVerticalPlacement = includes(
-      ['top', 'bottom'],
-      getBasePlacement(instance.state.currentPlacement),
-    )
-    const isVariation = !!instance.state.currentPlacement.split('-')[1]
-    const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
-    const halfSize = size / 2
-    const verticalIncrease = isVerticalPlacement
-      ? 0
-      : isVariation
-      ? size
-      : halfSize
-    const horizontalIncrease = isVerticalPlacement
-      ? isVariation
-        ? size
-        : halfSize
-      : 0
+    const { size, x, y } = getVirtualOffsets(instance, isVerticalPlacement)
 
     if (isCursorOverReference || !instance.props.interactive) {
       instance.popperInstance!.reference = {
@@ -438,10 +426,10 @@ export default function createTippy(
         getBoundingClientRect: (): DOMRect | ClientRect => ({
           width: isVerticalPlacement ? size : 0,
           height: isVerticalPlacement ? 0 : size,
-          top: (isHorizontal ? rect.top : y) - verticalIncrease,
-          bottom: (isHorizontal ? rect.bottom : y) + verticalIncrease,
-          left: (isVertical ? rect.left : x) - horizontalIncrease,
-          right: (isVertical ? rect.right : x) + horizontalIncrease,
+          top: (isHorizontal ? rect.top : clientY) - y,
+          bottom: (isHorizontal ? rect.bottom : clientY) + y,
+          left: (isVertical ? rect.left : clientX) - x,
+          right: (isVertical ? rect.right : clientX) + x,
         }),
       }
 
@@ -559,12 +547,18 @@ export default function createTippy(
   }
 
   function createPopperInstance(): void {
-    const { popperOptions } = instance.props
+    const { popperOptions, placement } = instance.props
     const { arrow } = instance.popperChildren
     const preventOverflowModifier = getModifier(
       popperOptions,
       'preventOverflow',
     )
+    // Due to the virtual offsets normalization when using `followCursor`, we
+    // need to use the opposite placement
+    const shift = placement.split('-')[1]
+    normalizedPlacement = (instance.props.followCursor && shift
+      ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
+      : placement) as Placement
 
     function applyMutations(data: Popper.Data): void {
       instance.state.currentPlacement = data.placement
@@ -621,7 +615,7 @@ export default function createTippy(
 
     const config = {
       eventsEnabled: false,
-      placement: instance.props.placement,
+      placement: normalizedPlacement,
       ...popperOptions,
       modifiers: {
         ...(popperOptions ? popperOptions.modifiers : {}),
@@ -1045,7 +1039,7 @@ export default function createTippy(
         }
 
         instance.popperInstance!.disableEventListeners()
-        instance.popperInstance!.options.placement = instance.props.placement
+        instance.popperInstance!.options.placement = normalizedPlacement
 
         popper.parentNode!.removeChild(popper)
         instance.props.onHidden(instance)
