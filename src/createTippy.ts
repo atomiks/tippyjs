@@ -5,7 +5,6 @@ import {
   Props,
   Instance,
   Content,
-  Placement,
 } from './types'
 import { isIE } from './browser'
 import { closestCallback } from './ponyfills'
@@ -69,7 +68,6 @@ export default function createTippy(
   let scheduleHideAnimationFrame: number
   let isBeingDestroyed = false
   let isScheduledToShow = false
-  let currentPlacement: Placement = props.placement
   let hasMountCallbackRun = false
   let didHideDueToDocumentMouseDown = false
   let currentMountCallback: () => void
@@ -94,6 +92,8 @@ export default function createTippy(
   const { tooltip, content } = popperChildren
 
   const state = {
+    // The current real placement (`data-placement` attribute)
+    currentPlacement: props.placement,
     // Is the instance currently enabled?
     isEnabled: true,
     // Is the tippy currently showing and not transitioning out?
@@ -178,11 +178,17 @@ export default function createTippy(
 
   /* ======================= 🔒 Private methods 🔒 ======================= */
   function getIsVerticalPlacement(): boolean {
-    return includes(['top', 'bottom'], getBasePlacement(currentPlacement))
+    return includes(
+      ['top', 'bottom'],
+      getBasePlacement(instance.state.currentPlacement),
+    )
   }
 
   function getIsOppositePlacement(): boolean {
-    return includes(['bottom', 'right'], getBasePlacement(currentPlacement))
+    return includes(
+      ['bottom', 'right'],
+      getBasePlacement(instance.state.currentPlacement),
+    )
   }
 
   function getIsInFollowCursorMode(): boolean {
@@ -408,9 +414,9 @@ export default function createTippy(
     // The virtual reference needs some size to prevent itself from overflowing
     const isVerticalPlacement = includes(
       ['top', 'bottom'],
-      getBasePlacement(currentPlacement),
+      getBasePlacement(instance.state.currentPlacement),
     )
-    const isVariation = !!currentPlacement.split('-')[1]
+    const isVariation = !!instance.state.currentPlacement.split('-')[1]
     const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
     const halfSize = size / 2
     const verticalIncrease = isVerticalPlacement
@@ -497,7 +503,7 @@ export default function createTippy(
 
     if (
       isCursorOutsideInteractiveBorder(
-        getBasePlacement(currentPlacement),
+        getBasePlacement(instance.state.currentPlacement),
         popper.getBoundingClientRect(),
         event,
         instance.props,
@@ -561,8 +567,7 @@ export default function createTippy(
     )
 
     function applyMutations(data: Popper.Data): void {
-      const previousPlacement = currentPlacement
-      currentPlacement = data.placement
+      instance.state.currentPlacement = data.placement
 
       if (instance.props.flip && !instance.props.flipOnUpdate) {
         if (data.flipped) {
@@ -572,8 +577,7 @@ export default function createTippy(
         setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
       }
 
-      // Apply Popper's `x-*` attributes to the tooltip with `data-*`
-      tooltip.setAttribute('data-placement', currentPlacement)
+      tooltip.setAttribute('data-placement', instance.state.currentPlacement)
       if (data.attributes['x-out-of-boundaries'] !== false) {
         tooltip.setAttribute('data-out-of-boundaries', '')
       } else {
@@ -581,7 +585,7 @@ export default function createTippy(
       }
 
       // Apply the `distance` prop
-      const basePlacement = getBasePlacement(currentPlacement)
+      const basePlacement = getBasePlacement(instance.state.currentPlacement)
       const tooltipStyles = tooltip.style
 
       tooltipStyles.top = '0'
@@ -613,12 +617,6 @@ export default function createTippy(
       )[0].padding = computedPadding
 
       currentComputedPadding = computedPadding
-
-      // The `distance` offset needs to be re-considered by Popper.js if the
-      // placement changed
-      if (currentPlacement !== previousPlacement) {
-        instance.popperInstance!.update()
-      }
     }
 
     const config = {

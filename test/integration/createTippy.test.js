@@ -343,6 +343,19 @@ describe('instance.setContent()', () => {
 })
 
 describe('instance.state', () => {
+  it('currentPlacement', () => {
+    instance = createTippy(h(), { ...defaultProps, placement: 'top' })
+    instance.show()
+    jest.runAllTimers()
+    expect(instance.state.currentPlacement).toBe('top')
+    instance.setProps({ placement: 'bottom' })
+    jest.runAllTimers()
+    expect(instance.state.currentPlacement).toBe('bottom')
+    instance.setProps({ placement: 'left-end' })
+    jest.runAllTimers()
+    expect(instance.state.currentPlacement).toBe('left-end')
+  })
+
   it('isEnabled', () => {
     instance = createTippy(h(), defaultProps)
     instance.show()
