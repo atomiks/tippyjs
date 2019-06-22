@@ -7,6 +7,7 @@ import {
   hasOwnProperty,
 } from '../utils'
 import { getBasePlacement } from '../popper'
+import { warnWhen } from '../validation'
 
 interface ExtendedProps extends Props {
   inlinePositioning: boolean | 'cursorRect' | 'cursorPoint'
@@ -41,35 +42,38 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
             triggerTarget: reference,
           }) as Instance
 
-          let undo = (): void => {}
+          reference._tippy = newInstance
 
-          function apply() {
-            undo()
-
-            if (typeof inlinePositioning === 'string') {
-              undo = applyCursorStrategy(newInstance, inlinePositioning)
-            } else {
-              newInstance.reference.getBoundingClientRect = ():
-                | ClientRect
-                | DOMRect => getBestRect(newInstance)
-            }
+          if (typeof inlinePositioning === 'string') {
+            applyCursorStrategy(newInstance, inlinePositioning)
+          } else {
+            newInstance.reference.getBoundingClientRect = ():
+              | ClientRect
+              | DOMRect => getBestRect(newInstance)
           }
-
-          apply()
 
           const originalSetProps = newInstance.setProps
           newInstance.setProps = (
             partialProps: Partial<ExtendedProps>,
           ): void => {
-            if (hasOwnProperty(partialProps, 'inlinePositioning')) {
-              if (partialProps.inlinePositioning) {
-                apply()
-              } else {
-                undo()
-              }
+            // Making this prop fully dynamic is difficult and buggy, and it's
+            // very unlikely the user will need to dynamically update it anyway.
+            // Just warn.
+            if (__DEV__) {
+              warnWhen(
+                hasOwnProperty(partialProps, 'inlinePositioning'),
+                'Cannot change `inlinePositioning` prop. Destroy this ' +
+                  'instance and create a new instance instead.',
+              )
             }
 
             originalSetProps(partialProps)
+          }
+
+          const originalDestroy = newInstance.destroy
+          newInstance.destroy = (): void => {
+            delete reference._tippy
+            originalDestroy()
           }
 
           return newInstance
@@ -155,7 +159,7 @@ function getBestRect(instance: Instance): ClientRect | DOMRect {
 function applyCursorStrategy(
   instance: Instance,
   type: 'cursorRect' | 'cursorPoint',
-): () => void {
+): void {
   const target = instance.props.triggerTarget as Element
 
   let originalGetBoundingClientRect = target.getBoundingClientRect
@@ -236,10 +240,5 @@ function applyCursorStrategy(
     }
 
     originalSetProps(props)
-  }
-
-  return (): void => {
-    instance.setProps = originalSetProps
-    originalSetProps({ onTrigger })
   }
 }
