@@ -12,12 +12,11 @@ interface ListenerObj {
 /**
  * Creates a delegate instance that controls the creation of tippy instances
  * for child elements (`target` CSS selector).
- * Port of v4's `target` prop to a separate function.
  */
 export default function delegate(
   targets: Targets,
   props: Props & { target: string },
-): Instance | Instance[] | null {
+): Instance | Instance[] {
   if (__DEV__) {
     throwErrorWhen(
       !props || !props.target,
