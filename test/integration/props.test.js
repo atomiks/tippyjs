@@ -848,27 +848,16 @@ describe('touch', () => {
     expect(instance.state.isVisible).toBe(false)
     disableTouchEnvironment()
   })
-})
 
-describe('touchHold', () => {
-  it('true: uses `touch` listeners instead', () => {
+  it('"hold": uses `touch` listeners instead', () => {
     enableTouchEnvironment()
     const ref = h()
-    const instance = tippy(ref, { touchHold: true })
+    const instance = tippy(ref, { touch: 'hold' })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(false)
     ref.dispatchEvent(new Event('focus'))
     expect(instance.state.isVisible).toBe(false)
     ref.dispatchEvent(new Event('touchstart'))
-    expect(instance.state.isVisible).toBe(true)
-    disableTouchEnvironment()
-  })
-
-  it('false: uses standard listeners', () => {
-    enableTouchEnvironment()
-    const ref = h()
-    const instance = tippy(ref, { touchHold: false })
-    ref.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(true)
     disableTouchEnvironment()
   })
