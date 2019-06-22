@@ -95,7 +95,11 @@ export default function createSingleton(
       instance.setProps({
         delay: 0,
         onTrigger(_, event): void {
-          instance.__originalProps__.onTrigger(instance, event)
+          if (
+            instance.props.onTrigger !== instance.__originalProps__.onTrigger
+          ) {
+            instance.__originalProps__.onTrigger(instance, event)
+          }
 
           const props = { ...instance.props }
           delete props.delay
