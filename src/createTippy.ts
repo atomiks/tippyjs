@@ -186,10 +186,10 @@ export default function createTippy(
     )
   }
 
-  function getNormalizedTouchSettings(): [string, number] {
+  function getNormalizedTouchSettings(): [string | boolean, number] {
     const { touch } = instance.props
     // longPress duration is 500 by default
-    return Array.isArray(touch) ? [touch[0], touch[1]] : [touch, 500]
+    return Array.isArray(touch) ? touch : [touch, 500]
   }
 
   function getIsCustomTouchBehavior(): boolean {
