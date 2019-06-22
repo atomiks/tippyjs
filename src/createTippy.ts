@@ -32,7 +32,6 @@ import {
   setTransitionDuration,
   setVisibilityState,
   debounce,
-  getVirtualOffsets,
 } from './utils'
 import { warnWhen, validateProps } from './validation'
 
@@ -64,12 +63,10 @@ export default function createTippy(
 
   /* ======================= 🔒 Private members 🔒 ======================= */
   let lastTriggerEventType: string
-  let lastMouseMoveEvent: MouseEvent
   let showTimeout: any
   let hideTimeout: any
   let scheduleHideAnimationFrame: number
   let isBeingDestroyed = false
-  let isScheduledToShow = false
   let hasMountCallbackRun = false
   let didHideDueToDocumentMouseDown = false
   let normalizedPlacement: Placement
@@ -77,13 +74,6 @@ export default function createTippy(
   let currentTransitionEndListener: (event: TransitionEvent) => void
   let listeners: Listener[] = []
   let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce)
-  let currentComputedPadding: {
-    top: number
-    bottom: number
-    left: number
-    right: number
-    [key: string]: number
-  }
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   const id = idCounter++
@@ -97,6 +87,8 @@ export default function createTippy(
   const state = {
     // The current real placement (`data-placement` attribute)
     currentPlacement: props.placement,
+    // Does the instance have a pending timeout for show()?
+    isScheduledToShow: false,
     // Is the instance currently enabled?
     isEnabled: true,
     // Is the tippy currently showing and not transitioning out?
@@ -194,23 +186,12 @@ export default function createTippy(
     )
   }
 
-  function getIsInFollowCursorMode(): boolean {
-    return instance.props.followCursor && lastTriggerEventType !== 'focus'
-  }
-
   function getTransitionableElements(): (HTMLDivElement | null)[] {
     return [tooltip, content, instance.popperChildren.backdrop]
   }
 
   function getEventListenersTarget(): ReferenceElement {
     return instance.props.triggerTarget || reference
-  }
-
-  function removeFollowCursorListener(): void {
-    document.removeEventListener(
-      'mousemove',
-      positionVirtualReferenceNearCursor,
-    )
   }
 
   function cleanupInteractiveMouseListeners(): void {
@@ -394,56 +375,6 @@ export default function createTippy(
     listeners = []
   }
 
-  function positionVirtualReferenceNearCursor(event: MouseEvent): void {
-    const { clientX, clientY } = (lastMouseMoveEvent = event)
-
-    // Gets set once popperInstance `onCreate` has been called
-    if (!currentComputedPadding) {
-      return
-    }
-
-    // If the instance is interactive, avoid updating the position unless it's
-    // over the reference element
-    const isCursorOverReference = closestCallback(
-      event.target as Element,
-      (el: Element): boolean => el === reference,
-    )
-
-    const rect = reference.getBoundingClientRect()
-    const { followCursor } = instance.props
-    const isHorizontal = followCursor === 'horizontal'
-    const isVertical = followCursor === 'vertical'
-    const isVerticalPlacement = getIsVerticalPlacement()
-
-    // The virtual reference needs some size to prevent itself from overflowing
-    const { size, x, y } = getVirtualOffsets(instance, isVerticalPlacement)
-
-    if (isCursorOverReference || !instance.props.interactive) {
-      instance.popperInstance!.reference = {
-        // These `client` values don't get used by Popper.js if they are 0
-        clientWidth: 0,
-        clientHeight: 0,
-        getBoundingClientRect: (): DOMRect | ClientRect => ({
-          width: isVerticalPlacement ? size : 0,
-          height: isVerticalPlacement ? 0 : size,
-          top: (isHorizontal ? rect.top : clientY) - y,
-          bottom: (isHorizontal ? rect.bottom : clientY) + y,
-          left: (isVertical ? rect.left : clientX) - x,
-          right: (isVertical ? rect.right : clientX) + x,
-        }),
-      }
-
-      instance.popperInstance!.update()
-    }
-
-    if (
-      currentInput.isTouch ||
-      (followCursor === 'initial' && instance.state.isVisible)
-    ) {
-      removeFollowCursorListener()
-    }
-  }
-
   function onTrigger(event: Event): void {
     if (
       didHideDueToDocumentMouseDown ||
@@ -457,8 +388,6 @@ export default function createTippy(
       lastTriggerEventType = event.type
 
       if (event instanceof MouseEvent) {
-        lastMouseMoveEvent = event
-
         // If scrolling, `mouseenter` events can be fired if the cursor lands
         // over a new target, but `mousemove` events don't get fired. This
         // causes interactive tooltips to get stuck open until the cursor is
@@ -609,8 +538,6 @@ export default function createTippy(
       instance.popperInstance!.modifiers.filter(
         (m): boolean => m.name === 'preventOverflow',
       )[0].padding = computedPadding
-
-      currentComputedPadding = computedPadding
     }
 
     const config = {
@@ -643,20 +570,20 @@ export default function createTippy(
         },
       },
       onCreate(data: Popper.Data): void {
-        applyMutations(data)
-        runMountCallback()
-
         if (popperOptions && popperOptions.onCreate) {
           popperOptions.onCreate(data)
         }
-      },
-      onUpdate(data: Popper.Data): void {
+
         applyMutations(data)
         runMountCallback()
-
+      },
+      onUpdate(data: Popper.Data): void {
         if (popperOptions && popperOptions.onUpdate) {
           popperOptions.onUpdate(data)
         }
+
+        applyMutations(data)
+        runMountCallback()
       },
     }
 
@@ -680,7 +607,6 @@ export default function createTippy(
     // popperInstance update/create
     hasMountCallbackRun = false
 
-    const isInFollowCursorMode = getIsInFollowCursorMode()
     const { appendTo } = instance.props
     const parentNode =
       appendTo === 'parent'
@@ -691,8 +617,6 @@ export default function createTippy(
     // updated as Popper.js needs to read its dimensions
     if (!parentNode.contains(popper)) {
       parentNode.appendChild(popper)
-      instance.props.onMount(instance)
-      instance.state.isMounted = true
     }
 
     if (instance.popperInstance) {
@@ -701,10 +625,8 @@ export default function createTippy(
         instance.props.flip,
       )
 
-      if (!isInFollowCursorMode) {
-        instance.popperInstance.reference = reference
-        instance.popperInstance.enableEventListeners()
-      }
+      instance.popperInstance.reference = reference
+      instance.popperInstance.enableEventListeners()
 
       // Mounting callback invoked in `onUpdate`
       instance.popperInstance.scheduleUpdate()
@@ -712,9 +634,7 @@ export default function createTippy(
       // Mounting callback invoked in `onCreate`
       createPopperInstance()
 
-      if (!isInFollowCursorMode) {
-        instance.popperInstance!.enableEventListeners()
-      }
+      instance.popperInstance!.enableEventListeners()
     }
   }
 
@@ -729,23 +649,14 @@ export default function createTippy(
       return
     }
 
-    isScheduledToShow = true
+    instance.state.isScheduledToShow = true
 
     if (instance.props.wait) {
       return instance.props.wait(instance, event)
     }
 
-    // If the tooltip has a delay, we need to be listening to the mousemove as
-    // soon as the trigger event is fired, so that it's in the correct position
-    // upon mount.
-    // Edge case: if the tooltip is still mounted, but then scheduleShow() is
-    // called, it causes a jump.
-    if (getIsInFollowCursorMode() && !instance.state.isMounted) {
-      if (!instance.popperInstance) {
-        createPopperInstance()
-      }
-
-      document.addEventListener('mousemove', positionVirtualReferenceNearCursor)
+    if (!instance.popperInstance) {
+      createPopperInstance()
     }
 
     addDocumentMouseDownListener()
@@ -768,12 +679,11 @@ export default function createTippy(
 
     if (!instance.state.isVisible) {
       removeDocumentMouseDownListener()
-      removeFollowCursorListener()
 
       return
     }
 
-    isScheduledToShow = false
+    instance.state.isScheduledToShow = false
 
     const delay = getValue(instance.props.delay, 1, defaultProps.delay)
 
@@ -867,10 +777,6 @@ export default function createTippy(
         if (instance.state.isVisible) {
           instance.popperInstance.enableEventListeners()
         }
-
-        if (instance.props.followCursor && lastMouseMoveEvent) {
-          positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-        }
       } else {
         instance.popperInstance.update()
       }
@@ -944,14 +850,11 @@ export default function createTippy(
         return
       }
 
-      const isInFollowCursorMode = getIsInFollowCursorMode()
+      // Double update will apply correct mutations
+      instance.popperInstance!.update()
 
-      if (isInFollowCursorMode && lastMouseMoveEvent) {
-        positionVirtualReferenceNearCursor(lastMouseMoveEvent)
-      } else if (!isInFollowCursorMode) {
-        // Double update will apply correct mutations
-        instance.popperInstance!.update()
-      }
+      instance.props.onMount(instance)
+      instance.state.isMounted = true
 
       // The content should fade in after the backdrop has mostly filled the
       // tooltip element. `clip-path` is the other alternative but is not well-
@@ -1028,10 +931,6 @@ export default function createTippy(
     onTransitionedOut(
       duration,
       (): void => {
-        if (!isScheduledToShow) {
-          removeFollowCursorListener()
-        }
-
         if (instance.props.aria) {
           getEventListenersTarget().removeAttribute(
             `aria-${instance.props.aria}`,

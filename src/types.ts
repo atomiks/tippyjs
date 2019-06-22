@@ -41,7 +41,7 @@ export interface Props {
   flip: boolean
   flipBehavior: 'flip' | Placement[]
   flipOnUpdate: boolean
-  followCursor: boolean | 'vertical' | 'horizontal' | 'initial'
+  followCursor: boolean | 'horizontal' | 'vertical' | 'initial'
   hideOnClick: boolean | 'toggle'
   ignoreAttributes: boolean
   inertia: boolean
@@ -93,12 +93,17 @@ export interface Instance {
   show(duration?: number, shouldPreventPopperTransition?: boolean): void
   state: {
     currentPlacement: Placement
+    isScheduledToShow: boolean
     isEnabled: boolean
     isVisible: boolean
     isDestroyed: boolean
     isMounted: boolean
     isShown: boolean
   }
+}
+
+export interface Singleton extends Instance {
+  instances: Instance[]
 }
 
 export interface PopperChildren {
