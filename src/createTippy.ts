@@ -419,7 +419,7 @@ export default function createTippy(
       if (currentInput.isTouch && value === 'longPress') {
         // We can hijack the show timeout here, it will be cleared by
         // `scheduleHide()` when necessary
-        showTimeout = setTimeout(() => {
+        showTimeout = setTimeout((): void => {
           scheduleShow(event)
         }, duration)
       } else {
