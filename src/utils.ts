@@ -150,6 +150,10 @@ export function evaluateProps(
     ...(props.ignoreAttributes ? {} : getDataAttributeProps(reference)),
   }
 
+  if (out.animateFill) {
+    out.arrow = false
+  }
+
   if (out.arrow || isUCBrowser) {
     out.animateFill = false
   }

@@ -260,18 +260,18 @@ describe('instance.setProps()', () => {
     instance = createTippy(h(), defaultProps)
     expect(
       instance.popper.querySelector('.__NAMESPACE_PREFIX__-arrow'),
-    ).toBeNull()
-    instance.setProps({ arrow: true })
+    ).not.toBeNull()
+    instance.setProps({ arrow: false })
     expect(
       instance.popper.querySelector('.__NAMESPACE_PREFIX__-arrow'),
-    ).not.toBeNull()
+    ).toBeNull()
   })
 
   it('popperChildren property is updated to reflect the new popper element', () => {
     instance = createTippy(h(), defaultProps)
-    expect(instance.popperChildren.arrow).toBeNull()
-    instance.setProps({ arrow: true })
     expect(instance.popperChildren.arrow).not.toBeNull()
+    instance.setProps({ arrow: false })
+    expect(instance.popperChildren.arrow).toBeNull()
   })
 
   it('popperInstance popper is updated to the new popper', () => {

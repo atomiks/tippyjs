@@ -71,20 +71,24 @@ async function build() {
   // Create `index.d.ts` file from `src/types.ts`
   fs.copyFileSync('./src/types.ts', './index.d.ts')
 
-  // Create `./tippy.css` first
-  const cssConfig = createRollupConfig(
-    'css.js',
-    PLUGIN_CONFIG.concat(createPluginSCSS('./tippy.css', true)),
-  )
-  const cssBundle = await rollup(cssConfig)
-  await cssBundle.write({
-    ...BASE_OUTPUT_CONFIG,
-    sourcemap: false,
-    format: 'umd',
-    file: './index.js',
-  })
-  fs.unlinkSync('./index.js')
+  // Create base CSS files
+  for (const filename of fs.readdirSync(`./build/css`)) {
+    const cssConfig = createRollupConfig(
+      `css/${filename}`,
+      PLUGIN_CONFIG.concat(
+        createPluginSCSS(`./${filename.replace('.js', '.css')}`, true),
+      ),
+    )
+    const cssBundle = await rollup(cssConfig)
+    await cssBundle.write({
+      ...BASE_OUTPUT_CONFIG,
+      sourcemap: false,
+      format: 'umd',
+      file: './index.js',
+    })
+  }
 
+  // Themes + animations
   for (const folder of ['themes', 'animations']) {
     for (const filename of fs.readdirSync(`./build/${folder}`)) {
       const filenameWithCSSExtension = filename.replace('.js', '.css')

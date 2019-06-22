@@ -231,7 +231,6 @@ describe('updatePopperElement', () => {
       const popper = createPopperElement(1, defaultProps)
       updatePopperElement(popper, defaultProps, {
         ...defaultProps,
-        arrow: true,
         arrowType: 'round',
       })
       expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
@@ -245,9 +244,9 @@ describe('updatePopperElement', () => {
       updatePopperElement(popper, props, newProps)
       expect(popper.querySelector(ARROW_SELECTOR)).not.toBe(null)
       expect(popper.querySelector(SVG_ARROW_SELECTOR)).toBe(null)
-      updatePopperElement(popper, newProps, defaultProps)
+      updatePopperElement(popper, newProps, props)
       expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
-      expect(popper.querySelector(SVG_ARROW_SELECTOR)).toBe(null)
+      expect(popper.querySelector(SVG_ARROW_SELECTOR)).not.toBe(null)
     }
   })
 

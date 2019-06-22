@@ -4,6 +4,8 @@
 /.devserver
 node_modules
 /tippy.css
+/backdrop.css
+/svgArrow.css
 /cjs
 /iife
 /esm

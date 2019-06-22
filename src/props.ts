@@ -2,11 +2,11 @@ import { Props } from './types'
 
 export const defaultProps: Props = {
   allowHTML: true,
-  animateFill: true,
-  animation: 'shift-away',
+  animateFill: false,
+  animation: 'fade',
   appendTo: (): Element => document.body,
   aria: 'describedby',
-  arrow: false,
+  arrow: true,
   arrowType: 'sharp',
   boundary: 'scrollParent',
   content: '',

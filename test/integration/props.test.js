@@ -458,18 +458,18 @@ describe('flipBehavior', () => {
 })
 
 describe('ignoreAttributes', () => {
-  it('false: looks at data-tippy-* options', () => {
-    const { props } = tippy(h('div', { 'data-tippy-arrow': true }), {
+  it('false: looks at data-tippy-* props', () => {
+    const { props } = tippy(h('div', { 'data-tippy-arrow': false }), {
       ignoreAttributes: false,
     })
-    expect(props.arrow).toBe(true)
+    expect(props.arrow).toBe(false)
   })
 
-  it('true: ignores data-tippy-* options', () => {
-    const { props } = tippy(h('div', { 'data-tippy-arrow': true }), {
+  it('true: ignores data-tippy-* props', () => {
+    const { props } = tippy(h('div', { 'data-tippy-arrow': false }), {
       ignoreAttributes: true,
     })
-    expect(props.arrow).toBe(false)
+    expect(props.arrow).toBe(true)
   })
 })
 

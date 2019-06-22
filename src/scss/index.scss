@@ -1,7 +1,6 @@
 @import './_mixins.scss';
 @import './_vars.scss';
 @import './animations/fade.scss';
-@import './animations/shift-away.scss';
 
 .#{$namespace-prefix}-iOS {
   cursor: pointer !important;
@@ -27,35 +26,6 @@
 
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-backdrop {
-        transform-origin: nth(
-          $backdrop-origins,
-          index($placements, $placement)
-        );
-        border-radius: nth(
-          $backdrop-border-radii,
-          index($placements, $placement)
-        );
-
-        &[data-state='visible'] {
-          @include backdrop-transform-enter($placement);
-        }
-
-        &[data-state='hidden'] {
-          @include backdrop-transform-leave($placement);
-        }
-      }
-
-      .#{$namespace-prefix}-svgArrow {
-        @include svgArrow-transform-origin($placement, 7px);
-        @include arrow-margin($placement);
-        @include arrow-position($placement, 7px, true);
-
-        svg {
-          @include svgArrow-transform($placement);
-        }
-      }
-
       .#{$namespace-prefix}-arrow {
         @include arrow($placement, 8px, #333);
         @include arrow-margin($placement);
@@ -87,10 +57,6 @@
 
   &[data-interactive] {
     pointer-events: auto;
-
-    .#{$namespace-prefix}-svgArrow path {
-      pointer-events: auto;
-    }
   }
 
   &[data-inertia] {
@@ -108,58 +74,14 @@
   border-style: solid;
 }
 
-.#{$namespace-prefix}-arrow,
-.#{$namespace-prefix}-svgArrow {
+.#{$namespace-prefix}-arrow {
   position: absolute;
 
   &[data-state='hidden'] {
     opacity: 0;
-  }
-}
-
-.#{$namespace-prefix}-svgArrow {
-  width: 18px;
-  height: 7px;
-  fill: #333;
-  pointer-events: none;
-
-  svg {
-    position: absolute;
-    left: 0;
-  }
-}
-
-.#{$namespace-prefix}-backdrop {
-  position: absolute;
-  background-color: #333;
-  border-radius: 50%;
-  width: calc(110% + 2rem);
-  left: 50%;
-  top: 50%;
-  z-index: -1;
-  transition: all cubic-bezier(0.46, 0.1, 0.52, 0.98);
-  backface-visibility: hidden;
-
-  &[data-state='hidden'] {
-    opacity: 0;
-  }
-
-  &::after {
-    content: '';
-    float: left;
-    padding-top: 100%;
   }
 }
 
 .#{$namespace-prefix}-content {
   padding: 0.3125rem 0.5625rem;
-}
-
-.#{$namespace-prefix}-backdrop + .#{$namespace-prefix}-content {
-  transition-property: opacity;
-  will-change: opacity;
-
-  &[data-state='hidden'] {
-    opacity: 0;
-  }
 }
