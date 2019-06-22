@@ -16,12 +16,12 @@ export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
   ): Instance | Instance[] => {
     return tippy(targets, {
       ...optionalProps,
-      onCreate(instance) {
+      onCreate(instance): void {
         if (optionalProps && optionalProps.onCreate) {
           optionalProps.onCreate(instance)
         }
 
-        let undo = () => {}
+        let undo = (): void => {}
 
         if (instance.props.followCursor) {
           undo = applyFollowCursor(instance)
@@ -51,11 +51,11 @@ function applyFollowCursor(instance: Instance): () => void {
   let isPopperInstanceCreated = false
   let triggerEventType: string
 
-  function addListener() {
+  function addListener(): void {
     document.addEventListener('mousemove', onMouseMove)
   }
 
-  function removeListener() {
+  function removeListener(): void {
     document.removeEventListener('mousemove', onMouseMove)
   }
 
@@ -121,7 +121,7 @@ function applyFollowCursor(instance: Instance): () => void {
 
   instance.setProps({
     popperOptions: {
-      onCreate(data) {
+      onCreate(data): void {
         if (popperOptions && popperOptions.onCreate) {
           popperOptions.onCreate(data)
         }
@@ -129,7 +129,7 @@ function applyFollowCursor(instance: Instance): () => void {
         isPopperInstanceCreated = true
       },
     },
-    onMount() {
+    onMount(): void {
       if (onMount) {
         onMount(instance)
       }
@@ -142,7 +142,7 @@ function applyFollowCursor(instance: Instance): () => void {
         }
       }
     },
-    onTrigger(instance, event) {
+    onTrigger(instance, event): void {
       triggerEventType = event.type
 
       if (event instanceof MouseEvent) {
@@ -158,7 +158,7 @@ function applyFollowCursor(instance: Instance): () => void {
         addListener()
       }
     },
-    onUntrigger(instance, event) {
+    onUntrigger(instance, event): void {
       if (onUntrigger) {
         onUntrigger(instance, event)
       }
@@ -167,7 +167,7 @@ function applyFollowCursor(instance: Instance): () => void {
         removeListener()
       }
     },
-    onHidden() {
+    onHidden(): void {
       if (onHidden) {
         onHidden(instance)
       }
@@ -179,7 +179,7 @@ function applyFollowCursor(instance: Instance): () => void {
   })
 
   const originalSetProps = instance.setProps
-  instance.setProps = partialProps => {
+  instance.setProps = (partialProps): void => {
     onTrigger = partialProps.onTrigger || onTrigger
     onUntrigger = partialProps.onUntrigger || onUntrigger
     onMount = partialProps.onMount || onMount
@@ -197,7 +197,7 @@ function applyFollowCursor(instance: Instance): () => void {
     originalSetProps(partialProps)
   }
 
-  return () => {
+  return (): void => {
     // Undo
     removeListener()
     instance.setProps = originalSetProps
