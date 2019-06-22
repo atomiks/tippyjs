@@ -41,12 +41,35 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
             triggerTarget: reference,
           }) as Instance
 
-          if (typeof inlinePositioning !== 'boolean') {
-            applyCursorStrategy(newInstance, inlinePositioning)
-          } else {
-            newInstance.reference.getBoundingClientRect = ():
-              | ClientRect
-              | DOMRect => getBestRect(newInstance)
+          let undo = (): void => {}
+
+          function apply() {
+            undo()
+
+            if (typeof inlinePositioning === 'string') {
+              undo = applyCursorStrategy(newInstance, inlinePositioning)
+            } else {
+              newInstance.reference.getBoundingClientRect = ():
+                | ClientRect
+                | DOMRect => getBestRect(newInstance)
+            }
+          }
+
+          apply()
+
+          const originalSetProps = newInstance.setProps
+          newInstance.setProps = (
+            partialProps: Partial<ExtendedProps>,
+          ): void => {
+            if (hasOwnProperty(partialProps, 'inlinePositioning')) {
+              if (partialProps.inlinePositioning) {
+                apply()
+              } else {
+                undo()
+              }
+            }
+
+            originalSetProps(partialProps)
           }
 
           return newInstance
@@ -132,8 +155,9 @@ function getBestRect(instance: Instance): ClientRect | DOMRect {
 function applyCursorStrategy(
   instance: Instance,
   type: 'cursorRect' | 'cursorPoint',
-): void {
+): () => void {
   const target = instance.props.triggerTarget as Element
+
   let originalGetBoundingClientRect = target.getBoundingClientRect
   let onTrigger = instance.props.onTrigger
 
@@ -212,14 +236,10 @@ function applyCursorStrategy(
     }
 
     originalSetProps(props)
+  }
 
-    if (
-      hasOwnProperty(props, 'inlinePositioning') &&
-      typeof props.inlinePositioning !== 'string'
-    ) {
-      // Undo this effect
-      instance.setProps = originalSetProps
-      originalSetProps({ onTrigger })
-    }
+  return (): void => {
+    instance.setProps = originalSetProps
+    originalSetProps({ onTrigger })
   }
 }
