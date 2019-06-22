@@ -64,7 +64,7 @@ function getBestRect(instance: Instance): ClientRect | DOMRect {
   const target = instance.props.triggerTarget as Element
   const rects = target.getClientRects()
 
-  const { currentPlacement } = instance.state
+  const basePlacement = getBasePlacement(instance.state.currentPlacement)
 
   let top
   let right
@@ -76,12 +76,12 @@ function getBestRect(instance: Instance): ClientRect | DOMRect {
     return target.getBoundingClientRect()
   }
 
-  switch (currentPlacement) {
+  switch (basePlacement) {
     case 'top':
     case 'bottom': {
       const firstRect = rects[0]
       const lastRect = rects[rects.length - 1]
-      const isTop = currentPlacement === 'top'
+      const isTop = basePlacement === 'top'
 
       top = firstRect.top
       bottom = lastRect.bottom
@@ -102,7 +102,7 @@ function getBestRect(instance: Instance): ClientRect | DOMRect {
       const maxRight = Math.max(...rights)
 
       const measureRects = rectsArr.filter(rect =>
-        currentPlacement === 'left'
+        basePlacement === 'left'
           ? Math.round(rect.left) === minLeft
           : Math.round(rect.right) === maxRight,
       )
