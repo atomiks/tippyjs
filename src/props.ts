@@ -50,7 +50,7 @@ export const defaultProps: Props = {
 }
 
 /**
- * If the set() method encounters one of these, the popperInstance must be
+ * If the setProps() method encounters one of these, the popperInstance must be
  * recreated
  */
 export const POPPER_INSTANCE_DEPENDENCIES: Array<keyof Props> = [
