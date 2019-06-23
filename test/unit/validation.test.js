@@ -48,6 +48,25 @@ describe('validateProps', () => {
     )
   })
 
+  it('recognizes the old `arrowType` prop', () => {
+    validateProps({ arrowType: 'round' })
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] The `arrowType` prop was removed in v5 ' +
+        'in favor of overloading the `arrow` prop. Specify ' +
+        '`arrowType: "' +
+        'round' +
+        '"` instead.',
+    )
+  })
+
+  it('recognizes the old `touchHold` prop', () => {
+    validateProps({ touchHold: true })
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] The `touchHold` prop was removed in v5 in favor of ' +
+        'overloading the `touch` prop. Specify `touch: "hold"` instead.',
+    )
+  })
+
   it('recognizes the old `google` theme', () => {
     validateProps({ theme: 'google' })
     expect(spy).toHaveBeenCalledWith(

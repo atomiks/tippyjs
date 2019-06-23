@@ -34,6 +34,8 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
       const didPassTargetProp = prop === 'target'
       const didPassA11yProp = prop === 'a11y'
       const didPassShowOnInitProp = prop === 'showOnInit'
+      const didPassArrowTypeProp = prop === 'arrowType'
+      const didPassTouchHoldProp = prop === 'touchHold'
       const didPassOtherUnknownProp =
         !hasOwnProperty(defaultProps, prop) &&
         !didPassTargetProp &&
@@ -60,6 +62,21 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
       warnWhen(
         didPassShowOnInitProp,
         'The `showOnInit` prop was renamed to `showOnCreate` in v5.',
+      )
+
+      warnWhen(
+        didPassArrowTypeProp,
+        'The `arrowType` prop was removed in v5 ' +
+          'in favor of overloading the `arrow` prop. Specify ' +
+          '`arrowType: "' +
+          value +
+          '"` instead.',
+      )
+
+      warnWhen(
+        didPassTouchHoldProp,
+        'The `touchHold` prop was removed in v5 in favor of overloading the ' +
+          '`touch` prop. Specify `touch: "hold"` instead.',
       )
 
       warnWhen(
