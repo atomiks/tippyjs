@@ -188,12 +188,11 @@ export default function createTippy(
 
   function getNormalizedTouchSettings(): [string | boolean, number] {
     const { touch } = instance.props
-    // longPress duration is 500 by default
-    return Array.isArray(touch) ? touch : [touch, 500]
+    return Array.isArray(touch) ? touch : [touch, 0]
   }
 
   function getIsCustomTouchBehavior(): boolean {
-    return includes(['hold', 'longPress'], getNormalizedTouchSettings()[0])
+    return getNormalizedTouchSettings()[0] === 'hold'
   }
 
   function getTransitionableElements(): (HTMLDivElement | null)[] {
@@ -416,7 +415,7 @@ export default function createTippy(
     } else {
       const [value, duration] = getNormalizedTouchSettings()
 
-      if (currentInput.isTouch && value === 'longPress') {
+      if (currentInput.isTouch && value === 'hold' && duration) {
         // We can hijack the show timeout here, it will be cleared by
         // `scheduleHide()` when necessary
         showTimeout = setTimeout((): void => {

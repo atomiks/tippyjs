@@ -66,7 +66,7 @@ export interface Props {
   size: 'small' | 'regular' | 'large'
   sticky: boolean
   theme: string
-  touch: boolean | 'hold' | 'longPress' | ['longPress', number]
+  touch: boolean | 'hold' | ['hold', number]
   trigger: string
   triggerTarget: Element | null
   updateDuration: number

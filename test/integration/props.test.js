@@ -867,18 +867,9 @@ describe('touch', () => {
     expect(instance.state.isVisible).toBe(false)
   })
 
-  it('"longPress": uses `touch` listeners and waits for timeout', () => {
+  it('"hold": respects duration', () => {
     const ref = h()
-    const instance = tippy(ref, { touch: 'longPress' })
-    ref.dispatchEvent(new Event('touchstart'))
-    expect(instance.state.isVisible).toBe(false)
-    jest.runAllTimers()
-    expect(instance.state.isVisible).toBe(true)
-  })
-
-  it('"longPress": respects duration', () => {
-    const ref = h()
-    const instance = tippy(ref, { touch: ['longPress', 100] })
+    const instance = tippy(ref, { touch: ['hold', 100] })
     ref.dispatchEvent(new Event('touchstart'))
     expect(instance.state.isVisible).toBe(false)
     jest.advanceTimersByTime(99)
@@ -887,9 +878,9 @@ describe('touch', () => {
     expect(instance.state.isVisible).toBe(true)
   })
 
-  it('"longPress": timeout is cancelled correctly', () => {
+  it('"hold": timeout is cancelled correctly', () => {
     const ref = h()
-    const instance = tippy(ref, { touch: ['longPress', 100] })
+    const instance = tippy(ref, { touch: ['hold', 100] })
     ref.dispatchEvent(new Event('touchstart'))
     expect(instance.state.isVisible).toBe(false)
     ref.dispatchEvent(new Event('touchend'))
