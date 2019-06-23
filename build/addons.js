@@ -11,5 +11,3 @@ if (typeof tippy === 'function') {
       'included the tippy script before tippy-addons.',
   )
 }
-
-export { delegate, createSingleton }

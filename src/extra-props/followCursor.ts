@@ -1,13 +1,8 @@
-import { Instance, Targets, Props, Tippy } from '../types'
+import { Instance, Targets, Props, Tippy, TippyCallWrapper } from '../types'
 import { closestCallback } from '../ponyfills'
 import { includes, getVirtualOffsets, hasOwnProperty } from '../utils'
 import { getBasePlacement } from '../popper'
 import { currentInput } from '../bindGlobalEventListeners'
-
-type TippyCallWrapper = (
-  targets: Targets,
-  optionalProps?: Partial<Props>,
-) => Instance | Instance[]
 
 export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
   return (

@@ -1,11 +1,4 @@
-import { Tippy, Props } from '../types'
-
-interface EnhancedTippy extends Tippy {
-  version: string
-  defaultProps: Props
-}
-
-type PropHOF = (tippy: Tippy) => EnhancedTippy
+import { Tippy, EnhancedTippy, PropHOF } from '../types'
 
 function copyStatics(to: EnhancedTippy, from: Tippy): EnhancedTippy {
   to.version = from.version

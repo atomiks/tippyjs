@@ -116,6 +116,18 @@ export interface HideAllOptions {
   exclude?: Instance | ReferenceElement
 }
 
+export type TippyCallWrapper = (
+  targets: Targets,
+  optionalProps?: Partial<Props>,
+) => Instance | Instance[]
+
+export interface EnhancedTippy extends Tippy {
+  version: string
+  defaultProps: Props
+}
+
+export type PropHOF = (tippy: Tippy) => EnhancedTippy
+
 export interface Tippy {
   (targets: Targets, props?: Partial<Props>): Instance | Instance[]
   readonly defaultProps: Props

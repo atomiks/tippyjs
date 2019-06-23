@@ -1,0 +1,9 @@
+{
+  "name": "tippy-extra-props",
+  "private": true,
+  "main": "./cjs/tippy-extra-props.js",
+  "module": "./esm/tippy-extra-props.js",
+  "unpkg": "./iife/tippy-extra-props.js",
+  "types": "index.d.ts",
+  "sideEffects": false
+}

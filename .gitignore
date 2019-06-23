@@ -15,3 +15,6 @@ node_modules
 /addons/cjs
 /addons/esm
 /addons/iife
+/extra-props/cjs
+/extra-props/esm
+/extra-props/iife
