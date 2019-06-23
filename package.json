@@ -84,8 +84,12 @@
       "maxSize": "5 kB"
     },
     {
+      "path": "./extra-props/iife/tippy-extra-props.min.js",
+      "maxSize": "5 kB"
+    },
+    {
       "path": "./tippy.css",
-      "maxSize": "1.25 kB"
+      "maxSize": "1 kB"
     }
   ],
   "husky": {
