@@ -1,5 +1,6 @@
 import tippy from '../../src'
 import '../../src/scss/index.scss'
+import '../../src/scss/svgArrow.scss'
 import '../../src/scss/themes/light.scss'
 import '../../src/scss/themes/light-border.scss'
 import '../../src/scss/themes/material.scss'
@@ -9,8 +10,7 @@ const container = document.querySelector('.container')
 
 const themes = ['dark', 'light', 'light-border', 'material', 'translucent']
 const placements = ['top', 'bottom', 'left', 'right']
-const arrows = [false, true]
-const arrowTypes = ['sharp', 'round']
+const arrows = [false, true, 'round']
 
 themes.forEach(theme => {
   const h1 = document.createElement('h1')
@@ -19,19 +19,16 @@ themes.forEach(theme => {
 
   placements.forEach(placement => {
     arrows.forEach(arrow => {
-      arrowTypes.forEach(arrowType => {
-        const button = document.createElement('button')
-        button.textContent = 'Button'
-        container.appendChild(button)
+      const button = document.createElement('button')
+      button.textContent = 'Button'
+      container.appendChild(button)
 
-        tippy(button, {
-          content: 'Tooltip',
-          showOnCreate: true,
-          theme,
-          placement,
-          arrow,
-          arrowType,
-        })
+      tippy(button, {
+        content: 'Tooltip',
+        showOnCreate: true,
+        theme,
+        placement,
+        arrow,
       })
     })
   })

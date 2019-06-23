@@ -70,6 +70,31 @@ describe('arrow', () => {
     const { popper } = tippy(ref, { arrow: false })
     expect(getChildren(popper).arrow).toBeNull()
   })
+
+  it('true: is CSS triangle', () => {
+    const { popperChildren } = tippy(h(), { arrow: true })
+    expect(popperChildren.arrow.matches(ARROW_SELECTOR)).toBe(true)
+  })
+
+  it('"round"', () => {
+    const { popperChildren } = tippy(h(), { arrow: 'round' })
+    expect(popperChildren.arrow.matches(SVG_ARROW_SELECTOR)).toBe(true)
+  })
+
+  it('string', () => {
+    const svg = '<svg viewBox="0 0 20 8"><path></path></svg>'
+    const { popperChildren } = tippy(h(), { arrow: svg })
+    expect(popperChildren.arrow.matches(SVG_ARROW_SELECTOR)).toBe(true)
+    expect(popperChildren.arrow.innerHTML).toBe(svg)
+  })
+
+  it('Element', () => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+    svg.appendChild(path)
+    const { popperChildren } = tippy(h(), { arrow: svg })
+    expect(popperChildren.arrow.firstElementChild).toBe(svg)
+  })
 })
 
 describe('animateFill', () => {
@@ -355,34 +380,6 @@ describe('interactive', () => {
       }),
     )
     expect(instance.state.isVisible).toBe(false)
-  })
-})
-
-describe('arrowType', () => {
-  it('sharp: is CSS triangle', () => {
-    const { popperChildren } = tippy(h(), {
-      arrow: true,
-      arrowType: 'sharp',
-    })
-    expect(popperChildren.arrow.matches(ARROW_SELECTOR)).toBe(true)
-  })
-
-  it('round: is an SVG', () => {
-    const { popperChildren } = tippy(h(), {
-      arrow: true,
-      arrowType: 'round',
-    })
-    expect(popperChildren.arrow.matches(SVG_ARROW_SELECTOR)).toBe(true)
-  })
-
-  it('other: custom shape', () => {
-    const svg = '<svg viewBox="0 0 20 8"><path></path></svg>'
-    const { popperChildren } = tippy(h(), {
-      arrow: true,
-      arrowType: svg,
-    })
-    expect(popperChildren.arrow.matches(SVG_ARROW_SELECTOR)).toBe(true)
-    expect(popperChildren.arrow.innerHTML).toBe(svg)
   })
 })
 

@@ -7,7 +7,6 @@ export const defaultProps: Props = {
   appendTo: (): Element => document.body,
   aria: 'describedby',
   arrow: true,
-  arrowType: 'sharp',
   boundary: 'scrollParent',
   content: '',
   delay: 0,
@@ -57,7 +56,6 @@ export const defaultProps: Props = {
  */
 export const POPPER_INSTANCE_DEPENDENCIES: Array<keyof Props> = [
   'arrow',
-  'arrowType',
   'boundary',
   'distance',
   'flip',

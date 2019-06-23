@@ -231,16 +231,16 @@ describe('updatePopperElement', () => {
       const popper = createPopperElement(1, defaultProps)
       updatePopperElement(popper, defaultProps, {
         ...defaultProps,
-        arrowType: 'round',
+        arrow: 'round',
       })
       expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
       expect(popper.querySelector(SVG_ARROW_SELECTOR)).not.toBe(null)
     }
 
     {
-      const props = { ...defaultProps, arrowType: 'round', arrow: true }
+      const props = { ...defaultProps, arrow: 'round' }
       const popper = createPopperElement(1, props)
-      const newProps = { ...defaultProps, arrowType: 'sharp', arrow: true }
+      const newProps = { ...defaultProps, arrow: true }
       updatePopperElement(popper, props, newProps)
       expect(popper.querySelector(ARROW_SELECTOR)).not.toBe(null)
       expect(popper.querySelector(SVG_ARROW_SELECTOR)).toBe(null)
@@ -373,8 +373,7 @@ describe('getChildren', () => {
   it('returns the children of the popper element, with round arrow', () => {
     const popper = createPopperElement(1, {
       ...defaultProps,
-      arrow: true,
-      arrowType: 'round',
+      arrow: 'round',
     })
     const children = getChildren(popper)
     expect(children.tooltip).toBeDefined()
@@ -385,7 +384,7 @@ describe('getChildren', () => {
 
 describe('createArrowElement', () => {
   it('returns a sharp arrow by default', () => {
-    const arrow = createArrowElement(defaultProps.arrowType)
+    const arrow = createArrowElement(defaultProps.arrow)
     expect(arrow.matches(ARROW_SELECTOR)).toBe(true)
   })
 

@@ -31,8 +31,7 @@ export interface Props {
   animation: string
   appendTo: 'parent' | Element | ((ref: Element) => Element)
   aria: 'describedby' | 'labelledby' | null
-  arrow: boolean
-  arrowType: string
+  arrow: boolean | string | SVGElement
   boundary: 'scrollParent' | 'window' | 'viewport' | HTMLElement
   content: Content
   delay: number | [number, number]

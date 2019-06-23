@@ -9,7 +9,7 @@ import {
 } from './types'
 import { isIE } from './browser'
 import { closestCallback } from './ponyfills'
-import { PASSIVE, PADDING } from './constants'
+import { PASSIVE, PREVENT_OVERFLOW_PADDING } from './constants'
 import { currentInput } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
@@ -520,7 +520,7 @@ export default function createTippy(
       const padding =
         preventOverflowModifier && preventOverflowModifier.padding !== undefined
           ? preventOverflowModifier.padding
-          : PADDING
+          : PREVENT_OVERFLOW_PADDING
       const isPaddingNumber = typeof padding === 'number'
 
       const computedPadding = {
@@ -548,7 +548,7 @@ export default function createTippy(
         ...(popperOptions ? popperOptions.modifiers : {}),
         preventOverflow: {
           boundariesElement: instance.props.boundary,
-          padding: PADDING,
+          padding: PREVENT_OVERFLOW_PADDING,
           ...preventOverflowModifier,
         },
         arrow: {
@@ -560,7 +560,7 @@ export default function createTippy(
           enabled: instance.props.flip,
           // The tooltip is offset by 10px from the popper in CSS,
           // we need to account for its distance
-          padding: instance.props.distance + PADDING,
+          padding: instance.props.distance + PREVENT_OVERFLOW_PADDING,
           behavior: instance.props.flipBehavior,
           ...getModifier(popperOptions, 'flip'),
         },

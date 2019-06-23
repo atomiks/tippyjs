@@ -19,6 +19,7 @@ import {
   CONTENT_SELECTOR,
   ARROW_SELECTOR,
   SVG_ARROW_SELECTOR,
+  ROUND_ARROW_INNER_HTML,
 } from './constants'
 
 /**
@@ -77,29 +78,25 @@ export function removeInertia(tooltip: PopperChildren['tooltip']): void {
 /**
  * Creates an arrow element and returns it
  */
-export function createArrowElement(
-  arrowType: Props['arrowType'],
-): HTMLDivElement {
-  const arrow = div()
+export function createArrowElement(arrow: Props['arrow']): HTMLDivElement {
+  const arrowElement = div()
 
-  if (arrowType !== 'sharp') {
-    arrow.className = SVG_ARROW_CLASS
-
-    // Use the built-in round SVG shape
-    if (arrowType === 'round') {
-      setInnerHTML(
-        arrow,
-        '<svg viewBox="0 0 18 7" xmlns="http://www.w3.org/2000/svg"><path d="M0 7s2.021-.015 5.253-4.218C6.584 1.051 7.797.007 9 0c1.203-.007 2.416 1.035 3.761 2.782C16.012 7.005 18 7 18 7H0z"/></svg>',
-      )
-    } else {
-      // Assume they're specifying their own SVG shape
-      setInnerHTML(arrow, arrowType)
-    }
+  if (arrow === true) {
+    arrowElement.className = ARROW_CLASS
   } else {
-    arrow.className = ARROW_CLASS
+    arrowElement.className = SVG_ARROW_CLASS
+
+    if (isRealElement(arrow)) {
+      arrowElement.appendChild(arrow)
+    } else {
+      setInnerHTML(
+        arrowElement,
+        arrow === 'round' ? ROUND_ARROW_INNER_HTML : (arrow as string),
+      )
+    }
   }
 
-  return arrow
+  return arrowElement
 }
 
 /**
@@ -202,7 +199,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
 
   if (props.arrow) {
     tooltip.setAttribute('data-arrow', '')
-    tooltip.appendChild(createArrowElement(props.arrowType))
+    tooltip.appendChild(createArrowElement(props.arrow))
   }
 
   if (props.animateFill) {
@@ -262,21 +259,13 @@ export function updatePopperElement(
   }
 
   // arrow
-  if (!prevProps.arrow && nextProps.arrow) {
-    tooltip.appendChild(createArrowElement(nextProps.arrowType))
-    tooltip.setAttribute('data-arrow', '')
-  } else if (prevProps.arrow && !nextProps.arrow) {
+  if (prevProps.arrow) {
     tooltip.removeChild(arrow!)
     tooltip.removeAttribute('data-arrow')
   }
-
-  // arrowType
-  if (
-    prevProps.arrow &&
-    nextProps.arrow &&
-    prevProps.arrowType !== nextProps.arrowType
-  ) {
-    tooltip.replaceChild(createArrowElement(nextProps.arrowType), arrow!)
+  if (nextProps.arrow) {
+    tooltip.appendChild(createArrowElement(nextProps.arrow))
+    tooltip.setAttribute('data-arrow', '')
   }
 
   // interactive

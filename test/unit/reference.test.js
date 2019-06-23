@@ -20,9 +20,9 @@ describe('getDataAttributeProps', () => {
 
   it('returns the attribute props', () => {
     const ref = h()
-    ref.setAttribute('data-tippy-arrowType', 'round')
+    ref.setAttribute('data-tippy-arrow', 'round')
     expect(getDataAttributeProps(ref)).toEqual({
-      arrowType: 'round',
+      arrow: 'round',
     })
   })
 
