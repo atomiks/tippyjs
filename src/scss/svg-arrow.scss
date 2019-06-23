@@ -4,26 +4,26 @@
 .#{$namespace-prefix}-tooltip {
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-svgArrow {
-        @include svgArrow-transform-origin($placement, 7px);
+      .#{$namespace-prefix}-svg-arrow {
+        @include svg-arrow-transform-origin($placement, 7px);
         @include arrow-margin($placement);
         @include arrow-position($placement, 7px, true);
 
         svg {
-          @include svgArrow-transform($placement);
+          @include svg-arrow-transform($placement);
         }
       }
     }
   }
 
   &[data-interactive] {
-    .#{$namespace-prefix}-svgArrow path {
+    .#{$namespace-prefix}-svg-arrow path {
       pointer-events: auto;
     }
   }
 }
 
-.#{$namespace-prefix}-svgArrow {
+.#{$namespace-prefix}-svg-arrow {
   position: absolute;
 
   &[data-state='hidden'] {
@@ -31,7 +31,7 @@
   }
 }
 
-.#{$namespace-prefix}-svgArrow {
+.#{$namespace-prefix}-svg-arrow {
   width: 18px;
   height: 7px;
   fill: #333;

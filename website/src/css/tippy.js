@@ -33,7 +33,7 @@ export default createGlobalStyle`
       background: tomato;
     }
 
-    .tippy-svgArrow {
+    .tippy-svg-arrow {
       fill: tomato;
     }
   }

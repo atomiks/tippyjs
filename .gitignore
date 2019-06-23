@@ -5,7 +5,7 @@
 node_modules
 /tippy.css
 /backdrop.css
-/svgArrow.css
+/svg-arrow.css
 /cjs
 /iife
 /esm
