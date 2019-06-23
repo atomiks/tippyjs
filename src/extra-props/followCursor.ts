@@ -137,12 +137,8 @@ function applyFollowCursor(instance: Instance): () => void {
     onMount(): void {
       preserveInvocation(onMount, instance.props.onMount, [instance])
 
-      if (triggerEventType !== 'focus') {
-        instance.popperInstance!.disableEventListeners()
-
-        if (lastMouseMoveEvent) {
-          onMouseMove(lastMouseMoveEvent)
-        }
+      if (triggerEventType !== 'focus' && lastMouseMoveEvent) {
+        onMouseMove(lastMouseMoveEvent)
       }
     },
     onTrigger(instance, event): void {
