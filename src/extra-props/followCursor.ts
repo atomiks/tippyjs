@@ -1,11 +1,11 @@
 import { Instance, Targets, Props, Tippy, TippyCallWrapper } from '../types'
-import { closestCallback } from '../ponyfills'
 import {
   includes,
   getVirtualOffsets,
   hasOwnProperty,
   preserveInvocation,
   removeProperties,
+  closestCallback,
 } from '../utils'
 import { getBasePlacement } from '../popper'
 import { currentInput } from '../bindGlobalEventListeners'

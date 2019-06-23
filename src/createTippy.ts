@@ -8,7 +8,6 @@ import {
   Placement,
 } from './types'
 import { isIE } from './browser'
-import { closestCallback } from './ponyfills'
 import { PASSIVE, PREVENT_OVERFLOW_PADDING } from './constants'
 import { currentInput } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
@@ -33,6 +32,7 @@ import {
   setVisibilityState,
   debounce,
   preserveInvocation,
+  closestCallback,
 } from './utils'
 import { warnWhen, validateProps } from './validation'
 

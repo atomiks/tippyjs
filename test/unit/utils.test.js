@@ -289,3 +289,25 @@ describe('removeProperties', () => {
     expect(Utils.removeProperties({ a: 1, b: 2 }, ['b'])).toEqual({ a: 1 })
   })
 })
+
+describe('arrayFrom', () => {
+  it('converts a NodeList to an array', () => {
+    ;[...Array(10)].map(() => h())
+    const arr = Utils.arrayFrom(document.querySelectorAll(IDENTIFIER))
+    expect(Array.isArray(arr)).toBe(true)
+  })
+})
+
+describe('closestCallback', () => {
+  it('works like Element.prototype.closest but uses a callback instead', () => {
+    const ref = h('div', { class: 'parent' })
+    const child = h('div', { class: 'child' })
+    ref.append(child)
+    expect(
+      Utils.closestCallback(ref, node => node.className === 'parent'),
+    ).toBe(ref)
+    expect(
+      Utils.closestCallback(child, node => node.className === 'parent'),
+    ).toBe(ref)
+  })
+})

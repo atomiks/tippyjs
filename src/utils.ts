@@ -1,5 +1,4 @@
 import { Props, ReferenceElement, Targets, Instance } from './types'
-import { arrayFrom } from './ponyfills'
 import { isUCBrowser } from './browser'
 import { getDataAttributeProps } from './reference'
 import { POPPER_CLASS } from './constants'
@@ -59,13 +58,6 @@ export function getValue(value: any, index: number, defaultValue: any): any {
  */
 export function getModifier(obj: any, key: string): any {
   return obj && obj.modifiers && obj.modifiers[key]
-}
-
-/**
- * Determines if an array or string includes a value
- */
-export function includes(a: any[] | string, b: any): boolean {
-  return a.indexOf(b) > -1
 }
 
 /**
@@ -234,4 +226,36 @@ export function removeProperties<T>(
     },
   )
   return clone
+}
+
+/**
+ * Ponyfill for Array.from - converts iterable values to an array
+ */
+export function arrayFrom(value: ArrayLike<any>): any[] {
+  return [].slice.call(value)
+}
+
+/**
+ * Works like Element.prototype.closest, but uses a callback instead
+ */
+export function closestCallback(
+  element: Element | null,
+  callback: Function,
+): Element | null {
+  while (element) {
+    if (callback(element)) {
+      return element
+    }
+
+    element = element.parentElement
+  }
+
+  return null
+}
+
+/**
+ * Determines if an array or string includes a value
+ */
+export function includes(a: any[] | string, b: any): boolean {
+  return a.indexOf(b) > -1
 }

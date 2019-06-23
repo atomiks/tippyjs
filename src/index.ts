@@ -5,8 +5,12 @@ import createTippy from './createTippy'
 import bindGlobalEventListeners, {
   currentInput,
 } from './bindGlobalEventListeners'
-import { arrayFrom } from './ponyfills'
-import { isRealElement, getArrayOfElements, isReferenceElement } from './utils'
+import {
+  arrayFrom,
+  isRealElement,
+  getArrayOfElements,
+  isReferenceElement,
+} from './utils'
 import { warnWhen, validateTargets, validateProps } from './validation'
 import { POPPER_SELECTOR } from './constants'
 import {
