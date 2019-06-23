@@ -1,6 +1,7 @@
 {
   "presets": ["@babel/env", "@babel/typescript"],
   "plugins": [
+    ["@babel/plugin-transform-destructuring", { "loose": true }, "unique"],
     ["@babel/plugin-transform-template-literals", { "loose": true }, "unique"],
     ["@babel/proposal-object-rest-spread", { "loose": true }, "unique"],
     "dev-expression"

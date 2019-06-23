@@ -71,6 +71,9 @@ export function onWindowBlur(): void {
  * Adds the needed global event listeners
  */
 export default function bindGlobalEventListeners(): void {
-  document.addEventListener('touchstart', onDocumentTouchStart, PASSIVE)
+  document.addEventListener('touchstart', onDocumentTouchStart, {
+    ...PASSIVE,
+    capture: true,
+  })
   window.addEventListener('blur', onWindowBlur)
 }

@@ -42,7 +42,6 @@ export const defaultProps: Props = {
   sticky: false,
   theme: '',
   touch: true,
-  touchHold: false,
   trigger: 'mouseenter focus',
   triggerTarget: null,
   updateDuration: 0,

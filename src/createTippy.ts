@@ -186,6 +186,16 @@ export default function createTippy(
     )
   }
 
+  function getNormalizedTouchSettings(): [string | boolean, number] {
+    const { touch } = instance.props
+    // longPress duration is 500 by default
+    return Array.isArray(touch) ? touch : [touch, 500]
+  }
+
+  function getIsCustomTouchBehavior(): boolean {
+    return includes(['hold', 'longPress'], getNormalizedTouchSettings()[0])
+  }
+
   function getTransitionableElements(): (HTMLDivElement | null)[] {
     return [tooltip, content, instance.popperChildren.backdrop]
   }
@@ -323,7 +333,7 @@ export default function createTippy(
   }
 
   function addTriggersToEventListenersTarget(): void {
-    if (instance.props.touchHold) {
+    if (getIsCustomTouchBehavior()) {
       on('touchstart', onTrigger, PASSIVE)
       on('touchend', onMouseLeave as EventListener, PASSIVE)
     }
@@ -404,7 +414,17 @@ export default function createTippy(
     ) {
       scheduleHide(event)
     } else {
-      scheduleShow(event)
+      const [value, duration] = getNormalizedTouchSettings()
+
+      if (currentInput.isTouch && value === 'longPress') {
+        // We can hijack the show timeout here, it will be cleared by
+        // `scheduleHide()` when necessary
+        showTimeout = setTimeout((): void => {
+          scheduleShow(event)
+        }, duration)
+      } else {
+        scheduleShow(event)
+      }
     }
   }
 
@@ -467,11 +487,14 @@ export default function createTippy(
   function isEventListenerStopped(event: Event): boolean {
     const supportsTouch = 'ontouchstart' in window
     const isTouchEvent = includes(event.type, 'touch')
-    const { touchHold } = instance.props
+    const isCustomTouch = getIsCustomTouchBehavior()
 
     return (
-      (supportsTouch && currentInput.isTouch && touchHold && !isTouchEvent) ||
-      (currentInput.isTouch && !touchHold && isTouchEvent)
+      (supportsTouch &&
+        currentInput.isTouch &&
+        isCustomTouch &&
+        !isTouchEvent) ||
+      (currentInput.isTouch && !isCustomTouch && isTouchEvent)
     )
   }
 
