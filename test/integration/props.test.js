@@ -203,7 +203,7 @@ describe('delay', () => {
 
     instance.popper.dispatchEvent(new Event('mouseenter'))
 
-    jest.advanceTimersByTime(100)
+    jest.advanceTimersByTime(1)
 
     expect(instance.state.isVisible).toBe(true)
     instance.popper.dispatchEvent(new Event('mouseleave'))
@@ -883,7 +883,7 @@ describe('touch', () => {
     expect(instance.state.isVisible).toBe(false)
     jest.advanceTimersByTime(99)
     expect(instance.state.isVisible).toBe(false)
-    jest.advanceTimersByTime(100)
+    jest.advanceTimersByTime(1)
     expect(instance.state.isVisible).toBe(true)
   })
 
