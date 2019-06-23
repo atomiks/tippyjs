@@ -1,6 +1,6 @@
 import tippy from '../../src'
 import '../../src/scss/index.scss'
-import '../../src/scss/svgArrow.scss'
+import '../../src/scss/svg-arrow.scss'
 import '../../src/scss/themes/light.scss'
 import '../../src/scss/themes/light-border.scss'
 import '../../src/scss/themes/material.scss'
