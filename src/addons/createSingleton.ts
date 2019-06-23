@@ -1,6 +1,11 @@
 import { Instance, Props } from '../types'
 import tippy from '..'
-import { getValue, hasOwnProperty } from '../utils'
+import {
+  getValue,
+  hasOwnProperty,
+  preserveInvocation,
+  removeProperties,
+} from '../utils'
 import { throwErrorWhen } from '../validation'
 
 interface SingletonInstance extends Instance {
@@ -95,11 +100,11 @@ export default function createSingleton(
       instance.setProps({
         delay: 0,
         onTrigger(_, event): void {
-          if (
-            instance.props.onTrigger !== instance.__originalProps__.onTrigger
-          ) {
-            instance.__originalProps__.onTrigger(instance, event)
-          }
+          preserveInvocation(
+            instance.__originalProps__.onTrigger,
+            instance.props.onTrigger,
+            [instance, event],
+          )
 
           const props = { ...instance.props }
           delete props.delay
@@ -131,7 +136,11 @@ export default function createSingleton(
           }
         },
         onUntrigger(_, event): void {
-          instance.__originalProps__.onUntrigger(instance, event)
+          preserveInvocation(
+            instance.__originalProps__.onUntrigger,
+            instance.props.onUntrigger,
+            [instance, event],
+          )
 
           clearTimeouts()
           hideTimeout = setTimeout((): void => {
@@ -151,11 +160,9 @@ export default function createSingleton(
           instance.__originalProps__.onUntrigger = partialProps.onUntrigger
         }
 
-        delete partialProps.delay
-        delete partialProps.onTrigger
-        delete partialProps.onUntrigger
-
-        instance.__originalSetProps__(partialProps)
+        instance.__originalSetProps__(
+          removeProperties(partialProps, ['delay', 'onTrigger', 'onUntrigger']),
+        )
       }
     },
   )

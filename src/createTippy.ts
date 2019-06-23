@@ -32,6 +32,7 @@ import {
   setTransitionDuration,
   setVisibilityState,
   debounce,
+  preserveInvocation,
 } from './utils'
 import { warnWhen, validateProps } from './validation'
 
@@ -592,17 +593,21 @@ export default function createTippy(
         },
       },
       onCreate(data: Popper.Data): void {
-        if (popperOptions && popperOptions.onCreate) {
-          popperOptions.onCreate(data)
-        }
+        preserveInvocation(
+          popperOptions && popperOptions.onCreate,
+          config.onCreate,
+          [data],
+        )
 
         applyMutations(data)
         runMountCallback()
       },
       onUpdate(data: Popper.Data): void {
-        if (popperOptions && popperOptions.onUpdate) {
-          popperOptions.onUpdate(data)
-        }
+        preserveInvocation(
+          popperOptions && popperOptions.onUpdate,
+          config.onUpdate,
+          [data],
+        )
 
         applyMutations(data)
         runMountCallback()

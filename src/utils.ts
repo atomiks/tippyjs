@@ -206,3 +206,32 @@ export function getVirtualOffsets(
     y: isVerticalPlacement ? 0 : isShift ? size : halfSize,
   }
 }
+
+/**
+ * Preserves the original function invocation when another function replaces it
+ */
+export function preserveInvocation<T>(
+  originalFn: undefined | ((...args: any) => void),
+  currentFn: undefined | ((...args: any) => void),
+  args: T[],
+): void {
+  if (originalFn && originalFn !== currentFn) {
+    originalFn.apply(null, args)
+  }
+}
+
+/**
+ * Deletes properties from an object (pure)
+ */
+export function removeProperties<T>(
+  partialProps: T,
+  keys: Array<keyof T>,
+): Partial<T> {
+  const clone = { ...partialProps }
+  keys.forEach(
+    (key): void => {
+      delete clone[key]
+    },
+  )
+  return clone
+}

@@ -268,3 +268,24 @@ describe('isReferenceElement', () => {
     expect(Utils.isReferenceElement(instance.popper)).toBe(false)
   })
 })
+
+describe('preserveInvocation', () => {
+  it('should invoke the first function if not the same as second', () => {
+    const spy = jest.fn()
+    Utils.preserveInvocation(spy, () => {}, ['test'])
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenCalledWith('test')
+  })
+
+  it('should not invoke the first function is the same as second', () => {
+    const spy = jest.fn()
+    Utils.preserveInvocation(spy, spy, ['test'])
+    expect(spy).not.toHaveBeenCalled()
+  })
+})
+
+describe('removeProperties', () => {
+  it('deletes unwanted properties', () => {
+    expect(Utils.removeProperties({ a: 1, b: 2 }, ['b'])).toEqual({ a: 1 })
+  })
+})

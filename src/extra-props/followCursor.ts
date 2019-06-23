@@ -1,6 +1,12 @@
 import { Instance, Targets, Props, Tippy, TippyCallWrapper } from '../types'
 import { closestCallback } from '../ponyfills'
-import { includes, getVirtualOffsets, hasOwnProperty } from '../utils'
+import {
+  includes,
+  getVirtualOffsets,
+  hasOwnProperty,
+  preserveInvocation,
+  removeProperties,
+} from '../utils'
 import { getBasePlacement } from '../popper'
 import { currentInput } from '../bindGlobalEventListeners'
 
@@ -12,9 +18,11 @@ export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
     return tippy(targets, {
       ...optionalProps,
       onCreate(instance): void {
-        if (optionalProps && optionalProps.onCreate) {
-          optionalProps.onCreate(instance)
-        }
+        preserveInvocation(
+          optionalProps && optionalProps.onCreate,
+          instance.props.onCreate,
+          [instance],
+        )
 
         let undo = (): void => {}
 
@@ -117,17 +125,17 @@ function applyFollowCursor(instance: Instance): () => void {
   instance.setProps({
     popperOptions: {
       onCreate(data): void {
-        if (popperOptions && popperOptions.onCreate) {
-          popperOptions.onCreate(data)
-        }
+        preserveInvocation(
+          popperOptions && popperOptions.onCreate,
+          instance.props.popperOptions.onCreate,
+          [data],
+        )
 
         isPopperInstanceCreated = true
       },
     },
     onMount(): void {
-      if (onMount) {
-        onMount(instance)
-      }
+      preserveInvocation(onMount, instance.props.onMount, [instance])
 
       if (triggerEventType !== 'focus') {
         instance.popperInstance!.disableEventListeners()
@@ -138,6 +146,8 @@ function applyFollowCursor(instance: Instance): () => void {
       }
     },
     onTrigger(instance, event): void {
+      preserveInvocation(onTrigger, instance.props.onTrigger, [instance, event])
+
       triggerEventType = event.type
 
       if (event instanceof MouseEvent) {
@@ -154,18 +164,17 @@ function applyFollowCursor(instance: Instance): () => void {
       }
     },
     onUntrigger(instance, event): void {
-      if (onUntrigger) {
-        onUntrigger(instance, event)
-      }
+      preserveInvocation(onUntrigger, instance.props.onUntrigger, [
+        instance,
+        event,
+      ])
 
       if (!instance.state.isVisible) {
         removeListener()
       }
     },
     onHidden(): void {
-      if (onHidden) {
-        onHidden(instance)
-      }
+      preserveInvocation(onHidden, instance.props.onHidden, [instance])
 
       if (!instance.state.isScheduledToShow) {
         removeListener()
@@ -181,15 +190,17 @@ function applyFollowCursor(instance: Instance): () => void {
     onHidden = partialProps.onHidden || onHidden
     popperOptions = partialProps.popperOptions || popperOptions
 
-    delete partialProps.onTrigger
-    delete partialProps.onUntrigger
-    delete partialProps.onMount
-    delete partialProps.onHidden
-    delete partialProps.popperOptions
-
     onMouseMove(lastMouseMoveEvent)
 
-    originalSetProps(partialProps)
+    originalSetProps(
+      removeProperties(partialProps, [
+        'onTrigger',
+        'onUntrigger',
+        'onMount',
+        'onHidden',
+        'popperOptions',
+      ]),
+    )
   }
 
   return (): void => {
