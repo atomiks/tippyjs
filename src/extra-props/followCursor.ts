@@ -106,8 +106,14 @@ function applyFollowCursor(instance: Instance): () => void {
       instance.popperInstance!.update()
     }
 
+    // IIFE context vs. ESM/CJS context
+    const ci =
+      // @ts-ignore
+      // eslint-disable-next-line
+      typeof tippy !== 'undefined' ? tippy.currentInput : currentInput
+
     if (
-      currentInput.isTouch ||
+      ci.isTouch ||
       (followCursor === 'initial' && instance.state.isVisible)
     ) {
       removeListener()

@@ -122,14 +122,16 @@ export type TippyCallWrapper = (
 ) => Instance | Instance[]
 
 export interface EnhancedTippy extends Tippy {
-  version: string
+  currentInput: { isTouch: boolean }
   defaultProps: Props
+  version: string
 }
 
 export type PropHOF = (tippy: Tippy) => EnhancedTippy
 
 export interface Tippy {
   (targets: Targets, props?: Partial<Props>): Instance | Instance[]
+  readonly currentInput: { isTouch: boolean }
   readonly defaultProps: Props
   readonly version: string
   hideAll(options?: HideAllOptions): void

@@ -1,4 +1,5 @@
 import tippy from '../../src'
+import enhance from '../../src/extra-props/enhance'
 import followCursor from '../../src/extra-props/followCursor'
 import {
   h,
@@ -17,6 +18,17 @@ tippy.setDefaultProps({
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
+
+describe('enhance', () => {
+  it('preserves statics', () => {
+    const enhancedTippy = enhance(tippy, [followCursor])
+    expect(enhancedTippy.defaultProps).toBe(tippy.defaultProps)
+    expect(enhancedTippy.currentInput).toBe(tippy.currentInput)
+    expect(enhancedTippy.version).toBe(tippy.version)
+    expect(enhancedTippy.hideAll).toBe(tippy.hideAll)
+    expect(enhancedTippy.setDefaultProps).toBe(tippy.setDefaultProps)
+  })
+})
 
 describe('followCursor', () => {
   // NOTE: Jest's simulated window dimensions are 1024 x 768. These values
