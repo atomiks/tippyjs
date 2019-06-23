@@ -833,44 +833,71 @@ describe('showOnCreate', () => {
 })
 
 describe('touch', () => {
+  beforeEach(enableTouchEnvironment)
+  afterEach(disableTouchEnvironment)
+
   it('true: shows tooltips on touch device', () => {
-    enableTouchEnvironment()
     const instance = tippy(h(), { touch: true })
     instance.show()
     expect(instance.state.isVisible).toBe(true)
-    disableTouchEnvironment()
   })
 
   it('false: does not show tooltip on touch device', () => {
-    enableTouchEnvironment()
     const instance = tippy(h(), { touch: false })
     instance.show()
     expect(instance.state.isVisible).toBe(false)
-    disableTouchEnvironment()
   })
-})
 
-describe('touchHold', () => {
-  it('true: uses `touch` listeners instead', () => {
-    enableTouchEnvironment()
+  it('"hold": uses `touch` listeners instead', () => {
     const ref = h()
-    const instance = tippy(ref, { touchHold: true })
+    const instance = tippy(ref, { touch: 'hold' })
     ref.dispatchEvent(new Event('mouseenter'))
     expect(instance.state.isVisible).toBe(false)
     ref.dispatchEvent(new Event('focus'))
     expect(instance.state.isVisible).toBe(false)
     ref.dispatchEvent(new Event('touchstart'))
     expect(instance.state.isVisible).toBe(true)
-    disableTouchEnvironment()
   })
 
-  it('false: uses standard listeners', () => {
-    enableTouchEnvironment()
+  it('"hold": hides due to the correct event', () => {
     const ref = h()
-    const instance = tippy(ref, { touchHold: false })
-    ref.dispatchEvent(new Event('mouseenter'))
+    const instance = tippy(ref, { touch: 'hold' })
+    ref.dispatchEvent(new Event('touchstart'))
     expect(instance.state.isVisible).toBe(true)
-    disableTouchEnvironment()
+    ref.dispatchEvent(new Event('mouseleave'))
+    expect(instance.state.isVisible).toBe(true)
+    ref.dispatchEvent(new Event('touchend'))
+    expect(instance.state.isVisible).toBe(false)
+  })
+
+  it('"longPress": uses `touch` listeners and waits for timeout', () => {
+    const ref = h()
+    const instance = tippy(ref, { touch: 'longPress' })
+    ref.dispatchEvent(new Event('touchstart'))
+    expect(instance.state.isVisible).toBe(false)
+    jest.runAllTimers()
+    expect(instance.state.isVisible).toBe(true)
+  })
+
+  it('"longPress": respects duration', () => {
+    const ref = h()
+    const instance = tippy(ref, { touch: ['longPress', 100] })
+    ref.dispatchEvent(new Event('touchstart'))
+    expect(instance.state.isVisible).toBe(false)
+    jest.advanceTimersByTime(99)
+    expect(instance.state.isVisible).toBe(false)
+    jest.advanceTimersByTime(100)
+    expect(instance.state.isVisible).toBe(true)
+  })
+
+  it('"longPress": timeout is cancelled correctly', () => {
+    const ref = h()
+    const instance = tippy(ref, { touch: ['longPress', 100] })
+    ref.dispatchEvent(new Event('touchstart'))
+    expect(instance.state.isVisible).toBe(false)
+    ref.dispatchEvent(new Event('touchend'))
+    jest.advanceTimersByTime(100)
+    expect(instance.state.isVisible).toBe(false)
   })
 })
 
