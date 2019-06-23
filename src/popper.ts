@@ -259,13 +259,14 @@ export function updatePopperElement(
   }
 
   // arrow
-  if (prevProps.arrow) {
+  if (prevProps.arrow !== nextProps.arrow) {
     tooltip.removeChild(arrow!)
     tooltip.removeAttribute('data-arrow')
-  }
-  if (nextProps.arrow) {
-    tooltip.appendChild(createArrowElement(nextProps.arrow))
-    tooltip.setAttribute('data-arrow', '')
+
+    if (nextProps.arrow) {
+      tooltip.appendChild(createArrowElement(nextProps.arrow))
+      tooltip.setAttribute('data-arrow', '')
+    }
   }
 
   // interactive
