@@ -53,7 +53,7 @@ function applyFollowCursor(instance: Instance): () => void {
   let lastMouseMoveEvent: MouseEvent
   let isPopperInstanceCreated = false
   let isDestroyed = false
-  let triggerEventType: string
+  let wasTriggeredByFocus = false
 
   function addListener(): void {
     document.addEventListener('mousemove', onMouseMove)
@@ -64,7 +64,7 @@ function applyFollowCursor(instance: Instance): () => void {
   }
 
   function onMouseMove(event: MouseEvent): void {
-    if (!lastMouseMoveEvent) {
+    if (wasTriggeredByFocus || isDestroyed || !event) {
       return
     }
 
@@ -148,25 +148,22 @@ function applyFollowCursor(instance: Instance): () => void {
     onMount(): void {
       preserveInvocation(onMount, instance.props.onMount, [instance])
 
-      if (triggerEventType !== 'focus') {
-        onMouseMove(lastMouseMoveEvent)
-      }
+      onMouseMove(lastMouseMoveEvent)
     },
     onTrigger(instance, event): void {
       preserveInvocation(onTrigger, instance.props.onTrigger, [instance, event])
 
-      triggerEventType = event.type
+      wasTriggeredByFocus = event.type === 'focus'
 
       if (event instanceof MouseEvent) {
         lastMouseMoveEvent = event
       }
 
-      // If the tooltip has a delay, we need to be listening to the mousemove as
-      // soon as the trigger event is fired, so that it's in the correct position
-      // upon mount.
-      // Edge case: if the tooltip is still mounted, but then scheduleShow() is
-      // called, it causes a jump.
-      if (triggerEventType !== 'focus' && !instance.state.isMounted) {
+      if (wasTriggeredByFocus && instance.popperInstance) {
+        instance.popperInstance.reference = instance.reference
+      }
+
+      if (!wasTriggeredByFocus) {
         addListener()
       }
     },
@@ -212,9 +209,7 @@ function applyFollowCursor(instance: Instance): () => void {
       ]),
     )
 
-    if (!isDestroyed) {
-      onMouseMove(lastMouseMoveEvent)
-    }
+    onMouseMove(lastMouseMoveEvent)
   }
 
   return (): void => {

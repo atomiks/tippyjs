@@ -374,6 +374,29 @@ describe('followCursor', () => {
     expect(spies.onHidden).toHaveBeenCalledWith(instance)
     expect(spies.popperOptions.onCreate).toHaveBeenCalled()
   })
+
+  it('should reset popperInstance.reference if triggered by `focus`', () => {
+    instance = tippyEnhanced(h(), {
+      followCursor: true,
+      flip: false,
+      delay: 1000,
+    })
+
+    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
+    instance.reference.dispatchEvent(new MouseEvent('mouseleave'))
+
+    instance.reference.dispatchEvent(secondMouseMoveEvent)
+
+    instance.hide()
+
+    instance.reference.dispatchEvent(new FocusEvent('focus'))
+
+    expect(instance.popperInstance.reference).toBe(instance.reference)
+  })
 })
 
 describe('inlinePositioning', () => {
