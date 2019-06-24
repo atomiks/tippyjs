@@ -1,7 +1,7 @@
 import tippy from '../../src'
 import enhance from '../../src/extra-props/enhance'
 import followCursor from '../../src/extra-props/followCursor'
-import {
+import withInlinePositioning, {
   getBestRect,
   applyCursorStrategy,
 } from '../../src/extra-props/inlinePositioning'
@@ -590,17 +590,57 @@ describe('inlinePositioning', () => {
       })
     })
 
-    it('restores original getBoundingClientRect for `focus` trigger', () => {
+    it('uses `getBestRect()` for `focus` trigger', () => {
       const ref = h()
-      const originalGetBoundingClientRect = ref.getBoundingClientRect
-      ref.getClientRects = mockTarget.getClientRects
-      const instance = tippy(ref, { triggerTarget: ref })
-
-      applyCursorStrategy(instance, 'cursorRect')
+      const instance = withInlinePositioning(tippy)(ref, {
+        inlinePositioning: 'cursorRect',
+      })
 
       ref.dispatchEvent(new FocusEvent('focus'))
 
-      expect(ref.getBoundingClientRect).toBe(originalGetBoundingClientRect)
+      jest.runAllTimers()
+
+      expect(instance.popperInstance.reference.getBoundingClientRect()).toEqual(
+        getBestRect(instance),
+      )
+    })
+  })
+
+  describe('inlinePositioning', () => {
+    const enhancedTippy = withInlinePositioning(tippy)
+
+    it('false: should not change instance.popperInstance.reference', () => {
+      const instance = enhancedTippy(h(), { inlinePositioning: false })
+      instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+      jest.runAllTimers()
+      expect(instance.popperInstance.reference).toBe(instance.reference)
+    })
+
+    it('true: uses `getBestRect()` by default', () => {
+      const instance = enhancedTippy(h(), { inlinePositioning: true })
+      instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+      jest.runAllTimers()
+      expect(instance.popperInstance.reference.getBoundingClientRect()).toEqual(
+        getBestRect(instance),
+      )
+    })
+
+    it('preserves `onTrigger` lifecycle hook', () => {
+      const spy = jest.fn()
+      const newSpy = jest.fn()
+      const instance = enhancedTippy(h(), {
+        inlinePositioning: true,
+        onTrigger: spy,
+      })
+      const event = new MouseEvent('mouseenter')
+      instance.reference.dispatchEvent(event)
+      jest.runAllTimers()
+      expect(spy).toHaveBeenCalledWith(instance, event)
+      instance.hide()
+      instance.setProps({ onTrigger: newSpy })
+      instance.reference.dispatchEvent(event)
+      jest.runAllTimers()
+      expect(newSpy).toHaveBeenCalledWith(instance, event)
     })
   })
 })

@@ -66,7 +66,7 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
               )
             }
 
-            onTrigger = instance.props.onTrigger || onTrigger
+            onTrigger = partialProps.onTrigger || onTrigger
 
             originalSetProps(removeProperties(partialProps, ['onTrigger']))
           }
@@ -160,7 +160,6 @@ export function applyCursorStrategy(
 ): void {
   const { reference } = instance
 
-  let originalGetBoundingClientRect = reference.getBoundingClientRect
   let onTrigger = instance.props.onTrigger
 
   instance.setProps({
@@ -227,7 +226,11 @@ export function applyCursorStrategy(
           }
         }
       } else {
-        instance.popperInstance!.reference.getBoundingClientRect = originalGetBoundingClientRect
+        // Fallback to `getBestRect` since "cursor" coords don't apply to
+        // non-MouseEvents
+        instance.popperInstance!.reference.getBoundingClientRect = ():
+          | ClientRect
+          | DOMRect => getBestRect(instance)
       }
     },
   })
