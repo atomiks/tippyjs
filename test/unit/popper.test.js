@@ -184,70 +184,90 @@ describe('updatePopperElement', () => {
     )
   })
 
-  it('sets new arrow element', () => {
-    {
-      const popper = createPopperElement(1, defaultProps)
-      updatePopperElement(popper, defaultProps, {
-        ...defaultProps,
-        arrow: true,
-      })
-      expect(popper.querySelector(ARROW_SELECTOR)).not.toBe(null)
-    }
-
-    {
-      const props = { ...defaultProps, arrow: true }
+  describe('diffs animateFill correclty', () => {
+    it('true -> false', () => {
+      const props = { ...defaultProps, animateFill: true }
       const popper = createPopperElement(1, props)
       updatePopperElement(popper, props, {
         ...defaultProps,
-        arrow: false,
+        animateFill: false,
       })
-      expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
-    }
+      expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
+        false,
+      )
+    })
+
+    it('false -> true', () => {
+      const props = { ...defaultProps, animateFill: false }
+      const popper = createPopperElement(1, props)
+      updatePopperElement(popper, props, {
+        ...defaultProps,
+        animateFill: true,
+      })
+      expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
+        true,
+      )
+    })
   })
 
-  it('sets arrow attribute', () => {
-    {
-      const popper = createPopperElement(1, defaultProps)
-      updatePopperElement(popper, defaultProps, {
-        ...defaultProps,
-        arrow: true,
-      })
-      expect(getChildren(popper).tooltip.hasAttribute('data-arrow')).toBe(true)
-    }
-
-    {
+  describe('diffs the arrow correctly', () => {
+    it('true -> false', () => {
       const props = { ...defaultProps, arrow: true }
       const popper = createPopperElement(1, props)
-      updatePopperElement(popper, props, {
-        ...defaultProps,
-        arrow: false,
-      })
+      updatePopperElement(popper, props, { ...defaultProps, arrow: false })
+      expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
+      expect(popper.querySelector(SVG_ARROW_SELECTOR)).toBe(null)
       expect(getChildren(popper).tooltip.hasAttribute('data-arrow')).toBe(false)
-    }
-  })
+    })
 
-  it('sets new arrow element type', () => {
-    {
-      const popper = createPopperElement(1, defaultProps)
-      updatePopperElement(popper, defaultProps, {
-        ...defaultProps,
-        arrow: 'round',
-      })
-      expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
-      expect(popper.querySelector(SVG_ARROW_SELECTOR)).not.toBe(null)
-    }
-
-    {
-      const props = { ...defaultProps, arrow: 'round' }
+    it('false -> true', () => {
+      const props = { ...defaultProps, arrow: false }
       const popper = createPopperElement(1, props)
-      const newProps = { ...defaultProps, arrow: true }
-      updatePopperElement(popper, props, newProps)
+      updatePopperElement(popper, props, { ...defaultProps, arrow: true })
       expect(popper.querySelector(ARROW_SELECTOR)).not.toBe(null)
       expect(popper.querySelector(SVG_ARROW_SELECTOR)).toBe(null)
-      updatePopperElement(popper, newProps, props)
+      expect(getChildren(popper).tooltip.hasAttribute('data-arrow')).toBe(true)
+    })
+
+    it('false -> "round"', () => {
+      const props = { ...defaultProps, arrow: false }
+      const popper = createPopperElement(1, props)
+      updatePopperElement(popper, props, { ...defaultProps, arrow: 'round' })
       expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
       expect(popper.querySelector(SVG_ARROW_SELECTOR)).not.toBe(null)
-    }
+      expect(getChildren(popper).tooltip.hasAttribute('data-arrow')).toBe(true)
+    })
+
+    it('"round" -> false', () => {
+      const props = { ...defaultProps, arrow: 'round' }
+      const popper = createPopperElement(1, props)
+      updatePopperElement(popper, props, { ...defaultProps, arrow: false })
+      expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
+      expect(popper.querySelector(SVG_ARROW_SELECTOR)).toBe(null)
+      expect(getChildren(popper).tooltip.hasAttribute('data-arrow')).toBe(false)
+    })
+
+    it('"round" -> true', () => {
+      const props = { ...defaultProps, arrow: 'round' }
+      const popper = createPopperElement(1, props)
+      updatePopperElement(popper, props, { ...defaultProps, arrow: true })
+      expect(popper.querySelector(ARROW_SELECTOR)).not.toBe(null)
+      expect(popper.querySelector(SVG_ARROW_SELECTOR)).toBe(null)
+      expect(getChildren(popper).tooltip.hasAttribute('data-arrow')).toBe(true)
+    })
+
+    it('"round" -> custom', () => {
+      const props = { ...defaultProps, arrow: 'round' }
+      const popper = createPopperElement(1, props)
+      updatePopperElement(popper, props, {
+        ...defaultProps,
+        arrow: document.createElement('article'),
+      })
+      expect(popper.querySelector(ARROW_SELECTOR)).toBe(null)
+      expect(popper.querySelector(SVG_ARROW_SELECTOR)).not.toBe(null)
+      expect(popper.querySelector('article')).not.toBe(null)
+      expect(getChildren(popper).tooltip.hasAttribute('data-arrow')).toBe(true)
+    })
   })
 
   it('sets interactive attribute', () => {
