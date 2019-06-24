@@ -652,7 +652,6 @@ export default function createTippy(
         instance.props.flip,
       )
 
-      instance.popperInstance.reference = reference
       instance.popperInstance.enableEventListeners()
 
       // Mounting callback invoked in `onUpdate`
@@ -668,22 +667,18 @@ export default function createTippy(
   function scheduleShow(event?: Event): void {
     instance.clearDelayTimeouts()
 
+    instance.state.isScheduledToShow = true
+
+    if (!instance.popperInstance) {
+      createPopperInstance()
+    }
+
     if (event) {
       instance.props.onTrigger(instance, event)
     }
 
-    if (instance.state.isVisible) {
-      return
-    }
-
-    instance.state.isScheduledToShow = true
-
     if (instance.props.wait) {
       return instance.props.wait(instance, event)
-    }
-
-    if (!instance.popperInstance) {
-      createPopperInstance()
     }
 
     addDocumentMouseDownListener()

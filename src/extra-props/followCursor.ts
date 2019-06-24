@@ -26,10 +26,6 @@ export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
 
         let undo = (): void => {}
 
-        if (instance.props.followCursor) {
-          undo = applyFollowCursor(instance)
-        }
-
         const originalSetProps = instance.setProps
         instance.setProps = (partialProps): void => {
           if (hasOwnProperty(partialProps, 'followCursor')) {
@@ -41,6 +37,10 @@ export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
           }
 
           originalSetProps(partialProps)
+        }
+
+        if (instance.props.followCursor) {
+          undo = applyFollowCursor(instance)
         }
       },
     })
@@ -217,7 +217,13 @@ function applyFollowCursor(instance: Instance): () => void {
   return (): void => {
     // Undo
     removeListener()
+
+    if (instance.popperInstance) {
+      instance.popperInstance.reference = instance.reference
+    }
+
     instance.setProps = originalSetProps
+
     originalSetProps({
       popperOptions,
       onTrigger,

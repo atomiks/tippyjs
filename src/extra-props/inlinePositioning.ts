@@ -2,10 +2,10 @@ import { Instance, Targets, Props, Tippy, TippyCallWrapper } from '../types'
 import {
   includes,
   getVirtualOffsets,
-  isRealElement,
   hasOwnProperty,
   arrayFrom,
   preserveInvocation,
+  removeProperties,
 } from '../utils'
 import { getBasePlacement } from '../popper'
 import { warnWhen } from '../validation'
@@ -29,29 +29,32 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
     if (inlinePositioning) {
       const instances = ([] as Instance[]).concat(returnValue)
 
-      const newInstances = instances.map(
-        ({ reference, props, destroy }): Instance => {
-          destroy()
+      instances.forEach(
+        (instance: Instance): void => {
+          const virtualReference = document.createElement('div')
 
-          const newInstance = tippy(document.createElement('div'), {
-            ...props,
-            triggerTarget: reference,
-          }) as Instance
+          let onTrigger = instance.props.onTrigger
 
-          reference._tippy = newInstance
+          instance.setProps({
+            onTrigger(instance, event) {
+              preserveInvocation(onTrigger, instance.props.onTrigger, [
+                instance,
+                event,
+              ])
+
+              instance.popperInstance!.reference = virtualReference
+            },
+          })
 
           if (typeof inlinePositioning === 'string') {
-            applyCursorStrategy(newInstance, inlinePositioning)
+            applyCursorStrategy(instance, inlinePositioning)
           } else {
-            newInstance.reference.getBoundingClientRect = ():
-              | ClientRect
-              | DOMRect => getBestRect(newInstance)
+            virtualReference.getBoundingClientRect = (): ClientRect | DOMRect =>
+              getBestRect(instance)
           }
 
-          const originalSetProps = newInstance.setProps
-          newInstance.setProps = (
-            partialProps: Partial<ExtendedProps>,
-          ): void => {
+          const originalSetProps = instance.setProps
+          instance.setProps = (partialProps: Partial<ExtendedProps>): void => {
             // Making this prop fully dynamic is difficult and buggy, and it's
             // very unlikely the user will need to dynamically update it anyway.
             // Just warn.
@@ -63,20 +66,12 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
               )
             }
 
-            originalSetProps(partialProps)
-          }
+            onTrigger = instance.props.onTrigger || onTrigger
 
-          const originalDestroy = newInstance.destroy
-          newInstance.destroy = (): void => {
-            delete reference._tippy
-            originalDestroy()
+            originalSetProps(removeProperties(partialProps, ['onTrigger']))
           }
-
-          return newInstance
         },
       )
-
-      return isRealElement(targets) ? newInstances[0] : newInstances
     }
 
     return returnValue
@@ -84,8 +79,8 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
 }
 
 export function getBestRect(instance: Instance): ClientRect | DOMRect {
-  const target = instance.props.triggerTarget as Element
-  const rects = target.getClientRects()
+  const { reference } = instance
+  const rects = reference.getClientRects()
 
   const basePlacement = getBasePlacement(instance.state.currentPlacement)
 
@@ -96,7 +91,7 @@ export function getBestRect(instance: Instance): ClientRect | DOMRect {
 
   // Not an inline element that spans 2 or more rows
   if (rects.length < 2) {
-    return target.getBoundingClientRect()
+    return reference.getBoundingClientRect()
   }
 
   const firstRect = rects[0]
@@ -145,7 +140,7 @@ export function getBestRect(instance: Instance): ClientRect | DOMRect {
       break
     }
     default: {
-      return target.getBoundingClientRect()
+      return reference.getBoundingClientRect()
     }
   }
 
@@ -163,16 +158,16 @@ export function applyCursorStrategy(
   instance: Instance,
   type: 'cursorRect' | 'cursorPoint',
 ): void {
-  const target = instance.props.triggerTarget as Element
+  const { reference } = instance
 
-  let originalGetBoundingClientRect = target.getBoundingClientRect
+  let originalGetBoundingClientRect = reference.getBoundingClientRect
   let onTrigger = instance.props.onTrigger
 
   instance.setProps({
     onTrigger(instance, event): void {
       preserveInvocation(onTrigger, instance.props.onTrigger, [instance, event])
 
-      const rects = arrayFrom(target.getClientRects())
+      const rects = arrayFrom(reference.getClientRects())
 
       if (event instanceof MouseEvent) {
         // We need to choose which rect to use. Check which rect
@@ -191,9 +186,11 @@ export function applyCursorStrategy(
           },
         )
 
-        instance.reference.getBoundingClientRect = (): ClientRect | DOMRect => {
+        instance.popperInstance!.reference.getBoundingClientRect = ():
+          | ClientRect
+          | DOMRect => {
           if (type === 'cursorPoint') {
-            const rect = target.getClientRects()[index]
+            const rect = reference.getClientRects()[index]
 
             const isVerticalPlacement = includes(
               ['top', 'bottom'],
@@ -226,11 +223,11 @@ export function applyCursorStrategy(
                   bottom: event.clientY + y,
                 }
           } else {
-            return target.getClientRects()[index]
+            return reference.getClientRects()[index]
           }
         }
       } else {
-        instance.reference.getBoundingClientRect = originalGetBoundingClientRect
+        instance.popperInstance!.reference.getBoundingClientRect = originalGetBoundingClientRect
       }
     },
   })

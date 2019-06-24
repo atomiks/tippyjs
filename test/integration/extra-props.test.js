@@ -284,13 +284,15 @@ describe('followCursor', () => {
 
   it('can be undone via setProps()', () => {
     instance = tippyEnhanced(h(), { followCursor: true, flip: false })
+    instance.reference.dispatchEvent(new MouseEvent('mouseenter', { ...first }))
+    jest.runAllTimers()
+    expect(instance.popperInstance.reference).not.toBe(instance.reference)
+    instance.hide()
     instance.setProps({ followCursor: false })
     instance.reference.dispatchEvent(new MouseEvent('mouseenter', { ...first }))
     jest.runAllTimers()
     instance.reference.dispatchEvent(firstMouseMoveEvent)
-    expect(instance.popperInstance.reference.getBoundingClientRect()).toEqual(
-      instance.reference.getBoundingClientRect(),
-    )
+    expect(instance.popperInstance.reference).toBe(instance.reference)
   })
 
   it('can be updated via setProps()', () => {
@@ -427,14 +429,14 @@ describe('inlinePositioning', () => {
       // non-real placement
       expect(
         getBestRect({
-          props: { triggerTarget: mockTarget },
+          reference: mockTarget,
           state: { currentPlacement: 'auto' },
         }),
       ).toBe('getBoundingClientRect')
       // Only 1 rect
       expect(
         getBestRect({
-          props: { triggerTarget: singleRectTarget },
+          reference: singleRectTarget,
           state: { currentPlacement: 'auto' },
         }),
       ).toBe('getBoundingClientRect')
@@ -442,7 +444,7 @@ describe('inlinePositioning', () => {
 
     it('"top" placement', () => {
       const received = getBestRect({
-        props: { triggerTarget: mockTarget },
+        reference: mockTarget,
         state: { currentPlacement: 'top' },
       })
 
@@ -459,7 +461,7 @@ describe('inlinePositioning', () => {
 
     it('"bottom" placement', () => {
       const received = getBestRect({
-        props: { triggerTarget: mockTarget },
+        reference: mockTarget,
         state: { currentPlacement: 'bottom' },
       })
 
@@ -476,7 +478,7 @@ describe('inlinePositioning', () => {
 
     it('"left" placement', () => {
       const received = getBestRect({
-        props: { triggerTarget: mockTarget },
+        reference: mockTarget,
         state: { currentPlacement: 'left' },
       })
 
@@ -497,7 +499,7 @@ describe('inlinePositioning', () => {
 
     it('"right" placement', () => {
       const received = getBestRect({
-        props: { triggerTarget: mockTarget },
+        reference: mockTarget,
         state: { currentPlacement: 'right' },
       })
 
