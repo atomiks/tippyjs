@@ -259,14 +259,18 @@ export function updatePopperElement(
   }
 
   // arrow
-  if (prevProps.arrow !== nextProps.arrow) {
+  if (!prevProps.arrow && nextProps.arrow) {
+    // false to true
+    tooltip.appendChild(createArrowElement(nextProps.arrow))
+    tooltip.setAttribute('data-arrow', '')
+  } else if (prevProps.arrow && !nextProps.arrow) {
+    // true to false
     tooltip.removeChild(arrow!)
     tooltip.removeAttribute('data-arrow')
-
-    if (nextProps.arrow) {
-      tooltip.appendChild(createArrowElement(nextProps.arrow))
-      tooltip.setAttribute('data-arrow', '')
-    }
+  } else if (prevProps.arrow !== nextProps.arrow) {
+    // true to 'round' or vice-versa
+    tooltip.removeChild(arrow!)
+    tooltip.appendChild(createArrowElement(nextProps.arrow))
   }
 
   // interactive
