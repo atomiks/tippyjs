@@ -52,6 +52,7 @@ function applyFollowCursor(instance: Instance): () => void {
 
   let lastMouseMoveEvent: MouseEvent
   let isPopperInstanceCreated = false
+  let isDestroyed = false
   let triggerEventType: string
 
   function addListener(): void {
@@ -201,8 +202,6 @@ function applyFollowCursor(instance: Instance): () => void {
     onHidden = partialProps.onHidden || onHidden
     popperOptions = partialProps.popperOptions || popperOptions
 
-    onMouseMove(lastMouseMoveEvent)
-
     originalSetProps(
       removeProperties(partialProps, [
         'onTrigger',
@@ -212,6 +211,10 @@ function applyFollowCursor(instance: Instance): () => void {
         'popperOptions',
       ]),
     )
+
+    if (!isDestroyed) {
+      onMouseMove(lastMouseMoveEvent)
+    }
   }
 
   return (): void => {
@@ -231,5 +234,7 @@ function applyFollowCursor(instance: Instance): () => void {
       onMount,
       onHidden,
     })
+
+    isDestroyed = true
   }
 }
