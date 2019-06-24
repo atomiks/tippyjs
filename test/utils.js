@@ -5,8 +5,6 @@ import {
 
 export const IDENTIFIER = '__tippy'
 
-export const el = type => document.createElement(type)
-
 export function cleanDocumentBody() {
   document.body.innerHTML = ''
 }
