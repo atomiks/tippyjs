@@ -1,10 +1,10 @@
 import { Instance, Targets, Props, Tippy } from '../types'
-import { arrayFrom } from '../ponyfills'
 import {
   includes,
   getVirtualOffsets,
   isRealElement,
   hasOwnProperty,
+  arrayFrom,
 } from '../utils'
 import { getBasePlacement } from '../popper'
 import { warnWhen } from '../validation'
