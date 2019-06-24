@@ -1,10 +1,11 @@
-import { Instance, Targets, Props, Tippy } from '../types'
+import { Instance, Targets, Props, Tippy, TippyCallWrapper } from '../types'
 import {
   includes,
   getVirtualOffsets,
   isRealElement,
   hasOwnProperty,
   arrayFrom,
+  preserveInvocation,
 } from '../utils'
 import { getBasePlacement } from '../popper'
 import { warnWhen } from '../validation'
@@ -12,11 +13,6 @@ import { warnWhen } from '../validation'
 interface ExtendedProps extends Props {
   inlinePositioning: boolean | 'cursorRect' | 'cursorPoint'
 }
-
-type TippyCallWrapper = (
-  targets: Targets,
-  optionalProps?: Partial<ExtendedProps>,
-) => Instance | Instance[]
 
 export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
   return (
@@ -129,15 +125,16 @@ export function getBestRect(instance: Instance): ClientRect | DOMRect {
 
       // The values are rounded because the rects are displayed via whole pixels
       // e.g. 140.1 and 139.9 are aligned the same
-      const lefts = rectsArr.map(rects => Math.round(rects.left))
-      const rights = rectsArr.map(rects => Math.round(rects.right))
+      const lefts = rectsArr.map((rects): number => Math.round(rects.left))
+      const rights = rectsArr.map((rects): number => Math.round(rects.right))
       const minLeft = Math.min(...lefts)
       const maxRight = Math.max(...rights)
 
-      const measureRects = rectsArr.filter(rect =>
-        basePlacement === 'left'
-          ? Math.round(rect.left) === minLeft
-          : Math.round(rect.right) === maxRight,
+      const measureRects = rectsArr.filter(
+        (rect): boolean =>
+          basePlacement === 'left'
+            ? Math.round(rect.left) === minLeft
+            : Math.round(rect.right) === maxRight,
       )
 
       top = measureRects[0].top
@@ -172,10 +169,8 @@ export function applyCursorStrategy(
   let onTrigger = instance.props.onTrigger
 
   instance.setProps({
-    onTrigger(_, event) {
-      if (onTrigger && onTrigger !== instance.props.onTrigger) {
-        onTrigger(_, event)
-      }
+    onTrigger(instance, event): void {
+      preserveInvocation(onTrigger, instance.props.onTrigger, [instance, event])
 
       const rects = arrayFrom(target.getClientRects())
 
@@ -183,16 +178,18 @@ export function applyCursorStrategy(
         // We need to choose which rect to use. Check which rect
         // the cursor landed on.
         let index = -1
-        rects.forEach((rect, i) => {
-          if (
-            event.clientY >= Math.floor(rect.top) &&
-            event.clientY <= Math.ceil(rect.bottom) &&
-            event.clientX >= Math.floor(rect.left) &&
-            event.clientX <= Math.ceil(rect.right)
-          ) {
-            index = i
-          }
-        })
+        rects.forEach(
+          (rect, i): void => {
+            if (
+              event.clientY >= Math.floor(rect.top) &&
+              event.clientY <= Math.ceil(rect.bottom) &&
+              event.clientX >= Math.floor(rect.left) &&
+              event.clientX <= Math.ceil(rect.right)
+            ) {
+              index = i
+            }
+          },
+        )
 
         instance.reference.getBoundingClientRect = (): ClientRect | DOMRect => {
           if (type === 'cursorPoint') {
