@@ -233,12 +233,9 @@ export function applyCursorStrategy(
   })
 
   const originalSetProps = instance.setProps
-  instance.setProps = (props: Partial<ExtendedProps>): void => {
-    if (props.onTrigger) {
-      onTrigger = props.onTrigger
-      delete props.onTrigger
-    }
+  instance.setProps = (partialProps: Partial<ExtendedProps>): void => {
+    onTrigger = partialProps.onTrigger || onTrigger
 
-    originalSetProps(props)
+    originalSetProps(removeProperties(partialProps, ['onTrigger']))
   }
 }
