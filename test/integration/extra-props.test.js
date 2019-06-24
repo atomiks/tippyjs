@@ -2,6 +2,10 @@ import tippy from '../../src'
 import enhance from '../../src/extra-props/enhance'
 import followCursor from '../../src/extra-props/followCursor'
 import {
+  getBestRect,
+  applyCursorStrategy,
+} from '../../src/extra-props/inlinePositioning'
+import {
   h,
   cleanDocumentBody,
   enableTouchEnvironment,
@@ -276,5 +280,234 @@ describe('followCursor', () => {
     })
 
     disableTouchEnvironment()
+  })
+})
+
+describe('inlinePositioning', () => {
+  const rects = [
+    {
+      width: 37.25,
+      height: 18,
+      top: 116.875,
+      right: 441.125,
+      bottom: 134.875,
+      left: 403.875,
+    },
+    {
+      width: 231.859375,
+      height: 18,
+      top: 134.875,
+      right: 451.859375,
+      bottom: 152.875,
+      left: 220,
+    },
+    {
+      width: 231.6875,
+      height: 18,
+      top: 152.875,
+      right: 451.6875,
+      bottom: 170.875,
+      left: 220,
+    },
+    {
+      width: 151.203125,
+      height: 18,
+      top: 170.875,
+      right: 371.203125,
+      bottom: 188.875,
+      left: 220,
+    },
+  ]
+
+  const mockTarget = {
+    getBoundingClientRect() {
+      return 'getBoundingClientRect'
+    },
+    getClientRects() {
+      return rects
+    },
+  }
+
+  const singleRectTarget = { ...mockTarget }
+  singleRectTarget.getClientRects = () => rects.slice(0, 1)
+
+  describe('getBestRect', () => {
+    it('default / non-applicable cases', () => {
+      // non-real placement
+      expect(
+        getBestRect({
+          props: { triggerTarget: mockTarget },
+          state: { currentPlacement: 'auto' },
+        }),
+      ).toBe('getBoundingClientRect')
+      // Only 1 rect
+      expect(
+        getBestRect({
+          props: { triggerTarget: singleRectTarget },
+          state: { currentPlacement: 'auto' },
+        }),
+      ).toBe('getBoundingClientRect')
+    })
+
+    it('"top" placement', () => {
+      const received = getBestRect({
+        props: { triggerTarget: mockTarget },
+        state: { currentPlacement: 'top' },
+      })
+
+      const rects = mockTarget.getClientRects()
+      const first = rects[0]
+
+      const expected = {
+        ...first,
+        height: first.bottom - first.top,
+      }
+
+      expect(received).toEqual(expected)
+    })
+
+    it('"bottom" placement', () => {
+      const received = getBestRect({
+        props: { triggerTarget: mockTarget },
+        state: { currentPlacement: 'bottom' },
+      })
+
+      const rects = mockTarget.getClientRects()
+      const last = rects[rects.length - 1]
+
+      const expected = {
+        ...last,
+        height: last.bottom - last.top,
+      }
+
+      expect(received).toEqual(expected)
+    })
+
+    it('"left" placement', () => {
+      const received = getBestRect({
+        props: { triggerTarget: mockTarget },
+        state: { currentPlacement: 'left' },
+      })
+
+      const rects = mockTarget.getClientRects()
+
+      const expected = {
+        top: rects[1].top,
+        right: Math.round(rects[1].right),
+        bottom: rects[rects.length - 1].bottom,
+        left: Math.round(rects[1].left),
+      }
+
+      expected.width = expected.right - expected.left
+      expected.height = expected.bottom - expected.top
+
+      expect(received).toEqual(expected)
+    })
+
+    it('"right" placement', () => {
+      const received = getBestRect({
+        props: { triggerTarget: mockTarget },
+        state: { currentPlacement: 'right' },
+      })
+
+      const rects = mockTarget.getClientRects()
+
+      const expected = {
+        top: rects[1].top,
+        right: Math.round(rects[1].right),
+        bottom: rects[2].bottom,
+        left: Math.round(rects[1].left),
+      }
+
+      expected.width = expected.right - expected.left
+      expected.height = expected.bottom - expected.top
+
+      expect(received).toEqual(expected)
+    })
+  })
+
+  describe('applyCursorStrategy', () => {
+    const createMouseEnterEvent = index =>
+      new MouseEvent('mouseenter', {
+        clientX: rects[index].left + 1,
+        clientY: rects[index].top + 1,
+      })
+
+    it('should preserve `onTrigger` invocation', () => {
+      const spy = jest.fn()
+      const event = createMouseEnterEvent(0)
+
+      const ref = h()
+      ref.getClientRects = mockTarget.getClientRects
+      const instance = tippy(ref, { triggerTarget: ref, onTrigger: spy })
+
+      applyCursorStrategy(instance, 'cursorRect')
+
+      ref.dispatchEvent(event)
+      expect(spy).toHaveBeenCalledWith(instance, event)
+
+      instance.hide()
+
+      const newSpy = jest.fn()
+      instance.setProps({ onTrigger: newSpy })
+      instance.reference.dispatchEvent(event)
+      expect(newSpy).toHaveBeenCalledWith(instance, event)
+    })
+
+    it('"cursorRect": should choose the correct rect', () => {
+      const ref = h()
+      ref.getClientRects = mockTarget.getClientRects
+      const instance = tippy(ref, { triggerTarget: ref })
+
+      applyCursorStrategy(instance, 'cursorRect')
+
+      for (let i = 0; i < rects.length; i++) {
+        ref.dispatchEvent(createMouseEnterEvent(i))
+        expect(ref.getBoundingClientRect()).toBe(rects[i])
+      }
+    })
+
+    it('"cursorPoint": chooses correct rect and includes axis variation', () => {
+      const placements = ['top', 'bottom', 'left', 'right']
+
+      placements.forEach(placement => {
+        const ref = h()
+        ref.getClientRects = mockTarget.getClientRects
+        const instance = tippy(ref, { placement, triggerTarget: ref })
+
+        applyCursorStrategy(instance, 'cursorPoint')
+
+        for (let i = 0; i < rects.length; i++) {
+          const event = createMouseEnterEvent(i)
+          ref.dispatchEvent(event)
+          expect(ref.getBoundingClientRect()).toEqual({
+            ...rects[i],
+            width: 0,
+            height: 0,
+            ...(['top', 'bottom'].includes(placement) && {
+              left: event.clientX,
+              right: event.clientX,
+            }),
+            ...(['left', 'right'].includes(placement) && {
+              top: event.clientY,
+              bottom: event.clientY,
+            }),
+          })
+        }
+      })
+    })
+
+    it('restores original getBoundingClientRect for `focus` trigger', () => {
+      const ref = h()
+      const originalGetBoundingClientRect = ref.getBoundingClientRect
+      ref.getClientRects = mockTarget.getClientRects
+      const instance = tippy(ref, { triggerTarget: ref })
+
+      applyCursorStrategy(instance, 'cursorRect')
+
+      ref.dispatchEvent(new FocusEvent('focus'))
+
+      expect(ref.getBoundingClientRect).toBe(originalGetBoundingClientRect)
+    })
   })
 })
