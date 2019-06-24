@@ -281,6 +281,97 @@ describe('followCursor', () => {
 
     disableTouchEnvironment()
   })
+
+  it('can be undone via setProps()', () => {
+    instance = tippyEnhanced(h(), { followCursor: true, flip: false })
+    instance.setProps({ followCursor: false })
+    instance.reference.dispatchEvent(new MouseEvent('mouseenter', { ...first }))
+    jest.runAllTimers()
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
+    expect(instance.popperInstance.reference.getBoundingClientRect()).toEqual(
+      instance.reference.getBoundingClientRect(),
+    )
+  })
+
+  it('can be updated via setProps()', () => {
+    instance = tippyEnhanced(h(), { followCursor: 'horizontal', flip: false })
+    instance.setProps({ followCursor: true })
+
+    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
+
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    matches({
+      top: first.clientY,
+      bottom: first.clientY,
+      left: first.clientX,
+      right: first.clientX,
+    })
+
+    instance.reference.dispatchEvent(secondMouseMoveEvent)
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+    matches({
+      top: second.clientY,
+      bottom: second.clientY,
+      left: second.clientX,
+      right: second.clientX,
+    })
+  })
+
+  it('cleans up listener if untriggered before it shows', () => {
+    instance = tippyEnhanced(h(), {
+      followCursor: true,
+      flip: false,
+      delay: 1000,
+    })
+
+    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+
+    jest.advanceTimersByTime(100)
+
+    instance.reference.dispatchEvent(firstMouseMoveEvent)
+    instance.reference.dispatchEvent(new MouseEvent('mouseleave'))
+
+    jest.advanceTimersByTime(900)
+
+    instance.reference.dispatchEvent(secondMouseMoveEvent)
+
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+  })
+
+  it('should preserve lifecycle hooks', () => {
+    const spies = {
+      onTrigger: jest.fn(),
+      onUntrigger: jest.fn(),
+      onMount: jest.fn(),
+      onHidden: jest.fn(),
+      popperOptions: {
+        onCreate: jest.fn(),
+      },
+    }
+    instance = tippyEnhanced(h(), {
+      followCursor: true,
+      flip: false,
+      ...spies,
+    })
+
+    const triggerEvent = new MouseEvent('mouseenter', { ...first })
+    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+
+    jest.runAllTimers()
+
+    const untriggerEvent = new MouseEvent('mouseleave')
+    instance.reference.dispatchEvent(new MouseEvent('mouseleave'))
+
+    expect(spies.onTrigger).toHaveBeenCalledWith(instance, triggerEvent)
+    expect(spies.onUntrigger).toHaveBeenCalledWith(instance, untriggerEvent)
+    expect(spies.onMount).toHaveBeenCalledWith(instance)
+    expect(spies.onHidden).toHaveBeenCalledWith(instance)
+    expect(spies.popperOptions.onCreate).toHaveBeenCalled()
+  })
 })
 
 describe('inlinePositioning', () => {

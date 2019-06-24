@@ -63,6 +63,10 @@ function applyFollowCursor(instance: Instance): () => void {
   }
 
   function onMouseMove(event: MouseEvent): void {
+    if (!lastMouseMoveEvent) {
+      return
+    }
+
     const { clientX, clientY } = (lastMouseMoveEvent = event)
 
     if (!instance.popperInstance || !isPopperInstanceCreated) {
@@ -143,7 +147,7 @@ function applyFollowCursor(instance: Instance): () => void {
     onMount(): void {
       preserveInvocation(onMount, instance.props.onMount, [instance])
 
-      if (triggerEventType !== 'focus' && lastMouseMoveEvent) {
+      if (triggerEventType !== 'focus') {
         onMouseMove(lastMouseMoveEvent)
       }
     },
@@ -171,6 +175,9 @@ function applyFollowCursor(instance: Instance): () => void {
         event,
       ])
 
+      // The listener gets added in `onTrigger()`, but due to potential delay(s)
+      // the instance made be untriggered before it shows. `onHidden()` will
+      // therefore never be invoked.
       if (!instance.state.isVisible) {
         removeListener()
       }
@@ -178,6 +185,8 @@ function applyFollowCursor(instance: Instance): () => void {
     onHidden(): void {
       preserveInvocation(onHidden, instance.props.onHidden, [instance])
 
+      // If scheduled to show before unmounting (e.g. delay: [500, 0]), the
+      // listener should not be removed
       if (!instance.state.isScheduledToShow) {
         removeListener()
       }
