@@ -80,11 +80,11 @@
       "maxSize": "5.75 kB"
     },
     {
-      "path": "./addons/iife/tippy-addons.min.js",
+      "path": "./addons/esm/tippy-addons.min.js",
       "maxSize": "5 kB"
     },
     {
-      "path": "./extra-props/iife/tippy-extra-props.min.js",
+      "path": "./extra-props/esm/tippy-extra-props.min.js",
       "maxSize": "5 kB"
     },
     {
