@@ -87,7 +87,7 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
   }
 }
 
-function getBestRect(instance: Instance): ClientRect | DOMRect {
+export function getBestRect(instance: Instance): ClientRect | DOMRect {
   const target = instance.props.triggerTarget as Element
   const rects = target.getClientRects()
 
@@ -103,17 +103,23 @@ function getBestRect(instance: Instance): ClientRect | DOMRect {
     return target.getBoundingClientRect()
   }
 
-  switch (basePlacement) {
-    case 'top':
-    case 'bottom': {
-      const firstRect = rects[0]
-      const lastRect = rects[rects.length - 1]
-      const isTop = basePlacement === 'top'
+  const firstRect = rects[0]
+  const lastRect = rects[rects.length - 1]
 
+  switch (basePlacement) {
+    case 'top': {
       top = firstRect.top
+      bottom = firstRect.bottom
+      left = firstRect.left
+      right = firstRect.right
+
+      break
+    }
+    case 'bottom': {
+      top = lastRect.top
       bottom = lastRect.bottom
-      left = isTop ? firstRect.left : lastRect.left
-      right = isTop ? firstRect.right : lastRect.right
+      left = lastRect.left
+      right = lastRect.right
 
       break
     }
@@ -156,7 +162,7 @@ function getBestRect(instance: Instance): ClientRect | DOMRect {
   }
 }
 
-function applyCursorStrategy(
+export function applyCursorStrategy(
   instance: Instance,
   type: 'cursorRect' | 'cursorPoint',
 ): void {
