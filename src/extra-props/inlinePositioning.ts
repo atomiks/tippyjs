@@ -11,7 +11,7 @@ import { getBasePlacement } from '../popper'
 import { warnWhen } from '../validation'
 
 interface ExtendedProps extends Props {
-  inlinePositioning: boolean | 'cursorRect' | 'cursorPoint'
+  inlinePositioning: boolean | 'cursor'
 }
 
 export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
@@ -46,8 +46,8 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
             },
           })
 
-          if (typeof inlinePositioning === 'string') {
-            applyCursorStrategy(instance, inlinePositioning)
+          if (inlinePositioning === 'cursor') {
+            applyCursorStrategy(instance)
           } else {
             virtualReference.getBoundingClientRect = (): ClientRect | DOMRect =>
               getBestRect(instance)
@@ -154,10 +154,7 @@ export function getBestRect(instance: Instance): ClientRect | DOMRect {
   }
 }
 
-export function applyCursorStrategy(
-  instance: Instance,
-  type: 'cursorRect' | 'cursorPoint',
-): void {
+export function applyCursorStrategy(instance: Instance): void {
   const { reference } = instance
 
   let onTrigger = instance.props.onTrigger
@@ -167,6 +164,7 @@ export function applyCursorStrategy(
       preserveInvocation(onTrigger, instance.props.onTrigger, [instance, event])
 
       const rects = arrayFrom(reference.getClientRects())
+      const basePlacement = getBasePlacement(instance.state.currentPlacement)
 
       if (event instanceof MouseEvent) {
         // We need to choose which rect to use. Check which rect
@@ -174,11 +172,32 @@ export function applyCursorStrategy(
         let index = -1
         rects.forEach(
           (rect, i): void => {
-            if (
-              event.clientY >= Math.floor(rect.top) &&
-              event.clientY <= Math.ceil(rect.bottom) &&
+            const isVerticalPlacement = includes(
+              ['top', 'bottom'],
+              basePlacement,
+            )
+
+            const isWithinHorizontalBounds =
               event.clientX >= Math.floor(rect.left) &&
               event.clientX <= Math.ceil(rect.right)
+
+            const isWithinAllBounds =
+              isWithinHorizontalBounds &&
+              event.clientY >= Math.floor(rect.top) &&
+              event.clientY <= Math.ceil(rect.bottom)
+
+            if (isVerticalPlacement) {
+              if (
+                isWithinHorizontalBounds &&
+                ((basePlacement === 'top' && index === -1) ||
+                  basePlacement === 'bottom')
+              ) {
+                index = i
+              }
+            } else if (
+              isWithinAllBounds &&
+              ((basePlacement === 'left' && index === -1) ||
+                basePlacement === 'right')
             ) {
               index = i
             }
@@ -188,42 +207,38 @@ export function applyCursorStrategy(
         instance.popperInstance!.reference.getBoundingClientRect = ():
           | ClientRect
           | DOMRect => {
-          if (type === 'cursorPoint') {
-            const rect = reference.getClientRects()[index]
+          const rect = reference.getClientRects()[index]
 
-            const isVerticalPlacement = includes(
-              ['top', 'bottom'],
-              getBasePlacement(instance.state.currentPlacement),
-            )
+          const isVerticalPlacement = includes(
+            ['top', 'bottom'],
+            getBasePlacement(instance.state.currentPlacement),
+          )
 
-            const { size, x, y } = getVirtualOffsets(
-              instance,
-              isVerticalPlacement,
-            )
+          const { size, x, y } = getVirtualOffsets(
+            instance,
+            isVerticalPlacement,
+          )
 
-            const baseRect = {
-              width: isVerticalPlacement ? size : 0,
-              height: isVerticalPlacement ? 0 : size,
-              top: rect.top,
-              right: rect.right,
-              bottom: rect.bottom,
-              left: rect.left,
-            }
-
-            return isVerticalPlacement
-              ? {
-                  ...baseRect,
-                  left: event.clientX - x,
-                  right: event.clientX + x,
-                }
-              : {
-                  ...baseRect,
-                  top: event.clientY - y,
-                  bottom: event.clientY + y,
-                }
-          } else {
-            return reference.getClientRects()[index]
+          const baseRect = {
+            width: isVerticalPlacement ? size : 0,
+            height: isVerticalPlacement ? 0 : size,
+            top: rect.top,
+            right: rect.right,
+            bottom: rect.bottom,
+            left: rect.left,
           }
+
+          return isVerticalPlacement
+            ? {
+                ...baseRect,
+                left: event.clientX - x,
+                right: event.clientX + x,
+              }
+            : {
+                ...baseRect,
+                top: event.clientY - y,
+                bottom: event.clientY + y,
+              }
         }
       } else {
         // Fallback to `getBestRect` since "cursor" coords don't apply to
