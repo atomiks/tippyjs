@@ -13,6 +13,10 @@ import {
 } from '../utils'
 import { getBasePlacement } from '../../src/popper'
 import { getVirtualOffsets } from '../../src/utils'
+import {
+  inlineElementClientRects,
+  positionSnapshots,
+} from './__rect-snapshots__'
 
 tippy.setDefaultProps({
   duration: 0,
@@ -557,7 +561,7 @@ describe('inlinePositioning', () => {
       ref.getClientRects = mockTarget.getClientRects
       const instance = tippy(ref, { triggerTarget: ref, onTrigger: spy })
 
-      applyCursorStrategy(instance, 'cursorRect')
+      applyCursorStrategy(instance, 'cursor')
 
       ref.dispatchEvent(event)
       expect(spy).toHaveBeenCalledWith(instance, event)
@@ -570,53 +574,30 @@ describe('inlinePositioning', () => {
       expect(newSpy).toHaveBeenCalledWith(instance, event)
     })
 
-    it('"cursorRect": should choose the correct rect', () => {
-      const ref = h()
-      ref.getClientRects = mockTarget.getClientRects
-      const instance = tippy(ref, { triggerTarget: ref })
-
-      applyCursorStrategy(instance, 'cursorRect')
-
-      for (let i = 0; i < rects.length; i++) {
-        ref.dispatchEvent(createMouseEnterEvent(i))
-        expect(ref.getBoundingClientRect()).toBe(rects[i])
-      }
-    })
-
-    it('"cursorPoint": chooses correct rect and includes axis variation', () => {
-      const placements = ['top', 'bottom', 'left', 'right']
-
-      placements.forEach(placement => {
+    it('"cursor": should choose optimal rect based on cursor point', () => {
+      const enhancedTippy = withInlinePositioning(tippy)
+      positionSnapshots.forEach(({ placement, rect, coords }) => {
         const ref = h()
-        ref.getClientRects = mockTarget.getClientRects
-        const instance = tippy(ref, { placement, triggerTarget: ref })
-
-        applyCursorStrategy(instance, 'cursorPoint')
-
-        for (let i = 0; i < rects.length; i++) {
-          const event = createMouseEnterEvent(i)
-          ref.dispatchEvent(event)
-          expect(ref.getBoundingClientRect()).toEqual({
-            ...rects[i],
-            width: 0,
-            height: 0,
-            ...(['top', 'bottom'].includes(placement) && {
-              left: event.clientX,
-              right: event.clientX,
-            }),
-            ...(['left', 'right'].includes(placement) && {
-              top: event.clientY,
-              bottom: event.clientY,
-            }),
-          })
-        }
+        ref.getClientRects = () => inlineElementClientRects
+        const instance = enhancedTippy(ref, {
+          placement,
+          inlinePositioning: 'cursor',
+        })
+        const { x, y } = coords
+        const event = new MouseEvent('mouseenter', { clientX: x, clientY: y })
+        ref.dispatchEvent(event)
+        jest.runAllTimers()
+        expect(
+          instance.popperInstance.reference.getBoundingClientRect(),
+        ).toEqual(rect)
+        instance.destroy()
       })
     })
 
     it('uses `getBestRect()` for `focus` trigger', () => {
       const ref = h()
       const instance = withInlinePositioning(tippy)(ref, {
-        inlinePositioning: 'cursorRect',
+        inlinePositioning: 'cursor',
       })
 
       ref.dispatchEvent(new FocusEvent('focus'))
