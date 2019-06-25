@@ -13,16 +13,20 @@ placements.forEach(placement => {
     multiple: true,
     content: 'tooltip',
     duration: 0,
-    arrow: true,
   }
   tippy('.inline', { ...props, inlinePositioning: true })
-  tippy('.cursorRect', { ...props, inlinePositioning: 'cursorRect' })
-  tippy('.cursorPoint', { ...props, inlinePositioning: 'cursorPoint' })
+  tippy('.cursor', { ...props, inlinePositioning: 'cursor' })
 })
 
-tippy('.followCursor', {
+const instance = tippy('.followCursor', {
   content: 'tooltip',
   animation: 'fade',
-  animateFill: false,
   followCursor: true,
-})
+  distance: 20,
+  arrow: false,
+  delay: [100, 500],
+})[0]
+
+setInterval(() => {
+  instance.setContent(Math.random())
+}, 1000)
