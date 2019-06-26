@@ -93,10 +93,8 @@ describe('createPopperElement', () => {
   it('sets the correct data-* attributes on the tooltip based on props', () => {
     const popper = createPopperElement(1, {
       ...defaultProps,
-      size: 'large',
       animation: 'scale',
     })
-    expect(getChildren(popper).tooltip.getAttribute('data-size')).toBe('large')
     expect(getChildren(popper).tooltip.getAttribute('data-animation')).toBe(
       'scale',
     )
@@ -133,14 +131,12 @@ describe('updatePopperElement', () => {
     expect(popper.style.zIndex).toBe('213')
   })
 
-  it('updates size and animation attributes', () => {
+  it('updates animation attribute', () => {
     const popper = createPopperElement(1, defaultProps)
     updatePopperElement(popper, defaultProps, {
       ...defaultProps,
-      size: 'large',
       animation: 'scale',
     })
-    expect(getChildren(popper).tooltip.getAttribute('data-size')).toBe('large')
     expect(getChildren(popper).tooltip.getAttribute('data-animation')).toBe(
       'scale',
     )

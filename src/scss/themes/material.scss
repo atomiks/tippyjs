@@ -27,14 +27,4 @@ $color: #505355;
   .#{$namespace-prefix}-svg-arrow {
     fill: $color;
   }
-
-  &[data-size='small'] {
-    font-size: 0.75rem;
-    padding: 0.1875rem 0.375rem;
-  }
-
-  &[data-size='large'] {
-    font-size: 1rem;
-    padding: 0.375rem 0.75rem;
-  }
 }

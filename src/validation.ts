@@ -36,6 +36,7 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
       const didPassShowOnInitProp = prop === 'showOnInit'
       const didPassArrowTypeProp = prop === 'arrowType'
       const didPassTouchHoldProp = prop === 'touchHold'
+      const didPassSizeProp = prop === 'size'
       const didPassOtherUnknownProp =
         !hasOwnProperty(defaultProps, prop) &&
         !didPassTargetProp &&
@@ -77,6 +78,12 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
         didPassTouchHoldProp,
         'The `touchHold` prop was removed in v5 in favor of overloading the ' +
           '`touch` prop. Specify `touch: "hold"` instead.',
+      )
+
+      warnWhen(
+        didPassSizeProp,
+        'The `size` prop was removed in v5. Instead, use a theme that ' +
+          'that specifies `font-size` and `padding` CSS properties.',
       )
 
       warnWhen(

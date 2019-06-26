@@ -38,7 +38,6 @@ export const defaultProps: Props = {
   popperOptions: {},
   role: 'tooltip',
   showOnCreate: false,
-  size: 'regular',
   sticky: false,
   theme: '',
   touch: true,

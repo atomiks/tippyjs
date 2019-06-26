@@ -67,6 +67,14 @@ describe('validateProps', () => {
     )
   })
 
+  it('recognizes the old `size` prop', () => {
+    validateProps({ size: 'small' })
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] The `size` prop was removed in v5. Instead, use a ' +
+        'theme that that specifies `font-size` and `padding` CSS properties.',
+    )
+  })
+
   it('recognizes the old `google` theme', () => {
     validateProps({ theme: 'google' })
     expect(spy).toHaveBeenCalledWith(

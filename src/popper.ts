@@ -234,7 +234,6 @@ export function updatePopperElement(
 
   popper.style.zIndex = '' + nextProps.zIndex
 
-  tooltip.setAttribute('data-size', nextProps.size)
   tooltip.setAttribute('data-animation', nextProps.animation)
   tooltip.style.maxWidth =
     nextProps.maxWidth + (typeof nextProps.maxWidth === 'number' ? 'px' : '')
