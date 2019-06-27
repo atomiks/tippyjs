@@ -593,23 +593,25 @@ export default function createTippy(
         },
       },
       onCreate(data: Popper.Data): void {
+        applyMutations(data)
+
         preserveInvocation(
           popperOptions && popperOptions.onCreate,
           config.onCreate,
           [data],
         )
 
-        applyMutations(data)
         runMountCallback()
       },
       onUpdate(data: Popper.Data): void {
+        applyMutations(data)
+
         preserveInvocation(
           popperOptions && popperOptions.onUpdate,
           config.onUpdate,
           [data],
         )
 
-        applyMutations(data)
         runMountCallback()
       },
     }
