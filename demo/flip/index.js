@@ -64,10 +64,10 @@ function parseTranslate3d(string) {
 const instance = tippy(button, {
   content: tippyContent,
   interactive: true,
-  animateFill: false,
   animation: 'fade',
   trigger: 'click',
   flipOnUpdate: true,
+  arrow: false,
   onCreate(instance) {
     const { popper } = instance
     const { tooltip, content, arrow } = instance.popperChildren
@@ -93,36 +93,44 @@ const instance = tippy(button, {
       // the dimensions spring animation so it stays perfectly positioned
       // throughout
       onSpringUpdate(springValue) {
-        if (wasInterrupted && offsets.tween) {
+        if (wasInterrupted) {
+          // Since the FLIP animation was interrupted, the popper's translation
+          // begins at the tweened offset
           offsets.prev = offsets.tween
           wasInterrupted = false
         }
 
         const { x: prevX, y: prevY } = offsets.prev
         const { x: currentX, y: currentY } = offsets.current
-        const { property: prevProperty, value: prevValue } = distance.prev
+        const { property: prevProperty, value: prevDistance } = distance.prev
         const {
           property: currentProperty,
-          value: currentValue,
+          value: currentDistance,
         } = distance.current
 
-        const x = prevX - springValue * (prevX - currentX)
-        const y = prevY - springValue * (prevY - currentY)
-        const computedDistance =
-          prevValue -
-          Math.max(0, Math.min(springValue, 1)) * (prevValue - currentValue)
+        // Calculate tweened offset and distance
+        const tweenedX = prevX - springValue * (prevX - currentX)
+        const tweenedY = prevY - springValue * (prevY - currentY)
+        const tweenedDistance =
+          prevDistance -
+          Math.max(0, Math.min(springValue, 1)) *
+            (prevDistance - currentDistance)
 
-        offsets.tween = { x, y }
+        // Write the current tweened offsets due to the FLIP animation
+        offsets.tween = { x: tweenedX, y: tweenedY }
         distance.tween = {
           property: currentProperty,
-          value: computedDistance,
+          value: tweenedDistance,
         }
 
-        instance.popper.style.transform = `translate3d(${x}px, ${y}px, 0)`
+        // Set tweened transform
+        const tweenedTransform = `translate3d(${tweenedX}px, ${tweenedY}px, 0)`
+        instance.popper.style.transform = tweenedTransform
 
+        // Set tweened distance
         const { tooltip } = instance.popperChildren
         tooltip.style[prevProperty] = '0'
-        tooltip.style[currentProperty] = `${computedDistance}px`
+        tooltip.style[currentProperty] = `${tweenedDistance}px`
       },
     })
 
@@ -165,10 +173,6 @@ const instance = tippy(button, {
       distance.current = { property, value }
     },
     onUpdate(data) {
-      wasInterrupted = true
-      offsets.prev = offsets.current
-      distance.prev = distance.current
-
       const { tooltip, arrow } = instance.popperChildren
 
       // `react-flip-toolkit` adds this
@@ -176,27 +180,29 @@ const instance = tippy(button, {
         arrow.style.transformOrigin = ''
       }
 
-      // We need to parse it because Popper rounds the values but doesn't
-      // expose the rounded values for us...
+      wasInterrupted = true
+      offsets.prev = offsets.current
+      distance.prev = distance.current
+
+      // We need to parse it because Popper rounds the values but doesn't expose
+      // the rounded values for us...
       const currentOffsets = parseTranslate3d(data.styles.transform)
       const currentProperty = tooltip.style.top ? 'top' : 'left'
       const currentValue = parseFloat(tooltip.style[currentProperty])
 
-      // Runs after `onSpringUpdate` tick
-      requestAnimationFrame(() => {
-        offsets.current = currentOffsets
-        distance.current = {
-          property: currentProperty,
-          value: currentValue,
-        }
+      offsets.current = currentOffsets
+      distance.current = {
+        property: currentProperty,
+        value: currentValue,
+      }
 
-        requestAnimationFrame(() => {
-          offsets.tween = currentOffsets
-        })
+      // Runs AFTER first `onSpringUpdate` frame
+      requestAnimationFrame(() => {
+        offsets.tween = currentOffsets
       })
 
-      // onSpringUpdate and popper's .update() run in different ticks, leading
-      // to 1 frame glitch
+      // onSpringUpdate and popper's .update() run in different frames, leading to
+      // 1 frame glitch
       if (wasManuallyUpdated) {
         const { x, y } = offsets.tween || offsets.prev
         const { property, value } = distance.tween || distance.prev
