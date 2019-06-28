@@ -1,4 +1,8 @@
-import { validateProps, validateTargets } from '../../src/validation'
+import {
+  validateProps,
+  validateTargets,
+  validateExtraPropsFunctionality,
+} from '../../src/validation'
 
 let spy
 
@@ -157,5 +161,44 @@ describe('validateTargets', () => {
         'reference element) which is no longer supported in v5. Instead, ' +
         'pass a placeholder element like `document.createElement("div")`',
     )
+  })
+})
+
+describe('validateExtraPropsFunctionality', () => {
+  it('followCursor: warns when the instance has not been configured with followCursor', () => {
+    const instance = { __dev__: {} }
+    validateExtraPropsFunctionality(instance, { followCursor: true })
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] The `followCursor` prop was specified, but the instance has not ' +
+        'been configured with followCursor functionality. In v5, ' +
+        '`followCursor` was moved to `extra-props`. View details: ' +
+        'https://atomiks.github.io/tippyjs/extra-props/',
+    )
+  })
+
+  it('followCursor: does not warn if instance has been configured', () => {
+    validateExtraPropsFunctionality(
+      { __dev__: { followCursor: true } },
+      { followCursor: true },
+    )
+    expect(spy).not.toHaveBeenCalled()
+  })
+
+  it('other: warns when the instance has not been configured with prop', () => {
+    const instance = { __dev__: {} }
+    validateExtraPropsFunctionality(instance, { inlinePositioning: true })
+    expect(spy).toHaveBeenCalledWith(
+      '[tippy.js WARNING] The `' +
+        'inlinePositioning' +
+        '` prop was specified, but the instance has not been configured ' +
+        'with inlinePositioning functionality. View details: ' +
+        'https://atomiks.github.io/tippyjs/extra-props/',
+    )
+  })
+
+  it('other: does not warn if instance has been configured with prop', () => {
+    const instance = { __dev__: { inlinePositioning: true } }
+    validateExtraPropsFunctionality(instance, { inlinePositioning: true })
+    expect(spy).not.toHaveBeenCalled()
   })
 })

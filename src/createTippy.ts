@@ -34,7 +34,11 @@ import {
   preserveInvocation,
   closestCallback,
 } from './utils'
-import { warnWhen, validateProps } from './validation'
+import {
+  warnWhen,
+  validateProps,
+  validateExtraPropsFunctionality,
+} from './validation'
 
 interface Listener {
   eventType: string
@@ -129,6 +133,11 @@ export default function createTippy(
       },
       enumerable: false,
     })
+
+    Object.defineProperty(instance, '__dev__', {
+      value: {},
+      enumerable: false,
+    })
   }
 
   /* ==================== Initial instance mutations =================== */
@@ -147,26 +156,20 @@ export default function createTippy(
 
   // Prevent a tippy with a delay from hiding if the cursor left then returned
   // before it started hiding
-  popper.addEventListener(
-    'mouseenter',
-    (): void => {
-      if (
-        instance.props.interactive &&
-        instance.state.isVisible &&
-        lastTriggerEventType === 'mouseenter'
-      ) {
-        instance.clearDelayTimeouts()
-      }
-    },
-  )
-  popper.addEventListener(
-    'mouseleave',
-    (): void => {
-      if (instance.props.interactive && lastTriggerEventType === 'mouseenter') {
-        document.addEventListener('mousemove', debouncedOnMouseMove)
-      }
-    },
-  )
+  popper.addEventListener('mouseenter', (): void => {
+    if (
+      instance.props.interactive &&
+      instance.state.isVisible &&
+      lastTriggerEventType === 'mouseenter'
+    ) {
+      instance.clearDelayTimeouts()
+    }
+  })
+  popper.addEventListener('mouseleave', (): void => {
+    if (instance.props.interactive && lastTriggerEventType === 'mouseenter') {
+      document.addEventListener('mousemove', debouncedOnMouseMove)
+    }
+  })
 
   props.onCreate(instance)
 
@@ -242,11 +245,9 @@ export default function createTippy(
       // `mousedown` event is fired right before `focus`. This lets a tippy with
       // `focus` trigger know that it should not show
       didHideDueToDocumentMouseDown = true
-      setTimeout(
-        (): void => {
-          didHideDueToDocumentMouseDown = false
-        },
-      )
+      setTimeout((): void => {
+        didHideDueToDocumentMouseDown = false
+      })
 
       // The listener gets added in `scheduleShow()`, but this may be hiding it
       // before it shows, and hide()'s early bail-out behavior can prevent it
@@ -282,18 +283,15 @@ export default function createTippy(
   }
 
   function onTransitionedOut(duration: number, callback: () => void): void {
-    onTransitionEnd(
-      duration,
-      (): void => {
-        if (
-          !instance.state.isVisible &&
-          popper.parentNode &&
-          popper.parentNode.contains(popper)
-        ) {
-          callback()
-        }
-      },
-    )
+    onTransitionEnd(duration, (): void => {
+      if (
+        !instance.state.isVisible &&
+        popper.parentNode &&
+        popper.parentNode.contains(popper)
+      ) {
+        callback()
+      }
+    })
   }
 
   function onTransitionedIn(duration: number, callback: () => void): void {
@@ -340,48 +338,37 @@ export default function createTippy(
 
     // `click` for keyboard. Mouse uses `mousedown` (onDocumentMouseDown)
     if (!includes(instance.props.trigger, 'click')) {
-      on(
-        'click',
-        (): void => {
-          if (!currentInput.isTouch && instance.props.hideOnClick === true) {
-            instance.hide()
-          }
-        },
-      )
+      on('click', (): void => {
+        if (!currentInput.isTouch && instance.props.hideOnClick === true) {
+          instance.hide()
+        }
+      })
     }
 
     instance.props.trigger
       .trim()
       .split(' ')
-      .forEach(
-        (eventType): void => {
-          if (eventType === 'manual') {
-            return
-          }
+      .forEach((eventType): void => {
+        if (eventType === 'manual') {
+          return
+        }
 
-          on(eventType, onTrigger)
-          switch (eventType) {
-            case 'mouseenter':
-              on('mouseleave', onMouseLeave as EventListener)
-              break
-            case 'focus':
-              on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
-              break
-          }
-        },
-      )
+        on(eventType, onTrigger)
+        switch (eventType) {
+          case 'mouseenter':
+            on('mouseleave', onMouseLeave as EventListener)
+            break
+          case 'focus':
+            on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
+            break
+        }
+      })
   }
 
   function removeTriggersFromEventListenersTarget(): void {
-    listeners.forEach(
-      ({ eventType, handler, options }: Listener): void => {
-        getEventListenersTarget().removeEventListener(
-          eventType,
-          handler,
-          options,
-        )
-      },
-    )
+    listeners.forEach(({ eventType, handler, options }: Listener): void => {
+      getEventListenersTarget().removeEventListener(eventType, handler, options)
+    })
     listeners = []
   }
 
@@ -720,11 +707,9 @@ export default function createTippy(
     } else {
       // Fixes a `transitionend` problem when it fires 1 frame too
       // late sometimes, we don't want hide() to be called.
-      scheduleHideAnimationFrame = requestAnimationFrame(
-        (): void => {
-          instance.hide()
-        },
-      )
+      scheduleHideAnimationFrame = requestAnimationFrame((): void => {
+        instance.hide()
+      })
     }
   }
 
@@ -758,6 +743,7 @@ export default function createTippy(
 
     if (__DEV__) {
       validateProps(partialProps)
+      validateExtraPropsFunctionality(instance, partialProps)
     }
 
     removeTriggersFromEventListenersTarget()
@@ -786,14 +772,12 @@ export default function createTippy(
 
     if (instance.popperInstance) {
       if (
-        POPPER_INSTANCE_DEPENDENCIES.some(
-          (prop): boolean => {
-            return (
-              hasOwnProperty(partialProps, prop) &&
-              partialProps[prop] !== prevProps[prop]
-            )
-          },
-        )
+        POPPER_INSTANCE_DEPENDENCIES.some((prop): boolean => {
+          return (
+            hasOwnProperty(partialProps, prop) &&
+            partialProps[prop] !== prevProps[prop]
+          )
+        })
       ) {
         instance.popperInstance.destroy()
         createPopperInstance()
@@ -895,20 +879,17 @@ export default function createTippy(
       setTransitionDuration(transitionableElements, duration)
       setVisibilityState(transitionableElements, 'visible')
 
-      onTransitionedIn(
-        duration,
-        (): void => {
-          if (instance.props.aria) {
-            getEventListenersTarget().setAttribute(
-              `aria-${instance.props.aria}`,
-              tooltip.id,
-            )
-          }
+      onTransitionedIn(duration, (): void => {
+        if (instance.props.aria) {
+          getEventListenersTarget().setAttribute(
+            `aria-${instance.props.aria}`,
+            tooltip.id,
+          )
+        }
 
-          instance.props.onShown(instance)
-          instance.state.isShown = true
-        },
-      )
+        instance.props.onShown(instance)
+        instance.state.isShown = true
+      })
     }
 
     mount()
@@ -952,23 +933,18 @@ export default function createTippy(
     setTransitionDuration(transitionableElements, duration)
     setVisibilityState(transitionableElements, 'hidden')
 
-    onTransitionedOut(
-      duration,
-      (): void => {
-        if (instance.props.aria) {
-          getEventListenersTarget().removeAttribute(
-            `aria-${instance.props.aria}`,
-          )
-        }
+    onTransitionedOut(duration, (): void => {
+      if (instance.props.aria) {
+        getEventListenersTarget().removeAttribute(`aria-${instance.props.aria}`)
+      }
 
-        instance.popperInstance!.disableEventListeners()
-        instance.popperInstance!.options.placement = normalizedPlacement
+      instance.popperInstance!.disableEventListeners()
+      instance.popperInstance!.options.placement = normalizedPlacement
 
-        popper.parentNode!.removeChild(popper)
-        instance.props.onHidden(instance)
-        instance.state.isMounted = false
-      },
-    )
+      popper.parentNode!.removeChild(popper)
+      instance.props.onHidden(instance)
+      instance.state.isMounted = false
+    })
   }
 
   function destroy(): void {

@@ -11,7 +11,12 @@ import {
   getArrayOfElements,
   isReferenceElement,
 } from './utils'
-import { warnWhen, validateTargets, validateProps } from './validation'
+import {
+  warnWhen,
+  validateTargets,
+  validateProps,
+  validateExtraPropsFunctionality,
+} from './validation'
 import { POPPER_SELECTOR } from './constants'
 import {
   Props,
@@ -58,6 +63,7 @@ function tippy(
       const instance = reference && createTippy(reference, props)
 
       if (instance) {
+        validateExtraPropsFunctionality(instance, optionalProps)
         acc.push(instance)
       }
 
@@ -81,12 +87,10 @@ tippy.setDefaultProps = (partialProps: Partial<Props>): void => {
     validateProps(partialProps)
   }
 
-  Object.keys(partialProps).forEach(
-    (key): void => {
-      // @ts-ignore
-      defaultProps[key] = partialProps[key]
-    },
-  )
+  Object.keys(partialProps).forEach((key): void => {
+    // @ts-ignore
+    defaultProps[key] = partialProps[key]
+  })
 }
 
 /**
@@ -156,15 +160,13 @@ if (__DEV__) {
  * Auto-init tooltips for elements with a `data-tippy="..."` attribute
  */
 export function autoInit(): void {
-  arrayFrom(document.querySelectorAll('[data-tippy]')).forEach(
-    (el): void => {
-      const content = el.getAttribute('data-tippy')
+  arrayFrom(document.querySelectorAll('[data-tippy]')).forEach((el): void => {
+    const content = el.getAttribute('data-tippy')
 
-      if (content) {
-        tippy(el, { content })
-      }
-    },
-  )
+    if (content) {
+      tippy(el, { content })
+    }
+  })
 }
 
 if (isBrowser) {

@@ -75,6 +75,7 @@ export interface Props {
 }
 
 export interface Instance {
+  __dev__?: any
   clearDelayTimeouts(): void
   destroy(): void
   disable(): void

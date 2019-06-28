@@ -29,49 +29,51 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
     if (inlinePositioning) {
       const instances = ([] as Instance[]).concat(returnValue)
 
-      instances.forEach(
-        (instance: Instance): void => {
-          const virtualReference = document.createElement('div')
+      instances.forEach((instance: Instance): void => {
+        if (__DEV__) {
+          instance.__dev__.inlinePositioning = true
+        }
 
-          let onTrigger = instance.props.onTrigger
+        const virtualReference = document.createElement('div')
 
-          instance.setProps({
-            onTrigger(instance, event) {
-              preserveInvocation(onTrigger, instance.props.onTrigger, [
-                instance,
-                event,
-              ])
+        let onTrigger = instance.props.onTrigger
 
-              instance.popperInstance!.reference = virtualReference
-            },
-          })
+        instance.setProps({
+          onTrigger(instance, event) {
+            preserveInvocation(onTrigger, instance.props.onTrigger, [
+              instance,
+              event,
+            ])
 
-          if (inlinePositioning === 'cursor') {
-            applyCursorStrategy(instance)
-          } else {
-            virtualReference.getBoundingClientRect = (): ClientRect | DOMRect =>
-              getBestRect(instance)
+            instance.popperInstance!.reference = virtualReference
+          },
+        })
+
+        if (inlinePositioning === 'cursor') {
+          applyCursorStrategy(instance)
+        } else {
+          virtualReference.getBoundingClientRect = (): ClientRect | DOMRect =>
+            getBestRect(instance)
+        }
+
+        const originalSetProps = instance.setProps
+        instance.setProps = (partialProps: Partial<ExtendedProps>): void => {
+          // Making this prop fully dynamic is difficult and buggy, and it's
+          // very unlikely the user will need to dynamically update it anyway.
+          // Just warn.
+          if (__DEV__) {
+            warnWhen(
+              hasOwnProperty(partialProps, 'inlinePositioning'),
+              'Cannot change `inlinePositioning` prop. Destroy this ' +
+                'instance and create a new instance instead.',
+            )
           }
 
-          const originalSetProps = instance.setProps
-          instance.setProps = (partialProps: Partial<ExtendedProps>): void => {
-            // Making this prop fully dynamic is difficult and buggy, and it's
-            // very unlikely the user will need to dynamically update it anyway.
-            // Just warn.
-            if (__DEV__) {
-              warnWhen(
-                hasOwnProperty(partialProps, 'inlinePositioning'),
-                'Cannot change `inlinePositioning` prop. Destroy this ' +
-                  'instance and create a new instance instead.',
-              )
-            }
+          onTrigger = partialProps.onTrigger || onTrigger
 
-            onTrigger = partialProps.onTrigger || onTrigger
-
-            originalSetProps(removeProperties(partialProps, ['onTrigger']))
-          }
-        },
-      )
+          originalSetProps(removeProperties(partialProps, ['onTrigger']))
+        }
+      })
     }
 
     return returnValue
@@ -125,11 +127,10 @@ export function getBestRect(instance: Instance): ClientRect | DOMRect {
       const minLeft = Math.min(...lefts)
       const maxRight = Math.max(...rights)
 
-      const measureRects = rectsArr.filter(
-        (rect): boolean =>
-          basePlacement === 'left'
-            ? Math.round(rect.left) === minLeft
-            : Math.round(rect.right) === maxRight,
+      const measureRects = rectsArr.filter((rect): boolean =>
+        basePlacement === 'left'
+          ? Math.round(rect.left) === minLeft
+          : Math.round(rect.right) === maxRight,
       )
 
       top = measureRects[0].top
@@ -170,39 +171,34 @@ export function applyCursorStrategy(instance: Instance): void {
         // We need to choose which rect to use. Check which rect
         // the cursor landed on.
         let index = -1
-        rects.forEach(
-          (rect, i): void => {
-            const isVerticalPlacement = includes(
-              ['top', 'bottom'],
-              basePlacement,
-            )
+        rects.forEach((rect, i): void => {
+          const isVerticalPlacement = includes(['top', 'bottom'], basePlacement)
 
-            const isWithinHorizontalBounds =
-              event.clientX >= Math.floor(rect.left) &&
-              event.clientX <= Math.ceil(rect.right)
+          const isWithinHorizontalBounds =
+            event.clientX >= Math.floor(rect.left) &&
+            event.clientX <= Math.ceil(rect.right)
 
-            const isWithinAllBounds =
+          const isWithinAllBounds =
+            isWithinHorizontalBounds &&
+            event.clientY >= Math.floor(rect.top) &&
+            event.clientY <= Math.ceil(rect.bottom)
+
+          if (isVerticalPlacement) {
+            if (
               isWithinHorizontalBounds &&
-              event.clientY >= Math.floor(rect.top) &&
-              event.clientY <= Math.ceil(rect.bottom)
-
-            if (isVerticalPlacement) {
-              if (
-                isWithinHorizontalBounds &&
-                ((basePlacement === 'top' && index === -1) ||
-                  basePlacement === 'bottom')
-              ) {
-                index = i
-              }
-            } else if (
-              isWithinAllBounds &&
-              ((basePlacement === 'left' && index === -1) ||
-                basePlacement === 'right')
+              ((basePlacement === 'top' && index === -1) ||
+                basePlacement === 'bottom')
             ) {
               index = i
             }
-          },
-        )
+          } else if (
+            isWithinAllBounds &&
+            ((basePlacement === 'left' && index === -1) ||
+              basePlacement === 'right')
+          ) {
+            index = i
+          }
+        })
 
         instance.popperInstance!.reference.getBoundingClientRect = ():
           | ClientRect
