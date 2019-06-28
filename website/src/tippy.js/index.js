@@ -9,8 +9,11 @@ import React, {
   Children,
 } from 'react'
 import { createPortal } from 'react-dom'
-import tippy from '../../../'
+import tippyBase from '../../../'
 import { createSingleton, delegate } from '../../../addons'
+import enhance, { followCursor, inlinePositioning } from '../../../extra-props'
+
+const tippy = enhance(tippyBase, [followCursor, inlinePositioning])
 
 function _extends() {
   _extends =
@@ -81,6 +84,8 @@ function Tippy(_ref) {
   var children = _ref.children,
     content = _ref.content,
     className = _ref.className,
+    onBeforeUpdate = _ref.onBeforeUpdate,
+    onAfterUpdate = _ref.onAfterUpdate,
     onCreate = _ref.onCreate,
     isVisible = _ref.isVisible,
     isEnabled = _ref.isEnabled,
@@ -96,6 +101,8 @@ function Tippy(_ref) {
       'content',
       'className',
       'onCreate',
+      'onBeforeUpdate',
+      'onAfterUpdate',
       'isVisible',
       'isEnabled',
       'visible',
@@ -159,7 +166,15 @@ function Tippy(_ref) {
       return
     }
 
+    if (onBeforeUpdate) {
+      onBeforeUpdate(instanceRef.current)
+    }
+
     instanceRef.current.setProps(options)
+
+    if (onAfterUpdate) {
+      onAfterUpdate(instanceRef.current)
+    }
 
     if (enabled) {
       instanceRef.current.enable()
@@ -175,6 +190,7 @@ function Tippy(_ref) {
       }
     }
   })
+
   useIsomorphicLayoutEffect(
     function() {
       if (className) {

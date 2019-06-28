@@ -41,14 +41,16 @@ them below!
 
 ### Default
 
-The default tippy tooltip looks like this. It has a nifty background fill
-animation!
+The default tippy tooltip looks like this: a background color of `#333` and an
+arrow:
 
 <Demo>
   <Tippy>
     <Button>My Button</Button>
   </Tippy>
 </Demo>
+
+Here's how you initialize it:
 
 ```js
 tippy('#myButton', {
@@ -77,6 +79,7 @@ Additionally, the tooltip can be shifted along the axis using the suffix
           content="Tooltip"
           placement={placement}
           flip={false}
+          arrow={false}
         >
           <Button
             style={{
@@ -97,6 +100,7 @@ Additionally, the tooltip can be shifted along the axis using the suffix
 ```js
 tippy('#myButton', {
   placement: 'bottom',
+  arrow: false,
 })
 ```
 
@@ -116,27 +120,31 @@ can use any type of SVG shape as the arrow, like a speech bubble shape.
   <Tippy arrow animation="fade">
     <Button>Default</Button>
   </Tippy>
-  <Tippy arrow animation="fade" arrowType="round" animation="fade">
+  <Tippy arrow="round" animation="fade" animation="fade">
     <Button>Round</Button>
   </Tippy>
-  <Tippy arrow animation="fade" theme="large-arrow" distance={16}>
+  <Tippy animation="fade" theme="large-arrow" distance={16}>
     <Button>Large</Button>
   </Tippy>
-  <Tippy arrow animation="fade" theme="small-arrow" distance={8}>
+  <Tippy animation="fade" theme="small-arrow" distance={8}>
     <Button>Small</Button>
   </Tippy>
-  <Tippy arrow animation="fade" theme="wide-arrow">
+  <Tippy animation="fade" theme="wide-arrow">
     <Button>Wide</Button>
   </Tippy>
-  <Tippy arrow animation="fade" theme="narrow-arrow">
+  <Tippy animation="fade" theme="narrow-arrow">
     <Button>Narrow</Button>
   </Tippy>
 </Demo>
 
 ```js
 tippy('#myButton', {
+  // Default CSS arrow
   arrow: true,
-  arrowType: 'round', // omit for the default sharp arrow
+  // Built-in SVG shape
+  arrow: 'round',
+  // Your own element
+  arrow: String | SVGElement,
 })
 ```
 
@@ -144,27 +152,8 @@ tippy('#myButton', {
 
 ### Animations
 
-Tooltips can have different types of transition animations. Note, the filling
-effect has been disabled in these examples (`animateFill: false`).
-
-#### Default animations
-
-These animations are included in the main default CSS file.
-
-<Demo>
-  {['fade', 'shift-away'].map(animation => (
-    <Tippy key={animation} animation={animation} animateFill={false}>
-      <Button>{animation}</Button>
-    </Tippy>
-  ))}
-</Demo>
-
-```js
-tippy('#myButton', {
-  animateFill: false,
-  animation: 'fade',
-})
-```
+Tooltips can have different types of transition animations. By default, it's a
+simple `fade` (opacity transition).
 
 #### Extra included animations
 
@@ -259,16 +248,6 @@ Animation libraries like `animejs` can also be integrated.
 
 Tooltips can have custom styling.
 
-#### Default theme
-
-The dark theme is default (`#333` background color):
-
-<Demo>
-  <Tippy animateFill={false}>
-    <Button>Default</Button>
-  </Tippy>
-</Demo>
-
 #### Included themes
 
 These themes are included in the package and can be imported separately.
@@ -283,7 +262,7 @@ These themes are included in the package and can be imported separately.
 
 ```js
 tippy('#myButton', {
-  theme: 'tippy-light',
+  theme: 'light',
 })
 ```
 
@@ -293,7 +272,7 @@ You can apply any CSS to a tippy via a theme.
 
 <Demo>
   {['gradient', 'retro', 'forest'].map(theme => (
-    <Tippy key={theme} theme={theme} animateFill={false}>
+    <Tippy key={theme} theme={theme} animateFill={false} arrow={false}>
       <Button>{theme}</Button>
     </Tippy>
   ))}
@@ -384,7 +363,10 @@ Tooltips can have different animation durations.
 
 ```js
 tippy('#myButton', {
+  // number: show and hide durations are the same
   duration: 0,
+  // [number, number]: [show, hide] duration
+  duration: [800, 100],
 })
 ```
 
@@ -408,7 +390,10 @@ Tooltips can delay hiding or showing after a trigger.
 
 ```js
 tippy('#myButton', {
+  // number: show and hide delay are the same
   delay: 500,
+  // [number, number]: [show, hide] delay
+  delay: [500, 0],
 })
 ```
 
@@ -453,7 +438,14 @@ following (initial).
 
 ```js
 tippy('#myButton', {
+  // Follow both x and y axes
   followCursor: true,
+  // Follow x-axis
+  followCursor: 'horizontal',
+  // Follow y-axis
+  followCursor: 'vertical',
+  // Follow initial cursor without listening
+  followCursor: 'initial',
 })
 ```
 
@@ -465,7 +457,7 @@ Tooltips can be placed on SVG nodes, where `followCursor: 'initial'` becomes
 very useful, since it can be placed directly on the line.
 
 <svg height="150" width="150">
-  <Tippy followCursor="initial" animation="fade" delay={100} arrow>
+  <Tippy followCursor="initial" animation="fade" delay={100}>
     <line
       x1="0"
       y1="0"
@@ -480,7 +472,6 @@ very useful, since it can be placed directly on the line.
 tippy('line', {
   followCursor: 'initial',
   delay: 200,
-  arrow: true,
 })
 ```
 
@@ -593,6 +584,85 @@ placements
     })
   })
 ```
+
+### Inline positioning
+
+Choose the best rect to use for inline elements.
+
+<Demo>
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies eget
+  enim{' '}
+  <Tippy content="inlinePositioning: true" inlinePositioning={true}>
+    <Tippy
+      content="inlinePositioning: true"
+      placement="bottom"
+      inlinePositioning={true}
+    >
+      <Tippy
+        content="inlinePositioning: true"
+        placement="left"
+        inlinePositioning={true}
+      >
+        <Tippy
+          content="inlinePositioning: true"
+          placement="right"
+          inlinePositioning={true}
+        >
+          <strong style={{ color: 'black' }}>
+            quis dapibus. Praesent posuere malesuada justo at efficitur. Aliquam
+            nec quam fringilla,
+          </strong>
+        </Tippy>
+      </Tippy>
+    </Tippy>
+  </Tippy>{' '}
+  gravida nisl vitae, scelerisque leo. Phasellus porta commodo risus id
+  interdum. Cras tempus diam ac molestie laoreet. Duis faucibus nec tellus at
+  luctus. Etiam in orci laoreet, posuere orci ac, bibendum neque. Duis
+  sollicitudin{' '}
+  <Tippy content="inlinePositioning: 'cursor'" inlinePositioning="cursor">
+    <Tippy
+      content="inlinePositioning: 'cursor'"
+      placement="bottom"
+      inlinePositioning="cursor"
+    >
+      <Tippy
+        content="inlinePositioning: 'cursor'"
+        placement="left"
+        inlinePositioning="cursor"
+      >
+        <Tippy
+          content="inlinePositioning: 'cursor'"
+          placement="right"
+          inlinePositioning="cursor"
+        >
+          <strong style={{ color: 'black' }}>
+            sollicitudin arcu, ac vestibulum erat. Nam vitae tristique mauris,
+            in consectetur lectus. Etiam sollicitudin, neque eget aliquam
+            suscipit, metus eros bibendum mi, eget maximus turpis libero nec
+            quam. Etiam venenatis nisi ut
+          </strong>
+        </Tippy>
+      </Tippy>
+    </Tippy>
+  </Tippy>{' '}
+  dignissim porta. Praesent id felis feugiat, aliquam eros condimentum, maximus
+  tortor.
+</Demo>
+
+### Miscellaneous
+
+<Demo>
+  <Tippy offset={50}>
+    <Button>Offset</Button>
+  </Tippy>
+  <Tippy distance={20}>
+    <Button>Distance</Button>
+  </Tippy>
+  <Tippy maxWidth={100}>
+    <Button>Max width</Button>
+  </Tippy>
+</Demo>
 
 <br />
 

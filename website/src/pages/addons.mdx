@@ -165,35 +165,3 @@ tippy('button', {
   },
 })
 ```
-
-#### Fully dynamic
-
-The interesting thing about `createSingleton()` is that it's fully dynamic. This
-means the singleton tippy can have its props changed while it's showing as it
-moves to the next target.
-
-<Demo>
-  <TippySingleton delay={[200, 400]}>
-    <Tippy content="Hello!" updateDuration={400} animateFill={false}>
-      <Button>Text</Button>
-    </Tippy>
-    <Tippy
-      content="Hello, there!"
-      animation="scale"
-      theme="tippy-light"
-      updateDuration={400}
-      animateFill={false}
-    >
-      <Button>Text</Button>
-    </Tippy>
-    <Tippy
-      content="Hmmm..."
-      animation="scale"
-      theme="tippy-translucent"
-      arrow={true}
-      updateDuration={400}
-    >
-      <Button>Text</Button>
-    </Tippy>
-  </TippySingleton>
-</Demo>

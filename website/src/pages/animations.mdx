@@ -5,25 +5,45 @@ index: 7
 ---
 
 import { Demo } from '../components/Framework'
-import DimensionsTransition from '../components/examples/DimensionsTransition'
+import { Button } from '../components/Framework'
+import ImageTransition from '../components/examples/ImageTransition'
+import TextTransition from '../components/examples/TextTransition'
 
-Tippy elements use a simple CSS transition by default. The main CSS file
-includes two animations: `fade` and `shift-away`.
+Tippy elements use a simple CSS `fade` transition by default.
 
-### Usage
+### Included animations
+
+The `tippy.js` package comes with extra animations for you to use:
+
+- `shift-away`
+- `shift-toward`
+- `scale`
+- `perspective`
+
+They need to be imported separately.
+
+Node:
+
+```js
+import 'tippy.js/animations/scale.css'
+```
+
+Browser:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/tippy.js@5/animations/scale.css"
+/>
+```
 
 Pass the animation name (string) as the `animation` prop:
 
 ```js
 tippy('button', {
-  animation: 'fade',
+  animation: 'scale',
 })
 ```
-
-### Extra animations
-
-There are 3 extra animations included in the package: `scale`, `perspective`,
-and `shift-toward`. You'll need to import these separately.
 
 Each of these 3 animations also has 3 variants (normal, subtle, and extreme).
 
@@ -198,11 +218,9 @@ View the [CodePen demo](https://codepen.io/atomiks/pen/LgjMbW).
 #### Fully dynamic
 
 <Demo>
-  <DimensionsTransition />
+  <ImageTransition />
+  <TextTransition />
 </Demo>
 
-Code: TBD
-
-Edge cases need to be worked out first. Highly experimental and buggy at this
-stage. There is no API wrapper for this yet as it's only being recently
-developed.
+Code is still being developed and it is highly experimental at this stage. There
+are still unresolved problems. You can keep track of its development here: TODO

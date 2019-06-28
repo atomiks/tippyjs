@@ -98,8 +98,8 @@ Depending on the props supplied, there will exist other elements inside it:
 #### Browser DevTools
 
 It's highly recommended you inspect a tippy element via your browser's DevTools.
-An easy way to do this is to give it a `click` trigger so that it stays visible
-when focus is switched to the DevTools window.
+An easy way to do this is to give it `hideOnClick: false` and `trigger: 'click'`
+props so that it stays visible when focus is switched to the DevTools window.
 
 The tippy element by default gets appended to the very end of the `<body>`, so
 you should scroll down the elements panel.
@@ -123,9 +123,8 @@ this by creating our own theme called `tomato`.
 }
 ```
 
-The `.tippy-backdrop` element is the background "filling" effect that's enabled
-by default. You should color the background of both the tooltip and the
-backdrop.
+The `.tippy-backdrop` element is the background "filling" effect enabled when
+you import `backdrop.css` and set `animateFill: true`.
 
 To apply the theme, specify a `theme` prop without the `-theme` suffix:
 
@@ -176,10 +175,10 @@ To color the SVG arrow, it's as simple as specifying the `fill` and targeting
 ```
 
 <Demo>
-  <Tippy theme="tomato" arrow>
+  <Tippy theme="tomato">
     <Button>CSS arrow</Button>
   </Tippy>
-  <Tippy theme="tomato" arrow arrowType="round">
+  <Tippy theme="tomato" arrow="round">
     <Button>SVG arrow</Button>
   </Tippy>
 </Demo>

@@ -173,7 +173,7 @@ export default createGlobalStyle`
 
   .token.method,
   .language-css .token.function {
-    color: #25c8e5;
+    color: #45baff;
   }
 
   .token.variable {

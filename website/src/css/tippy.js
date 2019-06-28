@@ -16,7 +16,7 @@ export default createGlobalStyle`
   .tippy-tooltip.tomato-theme[data-placement^='top'] .tippy-arrow {
     border-top-color: tomato;
   }
-  .tippy-tooltip.tomato-theme[data-placement^='top'] .tippy-arrow {
+  .tippy-tooltip.tomato-theme[data-placement^='bottom'] .tippy-arrow {
     border-bottom-color: tomato;
   }
 
@@ -87,5 +87,4 @@ export default createGlobalStyle`
     color: #683b33;
     font-weight: bold;
   }
-
 `

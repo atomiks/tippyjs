@@ -1,7 +1,7 @@
 ---
 title: Misc
 path: /misc/
-index: 14
+index: 15
 ---
 
 import EventDelegation from '../components/examples/EventDelegation'
@@ -11,29 +11,10 @@ import TriggerTarget from '../components/examples/TriggerTarget'
 import { Demo, Button, Flex } from '../components/Framework'
 import Tippy from '../components/Tippy'
 
-### Anchor links
+### Custom position
 
-When an inline anchor link spans two or more lines, the tippy gets centered as
-though it were attached to a block:
-
-<Demo style={{ paddingBottom: 20 }}>
-  <AnchorLink />
-</Demo>
-
-If this is a problem (e.g. with interactivity), there is a way to solve it:
-
-<Demo style={{ paddingBottom: 20 }}>
-  <AnchorLink smart />
-</Demo>
-
-It requires using a custom `getBoundingClientRect()`. See the
-[CodePen demo](https://codepen.io/atomiks/pen/GeBoyW?editors=0010).
-
-#### Custom position
-
-Expanding on the above, you can overwrite an element's `getBoundingClientRect`
-method, which Popper.js uses to position the tippy. This can be overwritten at
-any time.
+You can overwrite an element's `getBoundingClientRect` method, which Popper.js
+uses to position the tippy. This can be overwritten at any time.
 
 ```js
 const positioningElement = document.createElement('div')
@@ -104,7 +85,12 @@ tippy(innerOrangeSpanElement, {
 
 ---
 
-### Buttons with tooltips on touch devices
+### Touch devices
+
+Tippy provides first-class support for touch devices. Tooltips can be tricky to
+get right on touch devices because of the nature of touch input.
+
+#### Buttons
 
 A tooltip on a button is generally used to convey information before the user
 decides to click on it. On touch devices, this isn't possible because a tap is
@@ -122,22 +108,14 @@ If neither behavior is preferred, consider using the `touchHold` prop which
 allows the user to see the tooltip while pressing and holding the button, but
 won't fire a click event unless the click appears to be intentional.
 
-#### Setup
+##### Setup
 
 ```js
 const button = document.querySelector('button')
 const isIOS = /iPhone|iPad|iPod/.test(navigator.platform)
 ```
 
-#### A: Use `touchHold: true`
-
-```js
-tippy(button, {
-  touchHold: true,
-})
-```
-
-#### B: Make iOS behave like Android (single tap to click)
+##### A: Make iOS behave like Android (single tap to click)
 
 ```js
 button.addEventListener('click', () => {
@@ -153,7 +131,7 @@ tippy(button, {
 })
 ```
 
-#### C: Make Android behave like iOS (double tap to click)
+##### B: Make Android behave like iOS (double tap to click)
 
 Tippy has a useful static property `tippy.currentInput`. This is a mutable
 object whose properties change depending on the user's current input. Currently,
@@ -181,6 +159,20 @@ const onClick = emulateIOS(() => {
 })
 
 button.addEventListener('click', onClick)
+```
+
+#### Hold & long press
+
+```js
+// Will only show the tippy while the user is pressing the screen (not a tap)
+tippy(button, {
+  touch: 'hold',
+})
+
+// Will only show the tippy on a "long press" hold
+tippy(button, {
+  touch: ['hold', 500], // 500ms delay
+})
 ```
 
 ---

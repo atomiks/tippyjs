@@ -1,0 +1,64 @@
+---
+title: Extra Props
+path: /extra-props/
+index: 14
+---
+
+import Tippy, { TippySingleton } from '../components/Tippy'
+import { Demo, Button } from '../components/Framework'
+
+Extra props are additional props you can use but tend to add a fair amount of
+code. Users who don't need this functionality are therefore not burdened with
+the extra cost.
+
+Unlike addons, these props get added to the `optionalProps` object. This allows
+you to use them like any other prop. The reason is because a prop works better
+on a per-instance basis, while addons tend to work better on a group of
+instances.
+
+There are currently 2 extra props:
+
+- `followCursor`
+- `inlinePositioning`
+
+### Usage
+
+In order to use these props, you need to configure the `tippy` constructor
+function.
+
+#### Node
+
+Create a new file and import `tippy` from this file instead of node_modules.
+
+```js
+// Only import the extra props you need. The `enhance` helper function is
+// required.
+import tippy from 'tippy.js'
+import enhance, { followCursor, inlinePositioning } from 'tippy.js/extra-props'
+
+export default enhance(tippy, [followCursor, inlinePositioning])
+```
+
+```js
+import tippy from './myTippy'
+
+tippy('button', {
+  followCursor: true,
+})
+```
+
+#### Browser
+
+In the browser, the `tippy` module gets automatically configured. Note that
+treeshaking of separate functions is not possible, so instead all of the extra
+props are downloaded. It's recommended you use a bundler instead of a CDN.
+
+```html
+<!-- Main tippy.js links here -->
+<script src="https://unpkg.com/tippy.js@5/extra-props/iife/tippy-extra-props.min.js"></script>
+<script>
+  tippy('button', {
+    followCursor: true,
+  })
+</script>
+```

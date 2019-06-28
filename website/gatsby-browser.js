@@ -41,12 +41,12 @@ function addElasticScrollingToCodeBlocks() {
   }
 }
 
-function highlightDeprecatedOptions() {
-  const deprecatedOptions = Array.from(document.querySelectorAll('del')).map(
-    del => del.closest('tr'),
-  )
+function highlightExtraProps() {
+  const deprecatedOptions = Array.from(
+    document.querySelectorAll('td[data-label="Prop"] > strong'),
+  ).map(del => del.closest('tr'))
   deprecatedOptions.forEach(el => {
-    el.style.opacity = 0.5
+    el.style.background = '#fff8de'
   })
 }
 
@@ -67,7 +67,7 @@ function autoLinkHeaders() {
 export function onRouteUpdate() {
   addDataLabelToTdElements()
   addElasticScrollingToCodeBlocks()
-  highlightDeprecatedOptions()
+  highlightExtraProps()
   autoLinkHeaders()
 }
 

@@ -22,7 +22,7 @@ import tippy from 'tippy.js'
 
 This assumes you're using a module bundler like webpack or Parcel. When
 deploying for production, your minifier should remove the development warnings
-and error messages.
+and error messages provided `NODE_ENV=production`.
 
 ### Script tags via CDN
 
@@ -54,16 +54,17 @@ everything after `@5` (the production file as listed before).
 
 ### CSS
 
-Tippy includes a 1 kB CSS stylesheet by default. When including the script link
-above, the CSS stylesheet is injected into its own `<style>` tag in `<head>`. If
-for some reason you cannot use this, you can include the CSS separately in a
-`<link>` tag.
+Tippy includes a 600 B CSS stylesheet by default for the base tooltip styling,
+fade animation, CSS arrows, and other required CSS. When including the script
+link above, the CSS stylesheet is injected into its own `<style>` tag in
+`<head>`. If for some reason you cannot use this, you can include the CSS
+separately in a `<link>` tag.
 
 View the package contents here: https://unpkg.com/tippy.js@5/
 
-- `tippy.bundle.js` = Main JS + Main CSS injected into `<head>` (default)
-- `tippy.js` = Main JS only
-- `tippy.css` = Main CSS only
+- `tippy.bundle.js` = Core JS + Core CSS injected into `<head>` (default)
+- `tippy.js` = Core JS only
+- `tippy.css` = Core CSS only
 
 ### Frameworks
 
