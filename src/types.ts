@@ -63,7 +63,6 @@ export interface Props {
   popperOptions: Popper.PopperOptions
   role: string
   showOnCreate: boolean
-  size: 'small' | 'regular' | 'large'
   sticky: boolean
   theme: string
   touch: boolean | 'hold' | ['hold', number]
