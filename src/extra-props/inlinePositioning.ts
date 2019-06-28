@@ -24,59 +24,62 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
       ...optionalProps,
     }
 
-    const returnValue = tippy(targets, props)
+    return tippy(targets, {
+      ...props,
+      onCreate(instance) {
+        preserveInvocation(
+          optionalProps && optionalProps.onCreate,
+          instance.props.onCreate,
+          [instance],
+        )
 
-    if (inlinePositioning) {
-      const instances = ([] as Instance[]).concat(returnValue)
-
-      instances.forEach((instance: Instance): void => {
         if (__DEV__) {
           instance.__dev__.inlinePositioning = true
         }
 
-        const virtualReference = document.createElement('div')
+        if (inlinePositioning) {
+          const virtualReference = document.createElement('div')
 
-        let onTrigger = instance.props.onTrigger
+          let onTrigger = instance.props.onTrigger
 
-        instance.setProps({
-          onTrigger(instance, event) {
-            preserveInvocation(onTrigger, instance.props.onTrigger, [
-              instance,
-              event,
-            ])
+          instance.setProps({
+            onTrigger(instance, event) {
+              preserveInvocation(onTrigger, instance.props.onTrigger, [
+                instance,
+                event,
+              ])
 
-            instance.popperInstance!.reference = virtualReference
-          },
-        })
+              instance.popperInstance!.reference = virtualReference
+            },
+          })
 
-        if (inlinePositioning === 'cursor') {
-          applyCursorStrategy(instance)
-        } else {
-          virtualReference.getBoundingClientRect = (): ClientRect | DOMRect =>
-            getBestRect(instance)
-        }
-
-        const originalSetProps = instance.setProps
-        instance.setProps = (partialProps: Partial<ExtendedProps>): void => {
-          // Making this prop fully dynamic is difficult and buggy, and it's
-          // very unlikely the user will need to dynamically update it anyway.
-          // Just warn.
-          if (__DEV__) {
-            warnWhen(
-              hasOwnProperty(partialProps, 'inlinePositioning'),
-              'Cannot change `inlinePositioning` prop. Destroy this ' +
-                'instance and create a new instance instead.',
-            )
+          if (inlinePositioning === 'cursor') {
+            applyCursorStrategy(instance)
+          } else {
+            virtualReference.getBoundingClientRect = (): ClientRect | DOMRect =>
+              getBestRect(instance)
           }
 
-          onTrigger = partialProps.onTrigger || onTrigger
+          const originalSetProps = instance.setProps
+          instance.setProps = (partialProps: Partial<ExtendedProps>): void => {
+            // Making this prop fully dynamic is difficult and buggy, and it's
+            // very unlikely the user will need to dynamically update it anyway.
+            // Just warn.
+            if (__DEV__) {
+              warnWhen(
+                hasOwnProperty(partialProps, 'inlinePositioning'),
+                'Cannot change `inlinePositioning` prop. Destroy this ' +
+                  'instance and create a new instance instead.',
+              )
+            }
 
-          originalSetProps(removeProperties(partialProps, ['onTrigger']))
+            onTrigger = partialProps.onTrigger || onTrigger
+
+            originalSetProps(removeProperties(partialProps, ['onTrigger']))
+          }
         }
-      })
-    }
-
-    return returnValue
+      },
+    })
   }
 }
 
