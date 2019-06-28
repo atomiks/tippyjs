@@ -1,11 +1,6 @@
 {
-  "presets": ["@babel/env", "@babel/typescript"],
-  "plugins": [
-    ["@babel/plugin-transform-destructuring", { "loose": true }, "unique"],
-    ["@babel/plugin-transform-template-literals", { "loose": true }, "unique"],
-    ["@babel/proposal-object-rest-spread", { "loose": true }, "unique"],
-    "dev-expression"
-  ],
+  "presets": [["@babel/env", { "loose": true }], "@babel/typescript"],
+  "plugins": ["dev-expression"],
   "env": {
     "test": {
       "presets": [["@babel/env", { "targets": { "node": "current" } }]],
