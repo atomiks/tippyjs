@@ -63,7 +63,10 @@ function tippy(
       const instance = reference && createTippy(reference, props)
 
       if (instance) {
-        validateExtraPropsFunctionality(instance, optionalProps)
+        if (__DEV__) {
+          validateExtraPropsFunctionality(instance, optionalProps)
+        }
+
         acc.push(instance)
       }
 
