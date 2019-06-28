@@ -10,14 +10,10 @@ import {
 import { getBasePlacement } from '../popper'
 import { warnWhen } from '../validation'
 
-interface ExtendedProps extends Props {
-  inlinePositioning: boolean | 'cursor'
-}
-
 export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
   return (
     targets: Targets,
-    optionalProps?: Partial<ExtendedProps>,
+    optionalProps?: Partial<Props>,
   ): Instance | Instance[] => {
     const { inlinePositioning, ...props } = {
       inlinePositioning: false,
@@ -61,7 +57,7 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
           }
 
           const originalSetProps = instance.setProps
-          instance.setProps = (partialProps: Partial<ExtendedProps>): void => {
+          instance.setProps = (partialProps: Partial<Props>): void => {
             // Making this prop fully dynamic is difficult and buggy, and it's
             // very unlikely the user will need to dynamically update it anyway.
             // Just warn.
@@ -250,7 +246,7 @@ export function applyCursorStrategy(instance: Instance): void {
   })
 
   const originalSetProps = instance.setProps
-  instance.setProps = (partialProps: Partial<ExtendedProps>): void => {
+  instance.setProps = (partialProps): void => {
     onTrigger = partialProps.onTrigger || onTrigger
 
     originalSetProps(removeProperties(partialProps, ['onTrigger']))
