@@ -44,6 +44,7 @@ export interface Props {
   hideOnClick: boolean | 'toggle'
   ignoreAttributes: boolean
   inertia: boolean
+  inlinePositioning: boolean | 'cursor'
   interactive: boolean
   interactiveBorder: number
   interactiveDebounce: number
