@@ -160,7 +160,9 @@ export function validateExtraPropsFunctionality(
         'The `' +
           prop +
           '` prop was specified, but the instance has not been configured ' +
-          'with inlinePositioning functionality. View details: ' +
+          'with ' +
+          prop +
+          ' functionality. View details: ' +
           'https://atomiks.github.io/tippyjs/extra-props/',
       )
     }
