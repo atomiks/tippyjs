@@ -57,7 +57,7 @@ describe('validateProps', () => {
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] The `arrowType` prop was removed in v5 ' +
         'in favor of overloading the `arrow` prop. Specify ' +
-        '`arrowType: "' +
+        '`arrow: "' +
         'round' +
         '"` instead.',
     )

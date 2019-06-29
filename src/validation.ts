@@ -68,7 +68,7 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
       didPassArrowTypeProp,
       'The `arrowType` prop was removed in v5 ' +
         'in favor of overloading the `arrow` prop. Specify ' +
-        '`arrowType: "' +
+        '`arrow: "' +
         value +
         '"` instead.',
     )
