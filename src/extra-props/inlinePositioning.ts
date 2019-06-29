@@ -30,7 +30,7 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
         )
 
         if (__DEV__) {
-          instance.__dev__.inlinePositioning = true
+          instance.__extraProps__.inlinePositioning = true
         }
 
         if (props.inlinePositioning) {

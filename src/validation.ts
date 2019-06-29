@@ -143,7 +143,7 @@ export function validateExtraPropsFunctionality(
   const extraProps = ['followCursor', 'inlinePositioning']
 
   extraProps.forEach(prop => {
-    if (hasOwnProperty(partialProps, prop) && !instance.__dev__[prop]) {
+    if (hasOwnProperty(partialProps, prop) && !instance.__extraProps__[prop]) {
       const didPassFollowCursor = prop === 'followCursor'
       const didPassOtherExtraProp = !didPassFollowCursor
 

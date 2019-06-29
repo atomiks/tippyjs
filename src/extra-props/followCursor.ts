@@ -25,7 +25,7 @@ export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
         )
 
         if (__DEV__) {
-          instance.__dev__.followCursor = true
+          instance.__extraProps__.followCursor = true
         }
 
         let undo = (): void => {}

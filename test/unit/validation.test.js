@@ -166,7 +166,7 @@ describe('validateTargets', () => {
 
 describe('validateExtraPropsFunctionality', () => {
   it('followCursor: warns when the instance has not been configured with followCursor', () => {
-    const instance = { __dev__: {} }
+    const instance = { __extraProps__: {} }
     validateExtraPropsFunctionality(instance, { followCursor: true })
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] The `followCursor` prop was specified, but the instance has not ' +
@@ -178,14 +178,14 @@ describe('validateExtraPropsFunctionality', () => {
 
   it('followCursor: does not warn if instance has been configured', () => {
     validateExtraPropsFunctionality(
-      { __dev__: { followCursor: true } },
+      { __extraProps__: { followCursor: true } },
       { followCursor: true },
     )
     expect(spy).not.toHaveBeenCalled()
   })
 
   it('other: warns when the instance has not been configured with prop', () => {
-    const instance = { __dev__: {} }
+    const instance = { __extraProps__: {} }
     validateExtraPropsFunctionality(instance, { inlinePositioning: true })
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] The `' +
@@ -197,7 +197,7 @@ describe('validateExtraPropsFunctionality', () => {
   })
 
   it('other: does not warn if instance has been configured with prop', () => {
-    const instance = { __dev__: { inlinePositioning: true } }
+    const instance = { __extraProps__: { inlinePositioning: true } }
     validateExtraPropsFunctionality(instance, { inlinePositioning: true })
     expect(spy).not.toHaveBeenCalled()
   })
