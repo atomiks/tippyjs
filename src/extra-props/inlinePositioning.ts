@@ -15,7 +15,7 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
     targets: Targets,
     optionalProps?: Partial<Props>,
   ): Instance | Instance[] => {
-    const { inlinePositioning, ...props } = {
+    const props = {
       inlinePositioning: false,
       ...optionalProps,
     }
@@ -33,7 +33,7 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
           instance.__dev__.inlinePositioning = true
         }
 
-        if (inlinePositioning) {
+        if (props.inlinePositioning) {
           const virtualReference = document.createElement('div')
 
           let onTrigger = instance.props.onTrigger
@@ -49,7 +49,7 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
             },
           })
 
-          if (inlinePositioning === 'cursor') {
+          if (props.inlinePositioning === 'cursor') {
             applyCursorStrategy(instance)
           } else {
             virtualReference.getBoundingClientRect = (): ClientRect | DOMRect =>
