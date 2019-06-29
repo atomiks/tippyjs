@@ -29,20 +29,7 @@ const COMMON_PLUGINS = [PLUGINS.replaceNamespace, PLUGINS.resolve, PLUGINS.json]
 
 const PLUGIN_CONFIGS = {
   base: [PLUGINS.babel, ...COMMON_PLUGINS],
-  baseMin: [
-    PLUGINS.babel,
-    PLUGINS.replaceEnvProduction,
-    ...COMMON_PLUGINS,
-    PLUGINS.minify,
-  ],
   bundle: [PLUGINS.babel, ...COMMON_PLUGINS, PLUGINS.css],
-  bundleMin: [
-    PLUGINS.babel,
-    PLUGINS.replaceEnvProduction,
-    ...COMMON_PLUGINS,
-    PLUGINS.minify,
-    PLUGINS.css,
-  ],
   iifeBase: [PLUGINS.babel, PLUGINS.replaceEnvDevelopment, ...COMMON_PLUGINS],
   iifeBaseMin: [
     PLUGINS.babel,
@@ -191,41 +178,6 @@ export default [
       banner: BANNER,
       sourcemap: true,
       chunkFileNames: 'cjs/tippy.chunk.js',
-    },
-  },
-  {
-    input: {
-      'esm/tippy.min': 'build/base.js',
-      'esm/tippy.bundle.min': 'build/bundle.js',
-      'addons/esm/tippy-addons.min': 'build/addons-pure.js',
-      'extra-props/esm/tippy-extra-props.min': 'build/extra-props-pure.js',
-    },
-    plugins: PLUGIN_CONFIGS.bundleMin,
-    external: ['popper.js'],
-    output: {
-      format: 'esm',
-      dir: './',
-      banner: BANNER,
-      sourcemap: true,
-      chunkFileNames: 'esm/tippy.chunk.min.js',
-    },
-  },
-  {
-    input: {
-      'cjs/tippy.min': 'build/base.js',
-      'cjs/tippy.bundle.min': 'build/bundle.js',
-      'addons/cjs/tippy-addons.min': 'build/addons-pure.js',
-      'extra-props/cjs/tippy-extra-props.min': 'build/extra-props-pure.js',
-    },
-    plugins: PLUGIN_CONFIGS.bundleMin,
-    external: ['popper.js'],
-    output: {
-      format: 'cjs',
-      exports: 'named',
-      dir: './',
-      banner: BANNER,
-      sourcemap: true,
-      chunkFileNames: 'cjs/tippy.chunk.min.js',
     },
   },
 ]
