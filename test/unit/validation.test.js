@@ -75,7 +75,7 @@ describe('validateProps', () => {
     validateProps({ size: 'small' })
     expect(spy).toHaveBeenCalledWith(
       '[tippy.js WARNING] The `size` prop was removed in v5. Instead, use a ' +
-        'theme that that specifies `font-size` and `padding` CSS properties.',
+        'theme that specifies `font-size` and `padding` CSS properties.',
     )
   })
 

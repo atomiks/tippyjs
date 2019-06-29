@@ -82,7 +82,7 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
     warnWhen(
       didPassSizeProp,
       'The `size` prop was removed in v5. Instead, use a theme that ' +
-        'that specifies `font-size` and `padding` CSS properties.',
+        'specifies `font-size` and `padding` CSS properties.',
     )
 
     warnWhen(
