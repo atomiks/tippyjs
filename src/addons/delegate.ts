@@ -31,14 +31,22 @@ export default function delegate(
   const { target } = props
   delete props.target
 
-  const returnValue = tippy(targets, props)
+  // The user needs to specify their own enhanced tippy function to use extra
+  // props
+  // @ts-ignore
+  const tippyConstructor = delegate.tippy || tippy
+
+  const returnValue = tippyConstructor(targets, props)
 
   function onTrigger(event: Event): void {
     if (event.target) {
       const targetNode = (event.target as Element).closest(target)
 
       if (targetNode) {
-        const instance = tippy(targetNode, { ...props, showOnCreate: true })
+        const instance = tippyConstructor(targetNode, {
+          ...props,
+          showOnCreate: true,
+        })
 
         if (instance) {
           childTippyInstances = childTippyInstances.concat(instance)

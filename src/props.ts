@@ -1,6 +1,6 @@
 import { Props } from './types'
 
-export const defaultProps: Props = {
+export const defaultProps: Partial<Props> = {
   allowHTML: true,
   animateFill: false,
   animation: 'fade',
@@ -15,11 +15,9 @@ export const defaultProps: Props = {
   flip: true,
   flipBehavior: 'flip',
   flipOnUpdate: false,
-  followCursor: false,
   hideOnClick: true,
   ignoreAttributes: false,
   inertia: false,
-  inlinePositioning: false,
   interactive: false,
   interactiveBorder: 2,
   interactiveDebounce: 0,
@@ -47,6 +45,11 @@ export const defaultProps: Props = {
   updateDuration: 0,
   wait: null,
   zIndex: 9999,
+}
+
+export const extraProps: Partial<Props> = {
+  followCursor: false,
+  inlinePositioning: false,
 }
 
 /**

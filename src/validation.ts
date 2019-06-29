@@ -1,6 +1,6 @@
 import { Props, Targets, Instance } from './types'
-import { hasOwnProperty } from './utils'
-import { defaultProps } from './props'
+import { hasOwnProperty, includes } from './utils'
+import { defaultProps, extraProps } from './props'
 
 /**
  * Helpful wrapper around `console.warn()`.
@@ -36,14 +36,15 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
     const didPassArrowTypeProp = prop === 'arrowType'
     const didPassTouchHoldProp = prop === 'touchHold'
     const didPassSizeProp = prop === 'size'
+    const didPassGoogleTheme = prop === 'theme' && value === 'google'
+    const didSpecifyPlacementInPopperOptions =
+      prop === 'popperOptions' && value && hasOwnProperty(value, 'placement')
     const didPassOtherUnknownProp =
       !hasOwnProperty(defaultProps, prop) &&
       !didPassTargetProp &&
       !didPassA11yProp &&
-      !didPassShowOnInitProp
-    const didPassGoogleTheme = prop === 'theme' && value === 'google'
-    const didSpecifyPlacementInPopperOptions =
-      prop === 'popperOptions' && value && hasOwnProperty(value, 'placement')
+      !didPassShowOnInitProp &&
+      !includes(Object.keys(extraProps), prop)
 
     warnWhen(
       didPassTargetProp,
