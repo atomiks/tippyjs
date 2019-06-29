@@ -31,7 +31,7 @@ export default function delegate(
   const { target } = props
   delete props.target
 
-  const instanceOrInstances = tippy(targets, props)
+  const returnValue = tippy(targets, props)
 
   function onTrigger(event: Event): void {
     if (event.target) {
@@ -67,23 +67,21 @@ export default function delegate(
     instance.props.trigger
       .trim()
       .split(' ')
-      .forEach(
-        (eventType): void => {
-          switch (eventType) {
-            case 'mouseenter': {
-              on(reference, 'mouseover', onTrigger)
-              break
-            }
-            case 'focus': {
-              on(reference, 'focusin', onTrigger)
-              break
-            }
-            case 'click': {
-              on(reference, 'click', onTrigger)
-            }
+      .forEach((eventType): void => {
+        switch (eventType) {
+          case 'mouseenter': {
+            on(reference, 'mouseover', onTrigger)
+            break
           }
-        },
-      )
+          case 'focus': {
+            on(reference, 'focusin', onTrigger)
+            break
+          }
+          case 'click': {
+            on(reference, 'click', onTrigger)
+          }
+        }
+      })
   }
 
   function removeEventListeners(listeners: ListenerObj[]): void {
@@ -99,11 +97,9 @@ export default function delegate(
     const originalDestroy = instance.destroy
     instance.destroy = (shouldDestroyChildInstances: boolean = true): void => {
       if (shouldDestroyChildInstances) {
-        childTippyInstances.forEach(
-          (instance): void => {
-            instance.destroy()
-          },
-        )
+        childTippyInstances.forEach((instance): void => {
+          instance.destroy()
+        })
       }
       childTippyInstances = []
 
@@ -116,15 +112,8 @@ export default function delegate(
     instance.setProps({ trigger: 'manual' })
   }
 
-  if (instanceOrInstances) {
-    if (Array.isArray(instanceOrInstances)) {
-      const instances = instanceOrInstances
-      instances.forEach(applyMutations)
-    } else {
-      const instance = instanceOrInstances
-      applyMutations(instance)
-    }
-  }
+  const instances = ([] as Instance[]).concat(returnValue)
+  instances.forEach(applyMutations)
 
-  return instanceOrInstances
+  return returnValue
 }
