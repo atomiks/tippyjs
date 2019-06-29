@@ -2,16 +2,15 @@
   "name": "tippy.js",
   "version": "5.0.0-alpha.1",
   "description": "Highly customizable tooltip and popover library",
-  "main": "./cjs/tippy.bundle.js",
-  "module": "./esm/tippy.bundle.js",
-  "unpkg": "./iife/tippy.bundle.min.js",
+  "main": "cjs/tippy.bundle.js",
+  "module": "esm/tippy.bundle.js",
+  "unpkg": "iife/tippy.bundle.min.js",
   "types": "index.d.ts",
   "sideEffects": [
-    "./cjs/tippy.bundle.js",
-    "./cjs/tippy.bundle.min.js",
-    "./esm/tippy.bundle.js",
-    "./esm/tippy.bundle.min.js",
-    "*.css"
+    "cjs/*.js",
+    "esm/*.js",
+    "iife/*.js",
+    "./**/*.css"
   ],
   "author": "atomiks",
   "contributors": [
@@ -72,23 +71,23 @@
   ],
   "bundlesize": [
     {
-      "path": "./iife/tippy.bundle.min.js",
+      "path": "iife/tippy.bundle.min.js",
       "maxSize": "7 kB"
     },
     {
-      "path": "./iife/tippy.min.js",
+      "path": "iife/tippy.min.js",
       "maxSize": "5.75 kB"
     },
     {
-      "path": "./addons/esm/tippy-addons.min.js",
+      "path": "addons/iife/tippy-addons.min.js",
       "maxSize": "5 kB"
     },
     {
-      "path": "./extra-props/esm/tippy-extra-props.min.js",
+      "path": "extra-props/iife/tippy-extra-props.min.js",
       "maxSize": "5 kB"
     },
     {
-      "path": "./tippy.css",
+      "path": "tippy.css",
       "maxSize": "1 kB"
     }
   ],
