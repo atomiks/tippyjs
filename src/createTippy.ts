@@ -494,7 +494,7 @@ export default function createTippy(
     )
     // Due to the virtual offsets normalization when using `followCursor`, we
     // need to use the opposite placement
-    const shift = placement.split('-')[1]
+    const shift = instance.state.currentPlacement.split('-')[1]
     normalizedPlacement = (instance.props.followCursor && shift
       ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
       : placement) as Placement
