@@ -33,6 +33,7 @@
     "iife/",
     "esm/",
     "addons/",
+    "extra-props/",
     "animations/",
     "themes/",
     "tippy.css",
