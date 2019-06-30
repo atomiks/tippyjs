@@ -146,8 +146,15 @@ function applyFollowCursor(instance: Instance): () => void {
         isPopperInstanceCreated = true
       },
     },
-    onMount(): void {
+    onMount(instance): void {
       preserveInvocation(onMount, instance.props.onMount, [instance])
+
+      // Popper's scroll listeners make sense for `true`, where the cursor
+      // follows both axes. TODO: somehow keep scroll listeners for vertical
+      // scrolling for "vertical", and horizontal scrolling for "horizontal".
+      if (!wasTriggeredByFocus && instance.props.followCursor !== true) {
+        instance.popperInstance!.disableEventListeners()
+      }
 
       onMouseMove(lastMouseMoveEvent)
     },
