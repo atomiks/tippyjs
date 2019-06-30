@@ -10,6 +10,7 @@ import { throwErrorWhen } from '../validation'
 
 interface SingletonInstance extends Instance {
   __singleton__: boolean
+  __originalClearDelayTimeouts__: Instance['clearDelayTimeouts']
   __originalSetProps__: Instance['setProps']
   __originalProps__: {
     delay: Props['delay']
@@ -96,9 +97,9 @@ export default function createSingleton(
     // tippy, we can set its opacity to 0
     instance.popper.style.opacity = '0'
 
-    const originalClearDelayTimeouts = instance.clearDelayTimeouts
+    instance.__originalClearDelayTimeouts__ = instance.clearDelayTimeouts
     instance.clearDelayTimeouts = (): void => {
-      originalClearDelayTimeouts()
+      instance.__originalClearDelayTimeouts__()
       clearTimeouts()
     }
 
@@ -183,8 +184,11 @@ export default function createSingleton(
   ): void => {
     tippyInstances.forEach((instance): void => {
       // Restore the instances to their original state
+      instance.clearDelayTimeouts = instance.__originalClearDelayTimeouts__
       instance.setProps = instance.__originalSetProps__
       instance.setProps(instance.__originalProps__)
+
+      delete instance.__originalClearDelayTimeouts__
       delete instance.__originalProps__
       delete instance.__originalSetProps__
 
