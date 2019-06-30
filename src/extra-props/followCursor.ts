@@ -121,10 +121,7 @@ function applyFollowCursor(instance: Instance): () => void {
       // eslint-disable-next-line
       typeof tippy !== 'undefined' ? tippy.currentInput : currentInput
 
-    if (
-      ci.isTouch ||
-      (followCursor === 'initial' && instance.state.isVisible)
-    ) {
+    if (ci.isTouch) {
       removeListener()
     }
   }
@@ -167,7 +164,7 @@ function applyFollowCursor(instance: Instance): () => void {
         instance.popperInstance.reference = instance.reference
       }
 
-      if (!wasTriggeredByFocus) {
+      if (!wasTriggeredByFocus && instance.props.followCursor !== 'initial') {
         addListener()
       }
     },

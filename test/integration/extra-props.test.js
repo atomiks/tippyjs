@@ -401,6 +401,27 @@ describe('followCursor', () => {
 
     expect(instance.popperInstance.reference).toBe(instance.reference)
   })
+
+  it('"initial": does not update if triggered again while still visible', () => {
+    instance = tippyEnhanced(h(), {
+      followCursor: 'initial',
+    })
+
+    instance.reference.dispatchEvent(new MouseEvent('mouseenter', { ...first }))
+
+    jest.runAllTimers()
+
+    instance.reference.dispatchEvent(secondMouseMoveEvent)
+
+    rect = instance.popperInstance.reference.getBoundingClientRect()
+
+    matches({
+      top: first.clientY,
+      bottom: first.clientY,
+      left: first.clientX,
+      right: first.clientX,
+    })
+  })
 })
 
 describe('inlinePositioning', () => {
