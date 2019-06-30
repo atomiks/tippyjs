@@ -72,6 +72,7 @@ export default function createSingleton(
   const singletonInstance = tippyConstructor(
     document.createElement('div'),
   ) as Instance
+
   let { delay } = optionalProps
 
   let showTimeout: any
