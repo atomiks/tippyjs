@@ -526,7 +526,7 @@ export default function createTippy(
       placement: instance.props.placement,
       ...popperOptions,
       modifiers: {
-        ...(popperOptions ? popperOptions.modifiers : {}),
+        ...(popperOptions && popperOptions.modifiers),
         preventOverflow: {
           boundariesElement: instance.props.boundary,
           padding: PREVENT_OVERFLOW_PADDING,
