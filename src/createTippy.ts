@@ -43,6 +43,13 @@ import {
   validateExtraPropsFunctionality,
 } from './validation'
 
+interface PaddingObject {
+  top: number
+  right: number
+  bottom: number
+  left: number
+}
+
 interface Listener {
   eventType: string
   handler: EventListenerOrEventListenerObject
@@ -512,38 +519,6 @@ export default function createTippy(
       } else {
         tooltip.removeAttribute('data-out-of-boundaries')
       }
-
-      // Apply the `distance` prop
-      const basePlacement = getBasePlacement(instance.state.currentPlacement)
-      const tooltipStyles = tooltip.style
-
-      tooltipStyles.top = '0'
-      tooltipStyles.left = '0'
-      tooltipStyles[
-        getIsVerticalPlacement() ? 'top' : 'left'
-      ] = `${(getIsOppositePlacement() ? 1 : -1) * instance.props.distance}px`
-
-      const padding =
-        preventOverflowModifier && preventOverflowModifier.padding !== undefined
-          ? preventOverflowModifier.padding
-          : PREVENT_OVERFLOW_PADDING
-      const isPaddingNumber = typeof padding === 'number'
-
-      const computedPadding = {
-        top: isPaddingNumber ? padding : padding.top,
-        bottom: isPaddingNumber ? padding : padding.bottom,
-        left: isPaddingNumber ? padding : padding.left,
-        right: isPaddingNumber ? padding : padding.right,
-        ...(!isPaddingNumber && padding),
-      }
-
-      computedPadding[basePlacement] = isPaddingNumber
-        ? padding + instance.props.distance
-        : (padding[basePlacement] || 0) + instance.props.distance
-
-      instance.popperInstance!.modifiers.filter(
-        (m): boolean => m.name === 'preventOverflow',
-      )[0].padding = computedPadding
     }
 
     const config = {
@@ -556,6 +531,52 @@ export default function createTippy(
           boundariesElement: instance.props.boundary,
           padding: PREVENT_OVERFLOW_PADDING,
           ...preventOverflowModifier,
+        },
+        tippySetPreventOverflowPadding: {
+          enabled: true,
+          order: 299,
+          fn(data: Popper.Data): Popper.Data {
+            const tooltipStyles = tooltip.style
+
+            tooltipStyles.top = '0'
+            tooltipStyles.left = '0'
+            tooltipStyles[
+              getIsVerticalPlacement() ? 'top' : 'left'
+            ] = `${(getIsOppositePlacement() ? 1 : -1) *
+              instance.props.distance}px`
+
+            const basePlacement = getBasePlacement(data.placement)
+
+            const padding =
+              preventOverflowModifier &&
+              preventOverflowModifier.padding !== undefined
+                ? preventOverflowModifier.padding
+                : PREVENT_OVERFLOW_PADDING
+
+            const isPaddingNumber = typeof padding === 'number'
+
+            const paddingObject = { top: 0, bottom: 0, left: 0, right: 0 }
+
+            const computedPadding = (Object.keys(paddingObject) as Array<
+              keyof PaddingObject
+            >).reduce((obj: PaddingObject, key): PaddingObject => {
+              obj[key] = isPaddingNumber ? padding : padding[key]
+
+              if (basePlacement === key) {
+                obj[key] = isPaddingNumber
+                  ? padding + instance.props.distance
+                  : (padding[basePlacement] || 0) + instance.props.distance
+              }
+
+              return obj
+            }, paddingObject)
+
+            instance.popperInstance!.modifiers.filter(
+              (m): boolean => m.name === 'preventOverflow',
+            )[0].padding = computedPadding
+
+            return data
+          },
         },
         arrow: {
           element: arrow,
