@@ -585,8 +585,6 @@ export default function createTippy(
         },
         flip: {
           enabled: instance.props.flip,
-          // The tooltip is offset by 10px from the popper in CSS,
-          // we need to account for its distance
           padding: instance.props.distance + PREVENT_OVERFLOW_PADDING,
           behavior: instance.props.flipBehavior,
           ...getModifier(popperOptions, 'flip'),
