@@ -1,5 +1,5 @@
 import { h, hasTippy, cleanDocumentBody } from '../utils'
-import { defaultProps } from '../../src/props'
+import { defaultProps, extraProps } from '../../src/props'
 import { POPPER_SELECTOR } from '../../src/constants'
 import tippy, { autoInit } from '../../src'
 
@@ -20,6 +20,7 @@ describe('tippy', () => {
       }).props,
     ).toEqual({
       ...defaultProps,
+      ...extraProps,
       placement: 'bottom-end',
     })
   })

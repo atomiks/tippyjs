@@ -1,4 +1,4 @@
-import { Props, ReferenceElement, Targets, Instance } from './types'
+import { Props, ReferenceElement, Targets, PopperElement } from './types'
 import { isUCBrowser } from './browser'
 import { getDataAttributeProps } from './reference'
 import { POPPER_CLASS } from './constants'
@@ -103,13 +103,11 @@ export function setTransitionDuration(
   els: (HTMLDivElement | null)[],
   value: number,
 ): void {
-  els.forEach(
-    (el): void => {
-      if (el) {
-        el.style.transitionDuration = `${value}ms`
-      }
-    },
-  )
+  els.forEach((el): void => {
+    if (el) {
+      el.style.transitionDuration = `${value}ms`
+    }
+  })
 }
 
 /**
@@ -119,13 +117,11 @@ export function setVisibilityState(
   els: (HTMLDivElement | null)[],
   state: 'visible' | 'hidden',
 ): void {
-  els.forEach(
-    (el): void => {
-      if (el) {
-        el.setAttribute('data-state', state)
-      }
-    },
-  )
+  els.forEach((el): void => {
+    if (el) {
+      el.setAttribute('data-state', state)
+    }
+  })
 }
 
 /**
@@ -181,21 +177,19 @@ export function debounce<T>(
  * Returns offsets for virtual reference when using a cursor point
  */
 export function getVirtualOffsets(
-  { popper, state: { currentPlacement } }: Instance,
+  popper: PopperElement,
   isVerticalPlacement: boolean,
 ): {
   size: number
   x: number
   y: number
 } {
-  const isShift = !!currentPlacement.split('-')[1]
   const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
-  const halfSize = size / 2
 
   return {
     size,
-    x: isVerticalPlacement ? (isShift ? size : halfSize) : 0,
-    y: isVerticalPlacement ? 0 : isShift ? size : halfSize,
+    x: isVerticalPlacement ? size : 0,
+    y: isVerticalPlacement ? 0 : size,
   }
 }
 
@@ -220,11 +214,9 @@ export function removeProperties<T>(
   keys: Array<keyof T>,
 ): Partial<T> {
   const clone = { ...partialProps }
-  keys.forEach(
-    (key): void => {
-      delete clone[key]
-    },
-  )
+  keys.forEach((key): void => {
+    delete clone[key]
+  })
   return clone
 }
 

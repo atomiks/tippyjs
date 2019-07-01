@@ -5,10 +5,13 @@ import {
   Props,
   Instance,
   Content,
-  Placement,
 } from './types'
 import { isIE } from './browser'
-import { PASSIVE, PREVENT_OVERFLOW_PADDING } from './constants'
+import {
+  PASSIVE,
+  PREVENT_OVERFLOW_PADDING,
+  NON_UPDATEABLE_PROPS,
+} from './constants'
 import { currentInput } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
@@ -74,7 +77,6 @@ export default function createTippy(
   let isBeingDestroyed = false
   let hasMountCallbackRun = false
   let didHideDueToDocumentMouseDown = false
-  let normalizedPlacement: Placement
   let currentMountCallback: () => void
   let currentTransitionEndListener: (event: TransitionEvent) => void
   let listeners: Listener[] = []
@@ -486,18 +488,12 @@ export default function createTippy(
   }
 
   function createPopperInstance(): void {
-    const { popperOptions, placement } = instance.props
+    const { popperOptions } = instance.props
     const { arrow } = instance.popperChildren
     const preventOverflowModifier = getModifier(
       popperOptions,
       'preventOverflow',
     )
-    // Due to the virtual offsets normalization when using `followCursor`, we
-    // need to use the opposite placement
-    const shift = instance.state.currentPlacement.split('-')[1]
-    normalizedPlacement = (instance.props.followCursor && shift
-      ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
-      : placement) as Placement
 
     function applyMutations(data: Popper.Data): void {
       instance.state.currentPlacement = data.placement
@@ -552,7 +548,7 @@ export default function createTippy(
 
     const config = {
       eventsEnabled: false,
-      placement: normalizedPlacement,
+      placement: instance.props.placement,
       ...popperOptions,
       modifiers: {
         ...(popperOptions ? popperOptions.modifiers : {}),
@@ -728,7 +724,8 @@ export default function createTippy(
     cancelAnimationFrame(scheduleHideAnimationFrame)
   }
 
-  function setProps(partialProps: Partial<Props>): void {
+  // Cloning as we're deleting non-updateable props in DEV mode
+  function setProps({ ...partialProps }: Partial<Props>): void {
     if (__DEV__) {
       warnWhen(
         instance.state.isDestroyed,
@@ -744,6 +741,18 @@ export default function createTippy(
     if (__DEV__) {
       validateProps(partialProps)
       validateExtraPropsFunctionality(instance, partialProps)
+
+      NON_UPDATEABLE_PROPS.forEach((prop): void => {
+        if (hasOwnProperty(partialProps, prop)) {
+          delete partialProps[prop]
+          warnWhen(
+            true,
+            'Cannot update `' +
+              prop +
+              '` prop. Destroy this instance and create a new instance instead.',
+          )
+        }
+      })
     }
 
     removeTriggersFromEventListenersTarget()
@@ -939,7 +948,7 @@ export default function createTippy(
       }
 
       instance.popperInstance!.disableEventListeners()
-      instance.popperInstance!.options.placement = normalizedPlacement
+      instance.popperInstance!.options.placement = instance.props.placement
 
       popper.parentNode!.removeChild(popper)
       instance.props.onHidden(instance)

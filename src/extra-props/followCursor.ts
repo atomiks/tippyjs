@@ -1,14 +1,21 @@
-import { Instance, Targets, Props, Tippy, TippyCallWrapper } from '../types'
+import {
+  Instance,
+  Targets,
+  Props,
+  Tippy,
+  TippyCallWrapper,
+  Placement,
+} from '../types'
 import {
   includes,
   getVirtualOffsets,
-  hasOwnProperty,
   preserveInvocation,
   removeProperties,
   closestCallback,
 } from '../utils'
 import { getBasePlacement } from '../popper'
 import { currentInput } from '../bindGlobalEventListeners'
+import Popper from 'popper.js'
 
 export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
   return (
@@ -28,35 +35,20 @@ export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
           instance.__extraProps__.followCursor = true
         }
 
-        let undo = (): void => {}
-
-        const originalSetProps = instance.setProps
-        instance.setProps = (partialProps): void => {
-          if (hasOwnProperty(partialProps, 'followCursor')) {
-            undo()
-
-            if (partialProps.followCursor) {
-              undo = applyFollowCursor(instance)
-            }
-          }
-
-          originalSetProps(partialProps)
-        }
-
         if (instance.props.followCursor) {
-          undo = applyFollowCursor(instance)
+          applyFollowCursor(instance)
         }
       },
     })
   }
 }
 
-function applyFollowCursor(instance: Instance): () => void {
+function applyFollowCursor(instance: Instance): void {
   const { reference } = instance
+  const originalSetProps = instance.setProps
 
   let lastMouseMoveEvent: MouseEvent
   let isPopperInstanceCreated = false
-  let isDestroyed = false
   let wasTriggeredByFocus = false
 
   function addListener(): void {
@@ -68,7 +60,7 @@ function applyFollowCursor(instance: Instance): () => void {
   }
 
   function onMouseMove(event: MouseEvent): void {
-    if (wasTriggeredByFocus || isDestroyed || !event) {
+    if (wasTriggeredByFocus || !event) {
       return
     }
 
@@ -86,7 +78,7 @@ function applyFollowCursor(instance: Instance): () => void {
     )
 
     const rect = reference.getBoundingClientRect()
-    const { followCursor } = instance.props
+    const { followCursor } = instance.props as Props
     const isHorizontal = followCursor === 'horizontal'
     const isVertical = followCursor === 'vertical'
     const isVerticalPlacement = includes(
@@ -95,7 +87,10 @@ function applyFollowCursor(instance: Instance): () => void {
     )
 
     // The virtual reference needs some size to prevent itself from overflowing
-    const { size, x, y } = getVirtualOffsets(instance, isVerticalPlacement)
+    const { size, x, y } = getVirtualOffsets(
+      instance.popper,
+      isVerticalPlacement,
+    )
 
     if (isCursorOverReference || !instance.props.interactive) {
       instance.popperInstance!.reference = {
@@ -134,17 +129,37 @@ function applyFollowCursor(instance: Instance): () => void {
     onHidden,
   } = instance.props
 
+  // Due to the virtual offsets normalization when using `followCursor`,
+  // we need to use the opposite placement
+  let placement = instance.props.placement
+  let normalizedPlacement = placement
+
+  function setNormalizedPlacement(): void {
+    const shift = placement.split('-')[1]
+
+    normalizedPlacement = (instance.props.followCursor && shift
+      ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
+      : placement) as Placement
+
+    originalSetProps({ placement: normalizedPlacement })
+  }
+
+  setNormalizedPlacement()
+
+  function popperOnCreate(data: Popper.Data): void {
+    preserveInvocation(
+      popperOptions && popperOptions.onCreate,
+      instance.props.popperOptions.onCreate,
+      [data],
+    )
+
+    isPopperInstanceCreated = true
+  }
+
   instance.setProps({
     popperOptions: {
-      onCreate(data): void {
-        preserveInvocation(
-          popperOptions && popperOptions.onCreate,
-          instance.props.popperOptions.onCreate,
-          [data],
-        )
-
-        isPopperInstanceCreated = true
-      },
+      ...popperOptions,
+      onCreate: popperOnCreate,
     },
     onMount(instance): void {
       preserveInvocation(onMount, instance.props.onMount, [instance])
@@ -196,48 +211,36 @@ function applyFollowCursor(instance: Instance): () => void {
       if (!instance.state.isScheduledToShow) {
         removeListener()
       }
+
+      instance.popperInstance!.options.placement = normalizedPlacement
     },
   })
 
-  const originalSetProps = instance.setProps
   instance.setProps = (partialProps): void => {
+    placement = partialProps.placement || placement
     onTrigger = partialProps.onTrigger || onTrigger
     onUntrigger = partialProps.onUntrigger || onUntrigger
     onMount = partialProps.onMount || onMount
     onHidden = partialProps.onHidden || onHidden
     popperOptions = partialProps.popperOptions || popperOptions
 
-    originalSetProps(
-      removeProperties(partialProps, [
+    originalSetProps({
+      popperOptions: {
+        ...popperOptions,
+        onCreate: popperOnCreate,
+      },
+      ...removeProperties(partialProps, [
+        'placement',
         'onTrigger',
         'onUntrigger',
         'onMount',
         'onHidden',
         'popperOptions',
       ]),
-    )
-
-    onMouseMove(lastMouseMoveEvent)
-  }
-
-  return (): void => {
-    // Undo
-    removeListener()
-
-    if (instance.popperInstance) {
-      instance.popperInstance.reference = instance.reference
-    }
-
-    instance.setProps = originalSetProps
-
-    originalSetProps({
-      popperOptions,
-      onTrigger,
-      onUntrigger,
-      onMount,
-      onHidden,
     })
 
-    isDestroyed = true
+    setNormalizedPlacement()
+
+    onMouseMove(lastMouseMoveEvent)
   }
 }

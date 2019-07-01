@@ -1,6 +1,6 @@
 import { Props, Targets, Instance } from './types'
 import { hasOwnProperty, includes } from './utils'
-import { defaultProps, extraProps } from './props'
+import { defaultProps } from './props'
 
 /**
  * Helpful wrapper around `console.warn()`.
@@ -44,7 +44,7 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
       !didPassTargetProp &&
       !didPassA11yProp &&
       !didPassShowOnInitProp &&
-      !includes(Object.keys(extraProps), prop)
+      !includes(['followCursor', 'inlinePositioning'], prop)
 
     warnWhen(
       didPassTargetProp,
@@ -143,7 +143,7 @@ export function validateExtraPropsFunctionality(
 ): void {
   const extraProps = ['followCursor', 'inlinePositioning']
 
-  extraProps.forEach(prop => {
+  extraProps.forEach((prop): void => {
     if (hasOwnProperty(partialProps, prop) && !instance.__extraProps__[prop]) {
       const didPassFollowCursor = prop === 'followCursor'
       const didPassOtherExtraProp = !didPassFollowCursor

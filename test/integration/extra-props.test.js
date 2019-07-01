@@ -65,7 +65,7 @@ describe('followCursor', () => {
     const isVerticalPlacement = ['top', 'bottom'].includes(
       getBasePlacement(instance.popper.getAttribute('x-placement')),
     )
-    const { x, y } = getVirtualOffsets(instance, isVerticalPlacement)
+    const { x, y } = getVirtualOffsets(instance.popper, isVerticalPlacement)
 
     expect(rect.left).toBe(receivedRect.left - x)
     expect(rect.right).toBe(receivedRect.right + x)
@@ -284,47 +284,6 @@ describe('followCursor', () => {
     })
 
     disableTouchEnvironment()
-  })
-
-  it('can be undone via setProps()', () => {
-    instance = tippyEnhanced(h(), { followCursor: true, flip: false })
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter', { ...first }))
-    jest.runAllTimers()
-    expect(instance.popperInstance.reference).not.toBe(instance.reference)
-    instance.hide()
-    instance.setProps({ followCursor: false })
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter', { ...first }))
-    jest.runAllTimers()
-    instance.reference.dispatchEvent(firstMouseMoveEvent)
-    expect(instance.popperInstance.reference).toBe(instance.reference)
-  })
-
-  it('can be updated via setProps()', () => {
-    instance = tippyEnhanced(h(), { followCursor: 'horizontal', flip: false })
-    instance.setProps({ followCursor: true })
-
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
-
-    jest.runAllTimers()
-
-    instance.reference.dispatchEvent(firstMouseMoveEvent)
-
-    rect = instance.popperInstance.reference.getBoundingClientRect()
-    matches({
-      top: first.clientY,
-      bottom: first.clientY,
-      left: first.clientX,
-      right: first.clientX,
-    })
-
-    instance.reference.dispatchEvent(secondMouseMoveEvent)
-    rect = instance.popperInstance.reference.getBoundingClientRect()
-    matches({
-      top: second.clientY,
-      bottom: second.clientY,
-      left: second.clientX,
-      right: second.clientX,
-    })
   })
 
   it('cleans up listener if untriggered before it shows', () => {

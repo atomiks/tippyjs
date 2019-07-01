@@ -131,7 +131,7 @@ export interface EnhancedTippy extends Tippy {
 export type PropHOF = (tippy: Tippy) => EnhancedTippy
 
 export interface Tippy {
-  (targets: Targets, props?: Partial<Props>): Instance | Instance[]
+  (targets: Targets, optionalProps?: Partial<Props>): Instance | Instance[]
   readonly currentInput: { isTouch: boolean }
   readonly defaultProps: Props
   readonly version: string

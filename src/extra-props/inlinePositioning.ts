@@ -2,13 +2,11 @@ import { Instance, Targets, Props, Tippy, TippyCallWrapper } from '../types'
 import {
   includes,
   getVirtualOffsets,
-  hasOwnProperty,
   arrayFrom,
   preserveInvocation,
   removeProperties,
 } from '../utils'
 import { getBasePlacement } from '../popper'
-import { warnWhen } from '../validation'
 
 export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
   return (
@@ -22,7 +20,7 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
 
     return tippy(targets, {
       ...props,
-      onCreate(instance) {
+      onCreate(instance): void {
         preserveInvocation(
           optionalProps && optionalProps.onCreate,
           instance.props.onCreate,
@@ -39,7 +37,7 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
           let onTrigger = instance.props.onTrigger
 
           instance.setProps({
-            onTrigger(instance, event) {
+            onTrigger(instance, event): void {
               preserveInvocation(onTrigger, instance.props.onTrigger, [
                 instance,
                 event,
@@ -57,18 +55,7 @@ export default function withInlinePositioning(tippy: Tippy): TippyCallWrapper {
           }
 
           const originalSetProps = instance.setProps
-          instance.setProps = (partialProps: Partial<Props>): void => {
-            // Making this prop fully dynamic is difficult and buggy, and it's
-            // very unlikely the user will need to dynamically update it anyway.
-            // Just warn.
-            if (__DEV__) {
-              warnWhen(
-                hasOwnProperty(partialProps, 'inlinePositioning'),
-                'Cannot change `inlinePositioning` prop. Destroy this ' +
-                  'instance and create a new instance instead.',
-              )
-            }
-
+          instance.setProps = (partialProps): void => {
             onTrigger = partialProps.onTrigger || onTrigger
 
             originalSetProps(removeProperties(partialProps, ['onTrigger']))
@@ -210,7 +197,7 @@ export function applyCursorStrategy(instance: Instance): void {
           )
 
           const { size, x, y } = getVirtualOffsets(
-            instance,
+            instance.popper,
             isVerticalPlacement,
           )
 

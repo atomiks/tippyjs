@@ -7,6 +7,7 @@ import {
   removeProperties,
 } from '../utils'
 import { throwErrorWhen } from '../validation'
+import { NON_UPDATEABLE_PROPS } from '../constants'
 
 interface SingletonInstance extends Instance {
   __singleton__: boolean
@@ -112,10 +113,12 @@ export default function createSingleton(
           [instance, event],
         )
 
-        const props = { ...instance.props }
-        delete props.delay
-
-        singletonInstance.setProps(props)
+        singletonInstance.setProps(
+          removeProperties(
+            instance.props,
+            NON_UPDATEABLE_PROPS.concat('delay'),
+          ),
+        )
 
         singletonInstance.reference.getBoundingClientRect = ():
           | DOMRect
