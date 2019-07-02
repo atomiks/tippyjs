@@ -1,7 +1,10 @@
 import css from '../tippy.css'
 import tippy from '../src'
 import { injectCSS } from '../src/css'
+import { isBrowser } from '../src/browser'
 
-injectCSS(css)
+if (isBrowser) {
+  injectCSS(css)
+}
 
 export default tippy
