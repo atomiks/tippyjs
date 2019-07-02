@@ -67,48 +67,32 @@ describe('hasOwnProperty', () => {
   })
 })
 
-describe('getValue', () => {
+describe('getValueAtIndexOrReturn', () => {
   it('returns the value if not an array', () => {
-    expect(Utils.getValue('unique', 0)).toBe('unique')
-    expect(Utils.getValue('unique', 1)).toBe('unique')
-    expect(Utils.getValue(true, 1)).toBe(true)
+    expect(Utils.getValueAtIndexOrReturn('unique', 0)).toBe('unique')
+    expect(Utils.getValueAtIndexOrReturn('unique', 1)).toBe('unique')
+    expect(Utils.getValueAtIndexOrReturn(true, 1)).toBe(true)
   })
 
   it('returns the value at the specified index if an array', () => {
-    expect(Utils.getValue([-100, -200], 0)).toBe(-100)
-    expect(Utils.getValue([-100, -200], 1)).toBe(-200)
-    expect(Utils.getValue(['x', 'y'], 0)).toBe('x')
-    expect(Utils.getValue(['x', 'y'], 1)).toBe('y')
+    expect(Utils.getValueAtIndexOrReturn([-100, -200], 0)).toBe(-100)
+    expect(Utils.getValueAtIndexOrReturn([-100, -200], 1)).toBe(-200)
+    expect(Utils.getValueAtIndexOrReturn(['x', 'y'], 0)).toBe('x')
+    expect(Utils.getValueAtIndexOrReturn(['x', 'y'], 1)).toBe('y')
   })
 
   it('uses the default duration if the value is null', () => {
-    expect(Utils.getValue([null, 5], 0, defaultProps.duration[0])).toBe(
-      defaultProps.duration[0],
-    )
-    expect(Utils.getValue([5, null], 1, defaultProps.duration[1])).toBe(
-      defaultProps.duration[1],
-    )
-    expect(Utils.getValue([null, 5], 0, defaultProps.delay)).toBe(
-      defaultProps.delay,
-    )
-    expect(Utils.getValue([5, null], 1, defaultProps.delay)).toBe(
-      defaultProps.delay,
-    )
+    expect(Utils.getValueAtIndexOrReturn([null, 5], 0, -1)).toBe(-1)
+    expect(Utils.getValueAtIndexOrReturn([5, null], 1, 1000)).toBe(1000)
+    expect(Utils.getValueAtIndexOrReturn([null, 5], 0, [8, 9])).toBe(8)
+    expect(Utils.getValueAtIndexOrReturn([5, null], 1, [1, 2])).toBe(2)
   })
 
   it('uses the default duration if the value is undefined', () => {
-    expect(Utils.getValue([undefined, 5], 0, defaultProps.duration[0])).toBe(
-      defaultProps.duration[0],
-    )
-    expect(Utils.getValue([5, undefined], 1, defaultProps.duration[1])).toBe(
-      defaultProps.duration[1],
-    )
-    expect(Utils.getValue([undefined, 5], 0, defaultProps.delay)).toBe(
-      defaultProps.delay,
-    )
-    expect(Utils.getValue([5, undefined], 1, defaultProps.delay)).toBe(
-      defaultProps.delay,
-    )
+    expect(Utils.getValueAtIndexOrReturn([undefined, 5], 0, -1)).toBe(-1)
+    expect(Utils.getValueAtIndexOrReturn([5, undefined], 1, 1000)).toBe(1000)
+    expect(Utils.getValueAtIndexOrReturn([undefined, 5], 0, [8, 9])).toBe(8)
+    expect(Utils.getValueAtIndexOrReturn([5, undefined], 1, [1, 2])).toBe(2)
   })
 })
 

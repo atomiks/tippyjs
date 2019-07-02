@@ -1,7 +1,7 @@
 import { Instance, Props } from '../types'
 import tippy from '..'
 import {
-  getValue,
+  getValueAtIndexOrReturn,
   hasOwnProperty,
   preserveInvocation,
   removeProperties,
@@ -141,7 +141,7 @@ export default function createSingleton(
         } else {
           showTimeout = setTimeout((): void => {
             singletonInstance.show()
-          }, getValue(delay, 0, tippy.defaultProps.delay))
+          }, getValueAtIndexOrReturn(delay, 0, tippy.defaultProps.delay))
         }
       },
       onUntrigger(_, event): void {
@@ -154,7 +154,7 @@ export default function createSingleton(
         clearTimeouts()
         hideTimeout = setTimeout((): void => {
           singletonInstance.hide()
-        }, getValue(delay, 1, tippy.defaultProps.delay))
+        }, getValueAtIndexOrReturn(delay, 1, tippy.defaultProps.delay))
       },
     })
 

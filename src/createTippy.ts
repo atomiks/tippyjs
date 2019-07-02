@@ -25,7 +25,7 @@ import {
 } from './popper'
 import {
   hasOwnProperty,
-  getValue,
+  getValueAtIndexOrReturn,
   getModifier,
   includes,
   invokeWithArgsOrReturn,
@@ -687,7 +687,11 @@ export default function createTippy(
 
     addDocumentMouseDownListener()
 
-    const delay = getValue(instance.props.delay, 0, defaultProps.delay)
+    const delay = getValueAtIndexOrReturn(
+      instance.props.delay,
+      0,
+      defaultProps.delay,
+    )
 
     if (delay) {
       showTimeout = setTimeout((): void => {
@@ -711,7 +715,11 @@ export default function createTippy(
 
     instance.state.isScheduledToShow = false
 
-    const delay = getValue(instance.props.delay, 1, defaultProps.delay)
+    const delay = getValueAtIndexOrReturn(
+      instance.props.delay,
+      1,
+      defaultProps.delay,
+    )
 
     if (delay) {
       hideTimeout = setTimeout((): void => {
@@ -824,7 +832,7 @@ export default function createTippy(
   }
 
   function show(
-    duration: number = getValue(
+    duration: number = getValueAtIndexOrReturn(
       instance.props.duration,
       0,
       (defaultProps.duration as [number, number])[1],
@@ -924,7 +932,7 @@ export default function createTippy(
   }
 
   function hide(
-    duration: number = getValue(
+    duration: number = getValueAtIndexOrReturn(
       instance.props.duration,
       1,
       (defaultProps.duration as [number, number])[1],

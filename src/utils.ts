@@ -43,10 +43,18 @@ export function getArrayOfElements(value: Targets): Element[] {
 /**
  * Returns a value at a given index depending on if it's an array or number
  */
-export function getValue(value: any, index: number, defaultValue: any): any {
+export function getValueAtIndexOrReturn<T>(
+  value: T | T[],
+  index: number,
+  defaultValue: T | T[],
+): T {
   if (Array.isArray(value)) {
     const v = value[index]
-    return v == null ? defaultValue : v
+    return v == null
+      ? Array.isArray(defaultValue)
+        ? defaultValue[index]
+        : defaultValue
+      : v
   }
 
   return value
