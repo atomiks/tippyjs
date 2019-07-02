@@ -46,12 +46,12 @@
     "url": "git+https://github.com/atomiks/tippyjs.git"
   },
   "scripts": {
-    "dev": "parcel demo/index.html -d .devserver --open",
-    "dev:flip": "parcel demo/flip/index.html -d .devserver --open",
-    "dev:themes": "parcel demo/themes/index.html -d .devserver --open",
-    "dev:animations": "parcel demo/animations/index.html -d .devserver --open",
-    "dev:addons": "parcel demo/addons/index.html -d .devserver --open",
-    "dev:extra-props": "parcel demo/extra-props/index.html -d .devserver --open",
+    "dev": "parcel demo/index.html -d .devserver",
+    "dev:flip": "parcel demo/flip/index.html -d .devserver",
+    "dev:themes": "parcel demo/themes/index.html -d .devserver",
+    "dev:animations": "parcel demo/animations/index.html -d .devserver",
+    "dev:addons": "parcel demo/addons/index.html -d .devserver",
+    "dev:extra-props": "parcel demo/extra-props/index.html -d .devserver",
     "build": "node rollup.pre-build && rollup --config && bundlesize",
     "test": "jest --coverage --silent",
     "check-types": "tsc",
