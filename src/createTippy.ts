@@ -756,7 +756,7 @@ export default function createTippy(
     if (__DEV__) {
       warnWhen(
         instance.state.isDestroyed,
-        '`set()` was called on a destroyed instance. ' +
+        '`setProps()` was called on a destroyed instance. ' +
           'This is a no-op but indicates a potential memory leak.',
       )
     }
