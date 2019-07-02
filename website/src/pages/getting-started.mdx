@@ -20,9 +20,11 @@ In your application, import the `tippy` module:
 import tippy from 'tippy.js'
 ```
 
-This assumes you're using a module bundler like webpack or Parcel. When
-deploying for production, your minifier should remove the development warnings
-and error messages provided `NODE_ENV=production`.
+This assumes you're using a module bundler like webpack, Rollup, or Parcel. In
+development mode, you'll get helpful warnings when things go wrong. When
+deploying for production, your minifier should remove the development warnings.
+If you're getting an error message,
+[read the FAQ for help setting it up.](/faq/#im-getting-uncaught-referenceerror-process-is-not-defined)
 
 ### Script tags via CDN
 

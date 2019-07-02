@@ -13,7 +13,6 @@ import 'animate.css/source/attention_seekers/wobble.css'
 import 'focus-visible'
 import slugify from 'slugify'
 import elasticScroll from 'elastic-scroll-polyfill'
-import { spacesToHyphens } from './src/utils'
 import redirects from './src/redirects'
 
 function redirect() {
@@ -55,7 +54,10 @@ function autoLinkHeaders() {
   const headers = Array.from(document.querySelectorAll('h3,h4,h5,h6'))
   headers.forEach(header => {
     const a = document.createElement('a')
-    const href = slugify(header.textContent, { lower: true })
+    const href = slugify(header.textContent, {
+      lower: true,
+      remove: /[*+~.()'"!:@]/g,
+    })
     a.id = href
     a.href = `#${href}`
     a.className = 'link-icon'
