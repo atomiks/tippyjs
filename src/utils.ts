@@ -254,8 +254,8 @@ export function closestCallback(
 }
 
 /**
- * Determines if an array or string includes a value
+ * Determines if an array or string includes a string
  */
-export function includes(a: any[] | string, b: any): boolean {
+export function includes(a: string[] | string, b: string): boolean {
   return a.indexOf(b) > -1
 }
