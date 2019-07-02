@@ -2,7 +2,6 @@ import { Props, ReferenceElement, Targets, PopperElement } from './types'
 import { isUCBrowser } from './browser'
 import { getDataAttributeProps } from './reference'
 import { POPPER_CLASS } from './constants'
-import { throwErrorWhen } from './validation'
 
 /**
  * Determines if the value is a reference element
