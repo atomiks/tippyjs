@@ -186,6 +186,10 @@ export default function createSingleton(
     shouldDestroyPassedInstances: boolean = true,
   ): void => {
     tippyInstances.forEach((instance): void => {
+      if (instance.state.isDestroyed) {
+        return
+      }
+
       // Restore the instances to their original state
       instance.clearDelayTimeouts = instance.__originalClearDelayTimeouts__
       instance.setProps = instance.__originalSetProps__
