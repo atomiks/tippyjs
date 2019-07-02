@@ -2,6 +2,7 @@ import { Props, ReferenceElement, Targets, PopperElement } from './types'
 import { isUCBrowser } from './browser'
 import { getDataAttributeProps } from './reference'
 import { POPPER_CLASS } from './constants'
+import { throwErrorWhen } from './validation'
 
 /**
  * Determines if the value is a reference element
@@ -33,11 +34,7 @@ export function getArrayOfElements(value: Targets): Element[] {
     return value
   }
 
-  try {
-    return arrayFrom(document.querySelectorAll(value))
-  } catch (e) {
-    return []
-  }
+  return arrayFrom(document.querySelectorAll(value))
 }
 
 /**

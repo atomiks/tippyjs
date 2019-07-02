@@ -46,12 +46,6 @@ describe('getArrayOfElements', () => {
     expect(arr[0]).toBe(ref)
     expect(Array.isArray(arr)).toBe(true)
   })
-
-  it('returns an empty array for an invalid selector', () => {
-    const arr = Utils.getArrayOfElements('+')
-    expect(Array.isArray(arr)).toBe(true)
-    expect(arr.length).toBe(0)
-  })
 })
 
 describe('hasOwnProperty', () => {
