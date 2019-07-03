@@ -681,10 +681,6 @@ export default function createTippy(
       instance.props.onTrigger(instance, event)
     }
 
-    if (instance.props.wait) {
-      return instance.props.wait(instance, event)
-    }
-
     addDocumentMouseDownListener()
 
     const delay = getValueAtIndexOrReturn(

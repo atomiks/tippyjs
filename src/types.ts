@@ -70,7 +70,6 @@ export interface Props {
   trigger: string
   triggerTarget: Element | null
   updateDuration: number
-  wait: ((instance: Instance, event?: Event) => void) | null
   zIndex: number
 }
 
