@@ -519,6 +519,15 @@ export default function createTippy(
       } else {
         tooltip.removeAttribute('data-out-of-boundaries')
       }
+
+      const tooltipStyles = tooltip.style
+
+      // Apply `distance` prop
+      tooltipStyles.top = '0'
+      tooltipStyles.left = '0'
+      tooltipStyles[
+        getIsVerticalPlacement() ? 'top' : 'left'
+      ] = `${(getIsOppositePlacement() ? 1 : -1) * instance.props.distance}px`
     }
 
     const config = {
@@ -532,19 +541,11 @@ export default function createTippy(
           padding: PREVENT_OVERFLOW_PADDING,
           ...preventOverflowModifier,
         },
+        // Adds the `distance` calculation to preventOverflow padding
         tippySetPreventOverflowPadding: {
           enabled: true,
           order: 299,
           fn(data: Popper.Data): Popper.Data {
-            const tooltipStyles = tooltip.style
-
-            tooltipStyles.top = '0'
-            tooltipStyles.left = '0'
-            tooltipStyles[
-              getIsVerticalPlacement() ? 'top' : 'left'
-            ] = `${(getIsOppositePlacement() ? 1 : -1) *
-              instance.props.distance}px`
-
             const basePlacement = getBasePlacement(data.placement)
 
             const padding =
