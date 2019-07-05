@@ -133,6 +133,7 @@
     "postcss": "^7.0.14",
     "prettier": "^1.17.1",
     "promise": "^8.0.3",
+    "react-flip-toolkit": "^6.6.8",
     "rimraf": "^2.6.3",
     "rollup": "^1.13.1",
     "rollup-plugin-babel": "^4.3.2",

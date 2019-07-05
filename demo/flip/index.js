@@ -1,3 +1,4 @@
+import Flipper from 'react-flip-toolkit/core'
 import tippy from '../../src'
 import '../../src/scss/index.scss'
 
@@ -76,7 +77,7 @@ const instance = tippy(button, {
     content.style.willChange = 'transform'
     tooltip.style.textAlign = 'left'
 
-    flipper = new ReactFlipToolkitCore({ element: popper })
+    flipper = new Flipper({ element: popper })
 
     flipper.addFlipped({
       element: tooltip,
