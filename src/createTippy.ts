@@ -832,7 +832,7 @@ export default function createTippy(
     duration: number = getValueAtIndexOrReturn(
       instance.props.duration,
       0,
-      (defaultProps.duration as [number, number])[1],
+      defaultProps.duration,
     ),
     shouldPreventPopperTransition: boolean = true,
   ): void {
@@ -932,7 +932,7 @@ export default function createTippy(
     duration: number = getValueAtIndexOrReturn(
       instance.props.duration,
       1,
-      (defaultProps.duration as [number, number])[1],
+      defaultProps.duration,
     ),
   ): void {
     if (__DEV__) {
