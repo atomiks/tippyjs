@@ -191,7 +191,7 @@ function applyFollowCursor(instance: Instance): void {
 
       if (
         !wasTriggeredByFocus &&
-        !(instance.state.isVisible && instance.props.followCursor === 'initial')
+        !(instance.state.isMounted && instance.props.followCursor === 'initial')
       ) {
         addListener()
       }
