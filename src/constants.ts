@@ -23,7 +23,4 @@ export const ARROW_SELECTOR = `.${ARROW_CLASS}`
 export const SVG_ARROW_SELECTOR = `.${SVG_ARROW_CLASS}`
 
 // TODO: Work out best way to make these updateable
-export const NON_UPDATEABLE_PROPS: Array<keyof Props> = [
-  'followCursor',
-  'inlinePositioning',
-]
+export const NON_UPDATEABLE_PROPS: Array<keyof Props> = ['followCursor']

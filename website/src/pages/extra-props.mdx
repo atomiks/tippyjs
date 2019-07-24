@@ -16,14 +16,13 @@ you to use them like any other prop. The reason is because a prop works better
 on a per-instance basis, while addons tend to work better on a group of
 instances.
 
-There are currently 2 extra props:
+There is currently 1 extra prop:
 
 - `followCursor`
-- `inlinePositioning`
 
 ### Usage
 
-In order to use these props, you need to configure the `tippy` constructor
+In order to use this prop, you need to configure the `tippy` constructor
 function.
 
 #### Node
@@ -34,9 +33,9 @@ Create a new file and import `tippy` from this file instead of node_modules.
 // Only import the extra props you need. The `enhance` helper function is
 // required.
 import tippy from 'tippy.js'
-import enhance, { followCursor, inlinePositioning } from 'tippy.js/extra-props'
+import enhance, { followCursor } from 'tippy.js/extra-props'
 
-export default enhance(tippy, [followCursor, inlinePositioning])
+export default enhance(tippy, [followCursor])
 ```
 
 ```js

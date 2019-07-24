@@ -185,20 +185,6 @@ export default function createTippy(
   return instance
 
   /* ======================= 🔒 Private methods 🔒 ======================= */
-  function getIsVerticalPlacement(): boolean {
-    return includes(
-      ['top', 'bottom'],
-      getBasePlacement(instance.state.currentPlacement),
-    )
-  }
-
-  function getIsOppositePlacement(): boolean {
-    return includes(
-      ['bottom', 'right'],
-      getBasePlacement(instance.state.currentPlacement),
-    )
-  }
-
   function getNormalizedTouchSettings(): [string | boolean, number] {
     const { touch } = instance.props
     return Array.isArray(touch) ? touch : [touch, 0]
@@ -513,21 +499,24 @@ export default function createTippy(
         setFlipModifierEnabled(instance.popperInstance!.modifiers, false)
       }
 
-      tooltip.setAttribute('data-placement', instance.state.currentPlacement)
+      tooltip.setAttribute('data-placement', data.placement)
       if (data.attributes['x-out-of-boundaries'] !== false) {
         tooltip.setAttribute('data-out-of-boundaries', '')
       } else {
         tooltip.removeAttribute('data-out-of-boundaries')
       }
 
-      const tooltipStyles = tooltip.style
+      const basePlacement = getBasePlacement(data.placement)
+      const isVerticalPlacement = includes(['top', 'bottom'], basePlacement)
+      const isSecondaryPlacement = includes(['bottom', 'right'], basePlacement)
 
       // Apply `distance` prop
+      const tooltipStyles = tooltip.style
       tooltipStyles.top = '0'
       tooltipStyles.left = '0'
       tooltipStyles[
-        getIsVerticalPlacement() ? 'top' : 'left'
-      ] = `${(getIsOppositePlacement() ? 1 : -1) * instance.props.distance}px`
+        isVerticalPlacement ? 'top' : 'left'
+      ] = `${(isSecondaryPlacement ? 1 : -1) * instance.props.distance}px`
     }
 
     const config = {

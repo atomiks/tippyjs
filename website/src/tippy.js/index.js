@@ -11,9 +11,9 @@ import React, {
 import { createPortal } from 'react-dom'
 import tippyBase from '../../../'
 import { createSingleton, delegate } from '../../../addons'
-import enhance, { followCursor, inlinePositioning } from '../../../extra-props'
+import enhance, { followCursor } from '../../../extra-props'
 
-const tippy = enhance(tippyBase, [followCursor, inlinePositioning])
+const tippy = enhance(tippyBase, [followCursor])
 
 function _extends() {
   _extends =

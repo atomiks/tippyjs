@@ -44,7 +44,7 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
       !didPassTargetProp &&
       !didPassA11yProp &&
       !didPassShowOnInitProp &&
-      !includes(['followCursor', 'inlinePositioning'], prop)
+      !includes(['followCursor'], prop)
 
     warnWhen(
       didPassTargetProp,
@@ -141,7 +141,7 @@ export function validateExtraPropsFunctionality(
   instance: Instance,
   partialProps: Partial<Props> = {},
 ): void {
-  const extraProps = ['followCursor', 'inlinePositioning']
+  const extraProps = ['followCursor']
 
   extraProps.forEach((prop): void => {
     if (hasOwnProperty(partialProps, prop) && !instance.__extraProps__[prop]) {

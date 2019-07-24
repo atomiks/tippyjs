@@ -19,7 +19,6 @@ export const defaultProps: Props = {
   hideOnClick: true,
   ignoreAttributes: false,
   inertia: false,
-  inlinePositioning: false,
   interactive: false,
   interactiveBorder: 2,
   interactiveDebounce: 0,

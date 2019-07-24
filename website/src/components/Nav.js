@@ -58,7 +58,7 @@ const ListItem = styled.li`
 
   > a {
     display: block;
-    padding: 10px 25px;
+    padding: 6px 25px;
     padding-left: calc(25px + 4%);
     font-size: 17px;
 

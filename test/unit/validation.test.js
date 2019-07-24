@@ -183,22 +183,4 @@ describe('validateExtraPropsFunctionality', () => {
     )
     expect(spy).not.toHaveBeenCalled()
   })
-
-  it('other: warns when the instance has not been configured with prop', () => {
-    const instance = { __extraProps__: {} }
-    validateExtraPropsFunctionality(instance, { inlinePositioning: true })
-    expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] The `' +
-        'inlinePositioning' +
-        '` prop was specified, but the instance has not been configured ' +
-        'with inlinePositioning functionality. View details: ' +
-        'https://atomiks.github.io/tippyjs/extra-props/',
-    )
-  })
-
-  it('other: does not warn if instance has been configured with prop', () => {
-    const instance = { __extraProps__: { inlinePositioning: true } }
-    validateExtraPropsFunctionality(instance, { inlinePositioning: true })
-    expect(spy).not.toHaveBeenCalled()
-  })
 })
