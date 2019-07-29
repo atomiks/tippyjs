@@ -264,13 +264,25 @@ export default function createTippy(
   function makeSticky(): void {
     setTransitionDuration([popper], isIE ? 0 : instance.props.updateDuration)
 
+    let prevRefRect = reference.getBoundingClientRect()
+
     function updatePosition(): void {
-      instance.popperInstance!.scheduleUpdate()
+      const currentRefRect = reference.getBoundingClientRect()
+
+      // Only schedule an update if the reference rect has changed
+      if (
+        prevRefRect.top !== currentRefRect.top ||
+        prevRefRect.right !== currentRefRect.right ||
+        prevRefRect.bottom !== currentRefRect.bottom ||
+        prevRefRect.left !== currentRefRect.left
+      ) {
+        instance.popperInstance!.scheduleUpdate()
+      }
+
+      prevRefRect = currentRefRect
 
       if (instance.state.isMounted) {
         requestAnimationFrame(updatePosition)
-      } else {
-        setTransitionDuration([popper], 0)
       }
     }
 
