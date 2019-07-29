@@ -1012,34 +1012,17 @@ describe('appendTo', () => {
 })
 
 describe('sticky', () => {
-  it('updates position on each animation frame', done => {
-    const mockRAF = requestAnimationFrame
-    global.requestAnimationFrame = global.nativeRequestAnimationFrame
-    let calls = 0
-
+  it('updates position on each animation frame', () => {
+    const fn = jest.fn()
     const instance = tippy(h(), { sticky: true, lazy: false })
-    jest
-      .spyOn(instance.popperInstance, 'scheduleUpdate')
-      .mockImplementation(() => {
-        calls++
-      })
+
+    jest.spyOn(instance.popperInstance, 'scheduleUpdate').mockImplementation(fn)
+
     instance.show()
 
-    expect(calls).toBe(1)
+    jest.runAllTimers()
 
-    requestAnimationFrame(() => {
-      expect(calls).toBe(2)
-      instance.state.isMounted = false
-      requestAnimationFrame(() => {
-        expect(calls).toBe(3)
-        requestAnimationFrame(() => {
-          // Loop was broken
-          expect(calls).toBe(3)
-          global.requestAnimationFrame = mockRAF
-          done()
-        })
-      })
-    })
+    expect(fn).toHaveBeenCalledTimes(1)
   })
 })
 
@@ -1129,11 +1112,24 @@ describe('hideOnClick', () => {
       trigger: 'click',
       hideOnClick: 'toggle',
     })
+
     instance.show()
+
     jest.runAllTimers()
-    document.body.dispatchEvent(new Event('click', { bubbles: true }))
+
+    const mousedownEvent = new MouseEvent('mousedown', { bubbles: true })
+    const clickEvent = new MouseEvent('click', { bubbles: true })
+
+    document.body.dispatchEvent(mousedownEvent)
+    document.body.dispatchEvent(clickEvent)
+    instance.popperChildren.tooltip.dispatchEvent(mousedownEvent)
+    instance.popperChildren.tooltip.dispatchEvent(clickEvent)
+
     expect(instance.state.isVisible).toBe(true)
-    instance.reference.dispatchEvent(new Event('click', { bubbles: true }))
+
+    instance.reference.dispatchEvent(mousedownEvent)
+    instance.reference.dispatchEvent(clickEvent)
+
     expect(instance.state.isVisible).toBe(false)
   })
 })
