@@ -435,6 +435,9 @@ export default function createTippy(
     if (isCursorOverReference || !instance.props.interactive) {
       instance.popperInstance!.reference = {
         ...instance.popperInstance!.reference,
+        // This will exist in next Popper.js feature release to fix #532
+        // @ts-ignore
+        referenceNode: reference,
         // These `client` values don't get used by Popper.js if they are 0
         clientWidth: 0,
         clientHeight: 0,
@@ -1067,17 +1070,20 @@ export default function createTippy(
       setTransitionDuration(transitionableElements, duration)
       setVisibilityState(transitionableElements, 'visible')
 
-      onTransitionedIn(duration, (): void => {
-        if (instance.props.aria) {
-          getEventListenersTarget().setAttribute(
-            `aria-${instance.props.aria}`,
-            popper.id,
-          )
-        }
+      onTransitionedIn(
+        duration,
+        (): void => {
+          if (instance.props.aria) {
+            getEventListenersTarget().setAttribute(
+              `aria-${instance.props.aria}`,
+              popper.id,
+            )
+          }
 
-        instance.props.onShown(instance)
-        instance.state.isShown = true
-      })
+          instance.props.onShown(instance)
+          instance.state.isShown = true
+        },
+      )
     }
 
     mount()
