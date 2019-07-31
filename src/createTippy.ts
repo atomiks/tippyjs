@@ -856,7 +856,9 @@ export default function createTippy(
     clearDelayTimeouts()
 
     if (!instance.state.isVisible) {
-      return removeFollowCursorListener()
+      removeFollowCursorListener()
+      removeDocumentClickListener()
+      return
     }
 
     isScheduledToShow = false
@@ -1065,20 +1067,17 @@ export default function createTippy(
       setTransitionDuration(transitionableElements, duration)
       setVisibilityState(transitionableElements, 'visible')
 
-      onTransitionedIn(
-        duration,
-        (): void => {
-          if (instance.props.aria) {
-            getEventListenersTarget().setAttribute(
-              `aria-${instance.props.aria}`,
-              popper.id,
-            )
-          }
+      onTransitionedIn(duration, (): void => {
+        if (instance.props.aria) {
+          getEventListenersTarget().setAttribute(
+            `aria-${instance.props.aria}`,
+            popper.id,
+          )
+        }
 
-          instance.props.onShown(instance)
-          instance.state.isShown = true
-        },
-      )
+        instance.props.onShown(instance)
+        instance.state.isShown = true
+      })
     }
 
     mount()
