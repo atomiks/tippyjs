@@ -73,7 +73,7 @@ export default [
     external: ['popper.js'],
     output: {
       ...COMMON_IIFE_OUTPUT_OPTIONS,
-      file: 'iife/tippy.js',
+      file: 'dist/tippy.iife.js',
       banner: BANNER,
     },
   },
@@ -83,7 +83,7 @@ export default [
     external: ['popper.js'],
     output: {
       ...COMMON_IIFE_OUTPUT_OPTIONS,
-      file: 'iife/tippy.bundle.js',
+      file: 'dist/tippy.bundle.iife.js',
       banner: BANNER,
     },
   },
@@ -93,7 +93,7 @@ export default [
     external: ['popper.js'],
     output: {
       ...COMMON_IIFE_OUTPUT_OPTIONS,
-      file: 'iife/tippy.min.js',
+      file: 'dist/tippy.iife.min.js',
     },
   },
   {
@@ -102,7 +102,7 @@ export default [
     external: ['popper.js'],
     output: {
       ...COMMON_IIFE_OUTPUT_OPTIONS,
-      file: 'iife/tippy.bundle.min.js',
+      file: 'dist/tippy.bundle.iife.min.js',
     },
   },
   {
@@ -112,7 +112,7 @@ export default [
     output: {
       ...COMMON_IIFE_OUTPUT_OPTIONS,
       globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
-      file: 'addons/iife/tippy-addons.js',
+      file: 'addons/dist/tippy-addons.iife.js',
     },
   },
   {
@@ -122,7 +122,7 @@ export default [
     output: {
       ...COMMON_IIFE_OUTPUT_OPTIONS,
       globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
-      file: 'addons/iife/tippy-addons.min.js',
+      file: 'addons/dist/tippy-addons.iife.min.js',
     },
   },
   {
@@ -132,7 +132,7 @@ export default [
     output: {
       ...COMMON_IIFE_OUTPUT_OPTIONS,
       globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
-      file: 'extra-props/iife/tippy-extra-props.js',
+      file: 'extra-props/dist/tippy-extra-props.iife.js',
     },
   },
   {
@@ -142,15 +142,15 @@ export default [
     output: {
       ...COMMON_IIFE_OUTPUT_OPTIONS,
       globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
-      file: 'extra-props/iife/tippy-extra-props.min.js',
+      file: 'extra-props/dist/tippy-extra-props.iife.min.js',
     },
   },
   {
     input: {
-      'esm/tippy': 'build/base.js',
-      'esm/tippy.bundle': 'build/bundle.js',
-      'addons/esm/tippy-addons': 'build/addons-pure.js',
-      'extra-props/esm/tippy-extra-props': 'build/extra-props-pure.js',
+      'dist/tippy.esm': 'build/base.js',
+      'dist/tippy.bundle.esm': 'build/bundle.js',
+      'addons/dist/tippy-addons.esm': 'build/addons-pure.js',
+      'extra-props/dist/tippy-extra-props.esm': 'build/extra-props-pure.js',
     },
     plugins: PLUGIN_CONFIGS.bundle,
     external: ['popper.js'],
@@ -159,15 +159,15 @@ export default [
       dir: './',
       banner: BANNER,
       sourcemap: true,
-      chunkFileNames: 'esm/tippy.chunk.js',
+      chunkFileNames: 'dist/tippy.chunk.esm.js',
     },
   },
   {
     input: {
-      'cjs/tippy': 'build/base.js',
-      'cjs/tippy.bundle': 'build/bundle.js',
-      'addons/cjs/tippy-addons': 'build/addons-pure.js',
-      'extra-props/cjs/tippy-extra-props': 'build/extra-props-pure.js',
+      'dist/tippy.cjs': 'build/base.js',
+      'dist/tippy.bundle.cjs': 'build/bundle.js',
+      'addons/dist/tippy-addons.cjs': 'build/addons-pure.js',
+      'extra-props/dist/tippy-extra-props.cjs': 'build/extra-props-pure.js',
     },
     plugins: PLUGIN_CONFIGS.bundle,
     external: ['popper.js'],
@@ -177,7 +177,7 @@ export default [
       exports: 'named',
       banner: BANNER,
       sourcemap: true,
-      chunkFileNames: 'cjs/tippy.chunk.js',
+      chunkFileNames: 'dist/tippy.chunk.cjs.js',
     },
   },
 ]

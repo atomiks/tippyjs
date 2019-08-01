@@ -2,14 +2,12 @@
   "name": "tippy.js",
   "version": "5.0.0-beta.0",
   "description": "Highly customizable tooltip and popover library",
-  "main": "cjs/tippy.bundle.js",
-  "module": "esm/tippy.bundle.js",
-  "unpkg": "iife/tippy.bundle.min.js",
+  "main": "dist/tippy.bundle.cjs.js",
+  "module": "dist/tippy.bundle.esm.js",
+  "unpkg": "dist/tippy.bundle.iife.min.js",
   "types": "index.d.ts",
   "sideEffects": [
-    "cjs/*.js",
-    "esm/*.js",
-    "iife/*.js",
+    "dist/*.js",
     "./**/*.css"
   ],
   "author": "atomiks",
@@ -29,9 +27,7 @@
     "tippy.js"
   ],
   "files": [
-    "cjs/",
-    "iife/",
-    "esm/",
+    "dist/",
     "addons/",
     "extra-props/",
     "animations/",
