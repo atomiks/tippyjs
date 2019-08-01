@@ -46,7 +46,7 @@
     "testRegex": "./test/.*.test.js$"
   },
   "browserslist": [
-    "> 0.25%",
+    "android 4.4",
     "not dead",
     "not safari < 8"
   ],
