@@ -10,10 +10,10 @@ export function injectCSS(css: string): void {
     style.textContent = css
     style.setAttribute('data-__NAMESPACE_PREFIX__-stylesheet', '')
     const head = document.head
-    const { firstChild } = head
+    const firstStyleOrLinkTag = head.querySelector('style,link')
 
-    if (firstChild) {
-      head.insertBefore(style, firstChild)
+    if (firstStyleOrLinkTag) {
+      head.insertBefore(style, firstStyleOrLinkTag)
     } else {
       head.appendChild(style)
     }
