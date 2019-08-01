@@ -10,7 +10,6 @@ import { defaultProps } from './props'
  */
 export function warnWhen(condition: boolean, message: string): void {
   if (condition) {
-    /* eslint-disable-next-line no-console */
     console.warn(`[tippy.js WARNING] ${message}`)
   }
 }

@@ -1,5 +1,4 @@
 import { h, cleanDocumentBody, IDENTIFIER } from '../utils'
-import { defaultProps } from '../../src/props'
 import * as Utils from '../../src/utils'
 import tippy from '../../src'
 
