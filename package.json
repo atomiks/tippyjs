@@ -68,19 +68,19 @@
   ],
   "bundlesize": [
     {
-      "path": "iife/tippy.bundle.min.js",
+      "path": "dist/tippy.bundle.iife.min.js",
       "maxSize": "7 kB"
     },
     {
-      "path": "iife/tippy.min.js",
+      "path": "dist/tippy.iife.min.js",
       "maxSize": "5.75 kB"
     },
     {
-      "path": "addons/iife/tippy-addons.min.js",
+      "path": "addons/dist/tippy-addons.iife.min.js",
       "maxSize": "5 kB"
     },
     {
-      "path": "extra-props/iife/tippy-extra-props.min.js",
+      "path": "extra-props/dist/tippy-extra-props.iife.min.js",
       "maxSize": "5 kB"
     },
     {
