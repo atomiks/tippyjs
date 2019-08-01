@@ -333,17 +333,6 @@ describe('updatePopperElement', () => {
       true,
     )
   })
-
-  it('does not set `role` atttribute if `interactive: true`', () => {
-    const props = { ...defaultProps, interactive: true }
-    const popper = createPopperElement(1, props)
-    expect(popper.getAttribute('role')).toBe(null)
-    const nextProps = { ...props, interactive: false }
-    updatePopperElement(popper, props, nextProps)
-    expect(popper.getAttribute('role')).toBe('tooltip')
-    updatePopperElement(popper, nextProps, props)
-    expect(popper.getAttribute('role')).toBe(null)
-  })
 })
 
 describe('addInteractive', () => {
