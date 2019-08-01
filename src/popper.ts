@@ -187,7 +187,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   popper.style.top = '0'
   popper.style.left = '0'
 
-  if (props.role) {
+  if (props.role && !props.interactive) {
     popper.setAttribute('role', props.role)
   }
 
@@ -245,7 +245,7 @@ export function updatePopperElement(
   tooltip.style.maxWidth =
     nextProps.maxWidth + (typeof nextProps.maxWidth === 'number' ? 'px' : '')
 
-  if (nextProps.role) {
+  if (nextProps.role && !nextProps.interactive) {
     popper.setAttribute('role', nextProps.role)
   } else {
     popper.removeAttribute('role')
