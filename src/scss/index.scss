@@ -192,9 +192,6 @@
   transition-property: opacity;
   will-change: opacity;
 
-  &[data-state='visible'] {
-    opacity: 1;
-  }
   &[data-state='hidden'] {
     opacity: 0;
   }
