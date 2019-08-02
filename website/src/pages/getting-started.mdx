@@ -26,6 +26,11 @@ deploying for production, your minifier should remove the development warnings.
 If you're getting an error message,
 [read the FAQ for help setting it up.](/faq/#im-getting-uncaught-referenceerror-process-is-not-defined)
 
+Note: webpack defaults to `production` which means you won't get helpful
+development messages, but there won't be any error. Use the
+[`mode`](https://webpack.js.org/configuration/mode/) option to specify
+`development` or `production` where necessary.
+
 ### Script tags via CDN
 
 Tippy uses `popper.js` as a dependency for positioning. Include these script
@@ -48,7 +53,7 @@ helpful warnings and error messages when something goes wrong:
 
 ```html
 <script src="https://unpkg.com/popper.js@1"></script>
-<script src="https://unpkg.com/tippy.js@5/iife/tippy.bundle.js"></script>
+<script src="https://unpkg.com/tippy.js@5/dist/tippy.bundle.iife.js"></script>
 ```
 
 When you're finished developing (or deploying for production), you can remove

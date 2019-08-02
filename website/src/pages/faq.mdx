@@ -11,10 +11,12 @@ It's a theme I made called
 
 ### I'm getting Uncaught ReferenceError: process is not defined
 
-If you're using the ESM/CJS versions and importing like this:
+If you're using the ESM or CJS versions and importing like this:
 
 ```js
 import tippy from 'tippy.js'
+// or
+const tippy = require('tippy.js')
 ```
 
 Tippy uses a special expression to distinguish a development and production
@@ -23,42 +25,27 @@ messages to help your development experience. For your end users, all of this
 needs to get stripped out because it reduces performance and increases bundle
 size.
 
-You'll need to configure your bundler to handle development and production
-versions. Tools like `create-react-app` handle this automatically.
-
-#### Parcel
-
-You shouldn't need to configure anything. Parcel handles this for you.
-
-#### Webpack
-
-You need to use [`DefinePlugin`](https://webpack.js.org/plugins/define-plugin/)
-and ensure your development and production build pipelines set `NODE_ENV` as
-either `development` or `production`. This is considered a "standard" env
-variable for various tools.
-
-```js
-// Inside your plugins array
-new webpack.DefinePlugin({
-  'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-})
-```
+Tools like `create-react-app` and `Parcel` bundler handle this automatically.
+For tools like Browserify/Grunt/Gulp,
+[view the following link](https://vuejs.org/v2/guide/deployment.html#With-Build-Tools).
 
 #### Rollup
 
-You need to use the
-[`replace plugin`](https://www.npmjs.com/package/rollup-plugin-replace) and
-ensure your development and production build pipelines set `NODE_ENV` as either
-`development` or `production`. This is considered a "standard" env variable for
-various tools.
+Install the
+[`replace plugin`](https://www.npmjs.com/package/rollup-plugin-replace).
 
 ```js
 import replace from 'rollup-plugin-replace'
 
-// Inside your plugins array
-replace({
-  'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-})
+export default {
+  // ...
+  plugins: [
+    // Production config
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
+  ],
+}
 ```
 
 ### I can't click things inside the tooltip
