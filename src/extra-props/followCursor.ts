@@ -97,6 +97,9 @@ function applyFollowCursor(instance: Instance): void {
         // These `client` values don't get used by Popper.js if they are 0
         clientWidth: 0,
         clientHeight: 0,
+        // This will exist in next Popper.js feature release to fix #532
+        // @ts-ignore
+        referenceNode: reference,
         getBoundingClientRect: (): DOMRect | ClientRect => ({
           width: isVerticalPlacement ? size : 0,
           height: isVerticalPlacement ? 0 : size,
