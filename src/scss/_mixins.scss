@@ -75,8 +75,6 @@
 @mixin svg-arrow-transform($placement) {
   @if ($placement == 'top') {
     transform: rotate(180deg);
-  } @else if ($placement == 'bottom') {
-    transform: rotate(0);
   } @else if ($placement == 'left') {
     transform: rotate(90deg);
   } @else if ($placement == 'right') {
