@@ -6,7 +6,7 @@ if (typeof tippy === 'function') {
   window.tippy = enhance(tippy, [followCursor])
 } else {
   throw new Error(
-    '[tippy.js ERROR] `tippy` is not a global function. Make sure you have ' +
+    '`tippy` is not a global function. Make sure you have ' +
       'included the tippy script before tippy-extra-props.',
   )
 }

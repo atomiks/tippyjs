@@ -99,7 +99,7 @@ describe('createSingleton', () => {
     expect(() => {
       createSingleton(null)
     }).toThrow(
-      '[tippy.js ERROR] First argument to `createSingleton()` must ' +
+      'First argument to `createSingleton()` must ' +
         'be an array of tippy instances. The passed value was `' +
         null +
         '`',
@@ -110,7 +110,7 @@ describe('createSingleton', () => {
     expect(() => {
       createSingleton(tippy(h()))
     }).toThrow(
-      '[tippy.js ERROR] First argument to `createSingleton()` must ' +
+      'First argument to `createSingleton()` must ' +
         'be an *array* of tippy instances. The passed value was a ' +
         '*single* tippy instance.',
     )
@@ -122,7 +122,7 @@ describe('createSingleton', () => {
       createSingleton(instances)
       createSingleton(instances)
     }).toThrow(
-      '[tippy.js ERROR] The passed tippy instance(s) are already part of an ' +
+      'The passed tippy instance(s) are already part of an ' +
         'existing singleton instance. Make sure you destroy the previous ' +
         'singleton before calling `createSingleton()` again.',
     )
@@ -263,7 +263,7 @@ describe('delegate', () => {
 
   it('throws if passed falsy `target` prop', () => {
     const message =
-      '[tippy.js ERROR] You must specify a `target` prop indicating the CSS ' +
+      'You must specify a `target` prop indicating the CSS ' +
       'selector string matching the target elements that should receive a ' +
       'tippy.'
     expect(() => {

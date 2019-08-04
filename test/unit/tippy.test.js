@@ -2,6 +2,8 @@ import { h, hasTippy, cleanDocumentBody } from '../utils'
 import { defaultProps, extraProps } from '../../src/props'
 import { POPPER_SELECTOR } from '../../src/constants'
 import tippy, { autoInit } from '../../src'
+import { getFormattedMessage } from '../../src/validation'
+import { get } from 'http'
 
 jest.useFakeTimers()
 
@@ -53,13 +55,14 @@ describe('tippy', () => {
     const targets = [h(), h()]
     tippy(targets, { content: document.createElement('div') })
     expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] ' +
+      ...getFormattedMessage(
         '`tippy()` was passed a targets argument that will create more than ' +
-        'one tippy instance, but only a single element was supplied as the ' +
-        '`content` prop. This means the content will only be appended to the ' +
-        'last tippy element of the list. Instead, use a function that ' +
-        'returns a cloned version of the element instead, or pass the ' +
-        '.innerHTML of the element.',
+          'one tippy instance, but only a single element was supplied as the ' +
+          '`content` prop. This means the content will only be appended to the ' +
+          'last tippy element of the list. Instead, use a function that ' +
+          'returns a cloned version of the element instead, or pass the ' +
+          '.innerHTML of the element.',
+      ),
     )
     spy.mockRestore()
   })
@@ -76,8 +79,9 @@ describe('tippy.setDefaultProps()', () => {
     const spy = jest.spyOn(console, 'warn')
     tippy.setDefaultProps({ showOnInit: true })
     expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] ' +
+      ...getFormattedMessage(
         'The `showOnInit` prop was renamed to `showOnCreate` in v5.',
+      ),
     )
     spy.mockRestore()
   })
@@ -154,9 +158,11 @@ describe('tippy.group()', () => {
     const spy = jest.spyOn(console, 'warn')
     tippy.group()
     expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] `tippy.group()` was removed in v5 and replaced ' +
-        'with `createSingleton()`. Read more here: ' +
-        'https://atomiks.github.io/tippyjs/addons#singleton',
+      ...getFormattedMessage(
+        '`tippy.group()` was removed in v5 and replaced ' +
+          'with `createSingleton()`. Read more here: ' +
+          'https://atomiks.github.io/tippyjs/addons#singleton',
+      ),
     )
     spy.mockRestore()
   })
@@ -167,8 +173,10 @@ describe('tippy.setDefaults()', () => {
     const spy = jest.spyOn(console, 'warn')
     tippy.setDefaults({})
     expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] `tippy.setDefaults()` was renamed to ' +
-        '`tippy.setDefaultProps()` in v5.',
+      ...getFormattedMessage(
+        '`tippy.setDefaults()` was renamed to ' +
+          '`tippy.setDefaultProps()` in v5.',
+      ),
     )
     spy.mockRestore()
   })
@@ -179,8 +187,10 @@ describe('tippy.defaults', () => {
     const spy = jest.spyOn(console, 'warn')
     tippy.defaults
     expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] The `tippy.defaults` property was renamed to ' +
-        '`tippy.defaultProps` in v5.',
+      ...getFormattedMessage(
+        'The `tippy.defaults` property was renamed to ' +
+          '`tippy.defaultProps` in v5.',
+      ),
     )
     spy.mockRestore()
   })

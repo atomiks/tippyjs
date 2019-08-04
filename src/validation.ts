@@ -2,6 +2,29 @@ import { Props, Targets, Instance } from './types'
 import { hasOwnProperty, includes } from './utils'
 import { defaultProps } from './props'
 
+function getDevMessage(message: string) {
+  return (
+    '%ctippy.js\n\n' +
+    '%c' +
+    message +
+    '\n\n' +
+    '%c👷‍ This is a development only message. It will be removed in ' +
+    'production builds.'
+  )
+}
+
+export function getFormattedMessage(message: string): string[] {
+  return [
+    getDevMessage(message),
+    // title
+    'color: #00C584; font-size: 1.3em; font-weight: bold;',
+    // message
+    'line-height: 1.5',
+    // footer
+    'color: #a6a095;',
+  ]
+}
+
 /**
  * Helpful wrapper around `console.warn()`.
  * TODO: Should we use a cache so it only warns a single time and not spam the
@@ -10,7 +33,7 @@ import { defaultProps } from './props'
  */
 export function warnWhen(condition: boolean, message: string): void {
   if (condition) {
-    console.warn(`[tippy.js WARNING] ${message}`)
+    console.warn(...getFormattedMessage(message))
   }
 }
 
@@ -19,7 +42,7 @@ export function warnWhen(condition: boolean, message: string): void {
  */
 export function throwErrorWhen(condition: boolean, message: string): void {
   if (condition) {
-    throw new Error(`[tippy.js ERROR] ${message}`)
+    throw new Error(message)
   }
 }
 
