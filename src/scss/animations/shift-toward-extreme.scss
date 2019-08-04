@@ -3,13 +3,13 @@
 
 @mixin hidden-transform($placement) {
   @if ($placement == 'top') {
-    transform: translateY(-20px);
+    transform: translateY(-1.25rem);
   } @else if ($placement == 'bottom') {
-    transform: translateY(20px);
+    transform: translateY(1.25rem);
   } @else if ($placement == 'left') {
-    transform: translateX(-20px);
+    transform: translateX(-1.25rem);
   } @else if ($placement == 'right') {
-    transform: translateX(20px);
+    transform: translateX(1.25rem);
   }
 }
 

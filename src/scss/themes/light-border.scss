@@ -10,7 +10,7 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   background-clip: padding-box;
   border: 1px solid $transparentDark;
   color: #26323d;
-  box-shadow: 0 3px 14px -0.5px $transparentLight;
+  box-shadow: 0 3px 0.875rem -0.5px $transparentLight;
 
   .#{$namespace-prefix}-backdrop {
     background-color: white;
@@ -31,8 +31,8 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
 
     &::after {
       background-image: url(data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEuNDE0MjEiIHZpZXdCb3g9IjAgMCAxOCA3IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0wIDdzMi4wMjEtLjAxNSA1LjI1My00LjIxOGMxLjMzMS0xLjczMSAyLjU0NC0yLjc3NSAzLjc0Ny0yLjc4MiAxLjIwMy0uMDA3IDIuNDE2IDEuMDM1IDMuNzYxIDIuNzgyIDMuMjUxIDQuMjIzIDUuMjM5IDQuMjE4IDUuMjM5IDQuMjE4eiIgZmlsbD0iIzMzMyIgZmlsbC1vcGFjaXR5PSIuMjM1Mjk0IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48L3N2Zz4=);
-      background-size: 18px 7px;
-      width: 18px;
+      background-size: 1.125rem 7px;
+      width: 1.125rem;
       height: 7px;
       left: 0;
       top: 0;

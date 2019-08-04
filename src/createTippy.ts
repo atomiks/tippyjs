@@ -1,5 +1,5 @@
 import Popper from 'popper.js'
-import tippy, {
+import {
   ReferenceElement,
   PopperInstance,
   Props,
