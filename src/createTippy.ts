@@ -1,5 +1,5 @@
 import Popper from 'popper.js'
-import {
+import tippy, {
   ReferenceElement,
   PopperInstance,
   Props,
@@ -740,6 +740,9 @@ export default function createTippy(
   }
 
   function disable(): void {
+    // Disabling the instance should also hide it
+    // https://github.com/atomiks/tippy.js-react/issues/106
+    instance.hide()
     instance.state.isEnabled = false
   }
 
