@@ -29,6 +29,13 @@ Tools like `create-react-app` and `Parcel` bundler handle this automatically.
 For tools like Browserify/Grunt/Gulp,
 [view the following link](https://vuejs.org/v2/guide/deployment.html#With-Build-Tools).
 
+#### webpack
+
+By default, webpack defaults to `production` which means you won't get helpful
+development messages, but there won't be any error. Use the
+[`mode`](https://webpack.js.org/configuration/mode/) option to specify
+`development` or `production` where necessary.
+
 #### Rollup
 
 Install the
@@ -44,6 +51,12 @@ export default {
     replace({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
+    // OR, development config
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('development'),
+    }),
+    // You can also use process.env.NODE_ENV and set the env variables when
+    // running the rollup command
   ],
 }
 ```
