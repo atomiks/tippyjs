@@ -75,8 +75,8 @@ export default createGlobalStyle`
     font-size: 2rem;
     display: inline-block;
     color: inherit;
-    text-shadow: -2px 2px 0px #ffffff, -4px 4px 0px #aeffce;
-    color: #7037d5;
+    text-shadow: -2px 2px 0px #ffffff, -4px 4px 0px #ffffff;
+    color: #7761d1;
     padding: 10px 0;
     transition: color 0.3s;
 
@@ -98,7 +98,7 @@ export default createGlobalStyle`
       bottom: 0;
       width: calc(15% + 40px);
       margin-left: -25px;
-      background: linear-gradient(90deg,#ded1ff,#80fff9);
+      background: linear-gradient(45deg,#fff2df,#99ffec,#faa7ff);
       z-index: -1;
       transition: width 0.4s cubic-bezier(.23, 1, .32, 1);
       border-radius: 3px;
