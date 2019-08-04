@@ -21,15 +21,10 @@ import tippy from 'tippy.js'
 ```
 
 This assumes you're using a module bundler like webpack, Rollup, or Parcel. In
-development mode, you'll get helpful warnings when things go wrong. When
-deploying for production, your minifier should remove the development warnings.
-If you're getting an error message,
+development mode, you'll get helpful warning messages. When deploying for
+production, your minifier should remove the development warnings. If you're
+getting an error message about `process` inside the browser,
 [read the FAQ for help setting it up.](/faq/#im-getting-uncaught-referenceerror-process-is-not-defined)
-
-Note: webpack defaults to `production` which means you won't get helpful
-development messages, but there won't be any error. Use the
-[`mode`](https://webpack.js.org/configuration/mode/) option to specify
-`development` or `production` where necessary.
 
 ### Script tags via CDN
 
