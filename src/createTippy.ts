@@ -143,7 +143,7 @@ export default function createTippy(
       enumerable: false,
     })
 
-    Object.defineProperty(instance, '__extraProps__', {
+    Object.defineProperty(instance, '__extraProps', {
       value: {},
       enumerable: false,
     })

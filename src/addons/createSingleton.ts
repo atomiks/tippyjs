@@ -10,10 +10,10 @@ import { throwErrorWhen } from '../validation'
 import { NON_UPDATEABLE_PROPS } from '../constants'
 
 interface SingletonInstance extends Instance {
-  __singleton__: boolean
-  __originalClearDelayTimeouts__: Instance['clearDelayTimeouts']
-  __originalSetProps__: Instance['setProps']
-  __originalProps__: {
+  __singleton: boolean
+  __originalClearDelayTimeouts: Instance['clearDelayTimeouts']
+  __originalSetProps: Instance['setProps']
+  __originalProps: {
     delay: Props['delay']
     onTrigger: Props['onTrigger']
     onUntrigger: Props['onUntrigger']
@@ -47,7 +47,7 @@ export default function createSingleton(
     }
 
     const isAnyInstancePartOfExistingSingleton = tippyInstances.some(
-      (instance): boolean => hasOwnProperty(instance, '__singleton__'),
+      (instance): boolean => hasOwnProperty(instance, '__singleton'),
     )
 
     throwErrorWhen(
@@ -58,7 +58,7 @@ export default function createSingleton(
     )
 
     tippyInstances.forEach((instance): void => {
-      Object.defineProperty(instance, '__singleton__', {
+      Object.defineProperty(instance, '__singleton', {
         value: true,
         enumerable: false,
         configurable: true,
@@ -86,7 +86,7 @@ export default function createSingleton(
   }
 
   tippyInstances.forEach((instance): void => {
-    instance.__originalProps__ = {
+    instance.__originalProps = {
       delay: instance.props.delay,
       onTrigger: instance.props.onTrigger,
       onUntrigger: instance.props.onUntrigger,
@@ -98,9 +98,9 @@ export default function createSingleton(
     // tippy, we can set its opacity to 0
     instance.popper.style.opacity = '0'
 
-    instance.__originalClearDelayTimeouts__ = instance.clearDelayTimeouts
+    instance.__originalClearDelayTimeouts = instance.clearDelayTimeouts
     instance.clearDelayTimeouts = (): void => {
-      instance.__originalClearDelayTimeouts__()
+      instance.__originalClearDelayTimeouts()
       clearTimeouts()
     }
 
@@ -108,7 +108,7 @@ export default function createSingleton(
       delay: 0,
       onTrigger(_, event): void {
         preserveInvocation(
-          instance.__originalProps__.onTrigger,
+          instance.__originalProps.onTrigger,
           instance.props.onTrigger,
           [instance, event],
         )
@@ -146,7 +146,7 @@ export default function createSingleton(
       },
       onUntrigger(_, event): void {
         preserveInvocation(
-          instance.__originalProps__.onUntrigger,
+          instance.__originalProps.onUntrigger,
           instance.props.onUntrigger,
           [instance, event],
         )
@@ -159,17 +159,17 @@ export default function createSingleton(
     })
 
     // Ensure the lifecycle functions can be updated
-    instance.__originalSetProps__ = instance.setProps
+    instance.__originalSetProps = instance.setProps
     instance.setProps = (partialProps): void => {
       if (partialProps.onTrigger) {
-        instance.__originalProps__.onTrigger = partialProps.onTrigger
+        instance.__originalProps.onTrigger = partialProps.onTrigger
       }
 
       if (partialProps.onUntrigger) {
-        instance.__originalProps__.onUntrigger = partialProps.onUntrigger
+        instance.__originalProps.onUntrigger = partialProps.onUntrigger
       }
 
-      instance.__originalSetProps__(
+      instance.__originalSetProps(
         removeProperties(partialProps, ['delay', 'onTrigger', 'onUntrigger']),
       )
     }
@@ -191,16 +191,16 @@ export default function createSingleton(
       }
 
       // Restore the instances to their original state
-      instance.clearDelayTimeouts = instance.__originalClearDelayTimeouts__
-      instance.setProps = instance.__originalSetProps__
-      instance.setProps(instance.__originalProps__)
+      instance.clearDelayTimeouts = instance.__originalClearDelayTimeouts
+      instance.setProps = instance.__originalSetProps
+      instance.setProps(instance.__originalProps)
 
-      delete instance.__originalClearDelayTimeouts__
-      delete instance.__originalProps__
-      delete instance.__originalSetProps__
+      delete instance.__originalClearDelayTimeouts
+      delete instance.__originalProps
+      delete instance.__originalSetProps
 
       if (__DEV__) {
-        delete instance.__singleton__
+        delete instance.__singleton
       }
 
       if (shouldDestroyPassedInstances) {

@@ -183,7 +183,7 @@ describe('validateTargets', () => {
 
 describe('validateExtraPropsFunctionality', () => {
   it('followCursor: warns when the instance has not been configured with followCursor', () => {
-    const instance = { __extraProps__: {} }
+    const instance = { __extraProps: {} }
     validateExtraPropsFunctionality(instance, { followCursor: true })
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
@@ -197,7 +197,7 @@ describe('validateExtraPropsFunctionality', () => {
 
   it('followCursor: does not warn if instance has been configured', () => {
     validateExtraPropsFunctionality(
-      { __extraProps__: { followCursor: true } },
+      { __extraProps: { followCursor: true } },
       { followCursor: true },
     )
     expect(spy).not.toHaveBeenCalled()

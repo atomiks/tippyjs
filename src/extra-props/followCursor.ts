@@ -32,7 +32,7 @@ export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
         )
 
         if (__DEV__) {
-          instance.__extraProps__.followCursor = true
+          instance.__extraProps.followCursor = true
         }
 
         if (instance.props.followCursor) {
