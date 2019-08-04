@@ -231,7 +231,7 @@ describe('instance.enable()', () => {
   })
 })
 
-describe('instance.disable', () => {
+describe('instance.disable()', () => {
   it('sets state.isEnabled to `false`', () => {
     instance = createTippy(h(), defaultProps)
     instance.disable()
@@ -242,6 +242,13 @@ describe('instance.disable', () => {
     instance = createTippy(h(), defaultProps)
     instance.disable()
     instance.show()
+    expect(instance.state.isVisible).toBe(false)
+  })
+
+  it('hides the instance if visible', () => {
+    instance = createTippy(h(), defaultProps)
+    instance.show()
+    instance.disable()
     expect(instance.state.isVisible).toBe(false)
   })
 })
