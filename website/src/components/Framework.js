@@ -26,7 +26,7 @@ export const Container = styled.div`
   margin: 0 auto;
 
   ${MEDIA.sm} {
-    padding: 0 25px;
+    padding: 0 1.5625rem;
   }
   ${MEDIA.md} {
     padding: 0 60px;
@@ -109,8 +109,8 @@ export const Flex = styled.div`
   justify-content: ${props => props.justify};
 
   > div {
-    margin-right: 15px;
-    margin-bottom: 15px;
+    margin-right: 0.9375rem;
+    margin-bottom: 0.9375rem;
     flex: ${props => props.type === 'even' && 1};
   }
 `
@@ -124,11 +124,11 @@ export const Button = styled.button`
   color: white;
   will-change: opacity;
   box-shadow: 0 4px 8px -1px rgba(25, 80, 137, 0.08),
-    0 8px 24px -2px rgba(0, 128, 255, 0.06);
-  font-size: 17px;
+    0 8px 1.5rem -2px rgba(0, 128, 255, 0.06);
+  font-size: 1.0625rem;
   font-weight: 500;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  padding: 8px 16px;
+  padding: 8px 1rem;
   border-radius: 4px;
   margin: ${props => (props.marginless ? '0' : '0 8px 8px 0')};
   transition: opacity 0.2s;
@@ -140,14 +140,14 @@ export const Button = styled.button`
 
 export const Demo = styled.div`
   background: #eeeefa;
-  margin: 15px -5.55% 25px;
-  padding: 25px 5% 16px;
+  margin: 0.9375rem -5.55% 1.5625rem;
+  padding: 1.5625rem 5% 1rem;
 
   ${MEDIA.sm} {
-    padding-left: 25px;
-    padding-right: 25px;
-    margin-left: -25px;
-    margin-right: -25px;
+    padding-left: 1.5625rem;
+    padding-right: 1.5625rem;
+    margin-left: -1.5625rem;
+    margin-right: -1.5625rem;
   }
 
   ${MEDIA.md} {

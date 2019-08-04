@@ -26,12 +26,12 @@ export default createGlobalStyle`
   }
 
   pre[class*='language-'] {
-    padding: 20px 5%;
+    padding: 1.25rem 5%;
     margin-top: 0;
     margin-left: -5.55%;
     margin-right: -5.55%;
     background: radial-gradient(50% 80% at 80% 0%, rgb(56, 50, 87), rgb(33, 33, 57));
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1.5;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
@@ -41,17 +41,17 @@ export default createGlobalStyle`
     }
 
     ${MEDIA.sm} {
-      margin-left: -25px;
-      margin-right: -25px;
-      padding: 20px 25px;
+      margin-left: -1.5625rem;
+      margin-right: -1.5625rem;
+      padding: 1.25rem 1.5625rem;
     }
 
     ${MEDIA.md} {
-      border-radius: 8px;
+      border-radius: 0.5rem;
       margin-left: 0;
       margin-right: 0;
-      padding: 16px 25px;
-      font-size: 17px;
+      padding: 1rem 1.5625rem;
+      font-size: 1.0625rem;
     }
   }
 
@@ -60,7 +60,7 @@ export default createGlobalStyle`
     color: inherit;
     font-weight: bold;
     padding: 0.2em 0.4em;
-    border-radius: 4px;
+    border-radius: 0.25em;
     line-height: inherit;
     font-size: 90%;
   }
@@ -215,8 +215,8 @@ export default createGlobalStyle`
     margin-bottom: 1.5rem;
   
     ${MEDIA.md} {
-      margin-left: -25px;
-      margin-right: -25px;
+      margin-left: -1.5625rem;
+      margin-right: -1.5625rem;
     }
 
     &[data-language="html"]::before {
@@ -241,20 +241,20 @@ export default createGlobalStyle`
       width: 111.1%;
       position: absolute;
       font-weight: bold;
-      padding: 8px 15px;
+      padding: 8px 0.9375rem;
       font-family: ${MONOSPACE_FONT_STACK};
       color: white;
       margin-left: -5.55%;
       padding-left: 5%;
       text-transform: uppercase;
-      font-size: 15px;
+      font-size: 0.9375rem;
       text-align: right;
       pointer-events: none;
 
       ${MEDIA.sm} {
         width: calc(100% + 50px);
-        margin-left: -25px;
-        padding-left: 25px;
+        margin-left: -1.5625rem;
+        padding-left: 1.5625rem;
       }
 
       ${MEDIA.md} {

@@ -5,7 +5,7 @@ import { MEDIA } from '../Framework'
 
 const Wrapper = styled.div`
   max-width: 275px;
-  line-height: 24px;
+  line-height: 1.5rem;
 
   ${MEDIA.md} {
     max-width: 400px;

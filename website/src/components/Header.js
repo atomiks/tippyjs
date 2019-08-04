@@ -17,7 +17,7 @@ const HeaderRoot = styled.header`
   );
   background-repeat: no-repeat;
   background-size: cover;
-  padding: 25px 0;
+  padding: 1.5625rem 0;
   text-align: center;
   margin-bottom: 50px;
   color: white;
@@ -49,25 +49,25 @@ const Title = styled.h1`
   font-size: 50px;
   font-weight: 400;
   margin-top: 0;
-  margin-bottom: 25px;
+  margin-bottom: 1.5625rem;
 `
 
 const ButtonLink = styled(ExternalLink)`
   background: rgba(255, 255, 255, 0.15);
-  padding: 12px 24px;
+  padding: 0.75rem 1.5rem;
   border-radius: 4px;
   transition: all 0.25s;
   color: #ffffff;
-  margin: 0 10px 10px;
+  margin: 0 0.5rem 0.5rem;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 500;
   will-change: opacity;
 
   &:hover {
     background: white;
     border-bottom-color: white;
-    box-shadow: 0 8px 16px -2px rgba(0, 32, 128, 0.25);
+    box-shadow: 0 8px 1rem -2px rgba(0, 32, 128, 0.25);
     text-decoration: none;
   }
 `
@@ -75,7 +75,7 @@ const ButtonLink = styled(ExternalLink)`
 const MenuButton = styled.button`
   position: absolute;
   top: -10px;
-  left: 15px;
+  left: 0.9375rem;
   color: inherit;
   font-weight: bold;
   border: none;
@@ -94,7 +94,7 @@ const PoweredByLink = styled(ExternalLink)`
   top: 10px;
   color: rgba(255, 255, 255, 0.9);
   font-size: 90%;
-  font-size: 17px;
+  font-size: 1.0625rem;
 
   &:hover {
     color: white;

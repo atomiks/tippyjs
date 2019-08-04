@@ -9,8 +9,8 @@ const ImgWrapper = styled.div`
   margin-right: -5.5%;
 
   ${MEDIA.sm} {
-    margin-left: -25px;
-    margin-right: -25px;
+    margin-left: -1.5625rem;
+    margin-right: -1.5625rem;
   }
 
   ${MEDIA.md} {

@@ -18,11 +18,11 @@ export default createGlobalStyle`
     margin: 0;
     color: #515168;
     height: 100%;
-    font-size: 16px;
+    font-size: 1rem;
     -webkit-tap-highlight-color: transparent;
 
     ${MEDIA.md} {
-      font-size: 17px;
+      font-size: 1.0625rem;
     }
   }
 
@@ -97,7 +97,7 @@ export default createGlobalStyle`
       top: 0;
       bottom: 0;
       width: calc(15% + 40px);
-      margin-left: -25px;
+      margin-left: -1.5625rem;
       background: linear-gradient(45deg,#fff2df,#99ffec,#faa7ff);
       z-index: -1;
       transition: width 0.4s cubic-bezier(.23, 1, .32, 1);
@@ -158,7 +158,7 @@ export default createGlobalStyle`
       left: -30px;
 
       &:focus {
-        width: 20px;
+        width: 1.25rem;
       }
     }
   }
@@ -170,7 +170,7 @@ export default createGlobalStyle`
   }
 
   ul {
-    padding-left: 18px;
+    padding-left: 1.125rem;
   }
 
   table {
@@ -180,11 +180,11 @@ export default createGlobalStyle`
     padding: 0;
     line-height: 1.4;
     border-radius: 0 0 10px 10px;
-    font-size: 16px;
+    font-size: 1rem;
 
     ${MEDIA.xl} {
       width: calc(100% + 50px);
-      margin-left: -25px;
+      margin-left: -1.5625rem;
     }
   }
 
@@ -198,13 +198,13 @@ export default createGlobalStyle`
 
   td:first-child code {
     background: none;
-    font-size: 16px;
+    font-size: 1rem;
     color: #333;
     padding: 0;
   }
 
   th:last-child, td:last-child {
-    padding-left: 25px;
+    padding-left: 1.5625rem;
   }
 
   td:first-child,
@@ -214,17 +214,17 @@ export default createGlobalStyle`
 
   table th, table td {
     text-align: left;
-    padding: 15px;
+    padding: 0.9375rem;
 
     ${MEDIA.xl} {
-      padding: 15px 25px;
+      padding: 0.9375rem 1.5625rem;
     }
   }
 
   table th {
     position: relative;
     z-index: 1;
-    font-size: 14px;
+    font-size: 0.875rem;
     text-transform: uppercase;
     background: #eeeefa;
     position: sticky;
@@ -261,7 +261,7 @@ export default createGlobalStyle`
     }
 
     th:last-child, td:last-child {
-      padding-left: 15px;
+      padding-left: 0.9375rem;
     }
 
     table td::before {
@@ -270,7 +270,7 @@ export default createGlobalStyle`
       font-weight: bold;
       text-transform: uppercase;
       opacity: 0.7;
-      font-size: 13px;
+      font-size: 0.8125rem;
       margin-bottom: 5px;
     }
 
@@ -293,7 +293,7 @@ export default createGlobalStyle`
     background: white;
     border-radius: 4px;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 0.9375rem;
 
     &:focus {
       left: 5px;
@@ -313,6 +313,6 @@ export default createGlobalStyle`
     color: #828fa1;
     border-left: 5px solid #ced4dd;
     margin: 0;
-    padding-left: 15px;
+    padding-left: 0.9375rem;
   }
 `

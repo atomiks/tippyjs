@@ -13,7 +13,7 @@ const List = styled.div`
 const Reaction = styled.button`
   background: none;
   border: none;
-  font-size: 22px;
+  font-size: 1.375rem;
   color: inherit;
   transition: transform 0.1s ease-out;
   transform: scale(1.0001);

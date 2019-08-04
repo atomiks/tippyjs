@@ -11,7 +11,7 @@ const Square = styled(Button)`
   width: 300px;
   height: 150px;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
 `

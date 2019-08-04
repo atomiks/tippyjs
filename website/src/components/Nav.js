@@ -14,10 +14,10 @@ const Navbar = styled.nav`
   top: 0;
   bottom: 0;
   left: 0;
-  width: 250px;
+  width: 15.625rem;
   border-right: 1px solid rgba(0, 16, 64, 0.08);
   background-clip: padding-box;
-  padding: 0 0 25px;
+  padding: 0 0 1.5625rem;
   background: #43436a;
   color: #cbd6ff;
   overflow-y: auto;
@@ -31,7 +31,7 @@ const Navbar = styled.nav`
   transition-timing-function: ${props =>
     props.isOpen ? 'cubic-bezier(.165, 1.3, 0.4, 1)' : 'ease'};
   visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
-  box-shadow: 5px 0 30px 0 rgba(0, 32, 64, 0.25);
+  box-shadow: 0.25rem 0 2rem 0 rgba(0, 32, 64, 0.25);
   opacity: ${props => (props.isOpen ? 1 : 0)};
 
   ${MEDIA.lg} {
@@ -58,12 +58,12 @@ const ListItem = styled.li`
 
   > a {
     display: block;
-    padding: 6px 25px;
-    padding-left: calc(25px + 4%);
-    font-size: 17px;
+    padding: 0.4rem 1.5625rem;
+    padding-left: calc(1.5625rem + 4%);
+    font-size: 1.0625rem;
 
     ${MEDIA.lg} {
-      padding-left: 25px;
+      padding-left: 1.5625rem;
     }
 
     &:hover {
@@ -76,8 +76,8 @@ const ListItem = styled.li`
 
 const XButton = styled.button`
   position: absolute;
-  right: 5px;
-  top: 5px;
+  right: 0.4rem;
+  top: 0.4rem;
   background: none;
   border: none;
   color: inherit;
@@ -93,11 +93,11 @@ const Version = styled.div`
   color: #d0ffba;
   font-weight: bold;
   margin: 0;
-  padding: 15px 25px;
-  padding-left: calc(25px + 4%);
+  padding: 0.9375rem 1.5625rem;
+  padding-left: calc(1.5625rem + 4%);
 
   ${MEDIA.lg} {
-    padding-left: 25px;
+    padding-left: 1.5625rem;
   }
 `
 

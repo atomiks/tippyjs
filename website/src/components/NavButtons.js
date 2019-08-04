@@ -8,28 +8,28 @@ import ArrowLeft from 'react-feather/dist/icons/arrow-left'
 import Theme from '../css/theme'
 
 const Container = styled(Flex)`
-  margin-top: 40px;
-  margin-left: -10px;
-  margin-right: -10px;
+  margin-top: 2.5rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
 
   ${MEDIA.md} {
-    margin-left: -35px;
-    margin-right: -35px;
+    margin-left: -2.25rem;
+    margin-right: -2.25rem;
   }
 `
 
 const NavButton = styled(Link)`
   display: block;
-  padding: 40px 25px;
+  padding: 2.5rem 1.5625rem;
   border: ${props =>
     props['data-next'] ? 'none' : `1px solid ${Theme.border}`};
-  border-radius: 4px;
+  border-radius: 0.25rem;
   background: ${props => (props['data-next'] ? Theme.gradient : 'white')};
   text-decoration: none;
   color: ${props => (props['data-next'] ? 'white' : 'inherit')};
   font-weight: bold;
-  margin: 0 10px 15px;
-  font-size: 20px;
+  margin: 0 0.5rem 0.9375rem;
+  font-size: 1.25rem;
   transition: box-shadow 0.15s, border 0.15s, filter 0.15s;
   width: 100%;
 
@@ -51,8 +51,8 @@ const NavButton = styled(Link)`
   }
 
   ${MEDIA.sm} {
-    width: calc(50% - 20px);
-    margin: 0 10px;
+    width: calc(50% - 1.25rem);
+    margin: 0 0.5rem;
     order: initial;
 
     &[data-next] {
@@ -61,7 +61,7 @@ const NavButton = styled(Link)`
   }
 
   ${MEDIA.md} {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 `
 
