@@ -352,7 +352,16 @@ export default function createTippy(
       })
     }
 
-    instance.props.trigger
+    const { trigger } = instance.props
+
+    // User can either specify:
+    // - [showEvents, hideEvents] where the events are explictly set
+    // - showEvents where the hide events are automatically determined
+    const isString = typeof instance.props.trigger === 'string'
+    const showTrigger = getValueAtIndexOrReturn(trigger, 0, trigger)
+    const hideTrigger = getValueAtIndexOrReturn(trigger, 1, trigger)
+
+    showTrigger
       .trim()
       .split(' ')
       .forEach((eventType): void => {
@@ -361,13 +370,25 @@ export default function createTippy(
         }
 
         on(eventType, onTrigger)
-        switch (eventType) {
-          case 'mouseenter':
-            on('mouseleave', onMouseLeave as EventListener)
-            break
-          case 'focus':
-            on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
-            break
+
+        if (isString) {
+          switch (eventType) {
+            case 'mouseenter':
+              on('mouseleave', onMouseLeave as EventListener)
+              break
+            case 'focus':
+              on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
+              break
+          }
+        } else {
+          hideTrigger
+            .trim()
+            .split(' ')
+            .forEach((eventType): void => {
+              on(eventType, (eventType === 'blur'
+                ? onBlur
+                : onMouseLeave) as EventListener)
+            })
         }
       })
   }

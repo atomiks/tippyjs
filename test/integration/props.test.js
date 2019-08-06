@@ -332,6 +332,26 @@ describe('trigger', () => {
     instance.reference.dispatchEvent(new Event('touchstart'))
     expect(instance.state.isVisible).toBe(false)
   })
+
+  it('array: [showEvents, hideEvents]', () => {
+    let instance = tippy(h(), { trigger: ['click', 'mouseleave'] })
+    instance.reference.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(false)
+    instance.reference.dispatchEvent(new Event('click'))
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(new Event('mouseleave'))
+    expect(instance.state.isVisible).toBe(false)
+
+    instance = tippy(h(), { trigger: ['focus', 'mouseleave'] })
+    instance.reference.dispatchEvent(new Event('mouseenter'))
+    expect(instance.state.isVisible).toBe(false)
+    instance.reference.dispatchEvent(new Event('focus'))
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(new Event('blur'))
+    expect(instance.state.isVisible).toBe(true)
+    instance.reference.dispatchEvent(new Event('mouseleave'))
+    expect(instance.state.isVisible).toBe(false)
+  })
 })
 
 describe('interactive', () => {

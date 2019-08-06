@@ -1,6 +1,7 @@
 import { Targets, Instance, Props } from '../types'
 import tippy from '..'
 import { throwErrorWhen } from '../validation'
+import { getValueAtIndexOrReturn } from '../utils'
 
 interface ListenerObj {
   element: Element
@@ -28,7 +29,7 @@ export default function delegate(
   let listeners: ListenerObj[] = []
   let childTippyInstances: Instance[] = []
 
-  const { target } = props
+  const { target, trigger } = props
   delete props.target
 
   // The user needs to specify their own enhanced tippy function to use extra
@@ -36,7 +37,10 @@ export default function delegate(
   // @ts-ignore
   const tippyConstructor = delegate.tippy || tippy
 
-  const returnValue = tippyConstructor(targets, props)
+  const returnValue = tippyConstructor(targets, {
+    ...props,
+    trigger: 'manual',
+  })
 
   function onTrigger(event: Event): void {
     if (event.target) {
@@ -62,17 +66,15 @@ export default function delegate(
     options: object | boolean = false,
   ): void {
     element.addEventListener(eventType, listener, options)
-    listeners.push({
-      element,
-      eventType,
-      listener,
-      options,
-    })
+    listeners.push({ element, eventType, listener, options })
   }
 
   function addEventListeners(instance: Instance): void {
     const { reference } = instance
-    instance.props.trigger
+    const t = trigger || tippy.defaultProps.trigger
+    const showTrigger = getValueAtIndexOrReturn(t, 0, t)
+
+    showTrigger
       .trim()
       .split(' ')
       .forEach((eventType): void => {
@@ -109,6 +111,7 @@ export default function delegate(
           instance.destroy()
         })
       }
+
       childTippyInstances = []
 
       removeEventListeners(listeners)

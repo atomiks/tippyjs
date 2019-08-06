@@ -66,7 +66,7 @@ export interface Props {
   sticky: boolean
   theme: string
   touch: boolean | 'hold' | ['hold', number]
-  trigger: string
+  trigger: string | [string, string]
   triggerTarget: Element | null
   updateDuration: number
   zIndex: number
