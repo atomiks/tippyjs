@@ -4,6 +4,7 @@ import {
   getValueAtIndexOrReturn,
   hasOwnProperty,
   preserveInvocation,
+  invokeWithArgsOrReturn,
   removeProperties,
 } from '../utils'
 import { throwErrorWhen } from '../validation'
@@ -70,10 +71,7 @@ export default function createSingleton(
   // props
   // @ts-ignore
   const tippyConstructor = createSingleton.tippy || tippy
-
-  const singletonInstance = tippyConstructor(
-    document.createElement('div'),
-  ) as Instance
+  const singletonInstance = tippyConstructor(document.createElement('div'))
 
   let { delay } = optionalProps
 
@@ -119,6 +117,13 @@ export default function createSingleton(
             NON_UPDATEABLE_PROPS.concat('delay'),
           ),
         )
+
+        const { appendTo } = instance.props
+
+        singletonInstance.reference.referenceNode =
+          appendTo === 'parent'
+            ? instance.reference.parentNode
+            : invokeWithArgsOrReturn(appendTo, [instance.reference])
 
         singletonInstance.reference.getBoundingClientRect = ():
           | DOMRect
@@ -176,7 +181,7 @@ export default function createSingleton(
   })
 
   const originalSetProps = singletonInstance.setProps
-  singletonInstance.setProps = (partialProps): void => {
+  singletonInstance.setProps = (partialProps: Partial<Props>): void => {
     delay = partialProps.delay !== undefined ? partialProps.delay : delay
     originalSetProps(partialProps)
   }
