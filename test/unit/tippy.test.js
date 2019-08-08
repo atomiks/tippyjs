@@ -3,7 +3,6 @@ import { defaultProps, extraProps } from '../../src/props'
 import { POPPER_SELECTOR } from '../../src/constants'
 import tippy, { autoInit } from '../../src'
 import { getFormattedMessage } from '../../src/validation'
-import { get } from 'http'
 
 jest.useFakeTimers()
 
