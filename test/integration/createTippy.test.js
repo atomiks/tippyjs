@@ -330,7 +330,7 @@ describe('instance.set()', () => {
     instance = createTippy(h(), defaultProps)
     instance.set({})
     expect(spy).toHaveBeenCalledWith(
-      '[tippy.js WARNING] `set()` was renamed to `setProps()` in v5.',
+      ...getFormattedMessage('`set()` was renamed to `setProps()` in v5.'),
     )
     spy.mockRestore()
   })
