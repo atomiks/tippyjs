@@ -2,7 +2,7 @@ import { Props, Targets, Instance } from './types'
 import { hasOwnProperty, includes } from './utils'
 import { defaultProps } from './props'
 
-function getDevMessage(message: string) {
+function getDevMessage(message: string): string {
   return (
     '%ctippy.js\n\n' +
     '%c' +
