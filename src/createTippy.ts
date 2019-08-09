@@ -939,10 +939,13 @@ export default function createTippy(
 
       onTransitionedIn(duration, (): void => {
         if (instance.props.aria) {
-          getEventListenersTarget().setAttribute(
-            `aria-${instance.props.aria}`,
-            tooltip.id,
-          )
+          const node = getEventListenersTarget()
+          const attrName = `aria-${instance.props.aria}`
+          const currentAttrValue = node.getAttribute(attrName)
+          const nextAttrValue = currentAttrValue
+            ? `${currentAttrValue} ${tooltip.id}`
+            : tooltip.id
+          node.setAttribute(attrName, nextAttrValue)
         }
 
         instance.props.onShown(instance)
@@ -993,7 +996,18 @@ export default function createTippy(
 
     onTransitionedOut(duration, (): void => {
       if (instance.props.aria) {
-        getEventListenersTarget().removeAttribute(`aria-${instance.props.aria}`)
+        const node = getEventListenersTarget()
+        const attrName = `aria-${instance.props.aria}`
+        const currentAttrValue = node.getAttribute(attrName)
+        const nextAttrValue = currentAttrValue
+          ? currentAttrValue.replace(tooltip.id, '').trim()
+          : null
+
+        if (nextAttrValue) {
+          node.setAttribute(attrName, nextAttrValue)
+        } else {
+          node.removeAttribute(attrName)
+        }
       }
 
       instance.popperInstance!.disableEventListeners()

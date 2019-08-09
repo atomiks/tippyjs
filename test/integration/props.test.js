@@ -816,6 +816,31 @@ describe('aria', () => {
     expect(ref.getAttribute('aria-null')).toBe(null)
     expect(ref.getAttribute('aria-describedby')).toBe(null)
   })
+
+  it('handles multiple tippys using a space-separated list of ids', () => {
+    const ref = h()
+    const instance1 = tippy(ref, { multiple: true })
+    const instance2 = tippy(ref, { multiple: true })
+
+    instance1.show()
+    instance2.show()
+
+    jest.runAllTimers()
+
+    const id1 = `__NAMESPACE_PREFIX__-${instance1.id}`
+    const id2 = `__NAMESPACE_PREFIX__-${instance2.id}`
+
+    expect(ref.getAttribute('aria-describedby')).toBe(`${id1} ${id2}`)
+
+    instance1.hide()
+
+    expect(ref.getAttribute('aria-describedby')).toBe(id2)
+
+    instance2.hide()
+
+    expect(ref.getAttribute('aria-describedby')).toBe(null)
+    expect(ref.hasAttribute('aria-describedby')).toBe(false)
+  })
 })
 
 describe('boundary', () => {
