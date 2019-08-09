@@ -791,27 +791,27 @@ describe('maxWidth', () => {
 describe('aria', () => {
   it('sets the correct attribute on the reference', () => {
     const ref = h()
-    const tip = tippy(ref, { aria: 'labelledby', duration: 0 })
-    tip.show()
+    const instance = tippy(ref, { aria: 'labelledby', duration: 0 })
+    instance.show()
     jest.runAllTimers()
     expect(ref.getAttribute('aria-labelledby')).toBe(
-      tip.popperChildren.tooltip.id,
+      instance.popperChildren.tooltip.id,
     )
   })
 
   it('removes the attribute on hide', () => {
     const ref = h()
-    const tip = tippy(ref, { aria: 'labelledby', duration: 0 })
-    tip.show()
+    const instance = tippy(ref, { aria: 'labelledby', duration: 0 })
+    instance.show()
     jest.runAllTimers()
-    tip.hide()
+    instance.hide()
     expect(ref.getAttribute('aria-labelledby')).toBe(null)
   })
 
   it('does not set attribute for falsy/null value', () => {
     const ref = h()
-    const tip = tippy(ref, { aria: null, duration: 0 })
-    tip.show()
+    const instance = tippy(ref, { aria: null, duration: 0 })
+    instance.show()
     jest.runAllTimers()
     expect(ref.getAttribute('aria-null')).toBe(null)
     expect(ref.getAttribute('aria-describedby')).toBe(null)
