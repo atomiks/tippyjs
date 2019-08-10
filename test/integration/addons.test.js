@@ -1,13 +1,10 @@
+import { h, cleanDocumentBody, MOUSEENTER, MOUSELEAVE, CLICK } from '../utils'
+
 import createSingleton from '../../src/addons/createSingleton'
 import delegate from '../../src/addons/delegate'
 import tippy from '../../src'
-import { h, cleanDocumentBody } from '../utils'
 
-tippy.setDefaultProps({
-  duration: 0,
-  delay: 0,
-})
-
+tippy.setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
@@ -16,49 +13,64 @@ describe('createSingleton', () => {
   it('shows when a tippy instance reference is triggered', () => {
     const refs = [h(), h()]
     const singletonInstance = createSingleton(tippy(refs))
-    refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
+
+    refs[0].dispatchEvent(MOUSEENTER)
+
     jest.runAllTimers()
+
     expect(singletonInstance.state.isVisible).toBe(true)
   })
 
   it('does not visibly show the original tippy element (opacity of 0)', () => {
     const refs = [h(), h()]
+    const firstRef = refs[0]
+
     createSingleton(tippy(refs))
-    refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
+
+    firstRef.dispatchEvent(MOUSEENTER)
+
     jest.runAllTimers()
-    expect(refs[0]._tippy.state.isVisible).toBe(true)
-    expect(refs[0]._tippy.popper.style.opacity).toBe('0')
+
+    expect(firstRef._tippy.state.isVisible).toBe(true)
+    expect(firstRef._tippy.popper.style.opacity).toBe('0')
   })
 
   it('uses the relevant tippy instance props', () => {
     const configs = [{ arrow: true }, { duration: 1000 }]
     const instances = configs.map(props => tippy(h(), props))
     const singletonInstance = createSingleton(instances)
-    instances[0].reference.dispatchEvent(new MouseEvent('mouseenter'), {
-      bubbles: true,
-    })
+
+    instances[0].reference.dispatchEvent(MOUSEENTER)
+
     expect(singletonInstance.props.arrow).toBe(true)
-    instances[0].reference.dispatchEvent(new MouseEvent('mouseleave'), {
-      bubbles: true,
-    })
-    instances[1].reference.dispatchEvent(new MouseEvent('mouseenter'), {
-      bubbles: true,
-    })
+
+    instances[0].reference.dispatchEvent(MOUSELEAVE)
+    instances[1].reference.dispatchEvent(MOUSEENTER)
+
     expect(singletonInstance.props.duration).toBe(1000)
   })
 
   it('uses `delay: number` correctly', () => {
     const refs = [h(), h()]
     const singletonInstance = createSingleton(tippy(refs), { delay: 1000 })
-    refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
+    const firstRef = refs[0]
+
+    firstRef.dispatchEvent(MOUSEENTER)
     jest.advanceTimersByTime(999)
+
     expect(singletonInstance.state.isVisible).toBe(false)
+
     jest.advanceTimersByTime(1)
+
     expect(singletonInstance.state.isVisible).toBe(true)
-    refs[0].dispatchEvent(new MouseEvent('mouseleave'), { bubbles: true })
+
+    firstRef.dispatchEvent(MOUSELEAVE)
     jest.advanceTimersByTime(999)
+
     expect(singletonInstance.state.isVisible).toBe(true)
+
     jest.advanceTimersByTime(1)
+
     expect(singletonInstance.state.isVisible).toBe(false)
   })
 
@@ -67,30 +79,39 @@ describe('createSingleton', () => {
     const singletonInstance = createSingleton(tippy(refs), {
       delay: [500, 1000],
     })
-    refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
+    const firstRef = refs[0]
+
+    firstRef.dispatchEvent(MOUSEENTER)
     jest.advanceTimersByTime(499)
+
     expect(singletonInstance.state.isVisible).toBe(false)
+
     jest.advanceTimersByTime(1)
+
     expect(singletonInstance.state.isVisible).toBe(true)
-    refs[0].dispatchEvent(new MouseEvent('mouseleave'), { bubbles: true })
+
+    firstRef.dispatchEvent(MOUSELEAVE)
     jest.advanceTimersByTime(999)
+
     expect(singletonInstance.state.isVisible).toBe(true)
+
     jest.advanceTimersByTime(1)
+
     expect(singletonInstance.state.isVisible).toBe(false)
   })
 
   it('preserves original `onTrigger`, and `onUntrigger` props', () => {
-    const props = {
-      onTrigger: jest.fn(),
-      onUntrigger: jest.fn(),
-    }
-    const triggerEvent = new MouseEvent('mouseenter', { bubbles: true })
-    const untriggerEvent = new MouseEvent('mouseleave', { bubbles: true })
+    const props = { onTrigger: jest.fn(), onUntrigger: jest.fn() }
+    const triggerEvent = MOUSEENTER
+    const untriggerEvent = MOUSELEAVE
     const refs = [h(), h()]
     const ref = refs[0]
+
     createSingleton(tippy(refs, props))
+
     ref.dispatchEvent(triggerEvent)
     ref.dispatchEvent(untriggerEvent)
+
     expect(props.onTrigger).toHaveBeenCalledWith(ref._tippy, triggerEvent)
     expect(props.onUntrigger).toHaveBeenCalledWith(ref._tippy, untriggerEvent)
   })
@@ -139,39 +160,59 @@ describe('createSingleton', () => {
 
   it('does not prevent updating `onTrigger`, and `onUntrigger`', () => {
     const instances = tippy([h()])
-    createSingleton(instances)
+    const instance = instances[0]
     const onTriggerSpy = jest.fn()
     const onUntriggerSpy = jest.fn()
-    const [instance] = instances
+
+    createSingleton(instances)
+
     instance.setProps({
       onTrigger: onTriggerSpy,
       onUntrigger: onUntriggerSpy,
     })
-    instance.reference.dispatchEvent(new Event('mouseenter'))
+
+    instance.reference.dispatchEvent(MOUSEENTER)
+
     expect(onTriggerSpy).toHaveBeenCalled()
-    instance.reference.dispatchEvent(new Event('mouseleave'))
+
+    instance.reference.dispatchEvent(MOUSELEAVE)
+
     expect(onUntriggerSpy).toHaveBeenCalled()
+
     // And re-uses the same if not updated
     instance.setProps({})
-    instance.reference.dispatchEvent(new Event('mouseenter'))
+    instance.reference.dispatchEvent(MOUSEENTER)
+
     expect(onTriggerSpy).toHaveBeenCalled()
-    instance.reference.dispatchEvent(new Event('mouseleave'))
+
+    instance.reference.dispatchEvent(MOUSELEAVE)
+
     expect(onUntriggerSpy).toHaveBeenCalled()
   })
 
   it('can update the `delay` option', () => {
     const refs = [h(), h()]
     const singletonInstance = createSingleton(tippy(refs), { delay: 1000 })
+    const firstRef = refs[0]
+
     singletonInstance.setProps({ delay: 500 })
-    refs[0].dispatchEvent(new MouseEvent('mouseenter'), { bubbles: true })
+
+    firstRef.dispatchEvent(MOUSEENTER)
     jest.advanceTimersByTime(499)
+
     expect(singletonInstance.state.isVisible).toBe(false)
+
     jest.advanceTimersByTime(1)
+
     expect(singletonInstance.state.isVisible).toBe(true)
-    refs[0].dispatchEvent(new MouseEvent('mouseleave'), { bubbles: true })
+
+    firstRef.dispatchEvent(MOUSELEAVE)
     jest.advanceTimersByTime(499)
+
     expect(singletonInstance.state.isVisible).toBe(true)
+
     jest.advanceTimersByTime(1)
+
     expect(singletonInstance.state.isVisible).toBe(false)
   })
 
@@ -195,11 +236,15 @@ describe('createSingleton', () => {
 
   it('does not throw maximum call stack error due to stale lifecycle hooks', () => {
     const tippyInstances = tippy([h(), h()])
+    const instance = tippyInstances[0]
     const singletonInstance = createSingleton(tippyInstances)
+
     singletonInstance.destroy(false)
-    const [instance] = tippyInstances
+
     createSingleton(tippyInstances)
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+
+    instance.reference.dispatchEvent(MOUSEENTER)
+
     expect(instance.state.isVisible).toBe(true)
   })
 
@@ -219,9 +264,13 @@ describe('delegate', () => {
   it('creates an instance for the child target', () => {
     const button = h('button')
     const instance = delegate(document.body, { target: 'button' })
+
     expect(button._tippy).toBeUndefined()
+
     button.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
+
     expect(button._tippy).toBeDefined()
+
     instance.destroy()
   })
 
@@ -231,29 +280,43 @@ describe('delegate', () => {
       target: 'button',
       trigger: 'click',
     })
+
     expect(button._tippy).toBeUndefined()
-    button.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+
+    button.dispatchEvent(CLICK)
+
     expect(button._tippy).toBeDefined()
+
     instance.destroy()
   })
 
   it('handles an array of delegate targets', () => {
     const refs = [h(), h()]
+
     refs.forEach(ref => ref.append(document.createElement('button')))
+
     const instances = delegate(refs, { target: 'button' })
     const button = refs[0].querySelector('button')
+
     expect(button._tippy).toBeUndefined()
+
     button.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
+
     expect(button._tippy).toBeDefined()
+
     instances.forEach(instance => instance.destroy())
   })
 
   it('does not show its own tippy', () => {
     const instance = delegate(document.body, { target: 'button' })
+
     document.body.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
-    document.body.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
+    document.body.dispatchEvent(MOUSEENTER)
+
     jest.runAllTimers()
+
     expect(instance.state.isVisible).toBe(false)
+
     instance.destroy()
   })
 
@@ -277,24 +340,30 @@ describe('delegate', () => {
   it('can be destroyed', () => {
     const button = h('button')
     const instance = delegate(document.body, { target: 'button' })
+
     instance.destroy()
     button.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
+
     expect(button._tippy).toBeUndefined()
   })
 
   it('destroys child instances by default too', () => {
     const button = h('button')
     const instance = delegate(document.body, { target: 'button' })
+
     button.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
     instance.destroy()
+
     expect(button._tippy).toBeUndefined()
   })
 
   it('does not destroy child instances if passed `false`', () => {
     const button = h('button')
     const instance = delegate(document.body, { target: 'button' })
+
     button.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
     instance.destroy(false)
+
     expect(button._tippy).toBeDefined()
   })
 })

@@ -1,4 +1,5 @@
 import { h, cleanDocumentBody, IDENTIFIER } from '../utils'
+
 import * as Utils from '../../src/utils'
 import tippy from '../../src'
 
@@ -26,6 +27,7 @@ describe('getArrayOfElements', () => {
 
   it('returns an empty array when given an invalid selector string', () => {
     const arr = Utils.getArrayOfElements('😎')
+
     expect(Array.isArray(arr)).toBe(true)
     expect(arr.length).toBe(0)
   })
@@ -33,6 +35,7 @@ describe('getArrayOfElements', () => {
   it('returns an array of length 1 if the value is a DOM element', () => {
     const ref = h()
     const arr = Utils.getArrayOfElements(ref)
+
     expect(arr[0]).toBe(ref)
     expect(arr.length).toBe(1)
   })
@@ -42,6 +45,7 @@ describe('getArrayOfElements', () => {
     const arr = Utils.getArrayOfElements(
       document.querySelectorAll(`.${IDENTIFIER}`),
     )
+
     expect(arr[0]).toBe(ref)
     expect(Array.isArray(arr)).toBe(true)
   })
@@ -183,7 +187,9 @@ describe('evaluateProps', () => {
 
   it('sets `arrow` prop to false if `animateFill` is true (data attribute)', () => {
     const ref = h()
+
     ref.setAttribute('data-tippy-arrow', 'true')
+
     expect(Utils.evaluateProps(ref, { animateFill: true })).toEqual({
       arrow: false,
       animateFill: true,
@@ -193,7 +199,9 @@ describe('evaluateProps', () => {
   it('ignores attributes if `ignoreAttributes: true`', () => {
     const props = { animation: 'scale', ignoreAttributes: true }
     const reference = h()
+
     reference.setAttribute('data-tippy-animation', 'fade')
+
     expect(Utils.evaluateProps(reference, props)).toEqual({
       animation: 'scale',
       ignoreAttributes: true,
@@ -203,7 +211,9 @@ describe('evaluateProps', () => {
   it('does not ignore attributes if `ignoreAttributes: false`', () => {
     const props = { animation: 'scale', ignoreAttributes: false }
     const reference = h()
+
     reference.setAttribute('data-tippy-animation', 'fade')
+
     expect(Utils.evaluateProps(reference, props)).toEqual({
       animation: 'fade',
       ignoreAttributes: false,
@@ -215,6 +225,7 @@ describe('setTransitionDuration', () => {
   it('sets the `transition-duration` property on a list of elements with the value specified', () => {
     const els = [h(), h(), null, h()]
     Utils.setTransitionDuration(els, 1298)
+
     expect(els[0].style.transitionDuration).toBe('1298ms')
     expect(els[1].style.transitionDuration).toBe('1298ms')
     expect(els[3].style.transitionDuration).toBe('1298ms')
@@ -224,11 +235,15 @@ describe('setTransitionDuration', () => {
 describe('setVisibilityState', () => {
   it('sets the `data-state` attribute on a list of elements with the value specified', () => {
     const els = [h(), h(), null, h()]
+
     Utils.setVisibilityState(els, 'visible')
+
     expect(els[0].getAttribute('data-state')).toBe('visible')
     expect(els[1].getAttribute('data-state')).toBe('visible')
     expect(els[3].getAttribute('data-state')).toBe('visible')
+
     Utils.setVisibilityState(els, 'hidden')
+
     expect(els[0].getAttribute('data-state')).toBe('hidden')
     expect(els[1].getAttribute('data-state')).toBe('hidden')
     expect(els[3].getAttribute('data-state')).toBe('hidden')
@@ -238,10 +253,13 @@ describe('setVisibilityState', () => {
 describe('isReferenceElement', () => {
   it('correctly determines if a value is a reference element', () => {
     const instance = tippy(h())
+
     expect(Utils.isReferenceElement(document.createElement('div'))).toBe(false)
     expect(Utils.isReferenceElement(instance.reference)).toBe(true)
     expect(Utils.isReferenceElement(instance.popper)).toBe(false)
+
     instance.popper.classList.add('other')
+
     expect(Utils.isReferenceElement(instance.popper)).toBe(false)
   })
 })
@@ -249,14 +267,18 @@ describe('isReferenceElement', () => {
 describe('preserveInvocation', () => {
   it('should invoke the first function if not the same as second', () => {
     const spy = jest.fn()
+
     Utils.preserveInvocation(spy, () => {}, ['test'])
+
     expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toHaveBeenCalledWith('test')
   })
 
   it('should not invoke the first function is the same as second', () => {
     const spy = jest.fn()
+
     Utils.preserveInvocation(spy, spy, ['test'])
+
     expect(spy).not.toHaveBeenCalled()
   })
 })
@@ -271,6 +293,7 @@ describe('arrayFrom', () => {
   it('converts a NodeList to an array', () => {
     ;[...Array(10)].map(() => h())
     const arr = Utils.arrayFrom(document.querySelectorAll(IDENTIFIER))
+
     expect(Array.isArray(arr)).toBe(true)
   })
 })
@@ -279,7 +302,9 @@ describe('closestCallback', () => {
   it('works like Element.prototype.closest but uses a callback instead', () => {
     const ref = h('div', { class: 'parent' })
     const child = h('div', { class: 'child' })
+
     ref.append(child)
+
     expect(
       Utils.closestCallback(ref, node => node.className === 'parent'),
     ).toBe(ref)

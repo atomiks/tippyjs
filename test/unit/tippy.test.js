@@ -1,4 +1,5 @@
 import { h, hasTippy, cleanDocumentBody } from '../utils'
+
 import { defaultProps, extraProps } from '../../src/props'
 import { POPPER_SELECTOR } from '../../src/constants'
 import tippy, { autoInit } from '../../src'
@@ -15,11 +16,7 @@ describe('tippy', () => {
   })
 
   it('merges the default props with the supplied props', () => {
-    expect(
-      tippy(h(), {
-        placement: 'bottom-end',
-      }).props,
-    ).toEqual({
+    expect(tippy(h(), { placement: 'bottom-end' }).props).toEqual({
       ...defaultProps,
       ...extraProps,
       placement: 'bottom-end',
@@ -28,11 +25,11 @@ describe('tippy', () => {
 
   it('warns if invalid props(s) are supplied', () => {
     const spy = jest.spyOn(console, 'warn')
-    tippy(h(), {
-      placement: 'top',
-      _someInvalidProp: true,
-    })
+
+    tippy(h(), { placement: 'top', _someInvalidProp: true })
+
     expect(spy).toHaveBeenCalledTimes(1)
+
     spy.mockRestore()
   })
 
@@ -52,7 +49,9 @@ describe('tippy', () => {
   it('warns if passed a single content element for many different references', () => {
     const spy = jest.spyOn(console, 'warn')
     const targets = [h(), h()]
+
     tippy(targets, { content: document.createElement('div') })
+
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
         '`tippy()` was passed a targets argument that will create more than ' +
@@ -63,6 +62,7 @@ describe('tippy', () => {
           '.innerHTML of the element.',
       ),
     )
+
     spy.mockRestore()
   })
 })
@@ -70,18 +70,23 @@ describe('tippy', () => {
 describe('tippy.setDefaultProps()', () => {
   it('changes the default props applied to instances', () => {
     const newPlacement = 'bottom-end'
+
     tippy.setDefaultProps({ placement: newPlacement })
+
     expect(defaultProps.placement).toBe(newPlacement)
   })
 
   it('is validated', () => {
     const spy = jest.spyOn(console, 'warn')
+
     tippy.setDefaultProps({ showOnInit: true })
+
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
         'The `showOnInit` prop was renamed to `showOnCreate` in v5.',
       ),
     )
+
     spy.mockRestore()
   })
 })
@@ -90,8 +95,10 @@ describe('tippy.hideAll()', () => {
   it('hides all tippys on the document, ignoring `hideOnClick`', () => {
     const props = { showOnCreate: true, hideOnClick: false }
     const instances = [...Array(3)].map(() => tippy(h(), props))
+
     jest.runAllTimers()
     tippy.hideAll()
+
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(false)
     })
@@ -100,8 +107,10 @@ describe('tippy.hideAll()', () => {
   it('respects `duration` option', () => {
     const props = { showOnCreate: true, duration: 100 }
     const instances = [...Array(3)].map(() => tippy(h(), props))
+
     jest.runAllTimers()
     tippy.hideAll({ duration: 0 })
+
     instances.forEach(instance => {
       expect(instance.state.isMounted).toBe(false)
     })
@@ -110,8 +119,10 @@ describe('tippy.hideAll()', () => {
   it('respects `exclude` option', () => {
     const props = { showOnCreate: true }
     const instances = [...Array(3)].map(() => tippy(h(), props))
+
     jest.runAllTimers()
     tippy.hideAll({ exclude: instances[0] })
+
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(
         instance === instances[0] ? true : false,
@@ -122,12 +133,15 @@ describe('tippy.hideAll()', () => {
   it('respects `exclude` option as type ReferenceElement for multiple tippys', () => {
     const props = { showOnCreate: true, multiple: true }
     const ref = h()
+
     tippy(ref, props)
     tippy(ref, props)
     tippy.hideAll({ exclude: ref })
+
     const instances = [...document.querySelectorAll(POPPER_SELECTOR)].map(
       popper => popper._tippy,
     )
+
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(true)
     })
@@ -137,17 +151,21 @@ describe('tippy.hideAll()', () => {
 describe('auto-init', () => {
   it('adds a tooltip if "data-tippy" attribute is truthy', () => {
     const reference = document.createElement('div')
+
     reference.setAttribute('data-tippy', 'tooltip')
     document.body.append(reference)
     autoInit()
+
     expect(hasTippy(reference)).toBe(true)
   })
 
   it('does not add tooltip if "data-tippy" attribute is falsy', () => {
     const reference = document.createElement('div')
+
     reference.setAttribute('data-tippy', '')
     document.body.append(reference)
     autoInit()
+
     expect(hasTippy(reference)).toBe(false)
   })
 })
@@ -155,7 +173,9 @@ describe('auto-init', () => {
 describe('tippy.group()', () => {
   it('should warn', () => {
     const spy = jest.spyOn(console, 'warn')
+
     tippy.group()
+
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
         '`tippy.group()` was removed in v5 and replaced ' +
@@ -163,6 +183,7 @@ describe('tippy.group()', () => {
           'https://atomiks.github.io/tippyjs/addons#singleton',
       ),
     )
+
     spy.mockRestore()
   })
 })
@@ -170,13 +191,16 @@ describe('tippy.group()', () => {
 describe('tippy.setDefaults()', () => {
   it('should warn', () => {
     const spy = jest.spyOn(console, 'warn')
+
     tippy.setDefaults({})
+
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
         '`tippy.setDefaults()` was renamed to ' +
           '`tippy.setDefaultProps()` in v5.',
       ),
     )
+
     spy.mockRestore()
   })
 })
@@ -184,13 +208,16 @@ describe('tippy.setDefaults()', () => {
 describe('tippy.defaults', () => {
   it('should warn', () => {
     const spy = jest.spyOn(console, 'warn')
+
     tippy.defaults
+
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
         'The `tippy.defaults` property was renamed to ' +
           '`tippy.defaultProps` in v5.',
       ),
     )
+
     spy.mockRestore()
   })
 })

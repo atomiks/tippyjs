@@ -4,19 +4,24 @@ import {
   withTestProps,
   enableTouchEnvironment,
   disableTouchEnvironment,
+  MOUSEENTER,
+  MOUSELEAVE,
+  FOCUS,
+  TOUCHEND,
+  TOUCHSTART,
+  MOUSEDOWN,
+  CLICK,
+  BLUR,
 } from '../utils'
+
 import tippy from '../../src'
 import { getChildren } from '../../src/popper'
 import { ARROW_SELECTOR, SVG_ARROW_SELECTOR } from '../../src/constants'
 
+tippy.setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
-
-tippy.setDefaultProps({
-  duration: 0,
-  delay: 0,
-})
 
 describe('allowHTML', () => {
   it('false: it does not allow html content inside tooltip', () => {
@@ -25,6 +30,7 @@ describe('allowHTML', () => {
       content: '<strong>content</strong>',
       allowHTML: false,
     })
+
     expect(getChildren(popper).content.querySelector('strong')).toBeNull()
   })
 
@@ -37,6 +43,7 @@ describe('allowHTML', () => {
         allowHTML: true,
       }),
     )
+
     expect(getChildren(popper).content.querySelector('strong')).not.toBeNull()
   })
 })
@@ -48,6 +55,7 @@ describe('placement', () => {
       ref,
       withTestProps({ placement: 'left-end' }),
     )
+
     expect(popperInstance.options.placement).toBe('left-end')
   })
 })
@@ -56,23 +64,27 @@ describe('arrow', () => {
   it('true: creates an arrow element child of the popper', () => {
     const ref = h()
     const { popper } = tippy(ref, { arrow: true })
+
     expect(getChildren(popper).arrow).not.toBeNull()
   })
 
   it('true: disables `animateFill` option', () => {
     const ref = h()
     const { props } = tippy(ref, { arrow: true })
+
     expect(props.animateFill).toBe(false)
   })
 
   it('false: does not create an arrow element child of the popper', () => {
     const ref = h()
     const { popper } = tippy(ref, { arrow: false })
+
     expect(getChildren(popper).arrow).toBeNull()
   })
 
   it('true: is CSS triangle', () => {
     const { popperChildren } = tippy(h(), { arrow: true })
+
     expect(popperChildren.arrow.matches(ARROW_SELECTOR)).toBe(true)
   })
 
@@ -84,6 +96,7 @@ describe('arrow', () => {
   it('string', () => {
     const svg = '<svg viewBox="0 0 20 8"><path></path></svg>'
     const { popperChildren } = tippy(h(), { arrow: svg })
+
     expect(popperChildren.arrow.matches(SVG_ARROW_SELECTOR)).toBe(true)
     expect(popperChildren.arrow.innerHTML).toBe(svg)
   })
@@ -93,6 +106,7 @@ describe('arrow', () => {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
     svg.appendChild(path)
     const { popperChildren } = tippy(h(), { arrow: svg })
+
     expect(popperChildren.arrow.firstElementChild).toBe(svg)
   })
 })
@@ -101,6 +115,7 @@ describe('animateFill', () => {
   it('true: sets `data-animatefill` attribute on tooltip', () => {
     const ref = h()
     const { popper } = tippy(ref, { animateFill: true })
+
     expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
       true,
     )
@@ -109,6 +124,7 @@ describe('animateFill', () => {
   it('false: does not set `data-animatefill` attribute on tooltip', () => {
     const ref = h()
     const { popper } = tippy(ref, { animateFill: false })
+
     expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
       false,
     )
@@ -121,6 +137,7 @@ describe('animation', () => {
     const { tooltip } = tippy(h(), {
       animation,
     }).popperChildren
+
     expect(tooltip.getAttribute('data-animation')).toBe(animation)
   })
 })
@@ -133,63 +150,74 @@ describe('delay', () => {
       trigger: 'mouseenter',
       delay,
     })
-    ref.dispatchEvent(new Event('mouseenter'))
+
+    ref.dispatchEvent(MOUSEENTER)
+
     expect(state.isVisible).toBe(false)
+
     jest.advanceTimersByTime(delay)
+
     expect(state.isVisible).toBe(true)
   })
 
   it('number: delays hiding the tippy', async () => {
     const delay = 500
-    const ref = h()
-    const { state } = tippy(ref, {
+    const instance = tippy(h(), {
       trigger: 'mouseenter',
       delay,
     })
-    ref.dispatchEvent(new Event('mouseenter'))
+
+    instance.reference.dispatchEvent(MOUSEENTER)
+
     jest.advanceTimersByTime(delay)
-    ref.dispatchEvent(new Event('mouseleave'))
-    expect(state.isVisible).toBe(true)
+
+    instance.reference.dispatchEvent(MOUSELEAVE)
+
+    expect(instance.state.isVisible).toBe(true)
+
     jest.advanceTimersByTime(delay)
-    expect(state.isVisible).toBe(false)
+
+    expect(instance.state.isVisible).toBe(false)
   })
 
   it('array: uses the first element as the delay when showing', () => {
     const delay = [20, 100]
-    const ref = h()
-    const { state } = tippy(ref, {
-      trigger: 'mouseenter',
-      delay,
-    })
-    ref.dispatchEvent(new Event('mouseenter'))
-    expect(state.isVisible).toBe(false)
+    const instance = tippy(h(), { trigger: 'mouseenter', delay })
+
+    instance.reference.dispatchEvent(new Event('mouseenter'))
+
+    expect(instance.state.isVisible).toBe(false)
+
     jest.advanceTimersByTime(delay[0])
-    expect(state.isVisible).toBe(true)
+
+    expect(instance.state.isVisible).toBe(true)
   })
 
   it('array: uses the second element as the delay when hiding', () => {
     const delay = [100, 20]
-    const ref = h()
-    const { state } = tippy(ref, {
-      trigger: 'mouseenter',
-      delay,
-    })
-    ref.dispatchEvent(new Event('mouseenter'))
-    expect(state.isVisible).toBe(false)
+    const instance = tippy(h(), { trigger: 'mouseenter', delay })
+
+    instance.reference.dispatchEvent(MOUSEENTER)
+
+    expect(instance.state.isVisible).toBe(false)
+
     jest.advanceTimersByTime(delay[0])
-    expect(state.isVisible).toBe(true)
-    ref.dispatchEvent(new Event('mouseleave'))
+
+    expect(instance.state.isVisible).toBe(true)
+
+    instance.reference.dispatchEvent(new Event('mouseleave'))
     jest.advanceTimersByTime(delay[1])
-    expect(state.isVisible).toBe(false)
+
+    expect(instance.state.isVisible).toBe(false)
   })
 
   it('instance does not hide if cursor returned after leaving before delay finished', () => {
     const instance = tippy(h(), { delay: 100, interactive: true })
-    instance.reference.dispatchEvent(new Event('mouseenter'))
+    instance.reference.dispatchEvent(MOUSEENTER)
 
     jest.advanceTimersByTime(100)
 
-    instance.popper.dispatchEvent(new Event('mouseleave'))
+    instance.popper.dispatchEvent(MOUSELEAVE)
     document.body.dispatchEvent(
       new MouseEvent('mousemove', {
         bubbles: true,
@@ -197,16 +225,18 @@ describe('delay', () => {
         clientY: 1000,
       }),
     )
+
     expect(instance.state.isVisible).toBe(true)
 
     jest.advanceTimersByTime(99)
 
-    instance.popper.dispatchEvent(new Event('mouseenter'))
+    instance.popper.dispatchEvent(MOUSEENTER)
 
     jest.advanceTimersByTime(1)
 
     expect(instance.state.isVisible).toBe(true)
-    instance.popper.dispatchEvent(new Event('mouseleave'))
+
+    instance.popper.dispatchEvent(MOUSELEAVE)
     document.body.dispatchEvent(
       new MouseEvent('mousemove', {
         bubbles: true,
@@ -217,7 +247,8 @@ describe('delay', () => {
 
     jest.advanceTimersByTime(101)
 
-    instance.popper.dispatchEvent(new Event('mouseenter'))
+    instance.popper.dispatchEvent(MOUSEENTER)
+
     expect(instance.state.isVisible).toBe(false)
   })
 })
@@ -234,6 +265,7 @@ describe('content', () => {
     const { content } = tippy(h(), {
       content: '<strong>tooltip</strong>',
     }).popperChildren
+
     expect(content.querySelector('strong')).not.toBeNull()
   })
 
@@ -242,6 +274,7 @@ describe('content', () => {
     const { content } = tippy(h(), {
       content: el,
     }).popperChildren
+
     expect(content.firstElementChild).toBe(el)
   })
 
@@ -251,6 +284,7 @@ describe('content', () => {
         return reference.getAttribute('title')
       },
     })
+
     expect(instance.props.content).toBe('test')
     expect(instance.popperChildren.content.textContent).toBe('test')
   })
@@ -261,14 +295,18 @@ describe('content', () => {
         return reference.getAttribute('title')
       },
     })
+
     instance.setProps({
       content() {
         return 'set'
       },
     })
+
     expect(instance.props.content).toBe('set')
     expect(instance.popperChildren.content.textContent).toBe('set')
+
     instance.setContent(() => 'setContent')
+
     expect(instance.props.content).toBe('setContent')
     expect(instance.popperChildren.content.textContent).toBe('setContent')
   })
@@ -277,36 +315,46 @@ describe('content', () => {
 describe('trigger', () => {
   it('default: many triggers', () => {
     const instance = tippy(h())
-    instance.reference.dispatchEvent(new Event('mouseenter'))
+
+    instance.reference.dispatchEvent(MOUSEENTER)
     expect(instance.state.isVisible).toBe(true)
-    instance.reference.dispatchEvent(new Event('mouseleave'))
+
+    instance.reference.dispatchEvent(MOUSELEAVE)
     expect(instance.state.isVisible).toBe(false)
-    instance.reference.dispatchEvent(new Event('focus'))
+
+    instance.reference.dispatchEvent(FOCUS)
     expect(instance.state.isVisible).toBe(true)
-    instance.reference.dispatchEvent(new Event('blur'))
+
+    instance.reference.dispatchEvent(BLUR)
     expect(instance.state.isVisible).toBe(false)
   })
 
   it('mouseenter', () => {
     const instance = tippy(h(), { trigger: 'mouseenter' })
-    instance.reference.dispatchEvent(new Event('mouseenter'))
+
+    instance.reference.dispatchEvent(MOUSEENTER)
     expect(instance.state.isVisible).toBe(true)
-    instance.reference.dispatchEvent(new Event('mouseleave'))
+
+    instance.reference.dispatchEvent(MOUSELEAVE)
     expect(instance.state.isVisible).toBe(false)
   })
 
   it('focus', () => {
     const instance = tippy(h(), { trigger: 'focus' })
-    instance.reference.dispatchEvent(new Event('focus'))
+
+    instance.reference.dispatchEvent(FOCUS)
     expect(instance.state.isVisible).toBe(true)
-    instance.reference.dispatchEvent(new Event('blur'))
+
+    instance.reference.dispatchEvent(BLUR)
     expect(instance.state.isVisible).toBe(false)
   })
 
   it('focus + interactive: focus switching to inside popper does not hide tippy', () => {
     const instance = tippy(h(), { interactive: true, trigger: 'focus' })
+
     instance.reference.dispatchEvent(new Event('focus'))
     expect(instance.state.isVisible).toBe(true)
+
     instance.reference.dispatchEvent(
       new FocusEvent('blur', { relatedTarget: instance.popper }),
     )
@@ -315,20 +363,26 @@ describe('trigger', () => {
 
   it('click', () => {
     const instance = tippy(h(), { trigger: 'click' })
+
     instance.reference.dispatchEvent(new Event('click'))
     expect(instance.state.isVisible).toBe(true)
+
     instance.reference.dispatchEvent(new Event('click'))
     expect(instance.state.isVisible).toBe(false)
   })
 
   it('manual', () => {
     const instance = tippy(h(), { trigger: 'manual' })
-    instance.reference.dispatchEvent(new Event('mouseenter'))
+
+    instance.reference.dispatchEvent(MOUSEENTER)
     expect(instance.state.isVisible).toBe(false)
-    instance.reference.dispatchEvent(new Event('focus'))
+
+    instance.reference.dispatchEvent(FOCUS)
     expect(instance.state.isVisible).toBe(false)
-    instance.reference.dispatchEvent(new Event('click'))
+
+    instance.reference.dispatchEvent(CLICK)
     expect(instance.state.isVisible).toBe(false)
+
     instance.reference.dispatchEvent(new Event('touchstart'))
     expect(instance.state.isVisible).toBe(false)
   })
@@ -337,18 +391,23 @@ describe('trigger', () => {
 describe('interactive', () => {
   it('true: prevents a tippy from hiding when clicked', () => {
     const instance = tippy(h(), { interactive: true })
+
     instance.show()
-    instance.popperChildren.tooltip.dispatchEvent(new Event('click'))
+    instance.popperChildren.tooltip.dispatchEvent(CLICK)
+
     expect(instance.state.isVisible).toBe(true)
   })
 
   it('false: tippy is hidden when clicked', () => {
     const instance = tippy(h(), { interactive: false })
+
     instance.show()
     jest.runAllTimers()
+
     instance.popperChildren.tooltip.dispatchEvent(
       new MouseEvent('mousedown', { bubbles: true }),
     )
+
     expect(instance.state.isVisible).toBe(false)
   })
 
@@ -390,6 +449,7 @@ describe('theme', () => {
     } = tippy(h(), {
       theme: 'this is a test',
     })
+
     expect(tooltip.classList.contains('this-theme')).toBe(true)
     expect(tooltip.classList.contains('is-theme')).toBe(true)
     expect(tooltip.classList.contains('a-theme')).toBe(true)
@@ -402,17 +462,22 @@ describe('role', () => {
     const {
       popperChildren: { tooltip: a },
     } = tippy(h(), { role: 'menu' })
+
     expect(a.getAttribute('role')).toBe('menu')
+
     const {
       popperChildren: { tooltip: b },
     } = tippy(h(), { role: null })
+
     expect(b.hasAttribute('role')).toBe(false)
   })
 
   it('is updated correctly by .set()', () => {
     const instance = tippy(h(), { role: 'tooltip' })
+
     instance.setProps({ role: 'menu' })
     expect(instance.popperChildren.tooltip.getAttribute('role')).toBe('menu')
+
     instance.setProps({ role: null })
     expect(instance.popperChildren.tooltip.hasAttribute('role')).toBe(false)
   })
@@ -436,6 +501,7 @@ describe('flip', () => {
   it('does not change after mounting', () => {
     const instance = tippy(h(), withTestProps({ flip: false, duration: 0 }))
     instance.show()
+
     expect(
       instance.popperInstance.modifiers.find(m => m.name === 'flip').enabled,
     ).toBe(false)
@@ -448,6 +514,7 @@ describe('flipBehavior', () => {
       h(),
       withTestProps({ flipBehavior: ['top', 'bottom', 'left'] }),
     )
+
     expect(
       popperInstance.modifiers.find(m => m.name === 'flip').behavior,
     ).toEqual(['top', 'bottom', 'left'])
@@ -459,6 +526,7 @@ describe('ignoreAttributes', () => {
     const { props } = tippy(h('div', { 'data-tippy-arrow': false }), {
       ignoreAttributes: false,
     })
+
     expect(props.arrow).toBe(false)
   })
 
@@ -466,6 +534,7 @@ describe('ignoreAttributes', () => {
     const { props } = tippy(h('div', { 'data-tippy-arrow': false }), {
       ignoreAttributes: true,
     })
+
     expect(props.arrow).toBe(true)
   })
 })
@@ -475,6 +544,7 @@ describe('inertia', () => {
     const {
       popperChildren: { tooltip },
     } = tippy(h(), { inertia: true })
+
     expect(tooltip.hasAttribute('data-inertia')).toBe(true)
   })
 
@@ -482,6 +552,7 @@ describe('inertia', () => {
     const {
       popperChildren: { tooltip },
     } = tippy(h(), { inertia: false })
+
     expect(tooltip.hasAttribute('data-inertia')).toBe(false)
   })
 })
@@ -515,7 +586,9 @@ describe('onShow', () => {
   it('is called on show, passed the instance as an argument', () => {
     const spy = jest.fn()
     const instance = tippy(h(), { onShow: spy })
+
     instance.show()
+
     expect(spy.mock.calls.length).toBe(1)
     expect(spy).toBeCalledWith(instance)
   })
@@ -523,6 +596,7 @@ describe('onShow', () => {
   it('prevents the the tooltip from showing if it returns `false`', () => {
     const instance = tippy(h(), { onShow: () => false })
     instance.show()
+
     expect(instance.state.isVisible).toBe(false)
   })
 })
@@ -533,9 +607,11 @@ describe('onMount', () => {
       onMount(i) {
         expect(i).toBe(instance)
         expect(document.documentElement.contains(i.popper)).toBe(true)
+
         done()
       },
     })
+
     instance.show()
   })
 })
@@ -548,6 +624,7 @@ describe('onShown', () => {
         done()
       },
     })
+
     instance.show()
   })
 })
@@ -556,17 +633,21 @@ describe('onHide', () => {
   it('is called on hide, passed the instance as an argument', () => {
     const spy = jest.fn()
     const instance = tippy(h(), { onHide: spy })
+
     instance.show()
     instance.hide()
+
     expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toBeCalledWith(instance)
   })
 
   it('prevents the the tooltip from hiding if it returns `false`', () => {
     const instance = tippy(h(), { onHide: () => false })
+
     instance.show()
     jest.runAllTimers()
     instance.hide()
+
     expect(instance.state.isVisible).toBe(true)
   })
 })
@@ -575,10 +656,12 @@ describe('onHidden', () => {
   it('is called on transition end of hide, passed the instance as an argument', () => {
     const spy = jest.fn()
     const instance = tippy(h(), { onHidden: spy, duration: 0 })
+
     instance.show()
     jest.runAllTimers()
     instance.hide()
     jest.runAllTimers()
+
     expect(spy.mock.calls.length).toBe(1)
     expect(spy).toBeCalledWith(instance)
   })
@@ -588,14 +671,16 @@ describe('onTrigger', () => {
   it('is called upon an event triggering, passed correct arguments', () => {
     const spy = jest.fn()
     const instance = tippy(h(), { onTrigger: spy })
-    const event = new MouseEvent('mouseenter')
-    instance.reference.dispatchEvent(event)
-    expect(spy).toHaveBeenCalledWith(instance, event)
+
+    instance.reference.dispatchEvent(MOUSEENTER)
+
+    expect(spy).toHaveBeenCalledWith(instance, MOUSEENTER)
   })
 
   it('is not called without an event to pass (showOnCreate)', () => {
     const spy = jest.fn()
     tippy(h(), { onTrigger: spy, showOnCreate: true })
+
     expect(spy).not.toHaveBeenCalled()
   })
 })
@@ -603,9 +688,8 @@ describe('onTrigger', () => {
 describe('onCreate', () => {
   it('is called after instance has been created', () => {
     const spy = jest.fn()
-    const instance = tippy(h(), {
-      onCreate: spy,
-    })
+    const instance = tippy(h(), { onCreate: spy })
+
     expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toHaveBeenCalledWith(instance)
   })
@@ -619,6 +703,7 @@ describe('popperOptions', () => {
         anything: true,
       },
     })
+
     expect(popperInstance.options.anything).toBe(true)
   })
 
@@ -633,6 +718,7 @@ describe('popperOptions', () => {
         },
       },
     })
+
     expect(
       popperInstance.options.modifiers.preventOverflow.escapeWithReference,
     ).toBe(true)
@@ -649,6 +735,7 @@ describe('popperOptions', () => {
         },
       },
     })
+
     expect(popperInstance.options.modifiers.preventOverflow.test).toBe(true)
   })
 
@@ -706,6 +793,7 @@ describe('popperOptions', () => {
         },
       },
     })
+
     expect(popperInstance.options.modifiers.arrow.test).toBe(true)
   })
 
@@ -720,6 +808,7 @@ describe('popperOptions', () => {
         },
       },
     })
+
     expect(popperInstance.options.modifiers.flip.test).toBe(true)
   })
 
@@ -734,6 +823,7 @@ describe('popperOptions', () => {
         },
       },
     })
+
     expect(popperInstance.options.modifiers.offset.test).toBe(true)
   })
 
@@ -744,11 +834,15 @@ describe('popperOptions', () => {
       lazy: false,
       popperOptions: { onCreate, onUpdate },
     })
+
     jest.runAllTimers()
+
     expect(onCreate).toHaveBeenCalledTimes(1)
     expect(onUpdate).toHaveBeenCalledTimes(0)
+
     instance.show()
     jest.runAllTimers()
+
     expect(onCreate).toHaveBeenCalledTimes(1)
     expect(onUpdate).toHaveBeenCalledTimes(2)
   })
@@ -758,6 +852,7 @@ describe('maxWidth', () => {
   it('adds the value to tooltip.style.maxWidth', () => {
     const pxTip = tippy(h(), { maxWidth: '100px' })
     expect(pxTip.popperChildren.tooltip.style.maxWidth).toBe('100px')
+
     const remTip = tippy(h(), { maxWidth: '100rem' })
     expect(remTip.popperChildren.tooltip.style.maxWidth).toBe('100rem')
   })
@@ -772,8 +867,10 @@ describe('aria', () => {
   it('sets the correct attribute on the reference', () => {
     const ref = h()
     const instance = tippy(ref, { aria: 'labelledby', duration: 0 })
+
     instance.show()
     jest.runAllTimers()
+
     expect(ref.getAttribute('aria-labelledby')).toBe(
       instance.popperChildren.tooltip.id,
     )
@@ -782,17 +879,21 @@ describe('aria', () => {
   it('removes the attribute on hide', () => {
     const ref = h()
     const instance = tippy(ref, { aria: 'labelledby', duration: 0 })
+
     instance.show()
     jest.runAllTimers()
     instance.hide()
+
     expect(ref.getAttribute('aria-labelledby')).toBe(null)
   })
 
   it('does not set attribute for falsy/null value', () => {
     const ref = h()
     const instance = tippy(ref, { aria: null, duration: 0 })
+
     instance.show()
     jest.runAllTimers()
+
     expect(ref.getAttribute('aria-null')).toBe(null)
     expect(ref.getAttribute('aria-describedby')).toBe(null)
   })
@@ -829,6 +930,7 @@ describe('boundary', () => {
       lazy: false,
       boundary: 'example',
     })
+
     expect(
       popperInstance.options.modifiers.preventOverflow.boundariesElement,
     ).toBe('example')
@@ -848,13 +950,17 @@ describe('touch', () => {
 
   it('true: shows tooltips on touch device', () => {
     const instance = tippy(h(), { touch: true })
+
     instance.show()
+
     expect(instance.state.isVisible).toBe(true)
   })
 
   it('false: does not show tooltip on touch device', () => {
     const instance = tippy(h(), { touch: false })
+
     instance.show()
+
     expect(instance.state.isVisible).toBe(false)
   })
 
@@ -872,32 +978,45 @@ describe('touch', () => {
   it('"hold": hides due to the correct event', () => {
     const ref = h()
     const instance = tippy(ref, { touch: 'hold' })
-    ref.dispatchEvent(new Event('touchstart'))
+
+    ref.dispatchEvent(TOUCHSTART)
     expect(instance.state.isVisible).toBe(true)
-    ref.dispatchEvent(new Event('mouseleave'))
+
+    ref.dispatchEvent(MOUSELEAVE)
     expect(instance.state.isVisible).toBe(true)
-    ref.dispatchEvent(new Event('touchend'))
+
+    ref.dispatchEvent(TOUCHEND)
     expect(instance.state.isVisible).toBe(false)
   })
 
   it('"hold": respects duration', () => {
     const ref = h()
     const instance = tippy(ref, { touch: ['hold', 100] })
-    ref.dispatchEvent(new Event('touchstart'))
+
+    ref.dispatchEvent(TOUCHSTART)
+
     expect(instance.state.isVisible).toBe(false)
+
     jest.advanceTimersByTime(99)
+
     expect(instance.state.isVisible).toBe(false)
+
     jest.advanceTimersByTime(1)
+
     expect(instance.state.isVisible).toBe(true)
   })
 
   it('"hold": timeout is cancelled correctly', () => {
     const ref = h()
     const instance = tippy(ref, { touch: ['hold', 100] })
-    ref.dispatchEvent(new Event('touchstart'))
+
+    ref.dispatchEvent(TOUCHSTART)
+
     expect(instance.state.isVisible).toBe(false)
-    ref.dispatchEvent(new Event('touchend'))
+
+    ref.dispatchEvent(TOUCHEND)
     jest.advanceTimersByTime(100)
+
     expect(instance.state.isVisible).toBe(false)
   })
 })
@@ -912,6 +1031,7 @@ describe('appendTo', () => {
         done()
       },
     })
+
     instance.show()
   })
 
@@ -924,6 +1044,7 @@ describe('appendTo', () => {
         done()
       },
     })
+
     instance.show()
   })
 
@@ -936,6 +1057,7 @@ describe('appendTo', () => {
         done()
       },
     })
+
     instance.show()
   })
 })
@@ -959,9 +1081,13 @@ describe('triggerTarget', () => {
   it('acts as the trigger for the tooltip instead of the reference', () => {
     const node = h('div')
     const instance = tippy(h(), { triggerTarget: node })
-    instance.reference.dispatchEvent(new Event('mouseenter'))
+
+    instance.reference.dispatchEvent(MOUSEENTER)
+
     expect(instance.state.isVisible).toBe(false)
-    node.dispatchEvent(new Event('mouseenter'))
+
+    node.dispatchEvent(MOUSEENTER)
+
     expect(instance.state.isVisible).toBe(true)
   })
 
@@ -969,90 +1095,94 @@ describe('triggerTarget', () => {
     const node = h('div')
     const node2 = h('button')
     const instance = tippy(h(), { triggerTarget: node })
+
     instance.setProps({ triggerTarget: node2 })
+
     node.dispatchEvent(new Event('mouseenter'))
+
     expect(instance.state.isVisible).toBe(false)
+
     node2.dispatchEvent(new Event('mouseenter'))
+
     expect(instance.state.isVisible).toBe(true)
   })
 })
 
 describe('hideOnClick', () => {
-  const mousedownEvent = new MouseEvent('mousedown', { bubbles: true })
-  const clickEvent = new MouseEvent('click', { bubbles: true })
-
   it('true: hides if reference element was clicked', () => {
     const instance = tippy(h(), { hideOnClick: true })
+
     instance.show()
-    instance.reference.dispatchEvent(mousedownEvent)
+    instance.reference.dispatchEvent(MOUSEDOWN)
+
     expect(instance.state.isVisible).toBe(false)
   })
 
   it('true: does not hide if interactive and popper element child was clicked', () => {
-    const instance = tippy(h(), {
-      hideOnClick: true,
-      interactive: true,
-    })
+    const instance = tippy(h(), { hideOnClick: true, interactive: true })
+
     instance.show()
-    instance.popperChildren.tooltip.dispatchEvent(mousedownEvent)
-    instance.popperChildren.tooltip.dispatchEvent(clickEvent)
+
+    instance.popperChildren.tooltip.dispatchEvent(MOUSEDOWN)
+    instance.popperChildren.tooltip.dispatchEvent(CLICK)
+
     expect(instance.state.isVisible).toBe(true)
   })
 
   it('true: hides if not interactive and popper element was clicked', () => {
-    const instance = tippy(h(), {
-      hideOnClick: true,
-      interactive: false,
-    })
+    const instance = tippy(h(), { hideOnClick: true, interactive: false })
+
     instance.show()
     jest.runAllTimers()
-    instance.popperChildren.tooltip.dispatchEvent(mousedownEvent)
-    instance.popperChildren.tooltip.dispatchEvent(clickEvent)
+
+    instance.popperChildren.tooltip.dispatchEvent(MOUSEDOWN)
+    instance.popperChildren.tooltip.dispatchEvent(CLICK)
+
     expect(instance.state.isVisible).toBe(false)
   })
 
   it('false: does not hide if reference element was clicked', () => {
     const instance = tippy(h(), { hideOnClick: false })
+
     instance.show()
-    instance.reference.dispatchEvent(mousedownEvent)
-    instance.reference.dispatchEvent(clickEvent)
+
+    instance.reference.dispatchEvent(MOUSEDOWN)
+    instance.reference.dispatchEvent(CLICK)
+
     expect(instance.state.isVisible).toBe(true)
   })
 
   it('false: never hides if trigger is `click`', () => {
-    const instance = tippy(h(), {
-      trigger: 'click',
-      hideOnClick: false,
-    })
+    const instance = tippy(h(), { trigger: 'click', hideOnClick: false })
+
     instance.show()
-    instance.popperChildren.tooltip.dispatchEvent(mousedownEvent)
-    instance.popperChildren.tooltip.dispatchEvent(clickEvent)
-    instance.reference.dispatchEvent(mousedownEvent)
-    instance.reference.dispatchEvent(clickEvent)
-    document.body.dispatchEvent(mousedownEvent)
-    document.body.dispatchEvent(clickEvent)
+
+    instance.popperChildren.tooltip.dispatchEvent(MOUSEDOWN)
+    instance.popperChildren.tooltip.dispatchEvent(CLICK)
+    instance.reference.dispatchEvent(MOUSEDOWN)
+    instance.reference.dispatchEvent(CLICK)
+    document.body.dispatchEvent(MOUSEDOWN)
+    document.body.dispatchEvent(CLICK)
+
     expect(instance.state.isVisible).toBe(true)
   })
 
   it('"toggle": hides only if reference element was clicked', () => {
-    const instance = tippy(h(), {
-      trigger: 'click',
-      hideOnClick: 'toggle',
-    })
+    const instance = tippy(h(), { trigger: 'click', hideOnClick: 'toggle' })
 
     instance.show()
 
     jest.runAllTimers()
 
-    document.body.dispatchEvent(mousedownEvent)
-    document.body.dispatchEvent(clickEvent)
-    instance.popperChildren.tooltip.dispatchEvent(mousedownEvent)
-    instance.popperChildren.tooltip.dispatchEvent(clickEvent)
+    document.body.dispatchEvent(MOUSEDOWN)
+    document.body.dispatchEvent(CLICK)
+    instance.popperChildren.tooltip.dispatchEvent(MOUSEDOWN)
+    instance.popperChildren.tooltip.dispatchEvent(CLICK)
 
     expect(instance.state.isVisible).toBe(true)
 
-    instance.reference.dispatchEvent(mousedownEvent)
-    instance.reference.dispatchEvent(clickEvent)
+    instance.reference.dispatchEvent(MOUSEDOWN)
+    instance.reference.dispatchEvent(CLICK)
 
     expect(instance.state.isVisible).toBe(false)
   })
