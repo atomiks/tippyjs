@@ -1,8 +1,12 @@
 import { h, cleanDocumentBody, MOUSEENTER, MOUSELEAVE, CLICK } from '../utils'
 
-import createSingleton from '../../src/addons/createSingleton'
-import delegate from '../../src/addons/delegate'
+import createSingleton, {
+  EXISTING_SINGLETON_ERROR,
+  ARRAY_MISTAKE_ERROR,
+} from '../../src/addons/createSingleton'
+import delegate, { MISSING_TARGET_WARNING } from '../../src/addons/delegate'
 import tippy from '../../src'
+import { createInvalidCreateSingletonArgumentError } from '../../src/validation'
 
 tippy.setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
@@ -119,22 +123,13 @@ describe('createSingleton', () => {
   it('throws if not passed an array', () => {
     expect(() => {
       createSingleton(null)
-    }).toThrow(
-      'First argument to `createSingleton()` must ' +
-        'be an array of tippy instances. The passed value was `' +
-        null +
-        '`',
-    )
+    }).toThrow(createInvalidCreateSingletonArgumentError(null))
   })
 
   it('throws if passed a single instance', () => {
     expect(() => {
       createSingleton(tippy(h()))
-    }).toThrow(
-      'First argument to `createSingleton()` must ' +
-        'be an *array* of tippy instances. The passed value was a ' +
-        '*single* tippy instance.',
-    )
+    }).toThrow(ARRAY_MISTAKE_ERROR)
   })
 
   it('throws if any passed instance is part of an existing singleton', () => {
@@ -142,11 +137,7 @@ describe('createSingleton', () => {
       const instances = tippy([h(), h()])
       createSingleton(instances)
       createSingleton(instances)
-    }).toThrow(
-      'The passed tippy instance(s) are already part of an ' +
-        'existing singleton instance. Make sure you destroy the previous ' +
-        'singleton before calling `createSingleton()` again.',
-    )
+    }).toThrow(EXISTING_SINGLETON_ERROR)
   })
 
   it('does not throw if any passed instance is not part of an existing singleton', () => {
@@ -325,10 +316,7 @@ describe('delegate', () => {
   })
 
   it('throws if passed falsy `target` prop', () => {
-    const message =
-      'You must specify a `target` prop indicating the CSS ' +
-      'selector string matching the target elements that should receive a ' +
-      'tippy.'
+    const message = MISSING_TARGET_WARNING
     expect(() => {
       delegate(document.body)
     }).toThrow(message)

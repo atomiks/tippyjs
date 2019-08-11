@@ -7,7 +7,12 @@ import {
   invokeWithArgsOrReturn,
   removeProperties,
 } from '../utils'
-import { throwErrorWhen } from '../validation'
+import {
+  throwErrorWhen,
+  createInvalidCreateSingletonArgumentError,
+  ARRAY_MISTAKE_ERROR,
+  EXISTING_SINGLETON_ERROR,
+} from '../validation'
 import { NON_UPDATEABLE_PROPS } from '../constants'
 
 interface SingletonInstance extends Instance {
@@ -33,17 +38,13 @@ export default function createSingleton(
     if (!Array.isArray(tippyInstances)) {
       throwErrorWhen(
         !tippyInstances,
-        'First argument to `createSingleton()` must be an array of tippy ' +
-          'instances. The passed value was `' +
-          tippyInstances +
-          '`',
+        createInvalidCreateSingletonArgumentError(tippyInstances),
       )
 
       throwErrorWhen(
         // @ts-ignore
         tippyInstances.reference && tippyInstances.reference._tippy,
-        'First argument to `createSingleton()` must be an *array* of tippy ' +
-          'instances. The passed value was a *single* tippy instance.',
+        ARRAY_MISTAKE_ERROR,
       )
     }
 
@@ -53,9 +54,7 @@ export default function createSingleton(
 
     throwErrorWhen(
       isAnyInstancePartOfExistingSingleton,
-      'The passed tippy instance(s) are already part of an existing ' +
-        'singleton instance. Make sure you destroy the previous singleton ' +
-        'before calling `createSingleton()` again.',
+      EXISTING_SINGLETON_ERROR,
     )
 
     tippyInstances.forEach((instance): void => {

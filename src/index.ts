@@ -16,6 +16,10 @@ import {
   validateTargets,
   validateProps,
   validateExtraPropsFunctionality,
+  CONTENT_WARNING,
+  TIPPY_GROUP_WARNING,
+  SET_DEFAULTS_WARNING,
+  DEFAULTS_WARNING,
 } from './validation'
 import { POPPER_SELECTOR } from './constants'
 import {
@@ -49,12 +53,7 @@ function tippy(
     const isMoreThanOneReferenceElement = elements.length > 1
     warnWhen(
       isSingleContentElement && isMoreThanOneReferenceElement,
-      '`tippy()` was passed a targets argument that will create more than ' +
-        'one tippy instance, but only a single element was supplied as the ' +
-        '`content` prop. This means the content will only be appended to the ' +
-        'last tippy element of the list. Instead, use a function that ' +
-        'returns a cloned version of the element instead, or pass the ' +
-        '.innerHTML of the element.',
+      CONTENT_WARNING,
     )
   }
 
@@ -126,33 +125,21 @@ tippy.hideAll = ({
 if (__DEV__) {
   Object.defineProperty(tippy, 'group', {
     value: (): void => {
-      warnWhen(
-        true,
-        '`tippy.group()` was removed in v5 and replaced with ' +
-          '`createSingleton()`. Read more here: ' +
-          'https://atomiks.github.io/tippyjs/addons#singleton',
-      )
+      warnWhen(true, TIPPY_GROUP_WARNING)
     },
     enumerable: false,
   })
 
   Object.defineProperty(tippy, 'setDefaults', {
     value: (): void => {
-      warnWhen(
-        true,
-        '`tippy.setDefaults()` was renamed to `tippy.setDefaultProps()` in v5.',
-      )
+      warnWhen(true, SET_DEFAULTS_WARNING)
     },
     enumerable: false,
   })
 
   Object.defineProperty(tippy, 'defaults', {
     get(): void {
-      warnWhen(
-        true,
-        'The `tippy.defaults` property was renamed to `tippy.defaultProps` ' +
-          'in v5.',
-      )
+      warnWhen(true, DEFAULTS_WARNING)
       return undefined
     },
     enumerable: false,

@@ -3,7 +3,14 @@ import { h, hasTippy, cleanDocumentBody } from '../utils'
 import { defaultProps, extraProps } from '../../src/props'
 import { POPPER_SELECTOR } from '../../src/constants'
 import tippy, { autoInit } from '../../src'
-import { getFormattedMessage } from '../../src/validation'
+import {
+  getFormattedMessage,
+  CONTENT_WARNING,
+  SHOW_ON_INIT_WARNING,
+  DEFAULTS_WARNING,
+  SET_DEFAULTS_WARNING,
+  TIPPY_GROUP_WARNING,
+} from '../../src/validation'
 
 jest.useFakeTimers()
 
@@ -52,16 +59,7 @@ describe('tippy', () => {
 
     tippy(targets, { content: document.createElement('div') })
 
-    expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        '`tippy()` was passed a targets argument that will create more than ' +
-          'one tippy instance, but only a single element was supplied as the ' +
-          '`content` prop. This means the content will only be appended to the ' +
-          'last tippy element of the list. Instead, use a function that ' +
-          'returns a cloned version of the element instead, or pass the ' +
-          '.innerHTML of the element.',
-      ),
-    )
+    expect(spy).toHaveBeenCalledWith(...getFormattedMessage(CONTENT_WARNING))
 
     spy.mockRestore()
   })
@@ -82,9 +80,7 @@ describe('tippy.setDefaultProps()', () => {
     tippy.setDefaultProps({ showOnInit: true })
 
     expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        'The `showOnInit` prop was renamed to `showOnCreate` in v5.',
-      ),
+      ...getFormattedMessage(SHOW_ON_INIT_WARNING),
     )
 
     spy.mockRestore()
@@ -177,11 +173,7 @@ describe('tippy.group()', () => {
     tippy.group()
 
     expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        '`tippy.group()` was removed in v5 and replaced ' +
-          'with `createSingleton()`. Read more here: ' +
-          'https://atomiks.github.io/tippyjs/addons#singleton',
-      ),
+      ...getFormattedMessage(TIPPY_GROUP_WARNING),
     )
 
     spy.mockRestore()
@@ -195,10 +187,7 @@ describe('tippy.setDefaults()', () => {
     tippy.setDefaults({})
 
     expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        '`tippy.setDefaults()` was renamed to ' +
-          '`tippy.setDefaultProps()` in v5.',
-      ),
+      ...getFormattedMessage(SET_DEFAULTS_WARNING),
     )
 
     spy.mockRestore()
@@ -211,12 +200,7 @@ describe('tippy.defaults', () => {
 
     tippy.defaults
 
-    expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        'The `tippy.defaults` property was renamed to ' +
-          '`tippy.defaultProps` in v5.',
-      ),
-    )
+    expect(spy).toHaveBeenCalledWith(...getFormattedMessage(DEFAULTS_WARNING))
 
     spy.mockRestore()
   })

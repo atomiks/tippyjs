@@ -12,7 +12,7 @@ import tippy from '../../src'
 import { defaultProps } from '../../src/props'
 import createTippy from '../../src/createTippy'
 import { POPPER_SELECTOR } from '../../src/constants'
-import { getFormattedMessage } from '../../src/validation'
+import { getFormattedMessage, SET_WARNING } from '../../src/validation'
 
 jest.useFakeTimers()
 tippy.setDefaultProps({ duration: 0, delay: 0 })
@@ -397,9 +397,7 @@ describe('instance.set()', () => {
     instance = createTippy(h(), defaultProps)
     instance.set({})
 
-    expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage('`set()` was renamed to `setProps()` in v5.'),
-    )
+    expect(spy).toHaveBeenCalledWith(...getFormattedMessage(SET_WARNING))
 
     spy.mockRestore()
   })

@@ -1,6 +1,6 @@
 import { Targets, Instance, Props } from '../types'
 import tippy from '..'
-import { throwErrorWhen } from '../validation'
+import { throwErrorWhen, MISSING_TARGET_WARNING } from '../validation'
 import { getValueAtIndexOrReturn } from '../utils'
 
 interface ListenerObj {
@@ -19,11 +19,7 @@ export default function delegate(
   props: Props & { target: string },
 ): Instance | Instance[] {
   if (__DEV__) {
-    throwErrorWhen(
-      !props || !props.target,
-      'You must specify a `target` prop indicating the CSS selector string ' +
-        'matching the target elements that should receive a tippy.',
-    )
+    throwErrorWhen(!props || !props.target, MISSING_TARGET_WARNING)
   }
 
   let listeners: ListenerObj[] = []

@@ -3,6 +3,18 @@ import {
   validateTargets,
   validateExtraPropsFunctionality,
   getFormattedMessage,
+  createUnknownPropWarning,
+  createInvalidTargetsArgumentError,
+  TARGET_WARNING,
+  A11Y_WARNING,
+  SHOW_ON_INIT_WARNING,
+  ARROW_TYPE_WARNING,
+  TOUCH_HOLD_WARNING,
+  SIZE_WARNING,
+  GOOGLE_THEME_WARNING,
+  PLACEMENT_WARNING,
+  VIRTUAL_REFERENCE_OBJECT_WARNING,
+  FOLLOW_CURSOR_WARNING,
 } from '../../src/validation'
 
 let spy
@@ -19,97 +31,52 @@ describe('validateProps', () => {
   it('recognizes an unknown prop', () => {
     validateProps({ __unknown: true })
     expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        '`' +
-          '__unknown' +
-          '` is not a valid prop. You ' +
-          'may have spelled it incorrectly. View all of the valid props ' +
-          'here: https://atomiks.github.io/tippyjs/all-props/',
-      ),
+      ...getFormattedMessage(createUnknownPropWarning('__unknown')),
     )
   })
 
   it('recognizes the old `target` prop', () => {
     validateProps({ target: 'button' })
-    expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        'The `target` prop was removed in v5 and ' +
-          'replaced with the `delegate()` method. Read more here: ' +
-          'https//atomiks.github.io/tippyjs/addons#event-delegation',
-      ),
-    )
+    expect(spy).toHaveBeenCalledWith(...getFormattedMessage(TARGET_WARNING))
   })
 
   it('recognizes the old `a11y` prop', () => {
     validateProps({ a11y: true })
-    expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        'The `a11y` prop was removed in v5. Make ' +
-          'sure the element you are giving a tippy to is natively ' +
-          'focusable, such as <button> or <input>, not <div> or <span>.',
-      ),
-    )
+    expect(spy).toHaveBeenCalledWith(...getFormattedMessage(A11Y_WARNING))
   })
 
   it('recognizes the old `showOnInit` prop', () => {
     validateProps({ showOnInit: true })
     expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        '' + 'The `showOnInit` prop was renamed to `showOnCreate` in v5.',
-      ),
+      ...getFormattedMessage(SHOW_ON_INIT_WARNING),
     )
   })
 
   it('recognizes the old `arrowType` prop', () => {
     validateProps({ arrowType: 'round' })
-    expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        'The `arrowType` prop was removed in v5 ' +
-          'in favor of overloading the `arrow` prop. Specify ' +
-          '`arrow: "' +
-          'round' +
-          '"` instead.',
-      ),
-    )
+    expect(spy).toHaveBeenCalledWith(...getFormattedMessage(ARROW_TYPE_WARNING))
   })
 
   it('recognizes the old `touchHold` prop', () => {
     validateProps({ touchHold: true })
-    expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        'The `touchHold` prop was removed in v5 in favor of ' +
-          'overloading the `touch` prop. Specify `touch: "hold"` instead.',
-      ),
-    )
+    expect(spy).toHaveBeenCalledWith(...getFormattedMessage(TOUCH_HOLD_WARNING))
   })
 
   it('recognizes the old `size` prop', () => {
     validateProps({ size: 'small' })
-    expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        'The `size` prop was removed in v5. Instead, use a ' +
-          'theme that specifies `font-size` and `padding` CSS properties.',
-      ),
-    )
+    expect(spy).toHaveBeenCalledWith(...getFormattedMessage(SIZE_WARNING))
   })
 
   it('recognizes the old `google` theme', () => {
     validateProps({ theme: 'google' })
     expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        'The included theme `google` was renamed to ' + '`material` in v5.',
-      ),
+      ...getFormattedMessage(GOOGLE_THEME_WARNING),
     )
   })
 
   it('recognizes specifying `placement` in `popperOptions`', () => {
     validateProps({ popperOptions: { placement: 'auto' } })
-    expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        'Specifying `placement` in `popperOptions` is not ' +
-          'supported. Use the base-level `placement` prop instead.',
-      ),
-    )
+    expect(spy).toHaveBeenCalledWith(...getFormattedMessage(PLACEMENT_WARNING))
   })
 })
 
@@ -117,67 +84,33 @@ describe('validateTargets', () => {
   it('recognizes a falsy target', () => {
     expect(() => {
       validateTargets(null)
-    }).toThrow(
-      '`tippy()` was passed `' +
-        null +
-        '` (an invalid falsy value) as its targets argument. Valid types ' +
-        'are: String (CSS selector), Element, Element[], or NodeList.',
-    )
+    }).toThrow(createInvalidTargetsArgumentError(null))
 
     expect(() => {
       validateTargets(false)
-    }).toThrow(
-      '`tippy()` was passed `' +
-        false +
-        '` (an invalid falsy value) as its targets argument. Valid types ' +
-        'are: String (CSS selector), Element, Element[], or NodeList.',
-    )
+    }).toThrow(createInvalidTargetsArgumentError(false))
 
     expect(() => {
       validateTargets(undefined)
-    }).toThrow(
-      '`tippy()` was passed `' +
-        undefined +
-        '` (an invalid falsy value) as its targets argument. Valid types ' +
-        'are: String (CSS selector), Element, Element[], or NodeList.',
-    )
+    }).toThrow(createInvalidTargetsArgumentError(undefined))
 
     expect(() => {
       validateTargets(0)
-    }).toThrow(
-      '`tippy()` was passed `' +
-        0 +
-        '` (an invalid falsy value) as its targets argument. Valid types ' +
-        'are: String (CSS selector), Element, Element[], or NodeList.',
-    )
+    }).toThrow(createInvalidTargetsArgumentError(0))
 
     expect(() => {
       validateTargets('')
-    }).toThrow(
-      '`tippy()` was passed `' +
-        '' +
-        '` (an invalid falsy value) as its targets argument. Valid types ' +
-        'are: String (CSS selector), Element, Element[], or NodeList.',
-    )
+    }).toThrow(createInvalidTargetsArgumentError(''))
 
     expect(() => {
       validateTargets(NaN)
-    }).toThrow(
-      '`tippy()` was passed `' +
-        NaN +
-        '` (an invalid falsy value) as its targets argument. Valid types ' +
-        'are: String (CSS selector), Element, Element[], or NodeList.',
-    )
+    }).toThrow(createInvalidTargetsArgumentError(NaN))
   })
 
   it('recognizes a plain object', () => {
     expect(() => {
       validateTargets({})
-    }).toThrow(
-      '`tippy()` was passed a plain object (virtual ' +
-        'reference element) which is no longer supported in v5. Instead, ' +
-        'pass a placeholder element like `document.createElement("div")`',
-    )
+    }).toThrow(VIRTUAL_REFERENCE_OBJECT_WARNING)
   })
 })
 
@@ -186,12 +119,7 @@ describe('validateExtraPropsFunctionality', () => {
     const instance = { __extraProps: {} }
     validateExtraPropsFunctionality(instance, { followCursor: true })
     expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        'The `followCursor` prop was specified, but the instance has not ' +
-          'been configured with followCursor functionality. In v5, ' +
-          '`followCursor` was moved to `extra-props`. View details: ' +
-          'https://atomiks.github.io/tippyjs/extra-props/',
-      ),
+      ...getFormattedMessage(FOLLOW_CURSOR_WARNING),
     )
   })
 

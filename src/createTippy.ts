@@ -41,6 +41,9 @@ import {
   warnWhen,
   validateProps,
   validateExtraPropsFunctionality,
+  SET_WARNING,
+  createMemoryLeakWarning,
+  createCannotUpdateWarning,
 } from './validation'
 
 interface PaddingObject {
@@ -138,7 +141,7 @@ export default function createTippy(
   if (__DEV__) {
     Object.defineProperty(instance, 'set', {
       value(): void {
-        warnWhen(true, '`set()` was renamed to `setProps()` in v5.')
+        warnWhen(true, SET_WARNING)
       },
       enumerable: false,
     })
@@ -753,14 +756,10 @@ export default function createTippy(
     cancelAnimationFrame(scheduleHideAnimationFrame)
   }
 
-  // Cloning as we're deleting non-updateable props in DEV mode
-  function setProps({ ...partialProps }: Partial<Props>): void {
+  function setProps(partialProps: Partial<Props>): void {
     if (__DEV__) {
-      warnWhen(
-        instance.state.isDestroyed,
-        '`setProps()` was called on a destroyed instance. ' +
-          'This is a no-op but indicates a potential memory leak.',
-      )
+      partialProps = { ...partialProps }
+      warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('setProps'))
     }
 
     if (instance.state.isDestroyed) {
@@ -774,12 +773,7 @@ export default function createTippy(
       NON_UPDATEABLE_PROPS.forEach((prop): void => {
         if (hasOwnProperty(partialProps, prop)) {
           delete partialProps[prop]
-          warnWhen(
-            true,
-            'Cannot update `' +
-              prop +
-              '` prop. Destroy this instance and create a new instance instead.',
-          )
+          warnWhen(true, createCannotUpdateWarning(prop))
         }
       })
     }
@@ -842,11 +836,7 @@ export default function createTippy(
     shouldPreventPopperTransition: boolean = true,
   ): void {
     if (__DEV__) {
-      warnWhen(
-        instance.state.isDestroyed,
-        '`show()` was called on a destroyed instance. ' +
-          'This is a no-op but indicates a potential memory leak.',
-      )
+      warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('show'))
     }
 
     // Early bail-out
@@ -944,11 +934,7 @@ export default function createTippy(
     ),
   ): void {
     if (__DEV__) {
-      warnWhen(
-        instance.state.isDestroyed,
-        '`hide()` was called on a destroyed instance. ' +
-          'This is a no-op but indicates a potential memory leak.',
-      )
+      warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('hide'))
     }
 
     // Early bail-out
@@ -1001,11 +987,7 @@ export default function createTippy(
 
   function destroy(): void {
     if (__DEV__) {
-      warnWhen(
-        instance.state.isDestroyed,
-        '`destroy()` was called on an already-destroyed ' +
-          'instance. This is a no-op but indicates a potential memory leak.',
-      )
+      warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('destroy'))
     }
 
     if (instance.state.isDestroyed) {
