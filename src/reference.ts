@@ -61,3 +61,21 @@ export function handleAriaDescribedByAttribute(
     }
   }
 }
+
+/**
+ * Applies the `aria-expanded` attribute for interactive tippys, or removes it
+ * if no longer interactive
+ */
+export function handleAriaExpandedAttribute(
+  node: Element,
+  isShowing: boolean,
+  isInteractive: boolean,
+): void {
+  const attr = 'aria-expanded'
+
+  if (isInteractive) {
+    node.setAttribute(attr, isShowing ? 'true' : 'false')
+  } else {
+    node.removeAttribute(attr)
+  }
+}

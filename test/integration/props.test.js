@@ -440,6 +440,44 @@ describe('interactive', () => {
     )
     expect(instance.state.isVisible).toBe(false)
   })
+
+  it('true: handles the `aria-expanded` attribute', () => {
+    const instance = tippy(h(), { interactive: true })
+    const triggerTarget = h()
+
+    expect(instance.reference.getAttribute('aria-expanded')).toBe('false')
+
+    instance.show()
+    jest.runAllTimers()
+
+    expect(instance.reference.getAttribute('aria-expanded')).toBe('true')
+
+    instance.hide()
+
+    expect(instance.reference.getAttribute('aria-expanded')).toBe('false')
+
+    instance.setProps({ triggerTarget })
+
+    instance.show()
+    jest.runAllTimers()
+
+    expect(triggerTarget.getAttribute('aria-expanded')).toBe('true')
+
+    instance.hide()
+
+    expect(triggerTarget.getAttribute('aria-expanded')).toBe('false')
+  })
+
+  it('false: does not add `aria-expanded` attribute', () => {
+    const instance = tippy(h(), { interactive: false })
+
+    expect(instance.reference.getAttribute('aria-expanded')).toBe(null)
+
+    instance.show()
+    jest.runAllTimers()
+
+    expect(instance.reference.getAttribute('aria-expanded')).toBe(null)
+  })
 })
 
 describe('theme', () => {

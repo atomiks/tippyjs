@@ -45,7 +45,10 @@ import {
   createMemoryLeakWarning,
   createCannotUpdateWarning,
 } from './validation'
-import { handleAriaDescribedByAttribute } from './reference'
+import {
+  handleAriaDescribedByAttribute,
+  handleAriaExpandedAttribute,
+} from './reference'
 
 interface PaddingObject {
   top: number
@@ -158,6 +161,7 @@ export default function createTippy(
   popper._tippy = instance
 
   addListenersToTriggerTarget()
+  handleAriaExpandedAttribute(getTriggerTarget(), false, props.interactive)
 
   if (!props.lazy) {
     createPopperInstance()
@@ -893,6 +897,12 @@ export default function createTippy(
       instance.props.onMount(instance)
       instance.state.isMounted = true
 
+      const node = getTriggerTarget()
+      const { aria, interactive } = instance.props
+
+      handleAriaDescribedByAttribute(node, true, aria, tooltip.id)
+      handleAriaExpandedAttribute(node, true, interactive)
+
       // The content should fade in after the backdrop has mostly filled the
       // tooltip element. `clip-path` is the other alternative but is not well-
       // supported and is buggy on some devices.
@@ -909,13 +919,6 @@ export default function createTippy(
       setVisibilityState(transitionableElements, 'visible')
 
       onTransitionedIn(duration, (): void => {
-        handleAriaDescribedByAttribute(
-          getTriggerTarget(),
-          true,
-          instance.props.aria,
-          tooltip.id,
-        )
-
         instance.props.onShown(instance)
         instance.state.isShown = true
       })
@@ -958,14 +961,13 @@ export default function createTippy(
     setTransitionDuration(transitionableElements, duration)
     setVisibilityState(transitionableElements, 'hidden')
 
-    onTransitionedOut(duration, (): void => {
-      handleAriaDescribedByAttribute(
-        getTriggerTarget(),
-        false,
-        instance.props.aria,
-        tooltip.id,
-      )
+    const node = getTriggerTarget()
+    const { aria, interactive } = instance.props
 
+    handleAriaDescribedByAttribute(node, false, aria, tooltip.id)
+    handleAriaExpandedAttribute(node, false, interactive)
+
+    onTransitionedOut(duration, (): void => {
       instance.popperInstance!.disableEventListeners()
       instance.popperInstance!.options.placement = instance.props.placement
 
