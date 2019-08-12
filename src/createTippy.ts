@@ -45,6 +45,7 @@ import {
   createMemoryLeakWarning,
   createCannotUpdateWarning,
 } from './validation'
+import { handleAriaDescribedByAttribute } from './reference'
 
 interface PaddingObject {
   top: number
@@ -908,15 +909,12 @@ export default function createTippy(
       setVisibilityState(transitionableElements, 'visible')
 
       onTransitionedIn(duration, (): void => {
-        if (instance.props.aria) {
-          const node = getEventListenersTarget()
-          const attrName = `aria-${instance.props.aria}`
-          const currentAttrValue = node.getAttribute(attrName)
-          const nextAttrValue = currentAttrValue
-            ? `${currentAttrValue} ${tooltip.id}`
-            : tooltip.id
-          node.setAttribute(attrName, nextAttrValue)
-        }
+        handleAriaDescribedByAttribute(
+          getEventListenersTarget(),
+          true,
+          instance.props.aria,
+          tooltip.id,
+        )
 
         instance.props.onShown(instance)
         instance.state.isShown = true
@@ -961,20 +959,12 @@ export default function createTippy(
     setVisibilityState(transitionableElements, 'hidden')
 
     onTransitionedOut(duration, (): void => {
-      if (instance.props.aria) {
-        const node = getEventListenersTarget()
-        const attrName = `aria-${instance.props.aria}`
-        const currentAttrValue = node.getAttribute(attrName)
-        const nextAttrValue = currentAttrValue
-          ? currentAttrValue.replace(tooltip.id, '').trim()
-          : null
-
-        if (nextAttrValue) {
-          node.setAttribute(attrName, nextAttrValue)
-        } else {
-          node.removeAttribute(attrName)
-        }
-      }
+      handleAriaDescribedByAttribute(
+        getEventListenersTarget(),
+        false,
+        instance.props.aria,
+        tooltip.id,
+      )
 
       instance.popperInstance!.disableEventListeners()
       instance.popperInstance!.options.placement = instance.props.placement

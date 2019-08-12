@@ -31,3 +31,33 @@ export function getDataAttributeProps(reference: ReferenceElement): Props {
 
   return props
 }
+
+/**
+ * Applies the `aria-describedby` (or `aria-labelledby`) attribute to the
+ * triggerTarget
+ */
+export function handleAriaDescribedByAttribute(
+  node: Element,
+  isShowing: boolean,
+  aria: string | null,
+  id: string,
+): void {
+  if (!aria) {
+    return
+  }
+
+  const attr = `aria-${aria}`
+  const currentValue = node.getAttribute(attr)
+
+  if (isShowing) {
+    node.setAttribute(attr, currentValue ? `${currentValue} ${id}` : id)
+  } else {
+    const nextValue = currentValue && currentValue.replace(id, '').trim()
+
+    if (nextValue) {
+      node.setAttribute(attr, nextValue)
+    } else {
+      node.removeAttribute(attr)
+    }
+  }
+}
