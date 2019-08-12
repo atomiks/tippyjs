@@ -157,7 +157,7 @@ export default function createTippy(
   reference._tippy = instance
   popper._tippy = instance
 
-  addTriggersToEventListenersTarget()
+  addListenersToTriggerTarget()
 
   if (!props.lazy) {
     createPopperInstance()
@@ -202,7 +202,7 @@ export default function createTippy(
     return [tooltip, content, instance.popperChildren.backdrop]
   }
 
-  function getEventListenersTarget(): ReferenceElement {
+  function getTriggerTarget(): ReferenceElement {
     return instance.props.triggerTarget || reference
   }
 
@@ -224,7 +224,7 @@ export default function createTippy(
     }
 
     // Clicked on the event listeners target
-    if (getEventListenersTarget().contains(event.target as Element)) {
+    if (getTriggerTarget().contains(event.target as Element)) {
       if (currentInput.isTouch) {
         return
       }
@@ -337,11 +337,11 @@ export default function createTippy(
     handler: EventListener,
     options: boolean | object = false,
   ): void {
-    getEventListenersTarget().addEventListener(eventType, handler, options)
+    getTriggerTarget().addEventListener(eventType, handler, options)
     listeners.push({ eventType, handler, options })
   }
 
-  function addTriggersToEventListenersTarget(): void {
+  function addListenersToTriggerTarget(): void {
     if (getIsCustomTouchBehavior()) {
       on('touchstart', onTrigger, PASSIVE)
       on('touchend', onMouseLeave as EventListener, PASSIVE)
@@ -377,9 +377,9 @@ export default function createTippy(
       })
   }
 
-  function removeTriggersFromEventListenersTarget(): void {
+  function removeListenersFromTriggerTarget(): void {
     listeners.forEach(({ eventType, handler, options }: Listener): void => {
-      getEventListenersTarget().removeEventListener(eventType, handler, options)
+      getTriggerTarget().removeEventListener(eventType, handler, options)
     })
     listeners = []
   }
@@ -467,7 +467,7 @@ export default function createTippy(
   }
 
   function onBlur(event: FocusEvent): void {
-    if (event.target !== getEventListenersTarget()) {
+    if (event.target !== getTriggerTarget()) {
       return
     }
 
@@ -779,7 +779,7 @@ export default function createTippy(
       })
     }
 
-    removeTriggersFromEventListenersTarget()
+    removeListenersFromTriggerTarget()
 
     const prevProps = instance.props
     const nextProps = evaluateProps(reference, {
@@ -795,7 +795,7 @@ export default function createTippy(
       : prevProps.ignoreAttributes
     instance.props = nextProps
 
-    addTriggersToEventListenersTarget()
+    addListenersToTriggerTarget()
 
     cleanupInteractiveMouseListeners()
     debouncedOnMouseMove = debounce(onMouseMove, nextProps.interactiveDebounce)
@@ -859,7 +859,7 @@ export default function createTippy(
     // Normalize `disabled` behavior across browsers.
     // Firefox allows events on disabled elements, but Chrome doesn't.
     // Using a wrapper element (i.e. <span>) is recommended.
-    if (getEventListenersTarget().hasAttribute('disabled')) {
+    if (getTriggerTarget().hasAttribute('disabled')) {
       return
     }
 
@@ -910,7 +910,7 @@ export default function createTippy(
 
       onTransitionedIn(duration, (): void => {
         handleAriaDescribedByAttribute(
-          getEventListenersTarget(),
+          getTriggerTarget(),
           true,
           instance.props.aria,
           tooltip.id,
@@ -960,7 +960,7 @@ export default function createTippy(
 
     onTransitionedOut(duration, (): void => {
       handleAriaDescribedByAttribute(
-        getEventListenersTarget(),
+        getTriggerTarget(),
         false,
         instance.props.aria,
         tooltip.id,
@@ -988,7 +988,7 @@ export default function createTippy(
 
     instance.hide(0)
 
-    removeTriggersFromEventListenersTarget()
+    removeListenersFromTriggerTarget()
 
     delete reference._tippy
 
