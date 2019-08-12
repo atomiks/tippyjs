@@ -390,19 +390,6 @@ describe('instance.setProps()', () => {
   })
 })
 
-describe('instance.set()', () => {
-  it('should warn', () => {
-    const spy = jest.spyOn(console, 'warn')
-
-    instance = createTippy(h(), defaultProps)
-    instance.set({})
-
-    expect(spy).toHaveBeenCalledWith(...getFormattedMessage(SET_WARNING))
-
-    spy.mockRestore()
-  })
-})
-
 describe('instance.setContent()', () => {
   it('works like set({ content: newContent })', () => {
     instance = createTippy(h(), defaultProps)

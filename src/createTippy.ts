@@ -42,7 +42,6 @@ import {
   warnWhen,
   validateProps,
   validateExtraPropsFunctionality,
-  SET_WARNING,
   createMemoryLeakWarning,
   createCannotUpdateWarning,
 } from './validation'
@@ -144,13 +143,6 @@ export default function createTippy(
   }
 
   if (__DEV__) {
-    Object.defineProperty(instance, 'set', {
-      value(): void {
-        warnWhen(true, SET_WARNING)
-      },
-      enumerable: false,
-    })
-
     Object.defineProperty(instance, '__extraProps', {
       value: {},
       enumerable: false,

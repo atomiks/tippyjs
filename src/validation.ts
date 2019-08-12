@@ -14,25 +14,6 @@ export const CONTENT_WARNING = `
   2) content: element.innerHTML
 `
 
-export const TIPPY_GROUP_WARNING = `
-  tippy.group() was removed in v5 and replaced with the createSingleton()
-  method.
-
-  Read more: https://atomiks.github.io/tippyjs/addons#singleton
-`
-
-export const SET_DEFAULTS_WARNING = `
-  tippy.setDefaults() was renamed to tippy.setDefaultProps() in v5.
-`
-
-export const DEFAULTS_WARNING = `
-  tippy.defaults was renamed to tippy.defaultProps in v5.
-`
-
-export const SET_WARNING = `
-  instance.set() was renamed to instance.setProps() in v5.
-`
-
 export const TARGET_WARNING = `
   The target prop was removed in v5 and replaced with the delegate() method in
   order to conserve bundle size.
