@@ -4,6 +4,7 @@ import {
   PopperChildren,
   BasePlacement,
   Placement,
+  Instance,
 } from './types'
 import { innerHTML, div, isRealElement } from './utils'
 import { isUCBrowser } from './browser'
@@ -162,13 +163,11 @@ export function updateTheme(
   action: 'add' | 'remove',
   theme: Props['theme'],
 ): void {
-  theme.split(' ').forEach(
-    (name): void => {
-      if (name) {
-        tooltip.classList[action](`${name}-theme`)
-      }
-    },
-  )
+  theme.split(' ').forEach((name): void => {
+    if (name) {
+      tooltip.classList[action](`${name}-theme`)
+    }
+  })
 }
 
 /**
@@ -335,4 +334,36 @@ export function isCursorOutsideInteractiveBorder(
       : interactiveBorder)
 
   return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight
+}
+
+/**
+ * Updates the position of the tippy on every animation frame to ensure it stays
+ * stuck to the reference element.
+ * Optimized by ensuring the reference's clientRect has actually changed before
+ * scheduling an update.
+ */
+export function makeSticky(instance: Instance): void {
+  let prevRefRect = instance.reference.getBoundingClientRect()
+
+  function updatePosition(): void {
+    const currentRefRect = instance.reference.getBoundingClientRect()
+
+    // Only schedule an update if the reference rect has changed
+    if (
+      prevRefRect.top !== currentRefRect.top ||
+      prevRefRect.right !== currentRefRect.right ||
+      prevRefRect.bottom !== currentRefRect.bottom ||
+      prevRefRect.left !== currentRefRect.left
+    ) {
+      instance.popperInstance!.scheduleUpdate()
+    }
+
+    prevRefRect = currentRefRect
+
+    if (instance.state.isMounted) {
+      requestAnimationFrame(updatePosition)
+    }
+  }
+
+  updatePosition()
 }

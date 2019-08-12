@@ -22,6 +22,7 @@ import {
   updateTransitionEndListener,
   isCursorOutsideInteractiveBorder,
   reflow,
+  makeSticky,
 } from './popper'
 import {
   hasOwnProperty,
@@ -267,34 +268,6 @@ export default function createTippy(
 
   function removeDocumentMouseDownListener(): void {
     document.removeEventListener('mousedown', onDocumentMouseDown, true)
-  }
-
-  function makeSticky(): void {
-    setTransitionDuration([popper], isIE ? 0 : instance.props.updateDuration)
-
-    let prevRefRect = reference.getBoundingClientRect()
-
-    function updatePosition(): void {
-      const currentRefRect = reference.getBoundingClientRect()
-
-      // Only schedule an update if the reference rect has changed
-      if (
-        prevRefRect.top !== currentRefRect.top ||
-        prevRefRect.right !== currentRefRect.right ||
-        prevRefRect.bottom !== currentRefRect.bottom ||
-        prevRefRect.left !== currentRefRect.left
-      ) {
-        instance.popperInstance!.scheduleUpdate()
-      }
-
-      prevRefRect = currentRefRect
-
-      if (instance.state.isMounted) {
-        requestAnimationFrame(updatePosition)
-      }
-    }
-
-    updatePosition()
   }
 
   function onTransitionedOut(duration: number, callback: () => void): void {
@@ -911,7 +884,7 @@ export default function createTippy(
         : ''
 
       if (instance.props.sticky) {
-        makeSticky()
+        makeSticky(instance)
       }
 
       setTransitionDuration([popper], instance.props.updateDuration)
