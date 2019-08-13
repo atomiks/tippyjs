@@ -17,6 +17,10 @@ import {
 import tippy from '../../src'
 import { getChildren } from '../../src/popper'
 import { ARROW_SELECTOR, SVG_ARROW_SELECTOR } from '../../src/constants'
+import {
+  INTERACTIVE_A11Y_WARNING,
+  getFormattedMessage,
+} from '../../src/validation'
 
 tippy.setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
@@ -477,6 +481,43 @@ describe('interactive', () => {
     jest.runAllTimers()
 
     expect(instance.reference.getAttribute('aria-expanded')).toBe(null)
+  })
+
+  it('true: with default appendTo, uses appendTo: "parent"', () => {
+    const ref = h()
+    const container = h('div')
+
+    container.appendChild(ref)
+    document.body.appendChild(container)
+
+    const instance = tippy(ref, { interactive: true })
+
+    instance.show()
+    jest.runAllTimers()
+
+    expect(instance.popper.parentNode).toBe(container)
+
+    document.body.removeChild(container)
+  })
+
+  it('true: warns if tippy is not accessible', () => {
+    const instance = tippy(h(), { interactive: true })
+
+    const inbetweenNode = h()
+    instance.reference.parentNode.appendChild(inbetweenNode)
+
+    const spy = jest.spyOn(console, 'warn')
+
+    instance.show()
+    jest.runAllTimers()
+
+    expect(spy).toHaveBeenCalledWith(
+      ...getFormattedMessage(INTERACTIVE_A11Y_WARNING),
+    )
+
+    instance.reference.parentNode.removeChild(inbetweenNode)
+
+    spy.mockRestore()
   })
 })
 

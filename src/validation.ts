@@ -97,6 +97,14 @@ export const MISSING_TARGET_WARNING = `
   matching the target elements that should receive a tippy.
 `
 
+export const INTERACTIVE_A11Y_WARNING = `
+  Interactive tippy element may not be accessible via keyboard navigation.
+
+  Ensure the tippy element is directly after the reference (or triggerTarget)
+  element in the DOM source order. Using a wrapper <div> or <span> element
+  around it can solve this.
+`
+
 export function createInvalidCreateSingletonArgumentError(arg: string): string {
   return `
   The first argument passed to createSingleton() must be an array of tippy

@@ -150,6 +150,10 @@ export function evaluateProps(
     out.animateFill = false
   }
 
+  if (out.interactive) {
+    out.aria = null
+  }
+
   return out
 }
 

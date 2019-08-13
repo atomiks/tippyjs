@@ -15,7 +15,7 @@ or `<input>`. Some screenreader software may not announce the tooltip on an
 element like `<div>`, even if you add a `tabindex="0"` attribute on it so that
 it can receive focus.
 
-### Non-interactive tooltips are accessible by default
+### Tooltips are accessible by default
 
 The default trigger for tooltips is `"mouseenter focus"`. This means both a
 hover and focus via keyboard navigation will trigger a tooltip. The reference
@@ -31,61 +31,6 @@ shown:
 
 This allows screenreader software to announce the tooltip content describing the
 reference element. No work is required by you to achieve this functionality.
-
-### Creating accessible interactive tooltips
-
-Although non-interactive tooltips are accessible by default, making interactive
-tooltips accessible requires a bit of work by you.
-
-In your HTML, the element should have its own wrapper element (e.g. `div` or
-`span`), and an `aria-expanded` attribute:
-
-<!-- prettier-ignore -->
-```html
-<div>
-  <button aria-expanded="false">Text</button>
-</div>
-```
-
-When initializing the tooltip, the following props are recommended:
-
-```js
-tippy('button', {
-  interactive: true,
-  // `focus` is not suitable for buttons with dropdowns
-  trigger: 'click',
-  // Don't announce the tooltip's contents when expanded
-  aria: null,
-  // Important: the tooltip should be DIRECTLY after the reference element
-  // in the DOM source order, which is why it has its own wrapper element
-  appendTo: 'parent',
-  // Let the user know the dropdown has been expanded using these lifecycle
-  // functions
-  onMount({ reference }) {
-    reference.setAttribute('aria-expanded', 'true')
-  },
-  onHide({ reference }) {
-    reference.setAttribute('aria-expanded', 'false')
-  },
-})
-```
-
-<Demo>
-  <Button>Click me then press Tab</Button>
-  <Dropdown text="Press Enter to click" />
-</Demo>
-
-Using this technique, elements within the tippy can be tabbed to since they are
-directly after the reference element.
-
-It's also possible to change the `role` of the tippy to something other than
-`"tooltip"`:
-
-```js
-tippy('button', {
-  role: 'menu',
-})
-```
 
 ### Delays and keyboard navigation
 

@@ -43,6 +43,7 @@ import {
   validateExtraPropsFunctionality,
   createMemoryLeakWarning,
   createCannotUpdateWarning,
+  INTERACTIVE_A11Y_WARNING,
 } from './validation'
 import {
   handleAriaDescribedByAttribute,
@@ -614,15 +615,37 @@ export default function createTippy(
     hasMountCallbackRun = false
 
     const { appendTo } = instance.props
-    const parentNode =
+
+    let parentNode: any
+
+    // By default, we'll append the popper to the triggerTargets's parentNode so
+    // it's directly after the reference element so the elements inside the
+    // tippy can be tabbed to
+    // If there are clipping issues, the user can specify a different appendTo
+    // and ensure focus management is handled correctly manually
+    if (
+      (instance.props.interactive && appendTo === defaultProps.appendTo) ||
       appendTo === 'parent'
-        ? reference.parentNode
-        : invokeWithArgsOrReturn(appendTo, [reference])
+    ) {
+      parentNode = getTriggerTarget().parentNode
+    } else {
+      parentNode = invokeWithArgsOrReturn(appendTo, [reference])
+    }
 
     // The popper element needs to exist on the DOM before its position can be
     // updated as Popper.js needs to read its dimensions
     if (!parentNode.contains(popper)) {
       parentNode.appendChild(popper)
+    }
+
+    if (__DEV__) {
+      // Accessibility check
+      warnWhen(
+        instance.props.interactive &&
+          appendTo === defaultProps.appendTo &&
+          getTriggerTarget().nextElementSibling !== popper,
+        INTERACTIVE_A11Y_WARNING,
+      )
     }
 
     if (instance.popperInstance) {
