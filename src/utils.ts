@@ -213,11 +213,8 @@ export function preserveInvocation<T>(
 /**
  * Deletes properties from an object (pure)
  */
-export function removeProperties<T>(
-  partialProps: T,
-  keys: Array<keyof T>,
-): Partial<T> {
-  const clone = { ...partialProps }
+export function removeProperties<T>(obj: T, keys: Array<keyof T>): Partial<T> {
+  const clone = { ...obj }
   keys.forEach((key): void => {
     delete clone[key]
   })
