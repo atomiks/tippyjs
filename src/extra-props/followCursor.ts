@@ -5,10 +5,10 @@ import {
   Tippy,
   TippyCallWrapper,
   Placement,
+  PopperElement,
 } from '../types'
 import {
   includes,
-  getVirtualOffsets,
   preserveInvocation,
   removeProperties,
   closestCallback,
@@ -40,6 +40,23 @@ export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
         }
       },
     })
+  }
+}
+
+export function getVirtualOffsets(
+  popper: PopperElement,
+  isVerticalPlacement: boolean,
+): {
+  size: number
+  x: number
+  y: number
+} {
+  const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
+
+  return {
+    size,
+    x: isVerticalPlacement ? size : 0,
+    y: isVerticalPlacement ? 0 : size,
   }
 }
 

@@ -1,4 +1,4 @@
-import { Props, ReferenceElement, Targets, PopperElement } from './types'
+import { Props, ReferenceElement, Targets } from './types'
 import { isUCBrowser } from './browser'
 import { getDataAttributeProps } from './reference'
 import { POPPER_CLASS } from './constants'
@@ -174,26 +174,6 @@ export function debounce<T>(
     timeout = setTimeout((): void => {
       fn(arg)
     }, ms)
-  }
-}
-
-/**
- * Returns offsets for virtual reference when using a cursor point
- */
-export function getVirtualOffsets(
-  popper: PopperElement,
-  isVerticalPlacement: boolean,
-): {
-  size: number
-  x: number
-  y: number
-} {
-  const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
-
-  return {
-    size,
-    x: isVerticalPlacement ? size : 0,
-    y: isVerticalPlacement ? 0 : size,
   }
 }
 

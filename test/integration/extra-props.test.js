@@ -9,7 +9,7 @@ import tippy from '../../src'
 import enhance from '../../src/extra-props/enhance'
 import followCursor from '../../src/extra-props/followCursor'
 import { getBasePlacement } from '../../src/popper'
-import { getVirtualOffsets } from '../../src/utils'
+import { getVirtualOffsets } from '../../src/extra-props/followCursor'
 
 tippy.setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
