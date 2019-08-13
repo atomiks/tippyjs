@@ -17,7 +17,7 @@ import { getBasePlacement } from '../popper'
 import { currentInput } from '../bindGlobalEventListeners'
 import Popper from 'popper.js'
 
-export default function withFollowCursor(tippy: Tippy): TippyCallWrapper {
+export default function followCursor(tippy: Tippy): TippyCallWrapper {
   return (
     targets: Targets,
     optionalProps?: Partial<Props>,
