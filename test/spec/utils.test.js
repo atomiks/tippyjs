@@ -360,6 +360,7 @@ describe('setVisibilityState', () => {
 
 describe('arrayFromString', () => {
   it('returns an array parsed from the specified string', () => {
+    expect(Utils.arrayFromString('')).toMatchObject([])
     expect(Utils.arrayFromString('one')).toMatchObject(['one'])
     expect(Utils.arrayFromString('one two')).toMatchObject(['one', 'two'])
     expect(Utils.arrayFromString('one  two    three')).toMatchObject([
@@ -369,8 +370,7 @@ describe('arrayFromString', () => {
     ])
   })
 
-  it('ignores trailing whitespace', () => {
-    expect(Utils.arrayFromString('')).toMatchObject([])
+  it('ignores surrounding whitespace', () => {
     expect(Utils.arrayFromString('  one  ')).toMatchObject(['one'])
     expect(Utils.arrayFromString(' one  two ')).toMatchObject(['one', 'two'])
   })
