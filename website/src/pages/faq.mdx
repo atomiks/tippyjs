@@ -26,15 +26,10 @@ needs to get stripped out because it reduces performance and increases bundle
 size.
 
 Tools like `create-react-app` and `Parcel` bundler handle this automatically.
-For tools like Browserify/Grunt/Gulp,
-[view the following link](https://vuejs.org/v2/guide/deployment.html#With-Build-Tools).
 
-#### webpack
+#### Browserify/Grunt/Gulp
 
-By default, webpack defaults to `production` which means you won't get helpful
-development messages, but there won't be any error. Use the
-[`mode`](https://webpack.js.org/configuration/mode/) option to specify
-`development` or `production` where necessary.
+[View the following link](https://vuejs.org/v2/guide/deployment.html#With-Build-Tools).
 
 #### Rollup
 
@@ -60,6 +55,13 @@ export default {
   ],
 }
 ```
+
+#### webpack
+
+By default, webpack defaults to `production` which means you won't get helpful
+development messages, but there won't be any error. Use the
+[`mode`](https://webpack.js.org/configuration/mode/) option to specify
+`development` or `production` where necessary.
 
 ### I can't click things inside the tooltip
 
