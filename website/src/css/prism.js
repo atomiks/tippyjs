@@ -69,7 +69,8 @@ export default createGlobalStyle`
   .token.atrule,
   .token.keyword,
   .token.attribute {
-    color: #c3a2ff;
+    color: #d0aeff;
+    text-shadow: 0 0 2px #000, 0 0 35px #bf4fffdd;
   }
 
   .token.comment,
@@ -93,7 +94,8 @@ export default createGlobalStyle`
   }
 
   .token.punctuation {
-    color: #89DDFF;
+    color: #93e2ff;
+    text-shadow: 0 0 2px #000, 0 0 14px #46e3ff;
   }
 
   .token.block {
@@ -104,7 +106,8 @@ export default createGlobalStyle`
   .token.operator,
   .token.op,
   .token.module {
-    color: #89DDFF;
+    color: #93e2ff;
+    text-shadow: 0 0 2px #000, 0 0 14px #46e3ff;
   }
 
   .token.nil {
@@ -173,7 +176,7 @@ export default createGlobalStyle`
 
   .token.method,
   .language-css .token.function {
-    color: #45baff;
+    color: #39c5ff;
   }
 
   .token.variable {
@@ -183,7 +186,8 @@ export default createGlobalStyle`
   .token.dom,
   .token.class-name,
   .token.console {
-    color: #ffc777;
+    color: #ffe0a9;
+    text-shadow: 0 0 2px #000, 0 0 25px #eee9e3, 0 0 6px #ff7d1d;
   }
 
   .token.property.definition {
@@ -191,7 +195,7 @@ export default createGlobalStyle`
   }
 
   .token.property.access {
-    color: #89DDFF;
+    color: #b8c7fc;
   }
 
   .token.regex {
