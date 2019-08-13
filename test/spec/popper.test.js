@@ -683,11 +683,4 @@ describe('updateTheme', () => {
     updateTheme(div, 'add', theme)
     expect(div.className).toBe('hello-theme world-theme')
   })
-
-  it('does work with "falsy" strings', () => {
-    const div = document.createElement('div')
-    const theme = 'undefined null false'
-    updateTheme(div, 'add', theme)
-    expect(div.className).toBe('undefined-theme null-theme false-theme')
-  })
 })

@@ -6,7 +6,13 @@ import {
   BasicPlacement,
 } from './types'
 import { arrayFrom } from './ponyfills'
-import { innerHTML, div, isReferenceElement, isRealElement } from './utils'
+import {
+  innerHTML,
+  div,
+  isReferenceElement,
+  isRealElement,
+  arrayFromString,
+} from './utils'
 import { isUCBrowser } from './browser'
 import {
   POPPER_CLASS,
@@ -170,14 +176,11 @@ export function updateTheme(
   action: 'add' | 'remove',
   theme: Props['theme'],
 ): void {
-  theme
-    .split(' ')
-    .filter(Boolean)
-    .forEach(
-      (themeName): void => {
-        tooltip.classList[action](themeName + '-theme')
-      },
-    )
+  arrayFromString(theme).forEach(
+    (themeName): void => {
+      tooltip.classList[action](themeName + '-theme')
+    },
+  )
 }
 
 /**
