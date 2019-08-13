@@ -4,6 +4,10 @@ Prism.languages.insertBefore('javascript', 'keyword', {
     pattern: /\b(?:import|as|export|from|default)\b/,
     alias: 'keyword',
   },
+  control: {
+    pattern: /\b(?:if|else|return)\b/,
+    alias: 'keyword',
+  },
   op: {
     pattern: /\b(?:typeof|new|of|delete)\b/,
     alias: 'keyword',
@@ -35,6 +39,7 @@ Prism.languages.insertBefore('javascript', 'punctuation', {
     alias: 'variable',
   },
   console: /\bconsole\b/,
+  object: /\b[$\w\xA0-\uFFFF]+?(?=\.)/,
   class: {
     pattern: /\b[A-Z][$\w\xA0-\uFFFF]+\b/,
     alias: 'class-name',

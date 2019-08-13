@@ -105,7 +105,8 @@ export default createGlobalStyle`
   .token.tag .token.punctuation,
   .token.operator,
   .token.op,
-  .token.module {
+  .token.module,
+  .token.control {
     color: #93e2ff;
     text-shadow: 0 0 2px #000, 0 0 14px #46e3ff;
   }
@@ -185,7 +186,8 @@ export default createGlobalStyle`
 
   .token.dom,
   .token.class-name,
-  .token.console {
+  .token.console,
+  .token.object {
     color: #ffe0a9;
     text-shadow: 0 0 2px #000, 0 0 25px #eee9e3, 0 0 6px #ff7d1d;
   }
