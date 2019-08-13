@@ -1,7 +1,7 @@
 import { Targets, Instance, Props } from '../types'
 import tippy from '..'
 import { throwErrorWhen, MISSING_TARGET_WARNING } from '../validation'
-import { getValueAtIndexOrReturn } from '../utils'
+import { removeProperties } from '../utils'
 
 interface ListenerObj {
   element: Element
@@ -25,16 +25,16 @@ export default function delegate(
   let listeners: ListenerObj[] = []
   let childTippyInstances: Instance[] = []
 
-  const { target, trigger } = props
-  delete props.target
+  const { target } = props
+  const nativeProps = removeProperties(props, ['target'])
+  const trigger = props.trigger || tippy.defaultProps.trigger
 
   // The user needs to specify their own enhanced tippy function to use extra
   // props
   // @ts-ignore
   const tippyConstructor = delegate.tippy || tippy
-
   const returnValue = tippyConstructor(targets, {
-    ...props,
+    ...nativeProps,
     trigger: 'manual',
   })
 
@@ -67,10 +67,8 @@ export default function delegate(
 
   function addEventListeners(instance: Instance): void {
     const { reference } = instance
-    const t = trigger || tippy.defaultProps.trigger
-    const showTrigger = getValueAtIndexOrReturn(t, 0, t)
 
-    showTrigger
+    trigger
       .trim()
       .split(' ')
       .forEach((eventType): void => {
