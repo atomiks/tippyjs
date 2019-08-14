@@ -358,12 +358,12 @@ describe('setVisibilityState', () => {
   })
 })
 
-describe('arrayFromString', () => {
+describe('splitBySpaces', () => {
   it('returns an array parsed from the specified string', () => {
-    expect(Utils.arrayFromString('')).toMatchObject([])
-    expect(Utils.arrayFromString('one')).toMatchObject(['one'])
-    expect(Utils.arrayFromString('one two')).toMatchObject(['one', 'two'])
-    expect(Utils.arrayFromString('one  two    three')).toMatchObject([
+    expect(Utils.splitBySpaces('')).toMatchObject([])
+    expect(Utils.splitBySpaces('one')).toMatchObject(['one'])
+    expect(Utils.splitBySpaces('one two')).toMatchObject(['one', 'two'])
+    expect(Utils.splitBySpaces('one  two    three')).toMatchObject([
       'one',
       'two',
       'three',
@@ -371,7 +371,7 @@ describe('arrayFromString', () => {
   })
 
   it('ignores surrounding whitespace', () => {
-    expect(Utils.arrayFromString('  one  ')).toMatchObject(['one'])
-    expect(Utils.arrayFromString(' one  two ')).toMatchObject(['one', 'two'])
+    expect(Utils.splitBySpaces('  one  ')).toMatchObject(['one'])
+    expect(Utils.splitBySpaces(' one  two ')).toMatchObject(['one', 'two'])
   })
 })

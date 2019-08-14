@@ -11,7 +11,7 @@ import {
   div,
   isReferenceElement,
   isRealElement,
-  arrayFromString,
+  splitBySpaces,
 } from './utils'
 import { isUCBrowser } from './browser'
 import {
@@ -176,7 +176,7 @@ export function updateTheme(
   action: 'add' | 'remove',
   theme: Props['theme'],
 ): void {
-  arrayFromString(theme).forEach(
+  splitBySpaces(theme).forEach(
     (themeName): void => {
       tooltip.classList[action](themeName + '-theme')
     },

@@ -45,7 +45,7 @@ import {
   setTransitionDuration,
   setVisibilityState,
   isRealElement,
-  arrayFromString,
+  splitBySpaces,
 } from './utils'
 
 let idCounter = 1
@@ -342,7 +342,7 @@ export default function createTippy(
       on('touchend', onMouseLeave as EventListener, PASSIVE)
     }
 
-    arrayFromString(instance.props.trigger).forEach(eventType => {
+    splitBySpaces(instance.props.trigger).forEach(eventType => {
       if (eventType === 'manual') {
         return
       }

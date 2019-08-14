@@ -229,6 +229,6 @@ export function validateOptions(options: Options, defaultProps: Props): void {
 /**
  * Creates an array from string of values separated by whitespace
  */
-export function arrayFromString(value: string): string[] {
+export function splitBySpaces(value: string): string[] {
   return value.split(/\s+/).filter(Boolean)
 }
