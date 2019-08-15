@@ -357,3 +357,21 @@ describe('setVisibilityState', () => {
     expect(els[3].getAttribute('data-state')).toBe('hidden')
   })
 })
+
+describe('splitBySpaces', () => {
+  it('returns an array parsed from the specified string', () => {
+    expect(Utils.splitBySpaces('')).toMatchObject([])
+    expect(Utils.splitBySpaces('one')).toMatchObject(['one'])
+    expect(Utils.splitBySpaces('one two')).toMatchObject(['one', 'two'])
+    expect(Utils.splitBySpaces('one  two    three')).toMatchObject([
+      'one',
+      'two',
+      'three',
+    ])
+  })
+
+  it('ignores surrounding whitespace', () => {
+    expect(Utils.splitBySpaces('  one  ')).toMatchObject(['one'])
+    expect(Utils.splitBySpaces(' one  two ')).toMatchObject(['one', 'two'])
+  })
+})

@@ -676,4 +676,11 @@ describe('updateTheme', () => {
     updateTheme(div, 'remove', theme)
     expect(div.className).toBe('')
   })
+
+  it('ignores multiple whitespace characters in-between themes', () => {
+    const div = document.createElement('div')
+    const theme = 'hello   world'
+    updateTheme(div, 'add', theme)
+    expect(div.className).toBe('hello-theme world-theme')
+  })
 })

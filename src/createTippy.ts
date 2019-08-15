@@ -45,6 +45,7 @@ import {
   setTransitionDuration,
   setVisibilityState,
   isRealElement,
+  splitBySpaces,
 } from './utils'
 
 let idCounter = 1
@@ -341,42 +342,39 @@ export default function createTippy(
       on('touchend', onMouseLeave as EventListener, PASSIVE)
     }
 
-    instance.props.trigger
-      .trim()
-      .split(' ')
-      .forEach(eventType => {
-        if (eventType === 'manual') {
-          return
-        }
+    splitBySpaces(instance.props.trigger).forEach(eventType => {
+      if (eventType === 'manual') {
+        return
+      }
 
-        // Non-delegates
-        if (!instance.props.target) {
-          on(eventType, onTrigger)
-          switch (eventType) {
-            case 'mouseenter':
-              on('mouseleave', onMouseLeave as EventListener)
-              break
-            case 'focus':
-              on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
-              break
-          }
-        } else {
-          // Delegates
-          switch (eventType) {
-            case 'mouseenter':
-              on('mouseover', onDelegateShow)
-              on('mouseout', onDelegateHide)
-              break
-            case 'focus':
-              on('focusin', onDelegateShow)
-              on('focusout', onDelegateHide)
-              break
-            case 'click':
-              on(eventType, onDelegateShow)
-              break
-          }
+      // Non-delegates
+      if (!instance.props.target) {
+        on(eventType, onTrigger)
+        switch (eventType) {
+          case 'mouseenter':
+            on('mouseleave', onMouseLeave as EventListener)
+            break
+          case 'focus':
+            on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
+            break
         }
-      })
+      } else {
+        // Delegates
+        switch (eventType) {
+          case 'mouseenter':
+            on('mouseover', onDelegateShow)
+            on('mouseout', onDelegateHide)
+            break
+          case 'focus':
+            on('focusin', onDelegateShow)
+            on('focusout', onDelegateHide)
+            break
+          case 'click':
+            on(eventType, onDelegateShow)
+            break
+        }
+      }
+    })
   }
 
   /**

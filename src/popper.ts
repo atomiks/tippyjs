@@ -6,7 +6,13 @@ import {
   BasicPlacement,
 } from './types'
 import { arrayFrom } from './ponyfills'
-import { innerHTML, div, isReferenceElement, isRealElement } from './utils'
+import {
+  innerHTML,
+  div,
+  isReferenceElement,
+  isRealElement,
+  splitBySpaces,
+} from './utils'
 import { isUCBrowser } from './browser'
 import {
   POPPER_CLASS,
@@ -170,9 +176,11 @@ export function updateTheme(
   action: 'add' | 'remove',
   theme: Props['theme'],
 ): void {
-  theme.split(' ').forEach(themeName => {
-    tooltip.classList[action](themeName + '-theme')
-  })
+  splitBySpaces(theme).forEach(
+    (themeName): void => {
+      tooltip.classList[action](themeName + '-theme')
+    },
+  )
 }
 
 /**
@@ -309,7 +317,7 @@ export function hideAll({
   duration,
 }: HideAllOptions = {}): void {
   arrayFrom(document.querySelectorAll(POPPER_SELECTOR)).forEach(
-    (popper: PopperElement) => {
+    (popper: PopperElement): void => {
       const instance = popper._tippy
 
       if (instance) {
