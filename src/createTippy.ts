@@ -45,10 +45,6 @@ import {
   createCannotUpdateWarning,
   INTERACTIVE_A11Y_WARNING,
 } from './validation'
-import {
-  handleAriaDescribedByAttribute,
-  handleAriaExpandedAttribute,
-} from './reference'
 
 interface PaddingObject {
   top: number
@@ -154,7 +150,7 @@ export default function createTippy(
   popper._tippy = instance
 
   addListenersToTriggerTarget()
-  handleAriaExpandedAttribute(getTriggerTarget(), false, props.interactive)
+  handleAriaExpandedAttribute()
 
   if (!props.lazy) {
     createPopperInstance()
@@ -201,6 +197,42 @@ export default function createTippy(
 
   function getTriggerTarget(): ReferenceElement {
     return instance.props.triggerTarget || reference
+  }
+
+  function handleAriaDescribedByAttribute(): void {
+    const { aria } = instance.props
+
+    if (!aria) {
+      return
+    }
+
+    const attr = `aria-${aria}`
+    const node = getTriggerTarget()
+    const id = tooltip.id
+    const currentValue = node.getAttribute(attr)
+
+    if (instance.state.isVisible) {
+      node.setAttribute(attr, currentValue ? `${currentValue} ${id}` : id)
+    } else {
+      const nextValue = currentValue && currentValue.replace(id, '').trim()
+
+      if (nextValue) {
+        node.setAttribute(attr, nextValue)
+      } else {
+        node.removeAttribute(attr)
+      }
+    }
+  }
+
+  function handleAriaExpandedAttribute(): void {
+    const attr = 'aria-expanded'
+    const node = getTriggerTarget()
+
+    if (instance.props.interactive) {
+      node.setAttribute(attr, instance.state.isVisible ? 'true' : 'false')
+    } else {
+      node.removeAttribute(attr)
+    }
   }
 
   function cleanupInteractiveMouseListeners(): void {
@@ -884,12 +916,6 @@ export default function createTippy(
       instance.props.onMount(instance)
       instance.state.isMounted = true
 
-      const node = getTriggerTarget()
-      const { aria, interactive } = instance.props
-
-      handleAriaDescribedByAttribute(node, true, aria, tooltip.id)
-      handleAriaExpandedAttribute(node, true, interactive)
-
       // The content should fade in after the backdrop has mostly filled the
       // tooltip element. `clip-path` is the other alternative but is not well-
       // supported and is buggy on some devices.
@@ -904,6 +930,9 @@ export default function createTippy(
       setTransitionDuration([popper], instance.props.updateDuration)
       setTransitionDuration(transitionableElements, duration)
       setVisibilityState(transitionableElements, 'visible')
+
+      handleAriaDescribedByAttribute()
+      handleAriaExpandedAttribute()
 
       onTransitionedIn(duration, (): void => {
         instance.props.onShown(instance)
@@ -948,11 +977,8 @@ export default function createTippy(
     setTransitionDuration(transitionableElements, duration)
     setVisibilityState(transitionableElements, 'hidden')
 
-    const node = getTriggerTarget()
-    const { aria, interactive } = instance.props
-
-    handleAriaDescribedByAttribute(node, false, aria, tooltip.id)
-    handleAriaExpandedAttribute(node, false, interactive)
+    handleAriaDescribedByAttribute()
+    handleAriaExpandedAttribute()
 
     onTransitionedOut(duration, (): void => {
       instance.popperInstance!.disableEventListeners()
