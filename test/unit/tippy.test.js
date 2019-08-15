@@ -7,9 +7,6 @@ import {
   getFormattedMessage,
   CONTENT_WARNING,
   SHOW_ON_INIT_WARNING,
-  DEFAULTS_WARNING,
-  SET_DEFAULTS_WARNING,
-  TIPPY_GROUP_WARNING,
 } from '../../src/validation'
 
 jest.useFakeTimers()

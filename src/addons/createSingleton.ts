@@ -187,6 +187,9 @@ export default function createSingleton(
 
   const originalDestroy = singletonInstance.destroy
   singletonInstance.destroy = (
+    // ESLint parser and TypeScript are condradicting each other here for some
+    // reason
+    // eslint-disable-next-line
     shouldDestroyPassedInstances: boolean = true,
   ): void => {
     tippyInstances.forEach((instance): void => {

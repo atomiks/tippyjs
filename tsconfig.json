@@ -5,7 +5,13 @@
     "resolveJsonModule": true,
     "strict": true,
     "noUnusedLocals": true,
-    "types": ["node"]
+    "types": ["node"],
+    "allowJs": true
   },
-  "include": ["src/**/*", "index.d.ts", "addons/index.d.ts"]
+  "include": [
+    "src/**/*",
+    "index.d.ts",
+    "addons/index.d.ts",
+    "extra-props/index.d.ts"
+  ]
 }

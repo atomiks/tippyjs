@@ -519,6 +519,16 @@ describe('interactive', () => {
 
     spy.mockRestore()
   })
+
+  it('handles `aria-expanded` attribute correctly with .setProps()', () => {
+    const instance = tippy(h(), { interactive: true })
+
+    expect(instance.reference.getAttribute('aria-expanded')).not.toBe(null)
+
+    instance.setProps({ interactive: false })
+
+    expect(instance.reference.getAttribute('aria-expanded')).toBe(null)
+  })
 })
 
 describe('theme', () => {

@@ -88,7 +88,7 @@ export default function delegate(
       })
   }
 
-  function removeEventListeners(listeners: ListenerObj[]): void {
+  function removeEventListeners(): void {
     listeners.forEach(
       ({ element, eventType, listener, options }: ListenerObj): void => {
         element.removeEventListener(eventType, listener, options)
@@ -99,7 +99,7 @@ export default function delegate(
 
   function applyMutations(instance: Instance): void {
     const originalDestroy = instance.destroy
-    instance.destroy = (shouldDestroyChildInstances: boolean = true): void => {
+    instance.destroy = (shouldDestroyChildInstances = true): void => {
       if (shouldDestroyChildInstances) {
         childTippyInstances.forEach((instance): void => {
           instance.destroy()
@@ -108,7 +108,7 @@ export default function delegate(
 
       childTippyInstances = []
 
-      removeEventListeners(listeners)
+      removeEventListeners()
       originalDestroy()
     }
 

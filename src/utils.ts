@@ -83,7 +83,7 @@ export function innerHTML(): 'innerHTML' {
  * Evaluates a function if one, or returns the value
  */
 export function invokeWithArgsOrReturn(value: any, args: any[]): any {
-  return typeof value === 'function' ? value.apply(null, args) : value
+  return typeof value === 'function' ? value(...args) : value
 }
 
 /**
@@ -190,7 +190,7 @@ export function preserveInvocation<T>(
   args: T[],
 ): void {
   if (originalFn && originalFn !== currentFn) {
-    originalFn.apply(null, args)
+    originalFn(...args)
   }
 }
 

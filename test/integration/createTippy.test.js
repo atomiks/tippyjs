@@ -12,7 +12,6 @@ import tippy from '../../src'
 import { defaultProps } from '../../src/props'
 import createTippy from '../../src/createTippy'
 import { POPPER_SELECTOR } from '../../src/constants'
-import { getFormattedMessage, SET_WARNING } from '../../src/validation'
 
 jest.useFakeTimers()
 tippy.setDefaultProps({ duration: 0, delay: 0 })

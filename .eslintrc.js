@@ -20,10 +20,12 @@ module.exports = {
     project: './tsconfig.json',
   },
   rules: {
+    'no-prototype-builtins': 'off',
     '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/array-type': 'off',
-    'no-prototype-builtins': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/ban-ts-ignore': 'off',
   },
 }

@@ -824,6 +824,8 @@ export default function createTippy(
     updatePopperElement(popper, prevProps, nextProps, instance.state.isVisible)
     instance.popperChildren = getChildren(popper)
 
+    handleAriaExpandedAttribute()
+
     if (instance.popperInstance) {
       if (
         POPPER_INSTANCE_DEPENDENCIES.some((prop): boolean => {
@@ -855,7 +857,7 @@ export default function createTippy(
       0,
       defaultProps.duration,
     ),
-    shouldPreventPopperTransition: boolean = true,
+    shouldPreventPopperTransition = true,
   ): void {
     if (__DEV__) {
       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('show'))

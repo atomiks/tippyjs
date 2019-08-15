@@ -5,3 +5,7 @@
 /demo
 /addons
 /extra-props
+/test
+/build
+rollup.config.js
+rollup.pre-build.js
