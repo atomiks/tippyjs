@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Tippy from '../Tippy'
 import { Button } from '../Framework'
@@ -37,8 +37,6 @@ const DropdownTippy = styled(Tippy)`
 `
 
 function Dropdown({ text = 'Dropdown' }) {
-  const [ariaExpanded, setAriaExpanded] = useState('false')
-
   return (
     <DropdownTippy
       content={
@@ -74,7 +72,6 @@ function Dropdown({ text = 'Dropdown' }) {
           </List>
         </>
       }
-      aria={null}
       interactive={true}
       arrow={true}
       animateFill={false}
@@ -83,11 +80,8 @@ function Dropdown({ text = 'Dropdown' }) {
       animation="fade"
       theme="light-border dropdown"
       trigger="click"
-      appendTo="parent"
-      onMount={() => setAriaExpanded('true')}
-      onHide={() => setAriaExpanded('false')}
     >
-      <Button aria-expanded={ariaExpanded}>{text}</Button>
+      <Button>{text}</Button>
     </DropdownTippy>
   )
 }
