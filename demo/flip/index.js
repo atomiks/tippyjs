@@ -84,7 +84,8 @@ const instance = tippy(button, {
       flipId: 'tooltip',
       spring: 'veryGentle',
       onStart() {
-        instance.disable()
+        // .disable() hides the tippy by default now
+        instance.state.isEnabled = false
       },
       onComplete() {
         instance.enable()
