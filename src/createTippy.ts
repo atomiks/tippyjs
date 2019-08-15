@@ -36,6 +36,7 @@ import {
   debounce,
   preserveInvocation,
   closestCallback,
+  splitBySpaces,
 } from './utils'
 import {
   warnWhen,
@@ -357,25 +358,22 @@ export default function createTippy(
       })
     }
 
-    instance.props.trigger
-      .trim()
-      .split(' ')
-      .forEach((eventType): void => {
-        if (eventType === 'manual') {
-          return
-        }
+    splitBySpaces(instance.props.trigger).forEach((eventType): void => {
+      if (eventType === 'manual') {
+        return
+      }
 
-        on(eventType, onTrigger)
+      on(eventType, onTrigger)
 
-        switch (eventType) {
-          case 'mouseenter':
-            on('mouseleave', onMouseLeave as EventListener)
-            break
-          case 'focus':
-            on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
-            break
-        }
-      })
+      switch (eventType) {
+        case 'mouseenter':
+          on('mouseleave', onMouseLeave as EventListener)
+          break
+        case 'focus':
+          on(isIE ? 'focusout' : 'blur', onBlur as EventListener)
+          break
+      }
+    })
   }
 
   function removeListenersFromTriggerTarget(): void {

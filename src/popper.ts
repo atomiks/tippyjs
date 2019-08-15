@@ -5,7 +5,7 @@ import {
   BasePlacement,
   Placement,
 } from './types'
-import { innerHTML, div, isRealElement } from './utils'
+import { innerHTML, div, isRealElement, splitBySpaces } from './utils'
 import { isUCBrowser } from './browser'
 import {
   POPPER_CLASS,
@@ -162,10 +162,8 @@ export function updateTheme(
   action: 'add' | 'remove',
   theme: Props['theme'],
 ): void {
-  theme.split(' ').forEach((name): void => {
-    if (name) {
-      tooltip.classList[action](`${name}-theme`)
-    }
+  splitBySpaces(theme).forEach((name): void => {
+    tooltip.classList[action](`${name}-theme`)
   })
 }
 

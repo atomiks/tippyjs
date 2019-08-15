@@ -236,3 +236,10 @@ export function closestCallback(
 export function includes(a: string[] | string, b: string): boolean {
   return a.indexOf(b) > -1
 }
+
+/**
+ * Creates an array from string of values separated by whitespace
+ */
+export function splitBySpaces(value: string): string[] {
+  return value.split(/\s+/).filter(Boolean)
+}
