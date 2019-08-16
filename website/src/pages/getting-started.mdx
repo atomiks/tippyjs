@@ -54,6 +54,23 @@ helpful warnings and error messages when something goes wrong:
 When you're finished developing (or deploying for production), you can remove
 everything after `@5` (the production file as listed before).
 
+### Node vs. Browser
+
+The `tippy.js` package is generally used via Node using a module bundler, or in
+the browser using a CDN. This documentation defaults to module imports in all
+examples, so be aware that the following import path using a module bundler in
+Node:
+
+```js
+import 'tippy.js/backdrop.css'
+```
+
+Is equivalent to this using a CDN in the browser:
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@5/backdrop.css" />
+```
+
 ### CSS
 
 Tippy includes a 600 B CSS stylesheet by default for the base tooltip styling,

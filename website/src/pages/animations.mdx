@@ -22,19 +22,8 @@ The `tippy.js` package comes with extra animations for you to use:
 
 They need to be imported separately.
 
-Node:
-
 ```js
 import 'tippy.js/animations/scale.css'
-```
-
-Browser:
-
-```html
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/tippy.js@5/animations/scale.css"
-/>
 ```
 
 Pass the animation name (string) as the `animation` prop:
@@ -47,30 +36,11 @@ tippy('button', {
 
 Each of these 3 animations also has 3 variants (normal, subtle, and extreme).
 
-Node:
-
 ```js
 import 'tippy.js/animations/scale.css'
 import 'tippy.js/animations/scale-subtle.css'
 import 'tippy.js/animations/scale-extreme.css'
 // `perspective` and `shift-toward` follow the same format as above
-```
-
-Browser:
-
-```html
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/tippy.js@5/animations/scale.css"
-/>
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/tippy.js@5/animations/scale-extreme.css"
-/>
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/tippy.js@5/animations/scale-subtle.css"
-/>
 ```
 
 ### Custom animations
