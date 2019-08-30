@@ -927,13 +927,13 @@ describe('popperOptions', () => {
     jest.runAllTimers()
 
     expect(onCreate).toHaveBeenCalledTimes(1)
-    expect(onUpdate).toHaveBeenCalledTimes(0)
+    expect(onUpdate).toHaveBeenCalledTimes(1)
 
     instance.show()
     jest.runAllTimers()
 
     expect(onCreate).toHaveBeenCalledTimes(1)
-    expect(onUpdate).toHaveBeenCalledTimes(2)
+    expect(onUpdate).toHaveBeenCalledTimes(3)
   })
 })
 
@@ -1156,13 +1156,13 @@ describe('sticky', () => {
     const fn = jest.fn()
     const instance = tippy(h(), { sticky: true, lazy: false })
 
-    jest.spyOn(instance.popperInstance, 'scheduleUpdate').mockImplementation(fn)
+    jest.spyOn(instance.popperInstance, 'update').mockImplementation(fn)
 
     instance.show()
 
     jest.runAllTimers()
 
-    expect(fn).toHaveBeenCalledTimes(1)
+    expect(fn).toHaveBeenCalledTimes(2)
   })
 })
 

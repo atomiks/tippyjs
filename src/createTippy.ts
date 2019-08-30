@@ -86,8 +86,8 @@ export default function createTippy(
   let hideTimeout: any
   let scheduleHideAnimationFrame: number
   let isBeingDestroyed = false
-  let hasMountCallbackRun = false
   let didHideDueToDocumentMouseDown = false
+  let popperUpdates = 0
   let currentMountCallback: () => void
   let currentTransitionEndListener: (event: TransitionEvent) => void
   let listeners: Listener[] = []
@@ -632,8 +632,13 @@ export default function createTippy(
   }
 
   function runMountCallback(): void {
-    if (!hasMountCallbackRun && currentMountCallback) {
-      hasMountCallbackRun = true
+    // Only invoke currentMountCallback after 2 updates
+    // This fixes some bugs in Popper.js (TODO: aim for only 1 update)
+    if (popperUpdates === 0) {
+      popperUpdates++ // 1
+      instance.popperInstance!.update()
+    } else if (currentMountCallback && popperUpdates === 1) {
+      popperUpdates++ // 2
       reflow(popper)
       currentMountCallback()
     }
@@ -642,7 +647,7 @@ export default function createTippy(
   function mount(): void {
     // The mounting callback (`currentMountCallback`) is only run due to a
     // popperInstance update/create
-    hasMountCallbackRun = false
+    popperUpdates = 0
 
     const { appendTo } = instance.props
 
@@ -687,7 +692,7 @@ export default function createTippy(
       instance.popperInstance.enableEventListeners()
 
       // Mounting callback invoked in `onUpdate`
-      instance.popperInstance.scheduleUpdate()
+      instance.popperInstance.update()
     } else {
       // Mounting callback invoked in `onCreate`
       createPopperInstance()
@@ -909,9 +914,6 @@ export default function createTippy(
       if (!instance.state.isVisible) {
         return
       }
-
-      // Double update will apply correct mutations
-      instance.popperInstance!.update()
 
       instance.props.onMount(instance)
       instance.state.isMounted = true

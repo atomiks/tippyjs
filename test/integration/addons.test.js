@@ -25,7 +25,7 @@ describe('createSingleton', () => {
     expect(singletonInstance.state.isVisible).toBe(true)
   })
 
-  it('does not visibly show the original tippy element (opacity of 0)', () => {
+  it('does not show the original tippy element', () => {
     const refs = [h(), h()]
     const firstRef = refs[0]
 
@@ -35,8 +35,7 @@ describe('createSingleton', () => {
 
     jest.runAllTimers()
 
-    expect(firstRef._tippy.state.isVisible).toBe(true)
-    expect(firstRef._tippy.popper.style.opacity).toBe('0')
+    expect(firstRef._tippy.state.isVisible).toBe(false)
   })
 
   it('uses the relevant tippy instance props', () => {
@@ -236,7 +235,7 @@ describe('createSingleton', () => {
 
     instance.reference.dispatchEvent(MOUSEENTER)
 
-    expect(instance.state.isVisible).toBe(true)
+    jest.runAllTimers()
   })
 
   it('restores original state when destroyed', () => {
