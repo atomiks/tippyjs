@@ -21,6 +21,7 @@ interface SingletonInstance extends Instance {
   __originalSetProps: Instance['setProps']
   __originalProps: {
     delay: Props['delay']
+    onShow: Props['onShow']
     onTrigger: Props['onTrigger']
     onUntrigger: Props['onUntrigger']
   }
@@ -85,15 +86,10 @@ export default function createSingleton(
   tippyInstances.forEach((instance): void => {
     instance.__originalProps = {
       delay: instance.props.delay,
+      onShow: instance.props.onShow,
       onTrigger: instance.props.onTrigger,
       onUntrigger: instance.props.onUntrigger,
     }
-
-    // To prevent bugs with `hideOnClick`, we need to let the original tippy
-    // instance also go through its lifecycle (i.e. be mounted to the DOM as
-    // well). To prevent it from being seen/overlayed over the singleton
-    // tippy, we can set its opacity to 0
-    instance.popper.style.opacity = '0'
 
     instance.__originalClearDelayTimeouts = instance.clearDelayTimeouts
     instance.clearDelayTimeouts = (): void => {
@@ -103,6 +99,7 @@ export default function createSingleton(
 
     instance.setProps({
       delay: 0,
+      onShow: () => false,
       onTrigger(_, event): void {
         preserveInvocation(
           instance.__originalProps.onTrigger,
@@ -111,10 +108,11 @@ export default function createSingleton(
         )
 
         singletonInstance.setProps(
-          removeProperties(
-            instance.props,
-            NON_UPDATEABLE_PROPS.concat('delay'),
-          ),
+          removeProperties(instance.props, [
+            ...NON_UPDATEABLE_PROPS,
+            'delay',
+            'onShow',
+          ]),
         )
 
         const { appendTo } = instance.props
