@@ -107,10 +107,10 @@ export const INTERACTIVE_A11Y_WARNING = `
 
 export function createInvalidCreateSingletonArgumentError(arg: string): string {
   return `
-  The first argument passed to createSingleton() must be an array of tippy
-  instances.
+    The first argument passed to createSingleton() must be an array of tippy
+    instances.
 
-  The passed value was: ${arg}
+    The passed value was: ${arg}
   `
 }
 
