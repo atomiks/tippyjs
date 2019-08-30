@@ -44,7 +44,7 @@ export default function delegate(
 
       if (targetNode) {
         const instance = tippyConstructor(targetNode, {
-          ...props,
+          ...nativeProps,
           showOnCreate: true,
         })
 
