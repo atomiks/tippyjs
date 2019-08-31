@@ -23,7 +23,6 @@ interface SingletonInstance extends Instance {
     delay: Props['delay']
     onShow: Props['onShow']
     onTrigger: Props['onTrigger']
-    onUntrigger: Props['onUntrigger']
   }
 }
 
@@ -88,7 +87,6 @@ export default function createSingleton(
       delay: instance.props.delay,
       onShow: instance.props.onShow,
       onTrigger: instance.props.onTrigger,
-      onUntrigger: instance.props.onUntrigger,
     }
 
     instance.__originalClearDelayTimeouts = instance.clearDelayTimeouts
@@ -98,7 +96,7 @@ export default function createSingleton(
     }
 
     instance.setProps({
-      delay: 0,
+      delay,
       onShow: () => false,
       onTrigger(_, event): void {
         preserveInvocation(
@@ -107,13 +105,13 @@ export default function createSingleton(
           [instance, event],
         )
 
-        singletonInstance.setProps(
-          removeProperties(instance.props, [
-            ...NON_UPDATEABLE_PROPS,
-            'delay',
-            'onShow',
-          ]),
-        )
+        singletonInstance.clearDelayTimeouts()
+
+        singletonInstance.setProps({
+          ...removeProperties(instance.props, NON_UPDATEABLE_PROPS),
+          onShow: instance.__originalProps.onShow,
+          triggerTarget: instance.reference,
+        })
 
         const { appendTo } = instance.props
 
@@ -146,18 +144,6 @@ export default function createSingleton(
           }, getValueAtIndexOrReturn(delay, 0, tippy.defaultProps.delay))
         }
       },
-      onUntrigger(_, event): void {
-        preserveInvocation(
-          instance.__originalProps.onUntrigger,
-          instance.props.onUntrigger,
-          [instance, event],
-        )
-
-        clearTimeouts()
-        hideTimeout = setTimeout((): void => {
-          singletonInstance.hide()
-        }, getValueAtIndexOrReturn(delay, 1, tippy.defaultProps.delay))
-      },
     })
 
     // Ensure the lifecycle functions can be updated
@@ -167,19 +153,36 @@ export default function createSingleton(
         instance.__originalProps.onTrigger = partialProps.onTrigger
       }
 
-      if (partialProps.onUntrigger) {
-        instance.__originalProps.onUntrigger = partialProps.onUntrigger
+      if (partialProps.onShow) {
+        instance.__originalProps.onShow = partialProps.onShow
       }
 
-      instance.__originalSetProps(
-        removeProperties(partialProps, ['delay', 'onTrigger', 'onUntrigger']),
-      )
+      if (partialProps.delay !== undefined) {
+        instance.__originalProps.delay = partialProps.delay
+      }
+
+      instance.__originalSetProps({
+        ...removeProperties(partialProps, [
+          ...NON_UPDATEABLE_PROPS,
+          'onTrigger',
+          'onShow',
+          'delay',
+        ]),
+        delay,
+      })
     }
   })
 
   const originalSetProps = singletonInstance.setProps
   singletonInstance.setProps = (partialProps: Partial<Props>): void => {
-    delay = partialProps.delay !== undefined ? partialProps.delay : delay
+    if (partialProps.delay !== undefined) {
+      delay = partialProps.delay
+
+      tippyInstances.forEach((instance): void => {
+        instance.setProps({ delay })
+      })
+    }
+
     originalSetProps(partialProps)
   }
 
