@@ -255,6 +255,51 @@ describe('delay', () => {
 
     expect(instance.state.isVisible).toBe(false)
   })
+
+  it('trigger: "click" ignores delay hiding listeners', () => {
+    const instance = tippy(h(), {
+      delay: 100,
+      interactive: true,
+      trigger: 'click',
+    })
+
+    instance.reference.dispatchEvent(CLICK)
+    jest.advanceTimersByTime(100)
+
+    instance.popper.dispatchEvent(MOUSELEAVE)
+    document.body.dispatchEvent(
+      new MouseEvent('mousemove', {
+        bubbles: true,
+        clientX: 1000,
+        clientY: 1000,
+      }),
+    )
+
+    expect(instance.state.isVisible).toBe(true)
+
+    jest.advanceTimersByTime(99)
+
+    instance.popper.dispatchEvent(MOUSEENTER)
+
+    jest.advanceTimersByTime(1)
+
+    expect(instance.state.isVisible).toBe(true)
+
+    instance.popper.dispatchEvent(MOUSELEAVE)
+    document.body.dispatchEvent(
+      new MouseEvent('mousemove', {
+        bubbles: true,
+        clientX: 1000,
+        clientY: 1000,
+      }),
+    )
+
+    jest.advanceTimersByTime(101)
+
+    instance.popper.dispatchEvent(MOUSEENTER)
+
+    expect(instance.state.isVisible).toBe(true)
+  })
 })
 
 describe('content', () => {

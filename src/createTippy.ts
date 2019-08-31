@@ -168,7 +168,10 @@ export default function createTippy(
     }
   })
   popper.addEventListener('mouseleave', (): void => {
-    if (instance.props.interactive) {
+    if (
+      instance.props.interactive &&
+      includes(instance.props.trigger, 'mouseenter')
+    ) {
       document.addEventListener('mousemove', debouncedOnMouseMove)
     }
   })
