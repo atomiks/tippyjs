@@ -81,7 +81,6 @@ export default function createTippy(
   }
 
   /* ======================= 🔒 Private members 🔒 ======================= */
-  let lastTriggerEventType: string
   let showTimeout: any
   let hideTimeout: any
   let scheduleHideAnimationFrame: number
@@ -164,16 +163,12 @@ export default function createTippy(
   // Prevent a tippy with a delay from hiding if the cursor left then returned
   // before it started hiding
   popper.addEventListener('mouseenter', (): void => {
-    if (
-      instance.props.interactive &&
-      instance.state.isVisible &&
-      lastTriggerEventType === 'mouseenter'
-    ) {
+    if (instance.props.interactive && instance.state.isVisible) {
       instance.clearDelayTimeouts()
     }
   })
   popper.addEventListener('mouseleave', (): void => {
-    if (instance.props.interactive && lastTriggerEventType === 'mouseenter') {
+    if (instance.props.interactive) {
       document.addEventListener('mousemove', debouncedOnMouseMove)
     }
   })
@@ -392,16 +387,12 @@ export default function createTippy(
       return
     }
 
-    if (!instance.state.isVisible) {
-      lastTriggerEventType = event.type
-
-      if (event instanceof MouseEvent) {
-        // If scrolling, `mouseenter` events can be fired if the cursor lands
-        // over a new target, but `mousemove` events don't get fired. This
-        // causes interactive tooltips to get stuck open until the cursor is
-        // moved
-        mouseMoveListeners.forEach((listener): void => listener(event))
-      }
+    if (!instance.state.isVisible && event instanceof MouseEvent) {
+      // If scrolling, `mouseenter` events can be fired if the cursor lands
+      // over a new target, but `mousemove` events don't get fired. This
+      // causes interactive tooltips to get stuck open until the cursor is
+      // moved
+      mouseMoveListeners.forEach((listener): void => listener(event))
     }
 
     // Toggle show/hide when clicking click-triggered tooltips
