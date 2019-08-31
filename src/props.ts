@@ -11,7 +11,7 @@ export const defaultProps: Props = {
   content: '',
   delay: 0,
   distance: 10,
-  duration: [325, 275],
+  duration: [300, 250],
   flip: true,
   flipBehavior: 'flip',
   flipOnUpdate: false,
