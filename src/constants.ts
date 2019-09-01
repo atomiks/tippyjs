@@ -1,5 +1,3 @@
-import { Props } from './types'
-
 export const PASSIVE = { passive: true }
 
 export const PREVENT_OVERFLOW_PADDING = 5
@@ -21,6 +19,3 @@ export const CONTENT_SELECTOR = `.${CONTENT_CLASS}`
 export const BACKDROP_SELECTOR = `.${BACKDROP_CLASS}`
 export const ARROW_SELECTOR = `.${ARROW_CLASS}`
 export const SVG_ARROW_SELECTOR = `.${SVG_ARROW_CLASS}`
-
-// TODO: Work out best way to make these updateable
-export const NON_UPDATEABLE_PROPS: Array<keyof Props> = ['followCursor']

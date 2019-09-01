@@ -13,7 +13,6 @@ import {
   ARRAY_MISTAKE_ERROR,
   EXISTING_SINGLETON_ERROR,
 } from '../validation'
-import { NON_UPDATEABLE_PROPS } from '../constants'
 
 interface SingletonInstance extends Instance {
   __singleton: boolean
@@ -108,7 +107,7 @@ export default function createSingleton(
         singletonInstance.clearDelayTimeouts()
 
         singletonInstance.setProps({
-          ...removeProperties(instance.props, NON_UPDATEABLE_PROPS),
+          ...instance.props,
           onShow: instance.__originalProps.onShow,
           triggerTarget: instance.reference,
         })
@@ -162,12 +161,7 @@ export default function createSingleton(
       }
 
       instance.__originalSetProps({
-        ...removeProperties(partialProps, [
-          ...NON_UPDATEABLE_PROPS,
-          'onTrigger',
-          'onShow',
-          'delay',
-        ]),
+        ...removeProperties(partialProps, ['onTrigger', 'onShow', 'delay']),
         delay,
       })
     }

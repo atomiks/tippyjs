@@ -83,7 +83,11 @@ function applyFollowCursor(instance: Instance): void {
 
     const { clientX, clientY } = (lastMouseMoveEvent = event)
 
-    if (!instance.popperInstance || !isPopperInstanceCreated) {
+    if (
+      !instance.props.followCursor ||
+      !instance.popperInstance ||
+      !isPopperInstanceCreated
+    ) {
       return
     }
 
@@ -145,6 +149,7 @@ function applyFollowCursor(instance: Instance): void {
   }
 
   let {
+    placement,
     popperOptions,
     onMount,
     onTrigger,
@@ -154,7 +159,6 @@ function applyFollowCursor(instance: Instance): void {
 
   // Due to the virtual offsets normalization when using `followCursor`,
   // we need to use the opposite placement
-  let placement = instance.props.placement
   let normalizedPlacement = placement
 
   function setNormalizedPlacement(): void {
@@ -210,6 +214,7 @@ function applyFollowCursor(instance: Instance): void {
       }
 
       if (
+        instance.props.followCursor &&
         !wasTriggeredByFocus &&
         !(instance.state.isMounted && instance.props.followCursor === 'initial')
       ) {

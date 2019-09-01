@@ -130,13 +130,6 @@ export function createUnknownPropWarning(prop: string): string {
   `
 }
 
-export function createCannotUpdateWarning(prop: string): string {
-  return `
-    The ${prop} prop cannot be updated via setProps(). The instance must be 
-    destroyed and re-created with it specified in the optionalProps object.
-  `
-}
-
 export function createMemoryLeakWarning(method: string): string {
   const txt = method === 'destroy' ? 'n already-' : ' '
 

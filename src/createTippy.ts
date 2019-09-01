@@ -7,11 +7,7 @@ import {
   Content,
 } from './types'
 import { isIE } from './browser'
-import {
-  PASSIVE,
-  PREVENT_OVERFLOW_PADDING,
-  NON_UPDATEABLE_PROPS,
-} from './constants'
+import { PASSIVE, PREVENT_OVERFLOW_PADDING } from './constants'
 import { currentInput } from './bindGlobalEventListeners'
 import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
 import {
@@ -43,7 +39,6 @@ import {
   validateProps,
   validateExtraPropsFunctionality,
   createMemoryLeakWarning,
-  createCannotUpdateWarning,
   INTERACTIVE_A11Y_WARNING,
 } from './validation'
 
@@ -790,13 +785,6 @@ export default function createTippy(
     if (__DEV__) {
       validateProps(partialProps)
       validateExtraPropsFunctionality(instance, partialProps)
-
-      NON_UPDATEABLE_PROPS.forEach((prop): void => {
-        if (hasOwnProperty(partialProps, prop)) {
-          delete partialProps[prop]
-          warnWhen(true, createCannotUpdateWarning(prop))
-        }
-      })
     }
 
     removeListenersFromTriggerTarget()
