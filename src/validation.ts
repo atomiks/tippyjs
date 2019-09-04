@@ -15,37 +15,40 @@ export const CONTENT_WARNING = `
 `
 
 export const TARGET_WARNING = `
-  The target prop was removed in v5 and replaced with the delegate() method in
-  order to conserve bundle size.
+  The \`target\` prop was removed in v5 and replaced with the delegate() method 
+  in order to conserve bundle size.
   
   Read more: https//atomiks.github.io/tippyjs/addons#event-delegation
 `
 
 export const A11Y_WARNING = `
-  The a11y prop was removed in v5. Make sure the element you are giving a tippy
-  to is natively focusable, such as <button> or <input>, not <div> or <span>.
+  The \`a11y\` prop was removed in v5. Make sure the element you are giving a
+  tippy to is natively focusable, such as <button> or <input>, not <div> or 
+  <span>.
 `
 
 export const SHOW_ON_INIT_WARNING = `
-  The showOnInit prop was renamed to showOnCreate in v5.
+  The \`showOnInit\` prop was renamed to \`showOnCreate\` in v5.
 `
 
 export const ARROW_TYPE_WARNING = `
-  The arrowType prop was removed in v5 in favor of overloading the arrow prop.
+  The \`arrowType\` prop was removed in v5 in favor of overloading the \`arrow\`
+  prop.
 
   Before: {arrow: true, arrowType: "round"}
   After: {arrow: "round"}
 `
 
 export const TOUCH_HOLD_WARNING = `
-  The touchHold prop was removed in v5 in favor of overloading the touch prop.
+  The \`touchHold\` prop was removed in v5 in favor of overloading the \`touch\`
+  prop.
 
   Before: {touchHold: true}
   After: {touch: "hold"}
 `
 
 export const SIZE_WARNING = `
-  The size prop was removed in v5. Instead, use a theme that specifies CSS
+  The \`size\` prop was removed in v5. Instead, use a theme that specifies CSS
   padding and font-size properties.
 `
 
@@ -54,8 +57,8 @@ export const GOOGLE_THEME_WARNING = `
 `
 
 export const PLACEMENT_WARNING = `
-  Specifying placement in popperOptions is not supported. Use the base-level
-  placement prop instead.
+  Specifying placement in \`popperOptions\` is not supported. Use the base-level
+  \`placement\` prop instead.
 
   Before: {popperOptions: {placement: "bottom"}}
   After: {placement: "bottom"}
@@ -72,11 +75,11 @@ export const VIRTUAL_REFERENCE_OBJECT_WARNING = `
 `
 
 export const FOLLOW_CURSOR_WARNING = `
-  The followCursor prop was specified, but the instance has not been configured
-  with followCursor functionality.
+  The \`followCursor\` prop was specified, but the instance has not been 
+  configured with followCursor functionality.
 
-  In v5, followCursor was moved to a separate piece of code in order to conserve
-  bundle size.
+  In v5, \`followCursor\` was moved to a separate piece of code in order to 
+  conserve bundle size.
 
   Read more: https://atomiks.github.io/tippyjs/extra-props/
 `
@@ -93,7 +96,7 @@ export const EXISTING_SINGLETON_ERROR = `
 `
 
 export const MISSING_TARGET_WARNING = `
-  You must specify a target prop indicating the CSS selector string
+  You must specify a \`target\` prop indicating the CSS selector string
   matching the target elements that should receive a tippy.
 `
 
@@ -124,7 +127,8 @@ export function createInvalidTargetsArgumentError(targets: any): string {
 
 export function createUnknownPropWarning(prop: string): string {
   return `
-    The ${prop} prop is not a valid prop. You may have spelled it incorrectly.
+    The \`${prop}\` prop is not a valid prop. You may have spelled it 
+    incorrectly.
 
     All props: https://atomiks.github.io/tippyjs/all-props/
   `
