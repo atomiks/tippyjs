@@ -1,7 +1,7 @@
 import { Targets, Instance, Props } from '../types'
 import tippy from '..'
 import { throwErrorWhen, MISSING_TARGET_WARNING } from '../validation'
-import { removeProperties } from '../utils'
+import { removeProperties, splitBySpaces } from '../utils'
 
 interface ListenerObj {
   element: Element
@@ -68,24 +68,21 @@ export default function delegate(
   function addEventListeners(instance: Instance): void {
     const { reference } = instance
 
-    trigger
-      .trim()
-      .split(' ')
-      .forEach((eventType): void => {
-        switch (eventType) {
-          case 'mouseenter': {
-            on(reference, 'mouseover', onTrigger)
-            break
-          }
-          case 'focus': {
-            on(reference, 'focusin', onTrigger)
-            break
-          }
-          case 'click': {
-            on(reference, 'click', onTrigger)
-          }
+    splitBySpaces(trigger).forEach((eventType): void => {
+      switch (eventType) {
+        case 'mouseenter': {
+          on(reference, 'mouseover', onTrigger)
+          break
         }
-      })
+        case 'focus': {
+          on(reference, 'focusin', onTrigger)
+          break
+        }
+        case 'click': {
+          on(reference, 'click', onTrigger)
+        }
+      }
+    })
   }
 
   function removeEventListeners(): void {
