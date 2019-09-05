@@ -114,7 +114,7 @@ export default function delegate(
     instance.setProps({ trigger: 'manual' })
   }
 
-  const instances = ([] as Instance[]).concat(returnValue)
+  const instances: Instance[] = [].concat(returnValue)
   instances.forEach(applyMutations)
 
   return returnValue
