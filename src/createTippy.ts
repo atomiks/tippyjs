@@ -516,10 +516,9 @@ export default function createTippy(
       const isSecondaryPlacement = includes(['bottom', 'right'], basePlacement)
 
       // Apply `distance` prop
-      const tooltipStyles = tooltip.style
-      tooltipStyles.top = '0'
-      tooltipStyles.left = '0'
-      tooltipStyles[
+      tooltip.style.top = '0'
+      tooltip.style.left = '0'
+      tooltip.style[
         isVerticalPlacement ? 'top' : 'left'
       ] = `${(isSecondaryPlacement ? 1 : -1) * instance.props.distance}px`
     }
