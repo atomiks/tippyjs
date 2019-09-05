@@ -16,7 +16,7 @@ interface ListenerObj {
  */
 export default function delegate(
   targets: Targets,
-  props: Props & { target: string },
+  props: Partial<Props> & { target: string },
 ): Instance | Instance[] {
   if (__DEV__) {
     throwErrorWhen(!props || !props.target, MISSING_TARGET_WARNING)
