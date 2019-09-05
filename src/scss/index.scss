@@ -49,13 +49,8 @@
     pointer-events: auto;
   }
 
-  &[data-inertia] {
-    &[data-state='visible'] {
-      transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
-    }
-    &[data-state='hidden'] {
-      transition-timing-function: ease;
-    }
+  &[data-inertia][data-state='visible'] {
+    transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
   }
 }
 
