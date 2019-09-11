@@ -1,5 +1,4 @@
 import { version } from '../package.json'
-import { isBrowser } from './browser'
 import { defaultProps } from './props'
 import createTippy from './createTippy'
 import bindGlobalEventListeners, {
@@ -117,23 +116,6 @@ tippy.hideAll = ({
       }
     },
   )
-}
-
-/**
- * Auto-init tooltips for elements with a `data-tippy="..."` attribute
- */
-export function autoInit(): void {
-  arrayFrom(document.querySelectorAll('[data-tippy]')).forEach((el): void => {
-    const content = el.getAttribute('data-tippy')
-
-    if (content) {
-      tippy(el, { content })
-    }
-  })
-}
-
-if (isBrowser) {
-  setTimeout(autoInit)
 }
 
 export default tippy

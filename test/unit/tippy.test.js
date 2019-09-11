@@ -140,25 +140,3 @@ describe('tippy.hideAll()', () => {
     })
   })
 })
-
-describe('auto-init', () => {
-  it('adds a tooltip if "data-tippy" attribute is truthy', () => {
-    const reference = document.createElement('div')
-
-    reference.setAttribute('data-tippy', 'tooltip')
-    document.body.append(reference)
-    autoInit()
-
-    expect(hasTippy(reference)).toBe(true)
-  })
-
-  it('does not add tooltip if "data-tippy" attribute is falsy', () => {
-    const reference = document.createElement('div')
-
-    reference.setAttribute('data-tippy', '')
-    document.body.append(reference)
-    autoInit()
-
-    expect(hasTippy(reference)).toBe(false)
-  })
-})
