@@ -1,7 +1,7 @@
 import Tippy, { TippySingleton, tippy } from '../tippy.js'
 
-import '../../../backdrop.css'
-import '../../../svg-arrow.css'
+import '../../../dist/backdrop.css'
+import '../../../dist/svg-arrow.css'
 
 import '../../../themes/light.css'
 import '../../../themes/light-border.css'
