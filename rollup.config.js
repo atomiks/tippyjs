@@ -83,7 +83,7 @@ export default [
     external: ['popper.js'],
     output: {
       ...COMMON_IIFE_OUTPUT_OPTIONS,
-      file: 'dist/tippy.bundle.iife.js',
+      file: 'dist/tippy-bundle.iife.js',
       banner: BANNER,
     },
   },
@@ -102,7 +102,7 @@ export default [
     external: ['popper.js'],
     output: {
       ...COMMON_IIFE_OUTPUT_OPTIONS,
-      file: 'dist/tippy.bundle.iife.min.js',
+      file: 'dist/tippy-bundle.iife.min.js',
     },
   },
   {
@@ -148,7 +148,7 @@ export default [
   {
     input: {
       'dist/tippy.esm': 'build/base.js',
-      'dist/tippy.bundle.esm': 'build/bundle.js',
+      'dist/tippy-bundle.esm': 'build/bundle.js',
       'addons/dist/tippy-addons.esm': 'build/addons-pure.js',
       'extra-props/dist/tippy-extra-props.esm': 'build/extra-props-pure.js',
     },
@@ -165,7 +165,7 @@ export default [
   {
     input: {
       'dist/tippy.cjs': 'build/base.js',
-      'dist/tippy.bundle.cjs': 'build/bundle.js',
+      'dist/tippy-bundle.cjs': 'build/bundle.js',
       'addons/dist/tippy-addons.cjs': 'build/addons-pure.js',
       'extra-props/dist/tippy-extra-props.cjs': 'build/extra-props-pure.js',
     },
