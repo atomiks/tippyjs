@@ -76,7 +76,7 @@ async function build() {
     const cssConfig = createRollupConfig(
       `css/${filename}`,
       PLUGIN_CONFIG.concat(
-        createPluginSCSS(`./${filename.replace('.js', '.css')}`, true),
+        createPluginSCSS(`./dist/${filename.replace('.js', '.css')}`, true),
       ),
     )
     const cssBundle = await rollup(cssConfig)

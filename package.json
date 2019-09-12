@@ -32,9 +32,6 @@
     "extra-props/",
     "animations/",
     "themes/",
-    "tippy.css",
-    "backdrop.css",
-    "svg-arrow.css",
     "index.d.ts"
   ],
   "repository": {
@@ -84,7 +81,7 @@
       "maxSize": "5 kB"
     },
     {
-      "path": "tippy.css",
+      "path": "dist/tippy.css",
       "maxSize": "5 kB"
     }
   ],
