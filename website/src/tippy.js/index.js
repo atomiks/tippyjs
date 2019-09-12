@@ -12,6 +12,7 @@ import tippyBase from '../../../'
 import { createSingleton, delegate } from '../../../addons'
 import enhance, { followCursor } from '../../../extra-props'
 import { useThis } from '../hooks'
+import '../../../tippy.css'
 
 const isBrowser =
   typeof window !== 'undefined' && typeof document !== 'undefined'
