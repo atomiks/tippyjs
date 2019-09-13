@@ -256,7 +256,7 @@ export function validateExtraPropsFunctionality(
   const extraProps = ['followCursor']
 
   extraProps.forEach((prop): void => {
-    if (hasOwnProperty(partialProps, prop) && !instance.__extraProps[prop]) {
+    if (hasOwnProperty(partialProps, prop) && !instance.__extraProps![prop]) {
       warnWhen(prop === 'followCursor', FOLLOW_CURSOR_WARNING)
     }
   })
