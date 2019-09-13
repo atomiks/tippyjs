@@ -58,19 +58,6 @@ const instance = popper._tippy
 This is especially useful when listening to events on the tooltip and you need
 to find which reference element it's associated with.
 
-#### Auto-initialization
-
-If you're using auto-initialization (`data-tippy` attribute), and you need to
-access the instance immediately at runtime, make sure you wrap access in
-`setTimeout()`:
-
-```js
-setTimeout(() => {
-  const button = document.querySelector('button')
-  const instance = button._tippy
-})
-```
-
 ### Shape and properties
 
 `instance` is a plain object. It's best to log it out yourself and investigate

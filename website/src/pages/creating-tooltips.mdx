@@ -55,22 +55,6 @@ tippy([element1, element2, element3])
 tippy(document.querySelectorAll('.my-elements'))
 ```
 
-### Auto-initialization
-
-If your web page has regular server-rendered HTML, and you aren't using a
-front-end framework like React or Vue, then you can bypass the function call and
-use the `data-tippy` attribute:
-
-```html
-<button data-tippy="I will be created automatically">Text</button>
-```
-
-Note the lack of `-content` suffix.
-
-This attribute should only be used for basic tippys that exist on the document
-on page load. You can avoid it if you want - it's just the quickest way to
-initialize a tooltip.
-
 ### Client-rendered elements
 
 Every time you create a new element with JavaScript, you should pass it to
