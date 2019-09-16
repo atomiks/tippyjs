@@ -19,9 +19,11 @@ interface SingletonInstance extends Instance {
   __originalClearDelayTimeouts: Instance['clearDelayTimeouts']
   __originalSetProps: Instance['setProps']
   __originalProps: {
+    aria: Props['aria']
     delay: Props['delay']
     onShow: Props['onShow']
     onTrigger: Props['onTrigger']
+    onUntrigger: Props['onUntrigger']
   }
 }
 
@@ -73,6 +75,8 @@ export default function createSingleton(
 
   let { delay } = optionalProps
 
+  let prevReference: Element
+  let prevAria: Props['aria']
   let showTimeout: any
   let hideTimeout: any
 
@@ -83,9 +87,11 @@ export default function createSingleton(
 
   tippyInstances.forEach((instance): void => {
     instance.__originalProps = {
+      aria: instance.props.aria,
       delay: instance.props.delay,
       onShow: instance.props.onShow,
       onTrigger: instance.props.onTrigger,
+      onUntrigger: instance.props.onUntrigger,
     }
 
     instance.__originalClearDelayTimeouts = instance.clearDelayTimeouts
@@ -94,9 +100,30 @@ export default function createSingleton(
       clearTimeouts()
     }
 
+    function handleAriaDescribedBy(): void {
+      if (instance.__originalProps.aria) {
+        instance.reference.setAttribute(
+          `aria-${instance.__originalProps.aria}`,
+          singletonInstance.popperChildren.tooltip.id,
+        )
+      }
+    }
+
     instance.setProps({
       delay,
+      aria: null,
       onShow: () => false,
+      onUntrigger(_, event): void {
+        preserveInvocation(
+          instance.__originalProps.onUntrigger,
+          instance.props.onUntrigger,
+          [instance, event],
+        )
+
+        if (prevAria) {
+          prevReference.removeAttribute(`aria-${prevAria}`)
+        }
+      },
       onTrigger(_, event): void {
         preserveInvocation(
           instance.__originalProps.onTrigger,
@@ -127,6 +154,10 @@ export default function createSingleton(
 
         clearTimeouts()
 
+        if (singletonInstance.state.isVisible) {
+          handleAriaDescribedBy()
+        }
+
         // Edge case: if the tippy is currently hiding (but still mounted and
         // visible due to its opacity), it will slide to the new reference
         // element but fully to fade out before fading back in.
@@ -137,31 +168,50 @@ export default function createSingleton(
           singletonInstance.state.isMounted
         ) {
           singletonInstance.show(undefined, false)
+          handleAriaDescribedBy()
         } else {
           showTimeout = setTimeout((): void => {
             singletonInstance.show()
+            handleAriaDescribedBy()
           }, getValueAtIndexOrReturn(delay, 0, tippy.defaultProps.delay))
         }
+
+        prevReference = instance.reference
+        prevAria = instance.__originalProps.aria
       },
     })
 
     // Ensure the lifecycle functions can be updated
     instance.__originalSetProps = instance.setProps
     instance.setProps = (partialProps): void => {
-      if (partialProps.onTrigger) {
-        instance.__originalProps.onTrigger = partialProps.onTrigger
-      }
-
-      if (partialProps.onShow) {
-        instance.__originalProps.onShow = partialProps.onShow
+      if (partialProps.aria !== undefined) {
+        instance.__originalProps.aria = partialProps.aria
       }
 
       if (partialProps.delay !== undefined) {
         instance.__originalProps.delay = partialProps.delay
       }
 
+      if (partialProps.onShow) {
+        instance.__originalProps.onShow = partialProps.onShow
+      }
+
+      if (partialProps.onTrigger) {
+        instance.__originalProps.onTrigger = partialProps.onTrigger
+      }
+
+      if (partialProps.onUntrigger) {
+        instance.__originalProps.onUntrigger = partialProps.onUntrigger
+      }
+
       instance.__originalSetProps({
-        ...removeProperties(partialProps, ['onTrigger', 'onShow', 'delay']),
+        ...removeProperties(partialProps, [
+          'aria',
+          'delay',
+          'onShow',
+          'onTrigger',
+          'onUntrigger',
+        ]),
         delay,
       })
     }
