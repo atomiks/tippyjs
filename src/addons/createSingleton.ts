@@ -164,10 +164,11 @@ export default function createSingleton(
           singletonInstance.show(undefined, false)
           handleAriaDescribedBy()
         } else {
+          const defaultDelay = tippyConstructor.defaultProps.delay
           showTimeout = setTimeout((): void => {
             singletonInstance.show()
             handleAriaDescribedBy()
-          }, getValueAtIndexOrReturn(delay, 0, tippy.defaultProps.delay))
+          }, getValueAtIndexOrReturn(delay, 0, defaultDelay))
         }
 
         prevReference = instance.reference
