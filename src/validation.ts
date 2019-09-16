@@ -257,7 +257,10 @@ export function validateExtraPropsFunctionality(
 
   extraProps.forEach((prop): void => {
     if (hasOwnProperty(partialProps, prop) && !instance.__extraProps![prop]) {
-      warnWhen(prop === 'followCursor', FOLLOW_CURSOR_WARNING)
+      warnWhen(
+        prop === 'followCursor' && !!partialProps[prop],
+        FOLLOW_CURSOR_WARNING,
+      )
     }
   })
 }
