@@ -78,12 +78,6 @@ export default function createSingleton(
   let prevReference: Element
   let prevAria: Props['aria']
   let showTimeout: any
-  let hideTimeout: any
-
-  function clearTimeouts(): void {
-    clearTimeout(showTimeout)
-    clearTimeout(hideTimeout)
-  }
 
   tippyInstances.forEach((instance): void => {
     instance.__originalProps = {
@@ -97,7 +91,7 @@ export default function createSingleton(
     instance.__originalClearDelayTimeouts = instance.clearDelayTimeouts
     instance.clearDelayTimeouts = (): void => {
       instance.__originalClearDelayTimeouts()
-      clearTimeouts()
+      clearTimeout(showTimeout)
     }
 
     function handleAriaDescribedBy(): void {
@@ -152,7 +146,7 @@ export default function createSingleton(
           return instance.reference.getBoundingClientRect()
         }
 
-        clearTimeouts()
+        clearTimeout(showTimeout)
 
         if (singletonInstance.state.isVisible) {
           handleAriaDescribedBy()
