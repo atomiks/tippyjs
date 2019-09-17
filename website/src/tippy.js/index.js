@@ -8,9 +8,12 @@ import React, {
   Children,
 } from 'react'
 import { createPortal } from 'react-dom'
-import tippyBase from '../../../'
-import { createSingleton, delegate } from '../../../addons'
-import enhance, { followCursor } from '../../../extra-props'
+import tippyBase, {
+  createSingleton,
+  delegate,
+  enhance,
+  followCursor,
+} from '../../../'
 import { useThis } from '../hooks'
 import '../../../dist/tippy.css'
 

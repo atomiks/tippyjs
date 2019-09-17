@@ -43,7 +43,7 @@ should match the child elements which should receive a tippy.
 ##### Node
 
 ```js
-import { delegate } from 'tippy.js/addons'
+import { delegate } from 'tippy.js'
 
 delegate('#parent', {
   target: '.child',
@@ -52,14 +52,10 @@ delegate('#parent', {
 
 ##### Browser
 
-```html
-<!-- Main tippy.js links here -->
-<script src="https://unpkg.com/tippy.js@5/addons/dist/tippy-addons.iife.min.js"></script>
-<script>
-  tippy.delegate('#parent', {
-    target: '.child',
-  })
-</script>
+```js
+tippy.delegate('#parent', {
+  target: '.child',
+})
 ```
 
 #### Return type
@@ -122,8 +118,7 @@ and a `delay` prop:
 Node:
 
 ```js
-import tippy from 'tippy.js'
-import { createSingleton } from 'tippy.js/addons'
+import tippy, { createSingleton } from 'tippy.js'
 
 const tippyInstances = tippy('button')
 const singleton = createSingleton(tippyInstances, { delay: 1000 })
@@ -131,13 +126,9 @@ const singleton = createSingleton(tippyInstances, { delay: 1000 })
 
 Browser:
 
-```html
-<!-- Main tippy.js links here -->
-<script src="https://unpkg.com/tippy.js@5/addons/dist/tippy-addons.iife.min.js"></script>
-<script>
-  const tippyInstances = tippy('button')
-  const singleton = tippy.createSingleton(tippyInstances, { delay: 1000 })
-</script>
+```js
+const tippyInstances = tippy('button')
+const singleton = tippy.createSingleton(tippyInstances, { delay: 1000 })
 ```
 
 Note that the only prop `createSingleton` accepts at this time is `delay`. It

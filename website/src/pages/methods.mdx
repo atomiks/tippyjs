@@ -83,7 +83,9 @@ instance.
 Set the default props for each new instance:
 
 ```js
-tippy.setDefaultProps({
+import tippy, { setDefaultProps } from 'tippy.js'
+
+setDefaultProps({
   // Props
 })
 
@@ -91,16 +93,22 @@ tippy.setDefaultProps({
 tippy.defaultProps
 ```
 
+In the browser, it's available as `tippy.setDefaultProps()`.
+
 #### hideAll
 
 Hide all visible tippys on the document:
 
 ```js
+import { hideAll } from 'tippy.js'
+
 // Use each tippy's own duration
-tippy.hideAll()
+hideAll()
 // Hide them all instantly
-tippy.hideAll({ duration: 0 })
+hideAll({ duration: 0 })
 // Hide them all except a particular one
-tippy.hideAll({ exclude: tippyInstance })
-tippy.hideAll({ exclude: referenceElement })
+hideAll({ exclude: tippyInstance })
+hideAll({ exclude: referenceElement })
 ```
+
+In the browser, it's available as `tippy.hideAll()`.
