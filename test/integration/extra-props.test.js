@@ -5,13 +5,13 @@ import {
   disableTouchEnvironment,
 } from '../utils'
 
-import tippy from '../../src'
+import tippy, { setDefaultProps } from '../../src'
 import enhance from '../../src/extra-props/enhance'
 import followCursor from '../../src/extra-props/followCursor'
 import { getBasePlacement } from '../../src/popper'
 import { getVirtualOffsets } from '../../src/extra-props/followCursor'
 
-tippy.setDefaultProps({ duration: 0, delay: 0 })
+setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
@@ -23,8 +23,6 @@ describe('enhance', () => {
     expect(enhancedTippy.defaultProps).toBe(tippy.defaultProps)
     expect(enhancedTippy.currentInput).toBe(tippy.currentInput)
     expect(enhancedTippy.version).toBe(tippy.version)
-    expect(enhancedTippy.hideAll).toBe(tippy.hideAll)
-    expect(enhancedTippy.setDefaultProps).toBe(tippy.setDefaultProps)
   })
 })
 

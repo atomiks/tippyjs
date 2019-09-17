@@ -77,10 +77,12 @@ tippy.version = version
 tippy.defaultProps = defaultProps
 tippy.currentInput = currentInput
 
+export default tippy
+
 /**
  * Mutates the defaultProps object by setting the props specified
  */
-tippy.setDefaultProps = (partialProps: Partial<Props>): void => {
+export function setDefaultProps(partialProps: Partial<Props>): void {
   if (__DEV__) {
     validateProps(partialProps)
   }
@@ -94,10 +96,10 @@ tippy.setDefaultProps = (partialProps: Partial<Props>): void => {
 /**
  * Hides all visible poppers on the document
  */
-tippy.hideAll = ({
+export function hideAll({
   exclude: excludedReferenceOrInstance,
   duration,
-}: HideAllOptions = {}): void => {
+}: HideAllOptions = {}): void {
   arrayFrom(document.querySelectorAll(POPPER_SELECTOR)).forEach(
     (popper: PopperElement): void => {
       const instance = popper._tippy
@@ -117,5 +119,3 @@ tippy.hideAll = ({
     },
   )
 }
-
-export default tippy

@@ -4,8 +4,6 @@ function copyStatics(to: EnhancedTippy, from: Tippy): EnhancedTippy {
   to.currentInput = from.currentInput
   to.version = from.version
   to.defaultProps = from.defaultProps
-  to.setDefaultProps = from.setDefaultProps
-  to.hideAll = from.hideAll
 
   return to
 }

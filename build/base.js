@@ -1,4 +1,4 @@
-export { default } from '../src'
+export { default, setDefaultProps, hideAll } from '../src'
 export { default as createSingleton } from '../src/addons/createSingleton'
 export { default as delegate } from '../src/addons/delegate'
 export { default as enhance } from '../src/extra-props/enhance'

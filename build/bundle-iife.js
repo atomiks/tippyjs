@@ -1,5 +1,5 @@
 import css from '../dist/tippy.css'
-import tippy from '../src'
+import tippy, { setDefaultProps, hideAll } from '../src'
 import { injectCSS } from '../src/css'
 import { isBrowser } from '../src/browser'
 import createSingleton from '../src/addons/createSingleton'
@@ -17,5 +17,7 @@ tippyEnhanced.createSingleton = createSingleton
 tippyEnhanced.delegate = delegate
 tippyEnhanced.enhance = enhance
 tippyEnhanced.followCursor = followCursor
+tippyEnhanced.hideAll = hideAll
+tippyEnhanced.setDefaultProps = setDefaultProps
 
 export default tippyEnhanced

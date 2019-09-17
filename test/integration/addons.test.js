@@ -5,10 +5,10 @@ import createSingleton, {
   ARRAY_MISTAKE_ERROR,
 } from '../../src/addons/createSingleton'
 import delegate, { MISSING_TARGET_WARNING } from '../../src/addons/delegate'
-import tippy from '../../src'
+import tippy, { setDefaultProps } from '../../src'
 import { createInvalidCreateSingletonArgumentError } from '../../src/validation'
 
-tippy.setDefaultProps({ duration: 0, delay: 0 })
+setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)

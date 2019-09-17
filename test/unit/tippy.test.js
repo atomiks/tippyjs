@@ -1,8 +1,8 @@
-import { h, hasTippy, cleanDocumentBody } from '../utils'
+import { h, cleanDocumentBody } from '../utils'
 
 import { defaultProps, extraProps } from '../../src/props'
 import { POPPER_SELECTOR } from '../../src/constants'
-import tippy, { autoInit } from '../../src'
+import tippy, { setDefaultProps, hideAll } from '../../src'
 import {
   getFormattedMessage,
   CONTENT_WARNING,
@@ -62,11 +62,11 @@ describe('tippy', () => {
   })
 })
 
-describe('tippy.setDefaultProps()', () => {
+describe('setDefaultProps()', () => {
   it('changes the default props applied to instances', () => {
     const newPlacement = 'bottom-end'
 
-    tippy.setDefaultProps({ placement: newPlacement })
+    setDefaultProps({ placement: newPlacement })
 
     expect(defaultProps.placement).toBe(newPlacement)
   })
@@ -74,7 +74,7 @@ describe('tippy.setDefaultProps()', () => {
   it('is validated', () => {
     const spy = jest.spyOn(console, 'warn')
 
-    tippy.setDefaultProps({ showOnInit: true })
+    setDefaultProps({ showOnInit: true })
 
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(SHOW_ON_INIT_WARNING),
@@ -84,13 +84,13 @@ describe('tippy.setDefaultProps()', () => {
   })
 })
 
-describe('tippy.hideAll()', () => {
+describe('hideAll()', () => {
   it('hides all tippys on the document, ignoring `hideOnClick`', () => {
     const props = { showOnCreate: true, hideOnClick: false }
     const instances = [...Array(3)].map(() => tippy(h(), props))
 
     jest.runAllTimers()
-    tippy.hideAll()
+    hideAll()
 
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(false)
@@ -102,7 +102,7 @@ describe('tippy.hideAll()', () => {
     const instances = [...Array(3)].map(() => tippy(h(), props))
 
     jest.runAllTimers()
-    tippy.hideAll({ duration: 0 })
+    hideAll({ duration: 0 })
 
     instances.forEach(instance => {
       expect(instance.state.isMounted).toBe(false)
@@ -114,7 +114,7 @@ describe('tippy.hideAll()', () => {
     const instances = [...Array(3)].map(() => tippy(h(), props))
 
     jest.runAllTimers()
-    tippy.hideAll({ exclude: instances[0] })
+    hideAll({ exclude: instances[0] })
 
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(
@@ -129,7 +129,7 @@ describe('tippy.hideAll()', () => {
 
     tippy(ref, props)
     tippy(ref, props)
-    tippy.hideAll({ exclude: ref })
+    hideAll({ exclude: ref })
 
     const instances = [...document.querySelectorAll(POPPER_SELECTOR)].map(
       popper => popper._tippy,

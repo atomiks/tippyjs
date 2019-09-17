@@ -14,7 +14,7 @@ import {
   BLUR,
 } from '../utils'
 
-import tippy from '../../src'
+import tippy, { setDefaultProps } from '../../src'
 import { getChildren } from '../../src/popper'
 import { ARROW_SELECTOR, SVG_ARROW_SELECTOR } from '../../src/constants'
 import {
@@ -22,7 +22,7 @@ import {
   getFormattedMessage,
 } from '../../src/validation'
 
-tippy.setDefaultProps({ duration: 0, delay: 0 })
+setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
