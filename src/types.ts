@@ -140,6 +140,12 @@ export interface Tippy {
 declare const tippy: Tippy
 export default tippy
 
+export type HideAll = (options: HideAllOptions) => void
+export type SetDefaultProps = (partialProps: Partial<Props>) => void
+
+declare const hideAll: HideAll
+declare const setDefaultProps: SetDefaultProps
+
 export type Delegate = (
   targets: Targets,
   props: Partial<Props> & { target: string },
@@ -153,9 +159,14 @@ export type CreateSingleton = (
 declare const delegate: Delegate
 declare const createSingleton: CreateSingleton
 
-export { delegate, createSingleton }
-
 declare const enhance: (tippyBase: Tippy, propHOFs: PropHOF[]) => EnhancedTippy
 declare const followCursor: (tippy: Tippy) => TippyCallWrapper
 
-export { enhance, followCursor }
+export {
+  hideAll,
+  setDefaultProps,
+  delegate,
+  createSingleton,
+  enhance,
+  followCursor,
+}
