@@ -1,2 +1,5 @@
-import tippy from '../src'
-export default tippy
+export { default } from '../src'
+export { default as createSingleton } from '../src/addons/createSingleton'
+export { default as delegate } from '../src/addons/delegate'
+export { default as enhance } from '../src/extra-props/enhance'
+export { default as followCursor } from '../src/extra-props/followCursor'

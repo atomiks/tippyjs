@@ -66,19 +66,11 @@
   "bundlesize": [
     {
       "path": "dist/tippy-bundle.iife.min.js",
-      "maxSize": "7 kB"
+      "maxSize": "10 kB"
     },
     {
       "path": "dist/tippy.iife.min.js",
-      "maxSize": "5.75 kB"
-    },
-    {
-      "path": "addons/dist/tippy-addons.iife.min.js",
-      "maxSize": "5 kB"
-    },
-    {
-      "path": "extra-props/dist/tippy-extra-props.iife.min.js",
-      "maxSize": "5 kB"
+      "maxSize": "10 kB"
     },
     {
       "path": "dist/tippy.css",

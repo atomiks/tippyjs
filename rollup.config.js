@@ -68,7 +68,7 @@ const COMMON_IIFE_OUTPUT_OPTIONS = {
 
 export default [
   {
-    input: 'build/base.js',
+    input: 'build/base-iife.js',
     plugins: PLUGIN_CONFIGS.iifeBase,
     external: ['popper.js'],
     output: {
@@ -78,7 +78,7 @@ export default [
     },
   },
   {
-    input: 'build/bundle.js',
+    input: 'build/bundle-iife.js',
     plugins: PLUGIN_CONFIGS.iifeBundle,
     external: ['popper.js'],
     output: {
@@ -88,7 +88,7 @@ export default [
     },
   },
   {
-    input: 'build/base.js',
+    input: 'build/base-iife.js',
     plugins: PLUGIN_CONFIGS.iifeBaseMin,
     external: ['popper.js'],
     output: {
@@ -97,7 +97,7 @@ export default [
     },
   },
   {
-    input: 'build/bundle.js',
+    input: 'build/bundle-iife.js',
     plugins: PLUGIN_CONFIGS.iifeBundleMin,
     external: ['popper.js'],
     output: {
@@ -106,51 +106,9 @@ export default [
     },
   },
   {
-    input: 'build/addons.js',
-    plugins: PLUGIN_CONFIGS.iifeBase,
-    external: ['popper.js', '..'],
-    output: {
-      ...COMMON_IIFE_OUTPUT_OPTIONS,
-      globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
-      file: 'addons/dist/tippy-addons.iife.js',
-    },
-  },
-  {
-    input: 'build/addons.js',
-    plugins: PLUGIN_CONFIGS.iifeBaseMin,
-    external: ['popper.js', '..'],
-    output: {
-      ...COMMON_IIFE_OUTPUT_OPTIONS,
-      globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
-      file: 'addons/dist/tippy-addons.iife.min.js',
-    },
-  },
-  {
-    input: 'build/extra-props.js',
-    plugins: PLUGIN_CONFIGS.iifeBase,
-    external: ['popper.js', '..'],
-    output: {
-      ...COMMON_IIFE_OUTPUT_OPTIONS,
-      globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
-      file: 'extra-props/dist/tippy-extra-props.iife.js',
-    },
-  },
-  {
-    input: 'build/extra-props.js',
-    plugins: PLUGIN_CONFIGS.iifeBaseMin,
-    external: ['popper.js', '..'],
-    output: {
-      ...COMMON_IIFE_OUTPUT_OPTIONS,
-      globals: { ...COMMON_IIFE_OUTPUT_OPTIONS.globals, '..': 'tippy' },
-      file: 'extra-props/dist/tippy-extra-props.iife.min.js',
-    },
-  },
-  {
     input: {
       'dist/tippy.esm': 'build/base.js',
       'dist/tippy-bundle.esm': 'build/bundle.js',
-      'addons/dist/tippy-addons.esm': 'build/addons-pure.js',
-      'extra-props/dist/tippy-extra-props.esm': 'build/extra-props-pure.js',
     },
     plugins: PLUGIN_CONFIGS.bundle,
     external: ['popper.js'],
@@ -166,8 +124,6 @@ export default [
     input: {
       'dist/tippy.cjs': 'build/base.js',
       'dist/tippy-bundle.cjs': 'build/bundle.js',
-      'addons/dist/tippy-addons.cjs': 'build/addons-pure.js',
-      'extra-props/dist/tippy-extra-props.cjs': 'build/extra-props-pure.js',
     },
     plugins: PLUGIN_CONFIGS.bundle,
     external: ['popper.js'],

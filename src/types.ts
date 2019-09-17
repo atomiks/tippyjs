@@ -139,3 +139,23 @@ export interface Tippy {
 
 declare const tippy: Tippy
 export default tippy
+
+export type Delegate = (
+  targets: Targets,
+  props: Partial<Props> & { target: string },
+) => Instance | Instance[]
+
+export type CreateSingleton = (
+  tippyInstances: Instance[],
+  optionalProps?: { delay: number | [number, number] },
+) => Instance
+
+declare const delegate: Delegate
+declare const createSingleton: CreateSingleton
+
+export { delegate, createSingleton }
+
+declare const enhance: (tippyBase: Tippy, propHOFs: PropHOF[]) => EnhancedTippy
+declare const followCursor: (tippy: Tippy) => TippyCallWrapper
+
+export { enhance, followCursor }
