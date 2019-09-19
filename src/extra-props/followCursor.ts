@@ -145,6 +145,7 @@ function applyFollowCursor(instance: Instance): void {
   let {
     placement,
     popperOptions,
+    flipOnUpdate,
     onMount,
     onTrigger,
     onUntrigger,
@@ -220,7 +221,12 @@ function applyFollowCursor(instance: Instance): void {
         !(event.type === 'focus' && currentInput.isTouch) &&
         !(instance.state.isMounted && instance.props.followCursor === 'initial')
       ) {
+        // Force `flipOnUpdate: true` in followCursor mode, as it's better UX
+        // and works better with initial flips
+        instance.setProps({ flipOnUpdate: true })
         addListener()
+      } else {
+        instance.setProps({ flipOnUpdate })
       }
     },
     onUntrigger(instance, event): void {
@@ -258,6 +264,10 @@ function applyFollowCursor(instance: Instance): void {
     onMount = partialProps.onMount || onMount
     onHidden = partialProps.onHidden || onHidden
     popperOptions = partialProps.popperOptions || popperOptions
+
+    if (partialProps.flipOnUpdate !== undefined) {
+      flipOnUpdate = partialProps.flipOnUpdate
+    }
 
     originalSetProps({
       popperOptions: {
