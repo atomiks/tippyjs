@@ -4,10 +4,6 @@ path: /accessibility/
 index: 12
 ---
 
-import { Demo, Button } from '../components/Framework'
-import Dropdown from '../components/examples/Dropdown'
-import Tippy, { tippy } from '../components/Tippy'
-
 ### Use natively focusable elements
 
 Tooltips should only be applied to natively focusable elements like `<button>`
@@ -31,3 +27,41 @@ shown:
 
 This allows screenreader software to announce the tooltip content describing the
 reference element. No work is required by you to achieve this functionality.
+
+### Interactivity
+
+By default, the tippy element is appended to the reference (or `triggerTarget`)
+element's parent node. This means elements within the tippy can be tabbed to
+once focus has left the reference element, and screenreader users know if the
+popover has opened.
+
+This relies on there being no more focusable sibling elements after the
+reference element itself.
+
+Before opening the popover:
+
+```html
+<div id="parent">
+  <button aria-expanded="false">Text</button>
+</div>
+```
+
+After opening the popover:
+
+```html
+<div id="parent">
+  <button aria-expanded="true">Text</button>
+  <div id="tippy-1" role="tooltip" class="tippy-popper">
+    <!-- inner elements, with focusable content -->
+  </div>
+</div>
+```
+
+You should wrap the reference element in its own parent element (`<div>` or
+`<span>`) if it's not the only focusable sibling element.
+
+#### Clipping issues
+
+Sometimes, this behavior won't work for your app due to clipping issues. In this
+case, you need to specify a custom `appendTo` element outside of the parent node
+context and use a focus management solution to handle keyboard navigation.

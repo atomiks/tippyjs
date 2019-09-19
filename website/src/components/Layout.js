@@ -1,13 +1,102 @@
 import React, { Component } from 'react'
 import { SkipNavLink, SkipNavContent } from '@reach/skip-nav'
-import { Container } from './Framework'
+import { MDXProvider } from '@mdx-js/react'
+import { Container, Demo, Button, Row, Col, Flex } from './Framework'
+import Tippy, { TippySingleton } from './Tippy'
 import Nav from './Nav'
 import NavButtons from './NavButtons'
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
 import SEO from './SEO'
+import Image from './Image'
 import CSS from '../css'
+import slugify from 'slugify'
+import elasticScroll from 'elastic-scroll-polyfill'
+
+import 'normalize.css'
+import 'animate.css/source/_base.css'
+import 'animate.css/source/attention_seekers/rubberBand.css'
+import 'animate.css/source/attention_seekers/tada.css'
+import 'animate.css/source/attention_seekers/wobble.css'
+import 'focus-visible'
+
+function Heading({ children, level, ...props }) {
+  const href = slugify(String(children), {
+    lower: true,
+    remove: /[*+~.()'"!:@]/g,
+  })
+
+  const Tag = `h${level}`
+
+  return (
+    <Tag {...props}>
+      <a className="link-icon" id={href} href={`#${href}`}>
+        #
+      </a>
+      {children}
+    </Tag>
+  )
+}
+
+const components = {
+  Tippy,
+  TippySingleton,
+  Demo,
+  Button,
+  Row,
+  Col,
+  Flex,
+  Image,
+  h3: props => <Heading {...props} level={3} />,
+  h4: props => <Heading {...props} level={4} />,
+  h5: props => <Heading {...props} level={5} />,
+  h6: props => <Heading {...props} level={6} />,
+  tr: props => {
+    const isExtraProp = !!props.children[0].props.children[0] // <strong>
+    return (
+      <tr {...props} style={{ background: isExtraProp ? '#fff8de' : '' }} />
+    )
+  },
+  // TODO: find a better way to do this
+  td: class extends React.Component {
+    ref = React.createRef()
+
+    state = { dataLabel: '' }
+
+    componentDidMount() {
+      let child = this.ref.current
+      let i = 0
+
+      while ((child = child.previousSibling) != null) {
+        i++
+      }
+
+      this.setState({
+        dataLabel: ['Prop', 'Type', 'Default', 'Description'][i],
+      })
+    }
+
+    render() {
+      return (
+        <td ref={this.ref} {...this.props} data-label={this.state.dataLabel} />
+      )
+    }
+  },
+  pre: class extends React.Component {
+    ref = React.createRef()
+
+    componentDidMount() {
+      if (/Mac/.test(navigator.userAgent)) {
+        elasticScroll({ targets: this.ref.current })
+      }
+    }
+
+    render() {
+      return <pre ref={this.ref} {...this.props} />
+    }
+  },
+}
 
 class Layout extends Component {
   state = {
@@ -22,24 +111,11 @@ class Layout extends Component {
     this.setState({ isNavOpen: false })
   }
 
-  componentDidMount() {
-    // We're using our own hackish autolink headers thing so we need this for now
-    // Couldn't get the Gatsby plugin to work a couple months ago
-    setTimeout(() => {
-      if (window.location.hash) {
-        const anchor = document.querySelector(window.location.hash)
-        if (anchor) {
-          anchor.scrollIntoView()
-        }
-      }
-    })
-  }
-
   render() {
     const { isNavOpen } = this.state
     const { children, pageContext } = this.props
     return (
-      <>
+      <MDXProvider components={components}>
         <CSS />
         <SEO pageContext={pageContext} />
         <SkipNavLink />
@@ -59,7 +135,7 @@ class Layout extends Component {
           </SkipNavContent>
           <Footer>© {new Date().getFullYear()} - MIT License</Footer>
         </Main>
-      </>
+      </MDXProvider>
     )
   }
 }
