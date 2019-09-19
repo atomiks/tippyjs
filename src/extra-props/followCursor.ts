@@ -190,8 +190,10 @@ function applyFollowCursor(instance: Instance): void {
       // follows both axes. TODO: somehow keep scroll listeners for vertical
       // scrolling for "vertical", and horizontal scrolling for "horizontal".
       if (
-        firstTriggerEventType !== 'focus' &&
-        instance.props.followCursor !== true
+        // Touch devices always emulate "initial"
+        currentInput.isTouch ||
+        (firstTriggerEventType !== 'focus' &&
+          instance.props.followCursor !== true)
       ) {
         instance.popperInstance!.disableEventListeners()
       }
