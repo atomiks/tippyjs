@@ -6,7 +6,7 @@ index: 12
 
 import { Demo, Button } from '../components/Framework'
 import Dropdown from '../components/examples/Dropdown'
-import Tippy from '../components/Tippy'
+import Tippy, { tippy } from '../components/Tippy'
 
 ### Use natively focusable elements
 
@@ -31,47 +31,3 @@ shown:
 
 This allows screenreader software to announce the tooltip content describing the
 reference element. No work is required by you to achieve this functionality.
-
-### Delays and keyboard navigation
-
-When using keyboard navigation, it's probably best if there are no delays so
-that screenreaders can announce the tippy content as soon as possible if focus
-is currently on the reference element.
-
-<Demo>
-  <Tippy delay={500} duration={[300, 200]}>
-    <Button>Normal delay</Button>
-  </Tippy>
-  <Tippy
-    delay={500}
-    duration={[300, 200]}
-    onTrigger={(instance, event) => {
-      if (event.type === 'focus') {
-        instance.setProps({ delay: 0, duration: [200, 150] })
-      } else {
-        instance.setProps({ delay: 500, duration: [300, 200] })
-      }
-    }}
-  >
-    <Button>No keyboard delay</Button>
-  </Tippy>
-</Demo>
-
-```js
-const delay = 500
-const duration = [300, 200]
-
-tippy('button', {
-  delay,
-  duration,
-  onTrigger(instance, event) {
-    // If the tippy was triggered by a `focus` event (e.g keyboard navigation)
-    // then set `delay: 0` and reduce the duration a bit.
-    if (event.type === 'focus') {
-      instance.setProps({ delay: 0, duration: [200, 150] })
-    } else {
-      instance.setProps({ delay, duration })
-    }
-  },
-})
-```
