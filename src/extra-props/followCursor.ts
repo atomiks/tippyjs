@@ -64,9 +64,9 @@ function applyFollowCursor(instance: Instance): void {
   const { reference } = instance
   const originalSetProps = instance.setProps
 
+  let firstTriggerEventType: string | null = null
   let lastMouseMoveEvent: MouseEvent
   let isPopperInstanceCreated = false
-  let wasTriggeredByFocus = false
 
   function addListener(): void {
     document.addEventListener('mousemove', onMouseMove)
@@ -77,7 +77,7 @@ function applyFollowCursor(instance: Instance): void {
   }
 
   function onMouseMove(event: MouseEvent): void {
-    if (wasTriggeredByFocus || !event) {
+    if (firstTriggerEventType === 'focus' || !event) {
       return
     }
 
@@ -188,7 +188,10 @@ function applyFollowCursor(instance: Instance): void {
       // Popper's scroll listeners make sense for `true`, where the cursor
       // follows both axes. TODO: somehow keep scroll listeners for vertical
       // scrolling for "vertical", and horizontal scrolling for "horizontal".
-      if (!wasTriggeredByFocus && instance.props.followCursor !== true) {
+      if (
+        firstTriggerEventType !== 'focus' &&
+        instance.props.followCursor !== true
+      ) {
         instance.popperInstance!.disableEventListeners()
       }
 
@@ -197,19 +200,24 @@ function applyFollowCursor(instance: Instance): void {
     onTrigger(instance, event): void {
       preserveInvocation(onTrigger, instance.props.onTrigger, [instance, event])
 
-      wasTriggeredByFocus = event.type === 'focus'
+      // Tapping on touch devices can trigger `mouseenter` then `focus`
+      if (!firstTriggerEventType) {
+        firstTriggerEventType = event.type
+      }
 
       if (event instanceof MouseEvent) {
         lastMouseMoveEvent = event
       }
 
-      if (wasTriggeredByFocus && instance.popperInstance) {
+      if (firstTriggerEventType === 'focus' && instance.popperInstance) {
         instance.popperInstance.reference = instance.reference
       }
 
       if (
         instance.props.followCursor &&
-        !wasTriggeredByFocus &&
+        firstTriggerEventType !== 'focus' &&
+        // Touch devices can add two listeners due to `mouseenter` + `focus`
+        !(event.type === 'focus' && currentInput.isTouch) &&
         !(instance.state.isMounted && instance.props.followCursor === 'initial')
       ) {
         addListener()
@@ -227,6 +235,8 @@ function applyFollowCursor(instance: Instance): void {
       if (!instance.state.isVisible) {
         removeListener()
       }
+
+      firstTriggerEventType = null
     },
     onHidden(): void {
       preserveInvocation(onHidden, instance.props.onHidden, [instance])
