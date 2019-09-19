@@ -82,6 +82,7 @@ export default function createTippy(
   let isBeingDestroyed = false
   let didHideDueToDocumentMouseDown = false
   let popperUpdates = 0
+  let lastTriggerEventType: string
   let currentMountCallback: () => void
   let currentTransitionEndListener: (event: TransitionEvent) => void
   let listeners: Listener[] = []
@@ -191,6 +192,17 @@ export default function createTippy(
 
   function getTriggerTarget(): ReferenceElement {
     return instance.props.triggerTarget || reference
+  }
+
+  function getDelay(isShow: boolean): number {
+    // For touch or keyboard input, force `0` delay for UX reasons
+    return currentInput.isTouch || lastTriggerEventType === 'focus'
+      ? 0
+      : getValueAtIndexOrReturn(
+          instance.props.delay,
+          isShow ? 0 : 1,
+          defaultProps.delay,
+        )
   }
 
   function handleAriaDescribedByAttribute(): void {
@@ -384,6 +396,8 @@ export default function createTippy(
     ) {
       return
     }
+
+    lastTriggerEventType = event.type
 
     if (!instance.state.isVisible && event instanceof MouseEvent) {
       // If scrolling, `mouseenter` events can be fired if the cursor lands
@@ -704,11 +718,7 @@ export default function createTippy(
 
     addDocumentMouseDownListener()
 
-    const delay = getValueAtIndexOrReturn(
-      instance.props.delay,
-      0,
-      defaultProps.delay,
-    )
+    const delay = getDelay(true)
 
     if (delay) {
       showTimeout = setTimeout((): void => {
@@ -732,11 +742,7 @@ export default function createTippy(
 
     instance.state.isScheduledToShow = false
 
-    const delay = getValueAtIndexOrReturn(
-      instance.props.delay,
-      1,
-      defaultProps.delay,
-    )
+    const delay = getDelay(false)
 
     if (delay) {
       hideTimeout = setTimeout((): void => {

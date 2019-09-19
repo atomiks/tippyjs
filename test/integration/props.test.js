@@ -215,6 +215,26 @@ describe('delay', () => {
     expect(instance.state.isVisible).toBe(false)
   })
 
+  it('is 0 in touch context', () => {
+    tippy.currentInput.isTouch = true
+
+    const instance = tippy(h(), { delay: 100 })
+
+    instance.reference.dispatchEvent(MOUSEENTER)
+
+    expect(instance.state.isVisible).toBe(true)
+
+    tippy.currentInput.isTouch = false
+  })
+
+  it('is 0 in keyboard context', () => {
+    const instance = tippy(h(), { delay: 100 })
+
+    instance.reference.dispatchEvent(FOCUS)
+
+    expect(instance.state.isVisible).toBe(true)
+  })
+
   it('instance does not hide if cursor returned after leaving before delay finished', () => {
     const instance = tippy(h(), { delay: 100, interactive: true })
     instance.reference.dispatchEvent(MOUSEENTER)
