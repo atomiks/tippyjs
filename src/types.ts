@@ -152,7 +152,7 @@ export type Delegate = (
 
 export type CreateSingleton = (
   tippyInstances: Instance[],
-  optionalProps?: { delay: number | [number, number] },
+  optionalProps?: Props,
 ) => Instance
 
 declare const delegate: Delegate
