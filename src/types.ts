@@ -40,7 +40,6 @@ export interface Props {
   flip: boolean
   flipBehavior: 'flip' | Placement[]
   flipOnUpdate: boolean
-  followCursor: boolean | 'horizontal' | 'vertical' | 'initial'
   hideOnClick: boolean | 'toggle'
   ignoreAttributes: boolean
   inertia: boolean
@@ -65,7 +64,6 @@ export interface Props {
   popperOptions: Popper.PopperOptions
   role: string
   showOnCreate: boolean
-  sticky: boolean | 'reference' | 'popper'
   theme: string
   touch: boolean | 'hold' | ['hold', number]
   trigger: string
@@ -115,8 +113,8 @@ export interface HideAllOptions {
 
 export type Plugin = (instance: Instance) => Partial<Props>
 
-export interface Tippy {
-  (targets: Targets, optionalProps?: Partial<Props>): Instance | Instance[]
+export interface Tippy<TProps = Props> {
+  (targets: Targets, optionalProps?: Partial<TProps>): Instance | Instance[]
   readonly currentInput: { isTouch: boolean }
   readonly defaultProps: Props
   readonly version: string
@@ -127,6 +125,14 @@ export interface Tippy {
 
 declare const tippy: Tippy
 export default tippy
+
+export interface FollowCursorProps {
+  followCursor: boolean | 'horizontal' | 'vertical' | 'initial'
+}
+
+export interface StickyProps {
+  sticky: boolean | 'reference' | 'popper'
+}
 
 export type HideAll = (options: HideAllOptions) => void
 
