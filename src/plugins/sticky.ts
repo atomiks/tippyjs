@@ -32,7 +32,7 @@ export default function sticky(instance: ExtendedInstance): Partial<Props> {
         areRectsDifferent(prevRefRect, currentRefRect)) ||
       (shouldCheck('popper') && areRectsDifferent(prevPopRect, currentPopRect))
     ) {
-      instance.popperInstance.update()
+      instance.popperInstance!.update()
     }
 
     prevRefRect = currentRefRect
@@ -53,13 +53,17 @@ export default function sticky(instance: ExtendedInstance): Partial<Props> {
 }
 
 function areRectsDifferent(
-  rectA: DOMRect | ClientRect,
-  rectB: DOMRect | ClientRect,
+  rectA: ClientRect | null,
+  rectB: ClientRect | null,
 ): boolean {
-  return (
-    rectA.top !== rectB.top ||
-    rectA.right !== rectB.right ||
-    rectA.bottom !== rectB.bottom ||
-    rectA.left !== rectB.left
-  )
+  if (rectA && rectB) {
+    return (
+      rectA.top !== rectB.top ||
+      rectA.right !== rectB.right ||
+      rectA.bottom !== rectB.bottom ||
+      rectA.left !== rectB.left
+    )
+  }
+
+  return true
 }
