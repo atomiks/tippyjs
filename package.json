@@ -28,8 +28,6 @@
   ],
   "files": [
     "dist/",
-    "addons/",
-    "extra-props/",
     "animations/",
     "themes/",
     "index.d.ts"
