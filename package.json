@@ -42,7 +42,7 @@
     "dev:themes": "parcel demo/themes/index.html -d .devserver",
     "dev:animations": "parcel demo/animations/index.html -d .devserver",
     "dev:addons": "parcel demo/addons/index.html -d .devserver",
-    "dev:extra-props": "parcel demo/extra-props/index.html -d .devserver",
+    "dev:plugins": "parcel demo/plugins/index.html -d .devserver",
     "build": "node rollup.pre-build && rollup --config && bundlesize",
     "test": "jest --coverage --silent",
     "check-types": "tsc",

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Tippy Addons Dev</title>
+    <title>Tippy Plugins Dev</title>
     <script src="./index.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
@@ -9,14 +9,26 @@
     <script>
       process = { env: {} }
     </script>
+    <style>
+      @keyframes shift {
+        to {
+          transform: translateX(200px);
+        }
+      }
+
+      .sticky {
+        animation: shift 5s ease infinite alternate;
+      }
+    </style>
   </head>
 
   <body>
     <div class="container">
-      <div id="followCursor">
-        <h1>followCursor</h1>
-        <button class="followCursor">text</button>
-      </div>
+      <h1>followCursor</h1>
+      <button class="followCursor">text</button>
+
+      <h1>sticky</h1>
+      <button class="sticky">text</button>
     </div>
     <!-- prettier-ignore -->
     <script> </script>
