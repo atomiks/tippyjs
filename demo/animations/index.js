@@ -1,5 +1,6 @@
 import tippy from '../../src'
 import '../../src/scss/index.scss'
+import '../../src/scss/animations/shift-away.scss'
 import '../../src/scss/animations/shift-away-subtle.scss'
 import '../../src/scss/animations/shift-away-extreme.scss'
 import '../../src/scss/animations/shift-toward.scss'
