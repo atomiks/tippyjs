@@ -34,8 +34,8 @@ export default function createSingleton(
   let currentTarget: Element
 
   let { aria, onTrigger, onMount, onUntrigger, onPropsUpdated, onDestroy } = {
-    ...optionalProps,
     ...defaultProps,
+    ...optionalProps,
   }
 
   function handleAriaDescribedByAttribute(
