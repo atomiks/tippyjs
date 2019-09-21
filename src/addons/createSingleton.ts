@@ -105,9 +105,7 @@ export default function createSingleton(
       instance.reference.referenceNode =
         instance.props.appendTo === 'parent'
           ? target.parentNode
-          : invokeWithArgsOrReturn(instance.props.appendTo, [
-              instance.reference,
-            ])
+          : invokeWithArgsOrReturn(instance.props.appendTo, [target])
     },
     onPropsUpdated(instance, partialProps): void {
       preserveInvocation(onPropsUpdated, instance.props.onPropsUpdated, [
