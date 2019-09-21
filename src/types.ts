@@ -154,5 +154,6 @@ declare const delegate: Delegate
 declare const createSingleton: CreateSingleton
 
 declare const followCursor: (instance: Instance) => Partial<Props>
+declare const sticky: (instance: Instance) => Partial<Props>
 
-export { hideAll, delegate, createSingleton, followCursor }
+export { hideAll, delegate, createSingleton, followCursor, sticky }
