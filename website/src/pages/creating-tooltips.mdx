@@ -76,10 +76,10 @@ a tippy.
 <!-- prettier-ignore -->
 ```html
 <!-- Won't work! -->
-<button data-tippy="Tooltip" disabled>Text</button>
+<button data-tippy-content="Tooltip" disabled>Text</button>
 
 <!-- Wrapper <span> will work -->
-<span data-tippy="Tooltip">
+<span data-tippy-content="Tooltip" tabindex="0">
   <button disabled>Text</button>
 </span>
 ```

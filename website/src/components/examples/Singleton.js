@@ -6,10 +6,10 @@ const array = Array(4).fill()
 
 function Singleton({ group, transition }) {
   const updateDuration = transition ? 300 : 0
-  const delay = [200, 500]
+  const delay = transition ? [100, 500] : 500
 
   const children = array.map((_, i) => (
-    <Tippy key={i} content={`Tooltip ${i + 1}`}>
+    <Tippy key={i} content={`Tooltip ${i + 1}`} delay={500}>
       <Button>Text</Button>
     </Tippy>
   ))

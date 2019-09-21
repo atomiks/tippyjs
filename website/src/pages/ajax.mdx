@@ -28,14 +28,12 @@ Now, let's add some JavaScript:
 ```js
 tippy('#ajax-tippy', {
   content: 'Loading...',
-  animateFill: false,
-  animation: 'fade',
   // This prop is recommended if your tooltip changes size while showing
   flipOnUpdate: true,
 })
 ```
 
-Here's the result so far:
+Here's the result so far (nothing happens yet!):
 
 <Demo>
   <Tippy content="Loading..." animation="fade" animateFill={false}>
@@ -49,8 +47,6 @@ lifecycle:
 ```js
 tippy('#ajax-tippy', {
   content: 'Loading...',
-  animateFill: false,
-  animation: 'fade',
   flipOnUpdate: true,
   onShow(instance) {
     // Code here is executed every time the tippy shows
@@ -87,8 +83,6 @@ tippy('#ajax-tippy', {
 <Demo>
   <Tippy
     content="Loading..."
-    animation="fade"
-    animateFill={false}
     onShow={instance => {
       fetch('https://unsplash.it/200/?random')
         .then(response => response.blob())

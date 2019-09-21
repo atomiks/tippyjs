@@ -37,8 +37,20 @@ It's recommended to use a bundler instead of a CDN to benefit from treeshaking.
 
 ### Creating a plugin
 
-A plugin is created by defining a function that returns an object of lifecycle
-hooks:
+A plugin is created by defining a function that returns an object of
+[lifecycle hooks](/lifecycle-hooks):
+
+```js
+function plugin(instance) {
+  // Internal state
+  return {
+    // Lifecycle hooks
+  }
+}
+```
+
+Here's an example of a plugin that causes a popper to hide if no elements within
+it are in focus (for interactivity):
 
 ```js
 function hideOnPopperBlur() {
