@@ -17,10 +17,7 @@ import {
 import tippy from '../../src'
 import { getChildren } from '../../src/popper'
 import { ARROW_SELECTOR, SVG_ARROW_SELECTOR } from '../../src/constants'
-import {
-  INTERACTIVE_A11Y_WARNING,
-  getFormattedMessage,
-} from '../../src/validation'
+import { getFormattedMessage } from '../../src/validation'
 
 tippy.setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
@@ -578,7 +575,14 @@ describe('interactive', () => {
     jest.runAllTimers()
 
     expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(INTERACTIVE_A11Y_WARNING),
+      ...getFormattedMessage(
+        `Interactive tippy element may not be accessible via keyboard
+        navigation.
+        
+        Ensure the tippy element is directly after the reference
+        (or triggerTarget) element in the DOM source order. Using a wrapper
+        <div> or <span> element around it can solve this.`,
+      ),
     )
 
     instance.reference.parentNode.removeChild(inbetweenNode)

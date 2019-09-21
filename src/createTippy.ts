@@ -35,12 +35,7 @@ import {
   splitBySpaces,
   normalizeToArray,
 } from './utils'
-import {
-  warnWhen,
-  validateProps,
-  createMemoryLeakWarning,
-  INTERACTIVE_A11Y_WARNING,
-} from './validation'
+import { warnWhen, validateProps, createMemoryLeakWarning } from './validation'
 import { plugins } from './plugins'
 
 interface PaddingObject {
@@ -725,7 +720,12 @@ export default function createTippy(
         instance.props.interactive &&
           appendTo === defaultProps.appendTo &&
           node.nextElementSibling !== popper,
-        INTERACTIVE_A11Y_WARNING,
+        `Interactive tippy element may not be accessible via keyboard
+        navigation.
+        
+        Ensure the tippy element is directly after the reference
+        (or triggerTarget) element in the DOM source order. Using a wrapper
+        <div> or <span> element around it can solve this.`,
       )
     }
 

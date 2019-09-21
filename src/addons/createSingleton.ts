@@ -6,10 +6,7 @@ import {
   useIfDefined,
 } from '../utils'
 import { defaultProps } from '../props'
-import {
-  throwErrorWhen,
-  createInvalidCreateSingletonArgumentError,
-} from '../validation'
+import { throwErrorWhen } from '../validation'
 
 /**
  * Re-uses a single tippy element for many different tippy instances.
@@ -22,7 +19,10 @@ export default function createSingleton(
   if (__DEV__) {
     throwErrorWhen(
       !Array.isArray(tippyInstances),
-      createInvalidCreateSingletonArgumentError(String(tippyInstances)),
+      `The first argument passed to createSingleton() must be an array of tippy
+      instances.
+  
+      The passed value was: ${tippyInstances}`,
     )
   }
 

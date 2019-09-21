@@ -1,11 +1,9 @@
 import { h, cleanDocumentBody, MOUSEENTER, MOUSELEAVE, CLICK } from '../utils'
 
-import createSingleton, {
-  ARRAY_MISTAKE_ERROR,
-} from '../../src/addons/createSingleton'
-import delegate, { MISSING_TARGET_WARNING } from '../../src/addons/delegate'
+import createSingleton from '../../src/addons/createSingleton'
+import delegate from '../../src/addons/delegate'
 import tippy from '../../src'
-import { createInvalidCreateSingletonArgumentError } from '../../src/validation'
+import { clean } from '../../src/validation'
 
 tippy.setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
@@ -105,13 +103,12 @@ describe('createSingleton', () => {
   it('throws if not passed an array', () => {
     expect(() => {
       createSingleton(null)
-    }).toThrow(createInvalidCreateSingletonArgumentError(null))
-  })
+    }).toThrow(
+      clean(`The first argument passed to createSingleton() must be an array of tippy
+      instances.
 
-  it('throws if passed a single instance', () => {
-    expect(() => {
-      createSingleton(tippy(h()))
-    }).toThrow(ARRAY_MISTAKE_ERROR)
+      The passed value was: ${null}`),
+    )
   })
 
   it('does not throw if any passed instance is not part of an existing singleton', () => {
@@ -303,7 +300,11 @@ describe('delegate', () => {
   })
 
   it('throws if passed falsy `target` prop', () => {
-    const message = MISSING_TARGET_WARNING
+    const message = clean(
+      `You must specify a \`target\` prop indicating the CSS selector string
+    matching the target elements that should receive a tippy.`,
+    )
+
     expect(() => {
       delegate(document.body)
     }).toThrow(message)

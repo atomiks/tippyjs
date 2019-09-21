@@ -10,12 +10,7 @@ import {
   getArrayOfElements,
   isReferenceElement,
 } from './utils'
-import {
-  warnWhen,
-  validateTargets,
-  validateProps,
-  CONTENT_WARNING,
-} from './validation'
+import { warnWhen, validateTargets, validateProps } from './validation'
 import { POPPER_SELECTOR } from './constants'
 import {
   Props,
@@ -49,7 +44,15 @@ function tippy(
     const isMoreThanOneReferenceElement = elements.length > 1
     warnWhen(
       isSingleContentElement && isMoreThanOneReferenceElement,
-      CONTENT_WARNING,
+      `tippy() was passed an Element as the \`content\` prop, but more than one
+      tippy instance was created by this invocation. This means the content
+      element will only be appended to the last tippy instance.
+      
+      Instead, pass the .innerHTML of the element, or use a function that
+      returns a cloned version of the element instead.
+      
+      1) content: () => element.cloneNode(true)
+      2) content: element.innerHTML`,
     )
   }
 

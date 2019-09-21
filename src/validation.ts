@@ -2,132 +2,6 @@ import { Props, Targets } from './types'
 import { hasOwnProperty, includes } from './utils'
 import { defaultProps } from './props'
 
-export const CONTENT_WARNING = `
-  tippy() was passed an Element as the \`content\` prop, but more than one tippy
-  instance was created by this invocation. This means the content element will 
-  only be appended to the last tippy instance.
-
-  Instead, pass the .innerHTML of the element, or use a function that returns a
-  cloned version of the element instead.
-
-  1) content: () => element.cloneNode(true)
-  2) content: element.innerHTML
-`
-
-export const TARGET_WARNING = `
-  The \`target\` prop was removed in v5 and replaced with the delegate() method 
-  in order to conserve bundle size.
-  
-  Read more: https//atomiks.github.io/tippyjs/addons#event-delegation
-`
-
-export const A11Y_WARNING = `
-  The \`a11y\` prop was removed in v5. Make sure the element you are giving a
-  tippy to is natively focusable, such as <button> or <input>, not <div> or 
-  <span>.
-`
-
-export const SHOW_ON_INIT_WARNING = `
-  The \`showOnInit\` prop was renamed to \`showOnCreate\` in v5.
-`
-
-export const ARROW_TYPE_WARNING = `
-  The \`arrowType\` prop was removed in v5 in favor of overloading the \`arrow\`
-  prop.
-
-  Before: {arrow: true, arrowType: "round"}
-  After: {arrow: "round"}
-`
-
-export const TOUCH_HOLD_WARNING = `
-  The \`touchHold\` prop was removed in v5 in favor of overloading the \`touch\`
-  prop.
-
-  Before: {touchHold: true}
-  After: {touch: "hold"}
-`
-
-export const SIZE_WARNING = `
-  The \`size\` prop was removed in v5. Instead, use a theme that specifies CSS
-  padding and font-size properties.
-`
-
-export const GOOGLE_THEME_WARNING = `
-  The included theme "google" was renamed to "material" in v5.
-`
-
-export const PLACEMENT_WARNING = `
-  Specifying placement in \`popperOptions\` is not supported. Use the base-level
-  \`placement\` prop instead.
-
-  Before: {popperOptions: {placement: "bottom"}}
-  After: {placement: "bottom"}
-`
-
-export const VIRTUAL_REFERENCE_OBJECT_WARNING = `
-  tippy() was passed a plain object which is no longer supported as a method
-  of virtual positioning. Instead, pass a placeholder element like:
-
-  tippy(document.createElement("div"))
-
-  You can override its getBoundingClientRect() method, just like a regular plain
-  object.
-`
-
-export const FOLLOW_CURSOR_WARNING = `
-  The \`followCursor\` prop was specified, but the instance has not been 
-  configured with followCursor functionality.
-
-  In v5, \`followCursor\` was moved to a separate piece of code in order to 
-  conserve bundle size.
-
-  Read more: https://atomiks.github.io/tippyjs/extra-props/
-`
-
-export const ARRAY_MISTAKE_ERROR = `
-  First argument to createSingleton() must be an *array* of tippy instances. The
-  passed value was a *single* tippy instance.
-`
-
-export const MISSING_TARGET_WARNING = `
-  You must specify a \`target\` prop indicating the CSS selector string
-  matching the target elements that should receive a tippy.
-`
-
-export const INTERACTIVE_A11Y_WARNING = `
-  Interactive tippy element may not be accessible via keyboard navigation.
-
-  Ensure the tippy element is directly after the reference (or triggerTarget)
-  element in the DOM source order. Using a wrapper <div> or <span> element
-  around it can solve this.
-`
-
-export function createInvalidCreateSingletonArgumentError(arg: string): string {
-  return `
-    The first argument passed to createSingleton() must be an array of tippy
-    instances.
-
-    The passed value was: ${arg}
-  `
-}
-
-export function createInvalidTargetsArgumentError(targets: any): string {
-  return `
-    tippy() was passed \`${targets}\` as its targets (first) argument.
-
-    Valid types are: String, Element, Element[], or NodeList.
-  `
-}
-
-export function createUnknownPropWarning(prop: string): string {
-  return `
-    The \`${prop}\` prop is not a valid prop. You may have spelled it 
-    incorrectly.
-
-    All props: https://atomiks.github.io/tippyjs/all-props/
-  `
-}
-
 export function createMemoryLeakWarning(method: string): string {
   const txt = method === 'destroy' ? 'n already-' : ' '
 
@@ -137,7 +11,7 @@ export function createMemoryLeakWarning(method: string): string {
   `
 }
 
-function clean(value: string): string {
+export function clean(value: string): string {
   const spacesAndTabs = /[ \t]{2,}/g
   const lineStartWithSpaces = /^[ \t]*/gm
 
@@ -186,7 +60,7 @@ export function warnWhen(condition: boolean, message: string): void {
  */
 export function throwErrorWhen(condition: boolean, message: string): void {
   if (condition) {
-    throw new Error(message)
+    throw new Error(clean(message))
   }
 }
 
@@ -214,15 +88,71 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
         prop,
       )
 
-    warnWhen(prop === 'target', TARGET_WARNING)
-    warnWhen(prop === 'a11y', A11Y_WARNING)
-    warnWhen(prop === 'showOnInit', SHOW_ON_INIT_WARNING)
-    warnWhen(prop === 'arrowType', ARROW_TYPE_WARNING)
-    warnWhen(prop === 'touchHold', TOUCH_HOLD_WARNING)
-    warnWhen(prop === 'size', SIZE_WARNING)
-    warnWhen(prop === 'theme' && value === 'google', GOOGLE_THEME_WARNING)
-    warnWhen(didSpecifyPlacementInPopperOptions, PLACEMENT_WARNING)
-    warnWhen(didPassUnknownProp, createUnknownPropWarning(prop))
+    warnWhen(
+      prop === 'target',
+      `The \`target\` prop was removed in v5 and replaced with the delegate()
+      method in order to conserve bundle size.
+      
+      Read more: https//atomiks.github.io/tippyjs/addons#event-delegation`,
+    )
+
+    warnWhen(
+      prop === 'a11y',
+      `The \`a11y\` prop was removed in v5. Make sure the element you are giving
+      a tippy to is natively focusable, such as <button> or <input>, not <div>
+      or <span>.`,
+    )
+
+    warnWhen(
+      prop === 'showOnInit',
+      `The \`showOnInit\` prop was renamed to \`showOnCreate\` in v5.`,
+    )
+
+    warnWhen(
+      prop === 'arrowType',
+      `The \`arrowType\` prop was removed in v5 in favor of overloading the
+      \`arrow\` prop.
+  
+      Before: {arrow: true, arrowType: "round"}
+      After: {arrow: "round"}`,
+    )
+
+    warnWhen(
+      prop === 'touchHold',
+      `The \`touchHold\` prop was removed in v5 in favor of overloading the
+      \`touch\` prop.
+      
+      Before: {touchHold: true}
+      After: {touch: "hold"}`,
+    )
+
+    warnWhen(
+      prop === 'size',
+      `The \`size\` prop was removed in v5. Instead, use a theme that specifies
+      CSS padding and font-size properties.`,
+    )
+
+    warnWhen(
+      prop === 'theme' && value === 'google',
+      `The included theme "google" was renamed to "material" in v5.`,
+    )
+
+    warnWhen(
+      didSpecifyPlacementInPopperOptions,
+      `Specifying placement in \`popperOptions\` is not supported. Use the
+      base-level \`placement\` prop instead.
+      
+      Before: {popperOptions: {placement: "bottom"}}
+      After: {placement: "bottom"}`,
+    )
+
+    warnWhen(
+      didPassUnknownProp,
+      `The \`${prop}\` prop is not a valid prop. You may have spelled it 
+      incorrectly.
+      
+      All props: https://atomiks.github.io/tippyjs/all-props/`,
+    )
   })
 }
 
@@ -235,6 +165,21 @@ export function validateTargets(targets: Targets): void {
     Object.prototype.toString.call(targets) === '[object Object]' &&
     !(targets as any).addEventListener
 
-  throwErrorWhen(didPassFalsyValue, createInvalidTargetsArgumentError(targets))
-  throwErrorWhen(didPassPlainObject, VIRTUAL_REFERENCE_OBJECT_WARNING)
+  throwErrorWhen(
+    didPassFalsyValue,
+    `tippy() was passed \`${targets}\` as its targets (first) argument.
+
+    Valid types are: String, Element, Element[], or NodeList.`,
+  )
+
+  throwErrorWhen(
+    didPassPlainObject,
+    `tippy() was passed a plain object which is no longer supported as a method
+    of virtual positioning. Instead, pass a placeholder element like:
+    
+    tippy(document.createElement("div"))
+    
+    You can override its getBoundingClientRect() method, just like a regular
+    plain object.`,
+  )
 }
