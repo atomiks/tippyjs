@@ -113,8 +113,10 @@ export interface HideAllOptions {
 
 export type Plugin = (instance: Instance) => Partial<Props>
 
-export interface Tippy<TProps = Props> {
-  (targets: Targets, optionalProps?: Partial<TProps>): Instance | Instance[]
+export interface Tippy {
+  <TProps = Props>(targets: Targets, optionalProps?: Partial<TProps>):
+    | Instance
+    | Instance[]
   readonly currentInput: { isTouch: boolean }
   readonly defaultProps: Props
   readonly version: string
