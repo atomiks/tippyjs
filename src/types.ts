@@ -101,10 +101,6 @@ export interface Instance {
   }
 }
 
-export interface Singleton extends Instance {
-  instances: Instance[]
-}
-
 export interface PopperChildren {
   tooltip: HTMLDivElement
   content: HTMLDivElement
@@ -117,17 +113,6 @@ export interface HideAllOptions {
   exclude?: Instance | ReferenceElement
 }
 
-export type TippyCallWrapper = (
-  targets: Targets,
-  optionalProps?: Partial<Props>,
-) => Instance | Instance[]
-
-export interface EnhancedTippy extends Tippy {
-  currentInput: { isTouch: boolean }
-  defaultProps: Props
-  version: string
-}
-
 export type Plugin = (instance: Instance) => Partial<Props>
 
 export interface Tippy {
@@ -136,6 +121,7 @@ export interface Tippy {
   readonly defaultProps: Props
   readonly version: string
   readonly plugins: Plugin[]
+  setDefaultProps(partialProps: Partial<Props>): void
   use(plugin: Plugin): void
 }
 
@@ -143,10 +129,8 @@ declare const tippy: Tippy
 export default tippy
 
 export type HideAll = (options: HideAllOptions) => void
-export type SetDefaultProps = (partialProps: Partial<Props>) => void
 
 declare const hideAll: HideAll
-declare const setDefaultProps: SetDefaultProps
 
 export type Delegate = (
   targets: Targets,
@@ -161,6 +145,6 @@ export type CreateSingleton = (
 declare const delegate: Delegate
 declare const createSingleton: CreateSingleton
 
-declare const followCursor: (tippy: Tippy) => TippyCallWrapper
+declare const followCursor: (instance: Instance) => Partial<Props>
 
-export { hideAll, setDefaultProps, delegate, createSingleton, followCursor }
+export { hideAll, delegate, createSingleton, followCursor }
