@@ -140,7 +140,7 @@ export default function createTippy(
   reference._tippy = instance
   popper._tippy = instance
 
-  const instancePlugins = plugins.map(plugin => plugin(instance))
+  const instancePlugins = plugins.map(plugin => plugin.fn(instance))
 
   invokeHook('onCreate', [instance])
 
@@ -875,7 +875,7 @@ export default function createTippy(
       if (
         POPPER_INSTANCE_DEPENDENCIES.some((prop): boolean => {
           return (
-            hasOwnProperty(partialProps, prop) &&
+            hasOwnProperty(partialProps, prop as string) &&
             partialProps[prop] !== prevProps[prop]
           )
         })

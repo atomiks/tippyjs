@@ -25,7 +25,20 @@ export interface PopperInstance extends Popper {
   modifiers: { name: string; padding: object | number }[]
 }
 
-export interface Props {
+export interface LifecycleHooks {
+  onCreate(instance: Instance): void
+  onDestroy(instance: Instance): void
+  onHidden(instance: Instance): void
+  onHide(instance: Instance): void | false
+  onMount(instance: Instance): void
+  onPropsUpdated(instance: Instance, partialProps: Partial<Props>): void
+  onShow(instance: Instance): void | false
+  onShown(instance: Instance): void
+  onTrigger(instance: Instance, event: Event): void
+  onUntrigger(instance: Instance, event: Event): void
+}
+
+export interface Props extends LifecycleHooks {
   allowHTML: boolean
   animateFill: boolean
   animation: string
@@ -50,16 +63,6 @@ export interface Props {
   maxWidth: number | string
   multiple: boolean
   offset: number | string
-  onCreate(instance: Instance): void
-  onDestroy(instance: Instance): void
-  onHidden(instance: Instance): void
-  onHide(instance: Instance): void | false
-  onMount(instance: Instance): void
-  onPropsUpdated(instance: Instance, partialProps: Partial<Props>): void
-  onShow(instance: Instance): void | false
-  onShown(instance: Instance): void
-  onTrigger(instance: Instance, event: Event): void
-  onUntrigger(instance: Instance, event: Event): void
   placement: Placement
   popperOptions: Popper.PopperOptions
   role: string
@@ -70,10 +73,10 @@ export interface Props {
   triggerTarget: Element | Element[] | null
   updateDuration: number
   zIndex: number
+  [key: string]: any
 }
 
 export interface Instance {
-  __extraProps?: Record<string, any>
   clearDelayTimeouts(): void
   destroy(): void
   disable(): void
@@ -111,12 +114,14 @@ export interface HideAllOptions {
   exclude?: Instance | ReferenceElement
 }
 
-export type Plugin = (instance: Instance) => Partial<Props>
+export interface Plugin {
+  name: string
+  defaultValue: any
+  fn(instance: Instance): Partial<LifecycleHooks>
+}
 
-export interface Tippy {
-  <TProps = Props>(targets: Targets, optionalProps?: Partial<TProps>):
-    | Instance
-    | Instance[]
+export interface Tippy<TProps = Props> {
+  (targets: Targets, optionalProps?: Partial<TProps>): Instance | Instance[]
   readonly currentInput: { isTouch: boolean }
   readonly defaultProps: Props
   readonly version: string
@@ -153,7 +158,7 @@ export type CreateSingleton = (
 declare const delegate: Delegate
 declare const createSingleton: CreateSingleton
 
-declare const followCursor: (instance: Instance) => Partial<Props>
-declare const sticky: (instance: Instance) => Partial<Props>
+declare const followCursor: (instance: Instance) => Partial<LifecycleHooks>
+declare const sticky: (instance: Instance) => Partial<LifecycleHooks>
 
 export { hideAll, delegate, createSingleton, followCursor, sticky }

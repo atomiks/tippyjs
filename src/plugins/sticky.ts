@@ -1,55 +1,60 @@
-import { Instance, Props, StickyProps } from '../types'
+import { Instance, Props, StickyProps, LifecycleHooks } from '../types'
 
 interface ExtendedInstance extends Instance {
   props: Props & StickyProps
 }
 
-export default function sticky(instance: ExtendedInstance): Partial<Props> {
-  const { reference, popper } = instance
+export default {
+  name: 'sticky',
+  defaultValue: false,
+  fn(instance: ExtendedInstance): Partial<LifecycleHooks> {
+    const { reference, popper } = instance
 
-  function shouldCheck(value: 'reference' | 'popper'): boolean {
-    return instance.props.sticky === true || instance.props.sticky === value
-  }
+    function shouldCheck(value: 'reference' | 'popper'): boolean {
+      return instance.props.sticky === true || instance.props.sticky === value
+    }
 
-  let prevRefRect = shouldCheck('reference')
-    ? reference.getBoundingClientRect()
-    : null
-  let prevPopRect = shouldCheck('popper')
-    ? popper.getBoundingClientRect()
-    : null
-
-  function updatePosition(): void {
-    const currentRefRect = shouldCheck('reference')
+    let prevRefRect = shouldCheck('reference')
       ? reference.getBoundingClientRect()
       : null
-    const currentPopRect = shouldCheck('popper')
+    let prevPopRect = shouldCheck('popper')
       ? popper.getBoundingClientRect()
       : null
 
-    // Schedule an update if the reference rect has changed
-    if (
-      (shouldCheck('reference') &&
-        areRectsDifferent(prevRefRect, currentRefRect)) ||
-      (shouldCheck('popper') && areRectsDifferent(prevPopRect, currentPopRect))
-    ) {
-      instance.popperInstance!.update()
-    }
+    function updatePosition(): void {
+      const currentRefRect = shouldCheck('reference')
+        ? reference.getBoundingClientRect()
+        : null
+      const currentPopRect = shouldCheck('popper')
+        ? popper.getBoundingClientRect()
+        : null
 
-    prevRefRect = currentRefRect
-    prevPopRect = currentPopRect
-
-    if (instance.state.isMounted) {
-      requestAnimationFrame(updatePosition)
-    }
-  }
-
-  return {
-    onMount(): void {
-      if (instance.props.sticky) {
-        updatePosition()
+      // Schedule an update if the reference rect has changed
+      if (
+        (shouldCheck('reference') &&
+          areRectsDifferent(prevRefRect, currentRefRect)) ||
+        (shouldCheck('popper') &&
+          areRectsDifferent(prevPopRect, currentPopRect))
+      ) {
+        instance.popperInstance!.update()
       }
-    },
-  }
+
+      prevRefRect = currentRefRect
+      prevPopRect = currentPopRect
+
+      if (instance.state.isMounted) {
+        requestAnimationFrame(updatePosition)
+      }
+    }
+
+    return {
+      onMount(): void {
+        if (instance.props.sticky) {
+          updatePosition()
+        }
+      },
+    }
+  },
 }
 
 function areRectsDifferent(
