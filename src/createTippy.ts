@@ -965,9 +965,8 @@ export default function createTippy(
         return
       }
 
-      invokeHook('onMount', [instance])
-
       instance.state.isMounted = true
+      invokeHook('onMount', [instance])
 
       // The content should fade in after the backdrop has mostly filled the
       // tooltip element. `clip-path` is the other alternative but is not well-
@@ -975,10 +974,6 @@ export default function createTippy(
       content.style.transitionDelay = instance.popperChildren.backdrop
         ? `${Math.round(duration / 12)}ms`
         : ''
-
-      if (instance.props.sticky) {
-        makeSticky(instance)
-      }
 
       setTransitionDuration([popper], instance.props.updateDuration)
       setTransitionDuration(transitionableElements, duration)
@@ -988,8 +983,8 @@ export default function createTippy(
       handleAriaExpandedAttribute()
 
       onTransitionedIn(duration, (): void => {
-        invokeHook('onShown', [instance])
         instance.state.isShown = true
+        invokeHook('onShown', [instance])
       })
     }
 
@@ -1042,9 +1037,8 @@ export default function createTippy(
 
       popper.parentNode!.removeChild(popper)
 
-      invokeHook('onHidden', [instance])
-
       instance.state.isMounted = false
+      invokeHook('onHidden', [instance])
     })
   }
 
@@ -1074,36 +1068,4 @@ export default function createTippy(
 
     invokeHook('onDestroy', [instance])
   }
-}
-
-/**
- * Updates the position of the tippy on every animation frame to ensure it stays
- * stuck to the reference element.
- * Optimized by ensuring the reference's clientRect has actually changed before
- * scheduling an update.
- */
-function makeSticky(instance: Instance): void {
-  let prevRefRect = instance.reference.getBoundingClientRect()
-
-  function updatePosition(): void {
-    const currentRefRect = instance.reference.getBoundingClientRect()
-
-    // Only schedule an update if the reference rect has changed
-    if (
-      prevRefRect.top !== currentRefRect.top ||
-      prevRefRect.right !== currentRefRect.right ||
-      prevRefRect.bottom !== currentRefRect.bottom ||
-      prevRefRect.left !== currentRefRect.left
-    ) {
-      instance.popperInstance!.scheduleUpdate()
-    }
-
-    prevRefRect = currentRefRect
-
-    if (instance.state.isMounted) {
-      requestAnimationFrame(updatePosition)
-    }
-  }
-
-  updatePosition()
 }
