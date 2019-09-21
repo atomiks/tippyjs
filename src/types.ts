@@ -98,7 +98,7 @@ export interface Instance {
   reference: ReferenceElement
   setContent(content: Content): void
   setProps(partialProps: Partial<Props>): void
-  show(duration?: number, shouldPreventPopperTransition?: boolean): void
+  show(duration?: number): void
   state: {
     currentPlacement: Placement | null
     isScheduledToShow: boolean

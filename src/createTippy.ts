@@ -906,7 +906,6 @@ export default function createTippy(
       0,
       defaultProps.duration,
     ),
-    shouldPreventPopperTransition = true,
   ): void {
     if (__DEV__) {
       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('show'))
@@ -950,12 +949,7 @@ export default function createTippy(
     // Prevent a transition of the popper from its previous position and of the
     // elements at a different placement.
     const transitionableElements = getTransitionableElements()
-    setTransitionDuration(
-      shouldPreventPopperTransition
-        ? transitionableElements.concat(popper)
-        : transitionableElements,
-      0,
-    )
+    setTransitionDuration(transitionableElements.concat(popper), 0)
 
     currentMountCallback = (): void => {
       if (!instance.state.isVisible) {
