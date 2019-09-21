@@ -65,3 +65,16 @@ tippy(reference, { hideOnPopperBlur: true })
 Plugins are invoked per-instance and the plugin function definition takes the
 instance as an argument, so you can use private variables to create internal
 state in the plugin closure. This is how the `followCursor` plugin works.
+
+### Types
+
+If using TypeScript, you can extend the `Props` interface like so:
+
+```js
+import tippy, { Tippy, Props, followCursor, FollowCursorProps } from 'tippy.js'
+
+type ExtendedProps = Props & FollowCursorProps
+const extendedTippy = tippy.use(followCursor) as Tippy<ExtendedProps>
+
+export default extendedTippy
+```
