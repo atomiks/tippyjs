@@ -8,22 +8,14 @@ import React, {
   Children,
 } from 'react'
 import { createPortal } from 'react-dom'
-import tippyBase, {
-  createSingleton,
-  delegate,
-  enhance,
-  followCursor,
-} from '../../../'
-import { useThis } from '../hooks'
+import tippy, { createSingleton, delegate, followCursor } from '../../../'
+import { useInstance } from '../hooks'
 import '../../../dist/tippy.css'
+
+tippy.use(followCursor)
 
 const isBrowser =
   typeof window !== 'undefined' && typeof document !== 'undefined'
-
-const tippy = enhance(tippyBase, [followCursor])
-
-createSingleton.tippy = tippy
-delegate.tippy = tippy
 
 function preserveRef(ref, node) {
   if (ref) {
@@ -67,13 +59,16 @@ function Tippy({
   const isControlledMode = visible !== undefined
 
   const [mounted, setMounted] = useState(false)
-  const $this = useThis({ container: ssrSafeCreateDiv(), renders: 1 })
+  const component = useInstance(() => ({
+    container: ssrSafeCreateDiv(),
+    renders: 1,
+  }))
 
   const props = {
     ignoreAttributes,
     multiple,
     ...restOfNativeProps,
-    content: $this.container,
+    content: component.container,
   }
 
   if (isControlledMode) {
@@ -82,9 +77,9 @@ function Tippy({
 
   // CREATE
   useIsomorphicLayoutEffect(() => {
-    const instance = tippy($this.reference, props)
+    const instance = tippy(component.reference, props)
 
-    $this.instance = instance
+    component.instance = instance
 
     if (onCreate) {
       onCreate(instance)
@@ -103,38 +98,37 @@ function Tippy({
     return () => {
       instance.destroy()
     }
-  }, [])
+  }, [children.type])
 
   // UPDATE
   useIsomorphicLayoutEffect(() => {
-    // Prevent this effect from running on the initial render, and the render
-    // caused by setMounted().
-    if ($this.renders < 3) {
-      $this.renders++
+    // Prevent this effect from running on the initial render
+    if (component.renders === 1) {
+      component.renders++
       return
     }
 
     if (onBeforeUpdate) {
-      onBeforeUpdate($this.instance)
+      onBeforeUpdate(component.instance)
     }
 
-    $this.instance.setProps(props)
+    component.instance.setProps(props)
 
     if (onAfterUpdate) {
-      onAfterUpdate($this.instance)
+      onAfterUpdate(component.instance)
     }
 
     if (enabled) {
-      $this.instance.enable()
+      component.instance.enable()
     } else {
-      $this.instance.disable()
+      component.instance.disable()
     }
 
     if (isControlledMode) {
       if (visible) {
-        $this.instance.show()
+        component.instance.show()
       } else {
-        $this.instance.hide()
+        component.instance.hide()
       }
     }
   })
@@ -142,7 +136,7 @@ function Tippy({
   // UPDATE className
   useIsomorphicLayoutEffect(() => {
     if (className) {
-      const tooltip = $this.instance.popperChildren.tooltip
+      const tooltip = component.instance.popperChildren.tooltip
       updateClassName(tooltip, 'add', className)
       return () => {
         updateClassName(tooltip, 'remove', className)
@@ -154,33 +148,37 @@ function Tippy({
     <>
       {cloneElement(children, {
         ref(node) {
-          $this.reference = node
+          component.reference = node
           preserveRef(children.ref, node)
         },
       })}
-      {mounted && createPortal(content, $this.container)}
+      {mounted && createPortal(content, component.container)}
     </>
   )
 }
 
-function TippySingleton({ children, delay }) {
-  const $this = useThis({ instances: [] })
+function TippySingleton({ children, ...props }) {
+  const component = useInstance({ instances: [] })
 
-  useEffect(() => {
-    const singleton = createSingleton($this.instances, { delay })
+  useIsomorphicLayoutEffect(() => {
+    const { instances } = component
+    const singleton = createSingleton([...instances], props)
+
     return () => {
-      singleton.destroy(false)
+      singleton.destroy()
+      component.instances = instances.filter(i => !i.state.isDestroyed)
     }
-  }, [delay])
+  })
 
   return Children.map(children, child => {
     return cloneElement(child, {
+      enabled: false,
       onCreate(instance) {
         if (child.props.onCreate) {
           child.props.onCreate(instance)
         }
 
-        $this.instances.push(instance)
+        component.instances.push(instance)
       },
     })
   })

@@ -8,13 +8,13 @@ import {
   CLICK,
 } from '../utils'
 
-import tippy, { setDefaultProps } from '../../src'
+import tippy from '../../src'
 import { defaultProps } from '../../src/props'
 import createTippy from '../../src/createTippy'
 import { POPPER_SELECTOR } from '../../src/constants'
 
 jest.useFakeTimers()
-setDefaultProps({ duration: 0, delay: 0 })
+tippy.setDefaultProps({ duration: 0, delay: 0 })
 
 let instance
 

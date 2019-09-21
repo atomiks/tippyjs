@@ -1,7 +1,6 @@
 import {
   validateProps,
   validateTargets,
-  validateExtraPropsFunctionality,
   getFormattedMessage,
   createUnknownPropWarning,
   createInvalidTargetsArgumentError,
@@ -14,7 +13,6 @@ import {
   GOOGLE_THEME_WARNING,
   PLACEMENT_WARNING,
   VIRTUAL_REFERENCE_OBJECT_WARNING,
-  FOLLOW_CURSOR_WARNING,
 } from '../../src/validation'
 
 let spy
@@ -111,23 +109,5 @@ describe('validateTargets', () => {
     expect(() => {
       validateTargets({})
     }).toThrow(VIRTUAL_REFERENCE_OBJECT_WARNING)
-  })
-})
-
-describe('validateExtraPropsFunctionality', () => {
-  it('followCursor: warns when the instance has not been configured with followCursor', () => {
-    const instance = { __extraProps: {} }
-    validateExtraPropsFunctionality(instance, { followCursor: true })
-    expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage(FOLLOW_CURSOR_WARNING),
-    )
-  })
-
-  it('followCursor: does not warn if instance has been configured', () => {
-    validateExtraPropsFunctionality(
-      { __extraProps: { followCursor: true } },
-      { followCursor: true },
-    )
-    expect(spy).not.toHaveBeenCalled()
   })
 })

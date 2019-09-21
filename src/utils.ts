@@ -243,3 +243,19 @@ export function includes(a: string[] | string, b: string): boolean {
 export function splitBySpaces(value: string): string[] {
   return value.split(/\s+/).filter(Boolean)
 }
+
+/**
+ * Returns the `nextValue` if `nextValue` is not `undefined`, otherwise returns
+ * `currentValue`
+ */
+export function useIfDefined(nextValue: any, currentValue: any): any {
+  return nextValue !== undefined ? nextValue : currentValue
+}
+
+/**
+ * Converts a value that's an array or single value to an array
+ */
+export function normalizeToArray<T>(value: T | T[]): T[] {
+  // @ts-ignore
+  return [].concat(value)
+}

@@ -1,72 +1,48 @@
-import {
-  Instance,
-  Targets,
-  Props,
-  Tippy,
-  TippyCallWrapper,
-  Placement,
-  PopperElement,
-} from '../types'
-import {
-  includes,
-  preserveInvocation,
-  removeProperties,
-  closestCallback,
-} from '../utils'
+import { Instance, Props, Placement, PopperElement } from '../types'
+import { includes, closestCallback, useIfDefined } from '../utils'
 import { getBasePlacement } from '../popper'
 import { currentInput } from '../bindGlobalEventListeners'
 import Popper from 'popper.js'
 
-export default function followCursor(tippy: Tippy): TippyCallWrapper {
-  return (
-    targets: Targets,
-    optionalProps?: Partial<Props>,
-  ): Instance | Instance[] => {
-    return tippy(targets, {
-      ...optionalProps,
-      onCreate(instance): void {
-        preserveInvocation(
-          optionalProps && optionalProps.onCreate,
-          instance.props.onCreate,
-          [instance],
-        )
+export default function followCursor(instance: Instance): Partial<Props> {
+  const { reference, popper } = instance
 
-        if (__DEV__) {
-          instance.__extraProps!.followCursor = true
-        }
-
-        if (instance.props.followCursor) {
-          applyFollowCursor(instance)
-        }
-      },
-    })
-  }
-}
-
-export function getVirtualOffsets(
-  popper: PopperElement,
-  isVerticalPlacement: boolean,
-): {
-  size: number
-  x: number
-  y: number
-} {
-  const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
-
-  return {
-    size,
-    x: isVerticalPlacement ? size : 0,
-    y: isVerticalPlacement ? 0 : size,
-  }
-}
-
-function applyFollowCursor(instance: Instance): void {
-  const { reference } = instance
-  const originalSetProps = instance.setProps
-
-  let firstTriggerEventType: string | null = null
+  // Internal state
   let lastMouseMoveEvent: MouseEvent
+  let firstTriggerEventType: string | null = null
   let isPopperInstanceCreated = false
+  let normalizedPlacement: Placement
+  let shouldBypassSetPropsHook = false
+
+  // These are controlled by this plugin, so we need to store the user's
+  // original prop value
+  let placement: Props['placement']
+  let flipOnUpdate: Props['flipOnUpdate']
+
+  function setPrivateProps(props: Partial<Props>): void {
+    placement = useIfDefined(props.placement, placement)
+    flipOnUpdate = useIfDefined(props.flipOnUpdate, flipOnUpdate)
+  }
+
+  // Due to `getVirtualOffsets()`, we need to reverse the placement if it's
+  // shifted (start -> end, and vice-versa)
+  function setNormalizedPlacement(): void {
+    const shift = placement.split('-')[1]
+
+    normalizedPlacement = (instance.props.followCursor && shift
+      ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
+      : placement) as Placement
+
+    shouldBypassSetPropsHook = true
+    instance.setProps({ placement: normalizedPlacement })
+    shouldBypassSetPropsHook = false
+  }
+
+  function resetReference(): void {
+    if (instance.popperInstance) {
+      instance.popperInstance.reference = reference
+    }
+  }
 
   function addListener(): void {
     document.addEventListener('mousemove', onMouseMove)
@@ -99,7 +75,7 @@ function applyFollowCursor(instance: Instance): void {
     )
 
     const rect = reference.getBoundingClientRect()
-    const { followCursor } = instance.props as Props
+    const { followCursor } = instance.props
     const isHorizontal = followCursor === 'horizontal'
     const isVertical = followCursor === 'vertical'
     const isVerticalPlacement = includes(
@@ -108,13 +84,10 @@ function applyFollowCursor(instance: Instance): void {
     )
 
     // The virtual reference needs some size to prevent itself from overflowing
-    const { size, x, y } = getVirtualOffsets(
-      instance.popper,
-      isVerticalPlacement,
-    )
+    const { size, x, y } = getVirtualOffsets(popper, isVerticalPlacement)
 
     if (isCursorOverReference || !instance.props.interactive) {
-      instance.popperInstance!.reference = {
+      instance.popperInstance.reference = {
         // These `client` values don't get used by Popper.js if they are 0
         clientWidth: 0,
         clientHeight: 0,
@@ -131,61 +104,58 @@ function applyFollowCursor(instance: Instance): void {
         }),
       }
 
-      instance.popperInstance!.update()
+      instance.popperInstance.update()
     }
 
+    // "initial" behavior
     if (
       currentInput.isTouch ||
-      (followCursor === 'initial' && instance.state.isVisible)
+      (instance.props.followCursor === 'initial' && instance.state.isVisible)
     ) {
       removeListener()
     }
   }
 
-  let {
-    placement,
-    popperOptions,
-    flipOnUpdate,
-    onMount,
-    onTrigger,
-    onUntrigger,
-    onHidden,
-  } = instance.props
+  return {
+    onCreate(): void {
+      setPrivateProps(instance.props)
+      setNormalizedPlacement()
 
-  // Due to the virtual offsets normalization when using `followCursor`,
-  // we need to use the opposite placement
-  let normalizedPlacement = placement
+      const { popperOptions } = instance.props
 
-  function setNormalizedPlacement(): void {
-    const shift = placement.split('-')[1]
+      instance.setProps({
+        popperOptions: {
+          ...popperOptions,
+          // Technically we should try and preserve `onCreate` if `.setProps()`
+          // is called after the instance is created, but before the
+          // popperInstance is created, but this correctness seems extremely
+          // unlikely to be needed
+          onCreate(data: Popper.Data): void {
+            if (popperOptions && popperOptions.onCreate) {
+              popperOptions.onCreate(data)
+            }
 
-    normalizedPlacement = (instance.props.followCursor && shift
-      ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
-      : placement) as Placement
-
-    originalSetProps({ placement: normalizedPlacement })
-  }
-
-  setNormalizedPlacement()
-
-  function popperOnCreate(data: Popper.Data): void {
-    preserveInvocation(
-      popperOptions && popperOptions.onCreate,
-      instance.props.popperOptions.onCreate,
-      [data],
-    )
-
-    isPopperInstanceCreated = true
-  }
-
-  instance.setProps({
-    popperOptions: {
-      ...popperOptions,
-      onCreate: popperOnCreate,
+            isPopperInstanceCreated = true
+          },
+        },
+      })
     },
-    onMount(instance): void {
-      preserveInvocation(onMount, instance.props.onMount, [instance])
+    onPropsUpdated(_, partialProps): void {
+      if (!shouldBypassSetPropsHook) {
+        setPrivateProps(partialProps)
 
+        if (partialProps.placement !== placement) {
+          setNormalizedPlacement()
+        }
+      }
+
+      onMouseMove(lastMouseMoveEvent)
+
+      if (!instance.props.followCursor) {
+        resetReference()
+      }
+    },
+    onMount(): void {
       // Popper's scroll listeners make sense for `true`, where the cursor
       // follows both axes. TODO: somehow keep scroll listeners for vertical
       // scrolling for "vertical", and horizontal scrolling for "horizontal".
@@ -200,9 +170,7 @@ function applyFollowCursor(instance: Instance): void {
 
       onMouseMove(lastMouseMoveEvent)
     },
-    onTrigger(instance, event): void {
-      preserveInvocation(onTrigger, instance.props.onTrigger, [instance, event])
-
+    onTrigger(_, event): void {
       // Tapping on touch devices can trigger `mouseenter` then `focus`
       if (!firstTriggerEventType) {
         firstTriggerEventType = event.type
@@ -212,8 +180,8 @@ function applyFollowCursor(instance: Instance): void {
         lastMouseMoveEvent = event
       }
 
-      if (firstTriggerEventType === 'focus' && instance.popperInstance) {
-        instance.popperInstance.reference = instance.reference
+      if (firstTriggerEventType === 'focus') {
+        resetReference()
       }
 
       if (
@@ -231,12 +199,7 @@ function applyFollowCursor(instance: Instance): void {
         instance.setProps({ flipOnUpdate })
       }
     },
-    onUntrigger(instance, event): void {
-      preserveInvocation(onUntrigger, instance.props.onUntrigger, [
-        instance,
-        event,
-      ])
-
+    onUntrigger(): void {
       // The listener gets added in `onTrigger()`, but due to potential delay(s)
       // the instance made be untriggered before it shows. `onHidden()` will
       // therefore never be invoked.
@@ -247,8 +210,6 @@ function applyFollowCursor(instance: Instance): void {
       firstTriggerEventType = null
     },
     onHidden(): void {
-      preserveInvocation(onHidden, instance.props.onHidden, [instance])
-
       // If scheduled to show before unmounting (e.g. delay: [500, 0]), the
       // listener should not be removed
       if (!instance.state.isScheduledToShow) {
@@ -257,37 +218,22 @@ function applyFollowCursor(instance: Instance): void {
 
       instance.popperInstance!.options.placement = normalizedPlacement
     },
-  })
+  }
+}
 
-  instance.setProps = (partialProps): void => {
-    placement = partialProps.placement || placement
-    onTrigger = partialProps.onTrigger || onTrigger
-    onUntrigger = partialProps.onUntrigger || onUntrigger
-    onMount = partialProps.onMount || onMount
-    onHidden = partialProps.onHidden || onHidden
-    popperOptions = partialProps.popperOptions || popperOptions
+export function getVirtualOffsets(
+  popper: PopperElement,
+  isVerticalPlacement: boolean,
+): {
+  size: number
+  x: number
+  y: number
+} {
+  const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
 
-    if (partialProps.flipOnUpdate !== undefined) {
-      flipOnUpdate = partialProps.flipOnUpdate
-    }
-
-    originalSetProps({
-      popperOptions: {
-        ...popperOptions,
-        onCreate: popperOnCreate,
-      },
-      ...removeProperties(partialProps, [
-        'placement',
-        'onTrigger',
-        'onUntrigger',
-        'onMount',
-        'onHidden',
-        'popperOptions',
-      ]),
-    })
-
-    setNormalizedPlacement()
-
-    onMouseMove(lastMouseMoveEvent)
+  return {
+    size,
+    x: isVerticalPlacement ? size : 0,
+    y: isVerticalPlacement ? 0 : size,
   }
 }

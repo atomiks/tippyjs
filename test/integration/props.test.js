@@ -14,7 +14,7 @@ import {
   BLUR,
 } from '../utils'
 
-import tippy, { setDefaultProps } from '../../src'
+import tippy from '../../src'
 import { getChildren } from '../../src/popper'
 import { ARROW_SELECTOR, SVG_ARROW_SELECTOR } from '../../src/constants'
 import {
@@ -22,7 +22,7 @@ import {
   getFormattedMessage,
 } from '../../src/validation'
 
-setDefaultProps({ duration: 0, delay: 0 })
+tippy.setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
@@ -527,9 +527,10 @@ describe('interactive', () => {
 
     instance.setProps({ triggerTarget })
 
-    instance.show()
+    triggerTarget.dispatchEvent(MOUSEENTER)
     jest.runAllTimers()
 
+    expect(instance.reference.getAttribute('aria-expanded')).toBe(null)
     expect(triggerTarget.getAttribute('aria-expanded')).toBe('true')
 
     instance.hide()

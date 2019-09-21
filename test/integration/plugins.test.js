@@ -5,33 +5,22 @@ import {
   disableTouchEnvironment,
 } from '../utils'
 
-import tippy, { setDefaultProps } from '../../src'
-import enhance from '../../src/extra-props/enhance'
-import followCursor from '../../src/extra-props/followCursor'
+import tippy from '../../src'
+import followCursor, { getVirtualOffsets } from '../../src/plugins/followCursor'
 import { getBasePlacement } from '../../src/popper'
-import { getVirtualOffsets } from '../../src/extra-props/followCursor'
 
-setDefaultProps({ duration: 0, delay: 0 })
+tippy.setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
 
-describe('enhance', () => {
-  it('preserves statics', () => {
-    const enhancedTippy = enhance(tippy, [followCursor])
-
-    expect(enhancedTippy.defaultProps).toBe(tippy.defaultProps)
-    expect(enhancedTippy.currentInput).toBe(tippy.currentInput)
-    expect(enhancedTippy.version).toBe(tippy.version)
-  })
-})
+tippy.use(followCursor)
 
 describe('followCursor', () => {
   // NOTE: Jest's simulated window dimensions are 1024 x 768. These values
   // should be within that
   const first = { clientX: 317, clientY: 119 }
   const second = { clientX: 240, clientY: 500 }
-  const tippyEnhanced = followCursor(tippy)
 
   const firstMouseMoveEvent = new MouseEvent('mousemove', {
     ...first,
@@ -62,7 +51,7 @@ describe('followCursor', () => {
   }
 
   it('true: follows both axes', () => {
-    instance = tippyEnhanced(h(), { followCursor: true })
+    instance = tippy(h(), { followCursor: true })
 
     instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
 
@@ -88,7 +77,7 @@ describe('followCursor', () => {
   })
 
   it('"horizontal": follows x-axis', () => {
-    instance = tippyEnhanced(h(), { followCursor: 'horizontal' })
+    instance = tippy(h(), { followCursor: 'horizontal' })
     const referenceRect = instance.reference.getBoundingClientRect()
 
     instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
@@ -116,7 +105,7 @@ describe('followCursor', () => {
   })
 
   it('"vertical": follows y-axis', () => {
-    instance = tippyEnhanced(h(), { followCursor: 'vertical' })
+    instance = tippy(h(), { followCursor: 'vertical' })
     const referenceRect = instance.reference.getBoundingClientRect()
 
     instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
@@ -143,7 +132,7 @@ describe('followCursor', () => {
   })
 
   it('"initial": only follows once', () => {
-    instance = tippyEnhanced(h(), { followCursor: 'initial' })
+    instance = tippy(h(), { followCursor: 'initial' })
 
     // lastMouseMove event is used in this case
     instance.reference.dispatchEvent(new MouseEvent('mouseenter', { ...first }))
@@ -170,7 +159,7 @@ describe('followCursor', () => {
   })
 
   it('is at correct position after a delay', () => {
-    instance = tippyEnhanced(h(), { followCursor: true, delay: 100 })
+    instance = tippy(h(), { followCursor: true, delay: 100 })
 
     instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
 
@@ -190,7 +179,7 @@ describe('followCursor', () => {
   })
 
   it('is at correct position after a content update', () => {
-    instance = tippyEnhanced(h(), { followCursor: true })
+    instance = tippy(h(), { followCursor: true })
 
     instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
 
@@ -220,7 +209,7 @@ describe('followCursor', () => {
   })
 
   it('does not continue to follow if interactive: true and cursor is over popper', () => {
-    instance = tippyEnhanced(h(), {
+    instance = tippy(h(), {
       followCursor: 'horizontal',
       interactive: true,
     })
@@ -247,7 +236,7 @@ describe('followCursor', () => {
   it('touch device behavior is "initial"', () => {
     enableTouchEnvironment()
 
-    instance = tippyEnhanced(h(), { followCursor: true, flip: false })
+    instance = tippy(h(), { followCursor: true, flip: false })
 
     instance.reference.dispatchEvent(new MouseEvent('mouseenter', { ...first }))
 
@@ -275,7 +264,7 @@ describe('followCursor', () => {
   })
 
   it('cleans up listener if untriggered before it shows', () => {
-    instance = tippyEnhanced(h(), {
+    instance = tippy(h(), {
       followCursor: true,
       flip: false,
       delay: 1000,
@@ -305,7 +294,7 @@ describe('followCursor', () => {
         onCreate: jest.fn(),
       },
     }
-    instance = tippyEnhanced(h(), {
+    instance = tippy(h(), {
       followCursor: true,
       flip: false,
       ...spies,
@@ -327,7 +316,7 @@ describe('followCursor', () => {
   })
 
   it('should reset popperInstance.reference if triggered by `focus`', () => {
-    instance = tippyEnhanced(h(), {
+    instance = tippy(h(), {
       followCursor: true,
       flip: false,
       delay: 1000,
@@ -350,7 +339,7 @@ describe('followCursor', () => {
   })
 
   it('"initial": does not update if triggered again while still visible', () => {
-    instance = tippyEnhanced(h(), {
+    instance = tippy(h(), {
       followCursor: 'initial',
     })
 

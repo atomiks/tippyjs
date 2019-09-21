@@ -21,22 +21,52 @@ import 'animate.css/source/attention_seekers/tada.css'
 import 'animate.css/source/attention_seekers/wobble.css'
 import 'focus-visible'
 
-function Heading({ children, level, ...props }) {
-  const href = slugify(String(children), {
-    lower: true,
-    remove: /[*+~.()'"!:@]/g,
-  })
+let hrefs = []
 
-  const Tag = `h${level}`
+class Heading extends React.Component {
+  constructor(props) {
+    super(props)
 
-  return (
-    <Tag {...props}>
-      <a className="link-icon" id={href} href={`#${href}`}>
-        #
-      </a>
-      {children}
-    </Tag>
-  )
+    let href = slugify(String(this.props.children), {
+      lower: true,
+    })
+
+    // Check for duplicate #s
+    if (hrefs.indexOf(href) !== -1) {
+      let counter = 1
+
+      while (hrefs.indexOf(href + counter) !== -1) {
+        counter++
+      }
+
+      href = `${href}-${counter}`
+    }
+
+    hrefs.push(href)
+
+    this.state = { href }
+  }
+
+  componentWillUnmount() {
+    hrefs = hrefs.filter(href => href !== this.state.href)
+  }
+
+  render() {
+    const Tag = `h${this.props.level}`
+
+    return (
+      <Tag {...this.props}>
+        <a
+          className="link-icon"
+          id={this.state.href}
+          href={`#${this.state.href}`}
+        >
+          #
+        </a>
+        {this.props.children}
+      </Tag>
+    )
+  }
 }
 
 const components = {

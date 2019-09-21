@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import Tippy from '../Tippy'
 import { Button } from '../Framework'
 import TippyTransition from '../TippyTransition'
-import { useThis } from '../../hooks'
+import { useInstance } from '../../hooks'
 
 function DimensionsTransition() {
   const [display, setDisplay] = useState('none')
   const [expanded, setExpanded] = useState(false)
 
-  const $this = useThis({ isFirstChange: true })
+  const component = useInstance({ isFirstChange: true })
 
   function onClick() {
     setExpanded(expanded => !expanded)
@@ -19,8 +19,8 @@ function DimensionsTransition() {
     const { content } = instance.popperChildren
     const container = content.querySelector('.TippyTransition-image')
 
-    if ($this.isFirstChange) {
-      $this.isFirstChange = false
+    if (component.isFirstChange) {
+      component.isFirstChange = false
     } else {
       container.style.display = 'block'
     }

@@ -52,9 +52,11 @@ export interface Props {
   multiple: boolean
   offset: number | string
   onCreate(instance: Instance): void
+  onDestroy(instance: Instance): void
   onHidden(instance: Instance): void
   onHide(instance: Instance): void | false
   onMount(instance: Instance): void
+  onPropsUpdated(instance: Instance, partialProps: Partial<Props>): void
   onShow(instance: Instance): void | false
   onShown(instance: Instance): void
   onTrigger(instance: Instance, event: Event): void
@@ -67,7 +69,7 @@ export interface Props {
   theme: string
   touch: boolean | 'hold' | ['hold', number]
   trigger: string
-  triggerTarget: Element | null
+  triggerTarget: Element | Element[] | null
   updateDuration: number
   zIndex: number
 }
@@ -126,15 +128,15 @@ export interface EnhancedTippy extends Tippy {
   version: string
 }
 
-export type PropHOF = (tippy: Tippy) => EnhancedTippy
+export type Plugin = (instance: Instance) => Partial<Props>
 
 export interface Tippy {
   (targets: Targets, optionalProps?: Partial<Props>): Instance | Instance[]
   readonly currentInput: { isTouch: boolean }
   readonly defaultProps: Props
   readonly version: string
-  hideAll(options?: HideAllOptions): void
-  setDefaultProps(partialProps: Partial<Props>): void
+  readonly plugins: Plugin[]
+  use(plugin: Plugin): void
 }
 
 declare const tippy: Tippy
@@ -159,14 +161,6 @@ export type CreateSingleton = (
 declare const delegate: Delegate
 declare const createSingleton: CreateSingleton
 
-declare const enhance: (tippyBase: Tippy, propHOFs: PropHOF[]) => EnhancedTippy
 declare const followCursor: (tippy: Tippy) => TippyCallWrapper
 
-export {
-  hideAll,
-  setDefaultProps,
-  delegate,
-  createSingleton,
-  enhance,
-  followCursor,
-}
+export { hideAll, setDefaultProps, delegate, createSingleton, followCursor }

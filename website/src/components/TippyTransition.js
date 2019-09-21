@@ -1,6 +1,6 @@
 import { cloneElement, Children } from 'react'
 import Flipper from 'react-flip-toolkit/es/core'
-import { useThis } from '../hooks'
+import { useInstance } from '../hooks'
 
 function parseTranslate3d(string) {
   const match = string.match(/translate3d\((.+?),\s*(.+?),/)
@@ -14,29 +14,29 @@ function preserveInvocation(fn, args) {
 }
 
 function useStableMemo(fn, deps) {
-  const $this = useThis()
-  let areDepsEqual = $this.prevDeps ? true : false
+  const component = useInstance()
+  let areDepsEqual = component.prevDeps ? true : false
 
   if (Array.isArray(deps) && areDepsEqual) {
     for (let i = 0; i < deps.length; i++) {
-      if (deps[i] !== $this.prevDeps[i]) {
+      if (deps[i] !== component.prevDeps[i]) {
         areDepsEqual = false
         break
       }
     }
   }
 
-  $this.prevDeps = deps
+  component.prevDeps = deps
 
   if (!areDepsEqual) {
-    $this.result = fn()
+    component.result = fn()
   }
 
-  return $this.result
+  return component.result
 }
 
 function TippyTransition({ children, onChange }) {
-  const $this = useThis({
+  const component = useInstance({
     areDimensionsTransitioning: false,
     offsets: {},
     distance: {},
@@ -58,32 +58,32 @@ function TippyTransition({ children, onChange }) {
       flipId: 'tooltip',
       spring: 'veryGentle',
       onStart() {
-        $this.instance.popperInstance.disableEventListeners()
-        $this.areDimensionsTransitioning = true
+        component.instance.popperInstance.disableEventListeners()
+        component.areDimensionsTransitioning = true
       },
       onComplete() {
-        $this.instance.popperInstance.enableEventListeners()
-        $this.wasManuallyUpdated = false
-        $this.areDimensionsTransitioning = false
+        component.instance.popperInstance.enableEventListeners()
+        component.wasManuallyUpdated = false
+        component.areDimensionsTransitioning = false
       },
       onSpringUpdate(springValue) {
-        if ($this.wasInterrupted) {
+        if (component.wasInterrupted) {
           // Since the FLIP animation was interrupted, the popper's translation
           // begins at the tweened offset
-          $this.offsets.prev = $this.offsets.tween
-          $this.wasInterrupted = false
+          component.offsets.prev = component.offsets.tween
+          component.wasInterrupted = false
         }
 
-        const { x: prevX, y: prevY } = $this.offsets.prev
-        const { x: currentX, y: currentY } = $this.offsets.current
+        const { x: prevX, y: prevY } = component.offsets.prev
+        const { x: currentX, y: currentY } = component.offsets.current
         const {
           property: prevProperty,
           value: prevDistance,
-        } = $this.distance.prev
+        } = component.distance.prev
         const {
           property: currentProperty,
           value: currentDistance,
-        } = $this.distance.current
+        } = component.distance.current
 
         // Calculate tweened offset and distance
         const tweenedX = prevX - springValue * (prevX - currentX)
@@ -94,18 +94,18 @@ function TippyTransition({ children, onChange }) {
             (prevDistance - currentDistance)
 
         // Write the current tweened offsets due to the FLIP animation
-        $this.offsets.tween = { x: tweenedX, y: tweenedY }
-        $this.distance.tween = {
+        component.offsets.tween = { x: tweenedX, y: tweenedY }
+        component.distance.tween = {
           property: currentProperty,
           value: tweenedDistance,
         }
 
         // Set tweened transform
         const tweenedTransform = `translate3d(${tweenedX}px, ${tweenedY}px, 0)`
-        $this.instance.popper.style.transform = tweenedTransform
+        component.instance.popper.style.transform = tweenedTransform
 
         // Set tweened distance
-        const { tooltip } = $this.instance.popperChildren
+        const { tooltip } = component.instance.popperChildren
         tooltip.style[prevProperty] = '0'
         tooltip.style[currentProperty] = `${tweenedDistance}px`
       },
@@ -123,25 +123,25 @@ function TippyTransition({ children, onChange }) {
       })
     }
 
-    $this.instance = instance
-    $this.flipper = flipper
+    component.instance = instance
+    component.flipper = flipper
   }
 
   function onBeforeUpdate() {
-    if (!$this.instance.state.isVisible) {
+    if (!component.instance.state.isVisible) {
       return
     }
 
-    $this.wasManuallyUpdated = true
-    $this.flipper.recordBeforeUpdate()
+    component.wasManuallyUpdated = true
+    component.flipper.recordBeforeUpdate()
 
-    const { tooltip } = $this.instance.popperChildren
-    const prevDimensions = $this.dimensions
+    const { tooltip } = component.instance.popperChildren
+    const prevDimensions = component.dimensions
 
     tooltip.style.width = ''
     tooltip.style.height = ''
 
-    $this.dimensions = {
+    component.dimensions = {
       width: tooltip.offsetWidth,
       height: tooltip.offsetHeight,
     }
@@ -151,20 +151,20 @@ function TippyTransition({ children, onChange }) {
       tooltip.style.height = `${prevDimensions.height}px`
     }
 
-    Object.keys($this.instance.popperChildren).forEach(key => {
-      if ($this.instance.popperChildren[key]) {
-        $this.instance.popperChildren[key].style.transitionDuration = '0ms'
+    Object.keys(component.instance.popperChildren).forEach(key => {
+      if (component.instance.popperChildren[key]) {
+        component.instance.popperChildren[key].style.transitionDuration = '0ms'
       }
     })
 
-    if ($this.dimensions.width) {
-      tooltip.style.width = `${$this.dimensions.width + 1}px`
-      tooltip.style.height = `${$this.dimensions.height}px`
+    if (component.dimensions.width) {
+      tooltip.style.width = `${component.dimensions.width + 1}px`
+      tooltip.style.height = `${component.dimensions.height}px`
     }
   }
 
   function onAfterUpdate(instance) {
-    $this.flipper.onUpdate()
+    component.flipper.onUpdate()
 
     if (onChange) {
       onChange(instance)
@@ -172,43 +172,43 @@ function TippyTransition({ children, onChange }) {
   }
 
   function onMount() {
-    if (!$this.dimensions) {
+    if (!component.dimensions) {
       onBeforeUpdate()
     }
   }
 
   function onHide() {
-    if ($this.areDimensionsTransitioning) {
+    if (component.areDimensionsTransitioning) {
       return false
     }
   }
 
   function popperOnCreate(data) {
     const currentOffsets = parseTranslate3d(data.styles.transform)
-    $this.offsets.prev = currentOffsets
-    $this.offsets.current = currentOffsets
-    $this.offsets.tween = currentOffsets
+    component.offsets.prev = currentOffsets
+    component.offsets.current = currentOffsets
+    component.offsets.tween = currentOffsets
 
-    const { tooltip } = $this.instance.popperChildren
+    const { tooltip } = component.instance.popperChildren
     const property = tooltip.style.top ? 'top' : 'left'
     const value = parseFloat(tooltip.style[property])
 
-    $this.distance.prev = { property, value }
-    $this.distance.current = { property, value }
-    $this.distance.tween = { property, value }
+    component.distance.prev = { property, value }
+    component.distance.current = { property, value }
+    component.distance.tween = { property, value }
   }
 
   function popperOnUpdate(data) {
-    const { tooltip, arrow } = $this.instance.popperChildren
+    const { tooltip, arrow } = component.instance.popperChildren
 
     // `react-flip-toolkit` adds this
     if (arrow) {
       arrow.style.transformOrigin = ''
     }
 
-    $this.wasInterrupted = true
-    $this.offsets.prev = $this.offsets.current
-    $this.distance.prev = $this.distance.current
+    component.wasInterrupted = true
+    component.offsets.prev = component.offsets.current
+    component.distance.prev = component.distance.current
 
     // We need to parse it because Popper rounds the values but doesn't expose
     // the rounded values for us...
@@ -216,23 +216,24 @@ function TippyTransition({ children, onChange }) {
     const currentProperty = tooltip.style.top ? 'top' : 'left'
     const currentValue = parseFloat(tooltip.style[currentProperty])
 
-    $this.offsets.current = currentOffsets
-    $this.distance.current = {
+    component.offsets.current = currentOffsets
+    component.distance.current = {
       property: currentProperty,
       value: currentValue,
     }
 
     // Runs AFTER first `onSpringUpdate` frame
     requestAnimationFrame(() => {
-      $this.offsets.tween = currentOffsets
+      component.offsets.tween = currentOffsets
     })
 
     // onSpringUpdate and popper's .update() run in different frames, leading to
     // 1 frame glitch
-    if ($this.wasManuallyUpdated) {
-      const { x, y } = $this.offsets.tween || $this.offsets.prev
-      const { property, value } = $this.distance.tween || $this.distance.prev
-      $this.instance.popper.style.transform = `translate3d(${x}px, ${y}px, 0)`
+    if (component.wasManuallyUpdated) {
+      const { x, y } = component.offsets.tween || component.offsets.prev
+      const { property, value } =
+        component.distance.tween || component.distance.prev
+      component.instance.popper.style.transform = `translate3d(${x}px, ${y}px, 0)`
       tooltip.style[property] = `${value}px`
     }
   }

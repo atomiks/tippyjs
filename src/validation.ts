@@ -1,4 +1,4 @@
-import { Props, Targets, Instance } from './types'
+import { Props, Targets } from './types'
 import { hasOwnProperty, includes } from './utils'
 import { defaultProps } from './props'
 
@@ -87,12 +87,6 @@ export const FOLLOW_CURSOR_WARNING = `
 export const ARRAY_MISTAKE_ERROR = `
   First argument to createSingleton() must be an *array* of tippy instances. The
   passed value was a *single* tippy instance.
-`
-
-export const EXISTING_SINGLETON_ERROR = `
-  The passed tippy instance(s) are already part of an existing singleton
-  instance. Make sure you destroy the previous singleton before calling
-  createSingleton() again.
 `
 
 export const MISSING_TARGET_WARNING = `
@@ -243,24 +237,4 @@ export function validateTargets(targets: Targets): void {
 
   throwErrorWhen(didPassFalsyValue, createInvalidTargetsArgumentError(targets))
   throwErrorWhen(didPassPlainObject, VIRTUAL_REFERENCE_OBJECT_WARNING)
-}
-
-/**
- * Ensures the instance has been configured with the extra prop's functionality
- * if the user is specifying it as a prop
- */
-export function validateExtraPropsFunctionality(
-  instance: Instance,
-  partialProps: Partial<Props> = {},
-): void {
-  const extraProps = ['followCursor']
-
-  extraProps.forEach((prop): void => {
-    if (hasOwnProperty(partialProps, prop) && !instance.__extraProps![prop]) {
-      warnWhen(
-        prop === 'followCursor' && !!partialProps[prop],
-        FOLLOW_CURSOR_WARNING,
-      )
-    }
-  })
 }

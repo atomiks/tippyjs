@@ -2,7 +2,7 @@ import { h, cleanDocumentBody } from '../utils'
 
 import { defaultProps, extraProps } from '../../src/props'
 import { POPPER_SELECTOR } from '../../src/constants'
-import tippy, { setDefaultProps, hideAll } from '../../src'
+import tippy, { hideAll } from '../../src'
 import {
   getFormattedMessage,
   CONTENT_WARNING,
@@ -62,11 +62,11 @@ describe('tippy', () => {
   })
 })
 
-describe('setDefaultProps()', () => {
+describe('tippy.setDefaultProps()', () => {
   it('changes the default props applied to instances', () => {
     const newPlacement = 'bottom-end'
 
-    setDefaultProps({ placement: newPlacement })
+    tippy.setDefaultProps({ placement: newPlacement })
 
     expect(defaultProps.placement).toBe(newPlacement)
   })
@@ -74,7 +74,7 @@ describe('setDefaultProps()', () => {
   it('is validated', () => {
     const spy = jest.spyOn(console, 'warn')
 
-    setDefaultProps({ showOnInit: true })
+    tippy.setDefaultProps({ showOnInit: true })
 
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(SHOW_ON_INIT_WARNING),

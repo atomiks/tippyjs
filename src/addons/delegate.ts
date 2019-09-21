@@ -29,21 +29,14 @@ export default function delegate(
   const nativeProps = removeProperties(props, ['target'])
   const trigger = props.trigger || tippy.defaultProps.trigger
 
-  // The user needs to specify their own enhanced tippy function to use extra
-  // props
-  // @ts-ignore
-  const tippyConstructor = delegate.tippy || tippy
-  const returnValue = tippyConstructor(targets, {
-    ...nativeProps,
-    trigger: 'manual',
-  })
+  const returnValue = tippy(targets, { ...nativeProps, trigger: 'manual' })
 
   function onTrigger(event: Event): void {
     if (event.target) {
       const targetNode = (event.target as Element).closest(target)
 
       if (targetNode) {
-        const instance = tippyConstructor(targetNode, {
+        const instance = tippy(targetNode, {
           ...nativeProps,
           showOnCreate: true,
         })
@@ -114,8 +107,11 @@ export default function delegate(
     instance.setProps({ trigger: 'manual' })
   }
 
-  const instances: Instance[] = [].concat(returnValue)
-  instances.forEach(applyMutations)
+  if (Array.isArray(returnValue)) {
+    returnValue.forEach(applyMutations)
+  } else {
+    applyMutations(returnValue)
+  }
 
   return returnValue
 }

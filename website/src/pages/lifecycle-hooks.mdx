@@ -15,7 +15,7 @@ hook takes the [`instance`](/tippy-instance) as its first argument.
 Executed a single time when a tippy is first created.
 
 ```js
-tippy('button', {
+tippy(reference, {
   onCreate(instance) {
     // ...
   },
@@ -28,7 +28,7 @@ Executed when a tippy is triggered by a DOM event (e.g. mouseenter, focus,
 click), but before it starts to show.
 
 ```js
-tippy('button', {
+tippy(reference, {
   onTrigger(instance, event) {
     // ...
   },
@@ -42,7 +42,7 @@ Executed when a tippy begins to show, but before it gets mounted to the DOM.
 You can optionally return `false` to cancel the tippy from showing.
 
 ```js
-tippy('button', {
+tippy(reference, {
   onShow(instance) {
     // ...
     return false // cancels it
@@ -55,7 +55,7 @@ tippy('button', {
 Executed when the tippy element is mounted to the DOM.
 
 ```js
-tippy('button', {
+tippy(reference, {
   onMount(instance) {
     // ...
   },
@@ -67,7 +67,7 @@ tippy('button', {
 Executed when a tippy has fully transitioned in.
 
 ```js
-tippy('button', {
+tippy(reference, {
   onShown(instance) {
     // ...
   },
@@ -80,7 +80,7 @@ Executed when a tippy was untriggered by a DOM event (e.g. mouseleave, blur,
 click), but before it starts to hide.
 
 ```js
-tippy('button', {
+tippy(reference, {
   onUntrigger(instance, event) {
     // ...
   },
@@ -94,7 +94,7 @@ Executed when a tippy begins to hide and transition out.
 You can optionally return `false` to cancel the tippy from hiding.
 
 ```js
-tippy('button', {
+tippy(reference, {
   onHide(instance) {
     // ...
     return false // cancels it
@@ -107,8 +107,33 @@ tippy('button', {
 Executed when a tippy has fully transitioned out and unmounted from the DOM.
 
 ```js
-tippy('button', {
+tippy(reference, {
   onHidden(instance) {
+    // ...
+  },
+})
+```
+
+#### onPropsUpdated
+
+Executed after a tippy's props are updated (via `.setContent()` or
+`.setProps()`).
+
+```js
+tippy(reference, {
+  onPropsUpdated(instance, updatedProps) {
+    // ...
+  },
+})
+```
+
+#### onDestroy
+
+Executed a single time when a tippy is destroyed.
+
+```js
+tippy(reference, {
+  onDestroy(instance) {
     // ...
   },
 })

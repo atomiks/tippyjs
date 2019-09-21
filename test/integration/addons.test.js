@@ -1,14 +1,13 @@
 import { h, cleanDocumentBody, MOUSEENTER, MOUSELEAVE, CLICK } from '../utils'
 
 import createSingleton, {
-  EXISTING_SINGLETON_ERROR,
   ARRAY_MISTAKE_ERROR,
 } from '../../src/addons/createSingleton'
 import delegate, { MISSING_TARGET_WARNING } from '../../src/addons/delegate'
-import tippy, { setDefaultProps } from '../../src'
+import tippy from '../../src'
 import { createInvalidCreateSingletonArgumentError } from '../../src/validation'
 
-setDefaultProps({ duration: 0, delay: 0 })
+tippy.setDefaultProps({ duration: 0, delay: 0 })
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
@@ -38,19 +37,19 @@ describe('createSingleton', () => {
     expect(firstRef._tippy.state.isVisible).toBe(false)
   })
 
-  it('uses the relevant tippy instance props', () => {
-    const configs = [{ arrow: true }, { duration: 1000 }]
+  it('uses the relevant tippy instance content', () => {
+    const configs = [{ content: 'hi' }, { content: 'bye' }]
     const instances = configs.map(props => tippy(h(), props))
     const singletonInstance = createSingleton(instances)
 
     instances[0].reference.dispatchEvent(MOUSEENTER)
 
-    expect(singletonInstance.props.arrow).toBe(true)
+    expect(singletonInstance.props.content).toBe('hi')
 
     instances[0].reference.dispatchEvent(MOUSELEAVE)
     instances[1].reference.dispatchEvent(MOUSEENTER)
 
-    expect(singletonInstance.props.duration).toBe(1000)
+    expect(singletonInstance.props.content).toBe('bye')
   })
 
   it('uses `delay: number` correctly', () => {
@@ -103,22 +102,6 @@ describe('createSingleton', () => {
     expect(singletonInstance.state.isVisible).toBe(false)
   })
 
-  it('preserves original `onTrigger`, and `onUntrigger` props', () => {
-    const props = { onTrigger: jest.fn(), onUntrigger: jest.fn() }
-    const triggerEvent = MOUSEENTER
-    const untriggerEvent = MOUSELEAVE
-    const refs = [h(), h()]
-    const ref = refs[0]
-
-    createSingleton(tippy(refs, props))
-
-    ref.dispatchEvent(triggerEvent)
-    ref.dispatchEvent(untriggerEvent)
-
-    expect(props.onTrigger).toHaveBeenCalledWith(ref._tippy, triggerEvent)
-    expect(props.onUntrigger).toHaveBeenCalledWith(ref._tippy, untriggerEvent)
-  })
-
   it('throws if not passed an array', () => {
     expect(() => {
       createSingleton(null)
@@ -131,14 +114,6 @@ describe('createSingleton', () => {
     }).toThrow(ARRAY_MISTAKE_ERROR)
   })
 
-  it('throws if any passed instance is part of an existing singleton', () => {
-    expect(() => {
-      const instances = tippy([h(), h()])
-      createSingleton(instances)
-      createSingleton(instances)
-    }).toThrow(EXISTING_SINGLETON_ERROR)
-  })
-
   it('does not throw if any passed instance is not part of an existing singleton', () => {
     expect(() => {
       const instances = tippy([h(), h()])
@@ -148,36 +123,58 @@ describe('createSingleton', () => {
     }).not.toThrow()
   })
 
-  it('does not prevent updating `onTrigger`, and `onUntrigger`', () => {
+  it('preserves `onTrigger`, `onDestroy`, and `onPropsUpdated` calls', () => {
     const instances = tippy([h()])
-    const instance = instances[0]
+
     const onTriggerSpy = jest.fn()
-    const onUntriggerSpy = jest.fn()
+    const onDestroySpy = jest.fn()
+    const onPropsUpdatedSpy = jest.fn()
 
-    createSingleton(instances)
-
-    instance.setProps({
+    const singleton = createSingleton(instances, {
       onTrigger: onTriggerSpy,
-      onUntrigger: onUntriggerSpy,
+      onDestroy: onDestroySpy,
+      onPropsUpdated: onPropsUpdatedSpy,
     })
 
-    instance.reference.dispatchEvent(MOUSEENTER)
+    instances[0].reference.dispatchEvent(MOUSEENTER)
 
     expect(onTriggerSpy).toHaveBeenCalled()
 
-    instance.reference.dispatchEvent(MOUSELEAVE)
+    singleton.setProps({})
 
-    expect(onUntriggerSpy).toHaveBeenCalled()
+    expect(onPropsUpdatedSpy).toHaveBeenCalled()
 
-    // And re-uses the same if not updated
-    instance.setProps({})
-    instance.reference.dispatchEvent(MOUSEENTER)
+    singleton.destroy()
+
+    expect(onDestroySpy).toHaveBeenCalled()
+  })
+
+  it('allows updates to `onTrigger`, `onDestroy`, and `onPropsUpdated`', () => {
+    const instances = tippy([h()])
+
+    const onTriggerSpy = jest.fn()
+    const onDestroySpy = jest.fn()
+    const onPropsUpdatedSpy = jest.fn()
+
+    const singleton = createSingleton(instances)
+
+    singleton.setProps({
+      onTrigger: onTriggerSpy,
+      onDestroy: onDestroySpy,
+      onPropsUpdated: onPropsUpdatedSpy,
+    })
+
+    instances[0].reference.dispatchEvent(MOUSEENTER)
 
     expect(onTriggerSpy).toHaveBeenCalled()
 
-    instance.reference.dispatchEvent(MOUSELEAVE)
+    singleton.setProps({})
 
-    expect(onUntriggerSpy).toHaveBeenCalled()
+    expect(onPropsUpdatedSpy).toHaveBeenCalled()
+
+    singleton.destroy()
+
+    expect(onDestroySpy).toHaveBeenCalled()
   })
 
   it('can update the `delay` option', () => {
@@ -204,15 +201,6 @@ describe('createSingleton', () => {
     jest.advanceTimersByTime(1)
 
     expect(singletonInstance.state.isVisible).toBe(false)
-  })
-
-  it('destroys the passed instances by default', () => {
-    const tippyInstances = tippy([h(), h()])
-    const singletonInstance = createSingleton(tippyInstances)
-    singletonInstance.destroy()
-    tippyInstances.forEach(instance => {
-      expect(instance.state.isDestroyed).toBe(true)
-    })
   })
 
   it('does not destroy the passed instances if passed `false`', () => {

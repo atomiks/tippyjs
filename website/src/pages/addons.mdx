@@ -137,7 +137,10 @@ Utilize the `updateDuration` prop, which is the transition duration between
 position updates of the tippy element:
 
 ```js
-const tippyInstances = tippy('button', { updateDuration: 500 })
+const singleton = createSingleton(tippyInstances, {
+  delay: 1000,
+  updateDuration: 500,
+})
 ```
 
 The `transition-timing-function` by default is `easeOutQuint`. Usually this
@@ -145,7 +148,7 @@ looks nice, but you can change this (to add an inertial slingshot effect for
 example) like so:
 
 ```js
-tippy('button', {
+const singleton = createSingleton(tippyInstances, {
   updateDuration: 500,
   onCreate({ popper }) {
     // Any easing function you want.

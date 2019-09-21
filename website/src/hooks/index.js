@@ -1,5 +1,5 @@
 import { useState } from 'react'
 
-export function useThis(initialValue = {}) {
+export function useInstance(initialValue = {}) {
   return useState(initialValue)[0]
 }

@@ -33,14 +33,15 @@ import {
   preserveInvocation,
   closestCallback,
   splitBySpaces,
+  normalizeToArray,
 } from './utils'
 import {
   warnWhen,
   validateProps,
-  validateExtraPropsFunctionality,
   createMemoryLeakWarning,
   INTERACTIVE_A11Y_WARNING,
 } from './validation'
+import { plugins } from './plugins'
 
 interface PaddingObject {
   top: number
@@ -50,6 +51,7 @@ interface PaddingObject {
 }
 
 interface Listener {
+  node: Element
   eventType: string
   handler: EventListenerOrEventListenerObject
   options: boolean | object
@@ -82,7 +84,7 @@ export default function createTippy(
   let isBeingDestroyed = false
   let didHideDueToDocumentMouseDown = false
   let popperUpdates = 0
-  let lastTriggerEventType: string
+  let lastTriggerEvent: Event
   let currentMountCallback: () => void
   let currentTransitionEndListener: (event: TransitionEvent) => void
   let listeners: Listener[] = []
@@ -134,16 +136,13 @@ export default function createTippy(
     destroy,
   }
 
-  if (__DEV__) {
-    Object.defineProperty(instance, '__extraProps', {
-      value: {},
-      enumerable: false,
-    })
-  }
-
   /* ==================== Initial instance mutations =================== */
   reference._tippy = instance
   popper._tippy = instance
+
+  const instancePlugins = plugins.map(plugin => plugin(instance))
+
+  invokeHook('onCreate', [instance])
 
   addListenersToTriggerTarget()
   handleAriaExpandedAttribute()
@@ -172,8 +171,6 @@ export default function createTippy(
     }
   })
 
-  props.onCreate(instance)
-
   return instance
 
   /* ======================= 🔒 Private methods 🔒 ======================= */
@@ -190,19 +187,48 @@ export default function createTippy(
     return [tooltip, content, instance.popperChildren.backdrop]
   }
 
-  function getTriggerTarget(): ReferenceElement {
-    return instance.props.triggerTarget || reference
+  function getCurrentTarget(): Element {
+    return lastTriggerEvent ? (lastTriggerEvent.target as Element) : reference
   }
 
   function getDelay(isShow: boolean): number {
     // For touch or keyboard input, force `0` delay for UX reasons
-    return currentInput.isTouch || lastTriggerEventType === 'focus'
+    return currentInput.isTouch ||
+      (lastTriggerEvent ? lastTriggerEvent.type === 'focus' : true)
       ? 0
       : getValueAtIndexOrReturn(
           instance.props.delay,
           isShow ? 0 : 1,
           defaultProps.delay,
         )
+  }
+
+  function invokeHook(
+    hook:
+      | 'onCreate'
+      | 'onDestroy'
+      | 'onHidden'
+      | 'onHide'
+      | 'onMount'
+      | 'onPropsUpdated'
+      | 'onShow'
+      | 'onShown'
+      | 'onTrigger'
+      | 'onUntrigger',
+    args: [Instance, (Event | Partial<Props>)?],
+    shouldInvokePropsHook = true,
+  ): void {
+    if (shouldInvokePropsHook) {
+      // @ts-ignore
+      instance.props[hook](...args)
+    }
+
+    instancePlugins.forEach(plugin => {
+      if (hasOwnProperty(plugin, hook)) {
+        // @ts-ignore
+        plugin[hook](...args)
+      }
+    })
   }
 
   function handleAriaDescribedByAttribute(): void {
@@ -213,32 +239,41 @@ export default function createTippy(
     }
 
     const attr = `aria-${aria}`
-    const node = getTriggerTarget()
     const id = tooltip.id
-    const currentValue = node.getAttribute(attr)
+    const nodes = normalizeToArray(instance.props.triggerTarget || reference)
 
-    if (instance.state.isVisible) {
-      node.setAttribute(attr, currentValue ? `${currentValue} ${id}` : id)
-    } else {
-      const nextValue = currentValue && currentValue.replace(id, '').trim()
+    nodes.forEach((node): void => {
+      const currentValue = node.getAttribute(attr)
 
-      if (nextValue) {
-        node.setAttribute(attr, nextValue)
+      if (instance.state.isVisible) {
+        node.setAttribute(attr, currentValue ? `${currentValue} ${id}` : id)
       } else {
-        node.removeAttribute(attr)
+        const nextValue = currentValue && currentValue.replace(id, '').trim()
+
+        if (nextValue) {
+          node.setAttribute(attr, nextValue)
+        } else {
+          node.removeAttribute(attr)
+        }
       }
-    }
+    })
   }
 
   function handleAriaExpandedAttribute(): void {
-    const attr = 'aria-expanded'
-    const node = getTriggerTarget()
+    const nodes = normalizeToArray(instance.props.triggerTarget || reference)
 
-    if (instance.props.interactive) {
-      node.setAttribute(attr, instance.state.isVisible ? 'true' : 'false')
-    } else {
-      node.removeAttribute(attr)
-    }
+    nodes.forEach((node): void => {
+      if (instance.props.interactive) {
+        node.setAttribute(
+          'aria-expanded',
+          instance.state.isVisible && node === getCurrentTarget()
+            ? 'true'
+            : 'false',
+        )
+      } else {
+        node.removeAttribute('aria-expanded')
+      }
+    })
   }
 
   function cleanupInteractiveMouseListeners(): void {
@@ -259,7 +294,7 @@ export default function createTippy(
     }
 
     // Clicked on the event listeners target
-    if (getTriggerTarget().contains(event.target as Element)) {
+    if (getCurrentTarget().contains(event.target as Element)) {
       if (currentInput.isTouch) {
         return
       }
@@ -344,8 +379,16 @@ export default function createTippy(
     handler: EventListener,
     options: boolean | object = false,
   ): void {
-    getTriggerTarget().addEventListener(eventType, handler, options)
-    listeners.push({ eventType, handler, options })
+    if (Array.isArray(instance.props.triggerTarget)) {
+      instance.props.triggerTarget.forEach(node => {
+        node.addEventListener(eventType, handler, options)
+        listeners.push({ node, eventType, handler, options })
+      })
+    } else {
+      const node = instance.props.triggerTarget || reference
+      node.addEventListener(eventType, handler, options)
+      listeners.push({ node, eventType, handler, options })
+    }
   }
 
   function addListenersToTriggerTarget(): void {
@@ -382,9 +425,11 @@ export default function createTippy(
   }
 
   function removeListenersFromTriggerTarget(): void {
-    listeners.forEach(({ eventType, handler, options }: Listener): void => {
-      getTriggerTarget().removeEventListener(eventType, handler, options)
-    })
+    listeners.forEach(
+      ({ node, eventType, handler, options }: Listener): void => {
+        node.removeEventListener(eventType, handler, options)
+      },
+    )
     listeners = []
   }
 
@@ -397,7 +442,9 @@ export default function createTippy(
       return
     }
 
-    lastTriggerEventType = event.type
+    lastTriggerEvent = event
+
+    handleAriaExpandedAttribute()
 
     if (!instance.state.isVisible && event instanceof MouseEvent) {
       // If scrolling, `mouseenter` events can be fired if the cursor lands
@@ -469,7 +516,7 @@ export default function createTippy(
   }
 
   function onBlur(event: FocusEvent): void {
-    if (event.target !== getTriggerTarget()) {
+    if (event.target !== getCurrentTarget()) {
       return
     }
 
@@ -664,7 +711,7 @@ export default function createTippy(
       (instance.props.interactive && appendTo === defaultProps.appendTo) ||
       appendTo === 'parent'
     ) {
-      parentNode = getTriggerTarget().parentNode
+      parentNode = getCurrentTarget().parentNode
     } else {
       parentNode = invokeWithArgsOrReturn(appendTo, [reference])
     }
@@ -680,7 +727,7 @@ export default function createTippy(
       warnWhen(
         instance.props.interactive &&
           appendTo === defaultProps.appendTo &&
-          getTriggerTarget().nextElementSibling !== popper,
+          getCurrentTarget().nextElementSibling !== popper,
         INTERACTIVE_A11Y_WARNING,
       )
     }
@@ -713,7 +760,7 @@ export default function createTippy(
     }
 
     if (event) {
-      instance.props.onTrigger(instance, event)
+      invokeHook('onTrigger', [instance, event])
     }
 
     addDocumentMouseDownListener()
@@ -732,7 +779,7 @@ export default function createTippy(
   function scheduleHide(event: Event): void {
     instance.clearDelayTimeouts()
 
-    instance.props.onUntrigger(instance, event)
+    invokeHook('onUntrigger', [instance, event])
 
     if (!instance.state.isVisible) {
       removeDocumentMouseDownListener()
@@ -779,7 +826,6 @@ export default function createTippy(
 
   function setProps(partialProps: Partial<Props>): void {
     if (__DEV__) {
-      partialProps = { ...partialProps }
       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('setProps'))
     }
 
@@ -789,7 +835,6 @@ export default function createTippy(
 
     if (__DEV__) {
       validateProps(partialProps)
-      validateExtraPropsFunctionality(instance, partialProps)
     }
 
     removeListenersFromTriggerTarget()
@@ -800,12 +845,14 @@ export default function createTippy(
       ...partialProps,
       ignoreAttributes: true,
     })
+
     nextProps.ignoreAttributes = hasOwnProperty(
       partialProps,
       'ignoreAttributes',
     )
       ? partialProps.ignoreAttributes || false
       : prevProps.ignoreAttributes
+
     instance.props = nextProps
 
     addListenersToTriggerTarget()
@@ -815,6 +862,15 @@ export default function createTippy(
 
     updatePopperElement(popper, prevProps, nextProps, instance.state.isVisible)
     instance.popperChildren = getChildren(popper)
+
+    // Ensure stale aria-expanded attributes are removed
+    if (prevProps.triggerTarget && !nextProps.triggerTarget) {
+      normalizeToArray(prevProps.triggerTarget).forEach((node): void => {
+        node.removeAttribute('aria-expanded')
+      })
+    } else if (nextProps.triggerTarget) {
+      reference.removeAttribute('aria-expanded')
+    }
 
     handleAriaExpandedAttribute()
 
@@ -837,6 +893,8 @@ export default function createTippy(
         instance.popperInstance.update()
       }
     }
+
+    invokeHook('onPropsUpdated', [instance, partialProps])
   }
 
   function setContent(content: Content): void {
@@ -874,11 +932,14 @@ export default function createTippy(
     // Normalize `disabled` behavior across browsers.
     // Firefox allows events on disabled elements, but Chrome doesn't.
     // Using a wrapper element (i.e. <span>) is recommended.
-    if (getTriggerTarget().hasAttribute('disabled')) {
+    if (getCurrentTarget().hasAttribute('disabled')) {
       return
     }
 
-    if (instance.props.onShow(instance) === false) {
+    const isPrevented = instance.props.onShow(instance) === false
+    invokeHook('onShow', [instance], false)
+
+    if (isPrevented) {
       return
     }
 
@@ -902,7 +963,8 @@ export default function createTippy(
         return
       }
 
-      instance.props.onMount(instance)
+      invokeHook('onMount', [instance])
+
       instance.state.isMounted = true
 
       // The content should fade in after the backdrop has mostly filled the
@@ -924,7 +986,7 @@ export default function createTippy(
       handleAriaExpandedAttribute()
 
       onTransitionedIn(duration, (): void => {
-        instance.props.onShown(instance)
+        invokeHook('onShown', [instance])
         instance.state.isShown = true
       })
     }
@@ -952,7 +1014,10 @@ export default function createTippy(
       return
     }
 
-    if (instance.props.onHide(instance) === false && !isBeingDestroyed) {
+    const isPrevented = instance.props.onHide(instance) === false
+    invokeHook('onHide', [instance], false)
+
+    if (isPrevented && !isBeingDestroyed) {
       return
     }
 
@@ -974,7 +1039,9 @@ export default function createTippy(
       instance.popperInstance!.options.placement = instance.props.placement
 
       popper.parentNode!.removeChild(popper)
-      instance.props.onHidden(instance)
+
+      invokeHook('onHidden', [instance])
+
       instance.state.isMounted = false
     })
   }
@@ -1002,6 +1069,8 @@ export default function createTippy(
 
     isBeingDestroyed = false
     instance.state.isDestroyed = true
+
+    invokeHook('onDestroy', [instance])
   }
 }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Tippy from '../Tippy'
 import { Button } from '../Framework'
 import TippyTransition from '../TippyTransition'
-import { useThis } from '../../hooks'
+import { useInstance } from '../../hooks'
 
 const contents = [
   'Hello there!',
@@ -15,7 +15,7 @@ const contents = [
 
 function DimensionsTransition() {
   const [content, setContent] = useState(contents[0])
-  const $this = useThis({ currentIndex: 0 })
+  const component = useInstance({ currentIndex: 0 })
 
   function scheduleNextContent() {
     const currentIndex = contents.findIndex(c => c === content)
@@ -23,21 +23,21 @@ function DimensionsTransition() {
       currentIndex === contents.length - 1 ? 0 : currentIndex + 1
     const nextContent = contents[nextIndex]
 
-    clearTimeout($this.timeout)
-    $this.timeout = setTimeout(() => {
+    clearTimeout(component.timeout)
+    component.timeout = setTimeout(() => {
       setContent(nextContent)
       scheduleNextContent()
     }, 1000 + contents[currentIndex].length * 50)
   }
 
   useEffect(() => {
-    if ($this.instance.state.isVisible) {
+    if (component.instance.state.isVisible) {
       scheduleNextContent()
     }
   })
 
   function onCreate(instance) {
-    $this.instance = instance
+    component.instance = instance
   }
 
   function onMount() {
@@ -45,7 +45,7 @@ function DimensionsTransition() {
   }
 
   function onHidden() {
-    clearTimeout($this.timeout)
+    clearTimeout(component.timeout)
   }
 
   return (

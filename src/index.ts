@@ -14,7 +14,6 @@ import {
   warnWhen,
   validateTargets,
   validateProps,
-  validateExtraPropsFunctionality,
   CONTENT_WARNING,
 } from './validation'
 import { POPPER_SELECTOR } from './constants'
@@ -25,6 +24,7 @@ import {
   PopperElement,
   HideAllOptions,
 } from './types'
+import { plugins, use } from './plugins'
 
 /**
  * Exported module
@@ -58,10 +58,6 @@ function tippy(
       const instance = reference && createTippy(reference, props)
 
       if (instance) {
-        if (__DEV__) {
-          validateExtraPropsFunctionality(instance, optionalProps)
-        }
-
         acc.push(instance)
       }
 
@@ -75,14 +71,17 @@ function tippy(
 
 tippy.version = version
 tippy.defaultProps = defaultProps
+tippy.setDefaultProps = setDefaultProps
 tippy.currentInput = currentInput
+tippy.plugins = plugins
+tippy.use = use
 
 export default tippy
 
 /**
  * Mutates the defaultProps object by setting the props specified
  */
-export function setDefaultProps(partialProps: Partial<Props>): void {
+function setDefaultProps(partialProps: Partial<Props>): void {
   if (__DEV__) {
     validateProps(partialProps)
   }
