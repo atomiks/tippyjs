@@ -76,6 +76,14 @@ export interface Props extends LifecycleHooks {
   [key: string]: any
 }
 
+export interface FollowCursorProps {
+  followCursor: boolean | 'horizontal' | 'vertical' | 'initial'
+}
+
+export interface StickyProps {
+  sticky: boolean | 'reference' | 'popper'
+}
+
 export interface Instance {
   clearDelayTimeouts(): void
   destroy(): void
@@ -133,14 +141,6 @@ export interface Tippy<TProps = Props> {
 declare const tippy: Tippy
 export default tippy
 
-export interface FollowCursorProps {
-  followCursor: boolean | 'horizontal' | 'vertical' | 'initial'
-}
-
-export interface StickyProps {
-  sticky: boolean | 'reference' | 'popper'
-}
-
 export type HideAll = (options: HideAllOptions) => void
 
 declare const hideAll: HideAll
@@ -158,7 +158,19 @@ export type CreateSingleton = (
 declare const delegate: Delegate
 declare const createSingleton: CreateSingleton
 
-declare const followCursor: (instance: Instance) => Partial<LifecycleHooks>
-declare const sticky: (instance: Instance) => Partial<LifecycleHooks>
+export interface FollowCursor {
+  name: 'followCursor'
+  defaultValue: false
+  fn(instance: Instance): Partial<LifecycleHooks>
+}
+
+export interface Sticky {
+  name: 'sticky'
+  defaultValue: false
+  fn(instance: Instance): Partial<LifecycleHooks>
+}
+
+declare const followCursor: FollowCursor
+declare const sticky: Sticky
 
 export { hideAll, delegate, createSingleton, followCursor, sticky }
