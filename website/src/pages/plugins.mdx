@@ -37,41 +37,56 @@ It's recommended to use a bundler instead of a CDN to benefit from treeshaking.
 
 ### Creating a plugin
 
-A plugin is created by defining a function that returns an object of
-[lifecycle hooks](/lifecycle-hooks):
+A plugin is created by defining an object with the following shape:
 
 ```js
-function plugin(instance) {
-  // Internal state
-  return {
-    // Lifecycle hooks
-  }
+const plugin = {
+  // Optional (if the plugin provides a prop to use)
+  name: 'propName', // e.g. 'followCursor' or 'sticky',
+  defaultValue: 'anyValue',
+
+  // Required
+  fn(instance) {
+    // Internal state
+    return {
+      // Lifecycle hooks
+    }
+  },
 }
 ```
+
+The plugin's function `fn` returns an object of
+[lifecycle hooks](/lifecycle-hooks).
 
 Here's an example of a plugin that causes a popper to hide if no elements within
 it are in focus (for interactivity):
 
 ```js
-function hideOnPopperBlur() {
-  return {
-    onCreate(instance) {
-      instance.popper.addEventListener('focusout', e => {
-        if (
-          instance.props.hideOnPopperBlur &&
-          !instance.popper.contains(e.relatedTarget)
-        ) {
-          instance.hide()
-        }
-      })
-    },
-  }
+const hideOnPopperBlur = {
+  name: 'hideOnPopperBlur',
+  defaultValue: true,
+  fn() {
+    return {
+      onCreate(instance) {
+        instance.popper.addEventListener('focusout', e => {
+          if (
+            instance.props.hideOnPopperBlur &&
+            !instance.popper.contains(e.relatedTarget)
+          ) {
+            instance.hide()
+          }
+        })
+      },
+    }
+  },
 }
 
 tippy.use(hideOnPopperBlur)
 
-// Our new prop created by our plugin
-tippy(reference, { hideOnPopperBlur: true })
+// Our new prop is enabled by default (defaultValue: true)
+tippy(reference)
+// Use it as a prop to disable it:
+tippy(reference, { hideOnPopperBlur: false })
 ```
 
 Plugins are invoked per-instance and the plugin function definition takes the
@@ -85,8 +100,10 @@ If using TypeScript, you can extend the `Props` interface like so:
 ```ts
 import tippy, { Tippy, Props, followCursor, FollowCursorProps } from 'tippy.js'
 
+tippy.use(followCursor)
+
 type ExtendedProps = Props & FollowCursorProps
-const extendedTippy = tippy.use(followCursor) as Tippy<ExtendedProps>
+const extendedTippy = tippy as Tippy<ExtendedProps>
 
 export default extendedTippy
 ```
