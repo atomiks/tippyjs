@@ -1217,21 +1217,6 @@ describe('appendTo', () => {
   })
 })
 
-describe('sticky', () => {
-  it('updates position on each animation frame', () => {
-    const fn = jest.fn()
-    const instance = tippy(h(), { sticky: true, lazy: false })
-
-    jest.spyOn(instance.popperInstance, 'update').mockImplementation(fn)
-
-    instance.show()
-
-    jest.runAllTimers()
-
-    expect(fn).toHaveBeenCalledTimes(2)
-  })
-})
-
 describe('triggerTarget', () => {
   it('acts as the trigger for the tooltip instead of the reference', () => {
     const node = h('div')

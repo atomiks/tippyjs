@@ -7,14 +7,23 @@ import {
 
 import tippy from '../../src'
 import followCursor, { getVirtualOffsets } from '../../src/plugins/followCursor'
+import sticky from '../../src/plugins/sticky'
 import { getBasePlacement } from '../../src/popper'
 
 tippy.setDefaultProps({ duration: 0, delay: 0 })
+
+tippy.use(followCursor)
+tippy.use(sticky)
+
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
 
-tippy.use(followCursor)
+describe('sticky', () => {
+  it('updates position on each animation frame', () => {
+    // TODO
+  })
+})
 
 describe('followCursor', () => {
   // NOTE: Jest's simulated window dimensions are 1024 x 768. These values
