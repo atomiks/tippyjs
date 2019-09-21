@@ -20,6 +20,10 @@ tippy('button', {
 })
 ```
 
+⚠️ Be aware of XSS attacks. Always ensure strings containing user input are
+escaped and sanitized properly. To avoid strings being parsed as HTML, set
+`allowHTML: false`.
+
 ### Element
 
 #### `<template>` element

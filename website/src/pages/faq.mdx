@@ -9,6 +9,30 @@ index: 16
 It's a theme I made called
 [Moonlight](https://github.com/atomiks/moonlight-vscode-theme)!
 
+### Nothing is working
+
+Make sure Tippy's scripts are placed _before_ your own scripts, at the very
+bottom of the page, like so:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My page</title>
+  </head>
+  <body>
+    <button>Text</button>
+
+    <!-- Very end of the body -->
+    <script src="https://unpkg.com/popper.js@1"></script>
+    <script src="https://unpkg.com/tippy.js@5"></script>
+    <script>
+      tippy('button', { content: 'tooltip' })
+    </script>
+  </body>
+</html>
+```
+
 ### I'm getting Uncaught ReferenceError: process is not defined
 
 If you're using the ESM or CJS versions and importing like this:
@@ -72,31 +96,6 @@ To enable interactivity, set the `interactive` prop to `true`.
 If you're using a `focus` trigger, for example on an `<input>`, make sure you
 also set `hideOnClick: false`.
 
-### My tooltip is not working using `data-tippy`
-
-Make sure Tippy's scripts are placed _before_ your own scripts, at the very
-bottom of the page, like so:
-
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>My page</title>
-  </head>
-  <body>
-    <button data-tippy="Created automatically">Text</button>
-    <button data-tippy-content="Created by function">Text</button>
-
-    <!-- Very end of the body -->
-    <script src="https://unpkg.com/popper.js@1"></script>
-    <script src="https://unpkg.com/tippy.js@5"></script>
-    <script>
-      tippy('button')
-    </script>
-  </body>
-</html>
-```
-
 ### Changing data-tippy-\* attributes does not update the tooltip
 
 Updating the data-tippy-\* attribute on an element will currently not update the
@@ -107,15 +106,10 @@ For example, let's say you want to update the `theme` for tooltips when changing
 between dark and light mode:
 
 ```js
-const instances = tippy('.example', {
-  theme: 'custom-dark',
-})
+const instance = tippy(reference, { theme: 'custom-dark' })
 
 // When clicking the theme toggle button, you can do this:
-const newTheme = 'whatever'
-instances.forEach(instance => {
-  instance.setProps({ theme: newTheme })
-})
+instance.setProps({ theme: 'custom-light' })
 ```
 
 It's also possible to attach a `MutationObserver` to the reference elements and
@@ -140,30 +134,22 @@ tippy('button', {
 The `title` attribute should be removed once you have its content so the
 browser's default tooltip isn't displayed along with the tippy.
 
-It's recommended to create a new proxy (wrapper) function to extend the base
-`tippy()` module's functionality.
+#### Plugin
+
+You can create a plugin for this to generalize the behavior:
 
 ```js
-// You can call this whatever you want
-function tippy2(targets, optionalProps) {
-  return tippy(targets, {
-    ...optionalProps,
-    content(reference) {
-      if (optionalProps.content) {
-        return optionalProps.content
-      }
-
-      const title = reference.getAttribute('title')
-      reference.removeAttribute('title')
-
-      return title
+function titleAttribute() {
+  return {
+    onCreate(instance) {
+      instance.setContent(instance.reference.getAttribute('title'))
+      instance.reference.removeAttribute('title')
     },
-  })
+  }
 }
 
-// Everywhere in your application
-tippy2('button') // <button title="Hello world" /> now works!
+tippy.use(titleAttribute)
 ```
 
-Note that the above `tippy2` function does not take into consideration the
-`setProps()` method. There are some edge cases you should look out for.
+Note that the plugin does not take into account dynamic titles. Be cautious of
+why you might need this in the first place.
