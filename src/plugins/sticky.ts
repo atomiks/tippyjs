@@ -1,6 +1,10 @@
-import { Instance, Props } from '../types'
+import { Instance, Props, StickyProps } from '../types'
 
-export default function sticky(instance: Instance): Partial<Props> {
+interface ExtendedInstance extends Instance {
+  props: Props & StickyProps
+}
+
+export default function sticky(instance: ExtendedInstance): Partial<Props> {
   const { reference, popper } = instance
 
   function shouldCheck(value: 'reference' | 'popper'): boolean {

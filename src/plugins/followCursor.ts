@@ -1,10 +1,22 @@
-import { Instance, Props, Placement, PopperElement } from '../types'
+import {
+  Instance,
+  Props,
+  Placement,
+  PopperElement,
+  FollowCursorProps,
+} from '../types'
 import { includes, closestCallback, useIfDefined } from '../utils'
 import { getBasePlacement } from '../popper'
 import { currentInput } from '../bindGlobalEventListeners'
 import Popper from 'popper.js'
 
-export default function followCursor(instance: Instance): Partial<Props> {
+interface ExtendedInstance extends Instance {
+  props: Props & FollowCursorProps
+}
+
+export default function followCursor(
+  instance: ExtendedInstance,
+): Partial<Props> {
   const { reference, popper } = instance
 
   // Internal state
