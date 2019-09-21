@@ -8,9 +8,10 @@ Plugins add functionality (extra props to use) by hooking into a tippy instance.
 By splitting functionality into a plugin, users who don't need the code provided
 by the plugin are not burdened with its cost by default.
 
-There is currently 1 plugin exported by the package:
+There are currently 2 plugins exported by the package:
 
 - `followCursor`
+- `sticky`
 
 ### Usage
 
@@ -28,9 +29,9 @@ tippy(reference, { followCursor: true })
 #### Browser
 
 In the browser using the CDN (IIFE version), the `tippy` module gets
-automatically configured with the plugin, so you don't need to follow the above
+automatically configured with all plugins, so you don't need to follow the above
 steps. This comes with the downside of extra KBs being downloaded if you don't
-need to use the plugin.
+need to use the plugins.
 
 It's recommended to use a bundler instead of a CDN to benefit from treeshaking.
 

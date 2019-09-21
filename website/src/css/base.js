@@ -285,6 +285,15 @@ export default createGlobalStyle`
     margin: 50px 0;
   }
 
+  .plugin-prop {
+    background: linear-gradient(45deg, #e1f8ff, rgba(171, 255, 107, 0.3));
+
+    code.language-text {
+      background: white;
+      border: 1px solid black;
+    }
+  }
+
   [data-reach-skip-link] {
     position: fixed;
     z-index: 2;

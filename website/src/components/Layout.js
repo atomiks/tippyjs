@@ -83,10 +83,8 @@ const components = {
   h5: props => <Heading {...props} level={5} />,
   h6: props => <Heading {...props} level={6} />,
   tr: props => {
-    const isExtraProp = !!props.children[0].props.children[0] // <strong>
-    return (
-      <tr {...props} style={{ background: isExtraProp ? '#fff8de' : '' }} />
-    )
+    const isPlugin = !!props.children[0].props.children[0] // <strong>
+    return <tr {...props} className={isPlugin ? 'plugin-prop' : ''} />
   },
   // TODO: find a better way to do this
   td: class extends React.Component {

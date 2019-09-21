@@ -1,0 +1,61 @@
+import { Instance, Props } from '../types'
+
+export default function sticky(instance: Instance): Partial<Props> {
+  const { reference, popper } = instance
+
+  function shouldCheck(value: 'reference' | 'popper'): boolean {
+    return instance.props.sticky === true || instance.props.sticky === value
+  }
+
+  let prevRefRect = shouldCheck('reference')
+    ? reference.getBoundingClientRect()
+    : null
+  let prevPopRect = shouldCheck('popper')
+    ? popper.getBoundingClientRect()
+    : null
+
+  function updatePosition(): void {
+    const currentRefRect = shouldCheck('reference')
+      ? reference.getBoundingClientRect()
+      : null
+    const currentPopRect = shouldCheck('popper')
+      ? popper.getBoundingClientRect()
+      : null
+
+    // Schedule an update if the reference rect has changed
+    if (
+      (shouldCheck('reference') &&
+        areRectsDifferent(prevRefRect, currentRefRect)) ||
+      (shouldCheck('popper') && areRectsDifferent(prevPopRect, currentPopRect))
+    ) {
+      instance.popperInstance.update()
+    }
+
+    prevRefRect = currentRefRect
+    prevPopRect = currentPopRect
+
+    if (instance.state.isMounted) {
+      requestAnimationFrame(updatePosition)
+    }
+  }
+
+  return {
+    onMount(): void {
+      if (instance.props.sticky) {
+        updatePosition()
+      }
+    },
+  }
+}
+
+function areRectsDifferent(
+  rectA: DOMRect | ClientRect,
+  rectB: DOMRect | ClientRect,
+): boolean {
+  return (
+    rectA.top !== rectB.top ||
+    rectA.right !== rectB.right ||
+    rectA.bottom !== rectB.bottom ||
+    rectA.left !== rectB.left
+  )
+}
