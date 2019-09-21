@@ -41,15 +41,6 @@ yarn add tippy.js
 <script src="https://unpkg.com/tippy.js@5"></script>
 ```
 
-### Modern ES modules in the browser
-
-```html
-<script type="module">
-  // Uses latest popper.js (unminified code)
-  import tippy from 'https://unpkg.com/tippy.js@5?module'
-</script>
-```
-
 ## Component Wrappers
 
 - [React component](https://github.com/atomiks/tippy.js-react)
