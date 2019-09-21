@@ -115,8 +115,8 @@ export interface HideAllOptions {
 }
 
 export interface Plugin {
-  name: string
-  defaultValue: any
+  name?: string
+  defaultValue?: any
   fn(instance: Instance): Partial<LifecycleHooks>
 }
 
