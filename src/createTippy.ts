@@ -379,16 +379,11 @@ export default function createTippy(
     handler: EventListener,
     options: boolean | object = false,
   ): void {
-    if (Array.isArray(instance.props.triggerTarget)) {
-      instance.props.triggerTarget.forEach(node => {
-        node.addEventListener(eventType, handler, options)
-        listeners.push({ node, eventType, handler, options })
-      })
-    } else {
-      const node = instance.props.triggerTarget || reference
+    const nodes = normalizeToArray(instance.props.triggerTarget || reference)
+    nodes.forEach(node => {
       node.addEventListener(eventType, handler, options)
       listeners.push({ node, eventType, handler, options })
-    }
+    })
   }
 
   function addListenersToTriggerTarget(): void {
