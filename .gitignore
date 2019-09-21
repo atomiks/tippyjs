@@ -3,12 +3,7 @@
 /coverage
 /.devserver
 node_modules
-/tippy.css
-/backdrop.css
-/svg-arrow.css
 /dist
 /themes
 /animations
 /index.d.ts
-/addons/dist
-/extra-props/dist
