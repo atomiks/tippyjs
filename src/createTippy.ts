@@ -707,13 +707,15 @@ export default function createTippy(
     // tippy can be tabbed to
     // If there are clipping issues, the user can specify a different appendTo
     // and ensure focus management is handled correctly manually
+    const node = getCurrentTarget()
+
     if (
       (instance.props.interactive && appendTo === defaultProps.appendTo) ||
       appendTo === 'parent'
     ) {
-      parentNode = getCurrentTarget().parentNode
+      parentNode = node.parentNode
     } else {
-      parentNode = invokeWithArgsOrReturn(appendTo, [reference])
+      parentNode = invokeWithArgsOrReturn(appendTo, [node])
     }
 
     // The popper element needs to exist on the DOM before its position can be
@@ -727,7 +729,7 @@ export default function createTippy(
       warnWhen(
         instance.props.interactive &&
           appendTo === defaultProps.appendTo &&
-          getCurrentTarget().nextElementSibling !== popper,
+          node.nextElementSibling !== popper,
         INTERACTIVE_A11Y_WARNING,
       )
     }
