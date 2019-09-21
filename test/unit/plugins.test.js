@@ -1,5 +1,6 @@
 import { plugins, use } from '../../src/plugins'
 import { getFormattedMessage } from '../../src/validation'
+import { defaultProps } from '../../src/props'
 
 describe('use', () => {
   const plugin = { fn() {} }
@@ -41,5 +42,11 @@ describe('use', () => {
     )
 
     spy.mockRestore()
+  })
+
+  it('adds the plugin to defaultProps object', () => {
+    use({ name: 'hello', defaultValue: 1000, fn() {} })
+
+    expect(defaultProps.hello).toBe(1000)
   })
 })
