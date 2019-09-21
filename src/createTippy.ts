@@ -96,7 +96,7 @@ export default function createTippy(
 
   const state = {
     // The current real placement (`data-placement` attribute)
-    currentPlacement: props.placement,
+    currentPlacement: null,
     // Does the instance have a pending timeout for show()?
     isScheduledToShow: false,
     // Is the instance currently enabled?
@@ -478,7 +478,9 @@ export default function createTippy(
 
     if (
       isCursorOutsideInteractiveBorder(
-        getBasePlacement(instance.state.currentPlacement),
+        getBasePlacement(
+          instance.state.currentPlacement || instance.props.placement,
+        ),
         popper.getBoundingClientRect(),
         event,
         instance.props,

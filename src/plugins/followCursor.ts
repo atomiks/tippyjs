@@ -9,7 +9,6 @@ import {
 import { includes, closestCallback, useIfDefined } from '../utils'
 import { getBasePlacement } from '../popper'
 import { currentInput } from '../bindGlobalEventListeners'
-import Popper from 'popper.js'
 
 interface ExtendedInstance extends Instance {
   props: Props & FollowCursorProps
@@ -24,7 +23,6 @@ export default {
     // Internal state
     let lastMouseMoveEvent: MouseEvent
     let firstTriggerEventType: string | null = null
-    let isPopperInstanceCreated = false
     let normalizedPlacement: Placement
     let shouldBypassSetPropsHook = false
 
@@ -76,7 +74,8 @@ export default {
       if (
         !instance.props.followCursor ||
         !instance.popperInstance ||
-        !isPopperInstanceCreated
+        // isPopperInstanceCreated?
+        !instance.state.currentPlacement
       ) {
         return
       }
@@ -134,25 +133,6 @@ export default {
       onCreate(): void {
         setPrivateProps(instance.props)
         setNormalizedPlacement()
-
-        const { popperOptions } = instance.props
-
-        instance.setProps({
-          popperOptions: {
-            ...popperOptions,
-            // Technically we should try and preserve `onCreate` if `.setProps()`
-            // is called after the instance is created, but before the
-            // popperInstance is created, but this correctness seems extremely
-            // unlikely to be needed
-            onCreate(data: Popper.Data): void {
-              if (popperOptions && popperOptions.onCreate) {
-                popperOptions.onCreate(data)
-              }
-
-              isPopperInstanceCreated = true
-            },
-          },
-        })
       },
       onPropsUpdated(_, partialProps): void {
         if (!shouldBypassSetPropsHook) {

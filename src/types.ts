@@ -100,7 +100,7 @@ export interface Instance {
   setProps(partialProps: Partial<Props>): void
   show(duration?: number, shouldPreventPopperTransition?: boolean): void
   state: {
-    currentPlacement: Placement
+    currentPlacement: Placement | null
     isScheduledToShow: boolean
     isEnabled: boolean
     isVisible: boolean
