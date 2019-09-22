@@ -5,6 +5,7 @@ import {
   Props,
   Instance,
   Content,
+  LifecycleHooks,
 } from './types'
 import { isIE } from './browser'
 import { PASSIVE, PREVENT_OVERFLOW_PADDING } from './constants'
@@ -199,17 +200,7 @@ export default function createTippy(
   }
 
   function invokeHook(
-    hook:
-      | 'onCreate'
-      | 'onDestroy'
-      | 'onHidden'
-      | 'onHide'
-      | 'onMount'
-      | 'onPropsUpdated'
-      | 'onShow'
-      | 'onShown'
-      | 'onTrigger'
-      | 'onUntrigger',
+    hook: keyof LifecycleHooks,
     args: [Instance, (Event | Partial<Props>)?],
     shouldInvokePropsHook = true,
   ): void {
