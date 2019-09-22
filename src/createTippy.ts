@@ -136,7 +136,7 @@ export default function createTippy(
   reference._tippy = instance
   popper._tippy = instance
 
-  const instancePlugins = plugins.map(plugin => plugin.fn(instance))
+  const instancePluginsHooks = plugins.map(plugin => plugin.fn(instance))
 
   invokeHook('onCreate', [instance])
 
@@ -209,10 +209,10 @@ export default function createTippy(
       instance.props[hook](...args)
     }
 
-    instancePlugins.forEach(plugin => {
-      if (hasOwnProperty(plugin, hook)) {
+    instancePluginsHooks.forEach(pluginHooks => {
+      if (hasOwnProperty(pluginHooks, hook)) {
         // @ts-ignore
-        plugin[hook](...args)
+        pluginHooks[hook](...args)
       }
     })
   }
