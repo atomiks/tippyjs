@@ -130,6 +130,26 @@ describe('animateFill', () => {
       false,
     )
   })
+
+  it('true: sets `transitionDelay` style on content element', () => {
+    const instance = tippy(h(), { animateFill: true, duration: 120 })
+    const { content } = instance.popperChildren
+
+    instance.show()
+    jest.runAllTimers()
+
+    expect(content.style.transitionDelay).toBe(`${120 / 12}ms`)
+  })
+
+  it('false: does not set `transitionDelay` style on content element', () => {
+    const instance = tippy(h(), { animateFill: false, duration: 120 })
+    const { content } = instance.popperChildren
+
+    instance.show()
+    jest.runAllTimers()
+
+    expect(content.style.transitionDelay).toBe('')
+  })
 })
 
 describe('animation', () => {
@@ -1250,6 +1270,27 @@ describe('triggerTarget', () => {
 
     expect(instance.state.isVisible).toBe(true)
   })
+
+  it('works as an array of nodes', () => {
+    const nodes = Array(4)
+      .fill()
+      .map(() => h())
+    const instance = tippy(h(), { triggerTarget: nodes })
+
+    nodes.forEach(node => {
+      instance.reference.dispatchEvent(MOUSEENTER)
+
+      expect(instance.state.isVisible).toBe(false)
+
+      node.dispatchEvent(MOUSEENTER)
+
+      expect(instance.state.isVisible).toBe(true)
+
+      node.dispatchEvent(MOUSELEAVE)
+
+      expect(instance.state.isVisible).toBe(false)
+    })
+  })
 })
 
 describe('hideOnClick', () => {
@@ -1327,6 +1368,16 @@ describe('hideOnClick', () => {
 
     instance.reference.dispatchEvent(MOUSEDOWN)
     instance.reference.dispatchEvent(CLICK)
+
+    expect(instance.state.isVisible).toBe(false)
+  })
+
+  it('handles `mousedown` -> `focus` quirk', () => {
+    const instance = tippy(h(), { hideOnClick: true })
+
+    instance.reference.dispatchEvent(MOUSEENTER)
+    instance.reference.dispatchEvent(MOUSEDOWN)
+    instance.reference.dispatchEvent(FOCUS)
 
     expect(instance.state.isVisible).toBe(false)
   })

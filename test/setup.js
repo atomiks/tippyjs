@@ -1,5 +1,3 @@
-global.__DEV__ = true
-
 global.window.document.createRange = function createRange() {
   return {
     setEnd: () => {},

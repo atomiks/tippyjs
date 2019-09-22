@@ -12,6 +12,7 @@ import tippy from '../../src'
 import { defaultProps } from '../../src/props'
 import createTippy from '../../src/createTippy'
 import { POPPER_SELECTOR } from '../../src/constants'
+import { create } from 'handlebars'
 
 jest.useFakeTimers()
 tippy.setDefaultProps({ duration: 0, delay: 0 })
@@ -386,6 +387,35 @@ describe('instance.setProps()', () => {
     instance.setProps({ ...defaultProps, placement: 'bottom' })
 
     expect(instance.popperInstance).not.toBe(previousPopperInstance)
+  })
+
+  it('does nothing if the instance is destroyed', () => {
+    instance = createTippy(h(), defaultProps)
+
+    instance.destroy()
+    instance.setProps({ content: 'hello' })
+
+    expect(instance.props.content).not.toBe('hello')
+  })
+
+  it('correctly removes stale `aria-expanded` attributes', () => {
+    instance = createTippy(h(), { ...defaultProps, interactive: true })
+    const triggerTarget = h()
+
+    expect(instance.reference.getAttribute('aria-expanded')).toBe('false')
+
+    instance.setProps({ interactive: false })
+
+    expect(instance.reference.getAttribute('aria-expanded')).toBe(null)
+
+    instance.setProps({ triggerTarget, interactive: true })
+
+    expect(instance.reference.getAttribute('aria-expanded')).toBe(null)
+    expect(triggerTarget.getAttribute('aria-expanded')).toBe('false')
+
+    instance.setProps({ triggerTarget: null })
+
+    expect(instance.reference.getAttribute('aria-expanded')).toBe('false')
   })
 })
 
