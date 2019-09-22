@@ -300,9 +300,6 @@ export default function createTippy(
       // `mousedown` event is fired right before `focus`. This lets a tippy with
       // `focus` trigger know that it should not show
       didHideDueToDocumentMouseDown = true
-      setTimeout((): void => {
-        didHideDueToDocumentMouseDown = false
-      })
 
       // The listener gets added in `scheduleShow()`, but this may be hiding it
       // before it shows, and hide()'s early bail-out behavior can prevent it
@@ -415,11 +412,14 @@ export default function createTippy(
   }
 
   function onTrigger(event: Event): void {
-    if (
-      didHideDueToDocumentMouseDown ||
-      !instance.state.isEnabled ||
-      isEventListenerStopped(event)
-    ) {
+    // `mousedown` may be fired right before `focus`, in which case we should
+    // ignore the `focus` event
+    if (event.type === 'focus' && didHideDueToDocumentMouseDown) {
+      didHideDueToDocumentMouseDown = false
+      return
+    }
+
+    if (!instance.state.isEnabled || isEventListenerStopped(event)) {
       return
     }
 
