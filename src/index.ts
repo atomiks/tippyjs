@@ -90,7 +90,6 @@ function setDefaultProps(partialProps: Partial<Props>): void {
   }
 
   Object.keys(partialProps).forEach((key): void => {
-    // @ts-ignore
     defaultProps[key] = partialProps[key]
   })
 }
