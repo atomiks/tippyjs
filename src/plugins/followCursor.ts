@@ -29,11 +29,9 @@ export default {
     // These are controlled by this plugin, so we need to store the user's
     // original prop value
     let placement: Props['placement']
-    let flipOnUpdate: Props['flipOnUpdate']
 
     function setPrivateProps(props: Partial<Props>): void {
       placement = useIfDefined(props.placement, placement)
-      flipOnUpdate = useIfDefined(props.flipOnUpdate, flipOnUpdate)
     }
 
     // Due to `getVirtualOffsets()`, we need to reverse the placement if it's
@@ -188,12 +186,7 @@ export default {
             instance.props.followCursor === 'initial'
           )
         ) {
-          // Force `flipOnUpdate: true` in followCursor mode, as it's better UX
-          // and works better with initial flips
-          instance.setProps({ flipOnUpdate: true })
           addListener()
-        } else {
-          instance.setProps({ flipOnUpdate })
         }
       },
       onUntrigger(): void {
