@@ -51,6 +51,9 @@
     "prepare": "npm run clean && npm run build"
   },
   "jest": {
+    "globals": {
+      "__DEV__": true
+    },
     "setupFiles": [
       "./test/setup.js"
     ],
