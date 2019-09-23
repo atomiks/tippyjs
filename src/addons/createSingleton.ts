@@ -30,13 +30,18 @@ export default function createSingleton(
     instance.disable()
   })
 
-  let currentAria: string | null
+  let currentAria: string | null | undefined
   let currentTarget: Element
 
-  let { aria, onTrigger, onMount, onUntrigger, onPropsUpdated, onDestroy } = {
-    ...defaultProps,
-    ...optionalProps,
+  const userProps: Partial<Props> = {}
+
+  function setUserProps(props: Partial<Props>): void {
+    Object.keys(props).forEach((prop): void => {
+      userProps[prop] = useIfDefined(props[prop], userProps[prop])
+    })
   }
+
+  setUserProps({ ...defaultProps, ...optionalProps })
 
   function handleAriaDescribedByAttribute(
     id: string,
@@ -60,7 +65,7 @@ export default function createSingleton(
     aria: null,
     triggerTarget: references,
     onMount(instance) {
-      preserveInvocation(onMount, instance.props.onMount, [instance])
+      preserveInvocation(userProps.onMount, instance.props.onMount, [instance])
       handleAriaDescribedByAttribute(
         instance.popperChildren.tooltip.id,
         instance.props.interactive,
@@ -68,7 +73,7 @@ export default function createSingleton(
       )
     },
     onUntrigger(instance, event): void {
-      preserveInvocation(onUntrigger, instance.props.onUntrigger, [
+      preserveInvocation(userProps.onUntrigger, instance.props.onUntrigger, [
         instance,
         event,
       ])
@@ -80,13 +85,16 @@ export default function createSingleton(
       )
     },
     onTrigger(instance, event): void {
-      preserveInvocation(onTrigger, instance.props.onTrigger, [instance, event])
+      preserveInvocation(userProps.onTrigger, instance.props.onTrigger, [
+        instance,
+        event,
+      ])
 
       const target = event.currentTarget as Element
       const index = references.indexOf(target)
 
       currentTarget = target
-      currentAria = aria
+      currentAria = userProps.aria
 
       if (instance.state.isVisible) {
         handleAriaDescribedByAttribute(
@@ -108,19 +116,18 @@ export default function createSingleton(
           : invokeWithArgsOrReturn(instance.props.appendTo, [target])
     },
     onPropsUpdated(instance, partialProps): void {
-      preserveInvocation(onPropsUpdated, instance.props.onPropsUpdated, [
-        instance,
-      ])
+      preserveInvocation(
+        userProps.onPropsUpdated,
+        instance.props.onPropsUpdated,
+        [instance],
+      )
 
-      aria = useIfDefined(partialProps.aria, aria)
-      onTrigger = useIfDefined(partialProps.onTrigger, onTrigger)
-      onMount = useIfDefined(partialProps.onMount, onMount)
-      onUntrigger = useIfDefined(partialProps.onUntrigger, onUntrigger)
-      onPropsUpdated = useIfDefined(partialProps.onPropsUpdated, onPropsUpdated)
-      onDestroy = useIfDefined(partialProps.onDestroy, onDestroy)
+      setUserProps(partialProps)
     },
     onDestroy(instance): void {
-      preserveInvocation(onDestroy, instance.props.onDestroy, [instance])
+      preserveInvocation(userProps.onDestroy, instance.props.onDestroy, [
+        instance,
+      ])
 
       tippyInstances.forEach(instance => {
         instance.enable()

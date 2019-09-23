@@ -26,7 +26,7 @@ export default {
     // original prop value
     const userProps: Partial<Props> = {}
 
-    function setUserValuesForControlledProps(props: Partial<Props>): void {
+    function setUserProps(props: Partial<Props>): void {
       Object.keys(props).forEach((prop): void => {
         userProps[prop] = useIfDefined(props[prop], userProps[prop])
       })
@@ -157,11 +157,11 @@ export default {
 
     return {
       onCreate(): void {
-        setUserValuesForControlledProps(instance.props)
+        setUserProps(instance.props)
       },
       onPropsUpdated(_, partialProps): void {
         if (!isInternallySettingControlledProp) {
-          setUserValuesForControlledProps(partialProps)
+          setUserProps(partialProps)
 
           if (partialProps.placement) {
             setNormalizedPlacement()
