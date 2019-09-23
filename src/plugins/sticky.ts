@@ -1,13 +1,9 @@
-import { Instance, Props, StickyProps, LifecycleHooks } from '../types'
-
-interface ExtendedInstance extends Instance {
-  props: Props & StickyProps
-}
+import { LifecycleHooks, StickyInstance } from '../types'
 
 export default {
   name: 'sticky',
   defaultValue: false,
-  fn(instance: ExtendedInstance): Partial<LifecycleHooks> {
+  fn(instance: StickyInstance): Partial<LifecycleHooks> {
     const { reference, popper } = instance
 
     function shouldCheck(value: 'reference' | 'popper'): boolean {

@@ -1,56 +1,97 @@
 import {
-  Instance,
   Props,
-  Placement,
   PopperElement,
-  FollowCursorProps,
+  FollowCursorInstance,
   LifecycleHooks,
+  Placement,
 } from '../types'
 import { includes, closestCallback, useIfDefined } from '../utils'
 import { getBasePlacement } from '../popper'
 import { currentInput } from '../bindGlobalEventListeners'
 
-interface ExtendedInstance extends Instance {
-  props: Props & FollowCursorProps
-}
-
 export default {
   name: 'followCursor',
   defaultValue: false,
-  fn(instance: ExtendedInstance): Partial<LifecycleHooks> {
+  fn(instance: FollowCursorInstance): Partial<LifecycleHooks> {
     const { reference, popper } = instance
 
     // Internal state
     let lastMouseMoveEvent: MouseEvent
-    let firstTriggerEventType: string | null = null
+    let triggerEvent: Event | null = null
     let normalizedPlacement: Placement
-    let shouldBypassSetPropsHook = false
+    let isInternallySettingControlledProp = false
+    let shouldRemoveListener = true
 
     // These are controlled by this plugin, so we need to store the user's
     // original prop value
-    let placement: Props['placement']
+    const userProps: Partial<Props> = {}
 
-    function setPrivateProps(props: Partial<Props>): void {
-      placement = useIfDefined(props.placement, placement)
+    function setUserValuesForControlledProps(props: Partial<Props>): void {
+      Object.keys(props).forEach((prop): void => {
+        userProps[prop] = useIfDefined(props[prop], userProps[prop])
+      })
     }
 
     // Due to `getVirtualOffsets()`, we need to reverse the placement if it's
     // shifted (start -> end, and vice-versa)
     function setNormalizedPlacement(): void {
+      const { placement } = userProps
+
+      if (!placement) {
+        return
+      }
+
       const shift = placement.split('-')[1]
 
-      normalizedPlacement = (instance.props.followCursor && shift
+      normalizedPlacement = (getIsEnabled() && shift
         ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
         : placement) as Placement
 
-      shouldBypassSetPropsHook = true
+      isInternallySettingControlledProp = true
       instance.setProps({ placement: normalizedPlacement })
-      shouldBypassSetPropsHook = false
+      isInternallySettingControlledProp = false
+    }
+
+    function getIsEnabled(): boolean {
+      if (!(triggerEvent instanceof MouseEvent)) {
+        return false
+      }
+
+      return (
+        instance.props.followCursor &&
+        !(triggerEvent.clientX === 0 && triggerEvent.clientY === 0)
+      )
+    }
+
+    function getIsInitialBehavior(): boolean {
+      return (
+        currentInput.isTouch ||
+        (instance.props.followCursor === 'initial' && instance.state.isVisible)
+      )
     }
 
     function resetReference(): void {
       if (instance.popperInstance) {
         instance.popperInstance.reference = reference
+      }
+    }
+
+    function handleListeners(): void {
+      if (!instance.popperInstance) {
+        return
+      }
+
+      // Popper's scroll listeners make sense for `true` only. TODO: work out
+      // how to only listen horizontal scroll for "horizontal" and vertical
+      // scroll for "vertical"
+      if (instance.props.followCursor !== true || getIsInitialBehavior()) {
+        instance.popperInstance.disableEventListeners()
+      }
+    }
+
+    function triggerLastMouseMove(): void {
+      if (getIsEnabled()) {
+        onMouseMove(lastMouseMoveEvent)
       }
     }
 
@@ -63,18 +104,9 @@ export default {
     }
 
     function onMouseMove(event: MouseEvent): void {
-      if (firstTriggerEventType === 'focus' || !event) {
-        return
-      }
-
       const { clientX, clientY } = (lastMouseMoveEvent = event)
 
-      if (
-        !instance.props.followCursor ||
-        !instance.popperInstance ||
-        // isPopperInstanceCreated?
-        !instance.state.currentPlacement
-      ) {
+      if (!instance.popperInstance || !instance.state.currentPlacement) {
         return
       }
 
@@ -118,95 +150,88 @@ export default {
         instance.popperInstance.update()
       }
 
-      // "initial" behavior
-      if (
-        currentInput.isTouch ||
-        (instance.props.followCursor === 'initial' && instance.state.isVisible)
-      ) {
+      if (getIsInitialBehavior()) {
         removeListener()
       }
     }
 
     return {
       onCreate(): void {
-        setPrivateProps(instance.props)
-        setNormalizedPlacement()
+        setUserValuesForControlledProps(instance.props)
       },
       onPropsUpdated(_, partialProps): void {
-        if (!shouldBypassSetPropsHook) {
-          setPrivateProps(partialProps)
+        if (!isInternallySettingControlledProp) {
+          setUserValuesForControlledProps(partialProps)
 
-          if (partialProps.placement !== placement) {
+          if (partialProps.placement) {
             setNormalizedPlacement()
           }
         }
 
-        onMouseMove(lastMouseMoveEvent)
-
-        if (!instance.props.followCursor) {
-          resetReference()
+        // A new placement causes the popperInstance to be recreated
+        if (partialProps.placement) {
+          handleListeners()
         }
+
+        // Wait for `.update()` to set `instance.state.currentPlacement` to
+        // the new placement
+        setTimeout(triggerLastMouseMove)
       },
       onMount(): void {
-        // Popper's scroll listeners make sense for `true`, where the cursor
-        // follows both axes. TODO: somehow keep scroll listeners for vertical
-        // scrolling for "vertical", and horizontal scrolling for "horizontal".
-        if (
-          // Touch devices always emulate "initial"
-          currentInput.isTouch ||
-          (firstTriggerEventType !== 'focus' &&
-            instance.props.followCursor !== true)
-        ) {
-          instance.popperInstance!.disableEventListeners()
-        }
-
-        onMouseMove(lastMouseMoveEvent)
+        triggerLastMouseMove()
+        handleListeners()
       },
       onTrigger(_, event): void {
         // Tapping on touch devices can trigger `mouseenter` then `focus`
-        if (!firstTriggerEventType) {
-          firstTriggerEventType = event.type
+        if (!triggerEvent) {
+          triggerEvent = event
         }
 
         if (event instanceof MouseEvent) {
           lastMouseMoveEvent = event
         }
 
-        if (firstTriggerEventType === 'focus') {
-          resetReference()
+        // With "initial" behavior, flipping may be incorrect for the first show
+        if (getIsInitialBehavior()) {
+          isInternallySettingControlledProp = true
+          instance.setProps({ flipOnUpdate: true })
+          isInternallySettingControlledProp = false
+        } else {
+          instance.setProps({ flipOnUpdate: userProps.flipOnUpdate })
         }
 
-        if (
-          instance.props.followCursor &&
-          firstTriggerEventType !== 'focus' &&
-          // Touch devices can add two listeners due to `mouseenter` + `focus`
-          !(event.type === 'focus' && currentInput.isTouch) &&
-          !(
-            instance.state.isMounted &&
-            instance.props.followCursor === 'initial'
-          )
-        ) {
-          addListener()
+        setNormalizedPlacement()
+
+        if (getIsEnabled()) {
+          // Ignore any trigger events fired immediately after the first one
+          // e.g. `focus` can be fired right after `mouseenter` on touch devices
+          if (event === triggerEvent) {
+            addListener()
+          }
+
+          shouldRemoveListener = false
+        } else {
+          resetReference()
         }
       },
       onUntrigger(): void {
-        // The listener gets added in `onTrigger()`, but due to potential delay(s)
-        // the instance made be untriggered before it shows. `onHidden()` will
-        // therefore never be invoked.
+        // If untriggered before showing (`onHidden` will never be invoked)
         if (!instance.state.isVisible) {
           removeListener()
+          triggerEvent = null
         }
-
-        firstTriggerEventType = null
+      },
+      onHide(): void {
+        shouldRemoveListener = true
       },
       onHidden(): void {
-        // If scheduled to show before unmounting (e.g. delay: [500, 0]), the
-        // listener should not be removed
-        if (!instance.state.isScheduledToShow) {
+        // If triggered between onHide -> onHidden lifecycles, avoid removing
+        // the listener. This can occur with a `delay`
+        if (shouldRemoveListener) {
           removeListener()
         }
 
-        instance.popperInstance!.options.placement = normalizedPlacement
+        triggerEvent = null
       },
     }
   },

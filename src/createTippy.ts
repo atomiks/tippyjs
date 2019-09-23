@@ -98,8 +98,6 @@ export default function createTippy(
   const state = {
     // The current real placement (`data-placement` attribute)
     currentPlacement: null,
-    // Does the instance have a pending timeout for show()?
-    isScheduledToShow: false,
     // Is the instance currently enabled?
     isEnabled: true,
     // Is the tippy currently showing and not transitioning out?
@@ -189,14 +187,21 @@ export default function createTippy(
 
   function getDelay(isShow: boolean): number {
     // For touch or keyboard input, force `0` delay for UX reasons
-    return currentInput.isTouch ||
+    // Also if the instance is mounted but not visible (transitioning out),
+    // ignore delay
+    if (
+      (instance.state.isMounted && !instance.state.isVisible) ||
+      currentInput.isTouch ||
       (lastTriggerEvent ? lastTriggerEvent.type === 'focus' : true)
-      ? 0
-      : getValueAtIndexOrReturn(
-          instance.props.delay,
-          isShow ? 0 : 1,
-          defaultProps.delay,
-        )
+    ) {
+      return 0
+    }
+
+    return getValueAtIndexOrReturn(
+      instance.props.delay,
+      isShow ? 0 : 1,
+      defaultProps.delay,
+    )
   }
 
   function invokeHook(
@@ -297,9 +302,13 @@ export default function createTippy(
       instance.clearDelayTimeouts()
       instance.hide()
 
-      // `mousedown` event is fired right before `focus`. This lets a tippy with
-      // `focus` trigger know that it should not show
+      // `mousedown` event is fired right before `focus` if pressing the
+      // currentTarget. This lets a tippy with `focus` trigger know that it
+      // should not show
       didHideDueToDocumentMouseDown = true
+      setTimeout((): void => {
+        didHideDueToDocumentMouseDown = false
+      })
 
       // The listener gets added in `scheduleShow()`, but this may be hiding it
       // before it shows, and hide()'s early bail-out behavior can prevent it
@@ -375,15 +384,6 @@ export default function createTippy(
       on('touchend', onMouseLeave as EventListener, PASSIVE)
     }
 
-    // `click` for keyboard. Mouse uses `mousedown` (onDocumentMouseDown)
-    if (!includes(instance.props.trigger, 'click')) {
-      on('click', (): void => {
-        if (!currentInput.isTouch && instance.props.hideOnClick === true) {
-          instance.hide()
-        }
-      })
-    }
-
     splitBySpaces(instance.props.trigger).forEach((eventType): void => {
       if (eventType === 'manual') {
         return
@@ -412,14 +412,11 @@ export default function createTippy(
   }
 
   function onTrigger(event: Event): void {
-    // `mousedown` may be fired right before `focus`, in which case we should
-    // ignore the `focus` event
-    if (event.type === 'focus' && didHideDueToDocumentMouseDown) {
-      didHideDueToDocumentMouseDown = false
-      return
-    }
-
-    if (!instance.state.isEnabled || isEventListenerStopped(event)) {
+    if (
+      !instance.state.isEnabled ||
+      isEventListenerStopped(event) ||
+      didHideDueToDocumentMouseDown
+    ) {
       return
     }
 
@@ -743,8 +740,6 @@ export default function createTippy(
   function scheduleShow(event?: Event): void {
     instance.clearDelayTimeouts()
 
-    instance.state.isScheduledToShow = true
-
     if (!instance.popperInstance) {
       createPopperInstance()
     }
@@ -776,8 +771,6 @@ export default function createTippy(
 
       return
     }
-
-    instance.state.isScheduledToShow = false
 
     const delay = getDelay(false)
 

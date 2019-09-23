@@ -101,7 +101,6 @@ export interface Instance {
   show(duration?: number): void
   state: {
     currentPlacement: Placement | null
-    isScheduledToShow: boolean
     isEnabled: boolean
     isVisible: boolean
     isDestroyed: boolean
@@ -158,16 +157,24 @@ export type CreateSingleton = (
 declare const delegate: Delegate
 declare const createSingleton: CreateSingleton
 
+export interface FollowCursorInstance extends Instance {
+  props: Props & FollowCursorProps
+}
+
 export interface FollowCursor {
   name: 'followCursor'
   defaultValue: false
-  fn(instance: Instance): Partial<LifecycleHooks>
+  fn(instance: FollowCursorInstance): Partial<LifecycleHooks>
+}
+
+export interface StickyInstance extends Instance {
+  props: Props & StickyProps
 }
 
 export interface Sticky {
   name: 'sticky'
   defaultValue: false
-  fn(instance: Instance): Partial<LifecycleHooks>
+  fn(instance: StickyInstance): Partial<LifecycleHooks>
 }
 
 declare const followCursor: FollowCursor

@@ -20,6 +20,7 @@ afterEach(cleanDocumentBody)
 describe('followCursor', () => {
   // NOTE: Jest's simulated window dimensions are 1024 x 768. These values
   // should be within that
+  const mouseenter = new MouseEvent('mouseenter', { clientX: 1, clientY: 1 })
   const first = { clientX: 317, clientY: 119 }
   const second = { clientX: 240, clientY: 500 }
 
@@ -54,7 +55,7 @@ describe('followCursor', () => {
   it('true: follows both axes', () => {
     instance = tippy(h(), { followCursor: true })
 
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    instance.reference.dispatchEvent(mouseenter)
 
     jest.runAllTimers()
 
@@ -81,7 +82,7 @@ describe('followCursor', () => {
     instance = tippy(h(), { followCursor: 'horizontal' })
     const referenceRect = instance.reference.getBoundingClientRect()
 
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    instance.reference.dispatchEvent(mouseenter)
 
     jest.runAllTimers()
 
@@ -109,7 +110,7 @@ describe('followCursor', () => {
     instance = tippy(h(), { followCursor: 'vertical' })
     const referenceRect = instance.reference.getBoundingClientRect()
 
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    instance.reference.dispatchEvent(mouseenter)
 
     jest.runAllTimers()
 
@@ -162,7 +163,7 @@ describe('followCursor', () => {
   it('is at correct position after a delay', () => {
     instance = tippy(h(), { followCursor: true, delay: 100 })
 
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    instance.reference.dispatchEvent(mouseenter)
 
     jest.runAllTimers()
 
@@ -182,7 +183,7 @@ describe('followCursor', () => {
   it('is at correct position after a content update', () => {
     instance = tippy(h(), { followCursor: true })
 
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    instance.reference.dispatchEvent(mouseenter)
 
     jest.runAllTimers()
 
@@ -215,7 +216,7 @@ describe('followCursor', () => {
       interactive: true,
     })
 
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    instance.reference.dispatchEvent(mouseenter)
 
     jest.runAllTimers()
 
@@ -271,7 +272,7 @@ describe('followCursor', () => {
       delay: 1000,
     })
 
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    instance.reference.dispatchEvent(mouseenter)
 
     jest.advanceTimersByTime(100)
 
@@ -302,7 +303,7 @@ describe('followCursor', () => {
     })
 
     const triggerEvent = new MouseEvent('mouseenter', { ...first })
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    instance.reference.dispatchEvent(mouseenter)
 
     jest.runAllTimers()
 
@@ -323,7 +324,7 @@ describe('followCursor', () => {
       delay: 1000,
     })
 
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    instance.reference.dispatchEvent(mouseenter)
 
     jest.runAllTimers()
 
