@@ -10,7 +10,6 @@ import followCursor, { getVirtualOffsets } from '../../src/plugins/followCursor'
 import { getBasePlacement } from '../../src/popper'
 
 tippy.setDefaultProps({ duration: 0, delay: 0 })
-
 tippy.use(followCursor)
 
 jest.useFakeTimers()
@@ -21,6 +20,8 @@ describe('followCursor', () => {
   // NOTE: Jest's simulated window dimensions are 1024 x 768. These values
   // should be within that
   const mouseenter = new MouseEvent('mouseenter', { clientX: 1, clientY: 1 })
+  const mouseleave = new MouseEvent('mouseleave', { clientX: 1, clientY: 1 })
+
   const first = { clientX: 317, clientY: 119 }
   const second = { clientX: 240, clientY: 500 }
 
@@ -33,6 +34,8 @@ describe('followCursor', () => {
     bubbles: true,
   })
 
+  const placements = ['top', 'bottom', 'left', 'right']
+
   let rect
   let instance
 
@@ -42,7 +45,7 @@ describe('followCursor', () => {
 
   function matches(receivedRect) {
     const isVerticalPlacement = ['top', 'bottom'].includes(
-      getBasePlacement(instance.popper.getAttribute('x-placement')),
+      getBasePlacement(instance.state.currentPlacement),
     )
     const { x, y } = getVirtualOffsets(instance.popper, isVerticalPlacement)
 
@@ -53,110 +56,120 @@ describe('followCursor', () => {
   }
 
   it('true: follows both axes', () => {
-    instance = tippy(h(), { followCursor: true })
+    placements.forEach(placement => {
+      instance = tippy(h(), { followCursor: true, placement })
 
-    instance.reference.dispatchEvent(mouseenter)
+      instance.reference.dispatchEvent(mouseenter)
 
-    jest.runAllTimers()
+      jest.runAllTimers()
 
-    instance.reference.dispatchEvent(firstMouseMoveEvent)
-    rect = instance.popperInstance.reference.getBoundingClientRect()
-    matches({
-      top: first.clientY,
-      bottom: first.clientY,
-      left: first.clientX,
-      right: first.clientX,
-    })
+      instance.reference.dispatchEvent(firstMouseMoveEvent)
+      rect = instance.popperInstance.reference.getBoundingClientRect()
+      matches({
+        top: first.clientY,
+        bottom: first.clientY,
+        left: first.clientX,
+        right: first.clientX,
+      })
 
-    instance.reference.dispatchEvent(secondMouseMoveEvent)
-    rect = instance.popperInstance.reference.getBoundingClientRect()
-    matches({
-      top: second.clientY,
-      bottom: second.clientY,
-      left: second.clientX,
-      right: second.clientX,
+      instance.reference.dispatchEvent(secondMouseMoveEvent)
+      rect = instance.popperInstance.reference.getBoundingClientRect()
+      matches({
+        top: second.clientY,
+        bottom: second.clientY,
+        left: second.clientX,
+        right: second.clientX,
+      })
     })
   })
 
   it('"horizontal": follows x-axis', () => {
-    instance = tippy(h(), { followCursor: 'horizontal' })
-    const referenceRect = instance.reference.getBoundingClientRect()
+    placements.forEach(placement => {
+      instance = tippy(h(), { followCursor: 'horizontal', placement })
+      const referenceRect = instance.reference.getBoundingClientRect()
 
-    instance.reference.dispatchEvent(mouseenter)
+      instance.reference.dispatchEvent(mouseenter)
 
-    jest.runAllTimers()
+      jest.runAllTimers()
 
-    instance.reference.dispatchEvent(firstMouseMoveEvent)
-    rect = instance.popperInstance.reference.getBoundingClientRect()
+      instance.reference.dispatchEvent(firstMouseMoveEvent)
+      rect = instance.popperInstance.reference.getBoundingClientRect()
 
-    matches({
-      top: referenceRect.top,
-      bottom: referenceRect.bottom,
-      left: first.clientX,
-      right: first.clientX,
-    })
+      matches({
+        top: referenceRect.top,
+        bottom: referenceRect.bottom,
+        left: first.clientX,
+        right: first.clientX,
+      })
 
-    instance.reference.dispatchEvent(secondMouseMoveEvent)
-    rect = instance.popperInstance.reference.getBoundingClientRect()
-    matches({
-      top: referenceRect.top,
-      bottom: referenceRect.bottom,
-      left: second.clientX,
-      right: second.clientX,
+      instance.reference.dispatchEvent(secondMouseMoveEvent)
+      rect = instance.popperInstance.reference.getBoundingClientRect()
+      matches({
+        top: referenceRect.top,
+        bottom: referenceRect.bottom,
+        left: second.clientX,
+        right: second.clientX,
+      })
     })
   })
 
   it('"vertical": follows y-axis', () => {
-    instance = tippy(h(), { followCursor: 'vertical' })
-    const referenceRect = instance.reference.getBoundingClientRect()
+    placements.forEach(placement => {
+      instance = tippy(h(), { followCursor: 'vertical', placement })
+      const referenceRect = instance.reference.getBoundingClientRect()
 
-    instance.reference.dispatchEvent(mouseenter)
+      instance.reference.dispatchEvent(mouseenter)
 
-    jest.runAllTimers()
+      jest.runAllTimers()
 
-    instance.reference.dispatchEvent(firstMouseMoveEvent)
-    rect = instance.popperInstance.reference.getBoundingClientRect()
-    matches({
-      top: first.clientY,
-      bottom: first.clientY,
-      left: referenceRect.left,
-      right: referenceRect.right,
-    })
+      instance.reference.dispatchEvent(firstMouseMoveEvent)
+      rect = instance.popperInstance.reference.getBoundingClientRect()
+      matches({
+        top: first.clientY,
+        bottom: first.clientY,
+        left: referenceRect.left,
+        right: referenceRect.right,
+      })
 
-    instance.reference.dispatchEvent(secondMouseMoveEvent)
-    rect = instance.popperInstance.reference.getBoundingClientRect()
-    matches({
-      top: second.clientY,
-      bottom: second.clientY,
-      left: referenceRect.left,
-      right: referenceRect.right,
+      instance.reference.dispatchEvent(secondMouseMoveEvent)
+      rect = instance.popperInstance.reference.getBoundingClientRect()
+      matches({
+        top: second.clientY,
+        bottom: second.clientY,
+        left: referenceRect.left,
+        right: referenceRect.right,
+      })
     })
   })
 
   it('"initial": only follows once', () => {
-    instance = tippy(h(), { followCursor: 'initial' })
+    placements.forEach(placement => {
+      instance = tippy(h(), { followCursor: 'initial', placement })
 
-    // lastMouseMove event is used in this case
-    instance.reference.dispatchEvent(new MouseEvent('mouseenter', { ...first }))
+      // lastMouseMove event is used in this case
+      instance.reference.dispatchEvent(
+        new MouseEvent('mouseenter', { ...first }),
+      )
 
-    jest.runAllTimers()
+      jest.runAllTimers()
 
-    instance.reference.dispatchEvent(firstMouseMoveEvent)
-    rect = instance.popperInstance.reference.getBoundingClientRect()
-    matches({
-      top: first.clientY,
-      bottom: first.clientY,
-      left: first.clientX,
-      right: first.clientX,
-    })
+      instance.reference.dispatchEvent(firstMouseMoveEvent)
+      rect = instance.popperInstance.reference.getBoundingClientRect()
+      matches({
+        top: first.clientY,
+        bottom: first.clientY,
+        left: first.clientX,
+        right: first.clientX,
+      })
 
-    instance.reference.dispatchEvent(secondMouseMoveEvent)
-    rect = instance.popperInstance.reference.getBoundingClientRect()
-    matches({
-      top: first.clientY,
-      bottom: first.clientY,
-      left: first.clientX,
-      right: first.clientX,
+      instance.reference.dispatchEvent(secondMouseMoveEvent)
+      rect = instance.popperInstance.reference.getBoundingClientRect()
+      matches({
+        top: first.clientY,
+        bottom: first.clientY,
+        left: first.clientX,
+        right: first.clientX,
+      })
     })
   })
 
@@ -286,37 +299,6 @@ describe('followCursor', () => {
     rect = instance.popperInstance.reference.getBoundingClientRect()
   })
 
-  it('should preserve lifecycle hooks', () => {
-    const spies = {
-      onTrigger: jest.fn(),
-      onUntrigger: jest.fn(),
-      onMount: jest.fn(),
-      onHidden: jest.fn(),
-      popperOptions: {
-        onCreate: jest.fn(),
-      },
-    }
-    instance = tippy(h(), {
-      followCursor: true,
-      flip: false,
-      ...spies,
-    })
-
-    const triggerEvent = new MouseEvent('mouseenter', { ...first })
-    instance.reference.dispatchEvent(mouseenter)
-
-    jest.runAllTimers()
-
-    const untriggerEvent = new MouseEvent('mouseleave')
-    instance.reference.dispatchEvent(new MouseEvent('mouseleave'))
-
-    expect(spies.onTrigger).toHaveBeenCalledWith(instance, triggerEvent)
-    expect(spies.onUntrigger).toHaveBeenCalledWith(instance, untriggerEvent)
-    expect(spies.onMount).toHaveBeenCalledWith(instance)
-    expect(spies.onHidden).toHaveBeenCalledWith(instance)
-    expect(spies.popperOptions.onCreate).toHaveBeenCalled()
-  })
-
   it('should reset popperInstance.reference if triggered by `focus`', () => {
     instance = tippy(h(), {
       followCursor: true,
@@ -359,5 +341,40 @@ describe('followCursor', () => {
       left: first.clientX,
       right: first.clientX,
     })
+  })
+
+  it('sets normalizedPlacement for shifted placements correctly', () => {
+    instance = tippy(h(), {
+      placement: 'top-start',
+      followCursor: true,
+    })
+
+    instance.reference.dispatchEvent(mouseenter)
+    jest.runAllTimers()
+
+    expect(instance.props.placement).toBe('top-end')
+
+    instance.setProps({ placement: 'left-end' })
+
+    expect(instance.props.placement).toBe('left-start')
+
+    instance.setProps({ followCursor: false })
+
+    instance.reference.dispatchEvent(mouseleave)
+    instance.reference.dispatchEvent(mouseenter)
+    jest.runAllTimers()
+
+    expect(instance.props.placement).toBe('left-end')
+  })
+
+  it('is disabled if MouseEvent.{clientX,clientY} are 0', () => {
+    instance = tippy(h(), {
+      followCursor: true,
+    })
+
+    instance.reference.dispatchEvent(new MouseEvent('mouseenter'))
+    jest.runAllTimers()
+
+    expect(instance.popperInstance.reference).toBe(instance.reference)
   })
 })

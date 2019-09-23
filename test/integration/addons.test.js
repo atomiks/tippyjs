@@ -227,11 +227,40 @@ describe('createSingleton', () => {
     const tippyInstances = tippy([h(), h()])
     const prevInstanceProps = tippyInstances.map(instance => instance.props)
     const singletonInstance = createSingleton(tippyInstances)
+
     singletonInstance.destroy(false)
     tippyInstances.forEach((instance, i) => {
       const { props } = instance
       expect({ ...props, ...prevInstanceProps[i] }).toEqual(props)
     })
+  })
+
+  it('handles aria attribute correctly', () => {
+    const tippyInstances = tippy([h(), h()])
+    const singletonInstance = createSingleton(tippyInstances, { delay: 100 })
+
+    const id = singletonInstance.popperChildren.tooltip.id
+    const { reference: firstReference } = tippyInstances[0]
+    const { reference: secondReference } = tippyInstances[1]
+
+    firstReference.dispatchEvent(MOUSEENTER)
+    jest.runAllTimers()
+
+    expect(firstReference.getAttribute('aria-describedby')).toBe(id)
+
+    firstReference.dispatchEvent(MOUSELEAVE)
+    secondReference.dispatchEvent(MOUSEENTER)
+
+    expect(firstReference.getAttribute('aria-describedby')).toBe(null)
+    expect(secondReference.getAttribute('aria-describedby')).toBe(id)
+
+    singletonInstance.setProps({ aria: null })
+
+    secondReference.dispatchEvent(MOUSELEAVE)
+    firstReference.dispatchEvent(MOUSEENTER)
+
+    expect(firstReference.getAttribute('aria-describedby')).toBe(null)
+    expect(secondReference.getAttribute('aria-describedby')).toBe(null)
   })
 })
 
