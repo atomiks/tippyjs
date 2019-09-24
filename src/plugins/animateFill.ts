@@ -24,7 +24,7 @@ export default {
     return {
       onCreate(): void {
         if (backdrop) {
-          tooltip.appendChild(backdrop)
+          tooltip.insertBefore(backdrop, tooltip.firstElementChild!)
           tooltip.setAttribute('data-animatefill', '')
 
           instance.setProps({ animation: 'shift-away', arrow: false })
@@ -38,7 +38,11 @@ export default {
           // The content should fade in after the backdrop has mostly filled the
           // tooltip element. `clip-path` is the other alternative but is not
           // well-supported and is buggy on some devices.
-          content.style.transitionDelay = `${Math.round(duration / 12)}ms`
+          //
+          // We don't have access to the real duration that could have been
+          // potentially passed as an argument to `.show()` or `.hide()`.
+          content.style.transitionDelay = `${Math.round(duration / 8)}ms`
+
           backdrop.style.transitionDuration = transitionDuration
           setDataState(backdrop, 'visible')
 
@@ -69,6 +73,7 @@ export default {
       },
       onHide(): void {
         if (backdrop) {
+          content.style.transitionDelay = '0ms'
           setDataState(backdrop, 'hidden')
         }
       },
