@@ -149,9 +149,17 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
     warnWhen(
       didPassUnknownProp,
       `The \`${prop}\` prop is not a valid prop. You may have spelled it 
-      incorrectly.
+      incorrectly, or if it's a plugin, forgot to register it with
+      \`tippy.use()\`.
+
+      In v5, the following props were turned into plugins:
+
+      * animateFill
+      * followCursor
+      * sticky
       
-      All props: https://atomiks.github.io/tippyjs/all-props/`,
+      All props: https://atomiks.github.io/tippyjs/all-props/
+      Plugins: https://atomiks.github.io/tippyjs/plugins/`,
     )
   })
 }

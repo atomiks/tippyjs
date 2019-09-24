@@ -18,13 +18,11 @@ export default {
     // Internal state
     let lastMouseMoveEvent: MouseEvent
     let triggerEvent: Event | null = null
-    let normalizedPlacement: Placement
     let isInternallySettingControlledProp = false
-    let shouldRemoveListener = true
 
     // These are controlled by this plugin, so we need to store the user's
     // original prop value
-    const userProps: Partial<Props> = {}
+    const userProps = instance.props
 
     function setUserProps(props: Partial<Props>): void {
       Object.keys(props).forEach((prop): void => {
@@ -43,12 +41,14 @@ export default {
 
       const shift = placement.split('-')[1]
 
-      normalizedPlacement = (getIsEnabled() && shift
-        ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
-        : placement) as Placement
-
       isInternallySettingControlledProp = true
-      instance.setProps({ placement: normalizedPlacement })
+
+      instance.setProps({
+        placement: (getIsEnabled() && shift
+          ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
+          : placement) as Placement,
+      })
+
       isInternallySettingControlledProp = false
     }
 
@@ -156,9 +156,6 @@ export default {
     }
 
     return {
-      onCreate(): void {
-        setUserProps(instance.props)
-      },
       onPropsUpdated(_, partialProps): void {
         if (!isInternallySettingControlledProp) {
           setUserProps(partialProps)
@@ -183,9 +180,11 @@ export default {
       },
       onTrigger(_, event): void {
         // Tapping on touch devices can trigger `mouseenter` then `focus`
-        if (!triggerEvent) {
-          triggerEvent = event
+        if (triggerEvent) {
+          return
         }
+
+        triggerEvent = event
 
         if (event instanceof MouseEvent) {
           lastMouseMoveEvent = event
@@ -208,8 +207,6 @@ export default {
           if (event === triggerEvent) {
             addListener()
           }
-
-          shouldRemoveListener = false
         } else {
           resetReference()
         }
@@ -221,16 +218,8 @@ export default {
           triggerEvent = null
         }
       },
-      onHide(): void {
-        shouldRemoveListener = true
-      },
       onHidden(): void {
-        // If triggered between onHide -> onHidden lifecycles, avoid removing
-        // the listener. This can occur with a `delay`
-        if (shouldRemoveListener) {
-          removeListener()
-        }
-
+        removeListener()
         triggerEvent = null
       },
     }

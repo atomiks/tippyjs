@@ -40,7 +40,6 @@ export interface LifecycleHooks {
 
 export interface Props extends LifecycleHooks {
   allowHTML: boolean
-  animateFill: boolean
   animation: string
   appendTo: 'parent' | Element | ((ref: Element) => Element)
   aria: 'describedby' | 'labelledby' | null
@@ -74,6 +73,10 @@ export interface Props extends LifecycleHooks {
   updateDuration: number
   zIndex: number
   [key: string]: any
+}
+
+export interface AnimateFillProps {
+  animateFill: boolean
 }
 
 export interface FollowCursorProps {
@@ -113,7 +116,6 @@ export interface PopperChildren {
   tooltip: HTMLDivElement
   content: HTMLDivElement
   arrow: HTMLDivElement | null
-  backdrop: HTMLDivElement | null
 }
 
 export interface HideAllOptions {
@@ -157,6 +159,19 @@ export type CreateSingleton = (
 declare const delegate: Delegate
 declare const createSingleton: CreateSingleton
 
+export interface AnimateFillInstance extends Instance {
+  props: Props & AnimateFillProps
+  popperChildren: PopperChildren & {
+    backdrop: HTMLDivElement | null
+  }
+}
+
+export interface AnimateFill {
+  name: 'animateFill'
+  defaultValue: false
+  fn(instance: AnimateFillInstance): Partial<LifecycleHooks>
+}
+
 export interface FollowCursorInstance extends Instance {
   props: Props & FollowCursorProps
 }
@@ -177,7 +192,8 @@ export interface Sticky {
   fn(instance: StickyInstance): Partial<LifecycleHooks>
 }
 
+declare const animateFill: AnimateFill
 declare const followCursor: FollowCursor
 declare const sticky: Sticky
 
-export { hideAll, delegate, createSingleton, followCursor, sticky }
+export { hideAll, delegate, createSingleton, animateFill, followCursor, sticky }

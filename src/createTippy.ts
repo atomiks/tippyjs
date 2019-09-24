@@ -177,8 +177,8 @@ export default function createTippy(
     return getNormalizedTouchSettings()[0] === 'hold'
   }
 
-  function getTransitionableElements(): (HTMLDivElement | null)[] {
-    return [tooltip, content, instance.popperChildren.backdrop]
+  function getTransitionableElements(): HTMLDivElement[] {
+    return [tooltip, content]
   }
 
   function getCurrentTarget(): Element {
@@ -209,17 +209,17 @@ export default function createTippy(
     args: [Instance, (Event | Partial<Props>)?],
     shouldInvokePropsHook = true,
   ): void {
-    if (shouldInvokePropsHook) {
-      // @ts-ignore
-      instance.props[hook](...args)
-    }
-
     instancePluginsHooks.forEach(pluginHooks => {
       if (hasOwnProperty(pluginHooks, hook)) {
         // @ts-ignore
         pluginHooks[hook](...args)
       }
     })
+
+    if (shouldInvokePropsHook) {
+      // @ts-ignore
+      instance.props[hook](...args)
+    }
   }
 
   function handleAriaDescribedByAttribute(): void {
@@ -843,7 +843,7 @@ export default function createTippy(
     cleanupInteractiveMouseListeners()
     debouncedOnMouseMove = debounce(onMouseMove, nextProps.interactiveDebounce)
 
-    updatePopperElement(popper, prevProps, nextProps, instance.state.isVisible)
+    updatePopperElement(popper, prevProps, nextProps)
     instance.popperChildren = getChildren(popper)
 
     // Ensure stale aria-expanded attributes are removed
@@ -940,22 +940,15 @@ export default function createTippy(
         return
       }
 
-      instance.state.isMounted = true
-      invokeHook('onMount', [instance])
-
-      // The content should fade in after the backdrop has mostly filled the
-      // tooltip element. `clip-path` is the other alternative but is not well-
-      // supported and is buggy on some devices.
-      content.style.transitionDelay = instance.popperChildren.backdrop
-        ? `${Math.round(duration / 12)}ms`
-        : ''
-
       setTransitionDuration([popper], instance.props.updateDuration)
       setTransitionDuration(transitionableElements, duration)
       setVisibilityState(transitionableElements, 'visible')
 
       handleAriaDescribedByAttribute()
       handleAriaExpandedAttribute()
+
+      instance.state.isMounted = true
+      invokeHook('onMount', [instance])
 
       onTransitionedIn(duration, (): void => {
         instance.state.isShown = true

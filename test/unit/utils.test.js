@@ -177,25 +177,6 @@ describe('div', () => {
 })
 
 describe('evaluateProps', () => {
-  it('sets `arrow` prop to false if `animateFill` is true', () => {
-    const props = { animateFill: true, arrow: true }
-    expect(Utils.evaluateProps(h(), props)).toEqual({
-      animateFill: true,
-      arrow: false,
-    })
-  })
-
-  it('sets `arrow` prop to false if `animateFill` is true (data attribute)', () => {
-    const ref = h()
-
-    ref.setAttribute('data-tippy-arrow', 'true')
-
-    expect(Utils.evaluateProps(ref, { animateFill: true })).toEqual({
-      arrow: false,
-      animateFill: true,
-    })
-  })
-
   it('ignores attributes if `ignoreAttributes: true`', () => {
     const props = { animation: 'scale', ignoreAttributes: true }
     const reference = h()

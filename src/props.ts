@@ -2,7 +2,6 @@ import { Props } from './types'
 
 export const defaultProps: Props = {
   allowHTML: true,
-  animateFill: false,
   animation: 'fade',
   appendTo: (): Element => document.body,
   aria: 'describedby',

@@ -1,5 +1,4 @@
 import { Props, ReferenceElement, Targets } from './types'
-import { isUCBrowser } from './browser'
 import { getDataAttributeProps } from './reference'
 import { POPPER_CLASS } from './constants'
 
@@ -140,14 +139,6 @@ export function evaluateProps(
     ...props,
     content: invokeWithArgsOrReturn(props.content, [reference]),
     ...(props.ignoreAttributes ? {} : getDataAttributeProps(reference)),
-  }
-
-  if (out.animateFill) {
-    out.arrow = false
-  }
-
-  if (out.arrow || isUCBrowser) {
-    out.animateFill = false
   }
 
   if (out.interactive) {

@@ -5,7 +5,6 @@ import {
   createPopperElement,
   updatePopperElement,
   createArrowElement,
-  createBackdropElement,
   getChildren,
   addInertia,
   removeInertia,
@@ -61,26 +60,6 @@ describe('createPopperElement', () => {
   it('creates an arrow element if props.arrow is true', () => {
     const popper = createPopperElement(1, { ...defaultProps, arrow: true })
     expect(popper.querySelector(ARROW_SELECTOR)).not.toBe(null)
-  })
-
-  it('does not create a backdrop element if props.animateFill is false', () => {
-    const popper = createPopperElement(1, {
-      ...defaultProps,
-      animateFill: false,
-    })
-
-    expect(popper.querySelector(BACKDROP_SELECTOR)).toBe(null)
-  })
-
-  it('sets `[data-animatefill]` on the tooltip element if props.animateFill is true', () => {
-    const popper = createPopperElement(1, {
-      ...defaultProps,
-      animateFill: true,
-    })
-
-    expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-      true,
-    )
   })
 
   it('sets `[data-interactive]` on the tooltip if props.interactive is true', () => {
@@ -169,64 +148,6 @@ describe('updatePopperElement', () => {
     })
 
     expect(getChildren(popper).content.querySelector('strong')).not.toBe(null)
-  })
-
-  it('sets new backdrop element', () => {
-    const popper = createPopperElement(1, defaultProps)
-
-    updatePopperElement(popper, defaultProps, {
-      ...defaultProps,
-      animateFill: false,
-    })
-
-    expect(popper.querySelector(BACKDROP_SELECTOR)).toBe(null)
-    expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-      false,
-    )
-
-    updatePopperElement(
-      popper,
-      { ...defaultProps, animateFill: false },
-      {
-        ...defaultProps,
-        animateFill: true,
-      },
-    )
-
-    expect(popper.querySelector(BACKDROP_SELECTOR)).not.toBe(null)
-    expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-      true,
-    )
-  })
-
-  describe('diffs animateFill correclty', () => {
-    it('true -> false', () => {
-      const props = { ...defaultProps, animateFill: true }
-      const popper = createPopperElement(1, props)
-
-      updatePopperElement(popper, props, {
-        ...defaultProps,
-        animateFill: false,
-      })
-
-      expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-        false,
-      )
-    })
-
-    it('false -> true', () => {
-      const props = { ...defaultProps, animateFill: false }
-      const popper = createPopperElement(1, props)
-
-      updatePopperElement(popper, props, {
-        ...defaultProps,
-        animateFill: true,
-      })
-
-      expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-        true,
-      )
-    })
   })
 
   describe('diffs the arrow correctly', () => {
@@ -422,7 +343,6 @@ describe('getChildren', () => {
 
     expect(children.tooltip).toBeDefined()
     expect(children.content).toBeDefined()
-    expect(children.backdrop).toBeDefined()
   })
 
   it('returns the children of the popper element, with arrow', () => {
@@ -456,14 +376,6 @@ describe('createArrowElement', () => {
   it('returns a round arrow if "round" is passed as argument', () => {
     const roundArrow = createArrowElement('round')
     expect(roundArrow.matches(SVG_ARROW_SELECTOR)).toBe(true)
-  })
-})
-
-describe('createBackdropElement', () => {
-  it('returns a backdrop element', () => {
-    const arrow = createBackdropElement()
-    expect(arrow.matches(BACKDROP_SELECTOR)).toBe(true)
-    expect(arrow.getAttribute('data-state')).toBe('hidden')
   })
 })
 

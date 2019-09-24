@@ -34,11 +34,11 @@ describe('getDataAttributeProps', () => {
     const ref = h()
 
     ref.setAttribute('data-tippy-interactive', 'true')
-    ref.setAttribute('data-tippy-animateFill', 'false')
+    ref.setAttribute('data-tippy-arrow', 'false')
 
     expect(getDataAttributeProps(ref)).toEqual({
       interactive: true,
-      animateFill: false,
+      arrow: false,
     })
   })
 

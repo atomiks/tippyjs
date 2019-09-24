@@ -10,12 +10,10 @@ import { isUCBrowser } from './browser'
 import {
   POPPER_CLASS,
   TOOLTIP_CLASS,
-  BACKDROP_CLASS,
   CONTENT_CLASS,
   ARROW_CLASS,
   SVG_ARROW_CLASS,
   TOOLTIP_SELECTOR,
-  BACKDROP_SELECTOR,
   CONTENT_SELECTOR,
   ARROW_SELECTOR,
   SVG_ARROW_SELECTOR,
@@ -53,7 +51,6 @@ export function setContent(
 export function getChildren(popper: PopperElement): PopperChildren {
   return {
     tooltip: popper.querySelector(TOOLTIP_SELECTOR) as HTMLDivElement,
-    backdrop: popper.querySelector(BACKDROP_SELECTOR),
     content: popper.querySelector(CONTENT_SELECTOR) as HTMLDivElement,
     arrow:
       popper.querySelector(ARROW_SELECTOR) ||
@@ -97,16 +94,6 @@ export function createArrowElement(arrow: Props['arrow']): HTMLDivElement {
   }
 
   return arrowElement
-}
-
-/**
- * Creates a backdrop element and returns it
- */
-export function createBackdropElement(isVisible: boolean): HTMLDivElement {
-  const backdrop = div()
-  backdrop.className = BACKDROP_CLASS
-  backdrop.setAttribute('data-state', isVisible ? 'visible' : 'hidden')
-  return backdrop
 }
 
 /**
@@ -198,11 +185,6 @@ export function createPopperElement(id: number, props: Props): PopperElement {
     tooltip.appendChild(createArrowElement(props.arrow))
   }
 
-  if (props.animateFill) {
-    tooltip.appendChild(createBackdropElement(false))
-    tooltip.setAttribute('data-animatefill', '')
-  }
-
   if (props.inertia) {
     addInertia(tooltip)
   }
@@ -212,7 +194,7 @@ export function createPopperElement(id: number, props: Props): PopperElement {
   tooltip.appendChild(content)
   popper.appendChild(tooltip)
 
-  updatePopperElement(popper, props, props, false)
+  updatePopperElement(popper, props, props)
 
   return popper
 }
@@ -224,9 +206,8 @@ export function updatePopperElement(
   popper: PopperElement,
   prevProps: Props,
   nextProps: Props,
-  isVisible: boolean,
 ): void {
-  const { tooltip, content, backdrop, arrow } = getChildren(popper)
+  const { tooltip, content, arrow } = getChildren(popper)
 
   popper.style.zIndex = '' + nextProps.zIndex
 
@@ -242,15 +223,6 @@ export function updatePopperElement(
 
   if (prevProps.content !== nextProps.content) {
     setContent(content, nextProps)
-  }
-
-  // animateFill
-  if (!prevProps.animateFill && nextProps.animateFill) {
-    tooltip.appendChild(createBackdropElement(isVisible))
-    tooltip.setAttribute('data-animatefill', '')
-  } else if (prevProps.animateFill && !nextProps.animateFill) {
-    tooltip.removeChild(backdrop!)
-    tooltip.removeAttribute('data-animatefill')
   }
 
   // arrow

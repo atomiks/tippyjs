@@ -69,13 +69,6 @@ describe('arrow', () => {
     expect(getChildren(popper).arrow).not.toBeNull()
   })
 
-  it('true: disables `animateFill` option', () => {
-    const ref = h()
-    const { props } = tippy(ref, { arrow: true })
-
-    expect(props.animateFill).toBe(false)
-  })
-
   it('false: does not create an arrow element child of the popper', () => {
     const ref = h()
     const { popper } = tippy(ref, { arrow: false })
@@ -109,46 +102,6 @@ describe('arrow', () => {
     const { popperChildren } = tippy(h(), { arrow: svg })
 
     expect(popperChildren.arrow.firstElementChild).toBe(svg)
-  })
-})
-
-describe('animateFill', () => {
-  it('true: sets `data-animatefill` attribute on tooltip', () => {
-    const ref = h()
-    const { popper } = tippy(ref, { animateFill: true })
-
-    expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-      true,
-    )
-  })
-
-  it('false: does not set `data-animatefill` attribute on tooltip', () => {
-    const ref = h()
-    const { popper } = tippy(ref, { animateFill: false })
-
-    expect(getChildren(popper).tooltip.hasAttribute('data-animatefill')).toBe(
-      false,
-    )
-  })
-
-  it('true: sets `transitionDelay` style on content element', () => {
-    const instance = tippy(h(), { animateFill: true, duration: 120 })
-    const { content } = instance.popperChildren
-
-    instance.show()
-    jest.runAllTimers()
-
-    expect(content.style.transitionDelay).toBe(`${120 / 12}ms`)
-  })
-
-  it('false: does not set `transitionDelay` style on content element', () => {
-    const instance = tippy(h(), { animateFill: false, duration: 120 })
-    const { content } = instance.popperChildren
-
-    instance.show()
-    jest.runAllTimers()
-
-    expect(content.style.transitionDelay).toBe('')
   })
 })
 
