@@ -1,4 +1,4 @@
-import { Props, Targets } from './types'
+import { Props, Targets, Plugin } from './types'
 import { hasOwnProperty, includes } from './utils'
 import { defaultProps } from './props'
 
@@ -67,14 +67,28 @@ export function throwErrorWhen(condition: boolean, message: string): void {
 /**
  * Validates props with the valid `defaultProps` object
  */
-export function validateProps(partialProps: Partial<Props> = {}): void {
+export function validateProps(
+  partialProps: Partial<Props> = {},
+  plugins: Plugin[] = [],
+): void {
+  const extendedDefaultProps = {
+    ...defaultProps,
+    ...plugins.reduce<{ [key: string]: any }>((acc, plugin) => {
+      if (plugin.name) {
+        acc[plugin.name] = plugin.defaultValue
+      }
+
+      return acc
+    }, {}),
+  }
+
   Object.keys(partialProps).forEach((prop): void => {
-    const value = (partialProps as any)[prop]
+    const value = partialProps[prop]
 
     const didSpecifyPlacementInPopperOptions =
       prop === 'popperOptions' && value && hasOwnProperty(value, 'placement')
     const didPassUnknownProp =
-      !hasOwnProperty(defaultProps, prop) &&
+      !hasOwnProperty(extendedDefaultProps, prop) &&
       !includes(
         [
           'a11y',
@@ -149,8 +163,8 @@ export function validateProps(partialProps: Partial<Props> = {}): void {
     warnWhen(
       didPassUnknownProp,
       `The \`${prop}\` prop is not a valid prop. You may have spelled it 
-      incorrectly, or if it's a plugin, forgot to register it with
-      \`tippy.use()\`.
+      incorrectly, or if it's a plugin, forgot to pass it in an array as a 3rd
+      argument to \`tippy()\`.
 
       In v5, the following props were turned into plugins:
 

@@ -18,8 +18,8 @@ import {
   Targets,
   PopperElement,
   HideAllOptions,
+  Plugin,
 } from './types'
-import { plugins, use } from './plugins'
 
 /**
  * Exported module
@@ -27,10 +27,11 @@ import { plugins, use } from './plugins'
 function tippy(
   targets: Targets,
   optionalProps?: Partial<Props>,
+  plugins: Plugin[] = [],
 ): Instance | Instance[] {
   if (__DEV__) {
     validateTargets(targets)
-    validateProps(optionalProps)
+    validateProps(optionalProps, plugins)
   }
 
   bindGlobalEventListeners()
@@ -58,7 +59,7 @@ function tippy(
 
   const instances = elements.reduce<Instance[]>(
     (acc, reference): Instance[] => {
-      const instance = reference && createTippy(reference, props)
+      const instance = reference && createTippy(reference, props, plugins)
 
       if (instance) {
         acc.push(instance)
@@ -72,26 +73,40 @@ function tippy(
   return isRealElement(targets) ? instances[0] : instances
 }
 
-tippy.version = version
-tippy.defaultProps = defaultProps
-tippy.setDefaultProps = setDefaultProps
-tippy.currentInput = currentInput
-tippy.plugins = plugins
-tippy.use = use
+function addStatics(fn: any): void {
+  fn.version = version
+  fn.defaultProps = defaultProps
+  fn.setDefaultProps = setDefaultProps
+  fn.currentInput = currentInput
+}
 
-export default tippy
+addStatics(tippy)
 
 /**
  * Mutates the defaultProps object by setting the props specified
  */
 function setDefaultProps(partialProps: Partial<Props>): void {
   if (__DEV__) {
-    validateProps(partialProps)
+    validateProps(partialProps, [])
   }
 
   Object.keys(partialProps).forEach((key): void => {
     defaultProps[key] = partialProps[key]
   })
+}
+
+/**
+ * Returns a proxy wrapper function that passes the plugins
+ */
+export function createTippyWithPlugins(
+  plugins: Plugin[],
+): (targets: Targets, optionalProps?: Partial<Props>) => Instance | Instance[] {
+  const fn = (targets: Targets, optionalProps?: Partial<Props>) =>
+    tippy(targets, optionalProps, plugins)
+
+  addStatics(fn)
+
+  return fn
 }
 
 /**
@@ -120,3 +135,5 @@ export function hideAll({
     },
   )
 }
+
+export default tippy

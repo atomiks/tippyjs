@@ -17,12 +17,13 @@ afterEach(() => {
 
 describe('validateProps', () => {
   it('recognizes an unknown prop', () => {
-    validateProps({ __unknown: true })
+    const prop = '__x'
+    validateProps({ [prop]: true })
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
-        `The \`__unknown\` prop is not a valid prop. You may have spelled it 
-        incorrectly, or if it's a plugin, forgot to register it with
-        \`tippy.use()\`.
+        `The \`${prop}\` prop is not a valid prop. You may have spelled it 
+        incorrectly, or if it's a plugin, forgot to pass it in an array as a 3rd
+        argument to \`tippy()\`.
   
         In v5, the following props were turned into plugins:
   

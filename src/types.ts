@@ -94,6 +94,7 @@ export interface Instance {
   enable(): void
   hide(duration?: number): void
   id: number
+  plugins: Plugin[]
   popper: PopperElement
   popperChildren: PopperChildren
   popperInstance: PopperInstance | null
@@ -130,7 +131,9 @@ export interface Plugin {
 }
 
 export interface Tippy<TProps = Props> {
-  (targets: Targets, optionalProps?: Partial<TProps>): Instance | Instance[]
+  (targets: Targets, optionalProps?: Partial<TProps>, plugins?: Plugin[]):
+    | Instance
+    | Instance[]
   readonly currentInput: { isTouch: boolean }
   readonly defaultProps: Props
   readonly version: string

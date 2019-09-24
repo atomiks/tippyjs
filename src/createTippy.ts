@@ -3,6 +3,7 @@ import {
   ReferenceElement,
   PopperInstance,
   Props,
+  Plugin,
   Instance,
   Content,
   LifecycleHooks,
@@ -37,7 +38,6 @@ import {
   normalizeToArray,
 } from './utils'
 import { warnWhen, validateProps, createMemoryLeakWarning } from './validation'
-import { plugins } from './plugins'
 
 interface PaddingObject {
   top: number
@@ -65,6 +65,7 @@ let mouseMoveListeners: ((event: MouseEvent) => void)[] = []
 export default function createTippy(
   reference: ReferenceElement,
   collectionProps: Props,
+  plugins: Plugin[] = [],
 ): Instance | null {
   const props = evaluateProps(reference, collectionProps)
 
@@ -119,6 +120,7 @@ export default function createTippy(
     popperInstance,
     props,
     state,
+    plugins,
     // methods
     clearDelayTimeouts,
     setProps,
@@ -134,7 +136,7 @@ export default function createTippy(
   reference._tippy = instance
   popper._tippy = instance
 
-  const instancePluginsHooks = plugins.map(plugin => plugin.fn(instance))
+  const pluginsHooks = plugins.map(plugin => plugin.fn(instance))
 
   invokeHook('onCreate', [instance])
 
@@ -209,7 +211,7 @@ export default function createTippy(
     args: [Instance, (Event | Partial<Props>)?],
     shouldInvokePropsHook = true,
   ): void {
-    instancePluginsHooks.forEach(pluginHooks => {
+    pluginsHooks.forEach(pluginHooks => {
       if (hasOwnProperty(pluginHooks, hook)) {
         // @ts-ignore
         pluginHooks[hook](...args)
@@ -817,7 +819,7 @@ export default function createTippy(
     }
 
     if (__DEV__) {
-      validateProps(partialProps)
+      validateProps(partialProps, plugins)
     }
 
     removeListenersFromTriggerTarget()

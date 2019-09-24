@@ -2,7 +2,7 @@ import { h, cleanDocumentBody } from '../utils'
 
 import { defaultProps, extraProps } from '../../src/props'
 import { POPPER_SELECTOR } from '../../src/constants'
-import tippy, { hideAll } from '../../src'
+import tippy, { hideAll, createTippyWithPlugins } from '../../src'
 import { getFormattedMessage } from '../../src/validation'
 
 jest.useFakeTimers()
@@ -148,5 +148,25 @@ describe('hideAll()', () => {
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(true)
     })
+  })
+})
+
+describe('createTippyWithPlugins', () => {
+  it('returns a higher order tippy function that passes plugins', () => {
+    const plugin = { fn: () => ({}) }
+    const tippy = createTippyWithPlugins([plugin])
+    const instance = tippy(document.createElement('div'))
+
+    expect(instance.plugins).toEqual([plugin])
+  })
+
+  it('preserves statics', () => {
+    const plugin = { fn: () => ({}) }
+    const tippy = createTippyWithPlugins([plugin])
+
+    expect(tippy.version).toBeDefined()
+    expect(tippy.defaultProps).toBeDefined()
+    expect(tippy.setDefaultProps).toBeDefined()
+    expect(tippy.currentInput).toBeDefined()
   })
 })

@@ -5,20 +5,20 @@ import {
   disableTouchEnvironment,
 } from '../utils'
 
-import tippy from '../../src'
+import tippy, { createTippyWithPlugins } from '../../src'
 import followCursor, { getVirtualOffsets } from '../../src/plugins/followCursor'
 import animateFill from '../../src/plugins/animateFill'
 import { getBasePlacement } from '../../src/popper'
 
 tippy.setDefaultProps({ duration: 0, delay: 0 })
-tippy.use(followCursor)
-tippy.use(animateFill)
 
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
 
 describe('animateFill', () => {
+  const tippy = createTippyWithPlugins([animateFill])
+
   it('true: sets `data-animatefill` attribute on tooltip', () => {
     const ref = h()
     const instance = tippy(ref, { animateFill: true })
@@ -44,11 +44,14 @@ describe('animateFill', () => {
     instance.show()
     jest.runAllTimers()
 
-    expect(content.style.transitionDelay).toBe(`${120 / 12}ms`)
+    expect(content.style.transitionDelay).toBe(`${120 / 8}ms`)
   })
 
   it('false: does not set `transitionDelay` style on content element', () => {
-    const instance = tippy(h(), { animateFill: false, duration: 120 })
+    const instance = tippy(h(), {
+      animateFill: false,
+      duration: 120,
+    })
     const { content } = instance.popperChildren
 
     instance.show()
@@ -85,6 +88,8 @@ describe('animateFill', () => {
 })
 
 describe('followCursor', () => {
+  const tippy = createTippyWithPlugins([followCursor])
+
   // NOTE: Jest's simulated window dimensions are 1024 x 768. These values
   // should be within that
   const mouseenter = new MouseEvent('mouseenter', { clientX: 1, clientY: 1 })
@@ -153,7 +158,10 @@ describe('followCursor', () => {
 
   it('"horizontal": follows x-axis', () => {
     placements.forEach(placement => {
-      instance = tippy(h(), { followCursor: 'horizontal', placement })
+      instance = tippy(h(), {
+        followCursor: 'horizontal',
+        placement,
+      })
       const referenceRect = instance.reference.getBoundingClientRect()
 
       instance.reference.dispatchEvent(mouseenter)
