@@ -36,7 +36,7 @@ describe('animateFill', () => {
     instance.show()
     jest.runAllTimers()
 
-    expect(content.style.transitionDelay).toBe(`${120 / 8}ms`)
+    expect(content.style.transitionDelay).toBe(`${120 / 10}ms`)
   })
 
   it('false: does not set `transitionDelay` style on content element', () => {

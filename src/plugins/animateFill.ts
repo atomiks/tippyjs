@@ -41,7 +41,7 @@ export default {
           //
           // We don't have access to the real duration that could have been
           // potentially passed as an argument to `.show()` or `.hide()`.
-          content.style.transitionDelay = `${Math.round(duration / 8)}ms`
+          content.style.transitionDelay = `${Math.round(duration / 10)}ms`
 
           backdrop.style.transitionDuration = transitionDuration
           setDataState(backdrop, 'visible')
@@ -73,7 +73,6 @@ export default {
       },
       onHide(): void {
         if (backdrop) {
-          content.style.transitionDelay = '0ms'
           setDataState(backdrop, 'hidden')
         }
       },
