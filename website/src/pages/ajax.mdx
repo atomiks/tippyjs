@@ -132,20 +132,19 @@ current condition the tooltip is in.
 ```js
 tippy('#ajax-tippy', {
   // ...
-  onShow(instance) {
-    // We can monkey-patch the instance's state object with our own state
-    if (instance.state.ajax === undefined) {
-      instance.state.ajax = {
-        isFetching: false,
-        canFetch: true,
-      }
+  onCreate(instance) {
+    // Attach a state object to keep track of the request status
+    instance.ajaxState = {
+      isFetching: false,
+      canFetch: true,
     }
-
+  },
+  onShow(instance) {
     // Now we will avoid initiating a new request unless the old one
     // finished (`isFetching`).
     // We also only want to initiate a request if the tooltip has been
     // reset back to Loading... (`canFetch`).
-    if (instance.state.ajax.isFetching || !instance.state.ajax.canFetch) {
+    if (instance.ajaxState.isFetching || !instance.ajaxState.canFetch) {
       return
     }
 
@@ -160,12 +159,12 @@ tippy('#ajax-tippy', {
       .finally(() => {
         // Make sure to set it back to false so new requests can be
         // initiated
-        instance.state.ajax.isFetching = false
+        instance.ajaxState.isFetching = false
       })
   },
   onHidden(instance) {
     instance.setContent('Loading...')
-    instance.state.ajax.canFetch = true
+    instance.ajaxState.canFetch = true
   },
 })
 ```

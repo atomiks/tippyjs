@@ -52,9 +52,10 @@ const ListItem = styled.li`
 
   > a {
     display: block;
-    padding: 0.4rem 1.5625rem;
+    padding: 0.25rem 1.5625rem;
     padding-left: calc(1.5625rem + 4%);
     font-size: 1.0625rem;
+    border: 1px dashed transparent;
 
     ${MEDIA.lg} {
       padding-left: 1.5625rem;
@@ -64,6 +65,10 @@ const ListItem = styled.li`
       border-bottom-color: transparent;
       text-decoration: none;
       background: rgba(255, 255, 255, 0.15);
+    }
+
+    &:active {
+      border-color: white;
     }
   }
 `

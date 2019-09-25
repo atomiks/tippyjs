@@ -163,3 +163,11 @@ const titleAttribute = {
 
 Note that the plugin does not take into account dynamic titles. Be cautious of
 why you might need this in the first place.
+
+### What's the difference between an addon and a plugin?
+
+An **addon** is an external function that calls the `tippy()` constructor
+because it's controlling or creating many different tippy instances.
+
+A **plugin** is a plain object that hooks into, and adds functionality, to a
+single tippy instance that has already already created.

@@ -121,21 +121,19 @@ Flex.defaultProps = {
 
 export const Button = styled.button`
   border: none;
-  background: linear-gradient(135deg, #00acff, #6f99fc) no-repeat;
-  color: white;
+  color: #5183f5;
+  border: 2px dashed #5183f5;
   will-change: opacity;
-  box-shadow: 0 4px 8px -1px rgba(25, 80, 137, 0.08),
-    0 8px 1.5rem -2px rgba(0, 128, 255, 0.06);
   font-size: 1.0625rem;
   font-weight: 600;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  padding: 8px 1rem;
-  border-radius: 4px;
-  margin: ${props => (props.marginless ? '0' : '0 8px 8px 0')};
-  transition: opacity 0.2s;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  margin: ${props => (props.marginless ? '0' : '0 0.5rem 0.5rem 0')};
+  transition: background 0.2s, color 0.1s;
 
   &:hover {
-    opacity: 0.8;
+    background: #5183f5;
+    color: white;
   }
 `
 
