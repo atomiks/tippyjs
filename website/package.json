@@ -17,7 +17,6 @@
     "gatsby-mdx": "^1.0.0",
     "gatsby-plugin-catch-links": "^2.1.9",
     "gatsby-plugin-google-analytics": "^2.1.16",
-    "gatsby-plugin-google-fonts": "1.0.1",
     "gatsby-plugin-manifest": "^2.2.16",
     "gatsby-plugin-mdx": "^1.0.42",
     "gatsby-plugin-offline": "^3.0.7",

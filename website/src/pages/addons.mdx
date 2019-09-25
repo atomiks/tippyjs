@@ -37,8 +37,6 @@ Pass a `targets` argument to the `delegate()` addon function (the same type the
 should act as a delegate, and a `target` prop representing a CSS selector that
 should match the child elements which should receive a tippy.
 
-##### Node
-
 ```js
 import { delegate } from 'tippy.js'
 
@@ -47,13 +45,7 @@ delegate('#parent', {
 })
 ```
 
-##### Browser
-
-```js
-tippy.delegate('#parent', {
-  target: '.child',
-})
-```
+In the CDN (IIFE) version, it's available as `tippy.delegate()`
 
 #### Return type
 
@@ -92,8 +84,6 @@ delegateInstance.destroy(false)
 This addon uses `Element.prototype.closest()`, which is not supported in older
 browsers. You will need to polyfill this method to get full support.
 
----
-
 ### Singleton
 
 A singleton is a single tippy element that takes the place of an array of
@@ -112,8 +102,6 @@ This allows two things:
 Pass an **array** of tippy instances to the `createSingleton` addon function,
 and a `delay` prop:
 
-##### Node
-
 ```js
 import tippy, { createSingleton } from 'tippy.js'
 
@@ -121,15 +109,7 @@ const tippyInstances = tippy('button')
 const singleton = createSingleton(tippyInstances, { delay: 1000 })
 ```
 
-##### Browser
-
-```js
-const tippyInstances = tippy('button')
-const singleton = tippy.createSingleton(tippyInstances, { delay: 1000 })
-```
-
-Note that the only prop `createSingleton` accepts at this time is `delay`. It
-can take the same values as `tippy()`'s `delay` prop.
+In the CDN (IIFE) version, it's available as `tippy.createSingleton()`
 
 #### Smooth transitions
 

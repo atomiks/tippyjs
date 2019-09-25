@@ -139,16 +139,26 @@ browser's default tooltip isn't displayed along with the tippy.
 You can create a plugin for this to generalize the behavior:
 
 ```js
-function titleAttribute() {
-  return {
-    onCreate(instance) {
-      instance.setContent(instance.reference.getAttribute('title'))
-      instance.reference.removeAttribute('title')
-    },
-  }
-}
+const titleAttribute = {
+  name: 'titleAttribute',
+  defaultValue: true,
+  fn() {
+    return {
+      onCreate(instance) {
+        if (!instance.props.titleAttribute) {
+          return
+        }
 
-tippy.use(titleAttribute)
+        const title = instance.reference.getAttribute('title')
+
+        if (title) {
+          instance.setContent(title)
+          instance.reference.removeAttribute('title')
+        }
+      },
+    }
+  },
+}
 ```
 
 Note that the plugin does not take into account dynamic titles. Be cautious of

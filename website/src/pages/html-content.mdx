@@ -4,93 +4,60 @@ path: /html-content/
 index: 5
 ---
 
-Tippy isn't just limited to simple text tooltips. Rich HTML content can be
-displayed within the tippy, and users can interact with content inside.
+Tippy can take a string or HTML element as its `content` prop.
 
 Note that if you want to be able to interact with the content inside the tippy,
 you'll need to set `interactive: true`.
 
 ### String
 
-A string of HTML can be used:
-
 ```js
-tippy('button', {
-  content: '<strong>Bolded content</strong>',
-})
+tippy('button', { content: '<strong>Bolded content</strong>' })
 ```
 
 ⚠️ Be aware of XSS attacks. Always ensure strings containing user input are
 escaped and sanitized properly. To avoid strings being parsed as HTML, set
 `allowHTML: false`.
 
-### Element
+#### Element.innerHTML
 
-#### `<template>` element
-
-The content within a `<template>` is "inert" and doesn't get rendered on the
-page. This makes it ideal for creating reusable pieces of content:
-
-```html
-<template id="example">
-  <strong>Bolded content</strong>
-</template>
-```
-
-```js
-const template = document.getElementById('example')
-const container = document.createElement('div')
-container.appendChild(document.importNode(template.content, true))
-
-tippy('button', {
-  content: container.innerHTML,
-})
-```
-
-⚠️ Note that IE11 does not support the `<template>` element, see the
-[polyfill](https://github.com/webcomponents/template).
-
-#### Standard div
-
-It's also possible to use a `<div>` (or any other element) instead:
+You can pass in an elements' `.innerHTML` strings.
 
 <!-- prettier-ignore -->
 ```html
-<div id="example" style="display: none;">
+<div id="template" style="display: none;">
   <strong>Bolded content</strong>
 </div>
 ```
 
 ```js
-const template = document.getElementById('example')
-tippy('button', {
-  content: template.innerHTML,
-})
+const template = document.getElementById('template')
+
+// Since we're targeting many different elements, we can pass its `innerHTML`
+// as a string
+tippy('button', { content: template.innerHTML })
 ```
 
-Content within the `<div>` gets rendered and displayed on the page, so we need
-to hide it using `display: none`.
+You may want to use the `<template>` element instead (though it needs polyfill
+for IE11). The content inside a `<template>` does not get rendered, so
+network-expensive elements like images won't load until necessary.
 
-### Keep event listeners attached
+### Element
 
-If you want to keep event listeners attached to the element, you can pass the
-element itself (`<div>` element):
+You can pass the element itself, useful for keeping event listeners attached (or
+when a framework is controlling elements inside):
 
 ```js
 const template = document.getElementById('example')
 template.style.display = 'block'
 
-tippy('button', {
-  content: template,
-})
+tippy(singleButton, { content: template })
 ```
 
-Once Tippy has appended the template to the tooltip, we need to unhide it, which
-we can do by setting its `display` property to `block`.
+> **We're passing a single element, so it can only exist in a single tippy since
+> it's not being cloned.**
 
-Tippy will move the template from the document into the tooltip. Note that this
-is a one-time operation. It can only exist in a single tippy since it's not
-being cloned.
+Tippy will move the template from the document into the tooltip.
 
 ### Template linking
 
@@ -102,15 +69,17 @@ way to link them with their associated template:
 <button data-template="two">Two</button>
 <button data-template="three">Three</button>
 
-<template id="one">
-  <strong>Content for `one`</strong>
-</template>
-<template id="two">
-  <strong>Content for `two`</strong>
-</template>
-<template id="three">
-  <strong>Content for `three`</strong>
-</template>
+<div style="display: none;">
+  <div id="one">
+    <strong>Content for `one`</strong>
+  </div>
+  <div id="two">
+    <strong>Content for `two`</strong>
+  </div>
+  <div id="three">
+    <strong>Content for `three`</strong>
+  </div>
+</div>
 ```
 
 We can make `content` a function that receives the reference element (button in
@@ -119,12 +88,7 @@ this case) and returns template content:
 ```js
 tippy('button', {
   content(reference) {
-    const id = reference.getAttribute('data-template')
-    const container = document.createElement('div')
-    const linkedTemplate = document.getElementById(id)
-    const node = document.importNode(linkedTemplate.content, true)
-    container.appendChild(node)
-    return container
+    return document.getElementById(reference.getAttribute('data-template'))
   },
 })
 ```

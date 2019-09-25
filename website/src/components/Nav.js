@@ -5,8 +5,6 @@ import { StaticQuery, graphql } from 'gatsby'
 import { sortActivePages } from '../utils'
 import X from 'react-feather/dist/icons/x'
 import ElasticScroll from './ElasticScroll'
-import TextGradient from './TextGradient'
-import { version } from '../../../package.json'
 
 const Navbar = styled.nav`
   display: ${props => (props.isMounted ? 'block' : 'none')};
@@ -15,11 +13,10 @@ const Navbar = styled.nav`
   bottom: 0;
   left: 0;
   width: 15.625rem;
-  border-right: 1px solid rgba(0, 16, 64, 0.08);
-  background-clip: padding-box;
-  padding: 0 0 1.5625rem;
-  background: #43436a;
-  color: #cbd6ff;
+  padding: 1rem 0;
+  background: linear-gradient(180deg, rgba(121, 148, 198, 0.92), #565791);
+  backdrop-filter: saturate(180%);
+  color: white;
   overflow-y: auto;
   z-index: 1;
   transform: ${props =>
@@ -40,6 +37,7 @@ const Navbar = styled.nav`
     transform: none;
     box-shadow: none;
     opacity: 1;
+    will-change: transform, opacity;
   }
 `
 
@@ -51,10 +49,6 @@ const List = styled.ul`
 
 const ListItem = styled.li`
   margin: 0;
-
-  &:not(:last-child) {
-    border-bottom: 1px dotted rgba(0, 16, 64, 0.1);
-  }
 
   > a {
     display: block;
@@ -69,7 +63,7 @@ const ListItem = styled.li`
     &:hover {
       border-bottom-color: transparent;
       text-decoration: none;
-      color: white;
+      background: rgba(255, 255, 255, 0.15);
     }
   }
 `
@@ -86,18 +80,6 @@ const XButton = styled.button`
 
   ${MEDIA.lg} {
     display: none;
-  }
-`
-
-const Version = styled.div`
-  color: #d0ffba;
-  font-weight: bold;
-  margin: 0;
-  padding: 0.9375rem 1.5625rem;
-  padding-left: calc(1.5625rem + 4%);
-
-  ${MEDIA.lg} {
-    padding-left: 1.5625rem;
   }
 `
 
@@ -164,9 +146,6 @@ class Nav extends Component {
           isMounted={isMounted}
           onBlur={this.handleBlur}
         >
-          <Version>
-            <TextGradient>v{version}</TextGradient>
-          </Version>
           <XButton aria-label="Close Menu" onClick={this.handleClose}>
             <X style={{ width: 36, height: 36 }} />
           </XButton>

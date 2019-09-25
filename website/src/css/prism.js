@@ -30,7 +30,7 @@ export default createGlobalStyle`
     margin-top: 0;
     margin-left: -5.55%;
     margin-right: -5.55%;
-    background: radial-gradient(50% 80% at 80% 0%, rgb(56, 50, 87), rgb(33, 33, 57));
+    background: radial-gradient(50% 80% at 80% 0%,rgb(61, 59, 98),rgb(40, 40, 75));
     font-size: 1rem;
     line-height: 1.5;
     overflow: auto;
@@ -56,10 +56,12 @@ export default createGlobalStyle`
   }
 
   code.language-text {
-    background: #eeeefa;
-    color: inherit;
+    color: #333;
+    background: white;
+    border: 1px solid;
+    border-bottom-width: 2px;
     font-weight: bold;
-    padding: 0.2em 0.4em;
+    padding: 0.15em 0.4em;
     border-radius: 0.25em;
     line-height: inherit;
     font-size: 90%;
@@ -70,7 +72,6 @@ export default createGlobalStyle`
   .token.keyword,
   .token.attribute {
     color: #d0aeff;
-    text-shadow: 0 0 2px #000, 0 0 35px #bf4fffdd;
   }
 
   .token.comment,
@@ -99,7 +100,7 @@ export default createGlobalStyle`
   }
 
   .token.block {
-    color: #a5cbff;
+    color: #afcffa;
   }
   
   .token.tag .token.punctuation,
@@ -108,7 +109,6 @@ export default createGlobalStyle`
   .token.module,
   .token.control {
     color: #93e2ff;
-    text-shadow: 0 0 2px #000, 0 0 14px #46e3ff;
   }
 
   .token.nil {
@@ -117,6 +117,7 @@ export default createGlobalStyle`
 
   .token.arrow {
     color: #c49dff;
+    text-shadow: none;
   }
 
   .token.parameter {
@@ -171,13 +172,15 @@ export default createGlobalStyle`
   }
 
   .token.function,
-  .token.property {
-    color: #82AAFF;
+  .language-css .token.property {
+    color: #9bb5ff;
+    text-shadow: 0 0 10px #2f36ff, 0 0 22px #9d91ff;
   }
 
   .token.method,
   .language-css .token.function {
-    color: #39c5ff;
+    color: #67d2ff;
+    text-shadow: 0 0px 10px #39c5ff, 0 0px 2px black;
   }
 
   .token.variable {
@@ -188,8 +191,7 @@ export default createGlobalStyle`
   .token.class-name,
   .token.console,
   .token.object {
-    color: #ffe0a9;
-    text-shadow: 0 0 2px #000, 0 0 25px #eee9e3, 0 0 6px #ff7d1d;
+    color: #ffd181;
   }
 
   .token.property.definition {

@@ -10,11 +10,14 @@ import TriggerTarget from '../components/examples/TriggerTarget'
 
 ### Inline element positioning
 
-Popper.js does not support smart inline element positioning. You can view
-[one technique here](https://codepen.io/atomiks/pen/GeBoyW?editors=0010), but
-it's not completely bug-free yet. Alternative solutions are welcome.
+Popper.js does not support smart inline element positioning. Here are a couple
+of WIP solutions to view (they are not bug-free so use at your own risk!):
 
----
+- [Split lines](https://codepen.io/atomiks/pen/GeBoyW)
+- [Four placements](https://codepen.io/atomiks/pen/jjqbjy)
+
+Experimental work is being done to make this a plugin in the future without
+bugs.
 
 ### Custom position
 
@@ -42,8 +45,6 @@ A positioning element should not be appended to the DOM, so that its
 `clientWidth` and `clientHeight` values are 0. If they are not 0, unexpected
 positioning will occur.
 
----
-
 ### Scrollable containers
 
 While scrolling the container, the reference element can leave the boundary
@@ -66,8 +67,6 @@ Other cases:
 - Consider the prop `flipOnUpdate: true` if you want the tippy to flip to best
   fit in view while the container is being scrolled.
 
----
-
 ### Different trigger target
 
 You may want the tippy to appear at a different location from its trigger (event
@@ -87,8 +86,6 @@ tippy(innerOrangeSpanElement, {
   triggerTarget: outerDivElement,
 })
 ```
-
----
 
 ### Touch devices
 
@@ -179,8 +176,6 @@ tippy(button, {
   touch: ['hold', 500], // 500ms delay
 })
 ```
-
----
 
 ### `onMouseRest` implementation
 

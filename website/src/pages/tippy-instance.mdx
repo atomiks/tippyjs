@@ -35,28 +35,14 @@ const instances = tippy('button') // type Instance[] (array)
 #### `_tippy` property
 
 If you need to access the instance later, this property can be useful if you
-didn't assign the instance(s) to a variable.
-
-Both the reference element and the popper element have the instance attached as
-the `_tippy` property.
-
-##### Reference element:
+didn't assign the instance(s) to a variable. Both the reference element and the
+popper element have the instance attached as the `_tippy` property.
 
 ```js
 const button = document.querySelector('button')
 tippy(button)
 const instance = button._tippy
 ```
-
-##### Popper element (parent of tooltip):
-
-```js
-const popper = document.querySelector('.tippy-popper')
-const instance = popper._tippy
-```
-
-This is especially useful when listening to events on the tooltip and you need
-to find which reference element it's associated with.
 
 ### Shape and properties
 

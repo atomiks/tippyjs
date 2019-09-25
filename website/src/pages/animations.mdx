@@ -87,17 +87,15 @@ You can customize this prop in your CSS:
 
 ### Material filling effect
 
-Import `backdrop.css` and the `shift-away.css` animation stylesheet, and use the
-`animateFill` and `animation` props:
+Import the `animateFill` plugin, plus `dist/backdrop.css` &
+`animations/shift-away.css` stylesheets.
 
 ```js
+import tippy, { animateFill } from 'tippy.js'
 import 'tippy.js/dist/backdrop.css'
 import 'tippy.js/animations/shift-away.css'
 
-tippy(reference, {
-  animateFill: true,
-  animation: 'shift-away',
-})
+tippy(reference, { animateFill: true }, [animateFill])
 ```
 
 ### CSS animations

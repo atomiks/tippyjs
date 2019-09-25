@@ -8,11 +8,17 @@ import React, {
   Children,
 } from 'react'
 import { createPortal } from 'react-dom'
-import tippy, { createSingleton, delegate, followCursor } from '../../../'
+import {
+  createTippyWithPlugins,
+  createSingleton,
+  delegate,
+  followCursor,
+  animateFill,
+} from '../../../'
 import { useInstance } from '../hooks'
 import '../../../dist/tippy.css'
 
-tippy.use(followCursor)
+const tippy = createTippyWithPlugins([followCursor, animateFill])
 
 const isBrowser =
   typeof window !== 'undefined' && typeof document !== 'undefined'

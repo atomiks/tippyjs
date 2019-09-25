@@ -11,20 +11,16 @@ import Nesting from '../components/examples/Nesting'
 import Multiple from '../components/examples/Multiple'
 
 Tippy.js is a highly customizable tooltip and popover library powered by
-Popper.js. You can use Tippy.js to create simple static text tooltips, or
-complex interactive HTML popovers that utilize AJAX.
+[Popper.js](https://popper.js.org).
 
-Its purpose is to provide a complete set of features when dealing with a range
-of different "popper" elements such as tooltips, popovers, dropdowns, and more,
-while handling the basic structure and customization of these elements for you.
-The API is designed to be simple and easy to use with sensible defaults while
-also giving you full control where needed.
-
-It's compatible with IE11+, about 99% of desktop users and 97% of mobile users.
-Tippy.js also works very well on touch devices, and handles edge cases related
-to hybrid devices and iOS that you may have encountered in other libraries.
-
----
+- <Emoji emoji="🍀" /> <strong>Versatile:</strong> Create anything from static text tooltips to complex interactive HTML popovers
+- <Emoji emoji="⚡" /> <strong>Fast:</strong> Optimized positioning engine for flipping and overflow
+prevention
+- <Emoji emoji="🖱️" /> <strong>Universal:</strong> Compatible with mouse, keyboard, and touch inputs
+- <Emoji emoji="♿" /> <strong>Accessible:</strong> Focus and ARIA attributes taken care of by default
+- <Emoji emoji="🖌" /> <strong>Themeable:</strong> Style via custom CSS, includes extra themes and animations
+- <Emoji emoji="🌳" /> <strong>Tree shakeable:</strong> Code is split into separate pieces via addons and plugins
+- <Emoji emoji="🌐" /> <strong>Supports IE11+:</strong> About 99% of desktop users and 97% of mobile users
 
 ### Exploring Tippy's features
 
@@ -59,8 +55,6 @@ tippy('#myButton', {
 By default, a tippy is triggered by either `mouseenter` or `focus` events so
 they appear when hovered, focused via keyboard navigation, or tapped when using
 a touch device.
-
----
 
 ### Placement
 
@@ -106,8 +100,6 @@ If a tippy cannot fit within its desired placement, it will flip to the opposite
 placement if there is not enough space. In the above examples, flipping has been
 disabled to demonstrate each placement properly.
 
----
-
 ### Arrows
 
 Tooltips can have an arrow that points toward the reference element. The size
@@ -145,8 +137,6 @@ tippy('#myButton', {
   arrow: String | SVGElement,
 })
 ```
-
----
 
 ### Animations
 
@@ -248,8 +238,6 @@ for example using the `animate.css` package:
 
 Animation libraries like `animejs` can also be integrated.
 
----
-
 ### Themes
 
 Tooltips can have custom styling.
@@ -284,8 +272,6 @@ You can apply any CSS to a tippy via a theme.
   ))}
 </Demo>
 
----
-
 ### Triggers
 
 Tooltips can also be triggered by `click` or `focus` events.
@@ -305,8 +291,6 @@ tippy('#myButton', {
 })
 ```
 
----
-
 ### Interactivity
 
 Tooltips can be interactive, allowing you to hover over and click inside them.
@@ -323,8 +307,6 @@ tippy('#myButton', {
   interactive: true,
 })
 ```
-
----
 
 ### HTML Content
 
@@ -348,8 +330,6 @@ tippy('#myButton', {
   content: '<strong>Bolded <span style="color: aqua;">content</span></strong>',
 })
 ```
-
----
 
 ### Duration
 
@@ -376,8 +356,6 @@ tippy('#myButton', {
 })
 ```
 
----
-
 ### Delay
 
 Tooltips can delay hiding or showing after a trigger.
@@ -402,8 +380,6 @@ tippy('#myButton', {
   delay: [500, 0],
 })
 ```
-
----
 
 ### Follow Cursor
 
@@ -455,8 +431,6 @@ tippy('#myButton', {
 })
 ```
 
----
-
 ### SVGs
 
 Tooltips can be placed on SVG nodes, where `followCursor: 'initial'` becomes
@@ -480,8 +454,6 @@ tippy('line', {
   delay: 200,
 })
 ```
-
----
 
 ### Singleton
 
@@ -525,8 +497,6 @@ for (let i = 0; i < buttons.length; i++) {
 createSingleton(instances, { delay: [300, 600] })
 ```
 
----
-
 ### Nesting
 
 Tippys can be nested within other ones.
@@ -558,8 +528,6 @@ tippy('#myButton', {
 
 // Note: Some extra logic is required to handle some other edge cases
 ```
-
----
 
 ### Multiple
 

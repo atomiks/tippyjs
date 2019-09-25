@@ -81,8 +81,8 @@ Col.defaultProps = {
 export const Link = styled(GatsbyLink).attrs(props => ({
   activeStyle: {
     fontWeight: '600',
-    background: 'linear-gradient(90deg, #676c95, #4b4f74)',
-    color: 'white',
+    background: 'white',
+    color: '#7761d1',
   },
 }))`
   color: inherit;
@@ -107,6 +107,7 @@ export const Flex = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: ${props => props.justify};
+  align-items: ${props => props.align};
 
   > div {
     margin-right: 0.9375rem;
@@ -126,7 +127,7 @@ export const Button = styled.button`
   box-shadow: 0 4px 8px -1px rgba(25, 80, 137, 0.08),
     0 8px 1.5rem -2px rgba(0, 128, 255, 0.06);
   font-size: 1.0625rem;
-  font-weight: 500;
+  font-weight: 600;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   padding: 8px 1rem;
   border-radius: 4px;

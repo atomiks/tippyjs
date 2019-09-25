@@ -24,41 +24,46 @@ Tippy.js distinguishes them in the following way:
 
 Both of these are called a "tippy" when using Tippy.js!
 
-### Why Tippy.js?
+### Tippy.js
 
-Tippy's goal is to be as powerful as possible in the smallest possible size
-using the simplest possible API. It wants to give the user the most control
-while making them do as little as possible and incurring small cost in terms of
-download size.
+**Size: 5.5 KB (core)** (including Popper: 12.8 KB)
 
-The most basic tooltip is achieved via an attribute without needing to touch
-JavaScript. Once you start needing more advanced use cases, Tippy gives you full
-power.
+> (core) means the core JS & CSS. If importing more themes, animations, plugins,
+> or addons, the size will increase.
 
-How does Tippy compare to other solutions? For example:
+Tippy is an abstraction over Popper and provides a set of features and defaults
+that make creating tooltip and popover elements easy.
 
-- `popper.js`
-- `tooltip.js`
-- `tooltipster`
-- `microtip`
-- `balloon.css`
-
-Tippy.js, including the CSS and Popper.js dependency, is about **14 kB in
-size**.
+But, how does Tippy compare to other solutions?
 
 ### Comparison with Popper.js
 
-**Size: 7 kB**
+**Size: 7.3 KB**
 
 Popper.js is a positioning engine, not a tooltip library. Popper's only goal is
-to position one element (the tooltip) near another element (the reference). For
-people who want full control over their tooltips' appearance and behavior, this
-is a fantastic library. If you want "out of the box" behavior, then using Tippy
-might be better.
+to position an absolutely positioned element (the tooltip) near another element
+(the reference).
 
-Since Popper is a dependency of Tippy, you can use them together without
-incurring additional cost. If your bundler supports ES modules and the
-`"module"` field (both Parcel and Webpack support this):
+Since the element is absolutely positioned, naively centering it above the
+reference element can cause it to:
+
+- **Overflow the boundary** (viewport, window, scrollParent) and therefore get
+  cut off
+- **Overlap its reference element (due to overflow prevention)**, so it should
+  flip to the opposite side
+- **Detach from the reference element** if inside a scrolling container
+
+Popper solves all of these problems. The expected logic to do this is very
+complex, so this is effectively a "baseline" library if you want to even use
+popper elements (tooltips, popovers, dropdowns) in your app in the first place
+without them having poor UX.
+
+For people who want to build the appearance and behavior of their popper
+elements from scratch, this is a fantastic library. If you want "out of the box"
+(abstracted) behavior, then using Tippy might be better.
+
+Tippy takes advantage of Popper as a dependency, so you can use them together
+without incurring additional cost:
 
 ```js
 import Popper from 'popper.js'
@@ -69,29 +74,28 @@ If you're using the CDN, the `Popper` constructor will already be available.
 
 ### Comparison with Tooltip.js
 
-**Size: 8.5 kB**
+**Size: 2.3 KB** (including Popper: 9.6 KB)
 
 Tooltip.js is a small tooltip library built on top of Popper, much like Tippy
 is.
 
-Unlike Tippy, however, it:
+Unlike Tippy, however, it lacks certain features to be 3 KB smaller:
 
 - Does not come with styling or animations
-- Has no lifecycle functions for AJAX requests
-- Has no `followCursor` prop
+- Is less accessible out of the box
+- Has no lifecycle hooks for AJAX or plugin extensibility
 - Is more complex to set up, particularly using HTML
 - Interactivity is not possible with a hover event
-- Is less accessible out of the box
-- Cannot update any prop after the instance was created
+- Does not handle touch input adequately
 
 ### Comparison with Tooltipster
 
-**Size: 40 kB**
+**Size: 10 KB** (including jQuery: 40 KB)
 
 Tooltipster is a fantastic library with very similar functionality, but requires
 a jQuery dependency, unlike Tippy. To many people these days, this is a
-dealbreaker! jQuery's minzipped size is about 30 kB, and Tooltipster including
-CSS is about 10 kB. To people using frameworks like React, Vue, or Angular, it
+dealbreaker! jQuery's minzipped size is about 30 KB, and Tooltipster including
+CSS is about 10 KB. To people using frameworks like React, Vue, or Angular, it
 can be hard to deal with such a large dependency.
 
 Tooltipster is also receiving less frequent updates than Tippy, its last version
@@ -99,27 +103,16 @@ was released over a year ago (as of Feb 2019).
 
 ### Comparison with Microtip and Balloon.css
 
-**Size: 1 kB**
+**Size: 1 KB**
 
 Both of these are pure CSS tooltip libraries. CSS tooltips can be tiny in size,
 but come with many drawbacks:
 
-- Lack of positioning engine makes flipping impossible (to best fit within
-  viewport)
-- Will overflow in certain situations, particularly when close to the window
-  edge
-- No lifecycle functions / API to initiate effects, such as AJAX
-- No `followCursor` prop
+- Lack of positioning engine means overflow prevention & flipping are not
+  possible
 - No interactivity
 - No dynamic arrow positioning
 - Using HTML content within them (e.g. popovers) is cumbersome or not possible
 
 If you don't need the above, then a CSS tooltip library might better fit your
 needs.
-
-### Why does Tippy come with Popper.js as a dependency?
-
-Positioning "poppers" (elements that exist outside of the normal flow of the
-document), is quite complex, particularly when dealing with overflow and
-viewport awareness. Popper.js is actively maintained and very good at what it
-does, so there's no need to re-invent the wheel.

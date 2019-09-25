@@ -14,15 +14,15 @@ export default createGlobalStyle`
   }
 
   body {
-    font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+    font-family: 'X', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
     margin: 0;
     color: #515168;
     height: 100%;
-    font-size: 1rem;
+    font-size: 1.075rem;
     -webkit-tap-highlight-color: transparent;
 
     ${MEDIA.md} {
-      font-size: 1.0625rem;
+      font-size: 1.125rem;
     }
   }
 
@@ -42,7 +42,7 @@ export default createGlobalStyle`
   }
   
   a {
-    color: #0065d5;
+    color: #5183f5;
     text-decoration: none;
 
     &:hover {
@@ -72,10 +72,10 @@ export default createGlobalStyle`
   }
 
   h2 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     display: inline-block;
     color: inherit;
-    text-shadow: -2px 2px 0px #ffffff, -4px 4px 0px #ffffff;
+    text-shadow: -2px 2px 0px #ffffff, -4px 3px 0px #ffffff;
     color: #7761d1;
     padding: 10px 0;
     transition: color 0.3s;
@@ -105,17 +105,18 @@ export default createGlobalStyle`
     }
 
     ${MEDIA.md} {
-      font-size: 2.75rem;
+      font-size: 3rem;
     }
   }
 
   h3 {
-    font-size: 1.728rem;
-    margin-top: 3rem;
+    font-size: 2rem;
+    margin-top: 4rem;
+    margin-bottom: 1.5rem;
     padding-right: 30px;
 
     ${MEDIA.md} {
-      font-size: 2.074rem;
+      font-size: 2.25rem;
     }
   }
 
@@ -134,33 +135,6 @@ export default createGlobalStyle`
     margin-top: 2rem;
     color: #666c80;
     font-weight: 500;
-  }
-
-  .link-icon {
-    display: inline-block;
-    position: absolute;
-    padding: 10px 0;
-    opacity: 0;
-    transition: opacity 0.2s;
-    width: 30px;
-    top: -10px;
-    right: 0;
-    color: #5b36df;
-
-    &:hover,
-    &:focus {
-      opacity: 1;
-      text-decoration: none;
-    }
-
-    ${MEDIA.md} {
-      right: initial;
-      left: -30px;
-
-      &:focus {
-        width: 1.25rem;
-      }
-    }
   }
 
   p, 
@@ -198,18 +172,14 @@ export default createGlobalStyle`
 
   td:first-child code {
     background: none;
-    font-size: 1rem;
+    border: none;
+    font-size: 1.125rem;
     color: #333;
     padding: 0;
   }
 
   th:last-child, td:last-child {
     padding-left: 1.5625rem;
-  }
-
-  td:first-child,
-  td:nth-child(3) {
-    padding-right: 0;
   }
 
   table th, table td {
@@ -226,9 +196,14 @@ export default createGlobalStyle`
     z-index: 1;
     font-size: 0.875rem;
     text-transform: uppercase;
-    background: #eeeefa;
+    background: rgb(238, 238, 250);
     position: sticky;
     top: 0;
+
+    @supports (backdrop-filter: none) or (-webkit-backdrop-filter: none) {
+      backdrop-filter: saturate(180%) blur(5px);
+      background: rgb(238, 238, 250, 0.4);
+    }
   }
 
   @media (max-width: 1150px) {
@@ -287,11 +262,6 @@ export default createGlobalStyle`
 
   .plugin-prop {
     background: linear-gradient(45deg, #e1f8ff, rgba(171, 255, 107, 0.3));
-
-    code.language-text {
-      background: white;
-      border: 1px solid black;
-    }
   }
 
   [data-reach-skip-link] {
