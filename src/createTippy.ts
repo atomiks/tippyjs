@@ -849,8 +849,13 @@ export default function createTippy(
 
     addListenersToTriggerTarget()
 
-    cleanupInteractiveMouseListeners()
-    debouncedOnMouseMove = debounce(onMouseMove, nextProps.interactiveDebounce)
+    if (hasOwnProperty(partialProps, 'interactiveDebounce')) {
+      cleanupInteractiveMouseListeners()
+      debouncedOnMouseMove = debounce(
+        onMouseMove,
+        nextProps.interactiveDebounce,
+      )
+    }
 
     updatePopperElement(popper, prevProps, nextProps)
     instance.popperChildren = getChildren(popper)
