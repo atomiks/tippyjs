@@ -11,7 +11,11 @@ import {
 import { isIE } from './browser'
 import { PASSIVE, PREVENT_OVERFLOW_PADDING } from './constants'
 import { currentInput } from './bindGlobalEventListeners'
-import { defaultProps, POPPER_INSTANCE_DEPENDENCIES } from './props'
+import {
+  defaultProps,
+  POPPER_INSTANCE_DEPENDENCIES,
+  getExtendedProps,
+} from './props'
 import {
   createPopperElement,
   updatePopperElement,
@@ -67,7 +71,10 @@ export default function createTippy(
   collectionProps: Props,
   plugins: Plugin[] = [],
 ): Instance | null {
-  const props = evaluateProps(reference, collectionProps)
+  const props = getExtendedProps(
+    evaluateProps(reference, collectionProps),
+    plugins,
+  )
 
   // If the reference shouldn't have multiple tippys, return null early
   if (!props.multiple && reference._tippy) {

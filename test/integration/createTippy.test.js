@@ -12,6 +12,7 @@ import tippy from '../../src'
 import { defaultProps } from '../../src/props'
 import createTippy from '../../src/createTippy'
 import { POPPER_SELECTOR } from '../../src/constants'
+import animateFill from '../../src/plugins/animateFill'
 
 jest.useFakeTimers()
 tippy.setDefaultProps({ duration: 0, delay: 0 })
@@ -88,6 +89,12 @@ describe('createTippy', () => {
 
     instance.reference.dispatchEvent(CLICK)
     expect(instance.state.isVisible).toBe(false)
+  })
+
+  it('extends `instance.props` with plugin props', () => {
+    instance = createTippy(h(), defaultProps, [animateFill])
+
+    expect(instance.props.animateFill).toBe(animateFill.defaultValue)
   })
 })
 

@@ -1,6 +1,6 @@
 import { Props, Targets, Plugin } from './types'
 import { hasOwnProperty, includes } from './utils'
-import { defaultProps } from './props'
+import { defaultProps, getExtendedProps } from './props'
 
 export function createMemoryLeakWarning(method: string): string {
   const txt = method === 'destroy' ? 'n already-' : ' '
@@ -71,24 +71,13 @@ export function validateProps(
   partialProps: Partial<Props> = {},
   plugins: Plugin[] = [],
 ): void {
-  const extendedDefaultProps = {
-    ...defaultProps,
-    ...plugins.reduce<{ [key: string]: any }>((acc, plugin) => {
-      if (plugin.name) {
-        acc[plugin.name] = plugin.defaultValue
-      }
-
-      return acc
-    }, {}),
-  }
-
   Object.keys(partialProps).forEach((prop): void => {
     const value = partialProps[prop]
 
     const didSpecifyPlacementInPopperOptions =
       prop === 'popperOptions' && value && hasOwnProperty(value, 'placement')
     const didPassUnknownProp =
-      !hasOwnProperty(extendedDefaultProps, prop) &&
+      !hasOwnProperty(getExtendedProps(defaultProps, plugins), prop) &&
       !includes(
         [
           'a11y',

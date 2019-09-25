@@ -1,4 +1,4 @@
-import { Props } from './types'
+import { Props, Plugin } from './types'
 
 export const defaultProps: Props = {
   allowHTML: true,
@@ -61,3 +61,19 @@ export const POPPER_INSTANCE_DEPENDENCIES: Array<keyof Props> = [
   'placement',
   'popperOptions',
 ]
+
+export function getExtendedProps(props: Props, plugins: Plugin[]): Props {
+  return {
+    ...props,
+    ...plugins.reduce<{ [key: string]: any }>((acc, plugin) => {
+      if (plugin.name) {
+        acc[plugin.name] =
+          props[plugin.name] !== undefined
+            ? props[plugin.name]
+            : plugin.defaultValue
+      }
+
+      return acc
+    }, {}),
+  }
+}
