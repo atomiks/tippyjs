@@ -161,7 +161,6 @@ declare const delegate: Delegate
 declare const createSingleton: CreateSingleton
 
 export interface AnimateFillInstance extends Instance {
-  props: Props & AnimateFillProps
   popperChildren: PopperChildren & {
     backdrop: HTMLDivElement | null
   }
@@ -173,28 +172,35 @@ export interface AnimateFill {
   fn(instance: AnimateFillInstance): Partial<LifecycleHooks>
 }
 
-export interface FollowCursorInstance extends Instance {
-  props: Props & FollowCursorProps
-}
-
 export interface FollowCursor {
   name: 'followCursor'
   defaultValue: false
-  fn(instance: FollowCursorInstance): Partial<LifecycleHooks>
+  fn(instance: Instance): Partial<LifecycleHooks>
 }
 
-export interface StickyInstance extends Instance {
-  props: Props & StickyProps
+export interface InlinePositioning {
+  name: 'inlinePositioning'
+  defaultValue: true
+  fn(instance: Instance): Partial<LifecycleHooks>
 }
 
 export interface Sticky {
   name: 'sticky'
   defaultValue: false
-  fn(instance: StickyInstance): Partial<LifecycleHooks>
+  fn(instance: Instance): Partial<LifecycleHooks>
 }
 
 declare const animateFill: AnimateFill
 declare const followCursor: FollowCursor
+declare const inlinePositioning: InlinePositioning
 declare const sticky: Sticky
 
-export { hideAll, delegate, createSingleton, animateFill, followCursor, sticky }
+export {
+  hideAll,
+  delegate,
+  createSingleton,
+  animateFill,
+  followCursor,
+  inlinePositioning,
+  sticky,
+}

@@ -1,9 +1,9 @@
-import { LifecycleHooks, StickyInstance } from '../types'
+import { LifecycleHooks, Instance } from '../types'
 
 export default {
   name: 'sticky',
   defaultValue: false,
-  fn(instance: StickyInstance): Partial<LifecycleHooks> {
+  fn(instance: Instance): Partial<LifecycleHooks> {
     const { reference, popper } = instance
 
     function shouldCheck(value: 'reference' | 'popper'): boolean {

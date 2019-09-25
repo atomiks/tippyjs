@@ -14,6 +14,7 @@ There are currently 3 plugins exported by the package:
 
 - `animateFill` <Emoji emoji="🖌️" />
 - `followCursor`
+- `inlinePositioning`
 - `sticky`
 
 <Emoji emoji="🖌️" /> Requires importing the following CSS stylesheets to work:
@@ -123,22 +124,3 @@ tippy(reference, {}, [hideOnPopperBlur])
 Plugins are invoked per-instance and the plugin function definition takes the
 instance as an argument, so you can use private variables to create internal
 state in the plugin closure. This is how the `followCursor` plugin works.
-
-### Types
-
-If using TypeScript, you can extend the `Props` interface like so:
-
-```ts
-import tippy, {
-  createTippyWithPlugins,
-  followCursor,
-  FollowCursorProps,
-} from 'tippy.js'
-
-type ExtendedProps = Props & FollowCursorProps
-const extendedTippy = createTippyWithPlugins([followCursor]) as Tippy<
-  ExtendedProps
->
-
-export default extendedTippy
-```

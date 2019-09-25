@@ -1,9 +1,9 @@
 import {
   Props,
   PopperElement,
-  FollowCursorInstance,
   LifecycleHooks,
   Placement,
+  Instance,
 } from '../types'
 import { includes, closestCallback, useIfDefined } from '../utils'
 import { getBasePlacement } from '../popper'
@@ -12,7 +12,7 @@ import { currentInput } from '../bindGlobalEventListeners'
 export default {
   name: 'followCursor',
   defaultValue: false,
-  fn(instance: FollowCursorInstance): Partial<LifecycleHooks> {
+  fn(instance: Instance): Partial<LifecycleHooks> {
     const { reference, popper } = instance
 
     // Internal state

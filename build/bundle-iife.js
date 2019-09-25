@@ -1,21 +1,27 @@
 import css from '../dist/tippy.css'
-import tippy, { hideAll } from '../src'
 import { injectCSS } from '../src/css'
 import { isBrowser } from '../src/browser'
+import { hideAll, createTippyWithPlugins } from '../src'
 import createSingleton from '../src/addons/createSingleton'
 import delegate from '../src/addons/delegate'
+import animateFill from '../src/plugins/animateFill'
 import followCursor from '../src/plugins/followCursor'
+import inlinePositioning from '../src/plugins/inlinePositioning'
 import sticky from '../src/plugins/sticky'
 
 if (isBrowser) {
   injectCSS(css)
 }
 
-tippy.use(followCursor)
-tippy.use(sticky)
+const extendedTippy = createTippyWithPlugins([
+  animateFill,
+  followCursor,
+  inlinePositioning,
+  sticky,
+])
 
-tippy.createSingleton = createSingleton
-tippy.delegate = delegate
-tippy.hideAll = hideAll
+extendedTippy.createSingleton = createSingleton
+extendedTippy.delegate = delegate
+extendedTippy.hideAll = hideAll
 
-export default tippy
+export default extendedTippy
