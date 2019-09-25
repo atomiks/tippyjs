@@ -2,6 +2,7 @@ import {
   onDocumentMouseMove,
   onDocumentTouchStart,
 } from '../src/bindGlobalEventListeners'
+import tippy from '../src'
 
 export const IDENTIFIER = '__tippy'
 
@@ -16,6 +17,10 @@ export const TOUCHEND = new TouchEvent('touchend', { bubbles: true })
 
 export function cleanDocumentBody() {
   document.body.innerHTML = ''
+}
+
+export function setTestDefaultProps() {
+  tippy.setDefaultProps({ duration: 0, delay: 0 })
 }
 
 export function h(nodeName = 'button', attributes = {}) {

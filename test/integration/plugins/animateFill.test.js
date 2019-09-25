@@ -1,10 +1,9 @@
-import { h, cleanDocumentBody } from '../../utils'
+import { h, cleanDocumentBody, setTestDefaultProps } from '../../utils'
 
-import tippy, { createTippyWithPlugins } from '../../../src'
+import { createTippyWithPlugins } from '../../../src'
 import animateFill from '../../../src/plugins/animateFill'
 
-tippy.setDefaultProps({ duration: 0, delay: 0 })
-
+setTestDefaultProps()
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)

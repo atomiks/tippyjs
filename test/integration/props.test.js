@@ -12,6 +12,7 @@ import {
   MOUSEDOWN,
   CLICK,
   BLUR,
+  setTestDefaultProps,
 } from '../utils'
 
 import tippy from '../../src'
@@ -19,7 +20,7 @@ import { getChildren } from '../../src/popper'
 import { ARROW_SELECTOR, SVG_ARROW_SELECTOR } from '../../src/constants'
 import { getFormattedMessage } from '../../src/validation'
 
-tippy.setDefaultProps({ duration: 0, delay: 0 })
+setTestDefaultProps()
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)

@@ -3,16 +3,16 @@ import {
   cleanDocumentBody,
   enableTouchEnvironment,
   disableTouchEnvironment,
+  setTestDefaultProps,
 } from '../../utils'
 
-import tippy, { createTippyWithPlugins } from '../../../src'
+import { createTippyWithPlugins } from '../../../src'
 import followCursor, {
   getVirtualOffsets,
 } from '../../../src/plugins/followCursor'
 import { getBasePlacement } from '../../../src/popper'
 
-tippy.setDefaultProps({ duration: 0, delay: 0 })
-
+setTestDefaultProps()
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)

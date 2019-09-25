@@ -100,7 +100,8 @@ export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
     targets: Targets,
     optionalProps?: Partial<Props>,
     innerPlugins: Plugin[] = [],
-  ) => tippy(targets, optionalProps, [...outerPlugins, ...innerPlugins])
+  ): Instance | Instance[] =>
+    tippy(targets, optionalProps, [...outerPlugins, ...innerPlugins])
 
   fn.version = version
   fn.defaultProps = defaultProps

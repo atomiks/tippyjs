@@ -6,16 +6,16 @@ import {
   FOCUS,
   MOUSELEAVE,
   CLICK,
+  setTestDefaultProps,
 } from '../utils'
 
-import tippy from '../../src'
 import { defaultProps } from '../../src/props'
 import createTippy from '../../src/createTippy'
 import { POPPER_SELECTOR } from '../../src/constants'
 import animateFill from '../../src/plugins/animateFill'
 
 jest.useFakeTimers()
-tippy.setDefaultProps({ duration: 0, delay: 0 })
+setTestDefaultProps()
 
 let instance
 
