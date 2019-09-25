@@ -1,10 +1,6 @@
 import { Instance, Props } from '../types'
 import tippy from '..'
-import {
-  invokeWithArgsOrReturn,
-  preserveInvocation,
-  useIfDefined,
-} from '../utils'
+import { preserveInvocation, useIfDefined } from '../utils'
 import { defaultProps } from '../props'
 import { throwErrorWhen } from '../validation'
 
@@ -106,14 +102,17 @@ export default function createSingleton(
 
       instance.setContent(tippyInstances[index].props.content)
 
-      instance.reference.getBoundingClientRect = (): DOMRect | ClientRect =>
-        target.getBoundingClientRect()
-
-      // @ts-ignore - awaiting popper.js@1.16.0 release
-      instance.reference.referenceNode =
-        instance.props.appendTo === 'parent'
-          ? target.parentNode
-          : invokeWithArgsOrReturn(instance.props.appendTo, [target])
+      // Due to two updates performed upon mount, the second update will use
+      // this object
+      instance.popperInstance!.reference = {
+        // @ts-ignore - awaiting popper.js@1.16.0 release
+        referenceNode: target,
+        clientHeight: 0,
+        clientWidth: 0,
+        getBoundingClientRect(): ClientRect {
+          return target.getBoundingClientRect()
+        },
+      }
     },
     onPropsUpdated(instance, partialProps): void {
       preserveInvocation(
