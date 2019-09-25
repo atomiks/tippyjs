@@ -8,42 +8,27 @@ import EventDelegation from '../components/examples/EventDelegation'
 import Scroller from '../components/examples/Scroller'
 import TriggerTarget from '../components/examples/TriggerTarget'
 
-### Inline element positioning
-
-Popper.js does not support smart inline element positioning. Here are a couple
-of WIP solutions to view (they are not bug-free so use at your own risk!):
-
-- [Split lines](https://codepen.io/atomiks/pen/GeBoyW)
-- [Four placements](https://codepen.io/atomiks/pen/jjqbjy)
-
-Experimental work is being done to make this a plugin in the future without
-bugs.
-
 ### Custom position
 
-You can overwrite an element's `getBoundingClientRect` method, which Popper.js
-uses to position the tippy. This can be overwritten at any time.
+Use a Popper ReferenceObject:
 
 ```js
-const positioningElement = document.createElement('div')
-positioningElement.getBoundingClientRect = () => ({
-  width: 0,
-  height: 20,
-  top: 200,
-  right: 200,
-  bottom: 220,
-  left: 200,
-})
-
-tippy(positioningElement, {
-  content: 'tooltip',
-  triggerTarget: triggerElement, // See `Different trigger target` section below
+tippy(reference, {
+  // popperInstance will be available onCreate
+  lazy: false,
+  onCreate(instance) {
+    instance.popperInstance.reference = {
+      clientWidth: 0,
+      clientHeight: 0,
+      getBoundingClientRect() {
+        return {
+          // ...
+        }
+      },
+    }
+  },
 })
 ```
-
-A positioning element should not be appended to the DOM, so that its
-`clientWidth` and `clientHeight` values are 0. If they are not 0, unexpected
-positioning will occur.
 
 ### Scrollable containers
 

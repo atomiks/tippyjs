@@ -145,14 +145,14 @@ export default function createTippy(
 
   const pluginsHooks = plugins.map(plugin => plugin.fn(instance))
 
-  invokeHook('onCreate', [instance])
-
   addListenersToTriggerTarget()
   handleAriaExpandedAttribute()
 
   if (!props.lazy) {
     createPopperInstance()
   }
+
+  invokeHook('onCreate', [instance])
 
   if (props.showOnCreate) {
     scheduleShow()
