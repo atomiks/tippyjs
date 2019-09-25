@@ -137,9 +137,7 @@ export interface Tippy<TProps = Props> {
   readonly currentInput: { isTouch: boolean }
   readonly defaultProps: Props
   readonly version: string
-  readonly plugins: Plugin[]
   setDefaultProps(partialProps: Partial<Props>): void
-  use(plugin: Plugin): void
 }
 
 declare const tippy: Tippy

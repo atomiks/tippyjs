@@ -19,6 +19,7 @@ import {
   PopperElement,
   HideAllOptions,
   Plugin,
+  Tippy,
 } from './types'
 
 /**
@@ -73,14 +74,10 @@ function tippy(
   return isRealElement(targets) ? instances[0] : instances
 }
 
-function addStatics(fn: any): void {
-  fn.version = version
-  fn.defaultProps = defaultProps
-  fn.setDefaultProps = setDefaultProps
-  fn.currentInput = currentInput
-}
-
-addStatics(tippy)
+tippy.version = version
+tippy.defaultProps = defaultProps
+tippy.setDefaultProps = setDefaultProps
+tippy.currentInput = currentInput
 
 /**
  * Mutates the defaultProps object by setting the props specified
@@ -98,13 +95,17 @@ function setDefaultProps(partialProps: Partial<Props>): void {
 /**
  * Returns a proxy wrapper function that passes the plugins
  */
-export function createTippyWithPlugins(
-  plugins: Plugin[],
-): (targets: Targets, optionalProps?: Partial<Props>) => Instance | Instance[] {
-  const fn = (targets: Targets, optionalProps?: Partial<Props>) =>
-    tippy(targets, optionalProps, plugins)
+export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
+  const fn = (
+    targets: Targets,
+    optionalProps?: Partial<Props>,
+    innerPlugins: Plugin[] = [],
+  ) => tippy(targets, optionalProps, [...outerPlugins, ...innerPlugins])
 
-  addStatics(fn)
+  fn.version = version
+  fn.defaultProps = defaultProps
+  fn.setDefaultProps = setDefaultProps
+  fn.currentInput = currentInput
 
   return fn
 }

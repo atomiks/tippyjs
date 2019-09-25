@@ -2,6 +2,7 @@ import { Targets, Instance, Props } from '../types'
 import tippy from '..'
 import { throwErrorWhen } from '../validation'
 import { removeProperties, splitBySpaces } from '../utils'
+import { defaultProps } from '../props'
 
 interface ListenerObj {
   element: Element
@@ -31,7 +32,7 @@ export default function delegate(
 
   const { target } = props
   const nativeProps = removeProperties(props, ['target'])
-  const trigger = props.trigger || tippy.defaultProps.trigger
+  const trigger = props.trigger || defaultProps.trigger
 
   const returnValue = tippy(targets, { ...nativeProps, trigger: 'manual' })
 
