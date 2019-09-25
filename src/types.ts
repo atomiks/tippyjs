@@ -83,6 +83,10 @@ export interface FollowCursorProps {
   followCursor: boolean | 'horizontal' | 'vertical' | 'initial'
 }
 
+export interface InlinePositioningProps {
+  inlinePositioning: boolean
+}
+
 export interface StickyProps {
   sticky: boolean | 'reference' | 'popper'
 }
