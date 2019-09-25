@@ -149,13 +149,10 @@ describe('validateTargets', () => {
       validateTargets({})
     }).toThrow(
       clean(
-        `tippy() was passed a plain object which is no longer supported as a method
-      of virtual positioning. Instead, pass a placeholder element like:
-      
-      tippy(document.createElement("div"))
-      
-      You can override its getBoundingClientRect() method, just like a regular
-      plain object.`,
+        `tippy() was passed a plain object which is no longer supported as an
+        argument.
+        
+        See https://atomiks.github.io/tippyjs/misc#custom-position`,
       ),
     )
   })
