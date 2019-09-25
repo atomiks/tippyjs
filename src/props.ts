@@ -66,11 +66,10 @@ export function getExtendedProps(props: Props, plugins: Plugin[]): Props {
   return {
     ...props,
     ...plugins.reduce<{ [key: string]: any }>((acc, plugin) => {
-      if (plugin.name) {
-        acc[plugin.name] =
-          props[plugin.name] !== undefined
-            ? props[plugin.name]
-            : plugin.defaultValue
+      const { name, defaultValue } = plugin
+
+      if (name) {
+        acc[name] = props[name] !== undefined ? props[name] : defaultValue
       }
 
       return acc
