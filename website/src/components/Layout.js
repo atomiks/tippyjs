@@ -200,10 +200,6 @@ class Layout extends Component {
     this.setState({ isNavOpen: false })
   }
 
-  componentDidMount() {
-    console.log(this.props)
-  }
-
   render() {
     const { isNavOpen } = this.state
     const { children, pageContext } = this.props

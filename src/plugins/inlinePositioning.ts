@@ -26,22 +26,6 @@ export default {
           clientWidth: 0,
           clientHeight: 0,
           getBoundingClientRect(): ClientRect | DOMRect {
-            console.log(
-              JSON.stringify({
-                placement:
-                  instance.state.currentPlacement &&
-                  getBasePlacement(instance.state.currentPlacement),
-                clientRects: arrayFrom(reference.getClientRects()),
-                boundingRect: reference.getBoundingClientRect(),
-                result: getInlineBoundingClientRect(
-                  instance.state.currentPlacement &&
-                    getBasePlacement(instance.state.currentPlacement),
-                  reference.getBoundingClientRect(),
-                  arrayFrom(reference.getClientRects()),
-                ),
-              }),
-            )
-
             return getInlineBoundingClientRect(
               instance.state.currentPlacement &&
                 getBasePlacement(instance.state.currentPlacement),
