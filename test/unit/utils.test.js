@@ -183,7 +183,7 @@ describe('evaluateProps', () => {
 
     reference.setAttribute('data-tippy-animation', 'fade')
 
-    expect(Utils.evaluateProps(reference, props)).toEqual({
+    expect(Utils.evaluateProps(reference, props, [])).toEqual({
       animation: 'scale',
       ignoreAttributes: true,
     })
@@ -195,9 +195,21 @@ describe('evaluateProps', () => {
 
     reference.setAttribute('data-tippy-animation', 'fade')
 
-    expect(Utils.evaluateProps(reference, props)).toEqual({
+    expect(Utils.evaluateProps(reference, props, [])).toEqual({
       animation: 'fade',
       ignoreAttributes: false,
+    })
+  })
+
+  it('considers plugin props', () => {
+    const props = { plugin: 'x' }
+    const plugins = [{ name: 'plugin', fn: () => ({}) }]
+    const reference = h()
+
+    reference.setAttribute('data-tippy-plugin', 'y')
+
+    expect(Utils.evaluateProps(reference, props, plugins)).toEqual({
+      plugin: 'y',
     })
   })
 })

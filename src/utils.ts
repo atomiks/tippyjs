@@ -1,4 +1,4 @@
-import { Props, ReferenceElement, Targets } from './types'
+import { Props, ReferenceElement, Targets, Plugin } from './types'
 import { getDataAttributeProps } from './reference'
 import { POPPER_CLASS } from './constants'
 
@@ -134,11 +134,14 @@ export function setVisibilityState(
 export function evaluateProps(
   reference: ReferenceElement,
   props: Props,
+  plugins: Plugin[],
 ): Props {
   const out = {
     ...props,
     content: invokeWithArgsOrReturn(props.content, [reference]),
-    ...(props.ignoreAttributes ? {} : getDataAttributeProps(reference)),
+    ...(props.ignoreAttributes
+      ? {}
+      : getDataAttributeProps(reference, plugins)),
   }
 
   if (out.interactive) {

@@ -73,7 +73,7 @@ export default function createTippy(
   plugins: Plugin[] = [],
 ): Instance | null {
   const props = getExtendedProps(
-    evaluateProps(reference, collectionProps),
+    evaluateProps(reference, collectionProps, plugins),
     plugins,
   )
 
@@ -835,11 +835,15 @@ export default function createTippy(
     removeListenersFromTriggerTarget()
 
     const prevProps = instance.props
-    const nextProps = evaluateProps(reference, {
-      ...instance.props,
-      ...partialProps,
-      ignoreAttributes: true,
-    })
+    const nextProps = evaluateProps(
+      reference,
+      {
+        ...instance.props,
+        ...partialProps,
+        ignoreAttributes: true,
+      },
+      plugins,
+    )
 
     nextProps.ignoreAttributes = useIfDefined(
       partialProps.ignoreAttributes,
