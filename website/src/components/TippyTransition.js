@@ -128,6 +128,7 @@ function TippyTransition({ children, onChange }) {
   }
 
   function onBeforeUpdate(instance) {
+    console.log(instance)
     if (!instance.state.isVisible) {
       return
     }
@@ -177,7 +178,7 @@ function TippyTransition({ children, onChange }) {
 
   function onMount() {
     if (!component.dimensions) {
-      onBeforeUpdate()
+      onBeforeUpdate(component.instance)
     }
   }
 
