@@ -84,7 +84,11 @@ export default {
       // Popper's scroll listeners make sense for `true` only. TODO: work out
       // how to only listen horizontal scroll for "horizontal" and vertical
       // scroll for "vertical"
-      if (instance.props.followCursor !== true || getIsInitialBehavior()) {
+      if (
+        getIsEnabled() &&
+        getIsInitialBehavior() &&
+        instance.props.followCursor !== true
+      ) {
         instance.popperInstance.disableEventListeners()
       }
     }
