@@ -40,6 +40,7 @@ import {
   closestCallback,
   splitBySpaces,
   normalizeToArray,
+  useIfDefined,
 } from './utils'
 import { warnWhen, validateProps, createMemoryLeakWarning } from './validation'
 
@@ -840,18 +841,16 @@ export default function createTippy(
       ignoreAttributes: true,
     })
 
-    nextProps.ignoreAttributes = hasOwnProperty(
-      partialProps,
-      'ignoreAttributes',
+    nextProps.ignoreAttributes = useIfDefined(
+      partialProps.ignoreAttributes,
+      prevProps.ignoreAttributes,
     )
-      ? partialProps.ignoreAttributes || false
-      : prevProps.ignoreAttributes
 
     instance.props = nextProps
 
     addListenersToTriggerTarget()
 
-    if (hasOwnProperty(partialProps, 'interactiveDebounce')) {
+    if (prevProps.interactiveDebounce !== nextProps.interactiveDebounce) {
       cleanupInteractiveMouseListeners()
       debouncedOnMouseMove = debounce(
         onMouseMove,
