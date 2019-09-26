@@ -829,6 +829,8 @@ export default function createTippy(
       validateProps(partialProps, plugins)
     }
 
+    invokeHook('onBeforeUpdate', [instance, partialProps])
+
     removeListenersFromTriggerTarget()
 
     const prevProps = instance.props
@@ -891,7 +893,7 @@ export default function createTippy(
       }
     }
 
-    invokeHook('onPropsUpdated', [instance, partialProps])
+    invokeHook('onAfterUpdate', [instance, partialProps])
   }
 
   function setContent(content: Content): void {

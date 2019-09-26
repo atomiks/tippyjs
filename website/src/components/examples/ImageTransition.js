@@ -1,14 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Tippy from '../Tippy'
 import { Button } from '../Framework'
 import TippyTransition from '../TippyTransition'
-import { useInstance } from '../../hooks'
 
 function DimensionsTransition() {
   const [display, setDisplay] = useState('none')
   const [expanded, setExpanded] = useState(false)
-
-  const component = useInstance({ isFirstChange: true })
+  const imageContainerRef = useRef()
 
   function onClick() {
     setExpanded(expanded => !expanded)
@@ -16,14 +14,11 @@ function DimensionsTransition() {
   }
 
   function onChange(instance) {
-    const { content } = instance.popperChildren
-    const container = content.querySelector('.TippyTransition-image')
-
-    if (component.isFirstChange) {
-      component.isFirstChange = false
-    } else {
-      container.style.display = 'block'
+    if (!instance.state.isVisible) {
+      return
     }
+
+    imageContainerRef.current.style.display = 'block'
   }
 
   return (
@@ -34,7 +29,11 @@ function DimensionsTransition() {
             <Button onClick={onClick} style={{ margin: 10, width: 140 }}>
               {expanded ? 'Close' : 'Open'} Image
             </Button>
-            <div className="TippyTransition-image" style={{ display }}>
+            <div
+              className="TippyTransition-image"
+              style={{ display }}
+              ref={imageContainerRef}
+            >
               <img
                 style={{
                   width: 300,

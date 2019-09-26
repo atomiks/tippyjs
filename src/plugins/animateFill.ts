@@ -76,11 +76,11 @@ export default {
           setDataState(backdrop, 'hidden')
         }
       },
-      onPropsUpdated(): void {
+      onAfterUpdate(): void {
         // With this type of prop, it's highly unlikely it will be changed
         // dynamically. We'll leave out the diff/update logic it to save bytes.
 
-        // `popperChildren` is assigned a new object onPropsUpdated
+        // `popperChildren` is assigned a new object onAfterUpdate
         addBackdropToPopperChildren()
       },
     }

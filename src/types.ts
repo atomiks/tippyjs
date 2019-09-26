@@ -26,12 +26,13 @@ export interface PopperInstance extends Popper {
 }
 
 export interface LifecycleHooks {
+  onAfterUpdate(instance: Instance, partialProps: Partial<Props>): void
+  onBeforeUpdate(instance: Instance, partialProps: Partial<Props>): void
   onCreate(instance: Instance): void
   onDestroy(instance: Instance): void
   onHidden(instance: Instance): void
   onHide(instance: Instance): void | false
   onMount(instance: Instance): void
-  onPropsUpdated(instance: Instance, partialProps: Partial<Props>): void
   onShow(instance: Instance): void | false
   onShown(instance: Instance): void
   onTrigger(instance: Instance, event: Event): void

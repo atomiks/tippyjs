@@ -115,10 +115,10 @@ export default function createSingleton(
         },
       }
     },
-    onPropsUpdated(instance, partialProps): void {
+    onAfterUpdate(instance, partialProps): void {
       preserveInvocation(
-        userProps.onPropsUpdated,
-        instance.props.onPropsUpdated,
+        userProps.onAfterUpdate,
+        instance.props.onAfterUpdate,
         [instance],
       )
 

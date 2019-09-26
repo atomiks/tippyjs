@@ -156,7 +156,7 @@ export default {
     }
 
     return {
-      onPropsUpdated(_, partialProps): void {
+      onAfterUpdate(_, partialProps): void {
         if (!isInternallySettingControlledProp) {
           setUserProps(partialProps)
 

@@ -125,17 +125,17 @@ describe('createSingleton', () => {
     }).not.toThrow()
   })
 
-  it('preserves `onTrigger`, `onDestroy`, and `onPropsUpdated` calls', () => {
+  it('preserves `onTrigger`, `onDestroy`, and `onAfterUpdate` calls', () => {
     const instances = tippy([h()])
 
     const onTriggerSpy = jest.fn()
     const onDestroySpy = jest.fn()
-    const onPropsUpdatedSpy = jest.fn()
+    const onAfterUpdateSpy = jest.fn()
 
     const singleton = createSingleton(instances, {
       onTrigger: onTriggerSpy,
       onDestroy: onDestroySpy,
-      onPropsUpdated: onPropsUpdatedSpy,
+      onAfterUpdate: onAfterUpdateSpy,
     })
 
     instances[0].reference.dispatchEvent(MOUSEENTER)
@@ -144,26 +144,26 @@ describe('createSingleton', () => {
 
     singleton.setProps({})
 
-    expect(onPropsUpdatedSpy).toHaveBeenCalled()
+    expect(onAfterUpdateSpy).toHaveBeenCalled()
 
     singleton.destroy()
 
     expect(onDestroySpy).toHaveBeenCalled()
   })
 
-  it('allows updates to `onTrigger`, `onDestroy`, and `onPropsUpdated`', () => {
+  it('allows updates to `onTrigger`, `onDestroy`, and `onAfterUpdate`', () => {
     const instances = tippy([h()])
 
     const onTriggerSpy = jest.fn()
     const onDestroySpy = jest.fn()
-    const onPropsUpdatedSpy = jest.fn()
+    const onAfterUpdateSpy = jest.fn()
 
     const singleton = createSingleton(instances)
 
     singleton.setProps({
       onTrigger: onTriggerSpy,
       onDestroy: onDestroySpy,
-      onPropsUpdated: onPropsUpdatedSpy,
+      onAfterUpdate: onAfterUpdateSpy,
     })
 
     instances[0].reference.dispatchEvent(MOUSEENTER)
@@ -172,7 +172,7 @@ describe('createSingleton', () => {
 
     singleton.setProps({})
 
-    expect(onPropsUpdatedSpy).toHaveBeenCalled()
+    expect(onAfterUpdateSpy).toHaveBeenCalled()
 
     singleton.destroy()
 

@@ -116,14 +116,27 @@ tippy(reference, {
 })
 ```
 
-#### onPropsUpdated
+#### onBeforeUpdate
+
+Executed before a tippy's props are updated (via `.setContent()` or
+`.setProps()`).
+
+```js
+tippy(reference, {
+  onBeforeUpdate(instance, updatedProps) {
+    // ...
+  },
+})
+```
+
+#### onAfterUpdate
 
 Executed after a tippy's props are updated (via `.setContent()` or
 `.setProps()`).
 
 ```js
 tippy(reference, {
-  onPropsUpdated(instance, updatedProps) {
+  onAfterUpdate(instance, updatedProps) {
     // ...
   },
 })

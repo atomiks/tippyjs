@@ -47,15 +47,12 @@ function updateClassName(tooltip, action, classNames) {
   })
 }
 
-var useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect
+const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect
 
 function Tippy({
   children,
   content,
   className,
-  onBeforeUpdate,
-  onAfterUpdate,
-  onCreate,
   visible,
   enabled = true,
   multiple = true,
@@ -87,10 +84,6 @@ function Tippy({
 
     component.instance = instance
 
-    if (onCreate) {
-      onCreate(instance)
-    }
-
     if (!enabled) {
       instance.disable()
     }
@@ -114,15 +107,7 @@ function Tippy({
       return
     }
 
-    if (onBeforeUpdate) {
-      onBeforeUpdate(component.instance)
-    }
-
     component.instance.setProps(props)
-
-    if (onAfterUpdate) {
-      onAfterUpdate(component.instance)
-    }
 
     if (enabled) {
       component.instance.enable()
@@ -164,16 +149,32 @@ function Tippy({
 }
 
 function TippySingleton({ children, ...props }) {
-  const component = useInstance({ instances: [] })
+  const component = useInstance({
+    instances: [],
+    renders: 1,
+  })
 
   useIsomorphicLayoutEffect(() => {
     const { instances } = component
-    const singleton = createSingleton([...instances], props)
+    const singleton = createSingleton(instances, props)
+
+    component.singleton = singleton
 
     return () => {
       singleton.destroy()
+      singleton.clearDelayTimeouts()
+
       component.instances = instances.filter(i => !i.state.isDestroyed)
     }
+  }, [children.length])
+
+  useIsomorphicLayoutEffect(() => {
+    if (component.renders === 1) {
+      component.renders++
+      return
+    }
+
+    component.singleton.setProps(props)
   })
 
   return Children.map(children, child => {

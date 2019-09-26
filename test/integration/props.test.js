@@ -828,6 +828,40 @@ describe('onCreate', () => {
   })
 })
 
+describe('onAfterUpdate', () => {
+  it('is called before props are updated', done => {
+    const props = { content: 'bye' }
+    const instance = tippy(h(), {
+      content: 'hi',
+      onAfterUpdate(instance, updatedProps) {
+        expect(instance.props.content).toBe('bye')
+        expect(updatedProps).toBe(props)
+
+        done()
+      },
+    })
+
+    instance.setProps(props)
+  })
+})
+
+describe('onBeforeUpdate', () => {
+  it('is called before props are updated', done => {
+    const props = { content: 'bye' }
+    const instance = tippy(h(), {
+      content: 'hi',
+      onBeforeUpdate(instance, updatedProps) {
+        expect(instance.props.content).toBe('hi')
+        expect(updatedProps).toBe(props)
+
+        done()
+      },
+    })
+
+    instance.setProps(props)
+  })
+})
+
 describe('popperOptions', () => {
   it('top level', () => {
     const { popperInstance } = tippy(h(), {

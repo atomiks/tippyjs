@@ -127,15 +127,15 @@ function TippyTransition({ children, onChange }) {
     component.flipper = flipper
   }
 
-  function onBeforeUpdate() {
-    if (!component.instance.state.isVisible) {
+  function onBeforeUpdate(instance) {
+    if (!instance.state.isVisible) {
       return
     }
 
     component.wasManuallyUpdated = true
     component.flipper.recordBeforeUpdate()
 
-    const { tooltip } = component.instance.popperChildren
+    const { tooltip } = instance.popperChildren
     const prevDimensions = component.dimensions
 
     tooltip.style.width = ''
@@ -151,9 +151,9 @@ function TippyTransition({ children, onChange }) {
       tooltip.style.height = `${prevDimensions.height}px`
     }
 
-    Object.keys(component.instance.popperChildren).forEach(key => {
-      if (component.instance.popperChildren[key]) {
-        component.instance.popperChildren[key].style.transitionDuration = '0ms'
+    Object.keys(instance.popperChildren).forEach(key => {
+      if (instance.popperChildren[key]) {
+        instance.popperChildren[key].style.transitionDuration = '0ms'
       }
     })
 
@@ -164,6 +164,10 @@ function TippyTransition({ children, onChange }) {
   }
 
   function onAfterUpdate(instance) {
+    if (!instance.state.isVisible) {
+      return
+    }
+
     component.flipper.onUpdate()
 
     if (onChange) {
@@ -263,25 +267,25 @@ function TippyTransition({ children, onChange }) {
 
   return cloneElement(child, {
     popperOptions,
-    onBeforeUpdate(instance) {
-      preserveInvocation(child.props.onBeforeUpdate, [instance])
-      onBeforeUpdate(instance)
+    onBeforeUpdate(...args) {
+      preserveInvocation(child.props.onBeforeUpdate, args)
+      onBeforeUpdate(...args)
     },
-    onAfterUpdate(instance) {
-      preserveInvocation(child.props.onAfterUpdate, [instance])
-      onAfterUpdate(instance)
+    onAfterUpdate(...args) {
+      preserveInvocation(child.props.onAfterUpdate, args)
+      onAfterUpdate(...args)
     },
-    onCreate(instance) {
-      preserveInvocation(child.props.onCreate, [instance])
-      onCreate(instance)
+    onCreate(...args) {
+      preserveInvocation(child.props.onCreate, args)
+      onCreate(...args)
     },
-    onMount(instance) {
-      preserveInvocation(child.props.onMount, [instance])
-      onMount(instance)
+    onMount(...args) {
+      preserveInvocation(child.props.onMount, args)
+      onMount(...args)
     },
-    onHide(instance) {
-      const consumerResult = preserveInvocation(child.props.onHide, [instance])
-      const ourResult = onHide(instance)
+    onHide(...args) {
+      const consumerResult = preserveInvocation(child.props.onHide, args)
+      const ourResult = onHide(...args)
       return consumerResult === false || ourResult === false ? false : undefined
     },
   })
