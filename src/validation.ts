@@ -79,15 +79,7 @@ export function validateProps(
     const didPassUnknownProp =
       !hasOwnProperty(getExtendedProps(defaultProps, plugins), prop) &&
       !includes(
-        [
-          'a11y',
-          'arrowType',
-          'followCursor',
-          'showOnInit',
-          'size',
-          'target',
-          'touchHold',
-        ],
+        ['a11y', 'arrowType', 'showOnInit', 'size', 'target', 'touchHold'],
         prop,
       )
 
