@@ -58,6 +58,7 @@ export default function createSingleton(
   const references = tippyInstances.map(instance => instance.reference)
 
   const singleton = tippy(document.createElement('div'), {
+    ...optionalProps,
     aria: null,
     triggerTarget: references,
     onMount(instance) {
@@ -132,7 +133,6 @@ export default function createSingleton(
         instance.enable()
       })
     },
-    ...optionalProps,
   }) as Instance
 
   return singleton

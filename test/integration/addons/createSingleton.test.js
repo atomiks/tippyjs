@@ -1,10 +1,16 @@
-import { h, cleanDocumentBody, MOUSEENTER, MOUSELEAVE } from '../../utils'
+import {
+  h,
+  cleanDocumentBody,
+  MOUSEENTER,
+  MOUSELEAVE,
+  setTestDefaultProps,
+} from '../../utils'
 
 import createSingleton from '../../../src/addons/createSingleton'
 import tippy from '../../../src'
 import { clean } from '../../../src/validation'
 
-tippy.setDefaultProps({ duration: 0, delay: 0 })
+setTestDefaultProps()
 jest.useFakeTimers()
 
 afterEach(cleanDocumentBody)
@@ -260,5 +266,19 @@ describe('createSingleton', () => {
 
     expect(firstReference.getAttribute('aria-describedby')).toBe(null)
     expect(secondReference.getAttribute('aria-describedby')).toBe(null)
+  })
+
+  it('specifying lifecycle hook does not override internal hooks', () => {
+    const refs = [h(), h()]
+    const singletonInstance = createSingleton(tippy(refs), {
+      onTrigger() {},
+    })
+
+    refs[0].dispatchEvent(MOUSEENTER)
+    jest.runAllTimers()
+
+    expect(singletonInstance.popperInstance.reference.referenceNode).toBe(
+      refs[0],
+    )
   })
 })
