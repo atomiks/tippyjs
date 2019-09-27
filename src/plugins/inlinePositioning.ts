@@ -1,4 +1,4 @@
-import { Instance, LifecycleHooks } from '../types'
+import { Instance, LifecycleHooks, InlinePositioningProps } from '../types'
 import { arrayFrom } from '../utils'
 import { getBasePlacement } from '../popper'
 
@@ -11,7 +11,7 @@ export default {
   fn(instance: Instance): Partial<LifecycleHooks> {
     const { reference } = instance
 
-    function getIsEnabled() {
+    function getIsEnabled(): InlinePositioningProps['inlinePositioning'] {
       return instance.props.inlinePositioning
     }
 
