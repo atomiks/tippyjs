@@ -127,7 +127,6 @@ class Nav extends Component {
   }
 
   handleBlur = e => {
-    console.log(e.relatedTarget)
     if (!e.currentTarget.contains(e.relatedTarget)) {
       this.props.close()
     }

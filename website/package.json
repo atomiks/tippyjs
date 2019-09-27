@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@mdx-js/loader": "^1.4.5",
+    "eslint-config-react-app": "^5.0.2",
     "gh-pages": "^2.1.1",
     "loader-utils": "^1.2.3",
     "prettier": "^1.18.2",
