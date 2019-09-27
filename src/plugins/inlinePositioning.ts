@@ -7,16 +7,22 @@ import { getBasePlacement } from '../popper'
 // due to using event.clientX/Y values. (normalizedPlacement, getVirtualOffsets)
 export default {
   name: 'inlinePositioning',
-  defaultValue: true,
+  defaultValue: false,
   fn(instance: Instance): Partial<LifecycleHooks> {
     const { reference } = instance
 
+    function getIsEnabled() {
+      return instance.props.inlinePositioning
+    }
+
     return {
       onHidden(): void {
-        instance.popperInstance!.reference = reference
+        if (getIsEnabled()) {
+          instance.popperInstance!.reference = reference
+        }
       },
       onTrigger(): void {
-        if (!instance.props.inlinePositioning) {
+        if (!getIsEnabled()) {
           return
         }
 

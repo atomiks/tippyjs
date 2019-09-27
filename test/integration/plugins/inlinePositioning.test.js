@@ -21,6 +21,7 @@ describe('inlinePositioning', () => {
 
   it('true: sets popperInstance.reference = ReferenceObject onTrigger', () => {
     const instance = tippy(h(), {
+      inlinePositioning: true,
       onTrigger(instance) {
         expect({}.toString.call(instance.popperInstance.reference)).toBe(
           '[object Object]',
