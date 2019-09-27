@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import TippyLogo from '../images/logo.svg'
-import { MEDIA, Container, Flex, Link } from './Framework'
+import { Container, Flex, Link } from './Framework'
 import Menu from 'react-feather/dist/icons/menu'
 import theme from '../css/theme'
 import { MenuButton } from './Header'
@@ -25,7 +25,7 @@ const Logo = styled.img`
 `
 
 const MenuButtonDark = styled(MenuButton)`
-  color: #333;
+  color: #7761d1;
   margin-top: 1.125rem;
 `
 

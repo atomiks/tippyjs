@@ -72,7 +72,7 @@ export default createGlobalStyle`
   }
 
   h2 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     display: inline-block;
     color: inherit;
     text-shadow: -2px 2px 0px #ffffff, -4px 3px 0px #ffffff;
@@ -105,7 +105,7 @@ export default createGlobalStyle`
     }
 
     ${MEDIA.md} {
-      font-size: 3rem;
+      font-size: 4rem;
     }
   }
 

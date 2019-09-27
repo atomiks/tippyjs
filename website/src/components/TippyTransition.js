@@ -128,7 +128,6 @@ function TippyTransition({ children, onChange }) {
   }
 
   function onBeforeUpdate(instance) {
-    console.log(instance)
     if (!instance.state.isVisible) {
       return
     }
@@ -155,6 +154,8 @@ function TippyTransition({ children, onChange }) {
     Object.keys(instance.popperChildren).forEach(key => {
       if (instance.popperChildren[key]) {
         instance.popperChildren[key].style.transitionDuration = '0ms'
+        instance.popperChildren[key].style.transitionProperty =
+          'opacity, visibility'
       }
     })
 
@@ -176,16 +177,24 @@ function TippyTransition({ children, onChange }) {
     }
   }
 
-  function onMount() {
+  function onMount(instance) {
     if (!component.dimensions) {
-      onBeforeUpdate(component.instance)
+      onBeforeUpdate(instance)
     }
   }
 
-  function onHide() {
-    if (component.areDimensionsTransitioning) {
-      return false
+  function onHidden(instance) {
+    const { content, tooltip, arrow } = instance.popperChildren
+
+    content.style.transform = ''
+    tooltip.style.transform = ''
+    tooltip.style.top = ''
+
+    if (arrow) {
+      arrow.style.transform = ''
     }
+
+    component.wasManuallyUpdated = false
   }
 
   function popperOnCreate(data) {
@@ -284,10 +293,9 @@ function TippyTransition({ children, onChange }) {
       preserveInvocation(child.props.onMount, args)
       onMount(...args)
     },
-    onHide(...args) {
-      const consumerResult = preserveInvocation(child.props.onHide, args)
-      const ourResult = onHide(...args)
-      return consumerResult === false || ourResult === false ? false : undefined
+    onHidden(...args) {
+      preserveInvocation(child.props.onHidden, args)
+      onHidden(...args)
     },
   })
 }

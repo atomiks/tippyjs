@@ -14,10 +14,11 @@ const NavButtonsContainer = styled.div`
 
 const FlexContainer = styled(Flex)`
   flex-direction: column;
-  margin: 0 -1.5625rem;
+  margin: 0 -5%;
 
   ${MEDIA.sm} {
     flex-direction: row;
+    margin: 0 -1.5625rem;
   }
 `
 

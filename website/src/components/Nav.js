@@ -13,7 +13,6 @@ const Navbar = styled.nav`
   bottom: 0;
   left: 0;
   width: 15.625rem;
-  padding: 1rem 0;
   background: linear-gradient(180deg, rgba(121, 148, 198, 0.92), #565791);
   backdrop-filter: saturate(180%);
   color: white;
@@ -32,6 +31,7 @@ const Navbar = styled.nav`
   opacity: ${props => (props.isOpen ? 1 : 0)};
 
   ${MEDIA.lg} {
+    padding-top: 0;
     display: block;
     visibility: visible;
     transform: none;
@@ -49,6 +49,10 @@ const List = styled.ul`
 
 const ListItem = styled.li`
   margin: 0;
+
+  &:first-child {
+    padding-top: 2rem;
+  }
 
   > a {
     display: block;
@@ -75,17 +79,31 @@ const ListItem = styled.li`
 
 const XButton = styled.button`
   position: absolute;
-  right: 0.4rem;
-  top: 0.4rem;
-  background: none;
   border: none;
-  color: inherit;
   padding: 0;
-  transform: scale(0.9);
+  top: 0.5rem;
+  right: 1rem;
+  border-radius: 2rem;
+  height: 2.5rem;
+  width: 2.5rem;
+  cursor: pointer;
+  background: white;
+  color: #7761d1;
+  box-shadow: 0 0.3rem 0 rgba(0, 32, 64, 0.2);
+
+  &:active {
+    box-shadow: 0 0.1rem 0 rgba(0, 32, 64, 0.2);
+    transform: translateY(0.2rem);
+  }
 
   ${MEDIA.lg} {
     display: none;
   }
+`
+
+const XIcon = styled(X)`
+  height: 2rem;
+  width: 2rem;
 `
 
 class Nav extends Component {
@@ -109,6 +127,7 @@ class Nav extends Component {
   }
 
   handleBlur = e => {
+    console.log(e.relatedTarget)
     if (!e.currentTarget.contains(e.relatedTarget)) {
       this.props.close()
     }
@@ -152,7 +171,7 @@ class Nav extends Component {
           onBlur={this.handleBlur}
         >
           <XButton aria-label="Close Menu" onClick={this.handleClose}>
-            <X style={{ width: 36, height: 36 }} />
+            <XIcon />
           </XButton>
           <List>
             <StaticQuery

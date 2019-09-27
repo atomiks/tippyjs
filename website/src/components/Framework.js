@@ -121,6 +121,7 @@ Flex.defaultProps = {
 
 export const Button = styled.button`
   border: none;
+  background: white;
   color: #5183f5;
   border: 2px dashed #5183f5;
   will-change: opacity;

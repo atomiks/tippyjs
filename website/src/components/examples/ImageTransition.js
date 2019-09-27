@@ -42,6 +42,7 @@ function DimensionsTransition() {
                   transformOrigin: 'top',
                 }}
                 src="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+                alt="Starry mountain landscape"
               />
             </div>
           </>

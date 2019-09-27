@@ -135,13 +135,6 @@ const iconStyles = {
   marginRight: 8,
 }
 
-const headerIconStyles = {
-  ...iconStyles,
-  color: '#ffe6b3',
-  width: 20,
-  height: 20,
-}
-
 const githubStyles = {
   ...iconStyles,
   color: '#333',
