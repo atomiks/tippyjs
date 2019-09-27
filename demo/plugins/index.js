@@ -45,6 +45,7 @@ placements.forEach(placement => {
   tippy('.inlinePositioning', {
     content: 'tooltip',
     multiple: true,
+    inlinePositioning: true,
     placement,
   })
 })
