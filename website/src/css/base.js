@@ -166,7 +166,11 @@ export default createGlobalStyle`
     padding: 5px;
 
     &:not(:last-child) {
-      border-bottom: 1px dotted rgba(0,32,128,0.1);
+      border-bottom: 2px dashed rgba(0,32,128,0.1);
+    }
+
+    &:nth-child(even) {
+      background-color: rgba(0,32,128,0.04);
     }
   }
 
