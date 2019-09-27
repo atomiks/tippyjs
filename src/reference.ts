@@ -8,7 +8,7 @@ const keys = Object.keys(defaultProps)
  */
 export function getDataAttributeProps(
   reference: ReferenceElement,
-  plugins: Plugin[],
+  plugins?: Plugin[],
 ): Props {
   const props = [
     ...keys,
