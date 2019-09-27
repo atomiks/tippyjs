@@ -383,4 +383,59 @@ describe('followCursor', () => {
 
     expect(instance.popperInstance.reference).toBe(instance.reference)
   })
+
+  it('enables listeners for `true`', () => {
+    instance = tippy(h(), {
+      followCursor: true,
+    })
+
+    instance.reference.dispatchEvent(mouseenter)
+    jest.runAllTimers()
+
+    expect(instance.popperInstance.state.eventsEnabled).toBe(true)
+  })
+
+  it('enables listeners for `false`', () => {
+    instance = tippy(h(), {
+      followCursor: false,
+    })
+
+    instance.reference.dispatchEvent(mouseenter)
+    jest.runAllTimers()
+
+    expect(instance.popperInstance.state.eventsEnabled).toBe(true)
+  })
+
+  it('disables listeners for "initial"', () => {
+    instance = tippy(h(), {
+      followCursor: 'initial',
+    })
+
+    instance.reference.dispatchEvent(mouseenter)
+    jest.runAllTimers()
+
+    expect(instance.popperInstance.state.eventsEnabled).toBe(false)
+  })
+
+  it('disables listeners for "horizontal"', () => {
+    instance = tippy(h(), {
+      followCursor: 'horizontal',
+    })
+
+    instance.reference.dispatchEvent(mouseenter)
+    jest.runAllTimers()
+
+    expect(instance.popperInstance.state.eventsEnabled).toBe(false)
+  })
+
+  it('disables listeners for "vertical"', () => {
+    instance = tippy(h(), {
+      followCursor: 'vertical',
+    })
+
+    instance.reference.dispatchEvent(mouseenter)
+    jest.runAllTimers()
+
+    expect(instance.popperInstance.state.eventsEnabled).toBe(false)
+  })
 })

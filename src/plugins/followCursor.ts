@@ -86,8 +86,7 @@ export default {
       // scroll for "vertical"
       if (
         getIsEnabled() &&
-        getIsInitialBehavior() &&
-        instance.props.followCursor !== true
+        (getIsInitialBehavior() || instance.props.followCursor !== true)
       ) {
         instance.popperInstance.disableEventListeners()
       }
