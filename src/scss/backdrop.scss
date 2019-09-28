@@ -26,6 +26,14 @@
   }
 }
 
+.#{$namespace-prefix}-tooltip {
+  &[data-animatefill] {
+    // Declared with !important so that custom themes don't need to specify
+    // this property.
+    background-color: transparent !important;
+  }
+}
+
 .#{$namespace-prefix}-backdrop {
   position: absolute;
   background-color: #333;

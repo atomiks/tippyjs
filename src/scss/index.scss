@@ -39,12 +39,6 @@
     overflow: visible;
   }
 
-  &[data-animatefill] {
-    // Declared with !important so that custom themes don't need to specify
-    // this property.
-    background-color: transparent !important;
-  }
-
   &[data-interactive] {
     pointer-events: auto;
   }
