@@ -1,23 +1,19 @@
-import { Props } from './types'
+import { Props, Plugin } from './types'
 
 export const defaultProps: Props = {
-  a11y: true,
   allowHTML: true,
-  animateFill: true,
-  animation: 'shift-away',
-  appendTo: () => document.body,
+  animation: 'fade',
+  appendTo: (): Element => document.body,
   aria: 'describedby',
-  arrow: false,
-  arrowType: 'sharp',
+  arrow: true,
   boundary: 'scrollParent',
   content: '',
   delay: 0,
   distance: 10,
-  duration: [325, 275],
+  duration: [300, 250],
   flip: true,
   flipBehavior: 'flip',
   flipOnUpdate: false,
-  followCursor: false,
   hideOnClick: true,
   ignoreAttributes: false,
   inertia: false,
@@ -28,36 +24,35 @@ export const defaultProps: Props = {
   maxWidth: 350,
   multiple: false,
   offset: 0,
-  onHidden() {},
-  onHide() {},
-  onMount() {},
-  onShow() {},
-  onShown() {},
-  onTrigger() {},
+  onAfterUpdate(): void {},
+  onBeforeUpdate(): void {},
+  onCreate(): void {},
+  onDestroy(): void {},
+  onHidden(): void {},
+  onHide(): void | false {},
+  onMount(): void {},
+  onShow(): void | false {},
+  onShown(): void {},
+  onTrigger(): void {},
+  onUntrigger(): void {},
   placement: 'top',
   popperOptions: {},
   role: 'tooltip',
-  showOnInit: false,
-  size: 'regular',
-  sticky: false,
-  target: '',
-  theme: 'dark',
+  showOnCreate: false,
+  theme: '',
   touch: true,
-  touchHold: false,
   trigger: 'mouseenter focus',
   triggerTarget: null,
   updateDuration: 0,
-  wait: null,
   zIndex: 9999,
 }
 
 /**
- * If the set() method encounters one of these, the popperInstance must be
+ * If the setProps() method encounters one of these, the popperInstance must be
  * recreated
  */
 export const POPPER_INSTANCE_DEPENDENCIES: Array<keyof Props> = [
   'arrow',
-  'arrowType',
   'boundary',
   'distance',
   'flip',
@@ -67,3 +62,18 @@ export const POPPER_INSTANCE_DEPENDENCIES: Array<keyof Props> = [
   'placement',
   'popperOptions',
 ]
+
+export function getExtendedProps(props: Props, plugins: Plugin[]): Props {
+  return {
+    ...props,
+    ...plugins.reduce<{ [key: string]: any }>((acc, plugin) => {
+      const { name, defaultValue } = plugin
+
+      if (name) {
+        acc[name] = props[name] !== undefined ? props[name] : defaultValue
+      }
+
+      return acc
+    }, {}),
+  }
+}

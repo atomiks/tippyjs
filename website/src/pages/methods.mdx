@@ -1,7 +1,7 @@
 ---
 title: Methods
 path: /methods/
-index: 6
+index: 9
 ---
 
 ### Instance methods
@@ -43,13 +43,13 @@ Re-enable a tippy:
 instance.enable()
 ```
 
-#### set
+#### setProps
 
-You can update any option after the instance has been created. Pass an object of
-new options in:
+You can update any prop after the instance has been created. Pass an object of
+new props in:
 
 ```js
-instance.set({
+instance.setProps({
   arrow: true,
   animation: 'scale',
 })
@@ -57,7 +57,7 @@ instance.set({
 
 #### setContent
 
-Updating the `content` option has its own method as a shortcut:
+Updating the `content` prop has its own method as a shortcut:
 
 ```js
 instance.setContent('New content')
@@ -73,30 +73,24 @@ instance.destroy()
 
 The `_tippy` property is deleted from the reference element upon destruction.
 
-If you're destroying a delegate instance (i.e., one you created with the
-`target` option), pass `true` as an argument to destroy all child instances that
-may have been created too.
-
-```js
-instance.destroy(true)
-```
-
 ### Static methods
 
 Static methods belong to the `tippy` module function rather than a tippy
 instance.
 
-#### setDefaults
+#### setDefaultProps
 
-Set the default options for each new instance:
+Set the default props for each new instance:
 
 ```js
-tippy.setDefaults({
-  // Options
+import tippy from 'tippy.js'
+
+tippy.setDefaultProps({
+  // Props
 })
 
-// Access the current defaults
-tippy.defaults
+// Access the current default props
+tippy.defaultProps
 ```
 
 #### hideAll
@@ -104,16 +98,17 @@ tippy.defaults
 Hide all visible tippys on the document:
 
 ```js
+import { hideAll } from 'tippy.js'
+
 // Use each tippy's own duration
-tippy.hideAll()
+hideAll()
 // Hide them all instantly
-tippy.hideAll({ duration: 0 })
+hideAll({ duration: 0 })
 // Hide them all except a particular one
-tippy.hideAll({ exclude: tippyInstance })
-tippy.hideAll({ exclude: referenceElement })
+hideAll({ exclude: tippyInstance })
+hideAll({ exclude: referenceElement })
 ```
 
-#### group
-
-Used to improve UX for elements near each other when their tooltips have a
-`delay`. Learn about [`tippy.group()` here](/misc#groups).
+Note that this is not attached to `tippy` in ESM/CJS versions, it must be
+imported separately. In the CDN (IIFE) version, it's available as
+`tippy.hideAll()`.

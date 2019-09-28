@@ -3,7 +3,7 @@
 /coverage
 /.devserver
 node_modules
-/index.css
-/umd
-/esm
+/dist
 /themes
+/animations
+/index.d.ts

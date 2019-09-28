@@ -13,7 +13,7 @@ function SEO({ title, description, lang, meta, keywords, pageContext }) {
         const computedTitle =
           title ||
           (isIndex
-            ? 'Tippy.js - Vanilla JS Tooltip and Popover Library'
+            ? 'Tippy.js - Tooltip and Popover Library'
             : pageContext.frontmatter.title)
         return (
           <Helmet

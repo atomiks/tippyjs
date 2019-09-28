@@ -4,13 +4,13 @@ import { MEDIA } from './Framework'
 
 const Banner = styled.div`
   position: relative;
-  top: -25px;
+  top: -1.5625rem;
   background: #4b4f74;
   color: white;
   border-radius: 0 0 10px 10px;
-  padding: 15px;
-  font-size: 15px;
-  margin-bottom: 15px;
+  padding: 0.9375rem;
+  font-size: 0.9375rem;
+  margin-bottom: 0.9375rem;
   margin-left: 50px;
   font-weight: 600;
 
@@ -25,7 +25,7 @@ const Banner = styled.div`
 
   ${MEDIA.lg} {
     margin-left: 0;
-    margin-bottom: 25px;
+    margin-bottom: 1.5625rem;
   }
 `
 

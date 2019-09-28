@@ -1,0 +1,66 @@
+@import './_mixins.scss';
+@import './_vars.scss';
+
+.#{$namespace-prefix}-tooltip {
+  @each $placement in $placements {
+    &[data-placement^='#{$placement}'] {
+      .#{$namespace-prefix}-backdrop {
+        transform-origin: nth(
+          $backdrop-origins,
+          index($placements, $placement)
+        );
+        border-radius: nth(
+          $backdrop-border-radii,
+          index($placements, $placement)
+        );
+
+        &[data-state='visible'] {
+          @include backdrop-transform-enter($placement);
+        }
+
+        &[data-state='hidden'] {
+          @include backdrop-transform-leave($placement);
+        }
+      }
+    }
+  }
+}
+
+.#{$namespace-prefix}-tooltip {
+  &[data-animatefill] {
+    // Declared with !important so that custom themes don't need to specify
+    // this property.
+    background-color: transparent !important;
+  }
+}
+
+.#{$namespace-prefix}-backdrop {
+  position: absolute;
+  background-color: #333;
+  border-radius: 50%;
+  width: calc(110% + 2rem);
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  transition: all cubic-bezier(0.46, 0.1, 0.52, 0.98);
+  backface-visibility: hidden;
+
+  &[data-state='hidden'] {
+    opacity: 0;
+  }
+
+  &::after {
+    content: '';
+    float: left;
+    padding-top: 100%;
+  }
+}
+
+.#{$namespace-prefix}-backdrop + .#{$namespace-prefix}-content {
+  transition-property: opacity;
+  will-change: opacity;
+
+  &[data-state='hidden'] {
+    opacity: 0;
+  }
+}

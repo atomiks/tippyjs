@@ -1,7 +1,7 @@
 ---
 title: FAQ
 path: /faq/
-index: 12
+index: 16
 ---
 
 ### What syntax theme is used on this website?
@@ -9,39 +9,7 @@ index: 12
 It's a theme I made called
 [Moonlight](https://github.com/atomiks/moonlight-vscode-theme)!
 
-### Why is there a blue outline around my element?
-
-You may notice a blue outline around your reference element. The blue outline is
-called a focus ring; it lets keyboard users know which element on the page is
-currently in focus. Most natively focusable elements have this ring by default,
-but Tippy adds an attribute to the element so that it can receive focus if it
-natively cannot, so that keyboard users (e.g. blind users) can access the
-tooltip without using a mouse.
-
-Recommended: only apply the tooltip to natively focusable elements like
-`<button>` or `<input>`, otherwise use the `focus-visible` polyfill:
-https://github.com/WICG/focus-visible. This will remove the outline for mouse
-users but keep it visible for keyboard users.
-
-If your tooltip is **non-essential** (only acts as enhancement), then you can
-disable the `a11y` option:
-
-```js
-tippy('div', {
-  a11y: false,
-})
-```
-
-### I can't click things inside the tooltip
-
-To enable interactivity, set the `interactive` option to `true`.
-
-### My tooltip is hiding instantly after showing
-
-If you're using a `focus` trigger, for example on an `<input>`, make sure you
-also set `hideOnClick: false`.
-
-### My tooltip is not working using `data-tippy`
+### Nothing is working
 
 Make sure Tippy's scripts are placed _before_ your own scripts, at the very
 bottom of the page, like so:
@@ -53,48 +21,105 @@ bottom of the page, like so:
     <title>My page</title>
   </head>
   <body>
-    <button data-tippy="Created automatically">Text</button>
-    <button data-tippy-content="Created by function">Text</button>
+    <button>Text</button>
 
     <!-- Very end of the body -->
     <script src="https://unpkg.com/popper.js@1"></script>
-    <script src="https://unpkg.com/tippy.js@4"></script>
+    <script src="https://unpkg.com/tippy.js@5"></script>
     <script>
-      tippy('button')
+      tippy('button', { content: 'tooltip' })
     </script>
   </body>
 </html>
 ```
 
+### I'm getting Uncaught ReferenceError: process is not defined
+
+If you're using the ESM or CJS versions and importing like this:
+
+```js
+import tippy from 'tippy.js'
+// or
+const tippy = require('tippy.js')
+```
+
+Tippy uses a special expression to distinguish a development and production
+environment. For you, the developer, there are lots of warnings and error
+messages to help your development experience. For your end users, all of this
+needs to get stripped out because it reduces performance and increases bundle
+size.
+
+Tools like `create-react-app` and `Parcel` bundler handle this automatically.
+
+#### Browserify/Grunt/Gulp
+
+[View the following link](https://vuejs.org/v2/guide/deployment.html#With-Build-Tools).
+
+#### Rollup
+
+Install the
+[`replace plugin`](https://www.npmjs.com/package/rollup-plugin-replace).
+
+```js
+import replace from 'rollup-plugin-replace'
+
+export default {
+  // ...
+  plugins: [
+    // Production config
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
+    // OR, development config
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('development'),
+    }),
+    // You can also use process.env.NODE_ENV and set the env variables when
+    // running the rollup command
+  ],
+}
+```
+
+#### webpack
+
+By default, webpack defaults to `production` which means you won't get helpful
+development messages, but there won't be any error. Use the
+[`mode`](https://webpack.js.org/configuration/mode/) option to specify
+`development` or `production` where necessary.
+
+### I can't click things inside the tooltip
+
+To enable interactivity, set the `interactive` prop to `true`.
+
+### My tooltip is hiding instantly after showing
+
+If you're using a `focus` trigger, for example on an `<input>`, make sure you
+also set `hideOnClick: false`.
+
 ### Changing data-tippy-\* attributes does not update the tooltip
 
 Updating the data-tippy-\* attribute on an element will currently not update the
-tooltip. You must use the [`set()` method](/methods#update-the-tippy) on a Tippy
+tooltip. You must use the [`setProps()` method](/methods#setProps) on a Tippy
 instance.
 
 For example, let's say you want to update the `theme` for tooltips when changing
 between dark and light mode:
 
 ```js
-const instances = tippy('.example', {
-  theme: 'custom-dark',
-})
+const instance = tippy(reference, { theme: 'custom-dark' })
 
 // When clicking the theme toggle button, you can do this:
-const newTheme = 'whatever'
-instances.forEach(instance => {
-  instance.set({ theme: newTheme })
-})
+instance.setProps({ theme: 'custom-light' })
 ```
 
 It's also possible to attach a `MutationObserver` to the reference elements and
-observe mutations to attributes if need be, then call `.set()` with the new
+observe mutations to attributes if need be, then call `.setProps()` with the new
 values.
 
 ### Can I use the `title` attribute?
 
-Yes. The `content` option can be a function that receives the reference element
-as an argument and returns a string or element.
+Yes. The `content` prop can be a function that receives the reference element as
+an argument and returns a string or element.
 
 ```js
 tippy('button', {
@@ -109,27 +134,40 @@ tippy('button', {
 The `title` attribute should be removed once you have its content so the
 browser's default tooltip isn't displayed along with the tippy.
 
-With the beauty of higher-order functions, you can "enhance" the base tippy
-function with new functionality. To add this behavior by default, you can do
-something like this at the very top of your scripts before any calls to
-`tippy()`:
+#### Plugin
+
+You can create a plugin for this to generalize the behavior:
 
 ```js
-function withTitleAttributeContent(tippy) {
-  return (targets, options = {}) => {
-    return tippy(targets, {
-      ...options,
-      content(reference) {
-        if (options.content) {
-          return options.content
+const titleAttribute = {
+  name: 'titleAttribute',
+  defaultValue: true,
+  fn() {
+    return {
+      onCreate(instance) {
+        if (!instance.props.titleAttribute) {
+          return
         }
-        const title = reference.getAttribute('title')
-        reference.removeAttribute('title')
-        return title
-      },
-    })
-  }
-}
 
-window.tippy = withTitleAttributeContent(tippy)
+        const title = instance.reference.getAttribute('title')
+
+        if (title) {
+          instance.setContent(title)
+          instance.reference.removeAttribute('title')
+        }
+      },
+    }
+  },
+}
 ```
+
+Note that the plugin does not take into account dynamic titles. Be cautious of
+why you might need this in the first place.
+
+### What's the difference between an addon and a plugin?
+
+An **addon** is an external function that calls the `tippy()` constructor
+because it's controlling or creating many different tippy instances.
+
+A **plugin** is a plain object that hooks into, and adds functionality, to a
+single tippy instance that has already already created.

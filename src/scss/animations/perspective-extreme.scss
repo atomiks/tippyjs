@@ -1,0 +1,48 @@
+@import '../_mixins.scss';
+@import '../_vars.scss';
+
+@mixin visible-transform($placement) {
+  @if ($placement == 'top') {
+    transform: perspective(700px);
+  } @else if ($placement == 'bottom') {
+    transform: perspective(700px);
+  } @else if ($placement == 'left') {
+    transform: perspective(700px);
+  } @else if ($placement == 'right') {
+    transform: perspective(700px);
+  }
+}
+
+@mixin hidden-transform($placement) {
+  @if ($placement == 'top') {
+    transform: perspective(700px) translateY(10px) rotateX(90deg);
+  } @else if ($placement == 'bottom') {
+    transform: perspective(700px) translateY(-10px) rotateX(-90deg);
+  } @else if ($placement == 'left') {
+    transform: perspective(700px) translateX(10px) rotateY(-90deg);
+  } @else if ($placement == 'right') {
+    transform: perspective(700px) translateX(-10px) rotateY(90deg);
+  }
+}
+
+.#{$namespace-prefix}-tooltip {
+  &[data-animation='perspective-extreme'] {
+    @each $placement in $placements {
+      &[data-placement^='#{$placement}'] {
+        transform-origin: nth($origins, index($placements, $placement));
+
+        &[data-state='visible'] {
+          @include visible-transform($placement);
+        }
+
+        &[data-state='hidden'] {
+          @include hidden-transform($placement);
+        }
+      }
+    }
+
+    &[data-state='hidden'] {
+      opacity: 0.5;
+    }
+  }
+}

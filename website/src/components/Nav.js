@@ -2,11 +2,9 @@ import React, { Component, createRef } from 'react'
 import styled from 'styled-components'
 import { MEDIA, Link } from './Framework'
 import { StaticQuery, graphql } from 'gatsby'
-import { sortPagesByIndex } from '../utils'
+import { sortActivePages } from '../utils'
 import X from 'react-feather/dist/icons/x'
 import ElasticScroll from './ElasticScroll'
-import TextGradient from './TextGradient'
-import { version } from '../../../package.json'
 
 const Navbar = styled.nav`
   display: ${props => (props.isMounted ? 'block' : 'none')};
@@ -14,12 +12,10 @@ const Navbar = styled.nav`
   top: 0;
   bottom: 0;
   left: 0;
-  width: 250px;
-  border-right: 1px solid rgba(0, 16, 64, 0.08);
-  background-clip: padding-box;
-  padding: 0 0 25px;
-  background: #43436a;
-  color: #cbd6ff;
+  width: 15.625rem;
+  background: linear-gradient(180deg, rgba(121, 148, 198, 0.92), #565791);
+  backdrop-filter: saturate(180%);
+  color: white;
   overflow-y: auto;
   z-index: 1;
   transform: ${props =>
@@ -31,15 +27,17 @@ const Navbar = styled.nav`
   transition-timing-function: ${props =>
     props.isOpen ? 'cubic-bezier(.165, 1.3, 0.4, 1)' : 'ease'};
   visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
-  box-shadow: 5px 0 30px 0 rgba(0, 32, 64, 0.25);
+  box-shadow: 0.25rem 0 2rem 0 rgba(0, 32, 64, 0.25);
   opacity: ${props => (props.isOpen ? 1 : 0)};
 
   ${MEDIA.lg} {
+    padding-top: 0;
     display: block;
     visibility: visible;
     transform: none;
     box-shadow: none;
     opacity: 1;
+    will-change: transform, opacity;
   }
 `
 
@@ -52,53 +50,64 @@ const List = styled.ul`
 const ListItem = styled.li`
   margin: 0;
 
-  &:not(:last-child) {
-    border-bottom: 1px dotted rgba(0, 16, 64, 0.1);
+  &:first-child {
+    padding-top: 2rem;
+  }
+
+  &:last-child {
+    padding-bottom: 2rem;
   }
 
   > a {
     display: block;
-    padding: 10px 25px;
-    padding-left: calc(25px + 4%);
-    font-size: 17px;
+    padding: 0.25rem 1.5625rem;
+    padding-left: calc(1.5625rem + 4%);
+    font-size: 1.0625rem;
+    border: 1px dashed transparent;
 
     ${MEDIA.lg} {
-      padding-left: 25px;
+      padding-left: 1.5625rem;
     }
 
     &:hover {
       border-bottom-color: transparent;
       text-decoration: none;
-      color: white;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    &:active {
+      border-color: white;
     }
   }
 `
 
 const XButton = styled.button`
   position: absolute;
-  right: 5px;
-  top: 5px;
-  background: none;
   border: none;
-  color: inherit;
   padding: 0;
-  transform: scale(0.9);
+  top: 0.5rem;
+  right: 1rem;
+  border-radius: 2rem;
+  height: 2.5rem;
+  width: 2.5rem;
+  cursor: pointer;
+  background: white;
+  color: #7761d1;
+  box-shadow: 0 0.3rem 0 rgba(0, 32, 64, 0.2);
+
+  &:active {
+    box-shadow: 0 0.1rem 0 rgba(0, 32, 64, 0.2);
+    transform: translateY(0.2rem);
+  }
 
   ${MEDIA.lg} {
     display: none;
   }
 `
 
-const Version = styled.div`
-  color: #d0ffba;
-  font-weight: bold;
-  margin: 0;
-  padding: 15px 25px;
-  padding-left: calc(25px + 4%);
-
-  ${MEDIA.lg} {
-    padding-left: 25px;
-  }
+const XIcon = styled(X)`
+  height: 2rem;
+  width: 2rem;
 `
 
 class Nav extends Component {
@@ -138,6 +147,11 @@ class Nav extends Component {
     window.addEventListener('resize', this.handleResize)
     window.addEventListener('mousedown', this.handleOutsideClick, true)
     this.handleResize()
+
+    // TODO: Scroll the container so the currently active link is visible
+    // this.ref.current.scrollTop = document
+    //   .querySelector('[aria-current]')
+    //   .getBoundingClientRect().top
   }
 
   componentWillUnmount() {
@@ -159,17 +173,14 @@ class Nav extends Component {
           isMounted={isMounted}
           onBlur={this.handleBlur}
         >
-          <Version>
-            <TextGradient>v{version}</TextGradient>
-          </Version>
           <XButton aria-label="Close Menu" onClick={this.handleClose}>
-            <X style={{ width: 36, height: 36 }} />
+            <XIcon />
           </XButton>
           <List>
             <StaticQuery
               query={allMdxQuery}
               render={data => {
-                return sortPagesByIndex(data.allMdx.edges).map(({ node }) => (
+                return sortActivePages(data.allMdx.edges).map(({ node }) => (
                   <ListItem key={node.frontmatter.path}>
                     <Link to={node.frontmatter.path}>
                       {node.frontmatter.title}

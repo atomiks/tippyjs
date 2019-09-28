@@ -26,12 +26,12 @@ export default createGlobalStyle`
   }
 
   pre[class*='language-'] {
-    padding: 20px 5%;
+    padding: 1.25rem 1rem;
     margin-top: 0;
-    margin-left: -5.55%;
-    margin-right: -5.55%;
-    background: radial-gradient(50% 80% at 80% 0%, rgb(56, 50, 87), rgb(33, 33, 57));
-    font-size: 16px;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    background: radial-gradient(50% 80% at 80% 0%,rgb(61, 59, 98),rgb(40, 40, 75));
+    font-size: 1rem;
     line-height: 1.5;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
@@ -41,34 +41,37 @@ export default createGlobalStyle`
     }
 
     ${MEDIA.sm} {
-      margin-left: -25px;
-      margin-right: -25px;
-      padding: 20px 25px;
+      margin-left: -1.5625rem;
+      margin-right: -1.5625rem;
+      padding: 1.25rem 1.5625rem;
     }
 
     ${MEDIA.md} {
-      border-radius: 8px;
+      border-radius: 0.5rem;
       margin-left: 0;
       margin-right: 0;
-      padding: 16px 25px;
-      font-size: 17px;
+      padding: 1rem 1.5625rem;
+      font-size: 1.0625rem;
     }
   }
 
   code.language-text {
-    background: #eeeefa;
     color: #333;
+    background: white;
+    border: 1px solid;
+    border-bottom-width: 2px;
     font-weight: bold;
-    padding: 0.2em 0.4em;
-    border-radius: 4px;
+    padding: 0.15em 0.4em;
+    border-radius: 0.25em;
     line-height: inherit;
     font-size: 90%;
   }
 
   .token.important,
   .token.atrule,
-  .token.keyword {
-    color: #c3a2ff;
+  .token.keyword,
+  .token.attribute {
+    color: #d0aeff;
   }
 
   .token.comment,
@@ -92,18 +95,20 @@ export default createGlobalStyle`
   }
 
   .token.punctuation {
-    color: #89DDFF;
+    color: #93e2ff;
+    text-shadow: 0 0 2px #000, 0 0 14px #46e3ff;
   }
 
   .token.block {
-    color: #a5cbff;
+    color: #afcffa;
   }
   
   .token.tag .token.punctuation,
   .token.operator,
   .token.op,
-  .token.module {
-    color: #89DDFF;
+  .token.module,
+  .token.control {
+    color: #93e2ff;
   }
 
   .token.nil {
@@ -112,6 +117,7 @@ export default createGlobalStyle`
 
   .token.arrow {
     color: #c49dff;
+    text-shadow: none;
   }
 
   .token.parameter {
@@ -166,13 +172,15 @@ export default createGlobalStyle`
   }
 
   .token.function,
-  .token.property {
-    color: #82AAFF;
+  .language-css .token.property {
+    color: #9bb5ff;
+    text-shadow: 0 0 10px #2f36ff, 0 0 22px #9d91ff;
   }
 
   .token.method,
   .language-css .token.function {
-    color: #25c8e5;
+    color: #67d2ff;
+    text-shadow: 0 0px 10px #39c5ff, 0 0px 2px black;
   }
 
   .token.variable {
@@ -180,8 +188,10 @@ export default createGlobalStyle`
   }
 
   .token.dom,
-  .token.class-name {
-    color: #ffc777;
+  .token.class-name,
+  .token.console,
+  .token.object {
+    color: #ffd181;
   }
 
   .token.property.definition {
@@ -189,7 +199,7 @@ export default createGlobalStyle`
   }
 
   .token.property.access {
-    color: #89DDFF;
+    color: #b8c7fc;
   }
 
   .token.regex {
@@ -213,8 +223,8 @@ export default createGlobalStyle`
     margin-bottom: 1.5rem;
   
     ${MEDIA.md} {
-      margin-left: -25px;
-      margin-right: -25px;
+      margin-left: -1.5625rem;
+      margin-right: -1.5625rem;
     }
 
     &[data-language="html"]::before {
@@ -236,23 +246,23 @@ export default createGlobalStyle`
     &::before {
       content: attr(data-language);
       display: block;
-      width: 111.1%;
       position: absolute;
       font-weight: bold;
-      padding: 8px 15px;
+      padding: 8px 0.9375rem;
       font-family: ${MONOSPACE_FONT_STACK};
       color: white;
-      margin-left: -5.55%;
-      padding-left: 5%;
+      width: calc(100% + 2rem);
+      margin-left: -1rem;
+      padding-left: 1rem;
       text-transform: uppercase;
-      font-size: 15px;
+      font-size: 0.9375rem;
       text-align: right;
       pointer-events: none;
 
       ${MEDIA.sm} {
         width: calc(100% + 50px);
-        margin-left: -25px;
-        padding-left: 25px;
+        margin-left: -1.5625rem;
+        padding-left: 1.5625rem;
       }
 
       ${MEDIA.md} {

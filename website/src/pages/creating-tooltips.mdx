@@ -4,16 +4,16 @@ path: /creating-tooltips/
 index: 2
 ---
 
-import Tippy from '../components/Tippy'
-import { Button } from '../components/Framework'
-
-Call the `tippy()` function by passing in a CSS selector, and give your
-reference element(s) a `data-tippy-content` attribute:
+Give elements you would like to give tooltips to a `data-tippy-content`
+attribute:
 
 ```html
 <button data-tippy-content="Tooltip">Text</button>
 <button data-tippy-content="Another Tooltip">Text</button>
 ```
+
+To give them a tippy tooltip, call the `tippy()` function with a CSS selector
+matching these elements:
 
 ```js
 tippy('button')
@@ -22,7 +22,8 @@ tippy('button')
 The `data-tippy-content` attribute allows you to give different tooltip content
 to many different elements, while only needing to initialize once.
 
-For single elements, you can use the `content` option:
+If targeting a single element, you can use the `content` prop instead of the
+attribute:
 
 ```js
 tippy('#singleElement', {
@@ -36,36 +37,20 @@ The first argument you pass to `tippy()` is the targets you want to give
 tooltips to. This can represent one or many different elements.
 
 ```js
-// String: Any CSS selector is valid
+// String (CSS selector matching elements on the document)
 tippy('#id')
 tippy('.class')
 tippy('[data-tippy-content]')
 
-// Element | Element[]: An element or an array of elements is valid
-const element = document.getElementById('my-element')
-tippy(element)
+// Element
+tippy(document.getElementById('my-element'))
+
+// Element[]
 tippy([element1, element2, element3])
 
-// NodeList is valid
-const els = document.querySelectorAll('.my-elements')
-tippy(els)
+// NodeList
+tippy(document.querySelectorAll('.my-elements'))
 ```
-
-### Auto-initialization
-
-If your web page has regular server-rendered HTML, and you aren't using a
-front-end framework like React or Vue, then you can bypass the function call and
-use the `data-tippy` attribute:
-
-```html
-<button data-tippy="I will be created automatically">Text</button>
-```
-
-Note the lack of `-content` suffix.
-
-This attribute should only be used for basic tippys that exist on the document
-on page load. You can avoid it if you want - it's just the quickest way to
-initialize a tooltip.
 
 ### Client-rendered elements
 
@@ -91,27 +76,26 @@ a tippy.
 <!-- prettier-ignore -->
 ```html
 <!-- Won't work! -->
-<button data-tippy="Tooltip" disabled>Text</button>
+<button data-tippy-content="Tooltip" disabled>Text</button>
 
 <!-- Wrapper <span> will work -->
-<span data-tippy="Tooltip">
+<span data-tippy-content="Tooltip" tabindex="0">
   <button disabled>Text</button>
 </span>
 ```
 
+Please note that this has accessibility concerns and should be avoided if
+possible.
+
 ### ⚠️ SVG in IE11
 
-If you need to support SVG elements in IE11, you will need to include polyfills
-for `Element.prototype.classList` and `SVGElement.prototype.contains`.
+If you need to support SVG elements in IE11, you will need to include a polyfill
+for `SVGElement.prototype.contains`.
 
-The easiest fix is to include these scripts in your document before Tippy's
-scripts:
+The polyfill is small:
 
-```html
-<script src="https://polyfill.io/v3/polyfill.min.js?features=Element.prototype.classList"></script>
-<script>
-  if (!SVGElement.prototype.contains) {
-    SVGElement.prototype.contains = HTMLDivElement.prototype.contains
-  }
-</script>
+```js
+if (!SVGElement.prototype.contains) {
+  SVGElement.prototype.contains = HTMLDivElement.prototype.contains
+}
 ```

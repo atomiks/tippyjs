@@ -1,157 +1,56 @@
 ---
 title: Misc
 path: /misc/
-index: 11
+index: 15
 ---
 
 import EventDelegation from '../components/examples/EventDelegation'
 import Scroller from '../components/examples/Scroller'
-import AnchorLink from '../components/examples/AnchorLink'
 import TriggerTarget from '../components/examples/TriggerTarget'
-import { Demo, Button, Flex } from '../components/Framework'
-import Tippy, { TippyGroup } from '../components/Tippy'
 
-### Groups
+### Custom position
 
-Groups are designed to improve user experience when tooltips have delays. When
-moving the cursor between each item in the group, the tooltips will instantly
-show.
-
-Compare the following tooltips **without** grouping:
+Use a Popper ReferenceObject:
 
 ```js
-tippy('button', { delay: 1000 })
-```
-
-<Demo>
-  <Tippy delay={1000}>
-    <Button>Text</Button>
-  </Tippy>
-  <Tippy delay={1000}>
-    <Button>Text</Button>
-  </Tippy>
-  <Tippy delay={1000}>
-    <Button>Text</Button>
-  </Tippy>
-</Demo>
-
-Now compare the following tooltips **with** grouping:
-
-```js
-tippy.group(tippy('button', { delay: 1000 }))
-```
-
-<Demo>
-  <TippyGroup delay={1000}>
-    <Tippy>
-      <Button>Text</Button>
-    </Tippy>
-    <Tippy>
-      <Button>Text</Button>
-    </Tippy>
-    <Tippy>
-      <Button>Text</Button>
-    </Tippy>
-  </TippyGroup>
-</Demo>
-
-As you can see, the user experience is much nicer. To enable group behavior,
-call the method `tippy.group()` and pass in an array of Tippy instances.
-
-The group method also takes an optional options object as a second argument:
-
-```js
-tippy.group(instances, {
-  delay: 1000, // if the instances don't specify a `delay`
-  duration: 50, // instead of 0 (instant duration)
+tippy(reference, {
+  // popperInstance will be available onCreate
+  lazy: false,
+  onCreate(instance) {
+    instance.popperInstance.reference = {
+      clientWidth: 0,
+      clientHeight: 0,
+      getBoundingClientRect() {
+        return {
+          // ...
+        }
+      },
+    }
+  },
 })
 ```
-
-### Anchor links
-
-When an inline anchor link spans two or more lines, the tippy gets centered as
-though it were attached to a block:
-
-<Demo style={{ paddingBottom: 20 }}>
-  <AnchorLink />
-</Demo>
-
-If this is a problem (e.g. with interactivity), there is a way to solve it:
-
-<Demo style={{ paddingBottom: 20 }}>
-  <AnchorLink smart />
-</Demo>
-
-It requires using a [virtual positioning reference](#virtual-elements). See the
-[CodePen demo](https://codepen.io/atomiks/pen/GeBoyW?editors=0010).
 
 ### Scrollable containers
 
-Here are 3 common solutions. Note that no solution is completely ideal in all
-situations - it depends on the UI. In each of these, if you want the tippy to be
-clipped by the scrolling area, use `appendTo: "parent"`. If the tippy is large
-then this may be undesirable.
+While scrolling the container, the reference element can leave the boundary
+view, meaning the tippy will appear to be attached to nothing. You can hide the
+tippy to prevent it from being seen:
 
-<Demo>
-  <Scroller type="Unintrusive" boundary />
-</Demo>
-
-With this technique, the tooltip acts like it does on the document normally. It
-gets clipped by the scrolling area and does not attempt to position itself to be
-fully visible (but will still flip).
-
-```js
-tippy('#unintrusive-example', {
-  boundary: 'window',
-  appendTo: 'parent',
-  popperOptions: {
-    modifiers: {
-      flip: {
-        boundariesElement: 'scrollParent',
-      },
-    },
-  },
-})
+```css
+.tippy-tooltip[data-out-of-boundaries] {
+  display: none;
+}
 ```
 
-<Demo>
-  <Scroller type="Flip on update" flipOnUpdate />
-</Demo>
+This may not be ideal in all cases. You can include this attribute only on a
+theme if necessary.
 
-With this technique, the tooltip attempts to reposition itself to be visible to
-the user at all times. Sometimes this can be a little overly intrusive, though.
+Other cases:
 
-```js
-tippy('#scroll-flipping-example', {
-  appendTo: 'parent',
-  flipOnUpdate: true,
-  // Leave this out if you want flipping to occur based on the
-  // viewport rather than the container
-  popperOptions: {
-    modifiers: {
-      flip: {
-        boundariesElement: 'scrollParent',
-      },
-    },
-  },
-})
-```
-
-<Demo>
-  <Scroller type="Hide on scroll" hideOnScroll />
-</Demo>
-
-With this technique, the tooltip hides instantly whenever the user starts
-scrolling. In addition, it initially positions itself to be as visible as
-possible within the scrolling area.
-
-```js
-const instance = tippy(document.querySelector('#hide-on-scroll-example'))
-const container = document.querySelector('#scrollable-container')
-container.addEventListener('scroll', () => {
-  instance.hide(0)
-})
-```
+- If you want the tippy to be clipped by the scrolling container, use the props
+  `appendTo: 'parent'` and `boundary: scrollingContainer`.
+- Consider the prop `flipOnUpdate: true` if you want the tippy to flip to best
+  fit in view while the container is being scrolled.
 
 ### Different trigger target
 
@@ -162,7 +61,7 @@ listeners) target. For example:
   <TriggerTarget />
 </Demo>
 
-For this, you can utilize the `triggerTarget` option:
+For this, you can utilize the `triggerTarget` prop:
 
 ```js
 const innerOrangeSpanElement = document.querySelector('span')
@@ -173,186 +72,12 @@ tippy(innerOrangeSpanElement, {
 })
 ```
 
-### Custom animations
+### Touch devices
 
-Custom animations can be created, but require a bit of CSS to setup. The default
-`"shift-away"` animation has a hardcoded translation of 10px. Sometimes, for
-small elements, this can be a bit much, especially if the tippy has an arrow.
+Tippy provides first-class support for touch devices. Tooltips can be tricky to
+get right on touch devices because of the nature of touch input.
 
-You need to:
-
-- Target each different basic placement in `x-placement`: `top`, `bottom`,
-  `left`, `right`
-- Target the two visibility states in `data-state`: `visible` and `hidden`
-- Use your own animation name in `data-animation`
-
-Using a preprocessor with nesting support (e.g. SASS) helps reduce the
-boilerplate and amount of code required.
-
-```css
-/* Subtle shift-away animation */
-
-/* Top */
-.tippy-tooltip[x-placement^='top'][data-animation='subtle-shift-away'][data-state='visible'] {
-  transform: translateY(-10px);
-  opacity: 1;
-}
-.tippy-tooltip[x-placement^='top'][data-animation='subtle-shift-away'][data-state='hidden'] {
-  transform: translateY(-5px);
-  opacity: 0;
-}
-
-/* Bottom */
-.tippy-tooltip[x-placement^='bottom'][data-animation='subtle-shift-away'][data-state='visible'] {
-  transform: translateY(10px);
-  opacity: 1;
-}
-.tippy-tooltip[x-placement^='bottom'][data-animation='subtle-shift-away'][data-state='hidden'] {
-  transform: translateY(5px);
-  opacity: 0;
-}
-
-/* Left */
-.tippy-tooltip[x-placement^='left'][data-animation='subtle-shift-away'][data-state='visible'] {
-  transform: translateX(-10px);
-  opacity: 1;
-}
-.tippy-tooltip[x-placement^='left'][data-animation='subtle-shift-away'][data-state='hidden'] {
-  transform: translateX(-5px);
-  opacity: 0;
-}
-
-/* Right */
-.tippy-tooltip[x-placement^='right'][data-animation='subtle-shift-away'][data-state='visible'] {
-  transform: translateX(10px);
-  opacity: 1;
-}
-.tippy-tooltip[x-placement^='right'][data-animation='subtle-shift-away'][data-state='hidden'] {
-  transform: translateX(5px);
-  opacity: 0;
-}
-```
-
-> Why do the attribute names have a different prefix (`x-*` and `data-*`)?
-
-Popper.js (v1) uses the `x-` prefix convention, while Tippy.js adheres to the
-HTML5 spec with `data-` prefix. Popper.js v2 will change the prefix to match
-Tippy's.
-
-### Animate.css animations
-
-Want more animations than the built-in ones? You can use any CSS animation you
-like, for example, [animate.css](https://daneden.github.io/animate.css/).
-Include it on your page and then add/remove the classes onMount/onHidden:
-
-```js
-tippy('button', {
-  animation: 'fade',
-  // If you don't want the filling effect as well
-  animateFill: false,
-  // The default CSS uses `transform: translateY(10px)`, but animated.css transforms
-  // will override it, so we'll need to use +10 more distance than the default (10)
-  distance: 20,
-  onMount(instance) {
-    const { tooltip } = instance.popperChildren
-    requestAnimationFrame(() => {
-      tooltip.classList.add('animated')
-      tooltip.classList.add('wobble')
-    })
-  },
-  onHidden(instance) {
-    const { tooltip } = instance.popperChildren
-    tooltip.classList.remove('animated')
-    tooltip.classList.remove('wobble')
-  },
-})
-```
-
-<Demo>
-  <Tippy
-    animation="fade"
-    animateFill={false}
-    onMount={instance => {
-      requestAnimationFrame(() => {
-        instance.popperChildren.tooltip.classList.add('animated', 'wobble')
-      })
-    }}
-    onHidden={instance => {
-      instance.popperChildren.tooltip.classList.remove('animated', 'wobble')
-    }}
-    distance={20}
-  >
-    <Button>wobble</Button>
-  </Tippy>
-</Demo>
-
-### Event delegation
-
-Event delegation allows you to bind a Tippy instance to a parent container
-element to handle creation of tippys for children.
-
-This allows two things:
-
-- It eliminates the need to create new instances for new children getting
-  appended to the parent.
-- It improves performance as only a single instance is created, and event
-  bubbling handles creation of instances at the right time.
-
-Children will inherit the options specified in the parent instance, but
-individual options can be specified via `data-tippy-*` attributes.
-
-<!-- prettier-ignore -->
-```html
-<div id="parent">
-  <button 
-    class="child" 
-    data-tippy-content="Tooltip 1"
-  >
-    One
-  </button>
-  <button 
-    class="child" 
-    data-tippy-content="Tooltip 2"
-    data-tippy-arrow="true"
-  >
-    Two
-  </button>
-  <button 
-    class="child" 
-    data-tippy-content="Tooltip 3" 
-    data-tippy-theme="light"
-  >
-    Three
-  </button>
-</div>
-```
-
-To enable this behavior, bind the instance to the `#parent` element and specify
-a `target` option with a CSS selector that matches the child elements which
-should receive tooltips:
-
-```js
-tippy('#parent', {
-  target: '.child',
-})
-```
-
-<Demo>
-  <EventDelegation />
-</Demo>
-
-### Hide tooltips on scroll
-
-```js
-window.addEventListener('scroll', () => {
-  // If you want to use their own durations
-  tippy.hideAll()
-  // Or, if you want to make them all hide instantly
-  tippy.hideAll({ duration: 0 })
-})
-```
-
-### Buttons with tooltips on touch devices
+#### Buttons
 
 A tooltip on a button is generally used to convey information before the user
 decides to click on it. On touch devices, this isn't possible because a tap is
@@ -366,27 +91,24 @@ click event.
 Depending on your use case, one of these will be preferred, so user agent
 checking may be needed.
 
-If neither behavior is preferred, consider using the `touchHold` option which
+If neither behavior is preferred, consider using the `touchHold` prop which
 allows the user to see the tooltip while pressing and holding the button, but
 won't fire a click event unless the click appears to be intentional.
+
+##### Setup
 
 ```js
 const button = document.querySelector('button')
 const isIOS = /iPhone|iPad|iPod/.test(navigator.platform)
+```
 
-/*========================================================
-A: Use `touchHold: true`
-========================================================*/
-tippy(button, {
-  touchHold: true,
-})
+##### A: Make iOS behave like Android (single tap to click)
 
-/*========================================================
-B: Make iOS behave like Android (single tap to click)
-========================================================*/
+```js
 button.addEventListener('click', () => {
   // Your logic
 })
+
 tippy(button, {
   onShow() {
     if (isIOS) {
@@ -394,23 +116,49 @@ tippy(button, {
     }
   },
 })
+```
 
-/*========================================================
-C: Make Android behave like iOS (double tap to click)
-========================================================*/
-// Useful function for dynamically determining the input type:
-// https://github.com/30-seconds/30-seconds-of-code#onuserinputchange
-let isUsingTouch = false
-onUserInputChange(type => {
-  isUsingTouch = type === 'touch'
-})
+##### B: Make Android behave like iOS (double tap to click)
+
+Tippy has a useful static property `tippy.currentInput`. This is a mutable
+object whose properties change depending on the user's current input. Currently,
+it has a single property called `isTouch`, which is a boolean flag determining
+if the user is currently using touch input. This is a dynamic value because of
+hybrid devices which can use a mix of mouse and touch input.
+
+```js
+function emulateIOS(listener) {
+  let clicks = 0
+
+  return function() {
+    clicks++
+
+    if (clicks === 2 || isIOS || !tippy.currentInput.isTouch) {
+      clicks = 0
+      listener.apply(this, arguments)
+    }
+  }
+}
 
 const instance = tippy(button)
+const onClick = emulateIOS(() => {
+  // Your logic
+})
 
-button.addEventListener('click', () => {
-  if (isIOS || !isUsingTouch ? true : instance.state.isShown) {
-    // Your logic
-  }
+button.addEventListener('click', onClick)
+```
+
+#### Hold & long press
+
+```js
+// Will only show the tippy while the user is pressing the screen (not a tap)
+tippy(button, {
+  touch: 'hold',
+})
+
+// Will only show the tippy on a "long press" hold
+tippy(button, {
+  touch: ['hold', 500], // 500ms delay
 })
 ```
 
@@ -438,24 +186,3 @@ button.addEventListener('mouseleave', () => {
   instance.hide()
 })
 ```
-
-### Virtual elements
-
-In some cases you may need to use a virtual element instead of a real DOM
-element. Pass a plain object with a `getBoundingClientRect` method in:
-
-```js
-tippy({
-  getBoundingClientRect: () => ({
-    width: 0,
-    height: 0,
-    top: 100,
-    right: 100,
-    bottom: 100,
-    left: 100,
-  }),
-})
-```
-
-Change the numbers to suit your needs. Popper.js uses `getBoundingClientRect()`
-to position the tippy.

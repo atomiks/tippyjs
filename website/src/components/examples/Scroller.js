@@ -42,8 +42,8 @@ const ScrollingContainer = styled.div`
 
 const Type = styled.div`
   position: absolute;
-  top: 12px;
-  left: 16px;
+  top: 0.75rem;
+  left: 1rem;
   font-weight: bold;
 `
 
@@ -97,7 +97,7 @@ class Scroller extends Component {
               onCreate={this.storeTippyInstance}
               {...props}
             >
-              <Button style={{ transform: 'translate(85px, 125px)' }}>
+              <Button style={{ transform: 'translate(85px, 11.5625rem)' }}>
                 Click to open
               </Button>
             </Tippy>

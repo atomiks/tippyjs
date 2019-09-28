@@ -1,5 +1,6 @@
 @import './_mixins.scss';
 @import './_vars.scss';
+@import './animations/fade.scss';
 
 .#{$namespace-prefix}-iOS {
   cursor: pointer !important;
@@ -7,110 +8,9 @@
 }
 
 .#{$namespace-prefix}-popper {
-  transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
-  max-width: calc(100% - 8px);
   pointer-events: none;
-  outline: 0;
-
-  @each $placement in $placements {
-    &[x-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-backdrop {
-        border-radius: nth(
-          $backdrop-border-radii,
-          index($placements, $placement)
-        );
-      }
-
-      .#{$namespace-prefix}-roundarrow {
-        @include arrow-position($placement, 7px, true);
-        @include roundarrow-transform-origin($placement);
-        @include arrow-margin($placement);
-
-        svg {
-          position: absolute;
-          left: 0;
-          @include roundarrow-transform($placement);
-        }
-      }
-
-      .#{$namespace-prefix}-arrow {
-        @include arrow($placement, 8px, #333);
-        @include arrow-position($placement, 7px, false);
-        @include arrow-margin($placement);
-        @include arrow-transform-origin($placement);
-      }
-
-      .#{$namespace-prefix}-backdrop {
-        transform-origin: nth(
-          $backdrop-origins,
-          index($placements, $placement)
-        );
-
-        &[data-state='visible'] {
-          @include backdrop-transform-enter($placement);
-        }
-
-        &[data-state='hidden'] {
-          @include backdrop-transform-leave($placement);
-          opacity: 0;
-        }
-      }
-
-      [data-animation='shift-toward'] {
-        &[data-state='visible'] {
-          @include enter-transform($placement, 'fade');
-        }
-        &[data-state='hidden'] {
-          opacity: 0;
-          @include leave-transform($placement, 'shift-toward');
-        }
-      }
-
-      [data-animation='perspective'] {
-        transform-origin: nth($origins, index($placements, $placement));
-
-        &[data-state='visible'] {
-          @include enter-transform($placement, 'perspective');
-        }
-        &[data-state='hidden'] {
-          opacity: 0;
-          @include leave-transform($placement, 'perspective');
-        }
-      }
-
-      [data-animation='fade'] {
-        &[data-state='visible'] {
-          @include enter-transform($placement, 'fade');
-        }
-        &[data-state='hidden'] {
-          opacity: 0;
-          @include enter-transform($placement, 'fade');
-        }
-      }
-
-      [data-animation='shift-away'] {
-        &[data-state='visible'] {
-          @include enter-transform($placement, 'fade');
-        }
-        &[data-state='hidden'] {
-          opacity: 0;
-          @include leave-transform($placement, 'shift-away');
-        }
-      }
-
-      [data-animation='scale'] {
-        transform-origin: nth($origins, index($placements, $placement));
-
-        &[data-state='visible'] {
-          @include enter-transform($placement, 'scale');
-        }
-        &[data-state='hidden'] {
-          opacity: 0;
-          @include leave-transform($placement, 'scale');
-        }
-      }
-    }
-  }
+  max-width: calc(100% - 10px);
+  transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .#{$namespace-prefix}-tooltip {
@@ -118,81 +18,42 @@
   color: white;
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  padding: 0.3125rem 0.5625rem;
   line-height: 1.4;
-  text-align: center;
   background-color: #333;
+  overflow: hidden;
+  transition-property: visibility, opacity, transform;
+  outline: 0;
 
-  &[data-size='small'] {
-    padding: 0.1875rem 0.375rem;
-    font-size: 0.75rem;
+  @each $placement in $placements {
+    &[data-placement^='#{$placement}'] {
+      .#{$namespace-prefix}-arrow {
+        @include arrow($placement, 8px, #333);
+        @include arrow-margin($placement);
+        @include arrow-transform-origin($placement, 7px);
+        @include arrow-position($placement, 7px, false);
+      }
+    }
   }
 
-  &[data-size='large'] {
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-  }
-
-  &[data-animatefill] {
-    overflow: hidden;
-    background-color: transparent;
+  &[data-arrow] {
+    overflow: visible;
   }
 
   &[data-interactive] {
     pointer-events: auto;
-
-    .#{$namespace-prefix}-roundarrow path {
-      pointer-events: auto;
-    }
   }
 
-  &[data-inertia] {
-    &[data-state='visible'] {
-      transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
-    }
-    &[data-state='hidden'] {
-      transition-timing-function: ease;
-    }
+  &[data-inertia][data-state='visible'] {
+    transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
   }
 }
 
-.#{$namespace-prefix}-arrow,
-.#{$namespace-prefix}-roundarrow {
+.#{$namespace-prefix}-arrow {
   position: absolute;
-  width: 0;
-  height: 0;
+  border-color: transparent;
+  border-style: solid;
 }
 
-.#{$namespace-prefix}-roundarrow {
-  width: 18px;
-  height: 7px;
-  fill: #333;
-  pointer-events: none;
-}
-
-.#{$namespace-prefix}-backdrop {
-  position: absolute;
-  background-color: #333;
-  border-radius: 50%;
-  width: calc(110% + 2rem);
-  left: 50%;
-  top: 50%;
-  z-index: -1;
-  transition: all cubic-bezier(0.46, 0.1, 0.52, 0.98);
-  backface-visibility: hidden;
-
-  &::after {
-    content: '';
-    float: left;
-    padding-top: 100%;
-  }
-}
-
-.#{$namespace-prefix}-backdrop + .#{$namespace-prefix}-content {
-  transition-property: opacity;
-  will-change: opacity;
-
-  &[data-state='hidden'] {
-    opacity: 0;
-  }
+.#{$namespace-prefix}-content {
+  padding: 0.3125rem 0.5625rem;
 }

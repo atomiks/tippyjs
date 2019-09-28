@@ -22,11 +22,11 @@ export const Center = styled.div`
 export const Container = styled.div`
   position: relative;
   max-width: 940px;
-  padding: 0 ${props => props.mobilePadding}%;
+  padding: 0 ${props => props.mobilePadding || '1'}rem;
   margin: 0 auto;
 
   ${MEDIA.sm} {
-    padding: 0 25px;
+    padding: 0 1.5625rem;
   }
   ${MEDIA.md} {
     padding: 0 60px;
@@ -35,29 +35,19 @@ export const Container = styled.div`
     padding: 0 75px;
   }
 `
-Container.defaultProps = {
-  mobilePadding: 5,
-}
 
-export const Row = styled(({ children, spacing, ...rest }) => (
-  <div {...rest}>{children}</div>
-))`
+export const Row = styled(({ spacing, ...rest }) => <div {...rest} />)`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 0 -${props => props.spacing}px;
+  margin: 0 -${props => props.spacing || '0.5'}rem;
 `
-Row.defaultProps = {
-  spacing: 15,
-}
 
-export const Col = styled(
-  ({ children, base, xs, sm, md, lg, xl, spacing, ...rest }) => (
-    <div {...rest}>{children}</div>
-  ),
-)`
+export const Col = styled(({ base, xs, sm, md, lg, xl, spacing, ...rest }) => (
+  <div {...rest} />
+))`
   flex: 1;
-  padding: 0 ${props => props.spacing}px;
+  padding: 0 ${props => props.spacing || '0.5'}rem;
   ${props =>
     props.base &&
     css`
@@ -74,15 +64,12 @@ export const Col = styled(
         `,
       )};
 `
-Col.defaultProps = {
-  spacing: 15,
-}
 
-export const Link = styled(GatsbyLink).attrs(props => ({
+export const Link = styled(GatsbyLink).attrs(() => ({
   activeStyle: {
     fontWeight: '600',
-    background: 'linear-gradient(90deg, #676c95, #4b4f74)',
-    color: 'white',
+    background: 'white',
+    color: '#7761d1',
   },
 }))`
   color: inherit;
@@ -90,7 +77,7 @@ export const Link = styled(GatsbyLink).attrs(props => ({
   transition: color 0.15s;
 `
 
-export const ExternalLink = styled.a.attrs(props => ({
+export const ExternalLink = styled.a.attrs(() => ({
   target: '_blank',
   rel: 'noopener noreferrer',
 }))`
@@ -106,49 +93,45 @@ export const ExternalLink = styled.a.attrs(props => ({
 export const Flex = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: ${props => props.justify};
+  justify-content: ${props => props.justify || 'space-between'};
+  align-items: ${props => props.align || 'center'};
 
   > div {
-    margin-right: 15px;
-    margin-bottom: 15px;
+    margin-right: 0.9375rem;
+    margin-bottom: 0.9375rem;
     flex: ${props => props.type === 'even' && 1};
   }
 `
-Flex.defaultProps = {
-  justify: 'space-between',
-}
 
 export const Button = styled.button`
   border: none;
-  background: linear-gradient(135deg, #00acff, #6f99fc) no-repeat;
-  color: white;
+  background: white;
+  color: #5183f5;
+  border: 2px dashed #5183f5;
   will-change: opacity;
-  box-shadow: 0 4px 8px -1px rgba(25, 80, 137, 0.08),
-    0 8px 24px -2px rgba(0, 128, 255, 0.06);
-  font-size: 17px;
-  font-weight: 500;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  padding: 8px 16px;
-  border-radius: 4px;
-  margin-right: 8px;
-  margin-bottom: 8px;
-  transition: opacity 0.2s;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  margin: ${props => (props.marginless ? '0' : '0 0.5rem 0.5rem 0')};
+  transition: background 0.2s, color 0.1s;
 
   &:hover {
-    opacity: 0.8;
+    background: #5183f5;
+    color: white;
   }
 `
 
 export const Demo = styled.div`
   background: #eeeefa;
-  margin: 15px -5.55% 25px;
-  padding: 25px 5% 16px;
+  margin: 0.9375rem -1rem 1.5625rem;
+  padding: 1.5625rem 1rem 1rem;
 
   ${MEDIA.sm} {
-    padding-left: 25px;
-    padding-right: 25px;
-    margin-left: -25px;
-    margin-right: -25px;
+    padding-left: 1.5625rem;
+    padding-right: 1.5625rem;
+    margin-left: -1.5625rem;
+    margin-right: -1.5625rem;
   }
 
   ${MEDIA.md} {

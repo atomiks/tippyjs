@@ -1,11 +1,21 @@
 import React, { Component } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import TippyLogo from '../images/logo.svg'
 import { MEDIA, Container, Flex, ExternalLink } from './Framework'
 import GitHub from 'react-feather/dist/icons/github'
-import CloudLightning from 'react-feather/dist/icons/cloud-lightning'
 import Menu from 'react-feather/dist/icons/menu'
 import TextGradient from './TextGradient'
+import { version } from '../../../package.json'
+
+const hover = keyframes`
+  from {
+    transform: translate3d(0, 4px, 0);
+  }
+
+  to {
+    transform: translate3d(0, 10px, 0);
+  }
+`
 
 const HeaderRoot = styled.header`
   position: relative;
@@ -17,10 +27,12 @@ const HeaderRoot = styled.header`
   );
   background-repeat: no-repeat;
   background-size: cover;
-  padding: 25px 0;
+  padding: 1.5625rem 0;
   text-align: center;
   margin-bottom: 50px;
   color: white;
+  margin-left: -250px;
+  padding-left: 250px;
 
   &::before {
     content: '';
@@ -33,7 +45,7 @@ const HeaderRoot = styled.header`
     height: 100vh;
 
     ${MEDIA.lg} {
-      left: -250px;
+      left: -100px;
     }
   }
 `
@@ -42,6 +54,7 @@ const Logo = styled.img`
   display: block;
   height: 70px;
   margin: 0 auto 10px;
+  animation: ${hover} 2s ease-in-out infinite alternate;
 `
 
 const Title = styled.h1`
@@ -49,33 +62,33 @@ const Title = styled.h1`
   font-size: 50px;
   font-weight: 400;
   margin-top: 0;
-  margin-bottom: 25px;
+  margin-bottom: 1.5625rem;
 `
 
 const ButtonLink = styled(ExternalLink)`
   background: rgba(255, 255, 255, 0.15);
-  padding: 12px 24px;
+  padding: 0.75rem 1.5rem;
   border-radius: 4px;
   transition: all 0.25s;
   color: #ffffff;
-  margin: 0 10px 10px;
+  margin: 0 0.5rem 0.5rem;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 500;
   will-change: opacity;
 
   &:hover {
     background: white;
     border-bottom-color: white;
-    box-shadow: 0 8px 16px -2px rgba(0, 32, 128, 0.25);
+    box-shadow: 0 8px 1rem -2px rgba(0, 32, 128, 0.25);
     text-decoration: none;
   }
 `
 
-const MenuButton = styled.button`
+export const MenuButton = styled.button`
   position: absolute;
   top: -10px;
-  left: 15px;
+  left: 0.9375rem;
   color: inherit;
   font-weight: bold;
   border: none;
@@ -89,27 +102,31 @@ const MenuButton = styled.button`
   }
 `
 
-const PoweredByLink = styled(ExternalLink)`
-  position: relative;
-  top: 10px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 90%;
-  font-size: 17px;
+const Version = styled.div`
+  display: inline-block;
+  background: rgb(255, 255, 255, 0.95);
+  color: #7761d1;
+  font-weight: bold;
+  margin: 1rem 0;
+  padding: 0.375rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
 
-  &:hover {
-    color: white;
+  ${MEDIA.md} {
+    margin: 1rem 0;
   }
 `
 
 const svgStyles = css`
-  margin: 0 0 -30px;
+  margin: -1rem 0 -30px;
 
   ${MEDIA.md} {
-    margin: -6% 0 -30px;
+    margin: -10% 0 -30px;
+    margin-left: -250px;
   }
 
   @media (min-width: 1700px) {
-    margin: -7% 0 -30px;
+    margin: -9% 0 -30px;
   }
 `
 
@@ -118,21 +135,14 @@ const iconStyles = {
   marginRight: 8,
 }
 
-const headerIconStyles = {
-  ...iconStyles,
-  color: '#ffe6b3',
-  width: 20,
-  height: 20,
-}
-
 const githubStyles = {
   ...iconStyles,
   color: '#333',
 }
 
 const menuStyles = {
-  width: 36,
-  height: 36,
+  width: 40,
+  height: 40,
 }
 
 class Header extends Component {
@@ -151,10 +161,7 @@ class Header extends Component {
               View on GitHub
             </ButtonLink>
           </Flex>
-          <PoweredByLink href="https://popper.js.org">
-            <CloudLightning style={headerIconStyles} />
-            Powered by Popper.js
-          </PoweredByLink>
+          <Version>v{version}</Version>
           <MenuButton
             aria-label="Menu"
             aria-expanded={isNavOpen ? 'true' : 'false'}

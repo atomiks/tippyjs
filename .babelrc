@@ -1,11 +1,10 @@
 {
-  "presets": ["@babel/env", "@babel/typescript"],
-  "plugins": [
-    ["@babel/proposal-object-rest-spread", { "loose": true }, "unique"]
-  ],
+  "presets": [["@babel/env", { "loose": true }], "@babel/typescript"],
+  "plugins": ["dev-expression"],
   "env": {
     "test": {
-      "presets": [["@babel/env", { "targets": { "node": "current" } }]]
+      "presets": [["@babel/env", { "targets": { "node": "current" } }]],
+      "plugins": ["dev-expression"]
     }
   }
 }

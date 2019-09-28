@@ -1,104 +1,111 @@
 import React from 'react'
 import { Link, graphql, StaticQuery } from 'gatsby'
 import styled from 'styled-components'
-import { MEDIA, Flex } from './Framework'
-import { sortPagesByIndex } from '../utils'
+import { MEDIA, Flex, Container } from './Framework'
+import { sortActivePages } from '../utils'
 import ArrowRight from 'react-feather/dist/icons/arrow-right'
 import ArrowLeft from 'react-feather/dist/icons/arrow-left'
-import Theme from '../css/theme'
+import theme from '../css/theme'
 
-const Container = styled(Flex)`
-  margin-top: 40px;
-  margin-left: -10px;
-  margin-right: -10px;
+const NavButtonsContainer = styled.div`
+  margin-top: 4rem;
+  border-top: 1px solid ${theme.border};
+`
 
-  ${MEDIA.md} {
-    margin-left: -35px;
-    margin-right: -35px;
+const FlexContainer = styled(Flex)`
+  flex-direction: column;
+  margin: 0 -1rem;
+
+  ${MEDIA.sm} {
+    flex-direction: row;
+    margin: 0 -1.5625rem;
   }
 `
 
 const NavButton = styled(Link)`
   display: block;
-  padding: 40px 25px;
-  border: ${props =>
-    props['data-next'] ? 'none' : `1px solid ${Theme.border}`};
-  border-radius: 4px;
-  background: ${props => (props['data-next'] ? Theme.gradient : 'white')};
-  text-decoration: none;
-  color: ${props => (props['data-next'] ? 'white' : 'inherit')};
   font-weight: bold;
-  margin: 0 10px 15px;
-  font-size: 20px;
-  transition: box-shadow 0.15s, border 0.15s, filter 0.15s;
+  border-bottom: 2px solid transparent;
+  font-size: 1.75rem;
+  padding: 3rem 1rem;
   width: 100%;
 
-  &:hover {
-    border-color: inherit;
-    background: ${props => (props['data-next'] ? Theme.gradient : 'white')};
-    color: ${props => (props['data-next'] ? 'white' : 'inherit')};
-    text-decoration: none;
-  }
-
-  &[data-next] {
-    border-bottom: none;
-    filter: saturate(1.15);
+  &:nth-child(2) {
+    border-bottom: 2px solid ${theme.border};
+    text-align: right;
     order: -1;
-
-    &:hover {
-      filter: saturate(1.15) brightness(1.2);
-    }
   }
 
   ${MEDIA.sm} {
-    width: calc(50% - 20px);
-    margin: 0 10px;
-    order: initial;
+    width: 50%;
+    padding: 4rem 1.5625rem;
 
-    &[data-next] {
+    &:nth-child(2) {
+      border-left: 1px solid ${theme.border};
+      border-bottom: 2px solid transparent;
       order: initial;
     }
   }
 
-  ${MEDIA.md} {
-    font-size: 24px;
+  &:hover {
+    color: #2161f2;
+    background: #f0f4fe;
+    border-bottom: 2px solid #2161f2;
+    text-decoration: none;
+  }
+
+  &:active {
+    border-bottom-style: dashed;
   }
 `
 
 function NavButtons({ next }) {
   return (
-    <Container>
-      <StaticQuery
-        query={allMdxQuery}
-        render={data => {
-          const links = sortPagesByIndex(data.allMdx.edges).map(
-            ({ node }) => node,
-          )
-          const nextLink = links[next]
-          const prevLink = next > 1 ? links[next - 2] : null
+    <NavButtonsContainer>
+      <Container>
+        <StaticQuery
+          query={allMdxQuery}
+          render={data => {
+            const links = sortActivePages(data.allMdx.edges).map(
+              ({ node }) => node,
+            )
+            const nextLink = links[next]
+            const prevLink = next > 1 ? links[next - 2] : null
 
-          return (
-            <>
-              {prevLink && (
-                <NavButton to={prevLink.frontmatter.path}>
-                  <ArrowLeft
-                    aria-label="Previous"
-                    style={{ verticalAlign: -4 }}
-                  />{' '}
-                  {prevLink.frontmatter.title}
-                </NavButton>
-              )}
-              {nextLink && (
-                <NavButton to={nextLink.frontmatter.path} data-next>
-                  {nextLink.frontmatter.title}{' '}
-                  <ArrowRight aria-label="Next" style={{ verticalAlign: -4 }} />
-                </NavButton>
-              )}
-            </>
-          )
-        }}
-      />
-    </Container>
+            return (
+              <FlexContainer>
+                {prevLink && (
+                  <NavButton to={prevLink.frontmatter.path}>
+                    <ArrowLeft
+                      aria-label="Previous"
+                      style={{
+                        verticalAlign: -6,
+                        width: '2rem',
+                        height: '2rem',
+                      }}
+                    />{' '}
+                    {prevLink.frontmatter.title}
+                  </NavButton>
+                )}
+                {nextLink && (
+                  <NavButton to={nextLink.frontmatter.path} data-next>
+                    {nextLink.frontmatter.title}{' '}
+                    <ArrowRight
+                      aria-label="Next"
+                      style={{
+                        verticalAlign: -6,
+                        width: '2rem',
+                        height: '2rem',
+                      }}
+                    />
+                  </NavButton>
+                )}
+              </FlexContainer>
+            )
+          }}
+        />
+      </Container>
+    </NavButtonsContainer>
   )
 }
 

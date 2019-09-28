@@ -1,44 +1,66 @@
 import { version } from '../package.json'
-import { isBrowser } from './browser'
 import { defaultProps } from './props'
 import createTippy from './createTippy'
-import bindGlobalEventListeners from './bindGlobalEventListeners'
-import group from './group'
-import { polyfillElementPrototypeProperties } from './reference'
-import { arrayFrom } from './ponyfills'
-import { hideAll } from './popper'
+import bindGlobalEventListeners, {
+  currentInput,
+} from './bindGlobalEventListeners'
 import {
-  isSingular,
-  isBareVirtualElement,
+  arrayFrom,
+  isRealElement,
   getArrayOfElements,
-  validateOptions,
+  isReferenceElement,
 } from './utils'
-import { Options, Props, Instance, Targets, VirtualReference } from './types'
-
-let globalEventListenersBound = false
+import { warnWhen, validateTargets, validateProps } from './validation'
+import { POPPER_SELECTOR } from './constants'
+import {
+  Props,
+  Instance,
+  Targets,
+  PopperElement,
+  HideAllOptions,
+  Plugin,
+  Tippy,
+} from './types'
 
 /**
  * Exported module
  */
-function tippy(targets: Targets, options?: Options): Instance | Instance[] {
-  validateOptions(options || {}, defaultProps)
-
-  if (!globalEventListenersBound) {
-    bindGlobalEventListeners()
-    globalEventListenersBound = true
+function tippy(
+  targets: Targets,
+  optionalProps?: Partial<Props>,
+  plugins: Plugin[] = [],
+): Instance | Instance[] {
+  if (__DEV__) {
+    validateTargets(targets)
+    validateProps(optionalProps, plugins)
   }
 
-  const props: Props = { ...defaultProps, ...options }
+  bindGlobalEventListeners()
 
-  // If they are specifying a virtual positioning reference, we need to polyfill
-  // some native DOM props
-  if (isBareVirtualElement(targets)) {
-    polyfillElementPrototypeProperties(targets as VirtualReference)
+  const props: Props = { ...defaultProps, ...optionalProps }
+
+  const elements = getArrayOfElements(targets)
+
+  if (__DEV__) {
+    const isSingleContentElement = isRealElement(props.content)
+    const isMoreThanOneReferenceElement = elements.length > 1
+    warnWhen(
+      isSingleContentElement && isMoreThanOneReferenceElement,
+      `tippy() was passed an Element as the \`content\` prop, but more than one
+      tippy instance was created by this invocation. This means the content
+      element will only be appended to the last tippy instance.
+      
+      Instead, pass the .innerHTML of the element, or use a function that
+      returns a cloned version of the element instead.
+      
+      1) content: () => element.cloneNode(true)
+      2) content: element.innerHTML`,
+    )
   }
 
-  const instances = getArrayOfElements(targets).reduce<Instance[]>(
-    (acc, reference) => {
-      const instance = reference && createTippy(reference, props)
+  const instances = elements.reduce<Instance[]>(
+    (acc, reference): Instance[] => {
+      const instance = reference && createTippy(reference, props, plugins)
 
       if (instance) {
         acc.push(instance)
@@ -49,42 +71,71 @@ function tippy(targets: Targets, options?: Options): Instance | Instance[] {
     [],
   )
 
-  return isSingular(targets) ? instances[0] : instances
+  return isRealElement(targets) ? instances[0] : instances
 }
 
-/**
- * Static props
- */
 tippy.version = version
-tippy.defaults = defaultProps
+tippy.defaultProps = defaultProps
+tippy.setDefaultProps = setDefaultProps
+tippy.currentInput = currentInput
 
 /**
- * Static methods
+ * Mutates the defaultProps object by setting the props specified
  */
-tippy.setDefaults = (partialDefaults: Options) => {
-  Object.keys(partialDefaults).forEach(key => {
-    // @ts-ignore
-    defaultProps[key] = partialDefaults[key]
-  })
-}
-tippy.hideAll = hideAll
-tippy.group = group
+function setDefaultProps(partialProps: Partial<Props>): void {
+  if (__DEV__) {
+    validateProps(partialProps, [])
+  }
 
-/**
- * Auto-init tooltips for elements with a `data-tippy="..."` attribute
- */
-export function autoInit(): void {
-  arrayFrom(document.querySelectorAll('[data-tippy]')).forEach(el => {
-    const content = el.getAttribute('data-tippy')
-
-    if (content) {
-      tippy(el, { content })
-    }
+  Object.keys(partialProps).forEach((key): void => {
+    defaultProps[key] = partialProps[key]
   })
 }
 
-if (isBrowser) {
-  setTimeout(autoInit)
+/**
+ * Returns a proxy wrapper function that passes the plugins
+ */
+export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
+  const fn = (
+    targets: Targets,
+    optionalProps?: Partial<Props>,
+    innerPlugins: Plugin[] = [],
+  ): Instance | Instance[] =>
+    tippy(targets, optionalProps, [...outerPlugins, ...innerPlugins])
+
+  fn.version = version
+  fn.defaultProps = defaultProps
+  fn.setDefaultProps = setDefaultProps
+  fn.currentInput = currentInput
+
+  return fn
+}
+
+/**
+ * Hides all visible poppers on the document
+ */
+export function hideAll({
+  exclude: excludedReferenceOrInstance,
+  duration,
+}: HideAllOptions = {}): void {
+  arrayFrom(document.querySelectorAll(POPPER_SELECTOR)).forEach(
+    (popper: PopperElement): void => {
+      const instance = popper._tippy
+
+      if (instance) {
+        let isExcluded = false
+        if (excludedReferenceOrInstance) {
+          isExcluded = isReferenceElement(excludedReferenceOrInstance)
+            ? instance.reference === excludedReferenceOrInstance
+            : popper === excludedReferenceOrInstance.popper
+        }
+
+        if (!isExcluded) {
+          instance.hide(duration)
+        }
+      }
+    },
+  )
 }
 
 export default tippy

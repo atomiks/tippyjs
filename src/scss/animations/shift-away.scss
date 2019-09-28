@@ -1,0 +1,30 @@
+@import '../_mixins.scss';
+@import '../_vars.scss';
+
+@mixin hidden-transform($placement) {
+  @if ($placement == 'top') {
+    transform: translateY(10px);
+  } @else if ($placement == 'bottom') {
+    transform: translateY(-10px);
+  } @else if ($placement == 'left') {
+    transform: translateX(10px);
+  } @else if ($placement == 'right') {
+    transform: translateX(-10px);
+  }
+}
+
+.#{$namespace-prefix}-tooltip {
+  &[data-animation='shift-away'] {
+    @each $placement in $placements {
+      &[data-placement^='#{$placement}'] {
+        &[data-state='hidden'] {
+          @include hidden-transform($placement);
+        }
+      }
+    }
+
+    &[data-state='hidden'] {
+      opacity: 0;
+    }
+  }
+}

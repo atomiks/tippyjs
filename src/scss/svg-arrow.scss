@@ -1,0 +1,37 @@
+@import './_mixins.scss';
+@import './_vars.scss';
+
+.#{$namespace-prefix}-tooltip {
+  @each $placement in $placements {
+    &[data-placement^='#{$placement}'] {
+      .#{$namespace-prefix}-svg-arrow {
+        @include svg-arrow-transform-origin($placement, 7px);
+        @include arrow-margin($placement);
+        @include arrow-position($placement, 7px, true);
+
+        svg {
+          @include svg-arrow-transform($placement);
+        }
+      }
+    }
+  }
+
+  &[data-interactive] {
+    .#{$namespace-prefix}-svg-arrow path {
+      pointer-events: auto;
+    }
+  }
+}
+
+.#{$namespace-prefix}-svg-arrow {
+  position: absolute;
+  width: 18px;
+  height: 7px;
+  fill: #333;
+  pointer-events: none;
+
+  svg {
+    position: absolute;
+    left: 0;
+  }
+}

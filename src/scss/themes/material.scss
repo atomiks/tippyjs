@@ -1,0 +1,30 @@
+@import '../_mixins.scss';
+@import '../_vars.scss';
+
+$color: #505355;
+
+.#{$namespace-prefix}-tooltip.material-theme {
+  background-color: $color;
+  font-size: 0.8125rem;
+  font-weight: 600;
+
+  @each $placement in $placements {
+    &[data-placement^='#{$placement}'] {
+      .#{$namespace-prefix}-arrow {
+        @include arrow($placement, 8px, $color);
+      }
+    }
+  }
+
+  .#{$namespace-prefix}-content {
+    padding: 0.25rem 0.4375rem;
+  }
+
+  .#{$namespace-prefix}-backdrop {
+    background-color: $color;
+  }
+
+  .#{$namespace-prefix}-svg-arrow {
+    fill: $color;
+  }
+}

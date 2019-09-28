@@ -1,24 +1,15 @@
 ---
 title: AJAX
 path: /ajax/
-index: 9
+index: 11
 ---
 
-import Tippy from '../components/Tippy'
 import Ajax from '../components/examples/Ajax'
 import AjaxSmooth from '../components/examples/AjaxSmooth'
-import { Demo, Button } from '../components/Framework'
 
-Initiating AJAX requests is facilitated by lifecycle functions:
-
-- `onShow()`
-- `onMount()`
-- `onShown()`
-- `onHide()`
-- `onHidden()`
-
-This allows you to do very powerful things. For example, let's say you wanted to
-show a new image inside a tooltip each time it gets shown:
+Initiating AJAX requests is facilitated by lifecycle hooks. This allows you to
+do very powerful things. For example, let's say you wanted to show a new image
+inside a tooltip each time it gets shown:
 
 <Demo>
   <Ajax>Hover for a new image</Ajax>
@@ -37,14 +28,12 @@ Now, let's add some JavaScript:
 ```js
 tippy('#ajax-tippy', {
   content: 'Loading...',
-  animateFill: false,
-  animation: 'fade',
-  // This option is recommended if your tooltip changes size while showing
+  // This prop is recommended if your tooltip changes size while showing
   flipOnUpdate: true,
 })
 ```
 
-Here's the result so far:
+Here's the result so far (nothing happens yet!):
 
 <Demo>
   <Tippy content="Loading..." animation="fade" animateFill={false}>
@@ -58,8 +47,6 @@ lifecycle:
 ```js
 tippy('#ajax-tippy', {
   content: 'Loading...',
-  animateFill: false,
-  animation: 'fade',
   flipOnUpdate: true,
   onShow(instance) {
     // Code here is executed every time the tippy shows
@@ -96,8 +83,6 @@ tippy('#ajax-tippy', {
 <Demo>
   <Tippy
     content="Loading..."
-    animation="fade"
-    animateFill={false}
     onShow={instance => {
       fetch('https://unsplash.it/200/?random')
         .then(response => response.blob())
@@ -147,20 +132,19 @@ current condition the tooltip is in.
 ```js
 tippy('#ajax-tippy', {
   // ...
-  onShow(instance) {
-    // We can monkey-patch the instance's state object with our own state
-    if (instance.state.ajax === undefined) {
-      instance.state.ajax = {
-        isFetching: false,
-        canFetch: true,
-      }
+  onCreate(instance) {
+    // Attach a state object to keep track of the request status
+    instance.ajaxState = {
+      isFetching: false,
+      canFetch: true,
     }
-
+  },
+  onShow(instance) {
     // Now we will avoid initiating a new request unless the old one
     // finished (`isFetching`).
     // We also only want to initiate a request if the tooltip has been
     // reset back to Loading... (`canFetch`).
-    if (instance.state.ajax.isFetching || !instance.state.ajax.canFetch) {
+    if (instance.ajaxState.isFetching || !instance.ajaxState.canFetch) {
       return
     }
 
@@ -175,12 +159,12 @@ tippy('#ajax-tippy', {
       .finally(() => {
         // Make sure to set it back to false so new requests can be
         // initiated
-        instance.state.ajax.isFetching = false
+        instance.ajaxState.isFetching = false
       })
   },
   onHidden(instance) {
     instance.setContent('Loading...')
-    instance.state.ajax.canFetch = true
+    instance.ajaxState.canFetch = true
   },
 })
 ```
@@ -193,10 +177,4 @@ hides and resets back to `Loading...`, both of which appear "buggy".
 Currently, the image instantly replaces the `Loading...` text without any smooth
 transition. How do we make it so the tooltip smoothly transitions in height?
 
-<Demo>
-  <AjaxSmooth />
-</Demo>
-
-To look at example code solving this dynamically (i.e. not knowing the height of
-the image or initial size of the tooltip) view the
-[CodePen demo](https://codepen.io/atomiks/pen/LgjMbW).
+[See the Animations page for details](/animations#dimensions-transition).

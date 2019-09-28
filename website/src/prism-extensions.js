@@ -4,6 +4,10 @@ Prism.languages.insertBefore('javascript', 'keyword', {
     pattern: /\b(?:import|as|export|from|default)\b/,
     alias: 'keyword',
   },
+  control: {
+    pattern: /\b(?:if|else|return)\b/,
+    alias: 'keyword',
+  },
   op: {
     pattern: /\b(?:typeof|new|of|delete)\b/,
     alias: 'keyword',
@@ -35,6 +39,7 @@ Prism.languages.insertBefore('javascript', 'punctuation', {
     alias: 'variable',
   },
   console: /\bconsole\b/,
+  object: /\b[$\w\xA0-\uFFFF]+?(?=\.)/,
   class: {
     pattern: /\b[A-Z][$\w\xA0-\uFFFF]+\b/,
     alias: 'class-name',
@@ -73,27 +78,15 @@ Prism.languages.javascript.constant = [
   },
 ]
 
-Prism.languages.javascript.string = [
-  {
-    pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*(?=\1)/,
-    lookbehind: true,
+Prism.languages.javascript.string = {
+  pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
+  greedy: true,
+  inside: {
+    punctuation: /^["']|["']$/,
   },
-  {
-    pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*(?=\1)/,
-    alias: 'quote',
-  },
-  {
-    pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*(["'])/,
-    lookbehind: true,
-    alias: 'quote',
-  },
-]
+}
 
 Prism.languages.insertBefore('javascript', 'keyword', {
-  quote: {
-    pattern: /['"`]/,
-    alias: 'punctuation',
-  },
   parameter: [
     {
       pattern: /(function(?:\s+[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*)?\s*\(\s*)[^\s()][^()]*?(?=\s*\))/,
