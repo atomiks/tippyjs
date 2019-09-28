@@ -360,6 +360,7 @@ Browser:
 <summary>View details</summary>
 
 - `[x-placement]` attribute is now `[data-placement]`
+- `[x-out-of-boundaries]` is now `[data-out-of-boundaries]`
 - `.tippy-roundarrow` is now `.tippy-svg-arrow`
 - `.tippy-tooltip` no longer has `padding` on it, rather the `.tippy-content`
   selector does.
