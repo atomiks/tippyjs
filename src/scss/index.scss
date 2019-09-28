@@ -49,16 +49,9 @@
 }
 
 .#{$namespace-prefix}-arrow {
+  position: absolute;
   border-color: transparent;
   border-style: solid;
-}
-
-.#{$namespace-prefix}-arrow {
-  position: absolute;
-
-  &[data-state='hidden'] {
-    opacity: 0;
-  }
 }
 
 .#{$namespace-prefix}-content {
