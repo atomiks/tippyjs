@@ -194,7 +194,7 @@ export default {
         }
 
         // With "initial" behavior, flipping may be incorrect for the first show
-        if (getIsInitialBehavior()) {
+        if (getIsEnabled() && getIsInitialBehavior()) {
           isInternallySettingControlledProp = true
           instance.setProps({ flipOnUpdate: true })
           isInternallySettingControlledProp = false
