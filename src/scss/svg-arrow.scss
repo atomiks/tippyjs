@@ -25,14 +25,7 @@
 
 .#{$namespace-prefix}-svg-arrow {
   position: absolute;
-
-  &[data-state='hidden'] {
-    opacity: 0;
-  }
-}
-
-.#{$namespace-prefix}-svg-arrow {
-  width: 1.125rem;
+  width: 18px;
   height: 7px;
   fill: #333;
   pointer-events: none;

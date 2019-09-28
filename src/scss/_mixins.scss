@@ -40,14 +40,14 @@
   }
 }
 
-@mixin arrow-position($placement, $width, $issvg-arrow) {
-  @if ($placement == 'top') {
+@mixin arrow-position($placement, $width, $is-svg-arrow) {
+  @if ($placement == 'top' and not $is-svg-arrow) {
     bottom: -$width;
   } @else if ($placement == 'bottom') {
     top: -$width;
   }
 
-  @if ($issvg-arrow) {
+  @if ($is-svg-arrow) {
     @if ($placement == 'left') {
       right: -$width * 2 + 2px;
     } @else if ($placement == 'right') {
