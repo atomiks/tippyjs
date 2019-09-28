@@ -112,8 +112,10 @@ tippy('button', {
 
 ### Styling the arrow
 
-There are two types of arrows built-in: traditional CSS arrows (using the
+There are two types of arrows available: traditional CSS arrows (using the
 `border` trick), and a custom round SVG arrow.
+
+#### CSS arrow
 
 To style the default (sharp) CSS arrow, you'll need to target each different
 base placement (using the `data-placement` attribute on `.tippy-tooltip`
@@ -134,7 +136,15 @@ element) and apply it to the `.tippy-arrow` element:
 }
 ```
 
-To color the SVG arrow, it's as simple as specifying the `fill` and targeting
+#### SVG arrow
+
+First import the `svg-arrow.css` stylesheet for SVG arrow styling:
+
+```js
+import 'tippy.js/dist/svg-arrow.css'
+```
+
+To color an SVG arrow, it's as simple as specifying the `fill` and targeting
 `.tippy-svg-arrow`:
 
 <!-- prettier-ignore -->
@@ -144,11 +154,25 @@ To color the SVG arrow, it's as simple as specifying the `fill` and targeting
 }
 ```
 
-Note: You must import the `svg-arrow.css` stylesheet for SVG arrow styling to
-work properly.
+There is a default round arrow SVG shape exported from the package for you to
+use (seen on the demo).
+
+Node:
 
 ```js
-import 'tippy.js/dist/svg-arrow.css'
+import { roundArrow } from 'tippy.js'
+
+tippy(reference, {
+  arrow: roundArrow,
+})
+```
+
+Browser:
+
+```js
+tippy(reference, {
+  arrow: tippy.roundArrow,
+})
 ```
 
 <Demo>

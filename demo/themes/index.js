@@ -1,4 +1,6 @@
 import tippy from '../../src'
+import { ROUND_ARROW as roundArrow } from '../../src/constants'
+
 import '../../src/scss/index.scss'
 import '../../src/scss/svg-arrow.scss'
 import '../../src/scss/themes/light.scss'
@@ -10,7 +12,7 @@ const container = document.querySelector('.container')
 
 const themes = ['dark', 'light', 'light-border', 'material', 'translucent']
 const placements = ['top', 'bottom', 'left', 'right']
-const arrows = [false, true, 'round']
+const arrows = [false, true, roundArrow]
 
 themes.forEach(theme => {
   const h1 = document.createElement('h1')

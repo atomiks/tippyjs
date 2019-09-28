@@ -200,6 +200,8 @@ declare const followCursor: FollowCursor
 declare const inlinePositioning: InlinePositioning
 declare const sticky: Sticky
 
+declare const roundArrow: string
+
 export {
   hideAll,
   delegate,
@@ -208,4 +210,5 @@ export {
   followCursor,
   inlinePositioning,
   sticky,
+  roundArrow,
 }

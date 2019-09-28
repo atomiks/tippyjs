@@ -139,15 +139,17 @@ Browser:
 <details>
 <summary>View details</summary>
 
-Import the `svg-arrow` CSS, and use the `arrow` prop instead.
+Import the `svg-arrow` CSS, and the `roundArrow` string, and use the `arrow`
+prop instead.
 
 Node:
 
 ```js
+import { roundArrow } from 'tippy.js'
 import 'tippy.js/dist/svg-arrow.css'
 
 tippy(targets, {
-  arrow: 'round',
+  arrow: roundArrow,
 })
 ```
 
@@ -155,6 +157,11 @@ Browser:
 
 ```html
 <link rel="stylesheet" href="https://unpkg.com/tippy.js@5/dist/svg-arrow.css" />
+<script>
+  tippy(targets, {
+    arrow: tippy.roundArrow,
+  })
+</script>
 ```
 
 </details>

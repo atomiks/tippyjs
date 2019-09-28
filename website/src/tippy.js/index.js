@@ -14,6 +14,7 @@ import {
   delegate,
   followCursor,
   animateFill,
+  roundArrow,
 } from '../../../'
 import { useInstance } from '../hooks'
 import '../../../dist/tippy.css'
@@ -204,4 +205,4 @@ export default forwardRef(function TippyWrapper({ children, ...props }, ref) {
   )
 })
 
-export { TippySingleton, tippy, createSingleton, delegate }
+export { TippySingleton, tippy, createSingleton, delegate, roundArrow }

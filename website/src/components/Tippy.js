@@ -1,4 +1,5 @@
-import Tippy, { TippySingleton, tippy } from '../tippy.js'
+import React, { forwardRef } from 'react'
+import Tippy, { TippySingleton, tippy, roundArrow } from '../tippy.js'
 
 import '../../../dist/backdrop.css'
 import '../../../dist/svg-arrow.css'
@@ -21,9 +22,12 @@ import '../../../animations/shift-toward.css'
 import '../../../animations/shift-toward-subtle.css'
 import '../../../animations/shift-toward-extreme.css'
 
-Tippy.defaultProps = {
-  content: "I'm a Tippy tooltip!",
-}
+export default forwardRef(({ ...props }, ref) => {
+  if (props.arrow === 'round') {
+    props.arrow = roundArrow
+  }
 
-export default Tippy
+  return <Tippy content="I'm a Tippy tooltip!" {...props} ref={ref} />
+})
+
 export { TippySingleton, tippy }

@@ -17,7 +17,6 @@ import {
   CONTENT_SELECTOR,
   ARROW_SELECTOR,
   SVG_ARROW_SELECTOR,
-  ROUND_ARROW_INNER_HTML,
 } from './constants'
 
 /**
@@ -86,10 +85,7 @@ export function createArrowElement(arrow: Props['arrow']): HTMLDivElement {
     if (isRealElement(arrow)) {
       arrowElement.appendChild(arrow)
     } else {
-      setInnerHTML(
-        arrowElement,
-        arrow === 'round' ? ROUND_ARROW_INNER_HTML : (arrow as string),
-      )
+      setInnerHTML(arrowElement, arrow as string)
     }
   }
 
