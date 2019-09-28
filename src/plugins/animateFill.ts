@@ -19,11 +19,11 @@ export default {
       instance.popperChildren.backdrop = backdrop
     }
 
-    addBackdropToPopperChildren()
-
     return {
       onCreate(): void {
         if (backdrop) {
+          addBackdropToPopperChildren()
+
           tooltip.insertBefore(backdrop, tooltip.firstElementChild!)
           tooltip.setAttribute('data-animatefill', '')
 
