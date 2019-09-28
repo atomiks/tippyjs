@@ -10,12 +10,8 @@ export default {
       return instance.props.sticky === true || instance.props.sticky === value
     }
 
-    let prevRefRect = shouldCheck('reference')
-      ? reference.getBoundingClientRect()
-      : null
-    let prevPopRect = shouldCheck('popper')
-      ? popper.getBoundingClientRect()
-      : null
+    let prevRefRect: ClientRect | null = null
+    let prevPopRect: ClientRect | null = null
 
     function updatePosition(): void {
       const currentRefRect = shouldCheck('reference')
@@ -27,10 +23,8 @@ export default {
 
       // Schedule an update if the reference rect has changed
       if (
-        (shouldCheck('reference') &&
-          areRectsDifferent(prevRefRect, currentRefRect)) ||
-        (shouldCheck('popper') &&
-          areRectsDifferent(prevPopRect, currentPopRect))
+        (currentRefRect && areRectsDifferent(prevRefRect, currentRefRect)) ||
+        (currentPopRect && areRectsDifferent(prevPopRect, currentPopRect))
       ) {
         instance.popperInstance!.update()
       }
