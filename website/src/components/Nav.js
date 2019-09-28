@@ -54,6 +54,10 @@ const ListItem = styled.li`
     padding-top: 2rem;
   }
 
+  &:last-child {
+    padding-bottom: 2rem;
+  }
+
   > a {
     display: block;
     padding: 0.25rem 1.5625rem;

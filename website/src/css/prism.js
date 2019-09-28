@@ -26,10 +26,10 @@ export default createGlobalStyle`
   }
 
   pre[class*='language-'] {
-    padding: 1.25rem 5%;
+    padding: 1.25rem 1rem;
     margin-top: 0;
-    margin-left: -5.55%;
-    margin-right: -5.55%;
+    margin-left: -1rem;
+    margin-right: -1rem;
     background: radial-gradient(50% 80% at 80% 0%,rgb(61, 59, 98),rgb(40, 40, 75));
     font-size: 1rem;
     line-height: 1.5;
@@ -246,14 +246,14 @@ export default createGlobalStyle`
     &::before {
       content: attr(data-language);
       display: block;
-      width: 111.1%;
       position: absolute;
       font-weight: bold;
       padding: 8px 0.9375rem;
       font-family: ${MONOSPACE_FONT_STACK};
       color: white;
-      margin-left: -5.55%;
-      padding-left: 5%;
+      width: calc(100% + 2rem);
+      margin-left: -1rem;
+      padding-left: 1rem;
       text-transform: uppercase;
       font-size: 0.9375rem;
       text-align: right;

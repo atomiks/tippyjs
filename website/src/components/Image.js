@@ -5,8 +5,8 @@ import styled from 'styled-components'
 import { MEDIA } from '../components/Framework'
 
 const ImgWrapper = styled.div`
-  margin-left: -5.5%;
-  margin-right: -5.5%;
+  margin-left: -1rem;
+  margin-right: -1rem;
 
   ${MEDIA.sm} {
     margin-left: -1.5625rem;

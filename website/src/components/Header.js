@@ -118,7 +118,7 @@ const Version = styled.div`
 `
 
 const svgStyles = css`
-  margin: -5% 0 -30px;
+  margin: -1rem 0 -30px;
 
   ${MEDIA.md} {
     margin: -10% 0 -30px;

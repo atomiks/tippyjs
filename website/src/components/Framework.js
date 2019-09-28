@@ -22,7 +22,7 @@ export const Center = styled.div`
 export const Container = styled.div`
   position: relative;
   max-width: 940px;
-  padding: 0 ${props => props.mobilePadding}%;
+  padding: 0 ${props => props.mobilePadding || '1'}rem;
   margin: 0 auto;
 
   ${MEDIA.sm} {
@@ -35,29 +35,19 @@ export const Container = styled.div`
     padding: 0 75px;
   }
 `
-Container.defaultProps = {
-  mobilePadding: 5,
-}
 
-export const Row = styled(({ children, spacing, ...rest }) => (
-  <div {...rest}>{children}</div>
-))`
+export const Row = styled(({ spacing, ...rest }) => <div {...rest} />)`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 0 -${props => props.spacing}px;
+  margin: 0 -${props => props.spacing || '0.5'}rem;
 `
-Row.defaultProps = {
-  spacing: 15,
-}
 
-export const Col = styled(
-  ({ children, base, xs, sm, md, lg, xl, spacing, ...rest }) => (
-    <div {...rest}>{children}</div>
-  ),
-)`
+export const Col = styled(({ base, xs, sm, md, lg, xl, spacing, ...rest }) => (
+  <div {...rest} />
+))`
   flex: 1;
-  padding: 0 ${props => props.spacing}px;
+  padding: 0 ${props => props.spacing || '0.5'}rem;
   ${props =>
     props.base &&
     css`
@@ -74,11 +64,8 @@ export const Col = styled(
         `,
       )};
 `
-Col.defaultProps = {
-  spacing: 15,
-}
 
-export const Link = styled(GatsbyLink).attrs(props => ({
+export const Link = styled(GatsbyLink).attrs(() => ({
   activeStyle: {
     fontWeight: '600',
     background: 'white',
@@ -90,7 +77,7 @@ export const Link = styled(GatsbyLink).attrs(props => ({
   transition: color 0.15s;
 `
 
-export const ExternalLink = styled.a.attrs(props => ({
+export const ExternalLink = styled.a.attrs(() => ({
   target: '_blank',
   rel: 'noopener noreferrer',
 }))`
@@ -106,8 +93,8 @@ export const ExternalLink = styled.a.attrs(props => ({
 export const Flex = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: ${props => props.justify};
-  align-items: ${props => props.align};
+  justify-content: ${props => props.justify || 'space-between'};
+  align-items: ${props => props.align || 'center'};
 
   > div {
     margin-right: 0.9375rem;
@@ -115,9 +102,6 @@ export const Flex = styled.div`
     flex: ${props => props.type === 'even' && 1};
   }
 `
-Flex.defaultProps = {
-  justify: 'space-between',
-}
 
 export const Button = styled.button`
   border: none;
@@ -140,8 +124,8 @@ export const Button = styled.button`
 
 export const Demo = styled.div`
   background: #eeeefa;
-  margin: 0.9375rem -5.55% 1.5625rem;
-  padding: 1.5625rem 5% 1rem;
+  margin: 0.9375rem -1rem 1.5625rem;
+  padding: 1.5625rem 1rem 1rem;
 
   ${MEDIA.sm} {
     padding-left: 1.5625rem;

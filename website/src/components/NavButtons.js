@@ -14,7 +14,7 @@ const NavButtonsContainer = styled.div`
 
 const FlexContainer = styled(Flex)`
   flex-direction: column;
-  margin: 0 -5%;
+  margin: 0 -1rem;
 
   ${MEDIA.sm} {
     flex-direction: row;
@@ -27,7 +27,8 @@ const NavButton = styled(Link)`
   font-weight: bold;
   border-bottom: 2px solid transparent;
   font-size: 1.75rem;
-  padding: 3rem 1.5rem;
+  padding: 3rem 1rem;
+  width: 100%;
 
   &:nth-child(2) {
     border-bottom: 2px solid ${theme.border};
@@ -37,11 +38,11 @@ const NavButton = styled(Link)`
 
   ${MEDIA.sm} {
     width: 50%;
-    padding: 4rem 2rem;
+    padding: 4rem 1.5625rem;
 
     &:nth-child(2) {
       border-left: 1px solid ${theme.border};
-      border-bottom: none;
+      border-bottom: 2px solid transparent;
       order: initial;
     }
   }
