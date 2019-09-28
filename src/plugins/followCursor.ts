@@ -53,12 +53,9 @@ export default {
     }
 
     function getIsEnabled(): boolean {
-      if (!(triggerEvent instanceof MouseEvent)) {
-        return false
-      }
-
       return (
         instance.props.followCursor &&
+        triggerEvent instanceof MouseEvent &&
         !(triggerEvent.clientX === 0 && triggerEvent.clientY === 0)
       )
     }
