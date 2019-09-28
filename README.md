@@ -20,7 +20,7 @@
 
 ## Demo and Documentation
 
-**[🚀 View the latest demo & docs here](https://atomiks.github.io/tippyjs/)**
+🚀 **[View the latest demo & docs here](https://atomiks.github.io/tippyjs/)**
 
 [View migration guide from v4 to v5](https://github.com/atomiks/tippyjs/blob/master/MIGRATION_GUIDE.md)
 
@@ -47,7 +47,7 @@ yarn add tippy.js
 
 ## Component Wrappers
 
-- React: [@tippy.js/react](https://github.com/atomiks/tippy.js-react)
+React: [@tippy.js/react](https://github.com/atomiks/tippy.js-react)
 
 ## License
 
