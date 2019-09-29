@@ -38,11 +38,11 @@ should act as a delegate, and a `target` prop representing a CSS selector that
 should match the child elements which should receive a tippy.
 
 ```js
-import { delegate } from 'tippy.js'
+import {delegate} from 'tippy.js';
 
 delegate('#parent', {
   target: '.child',
-})
+});
 ```
 
 In the CDN (IIFE) version, it's available as `tippy.delegate()`
@@ -55,11 +55,11 @@ value depending on the type supplied, just like `tippy()`.
 ```js
 const delegateInstances = delegate('.parent', {
   target: '.child',
-}) // Instance[]
+}); // Instance[]
 
 const delegateInstance = delegate(parentElement, {
   target: '.child',
-}) // Instance
+}); // Instance
 ```
 
 #### Cleanup
@@ -71,12 +71,12 @@ behavior, pass `false` as an argument:
 ```js
 const delegateInstance = delegate(parentElement, {
   target: '.child',
-})
+});
 
 // Prevents further creation and destroys any created child tippy instances
-delegateInstance.destroy()
+delegateInstance.destroy();
 // Prevents further creation only
-delegateInstance.destroy(false)
+delegateInstance.destroy(false);
 ```
 
 #### Polyfill
@@ -103,10 +103,10 @@ Pass an **array** of tippy instances to the `createSingleton` addon function,
 and a `delay` prop:
 
 ```js
-import tippy, { createSingleton } from 'tippy.js'
+import tippy, {createSingleton} from 'tippy.js';
 
-const tippyInstances = tippy('button')
-const singleton = createSingleton(tippyInstances, { delay: 1000 })
+const tippyInstances = tippy('button');
+const singleton = createSingleton(tippyInstances, {delay: 1000});
 ```
 
 In the CDN (IIFE) version, it's available as `tippy.createSingleton()`
@@ -120,7 +120,7 @@ position updates of the tippy element:
 const singleton = createSingleton(tippyInstances, {
   delay: 1000,
   updateDuration: 500,
-})
+});
 ```
 
 The `transition-timing-function` by default is `easeOutQuint`. Usually this
@@ -130,9 +130,9 @@ example) like so:
 ```js
 const singleton = createSingleton(tippyInstances, {
   updateDuration: 500,
-  onCreate({ popper }) {
+  onCreate({popper}) {
     // Any easing function you want.
-    popper.style.transitionTimingFunction = 'cubic-bezier(...)'
+    popper.style.transitionTimingFunction = 'cubic-bezier(...)';
   },
-})
+});
 ```

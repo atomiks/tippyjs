@@ -1,51 +1,51 @@
-import { LifecycleHooks, Instance } from '../types'
+import {LifecycleHooks, Instance} from '../types';
 
 export default {
   name: 'sticky',
   defaultValue: false,
   fn(instance: Instance): Partial<LifecycleHooks> {
-    const { reference, popper } = instance
+    const {reference, popper} = instance;
 
     function shouldCheck(value: 'reference' | 'popper'): boolean {
-      return instance.props.sticky === true || instance.props.sticky === value
+      return instance.props.sticky === true || instance.props.sticky === value;
     }
 
-    let prevRefRect: ClientRect | null = null
-    let prevPopRect: ClientRect | null = null
+    let prevRefRect: ClientRect | null = null;
+    let prevPopRect: ClientRect | null = null;
 
     function updatePosition(): void {
       const currentRefRect = shouldCheck('reference')
         ? reference.getBoundingClientRect()
-        : null
+        : null;
       const currentPopRect = shouldCheck('popper')
         ? popper.getBoundingClientRect()
-        : null
+        : null;
 
       // Schedule an update if the reference rect has changed
       if (
         (currentRefRect && areRectsDifferent(prevRefRect, currentRefRect)) ||
         (currentPopRect && areRectsDifferent(prevPopRect, currentPopRect))
       ) {
-        instance.popperInstance!.update()
+        instance.popperInstance!.update();
       }
 
-      prevRefRect = currentRefRect
-      prevPopRect = currentPopRect
+      prevRefRect = currentRefRect;
+      prevPopRect = currentPopRect;
 
       if (instance.state.isMounted) {
-        requestAnimationFrame(updatePosition)
+        requestAnimationFrame(updatePosition);
       }
     }
 
     return {
       onMount(): void {
         if (instance.props.sticky) {
-          updatePosition()
+          updatePosition();
         }
       },
-    }
+    };
   },
-}
+};
 
 function areRectsDifferent(
   rectA: ClientRect | null,
@@ -57,8 +57,8 @@ function areRectsDifferent(
       rectA.right !== rectB.right ||
       rectA.bottom !== rectB.bottom ||
       rectA.left !== rectB.left
-    )
+    );
   }
 
-  return true
+  return true;
 }

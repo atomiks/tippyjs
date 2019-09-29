@@ -4,7 +4,6 @@ about: Suggest a feature for Tippy.js
 title: ''
 labels: "\U0001F48E enhancement"
 assignees: ''
-
 ---
 
 ## Problem

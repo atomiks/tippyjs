@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components'
+import {createGlobalStyle} from 'styled-components';
 
 export default createGlobalStyle`
   .tippy-tooltip.ajax-theme {
@@ -87,4 +87,4 @@ export default createGlobalStyle`
     color: #683b33;
     font-weight: bold;
   }
-`
+`;

@@ -1,6 +1,6 @@
-import React from 'react'
-import Tippy from '../Tippy'
-import { Button } from '../Framework'
+import React from 'react';
+import Tippy from '../Tippy';
+import {Button} from '../Framework';
 
 function EventDelegation() {
   return (
@@ -25,7 +25,7 @@ function EventDelegation() {
         </Button>
       </div>
     </Tippy>
-  )
+  );
 }
 
-export default EventDelegation
+export default EventDelegation;

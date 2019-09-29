@@ -1,6 +1,6 @@
-import React from 'react'
-import styled, { css } from 'styled-components'
-import { Link as GatsbyLink } from 'gatsby'
+import React from 'react';
+import styled, {css} from 'styled-components';
+import {Link as GatsbyLink} from 'gatsby';
 
 export const MEDIA_SIZES = {
   xs: 360,
@@ -8,16 +8,16 @@ export const MEDIA_SIZES = {
   md: 768,
   lg: 992,
   xl: 1200,
-}
+};
 
 export const MEDIA = Object.keys(MEDIA_SIZES).reduce((acc, mediaSize) => {
-  acc[mediaSize] = `@media (min-width: ${MEDIA_SIZES[mediaSize]}px)`
-  return acc
-}, {})
+  acc[mediaSize] = `@media (min-width: ${MEDIA_SIZES[mediaSize]}px)`;
+  return acc;
+}, {});
 
 export const Center = styled.div`
   text-align: center;
-`
+`;
 
 export const Container = styled.div`
   position: relative;
@@ -34,16 +34,16 @@ export const Container = styled.div`
   ${MEDIA.lg} {
     padding: 0 75px;
   }
-`
+`;
 
-export const Row = styled(({ spacing, ...rest }) => <div {...rest} />)`
+export const Row = styled(({spacing, ...rest}) => <div {...rest} />)`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin: 0 -${props => props.spacing || '0.5'}rem;
-`
+`;
 
-export const Col = styled(({ base, xs, sm, md, lg, xl, spacing, ...rest }) => (
+export const Col = styled(({base, xs, sm, md, lg, xl, spacing, ...rest}) => (
   <div {...rest} />
 ))`
   flex: 1;
@@ -63,7 +63,7 @@ export const Col = styled(({ base, xs, sm, md, lg, xl, spacing, ...rest }) => (
           }
         `,
       )};
-`
+`;
 
 export const Link = styled(GatsbyLink).attrs(() => ({
   activeStyle: {
@@ -75,7 +75,7 @@ export const Link = styled(GatsbyLink).attrs(() => ({
   color: inherit;
   text-decoration: none;
   transition: color 0.15s;
-`
+`;
 
 export const ExternalLink = styled.a.attrs(() => ({
   target: '_blank',
@@ -88,7 +88,7 @@ export const ExternalLink = styled.a.attrs(() => ({
   &:hover {
     color: #2263e5;
   }
-`
+`;
 
 export const Flex = styled.div`
   display: flex;
@@ -101,7 +101,7 @@ export const Flex = styled.div`
     margin-bottom: 0.9375rem;
     flex: ${props => props.type === 'even' && 1};
   }
-`
+`;
 
 export const Button = styled.button`
   border: none;
@@ -120,7 +120,7 @@ export const Button = styled.button`
     background: #5183f5;
     color: white;
   }
-`
+`;
 
 export const Demo = styled.div`
   background: #eeeefa;
@@ -137,4 +137,4 @@ export const Demo = styled.div`
   ${MEDIA.md} {
     border-radius: 8px;
   }
-`
+`;

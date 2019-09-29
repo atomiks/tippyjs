@@ -1,1 +1,1 @@
-import '../../src/scss/themes/material.scss'
+import '../../src/scss/themes/material.scss';

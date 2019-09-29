@@ -1,28 +1,28 @@
-import React, { Component } from 'react'
-import { SkipNavLink, SkipNavContent } from '@reach/skip-nav'
-import { MDXProvider } from '@mdx-js/react'
-import styled from 'styled-components'
-import { Container, Demo, Button, Row, Col, Flex, MEDIA } from './Framework'
-import Tippy, { TippySingleton } from './Tippy'
-import Nav from './Nav'
-import NavButtons from './NavButtons'
-import Header from './Header'
-import MiniHeader from './MiniHeader'
-import Main from './Main'
-import Footer from './Footer'
-import SEO from './SEO'
-import Image from './Image'
-import Emoji from './Emoji'
-import CSS from '../css'
-import slugify from 'slugify'
-import elasticScroll from 'elastic-scroll-polyfill'
+import React, {Component} from 'react';
+import {SkipNavLink, SkipNavContent} from '@reach/skip-nav';
+import {MDXProvider} from '@mdx-js/react';
+import styled from 'styled-components';
+import {Container, Demo, Button, Row, Col, Flex, MEDIA} from './Framework';
+import Tippy, {TippySingleton} from './Tippy';
+import Nav from './Nav';
+import NavButtons from './NavButtons';
+import Header from './Header';
+import MiniHeader from './MiniHeader';
+import Main from './Main';
+import Footer from './Footer';
+import SEO from './SEO';
+import Image from './Image';
+import Emoji from './Emoji';
+import CSS from '../css';
+import slugify from 'slugify';
+import elasticScroll from 'elastic-scroll-polyfill';
 
-import 'normalize.css'
-import 'animate.css/source/_base.css'
-import 'animate.css/source/attention_seekers/rubberBand.css'
-import 'animate.css/source/attention_seekers/tada.css'
-import 'animate.css/source/attention_seekers/wobble.css'
-import 'focus-visible'
+import 'normalize.css';
+import 'animate.css/source/_base.css';
+import 'animate.css/source/attention_seekers/rubberBand.css';
+import 'animate.css/source/attention_seekers/tada.css';
+import 'animate.css/source/attention_seekers/wobble.css';
+import 'focus-visible';
 
 const LinkIcon = styled.a`
   display: inline-block;
@@ -49,7 +49,7 @@ const LinkIcon = styled.a`
       width: 1.25rem;
     }
   }
-`
+`;
 
 const A = styled.a`
   font-weight: bold;
@@ -65,40 +65,40 @@ const A = styled.a`
   &:active {
     border-bottom-style: dashed;
   }
-`
+`;
 
-let hrefs = []
+let hrefs = [];
 
 class Heading extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     let href = slugify(String(this.props.children), {
       lower: true,
-    })
+    });
 
     // Check for duplicate #s
     if (hrefs.indexOf(href) !== -1) {
-      let counter = 1
+      let counter = 1;
 
       while (hrefs.indexOf(href + counter) !== -1) {
-        counter++
+        counter++;
       }
 
-      href = `${href}-${counter}`
+      href = `${href}-${counter}`;
     }
 
-    hrefs.push(href)
+    hrefs.push(href);
 
-    this.state = { href }
+    this.state = {href};
   }
 
   componentWillUnmount() {
-    hrefs = hrefs.filter(href => href !== this.state.href)
+    hrefs = hrefs.filter(href => href !== this.state.href);
   }
 
   render() {
-    const Tag = `h${this.props.level}`
+    const Tag = `h${this.props.level}`;
 
     return (
       <Tag {...this.props}>
@@ -111,7 +111,7 @@ class Heading extends React.Component {
         </LinkIcon>
         {this.props.children}
       </Tag>
-    )
+    );
   }
 }
 
@@ -126,85 +126,85 @@ const components = {
   Image,
   Emoji,
   a: props => {
-    const extendedProps = { ...props }
+    const extendedProps = {...props};
 
     if (props.href && props.href[0] !== '/') {
-      extendedProps.rel = 'nofollow noreferrer'
-      extendedProps.target = '_blank'
+      extendedProps.rel = 'nofollow noreferrer';
+      extendedProps.target = '_blank';
     }
 
-    return <A {...extendedProps} />
+    return <A {...extendedProps} />;
   },
   h3: props => <Heading {...props} level={3} />,
   h4: props => <Heading {...props} level={4} />,
   h5: props => <Heading {...props} level={5} />,
   h6: props => <Heading {...props} level={6} />,
   tr: props => {
-    const maybeStrongNode = props.children[0].props.children[0] // <strong>
+    const maybeStrongNode = props.children[0].props.children[0]; // <strong>
     const isPluginRow =
       maybeStrongNode && maybeStrongNode.props
         ? maybeStrongNode.props.mdxType === 'strong'
-        : false
-    return <tr {...props} className={isPluginRow ? 'plugin-prop' : ''} />
+        : false;
+    return <tr {...props} className={isPluginRow ? 'plugin-prop' : ''} />;
   },
   // TODO: find a better way to do this
   td: class extends React.Component {
-    ref = React.createRef()
+    ref = React.createRef();
 
-    state = { dataLabel: '' }
+    state = {dataLabel: ''};
 
     componentDidMount() {
-      let child = this.ref.current
-      let i = 0
+      let child = this.ref.current;
+      let i = 0;
 
       while ((child = child.previousSibling) != null) {
-        i++
+        i++;
       }
 
       this.setState({
         dataLabel: ['Prop', 'Default', 'Description'][i],
-      })
+      });
     }
 
     render() {
       return (
         <td ref={this.ref} {...this.props} data-label={this.state.dataLabel} />
-      )
+      );
     }
   },
   pre: class extends React.Component {
-    ref = React.createRef()
+    ref = React.createRef();
 
     componentDidMount() {
       if (/Mac/.test(navigator.userAgent)) {
-        elasticScroll({ targets: this.ref.current })
+        elasticScroll({targets: this.ref.current});
       }
     }
 
     render() {
-      return <pre ref={this.ref} {...this.props} />
+      return <pre ref={this.ref} {...this.props} />;
     }
   },
-}
+};
 
 class Layout extends Component {
   state = {
     isNavOpen: false,
-  }
+  };
 
   openNav = () => {
-    this.setState({ isNavOpen: true })
-  }
+    this.setState({isNavOpen: true});
+  };
 
   closeNav = () => {
-    this.setState({ isNavOpen: false })
-  }
+    this.setState({isNavOpen: false});
+  };
 
   render() {
-    const { isNavOpen } = this.state
-    const { children, pageContext } = this.props
+    const {isNavOpen} = this.state;
+    const {children, pageContext} = this.props;
 
-    const HeaderToUse = this.props.path === '/' ? Header : MiniHeader
+    const HeaderToUse = Header;
 
     return (
       <MDXProvider components={components}>
@@ -228,8 +228,8 @@ class Layout extends Component {
           <Footer>© {new Date().getFullYear()} - MIT License</Footer>
         </Main>
       </MDXProvider>
-    )
+    );
   }
 }
 
-export default Layout
+export default Layout;

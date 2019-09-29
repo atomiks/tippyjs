@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import styled from 'styled-components'
-import TippyLogo from '../images/logo.svg'
-import { Container, Flex, Link } from './Framework'
-import Menu from 'react-feather/dist/icons/menu'
-import theme from '../css/theme'
-import { MenuButton } from './Header'
+import React, {Component} from 'react';
+import styled from 'styled-components';
+import TippyLogo from '../images/logo.svg';
+import {Container, Flex, Link} from './Framework';
+import Menu from 'react-feather/dist/icons/menu';
+import theme from '../css/theme';
+import {MenuButton} from './Header';
 
 const HeaderRoot = styled.header`
   position: relative;
@@ -17,26 +17,26 @@ const HeaderRoot = styled.header`
   padding-bottom: 0.75rem;
   margin-bottom: 2rem;
   border-bottom: 1px solid ${theme.border};
-`
+`;
 
 const Logo = styled.img`
   display: block;
   height: 3.5rem;
-`
+`;
 
 const MenuButtonDark = styled(MenuButton)`
   color: #7761d1;
   margin-top: 1.125rem;
-`
+`;
 
 const menuStyles = {
   width: 40,
   height: 40,
-}
+};
 
 class MiniHeader extends Component {
   render() {
-    const { isNavOpen, openNav } = this.props
+    const {isNavOpen, openNav} = this.props;
     return (
       <HeaderRoot>
         <Container>
@@ -54,8 +54,8 @@ class MiniHeader extends Component {
           </Flex>
         </Container>
       </HeaderRoot>
-    )
+    );
   }
 }
 
-export default MiniHeader
+export default MiniHeader;

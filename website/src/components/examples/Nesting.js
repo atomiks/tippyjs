@@ -1,12 +1,12 @@
-import React, { useRef } from 'react'
-import Tippy from '../Tippy'
-import { Button } from '../Framework'
+import React, {useRef} from 'react';
+import Tippy from '../Tippy';
+import {Button} from '../Framework';
 
-const array = Array(3).fill()
+const array = Array(3).fill();
 
 function Nesting() {
-  const parentInstanceRef = useRef()
-  const currentlyOpenNestedTippyRef = useRef()
+  const parentInstanceRef = useRef();
+  const currentlyOpenNestedTippyRef = useRef();
 
   return (
     <Tippy
@@ -16,11 +16,11 @@ function Nesting() {
       onCreate={instance => (parentInstanceRef.current = instance)}
       onHide={() => {
         if (currentlyOpenNestedTippyRef.current) {
-          currentlyOpenNestedTippyRef.current.hide()
+          currentlyOpenNestedTippyRef.current.hide();
         }
       }}
       content={
-        <div style={{ marginTop: 8, marginLeft: 8 }}>
+        <div style={{marginTop: 8, marginLeft: 8}}>
           {array.map((_, i) => (
             <Tippy
               key={i}
@@ -29,9 +29,9 @@ function Nesting() {
               onShow={instance => {
                 // Prevent showing if parent isn't visible
                 if (!parentInstanceRef.current.state.isVisible) {
-                  return false
+                  return false;
                 } else {
-                  currentlyOpenNestedTippyRef.current = instance
+                  currentlyOpenNestedTippyRef.current = instance;
                 }
               }}
             >
@@ -43,7 +43,7 @@ function Nesting() {
     >
       <Button>Text</Button>
     </Tippy>
-  )
+  );
 }
 
-export default Nesting
+export default Nesting;

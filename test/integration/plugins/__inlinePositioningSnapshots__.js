@@ -266,4 +266,4 @@ export default [
       left: 220,
     },
   },
-]
+];

@@ -1,1 +1,1 @@
-import '../../src/scss/animations/scale-subtle.scss'
+import '../../src/scss/animations/scale-subtle.scss';

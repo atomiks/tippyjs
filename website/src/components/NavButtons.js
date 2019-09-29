@@ -1,16 +1,16 @@
-import React from 'react'
-import { Link, graphql, StaticQuery } from 'gatsby'
-import styled from 'styled-components'
-import { MEDIA, Flex, Container } from './Framework'
-import { sortActivePages } from '../utils'
-import ArrowRight from 'react-feather/dist/icons/arrow-right'
-import ArrowLeft from 'react-feather/dist/icons/arrow-left'
-import theme from '../css/theme'
+import React from 'react';
+import {Link, graphql, StaticQuery} from 'gatsby';
+import styled from 'styled-components';
+import {MEDIA, Flex, Container} from './Framework';
+import {sortActivePages} from '../utils';
+import ArrowRight from 'react-feather/dist/icons/arrow-right';
+import ArrowLeft from 'react-feather/dist/icons/arrow-left';
+import theme from '../css/theme';
 
 const NavButtonsContainer = styled.div`
   margin-top: 4rem;
   border-top: 1px solid ${theme.border};
-`
+`;
 
 const FlexContainer = styled(Flex)`
   flex-direction: column;
@@ -20,7 +20,7 @@ const FlexContainer = styled(Flex)`
     flex-direction: row;
     margin: 0 -1.5625rem;
   }
-`
+`;
 
 const NavButton = styled(Link)`
   display: block;
@@ -57,9 +57,9 @@ const NavButton = styled(Link)`
   &:active {
     border-bottom-style: dashed;
   }
-`
+`;
 
-function NavButtons({ next }) {
+function NavButtons({next}) {
   return (
     <NavButtonsContainer>
       <Container>
@@ -67,10 +67,10 @@ function NavButtons({ next }) {
           query={allMdxQuery}
           render={data => {
             const links = sortActivePages(data.allMdx.edges).map(
-              ({ node }) => node,
-            )
-            const nextLink = links[next]
-            const prevLink = next > 1 ? links[next - 2] : null
+              ({node}) => node,
+            );
+            const nextLink = links[next];
+            const prevLink = next > 1 ? links[next - 2] : null;
 
             return (
               <FlexContainer>
@@ -101,15 +101,15 @@ function NavButtons({ next }) {
                   </NavButton>
                 )}
               </FlexContainer>
-            )
+            );
           }}
         />
       </Container>
     </NavButtonsContainer>
-  )
+  );
 }
 
-export default NavButtons
+export default NavButtons;
 
 const allMdxQuery = graphql`
   query {
@@ -125,4 +125,4 @@ const allMdxQuery = graphql`
       }
     }
   }
-`
+`;

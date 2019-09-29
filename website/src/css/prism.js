@@ -1,7 +1,7 @@
-import { createGlobalStyle } from 'styled-components'
-import { MEDIA } from '../components/Framework'
+import {createGlobalStyle} from 'styled-components';
+import {MEDIA} from '../components/Framework';
 
-const MONOSPACE_FONT_STACK = `Menlo, "Dank Mono", Inconsolata, "Operator Mono", Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", "Courier New", Courier, monospace`
+const MONOSPACE_FONT_STACK = `Menlo, "Dank Mono", Inconsolata, "Operator Mono", Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", "Courier New", Courier, monospace`;
 
 export default createGlobalStyle`
   code[class*='language-'],
@@ -276,4 +276,4 @@ export default createGlobalStyle`
   a code.language-text {
     color: inherit;
   }
-`
+`;

@@ -21,7 +21,7 @@ Prism.languages.insertBefore('javascript', 'keyword', {
     lookbehind: true,
     alias: 'method',
   },
-})
+});
 
 Prism.languages.insertBefore('javascript', 'punctuation', {
   definition: {
@@ -44,7 +44,7 @@ Prism.languages.insertBefore('javascript', 'punctuation', {
     pattern: /\b[A-Z][$\w\xA0-\uFFFF]+\b/,
     alias: 'class-name',
   },
-})
+});
 
 Prism.languages.insertBefore('javascript', 'operator', {
   spread: {
@@ -55,12 +55,12 @@ Prism.languages.insertBefore('javascript', 'operator', {
     pattern: /=>/,
     alias: 'operator',
   },
-})
+});
 
-Prism.languages.javascript.punctuation = /[;,.:]/
+Prism.languages.javascript.punctuation = /[;,.:]/;
 Prism.languages.insertBefore('javascript', 'punctuation', {
   block: /[()[\]{}]/,
-})
+});
 
 Prism.languages.insertBefore('javascript', 'function', {
   method: {
@@ -68,7 +68,7 @@ Prism.languages.insertBefore('javascript', 'function', {
     lookbehind: true,
     alias: 'function',
   },
-})
+});
 
 Prism.languages.javascript.constant = [
   Prism.languages.javascript.constant,
@@ -76,7 +76,7 @@ Prism.languages.javascript.constant = [
     pattern: /(const\s+(\{\s*)?)[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*/,
     lookbehind: true,
   },
-]
+];
 
 Prism.languages.javascript.string = {
   pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
@@ -84,7 +84,7 @@ Prism.languages.javascript.string = {
   inside: {
     punctuation: /^["']|["']$/,
   },
-}
+};
 
 Prism.languages.insertBefore('javascript', 'keyword', {
   parameter: [
@@ -108,7 +108,7 @@ Prism.languages.insertBefore('javascript', 'keyword', {
       inside: Prism.languages.javascript,
     },
   ],
-})
+});
 
 Prism.languages.css.selector = {
   pattern: Prism.languages.css.selector,
@@ -149,14 +149,14 @@ Prism.languages.css.selector = {
       },
     },
   },
-}
+};
 
 Prism.languages.insertBefore('css', 'property', {
   variable: {
     pattern: /(^|[^-\w\xA0-\uFFFF])--[-_a-z\xA0-\uFFFF][-\w\xA0-\uFFFF]*/i,
     lookbehind: true,
   },
-})
+});
 
 Prism.languages.insertBefore('css', 'function', {
   operator: {
@@ -170,5 +170,5 @@ Prism.languages.insertBefore('css', 'function', {
     lookbehind: true,
   },
   number: /-?[\d.]+/,
-})
+});
 // __gatsby-monkey-patch-end

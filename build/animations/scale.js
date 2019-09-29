@@ -1,1 +1,1 @@
-import '../../src/scss/animations/scale.scss'
+import '../../src/scss/animations/scale.scss';

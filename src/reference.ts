@@ -1,7 +1,7 @@
-import { ReferenceElement, Props, Plugin } from './types'
-import { defaultProps, getExtendedProps } from './props'
+import {ReferenceElement, Props, Plugin} from './types';
+import {defaultProps, getExtendedProps} from './props';
 
-const keys = Object.keys(defaultProps)
+const keys = Object.keys(defaultProps);
 
 /**
  * Returns an object of optional props from data-tippy-* attributes
@@ -16,24 +16,24 @@ export function getDataAttributeProps(
   ].reduce((acc: any, key): Partial<Props> => {
     const valueAsString = (
       reference.getAttribute(`data-tippy-${key}`) || ''
-    ).trim()
+    ).trim();
 
     if (!valueAsString) {
-      return acc
+      return acc;
     }
 
     if (key === 'content') {
-      acc[key] = valueAsString
+      acc[key] = valueAsString;
     } else {
       try {
-        acc[key] = JSON.parse(valueAsString)
+        acc[key] = JSON.parse(valueAsString);
       } catch (e) {
-        acc[key] = valueAsString
+        acc[key] = valueAsString;
       }
     }
 
-    return acc
-  }, {})
+    return acc;
+  }, {});
 
-  return props
+  return props;
 }

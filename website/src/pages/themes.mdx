@@ -15,16 +15,16 @@ must import them since they are separate from the main CSS file.
 Only import the themes you actually use to conserve size and/or HTTP requests.
 
 ```js
-import 'tippy.js/themes/light.css'
-import 'tippy.js/themes/light-border.css'
-import 'tippy.js/themes/material.css'
-import 'tippy.js/themes/translucent.css'
+import 'tippy.js/themes/light.css';
+import 'tippy.js/themes/light-border.css';
+import 'tippy.js/themes/material.css';
+import 'tippy.js/themes/translucent.css';
 ```
 
 ```js
 tippy('button', {
   theme: 'light',
-})
+});
 ```
 
 ### Tippy elements
@@ -101,7 +101,7 @@ To apply the theme, specify a `theme` prop without the `-theme` suffix:
 ```js
 tippy('button', {
   theme: 'tomato',
-})
+});
 ```
 
 <Demo>
@@ -141,7 +141,7 @@ element) and apply it to the `.tippy-arrow` element:
 First import the `svg-arrow.css` stylesheet for SVG arrow styling:
 
 ```js
-import 'tippy.js/dist/svg-arrow.css'
+import 'tippy.js/dist/svg-arrow.css';
 ```
 
 To color an SVG arrow, it's as simple as specifying the `fill` and targeting
@@ -160,11 +160,11 @@ use (seen on the demo).
 Node:
 
 ```js
-import { roundArrow } from 'tippy.js'
+import {roundArrow} from 'tippy.js';
 
 tippy(reference, {
   arrow: roundArrow,
-})
+});
 ```
 
 Browser:
@@ -172,7 +172,7 @@ Browser:
 ```js
 tippy(reference, {
   arrow: tippy.roundArrow,
-})
+});
 ```
 
 <Demo>

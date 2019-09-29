@@ -3,21 +3,21 @@ import {
   cleanDocumentBody,
   MOUSEENTER,
   setTestDefaultProps,
-} from '../../utils'
+} from '../../utils';
 
-import { createTippyWithPlugins } from '../../../src'
+import {createTippyWithPlugins} from '../../../src';
 import inlinePositioning, {
   getInlineBoundingClientRect,
-} from '../../../src/plugins/inlinePositioning'
-import inlinePositioningSnapshots from './__inlinePositioningSnapshots__'
+} from '../../../src/plugins/inlinePositioning';
+import inlinePositioningSnapshots from './__inlinePositioningSnapshots__';
 
-setTestDefaultProps()
-jest.useFakeTimers()
+setTestDefaultProps();
+jest.useFakeTimers();
 
-afterEach(cleanDocumentBody)
+afterEach(cleanDocumentBody);
 
 describe('inlinePositioning', () => {
-  const tippy = createTippyWithPlugins([inlinePositioning])
+  const tippy = createTippyWithPlugins([inlinePositioning]);
 
   it('true: sets popperInstance.reference = ReferenceObject onTrigger', () => {
     const instance = tippy(h(), {
@@ -25,38 +25,38 @@ describe('inlinePositioning', () => {
       onTrigger(instance) {
         expect({}.toString.call(instance.popperInstance.reference)).toBe(
           '[object Object]',
-        )
+        );
       },
-    })
+    });
 
-    instance.reference.dispatchEvent(MOUSEENTER)
-    jest.runAllTimers()
-  })
+    instance.reference.dispatchEvent(MOUSEENTER);
+    jest.runAllTimers();
+  });
 
   it('false: does not set instance.popperInstance = ReferenceObject onTrigger', () => {
     const instance = tippy(h(), {
       inlinePositioning: false,
       onTrigger(instance) {
-        expect(instance.popperInstance.reference).toBe(instance.reference)
+        expect(instance.popperInstance.reference).toBe(instance.reference);
       },
-    })
+    });
 
-    instance.reference.dispatchEvent(MOUSEENTER)
-    jest.runAllTimers()
-  })
+    instance.reference.dispatchEvent(MOUSEENTER);
+    jest.runAllTimers();
+  });
 
   it('resets popperInstance.reference onHidden', () => {
     const instance = tippy(h(), {
       onHidden(instance) {
-        expect(instance.popperInstance.reference).toBe(instance.reference)
+        expect(instance.popperInstance.reference).toBe(instance.reference);
       },
-    })
+    });
 
-    instance.reference.dispatchEvent(MOUSEENTER)
-    jest.runAllTimers()
-    instance.hide()
-  })
-})
+    instance.reference.dispatchEvent(MOUSEENTER);
+    jest.runAllTimers();
+    instance.hide();
+  });
+});
 
 describe('getInlineBoundingClientRect', () => {
   it('matches placement snapshots', () => {
@@ -67,16 +67,16 @@ describe('getInlineBoundingClientRect', () => {
           snapshot.boundingRect,
           snapshot.clientRects,
         ),
-      ).toEqual(snapshot.result)
-    })
-  })
+      ).toEqual(snapshot.result);
+    });
+  });
 
   it('uses boundingRect if clientRects.length < 2', () => {
-    const boundingRect = {}
-    const clientRects = [{}]
+    const boundingRect = {};
+    const clientRects = [{}];
 
     expect(
       getInlineBoundingClientRect('top', boundingRect, clientRects),
-    ).toEqual(boundingRect)
-  })
-})
+    ).toEqual(boundingRect);
+  });
+});

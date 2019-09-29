@@ -1,19 +1,19 @@
-import { Props, ReferenceElement, Targets, Plugin } from './types'
-import { getDataAttributeProps } from './reference'
-import { POPPER_CLASS } from './constants'
+import {Props, ReferenceElement, Targets, Plugin} from './types';
+import {getDataAttributeProps} from './reference';
+import {POPPER_CLASS} from './constants';
 
 /**
  * Determines if the value is a reference element
  */
 export function isReferenceElement(value: any): value is ReferenceElement {
-  return !!(value && value._tippy && !value.classList.contains(POPPER_CLASS))
+  return !!(value && value._tippy && !value.classList.contains(POPPER_CLASS));
 }
 
 /**
  * Safe .hasOwnProperty check, for prototype-less objects
  */
 export function hasOwnProperty(obj: object, key: string): boolean {
-  return {}.hasOwnProperty.call(obj, key)
+  return {}.hasOwnProperty.call(obj, key);
 }
 
 /**
@@ -21,18 +21,18 @@ export function hasOwnProperty(obj: object, key: string): boolean {
  */
 export function getArrayOfElements(value: Targets): Element[] {
   if (isRealElement(value)) {
-    return [value]
+    return [value];
   }
 
   if (value instanceof NodeList) {
-    return arrayFrom(value)
+    return arrayFrom(value);
   }
 
   if (Array.isArray(value)) {
-    return value
+    return value;
   }
 
-  return arrayFrom(document.querySelectorAll(value))
+  return arrayFrom(document.querySelectorAll(value));
 }
 
 /**
@@ -44,15 +44,15 @@ export function getValueAtIndexOrReturn<T>(
   defaultValue: T | T[],
 ): T {
   if (Array.isArray(value)) {
-    const v = value[index]
+    const v = value[index];
     return v == null
       ? Array.isArray(defaultValue)
         ? defaultValue[index]
         : defaultValue
-      : v
+      : v;
   }
 
-  return value
+  return value;
 }
 
 /**
@@ -60,14 +60,14 @@ export function getValueAtIndexOrReturn<T>(
  * in `popperOptions`
  */
 export function getModifier(obj: any, key: string): any {
-  return obj && obj.modifiers && obj.modifiers[key]
+  return obj && obj.modifiers && obj.modifiers[key];
 }
 
 /**
  * Determines if the value is a real element
  */
 export function isRealElement(value: any): value is Element {
-  return value instanceof Element
+  return value instanceof Element;
 }
 
 /**
@@ -75,28 +75,28 @@ export function isRealElement(value: any): value is Element {
  * it
  */
 export function innerHTML(): 'innerHTML' {
-  return 'innerHTML'
+  return 'innerHTML';
 }
 
 /**
  * Evaluates a function if one, or returns the value
  */
 export function invokeWithArgsOrReturn(value: any, args: any[]): any {
-  return typeof value === 'function' ? value(...args) : value
+  return typeof value === 'function' ? value(...args) : value;
 }
 
 /**
  * Sets a popperInstance `flip` modifier's enabled state
  */
 export function setFlipModifierEnabled(modifiers: any[], value: any): void {
-  modifiers.filter((m): boolean => m.name === 'flip')[0].enabled = value
+  modifiers.filter((m): boolean => m.name === 'flip')[0].enabled = value;
 }
 
 /**
  * Returns a new `div` element
  */
 export function div(): HTMLDivElement {
-  return document.createElement('div')
+  return document.createElement('div');
 }
 
 /**
@@ -108,9 +108,9 @@ export function setTransitionDuration(
 ): void {
   els.forEach((el): void => {
     if (el) {
-      el.style.transitionDuration = `${value}ms`
+      el.style.transitionDuration = `${value}ms`;
     }
-  })
+  });
 }
 
 /**
@@ -122,9 +122,9 @@ export function setVisibilityState(
 ): void {
   els.forEach((el): void => {
     if (el) {
-      el.setAttribute('data-state', state)
+      el.setAttribute('data-state', state);
     }
-  })
+  });
 }
 
 /**
@@ -142,13 +142,13 @@ export function evaluateProps(
     ...(props.ignoreAttributes
       ? {}
       : getDataAttributeProps(reference, plugins)),
-  }
+  };
 
   if (out.interactive) {
-    out.aria = null
+    out.aria = null;
   }
 
-  return out
+  return out;
 }
 
 /**
@@ -162,17 +162,17 @@ export function debounce<T>(
 ): (arg: T) => void {
   // Avoid wrapping in `setTimeout` if ms is 0 anyway
   if (ms === 0) {
-    return fn
+    return fn;
   }
 
-  let timeout: any
+  let timeout: any;
 
   return (arg): void => {
-    clearTimeout(timeout)
+    clearTimeout(timeout);
     timeout = setTimeout((): void => {
-      fn(arg)
-    }, ms)
-  }
+      fn(arg);
+    }, ms);
+  };
 }
 
 /**
@@ -184,7 +184,7 @@ export function preserveInvocation<T>(
   args: T[],
 ): void {
   if (originalFn && originalFn !== currentFn) {
-    originalFn(...args)
+    originalFn(...args);
   }
 }
 
@@ -192,18 +192,18 @@ export function preserveInvocation<T>(
  * Deletes properties from an object (pure)
  */
 export function removeProperties<T>(obj: T, keys: Array<keyof T>): Partial<T> {
-  const clone = { ...obj }
+  const clone = {...obj};
   keys.forEach((key): void => {
-    delete clone[key]
-  })
-  return clone
+    delete clone[key];
+  });
+  return clone;
 }
 
 /**
  * Ponyfill for Array.from - converts iterable values to an array
  */
 export function arrayFrom(value: ArrayLike<any>): any[] {
-  return [].slice.call(value)
+  return [].slice.call(value);
 }
 
 /**
@@ -215,27 +215,27 @@ export function closestCallback(
 ): Element | null {
   while (element) {
     if (callback(element)) {
-      return element
+      return element;
     }
 
-    element = element.parentElement
+    element = element.parentElement;
   }
 
-  return null
+  return null;
 }
 
 /**
  * Determines if an array or string includes a string
  */
 export function includes(a: string[] | string, b: string): boolean {
-  return a.indexOf(b) > -1
+  return a.indexOf(b) > -1;
 }
 
 /**
  * Creates an array from string of values separated by whitespace
  */
 export function splitBySpaces(value: string): string[] {
-  return value.split(/\s+/).filter(Boolean)
+  return value.split(/\s+/).filter(Boolean);
 }
 
 /**
@@ -243,7 +243,7 @@ export function splitBySpaces(value: string): string[] {
  * `currentValue`
  */
 export function useIfDefined(nextValue: any, currentValue: any): any {
-  return nextValue !== undefined ? nextValue : currentValue
+  return nextValue !== undefined ? nextValue : currentValue;
 }
 
 /**
@@ -251,5 +251,5 @@ export function useIfDefined(nextValue: any, currentValue: any): any {
  */
 export function normalizeToArray<T>(value: T | T[]): T[] {
   // @ts-ignore
-  return [].concat(value)
+  return [].concat(value);
 }

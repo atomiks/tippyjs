@@ -1,24 +1,24 @@
-import { Props, Targets, Plugin } from './types'
-import { hasOwnProperty, includes } from './utils'
-import { defaultProps, getExtendedProps } from './props'
+import {Props, Targets, Plugin} from './types';
+import {hasOwnProperty, includes} from './utils';
+import {defaultProps, getExtendedProps} from './props';
 
 export function createMemoryLeakWarning(method: string): string {
-  const txt = method === 'destroy' ? 'n already-' : ' '
+  const txt = method === 'destroy' ? 'n already-' : ' ';
 
   return `
     ${method}() was called on a${txt}destroyed instance. This is a no-op but
     indicates a potential memory leak.
-  `
+  `;
 }
 
 export function clean(value: string): string {
-  const spacesAndTabs = /[ \t]{2,}/g
-  const lineStartWithSpaces = /^[ \t]*/gm
+  const spacesAndTabs = /[ \t]{2,}/g;
+  const lineStartWithSpaces = /^[ \t]*/gm;
 
   return value
     .replace(spacesAndTabs, ' ')
     .replace(lineStartWithSpaces, '')
-    .trim()
+    .trim();
 }
 
 function getDevMessage(message: string): string {
@@ -28,7 +28,7 @@ function getDevMessage(message: string): string {
   %c${clean(message)}
 
   %c👷‍ This is a development-only message. It will be removed in production.
-  `)
+  `);
 }
 
 export function getFormattedMessage(message: string): string[] {
@@ -40,7 +40,7 @@ export function getFormattedMessage(message: string): string[] {
     'line-height: 1.5',
     // footer
     'color: #a6a095;',
-  ]
+  ];
 }
 
 /**
@@ -51,7 +51,7 @@ export function getFormattedMessage(message: string): string[] {
  */
 export function warnWhen(condition: boolean, message: string): void {
   if (condition) {
-    console.warn(...getFormattedMessage(message))
+    console.warn(...getFormattedMessage(message));
   }
 }
 
@@ -60,7 +60,7 @@ export function warnWhen(condition: boolean, message: string): void {
  */
 export function throwErrorWhen(condition: boolean, message: string): void {
   if (condition) {
-    throw new Error(clean(message))
+    throw new Error(clean(message));
   }
 }
 
@@ -72,16 +72,16 @@ export function validateProps(
   plugins: Plugin[] = [],
 ): void {
   Object.keys(partialProps).forEach((prop): void => {
-    const value = partialProps[prop]
+    const value = partialProps[prop];
 
     const didSpecifyPlacementInPopperOptions =
-      prop === 'popperOptions' && value && hasOwnProperty(value, 'placement')
+      prop === 'popperOptions' && value && hasOwnProperty(value, 'placement');
     const didPassUnknownProp =
       !hasOwnProperty(getExtendedProps(defaultProps, plugins), prop) &&
       !includes(
         ['a11y', 'arrowType', 'showOnInit', 'size', 'target', 'touchHold'],
         prop,
-      )
+      );
 
     warnWhen(
       prop === 'target',
@@ -89,19 +89,19 @@ export function validateProps(
       method in order to conserve bundle size.
       
       Read more: https//atomiks.github.io/tippyjs/addons#event-delegation`,
-    )
+    );
 
     warnWhen(
       prop === 'a11y',
       `The \`a11y\` prop was removed in v5. Make sure the element you are giving
       a tippy to is natively focusable, such as <button> or <input>, not <div>
       or <span>.`,
-    )
+    );
 
     warnWhen(
       prop === 'showOnInit',
       `The \`showOnInit\` prop was renamed to \`showOnCreate\` in v5.`,
-    )
+    );
 
     warnWhen(
       prop === 'arrowType',
@@ -110,7 +110,7 @@ export function validateProps(
   
       Before: {arrow: true, arrowType: "round"}
       After: {arrow: "round"}`,
-    )
+    );
 
     warnWhen(
       prop === 'touchHold',
@@ -119,18 +119,18 @@ export function validateProps(
       
       Before: {touchHold: true}
       After: {touch: "hold"}`,
-    )
+    );
 
     warnWhen(
       prop === 'size',
       `The \`size\` prop was removed in v5. Instead, use a theme that specifies
       CSS padding and font-size properties.`,
-    )
+    );
 
     warnWhen(
       prop === 'theme' && value === 'google',
       `The included theme "google" was renamed to "material" in v5.`,
-    )
+    );
 
     warnWhen(
       didSpecifyPlacementInPopperOptions,
@@ -139,7 +139,7 @@ export function validateProps(
       
       Before: {popperOptions: {placement: "bottom"}}
       After: {placement: "bottom"}`,
-    )
+    );
 
     warnWhen(
       didPassUnknownProp,
@@ -155,25 +155,25 @@ export function validateProps(
       
       All props: https://atomiks.github.io/tippyjs/all-props/
       Plugins: https://atomiks.github.io/tippyjs/plugins/`,
-    )
-  })
+    );
+  });
 }
 
 /**
  * Validates the `targets` value passed to `tippy()`
  */
 export function validateTargets(targets: Targets): void {
-  const didPassFalsyValue = !targets
+  const didPassFalsyValue = !targets;
   const didPassPlainObject =
     Object.prototype.toString.call(targets) === '[object Object]' &&
-    !(targets as any).addEventListener
+    !(targets as any).addEventListener;
 
   throwErrorWhen(
     didPassFalsyValue,
     `tippy() was passed \`${targets}\` as its targets (first) argument.
 
     Valid types are: String, Element, Element[], or NodeList.`,
-  )
+  );
 
   throwErrorWhen(
     didPassPlainObject,
@@ -181,5 +181,5 @@ export function validateTargets(targets: Targets): void {
     argument.
     
     See https://atomiks.github.io/tippyjs/misc#custom-position`,
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components'
-import { MEDIA } from '../components/Framework'
+import {createGlobalStyle} from 'styled-components';
+import {MEDIA} from '../components/Framework';
 
 export default createGlobalStyle`
   html {
@@ -298,4 +298,4 @@ export default createGlobalStyle`
     margin: 0;
     padding-left: 0.9375rem;
   }
-`
+`;

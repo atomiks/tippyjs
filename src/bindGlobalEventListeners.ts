@@ -1,8 +1,8 @@
-import { isIOS } from './browser'
-import { PASSIVE, IOS_CLASS } from './constants'
+import {isIOS} from './browser';
+import {PASSIVE, IOS_CLASS} from './constants';
 
-export const currentInput = { isTouch: false }
-let lastMouseMoveTime = 0
+export const currentInput = {isTouch: false};
+let lastMouseMoveTime = 0;
 
 /**
  * When a `touchstart` event is fired, it's assumed the user is using touch
@@ -12,17 +12,17 @@ let lastMouseMoveTime = 0
  */
 export function onDocumentTouchStart(): void {
   if (currentInput.isTouch) {
-    return
+    return;
   }
 
-  currentInput.isTouch = true
+  currentInput.isTouch = true;
 
   if (isIOS) {
-    document.body.classList.add(IOS_CLASS)
+    document.body.classList.add(IOS_CLASS);
   }
 
   if (window.performance) {
-    document.addEventListener('mousemove', onDocumentMouseMove)
+    document.addEventListener('mousemove', onDocumentMouseMove);
   }
 }
 
@@ -32,19 +32,19 @@ export function onDocumentTouchStart(): void {
  * well, but very rarely that quickly.
  */
 export function onDocumentMouseMove(): void {
-  const now = performance.now()
+  const now = performance.now();
 
   if (now - lastMouseMoveTime < 20) {
-    currentInput.isTouch = false
+    currentInput.isTouch = false;
 
-    document.removeEventListener('mousemove', onDocumentMouseMove)
+    document.removeEventListener('mousemove', onDocumentMouseMove);
 
     if (!isIOS) {
-      document.body.classList.remove(IOS_CLASS)
+      document.body.classList.remove(IOS_CLASS);
     }
   }
 
-  lastMouseMoveTime = now
+  lastMouseMoveTime = now;
 }
 
 /**
@@ -54,8 +54,8 @@ export function onDocumentMouseMove(): void {
  * TODO: find a better technique to solve this problem
  */
 export function onWindowBlur(): void {
-  const { activeElement }: { activeElement: any } = document
-  const instance = activeElement._tippy
+  const {activeElement}: {activeElement: any} = document;
+  const instance = activeElement._tippy;
 
   if (
     activeElement &&
@@ -63,7 +63,7 @@ export function onWindowBlur(): void {
     instance &&
     !instance.state.isVisible
   ) {
-    activeElement.blur()
+    activeElement.blur();
   }
 }
 
@@ -74,6 +74,6 @@ export default function bindGlobalEventListeners(): void {
   document.addEventListener('touchstart', onDocumentTouchStart, {
     ...PASSIVE,
     capture: true,
-  })
-  window.addEventListener('blur', onWindowBlur)
+  });
+  window.addEventListener('blur', onWindowBlur);
 }

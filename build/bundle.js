@@ -1,10 +1,10 @@
-import css from '../dist/tippy.css'
-import tippy from '../src'
-import { injectCSS } from '../src/css'
-import { isBrowser } from '../src/browser'
+import css from '../dist/tippy.css';
+import tippy from '../src';
+import {injectCSS} from '../src/css';
+import {isBrowser} from '../src/browser';
 
 if (isBrowser) {
-  injectCSS(css)
+  injectCSS(css);
 }
 
-export default tippy
+export default tippy;

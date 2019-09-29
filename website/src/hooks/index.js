@@ -1,5 +1,5 @@
-import { useState } from 'react'
+import {useState} from 'react';
 
 export function useInstance(initialValue = {}) {
-  return useState(initialValue)[0]
+  return useState(initialValue)[0];
 }

@@ -4,11 +4,11 @@ path: /
 index: 0
 ---
 
-import { ALL_PLACEMENTS, EXTRA_ANIMATIONS } from '../utils'
-import Dropdown from '../components/examples/Dropdown'
-import Singleton from '../components/examples/Singleton'
-import Nesting from '../components/examples/Nesting'
-import Multiple from '../components/examples/Multiple'
+import {ALL_PLACEMENTS, EXTRA_ANIMATIONS} from '../utils';
+import Dropdown from '../components/examples/Dropdown';
+import Singleton from '../components/examples/Singleton';
+import Nesting from '../components/examples/Nesting';
+import Multiple from '../components/examples/Multiple';
 
 Tippy.js is a highly customizable tooltip and popover library powered by
 [Popper.js](https://popper.js.org).
@@ -49,7 +49,7 @@ Here's how you initialize it:
 ```js
 tippy('#myButton', {
   content: "I'm a Tippy tooltip!",
-})
+});
 ```
 
 By default, a tippy is triggered by either `mouseenter` or `focus` events so
@@ -93,7 +93,7 @@ Additionally, the tooltip can be shifted along the axis using the suffix
 tippy('#myButton', {
   placement: 'bottom',
   arrow: false,
-})
+});
 ```
 
 If a tippy cannot fit within its desired placement, it will flip to the opposite
@@ -135,7 +135,7 @@ tippy('#myButton', {
   arrow: 'round',
   // Your own element
   arrow: String | SVGElement,
-})
+});
 ```
 
 ### Animations
@@ -208,11 +208,14 @@ for example using the `animate.css` package:
     duration={[500, 200]}
     onMount={instance => {
       requestAnimationFrame(() => {
-        instance.popperChildren.tooltip.classList.add('rubberBand', 'animated')
-      })
+        instance.popperChildren.tooltip.classList.add('rubberBand', 'animated');
+      });
     }}
     onHidden={instance => {
-      instance.popperChildren.tooltip.classList.remove('rubberBand', 'animated')
+      instance.popperChildren.tooltip.classList.remove(
+        'rubberBand',
+        'animated',
+      );
     }}
   >
     <Button>rubberBand</Button>
@@ -223,11 +226,11 @@ for example using the `animate.css` package:
     duration={[500, 200]}
     onMount={instance => {
       requestAnimationFrame(() => {
-        instance.popperChildren.tooltip.classList.add('tada', 'animated')
-      })
+        instance.popperChildren.tooltip.classList.add('tada', 'animated');
+      });
     }}
     onHidden={instance => {
-      instance.popperChildren.tooltip.classList.remove('tada', 'animated')
+      instance.popperChildren.tooltip.classList.remove('tada', 'animated');
     }}
   >
     <Button>tada</Button>
@@ -257,7 +260,7 @@ These themes are included in the package and can be imported separately.
 ```js
 tippy('#myButton', {
   theme: 'light',
-})
+});
 ```
 
 #### Custom themes
@@ -288,7 +291,7 @@ Tooltips can also be triggered by `click` or `focus` events.
 ```js
 tippy('#myButton', {
   trigger: 'click', // or 'focus'
-})
+});
 ```
 
 ### Interactivity
@@ -305,7 +308,7 @@ Tooltips can be interactive, allowing you to hover over and click inside them.
 tippy('#myButton', {
   content: 'You can select the text inside here.',
   interactive: true,
-})
+});
 ```
 
 ### HTML Content
@@ -316,7 +319,7 @@ Tooltips can contain HTML.
   <Tippy
     content={
       <strong>
-        Bolded <span style={{ color: 'aqua' }}>content</span>
+        Bolded <span style={{color: 'aqua'}}>content</span>
       </strong>
     }
   >
@@ -328,7 +331,7 @@ Tooltips can contain HTML.
 ```js
 tippy('#myButton', {
   content: '<strong>Bolded <span style="color: aqua;">content</span></strong>',
-})
+});
 ```
 
 ### Duration
@@ -353,7 +356,7 @@ tippy('#myButton', {
   duration: 0,
   // [number, number]: [show, hide] duration
   duration: [800, 100],
-})
+});
 ```
 
 ### Delay
@@ -378,7 +381,7 @@ tippy('#myButton', {
   delay: 500,
   // [number, number]: [show, hide] delay
   delay: [500, 0],
-})
+});
 ```
 
 ### Follow Cursor
@@ -428,7 +431,7 @@ tippy('#myButton', {
   followCursor: 'vertical',
   // Follow initial cursor without listening
   followCursor: 'initial',
-})
+});
 ```
 
 ### SVGs
@@ -443,7 +446,7 @@ very useful, since it can be placed directly on the line.
       y1="0"
       x2="150"
       y2="150"
-      style={{ stroke: 'tomato', strokeWidth: 5 }}
+      style={{stroke: 'tomato', strokeWidth: 5}}
     />
   </Tippy>
 </svg>
@@ -452,7 +455,7 @@ very useful, since it can be placed directly on the line.
 tippy('line', {
   followCursor: 'initial',
   delay: 200,
-})
+});
 ```
 
 ### Singleton
@@ -480,10 +483,10 @@ Singleton tippy with a transition:
 </Demo>
 
 ```js
-import { createSingleton } from 'tippy.js'
+import {createSingleton} from 'tippy.js';
 
-const instances = []
-const buttons = document.querySelectorAll('button')
+const instances = [];
+const buttons = document.querySelectorAll('button');
 
 for (let i = 0; i < buttons.length; i++) {
   instances.push(
@@ -491,10 +494,10 @@ for (let i = 0; i < buttons.length; i++) {
       content: `Tooltip ${i + 1}`,
       updateDuration: 400,
     }),
-  )
+  );
 }
 
-createSingleton(instances, { delay: [300, 600] })
+createSingleton(instances, {delay: [300, 600]});
 ```
 
 ### Nesting
@@ -506,25 +509,25 @@ Tippys can be nested within other ones.
 </Demo>
 
 ```js
-const content = document.createElement('div')
+const content = document.createElement('div');
 
 for (let i = 0; i < 3; i++) {
-  const button = document.createElement('button')
-  button.textContent = 'Text'
-  content.appendChild(button)
+  const button = document.createElement('button');
+  button.textContent = 'Text';
+  content.appendChild(button);
 
   tippy(button, {
     content: "I'm a Tippy tooltip!",
     arrow: true,
     animation: 'fade',
-  })
+  });
 }
 
 tippy('#myButton', {
   content,
   arrow: true,
   theme: 'light-border',
-})
+});
 
 // Note: Some extra logic is required to handle some other edge cases
 ```
@@ -538,7 +541,7 @@ Attach many tippys to a single element.
 </Demo>
 
 ```js
-const placements = ['top', 'bottom', 'left', 'right']
+const placements = ['top', 'bottom', 'left', 'right'];
 
 placements
   .reduce(
@@ -555,8 +558,8 @@ placements
       content: placement,
       placement,
       multiple: true,
-    })
-  })
+    });
+  });
 ```
 
 ### Miscellaneous

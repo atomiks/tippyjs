@@ -1,6 +1,5 @@
 {
-  "semi": false,
   "singleQuote": true,
-  "trailingComma": "all",
-  "proseWrap": "always"
+  "bracketSpacing": false,
+  "trailingComma": "all"
 }
