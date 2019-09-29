@@ -19,6 +19,7 @@ export default function delegate(
   targets: Targets,
   props: Partial<Props> & {target: string},
 ): Instance | Instance[] {
+  /* istanbul ignore else */
   if (__DEV__) {
     throwErrorWhen(
       !props || !props.target,

@@ -12,6 +12,7 @@ export default function createSingleton(
   tippyInstances: Instance[],
   optionalProps?: Partial<Props>,
 ): Instance {
+  /* istanbul ignore else */
   if (__DEV__) {
     throwErrorWhen(
       !Array.isArray(tippyInstances),

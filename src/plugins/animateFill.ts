@@ -47,6 +47,7 @@ export default {
           setDataState(backdrop, 'visible');
 
           // Warn if the stylesheets are not loaded
+          /* istanbul ignore else */
           if (__DEV__) {
             warnWhen(
               getComputedStyle(backdrop).position !== 'absolute',

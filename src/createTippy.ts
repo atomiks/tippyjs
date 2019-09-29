@@ -716,6 +716,7 @@ export default function createTippy(
       parentNode.appendChild(popper);
     }
 
+    /* istanbul ignore else */
     if (__DEV__) {
       // Accessibility check
       warnWhen(
@@ -820,6 +821,7 @@ export default function createTippy(
   }
 
   function setProps(partialProps: Partial<Props>): void {
+    /* istanbul ignore else */
     if (__DEV__) {
       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('setProps'));
     }
@@ -828,6 +830,7 @@ export default function createTippy(
       return;
     }
 
+    /* istanbul ignore else */
     if (__DEV__) {
       validateProps(partialProps, plugins);
     }
@@ -912,6 +915,7 @@ export default function createTippy(
       defaultProps.duration,
     ),
   ): void {
+    /* istanbul ignore else */
     if (__DEV__) {
       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('show'));
     }
@@ -987,6 +991,7 @@ export default function createTippy(
       defaultProps.duration,
     ),
   ): void {
+    /* istanbul ignore else */
     if (__DEV__) {
       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('hide'));
     }
@@ -1032,6 +1037,7 @@ export default function createTippy(
   }
 
   function destroy(): void {
+    /* istanbul ignore else */
     if (__DEV__) {
       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('destroy'));
     }

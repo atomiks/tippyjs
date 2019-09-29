@@ -30,6 +30,7 @@ function tippy(
   optionalProps?: Partial<Props>,
   plugins: Plugin[] = [],
 ): Instance | Instance[] {
+  /* istanbul ignore else */
   if (__DEV__) {
     validateTargets(targets);
     validateProps(optionalProps, plugins);
@@ -41,6 +42,7 @@ function tippy(
 
   const elements = getArrayOfElements(targets);
 
+  /* istanbul ignore else */
   if (__DEV__) {
     const isSingleContentElement = isRealElement(props.content);
     const isMoreThanOneReferenceElement = elements.length > 1;
@@ -83,6 +85,7 @@ tippy.currentInput = currentInput;
  * Mutates the defaultProps object by setting the props specified
  */
 function setDefaultProps(partialProps: Partial<Props>): void {
+  /* istanbul ignore else */
   if (__DEV__) {
     validateProps(partialProps, []);
   }
