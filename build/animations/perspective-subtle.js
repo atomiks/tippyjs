@@ -1,1 +1,1 @@
-import '../../src/scss/animations/perspective-subtle.scss'
+import '../../src/scss/animations/perspective-subtle.scss';

@@ -4,8 +4,8 @@ path: /ajax/
 index: 11
 ---
 
-import Ajax from '../components/examples/Ajax'
-import AjaxSmooth from '../components/examples/AjaxSmooth'
+import Ajax from '../components/examples/Ajax';
+import AjaxSmooth from '../components/examples/AjaxSmooth';
 
 Initiating AJAX requests is facilitated by lifecycle hooks. This allows you to
 do very powerful things. For example, let's say you wanted to show a new image
@@ -30,7 +30,7 @@ tippy('#ajax-tippy', {
   content: 'Loading...',
   // This prop is recommended if your tooltip changes size while showing
   flipOnUpdate: true,
-})
+});
 ```
 
 Here's the result so far (nothing happens yet!):
@@ -51,7 +51,7 @@ tippy('#ajax-tippy', {
   onShow(instance) {
     // Code here is executed every time the tippy shows
   },
-})
+});
 ```
 
 Modern browsers support the `fetch` API, so we'll use it for this example
@@ -66,18 +66,18 @@ tippy('#ajax-tippy', {
       .then(response => response.blob())
       .then(blob => {
         // Convert the blob into a URL
-        const url = URL.createObjectURL(blob)
+        const url = URL.createObjectURL(blob);
         // Create an image
-        const image = new Image()
-        image.width = 200
-        image.height = 200
-        image.style.display = 'block'
-        image.src = url
+        const image = new Image();
+        image.width = 200;
+        image.height = 200;
+        image.style.display = 'block';
+        image.src = url;
         // Update the tippy content with the image
-        instance.setContent(image)
-      })
+        instance.setContent(image);
+      });
   },
-})
+});
 ```
 
 <Demo>
@@ -88,20 +88,20 @@ tippy('#ajax-tippy', {
         .then(response => response.blob())
         .then(blob => {
           // Convert the blob into a URL
-          const url = URL.createObjectURL(blob)
+          const url = URL.createObjectURL(blob);
           // Create an image
-          const image = new Image()
-          image.width = 200
-          image.height = 200
-          image.style.display = 'block'
-          image.src = url
+          const image = new Image();
+          image.width = 200;
+          image.height = 200;
+          image.style.display = 'block';
+          image.src = url;
           // Update the tippy content with the image
-          instance.setContent(image)
+          instance.setContent(image);
         })
         .catch(error => {
           // Fallback if the network request failed
-          instance.setContent(`Request failed. ${error}`)
-        })
+          instance.setContent(`Request failed. ${error}`);
+        });
     }}
   >
     <Button>Hover for a new image</Button>
@@ -121,9 +121,9 @@ once the tippy fully transitions out and is unmounted from the DOM:
 tippy('#ajax-tippy', {
   // ...
   onHidden(instance) {
-    instance.setContent('Loading...')
+    instance.setContent('Loading...');
   },
-})
+});
 ```
 
 The second one is trickier and requires using state. This will let us know the
@@ -137,7 +137,7 @@ tippy('#ajax-tippy', {
     instance.ajaxState = {
       isFetching: false,
       canFetch: true,
-    }
+    };
   },
   onShow(instance) {
     // Now we will avoid initiating a new request unless the old one
@@ -145,7 +145,7 @@ tippy('#ajax-tippy', {
     // We also only want to initiate a request if the tooltip has been
     // reset back to Loading... (`canFetch`).
     if (instance.ajaxState.isFetching || !instance.ajaxState.canFetch) {
-      return
+      return;
     }
 
     fetch('https://unsplash.it/200/?random')
@@ -159,14 +159,14 @@ tippy('#ajax-tippy', {
       .finally(() => {
         // Make sure to set it back to false so new requests can be
         // initiated
-        instance.ajaxState.isFetching = false
-      })
+        instance.ajaxState.isFetching = false;
+      });
   },
   onHidden(instance) {
-    instance.setContent('Loading...')
-    instance.ajaxState.canFetch = true
+    instance.setContent('Loading...');
+    instance.ajaxState.canFetch = true;
   },
-})
+});
 ```
 
 We use state to keep track of the request's status. Without the state booleans,

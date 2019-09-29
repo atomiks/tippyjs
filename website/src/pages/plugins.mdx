@@ -20,8 +20,8 @@ These plugins are exported by the package:
 <Emoji emoji="🖌️" /> Requires importing the following CSS stylesheets to work:
 
 ```js
-import 'tippy.js/dist/backdrop.css'
-import 'tippy.js/animations/shift-away.css'
+import 'tippy.js/dist/backdrop.css';
+import 'tippy.js/animations/shift-away.css';
 ```
 
 ### Usage
@@ -35,9 +35,9 @@ import 'tippy.js/animations/shift-away.css'
 Pass the plugin(s) in an array as a 3rd argument to `tippy()`:
 
 ```js
-import tippy, { followCursor } from 'tippy.js'
+import tippy, {followCursor} from 'tippy.js';
 
-tippy(reference, { followCursor: true }, [followCursor])
+tippy(reference, {followCursor: true}, [followCursor]);
 ```
 
 #### Helper function
@@ -48,9 +48,9 @@ pass the plugin(s) for you:
 `src/tippy.js`:
 
 ```js
-import { createTippyWithPlugins, followCursor } from 'tippy.js'
+import {createTippyWithPlugins, followCursor} from 'tippy.js';
 
-export default createTippyWithPlugins([followCursor])
+export default createTippyWithPlugins([followCursor]);
 ```
 
 Import `tippy` from this file instead of `node_modules`.
@@ -58,9 +58,9 @@ Import `tippy` from this file instead of `node_modules`.
 `src/index.js`:
 
 ```js
-import tippy from './tippy'
+import tippy from './tippy';
 
-tippy(reference, { followCursor: true })
+tippy(reference, {followCursor: true});
 ```
 
 If bundle size is important, you can create different tippy files with pass
@@ -85,9 +85,9 @@ const plugin = {
     // Internal state
     return {
       // Lifecycle hooks
-    }
+    };
   },
-}
+};
 ```
 
 The plugin's function `fn` returns an object of
@@ -109,16 +109,16 @@ const hideOnPopperBlur = {
             event.relatedTarget &&
             !instance.popper.contains(event.relatedTarget)
           ) {
-            instance.hide()
+            instance.hide();
           }
-        })
+        });
       },
-    }
+    };
   },
-}
+};
 
 // Our new prop is enabled by default (defaultValue: true)
-tippy(reference, {}, [hideOnPopperBlur])
+tippy(reference, {}, [hideOnPopperBlur]);
 ```
 
 Plugins are invoked per-instance and the plugin function definition takes the

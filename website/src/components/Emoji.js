@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-function Emoji({ emoji }) {
+function Emoji({emoji}) {
   return (
     <span
       style={{
@@ -12,7 +12,7 @@ function Emoji({ emoji }) {
     >
       {emoji}
     </span>
-  )
+  );
 }
 
-export default Emoji
+export default Emoji;

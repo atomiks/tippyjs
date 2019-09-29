@@ -1,7 +1,7 @@
-import React from 'react'
-import Tippy from '../Tippy'
-import styled from 'styled-components'
-import { Button } from '../Framework'
+import React from 'react';
+import Tippy from '../Tippy';
+import styled from 'styled-components';
+import {Button} from '../Framework';
 
 const Square = styled(Button)`
   position: relative;
@@ -14,7 +14,7 @@ const Square = styled(Button)`
   font-size: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
-`
+`;
 
 function Multiple() {
   return ['top', 'right', 'bottom', 'left']
@@ -39,7 +39,7 @@ function Multiple() {
         </Tippy>
       ),
       <Square>Hover me</Square>,
-    )
+    );
 }
 
-export default Multiple
+export default Multiple;

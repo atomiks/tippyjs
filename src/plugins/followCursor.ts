@@ -4,52 +4,52 @@ import {
   LifecycleHooks,
   Placement,
   Instance,
-} from '../types'
-import { includes, closestCallback, useIfDefined } from '../utils'
-import { getBasePlacement } from '../popper'
-import { currentInput } from '../bindGlobalEventListeners'
+} from '../types';
+import {includes, closestCallback, useIfDefined} from '../utils';
+import {getBasePlacement} from '../popper';
+import {currentInput} from '../bindGlobalEventListeners';
 
 export default {
   name: 'followCursor',
   defaultValue: false,
   fn(instance: Instance): Partial<LifecycleHooks> {
-    const { reference, popper } = instance
+    const {reference, popper} = instance;
 
     // Internal state
-    let lastMouseMoveEvent: MouseEvent
-    let triggerEvent: Event | null = null
-    let isInternallySettingControlledProp = false
+    let lastMouseMoveEvent: MouseEvent;
+    let triggerEvent: Event | null = null;
+    let isInternallySettingControlledProp = false;
 
     // These are controlled by this plugin, so we need to store the user's
     // original prop value
-    const userProps = instance.props
+    const userProps = instance.props;
 
     function setUserProps(props: Partial<Props>): void {
       Object.keys(props).forEach((prop): void => {
-        userProps[prop] = useIfDefined(props[prop], userProps[prop])
-      })
+        userProps[prop] = useIfDefined(props[prop], userProps[prop]);
+      });
     }
 
     // Due to `getVirtualOffsets()`, we need to reverse the placement if it's
     // shifted (start -> end, and vice-versa)
     function setNormalizedPlacement(): void {
-      const { placement } = userProps
+      const {placement} = userProps;
 
       if (!placement) {
-        return
+        return;
       }
 
-      const shift = placement.split('-')[1]
+      const shift = placement.split('-')[1];
 
-      isInternallySettingControlledProp = true
+      isInternallySettingControlledProp = true;
 
       instance.setProps({
         placement: (getIsEnabled() && shift
           ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
           : placement) as Placement,
-      })
+      });
 
-      isInternallySettingControlledProp = false
+      isInternallySettingControlledProp = false;
     }
 
     function getIsEnabled(): boolean {
@@ -57,25 +57,25 @@ export default {
         instance.props.followCursor &&
         triggerEvent instanceof MouseEvent &&
         !(triggerEvent.clientX === 0 && triggerEvent.clientY === 0)
-      )
+      );
     }
 
     function getIsInitialBehavior(): boolean {
       return (
         currentInput.isTouch ||
         (instance.props.followCursor === 'initial' && instance.state.isVisible)
-      )
+      );
     }
 
     function resetReference(): void {
       if (instance.popperInstance) {
-        instance.popperInstance.reference = reference
+        instance.popperInstance.reference = reference;
       }
     }
 
     function handleListeners(): void {
       if (!instance.popperInstance) {
-        return
+        return;
       }
 
       // Popper's scroll listeners make sense for `true` only. TODO: work out
@@ -85,29 +85,29 @@ export default {
         getIsEnabled() &&
         (getIsInitialBehavior() || instance.props.followCursor !== true)
       ) {
-        instance.popperInstance.disableEventListeners()
+        instance.popperInstance.disableEventListeners();
       }
     }
 
     function triggerLastMouseMove(): void {
       if (getIsEnabled()) {
-        onMouseMove(lastMouseMoveEvent)
+        onMouseMove(lastMouseMoveEvent);
       }
     }
 
     function addListener(): void {
-      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mousemove', onMouseMove);
     }
 
     function removeListener(): void {
-      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mousemove', onMouseMove);
     }
 
     function onMouseMove(event: MouseEvent): void {
-      const { clientX, clientY } = (lastMouseMoveEvent = event)
+      const {clientX, clientY} = (lastMouseMoveEvent = event);
 
       if (!instance.popperInstance || !instance.state.currentPlacement) {
-        return
+        return;
       }
 
       // If the instance is interactive, avoid updating the position unless it's
@@ -115,19 +115,19 @@ export default {
       const isCursorOverReference = closestCallback(
         event.target as Element,
         (el: Element): boolean => el === reference,
-      )
+      );
 
-      const rect = reference.getBoundingClientRect()
-      const { followCursor } = instance.props
-      const isHorizontal = followCursor === 'horizontal'
-      const isVertical = followCursor === 'vertical'
+      const rect = reference.getBoundingClientRect();
+      const {followCursor} = instance.props;
+      const isHorizontal = followCursor === 'horizontal';
+      const isVertical = followCursor === 'vertical';
       const isVerticalPlacement = includes(
         ['top', 'bottom'],
         getBasePlacement(instance.state.currentPlacement),
-      )
+      );
 
       // The virtual reference needs some size to prevent itself from overflowing
-      const { size, x, y } = getVirtualOffsets(popper, isVerticalPlacement)
+      const {size, x, y} = getVirtualOffsets(popper, isVerticalPlacement);
 
       if (isCursorOverReference || !instance.props.interactive) {
         instance.popperInstance.reference = {
@@ -145,100 +145,100 @@ export default {
             left: (isVertical ? rect.left : clientX) - x,
             right: (isVertical ? rect.right : clientX) + x,
           }),
-        }
+        };
 
-        instance.popperInstance.update()
+        instance.popperInstance.update();
       }
 
       if (getIsInitialBehavior()) {
-        removeListener()
+        removeListener();
       }
     }
 
     return {
       onAfterUpdate(_, partialProps): void {
         if (!isInternallySettingControlledProp) {
-          setUserProps(partialProps)
+          setUserProps(partialProps);
 
           if (partialProps.placement) {
-            setNormalizedPlacement()
+            setNormalizedPlacement();
           }
         }
 
         // A new placement causes the popperInstance to be recreated
         if (partialProps.placement) {
-          handleListeners()
+          handleListeners();
         }
 
         // Wait for `.update()` to set `instance.state.currentPlacement` to
         // the new placement
-        setTimeout(triggerLastMouseMove)
+        setTimeout(triggerLastMouseMove);
       },
       onMount(): void {
-        triggerLastMouseMove()
-        handleListeners()
+        triggerLastMouseMove();
+        handleListeners();
       },
       onTrigger(_, event): void {
         // Tapping on touch devices can trigger `mouseenter` then `focus`
         if (triggerEvent) {
-          return
+          return;
         }
 
-        triggerEvent = event
+        triggerEvent = event;
 
         if (event instanceof MouseEvent) {
-          lastMouseMoveEvent = event
+          lastMouseMoveEvent = event;
         }
 
         // With "initial" behavior, flipping may be incorrect for the first show
         if (getIsEnabled() && getIsInitialBehavior()) {
-          isInternallySettingControlledProp = true
-          instance.setProps({ flipOnUpdate: true })
-          isInternallySettingControlledProp = false
+          isInternallySettingControlledProp = true;
+          instance.setProps({flipOnUpdate: true});
+          isInternallySettingControlledProp = false;
         } else {
-          instance.setProps({ flipOnUpdate: userProps.flipOnUpdate })
+          instance.setProps({flipOnUpdate: userProps.flipOnUpdate});
         }
 
-        setNormalizedPlacement()
+        setNormalizedPlacement();
 
         if (getIsEnabled()) {
           // Ignore any trigger events fired immediately after the first one
           // e.g. `focus` can be fired right after `mouseenter` on touch devices
           if (event === triggerEvent) {
-            addListener()
+            addListener();
           }
         } else {
-          resetReference()
+          resetReference();
         }
       },
       onUntrigger(): void {
         // If untriggered before showing (`onHidden` will never be invoked)
         if (!instance.state.isVisible) {
-          removeListener()
-          triggerEvent = null
+          removeListener();
+          triggerEvent = null;
         }
       },
       onHidden(): void {
-        removeListener()
-        triggerEvent = null
+        removeListener();
+        triggerEvent = null;
       },
-    }
+    };
   },
-}
+};
 
 export function getVirtualOffsets(
   popper: PopperElement,
   isVerticalPlacement: boolean,
 ): {
-  size: number
-  x: number
-  y: number
+  size: number;
+  x: number;
+  y: number;
 } {
-  const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight
+  const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight;
 
   return {
     size,
     x: isVerticalPlacement ? size : 0,
     y: isVerticalPlacement ? 0 : size,
-  }
+  };
 }

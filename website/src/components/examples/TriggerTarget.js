@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react'
-import Tippy from '../Tippy'
-import styled from 'styled-components'
+import React, {useState, useEffect, useRef} from 'react';
+import Tippy from '../Tippy';
+import styled from 'styled-components';
 
 const PositioningTarget = styled.span`
   background: tomato;
   color: white;
   padding: 4px 8px;
-`
+`;
 
 function TriggerTarget() {
-  const [mounted, setMounted] = useState(false)
-  const ref = useRef()
+  const [mounted, setMounted] = useState(false);
+  const ref = useRef();
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   return (
-    <div ref={ref} style={{ marginBottom: 8 }}>
+    <div ref={ref} style={{marginBottom: 8}}>
       Trigger target vs{' '}
       {mounted && (
         <Tippy triggerTarget={ref.current}>
@@ -25,7 +25,7 @@ function TriggerTarget() {
         </Tippy>
       )}
     </div>
-  )
+  );
 }
 
-export default TriggerTarget
+export default TriggerTarget;

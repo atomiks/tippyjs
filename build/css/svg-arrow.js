@@ -1,1 +1,1 @@
-import '../../src/scss/svg-arrow.scss'
+import '../../src/scss/svg-arrow.scss';

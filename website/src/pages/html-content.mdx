@@ -12,7 +12,7 @@ you'll need to set `interactive: true`.
 ### String
 
 ```js
-tippy('button', { content: '<strong>Bolded content</strong>' })
+tippy('button', {content: '<strong>Bolded content</strong>'});
 ```
 
 ⚠️ Be aware of XSS attacks. Always ensure strings containing user input are
@@ -31,11 +31,11 @@ You can pass in an elements' `.innerHTML` strings.
 ```
 
 ```js
-const template = document.getElementById('template')
+const template = document.getElementById('template');
 
 // Since we're targeting many different elements, we can pass its `innerHTML`
 // as a string
-tippy('button', { content: template.innerHTML })
+tippy('button', {content: template.innerHTML});
 ```
 
 You may want to use the `<template>` element instead (though it needs polyfill
@@ -48,10 +48,10 @@ You can pass the element itself, useful for keeping event listeners attached (or
 when a framework is controlling elements inside):
 
 ```js
-const template = document.getElementById('example')
-template.style.display = 'block'
+const template = document.getElementById('example');
+template.style.display = 'block';
 
-tippy(singleButton, { content: template })
+tippy(singleButton, {content: template});
 ```
 
 > **We're passing a single element, so it can only exist in a single tippy since
@@ -88,7 +88,7 @@ this case) and returns template content:
 ```js
 tippy('button', {
   content(reference) {
-    return document.getElementById(reference.getAttribute('data-template'))
+    return document.getElementById(reference.getAttribute('data-template'));
   },
-})
+});
 ```

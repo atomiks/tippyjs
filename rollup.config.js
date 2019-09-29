@@ -1,15 +1,15 @@
-import babel from 'rollup-plugin-babel'
-import json from 'rollup-plugin-json'
-import resolve from 'rollup-plugin-node-resolve'
-import cssOnly from 'rollup-plugin-css-only'
-import replace from 'rollup-plugin-replace'
-import { terser } from 'rollup-plugin-terser'
-import pkg from './package.json'
+import babel from 'rollup-plugin-babel';
+import json from 'rollup-plugin-json';
+import resolve from 'rollup-plugin-node-resolve';
+import cssOnly from 'rollup-plugin-css-only';
+import replace from 'rollup-plugin-replace';
+import {terser} from 'rollup-plugin-terser';
+import pkg from './package.json';
 
-const NAMESPACE_PREFIX = process.env.NAMESPACE || 'tippy'
+const NAMESPACE_PREFIX = process.env.NAMESPACE || 'tippy';
 
 const PLUGINS = {
-  babel: babel({ extensions: ['.js', '.ts'] }),
+  babel: babel({extensions: ['.js', '.ts']}),
   replaceNamespace: replace({
     __NAMESPACE_PREFIX__: NAMESPACE_PREFIX,
   }),
@@ -20,12 +20,16 @@ const PLUGINS = {
     'process.env.NODE_ENV': JSON.stringify('development'),
   }),
   minify: terser(),
-  resolve: resolve({ extensions: ['.js', '.ts'] }),
-  css: cssOnly({ output: false }),
+  resolve: resolve({extensions: ['.js', '.ts']}),
+  css: cssOnly({output: false}),
   json: json(),
-}
+};
 
-const COMMON_PLUGINS = [PLUGINS.replaceNamespace, PLUGINS.resolve, PLUGINS.json]
+const COMMON_PLUGINS = [
+  PLUGINS.replaceNamespace,
+  PLUGINS.resolve,
+  PLUGINS.json,
+];
 
 const PLUGIN_CONFIGS = {
   base: [PLUGINS.babel, ...COMMON_PLUGINS],
@@ -50,21 +54,21 @@ const PLUGIN_CONFIGS = {
     PLUGINS.minify,
     PLUGINS.css,
   ],
-}
+};
 
 const BANNER = `/**!
 * tippy.js v${pkg.version}
 * (c) 2017-${new Date().getFullYear()} atomiks
 * MIT License
-*/`
+*/`;
 
 const COMMON_IIFE_OUTPUT_OPTIONS = {
-  globals: { 'popper.js': 'Popper' },
+  globals: {'popper.js': 'Popper'},
   format: 'iife',
   name: 'tippy',
   esModule: false,
   sourcemap: true,
-}
+};
 
 export default [
   {
@@ -136,4 +140,4 @@ export default [
       chunkFileNames: 'dist/tippy.chunk.cjs.js',
     },
   },
-]
+];

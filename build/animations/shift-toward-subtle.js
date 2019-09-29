@@ -1,1 +1,1 @@
-import '../../src/scss/animations/shift-toward-subtle.scss'
+import '../../src/scss/animations/shift-toward-subtle.scss';

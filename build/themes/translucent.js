@@ -1,1 +1,1 @@
-import '../../src/scss/themes/translucent.scss'
+import '../../src/scss/themes/translucent.scss';

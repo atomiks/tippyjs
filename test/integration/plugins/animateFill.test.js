@@ -1,80 +1,80 @@
-import { h, cleanDocumentBody, setTestDefaultProps } from '../../utils'
+import {h, cleanDocumentBody, setTestDefaultProps} from '../../utils';
 
-import { createTippyWithPlugins } from '../../../src'
-import animateFill from '../../../src/plugins/animateFill'
+import {createTippyWithPlugins} from '../../../src';
+import animateFill from '../../../src/plugins/animateFill';
 
-setTestDefaultProps()
-jest.useFakeTimers()
+setTestDefaultProps();
+jest.useFakeTimers();
 
-afterEach(cleanDocumentBody)
+afterEach(cleanDocumentBody);
 
 describe('animateFill', () => {
-  const tippy = createTippyWithPlugins([animateFill])
+  const tippy = createTippyWithPlugins([animateFill]);
 
   it('true: sets `data-animatefill` attribute on tooltip', () => {
-    const ref = h()
-    const instance = tippy(ref, { animateFill: true })
+    const ref = h();
+    const instance = tippy(ref, {animateFill: true});
 
     expect(
       instance.popperChildren.tooltip.hasAttribute('data-animatefill'),
-    ).toBe(true)
-  })
+    ).toBe(true);
+  });
 
   it('false: does not set `data-animatefill` attribute on tooltip', () => {
-    const ref = h()
-    const instance = tippy(ref, { animateFill: false })
+    const ref = h();
+    const instance = tippy(ref, {animateFill: false});
 
     expect(
       instance.popperChildren.tooltip.hasAttribute('data-animatefill'),
-    ).toBe(false)
-  })
+    ).toBe(false);
+  });
 
   it('true: sets `transitionDelay` style on content element', () => {
-    const instance = tippy(h(), { animateFill: true, duration: 120 })
-    const { content } = instance.popperChildren
+    const instance = tippy(h(), {animateFill: true, duration: 120});
+    const {content} = instance.popperChildren;
 
-    instance.show()
-    jest.runAllTimers()
+    instance.show();
+    jest.runAllTimers();
 
-    expect(content.style.transitionDelay).toBe(`${120 / 10}ms`)
-  })
+    expect(content.style.transitionDelay).toBe(`${120 / 10}ms`);
+  });
 
   it('false: does not set `transitionDelay` style on content element', () => {
     const instance = tippy(h(), {
       animateFill: false,
       duration: 120,
-    })
-    const { content } = instance.popperChildren
+    });
+    const {content} = instance.popperChildren;
 
-    instance.show()
-    jest.runAllTimers()
+    instance.show();
+    jest.runAllTimers();
 
-    expect(content.style.transitionDelay).toBe('')
-  })
+    expect(content.style.transitionDelay).toBe('');
+  });
 
   it('true: sets `animation: "shift-away"', () => {
-    const instance = tippy(h(), { animateFill: true })
-    expect(instance.props.animation).toBe('shift-away')
-  })
+    const instance = tippy(h(), {animateFill: true});
+    expect(instance.props.animation).toBe('shift-away');
+  });
 
   it('false: does not set `animation: "shift-away"', () => {
-    const instance = tippy(h(), { animateFill: false })
-    expect(instance.props.animation).not.toBe('shift-away')
-  })
+    const instance = tippy(h(), {animateFill: false});
+    expect(instance.props.animation).not.toBe('shift-away');
+  });
 
   it('sets `data-state` correctly', () => {
-    const instance = tippy(h(), { animateFill: true })
-    const { backdrop } = instance.popperChildren
+    const instance = tippy(h(), {animateFill: true});
+    const {backdrop} = instance.popperChildren;
 
-    expect(backdrop.getAttribute('data-state')).toBe('hidden')
+    expect(backdrop.getAttribute('data-state')).toBe('hidden');
 
-    instance.show()
-    jest.runAllTimers()
+    instance.show();
+    jest.runAllTimers();
 
-    expect(backdrop.getAttribute('data-state')).toBe('visible')
+    expect(backdrop.getAttribute('data-state')).toBe('visible');
 
-    instance.hide()
+    instance.hide();
 
-    expect(backdrop.getAttribute('data-state')).toBe('hidden')
-  })
-})
+    expect(backdrop.getAttribute('data-state')).toBe('hidden');
+  });
+});

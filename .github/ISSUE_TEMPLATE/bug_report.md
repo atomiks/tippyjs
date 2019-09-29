@@ -4,7 +4,6 @@ about: Create a report to help Tippy.js improve
 title: ''
 labels: "\U0001F41B bug, \U0001F6A7 unconfirmed"
 assignees: ''
-
 ---
 
 ## Bug description

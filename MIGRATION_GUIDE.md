@@ -30,7 +30,7 @@ When you're finished, you can remove everything after @5
 Previously, the default import injected the CSS stylesheet into `<head>`:
 
 ```js
-import tippy from 'tippy.js'
+import tippy from 'tippy.js';
 ```
 
 In v5, this import is now side-effect free to work better with dependencies when
@@ -39,18 +39,18 @@ users have CSP enabled or using frameworks that control the `<head>`.
 You should import the CSS separately:
 
 ```js
-import tippy from 'tippy.js'
-import 'tippy.js/dist/tippy.css'
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
 ```
 
 You can however opt-in to use the injected CSS version, just like v4:
 
 ```js
 // Just like v4
-import tippy from 'tippy.js/dist/tippy-bundle.esm'
+import tippy from 'tippy.js/dist/tippy-bundle.esm';
 
 // Or CommonJS:
-const tippy = require('tippy.js/dist/tippy-bundle.cjs')
+const tippy = require('tippy.js/dist/tippy-bundle.cjs');
 ```
 
 ## `data-tippy` attribute
@@ -68,12 +68,12 @@ free. Initializing via the `tippy()` constructor is required.
 Node:
 
 ```js
-import tippy, { animateFill } from 'tippy.js'
-import 'tippy.js/dist/tippy.css'
+import tippy, {animateFill} from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
 
 // These stylesheets are required for it to work
-import 'tippy.js/dist/backdrop.css'
-import 'tippy.js/animations/shift-away.css'
+import 'tippy.js/dist/backdrop.css';
+import 'tippy.js/animations/shift-away.css';
 
 tippy(
   targets,
@@ -82,7 +82,7 @@ tippy(
     animateFill: true,
   },
   [animateFill],
-)
+);
 ```
 
 Browser:
@@ -99,7 +99,7 @@ Browser:
   tippy(targets, {
     content: 'tooltip',
     animateFill: true,
-  })
+  });
 </script>
 ```
 
@@ -118,7 +118,7 @@ Browser:
 Node:
 
 ```js
-import 'tippy.js/animations/scale.css'
+import 'tippy.js/animations/scale.css';
 ```
 
 Browser:
@@ -145,12 +145,12 @@ prop instead.
 Node:
 
 ```js
-import { roundArrow } from 'tippy.js'
-import 'tippy.js/dist/svg-arrow.css'
+import {roundArrow} from 'tippy.js';
+import 'tippy.js/dist/svg-arrow.css';
 
 tippy(targets, {
   arrow: roundArrow,
-})
+});
 ```
 
 Browser:
@@ -160,7 +160,7 @@ Browser:
 <script>
   tippy(targets, {
     arrow: tippy.roundArrow,
-  })
+  });
 </script>
 ```
 
@@ -174,9 +174,9 @@ Browser:
 Node:
 
 ```js
-import tippy, { followCursor } from 'tippy.js'
+import tippy, {followCursor} from 'tippy.js';
 
-tippy('button', { followCursor: true }, [followCursor])
+tippy('button', {followCursor: true}, [followCursor]);
 ```
 
 Browser:
@@ -193,9 +193,9 @@ Browser:
 Node:
 
 ```js
-import tippy, { sticky } from 'tippy.js'
+import tippy, {sticky} from 'tippy.js';
 
-tippy('button', { sticky: true }, [sticky])
+tippy('button', {sticky: true}, [sticky]);
 ```
 
 Browser:
@@ -214,9 +214,9 @@ Use `delegate()`.
 Node:
 
 ```js
-import tippy, { delegate } from 'tippy.js'
+import tippy, {delegate} from 'tippy.js';
 
-delegate('#parent', { target: 'button' })
+delegate('#parent', {target: 'button'});
 ```
 
 Browser:
@@ -225,7 +225,7 @@ Browser:
 <script src="https://unpkg.com/popper.js@1"></script>
 <script src="https://unpkg.com/tippy.js@5"></script>
 <script>
-  tippy.delegate('#parent', { target: 'button' })
+  tippy.delegate('#parent', {target: 'button'});
 </script>
 ```
 
@@ -312,9 +312,9 @@ In ESM/CJS contexts, it's no longer attached to `tippy`
 Node:
 
 ```js
-import { hideAll } from 'tippy.js'
+import {hideAll} from 'tippy.js';
 
-hideAll()
+hideAll();
 ```
 
 Browser:
@@ -333,9 +333,9 @@ Use `createSingleton()`.
 Node:
 
 ```js
-import tippy, { createSingleton } from 'tippy.js'
+import tippy, {createSingleton} from 'tippy.js';
 
-createSingleton(tippy('button'), { delay: 1000 })
+createSingleton(tippy('button'), {delay: 1000});
 ```
 
 Browser:
@@ -344,7 +344,7 @@ Browser:
 <script src="https://unpkg.com/popper.js@1"></script>
 <script src="https://unpkg.com/tippy.js@5"></script>
 <script>
-  tippy.createSingleton(tippy('button'), { delay: 1000 })
+  tippy.createSingleton(tippy('button'), {delay: 1000});
 </script>
 ```
 

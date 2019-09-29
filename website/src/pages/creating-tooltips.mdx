@@ -16,7 +16,7 @@ To give them a tippy tooltip, call the `tippy()` function with a CSS selector
 matching these elements:
 
 ```js
-tippy('button')
+tippy('button');
 ```
 
 The `data-tippy-content` attribute allows you to give different tooltip content
@@ -28,7 +28,7 @@ attribute:
 ```js
 tippy('#singleElement', {
   content: 'Tooltip',
-})
+});
 ```
 
 ### Target types
@@ -38,18 +38,18 @@ tooltips to. This can represent one or many different elements.
 
 ```js
 // String (CSS selector matching elements on the document)
-tippy('#id')
-tippy('.class')
-tippy('[data-tippy-content]')
+tippy('#id');
+tippy('.class');
+tippy('[data-tippy-content]');
 
 // Element
-tippy(document.getElementById('my-element'))
+tippy(document.getElementById('my-element'));
 
 // Element[]
-tippy([element1, element2, element3])
+tippy([element1, element2, element3]);
 
 // NodeList
-tippy(document.querySelectorAll('.my-elements'))
+tippy(document.querySelectorAll('.my-elements'));
 ```
 
 ### Client-rendered elements
@@ -58,12 +58,12 @@ Every time you create a new element with JavaScript, you should pass it to
 `tippy()` in order to apply a tooltip to it.
 
 ```js
-const strong = document.createElement('strong')
-strong.textContent = 'reference'
-document.body.appendChild(strong)
+const strong = document.createElement('strong');
+strong.textContent = 'reference';
+document.body.appendChild(strong);
 
 // `content` is the JavaScript form of the `data-tippy-content` HTML attribute
-tippy(strong, { content: 'tooltip' })
+tippy(strong, {content: 'tooltip'});
 ```
 
 ### Disabled elements
@@ -96,6 +96,6 @@ The polyfill is small:
 
 ```js
 if (!SVGElement.prototype.contains) {
-  SVGElement.prototype.contains = HTMLDivElement.prototype.contains
+  SVGElement.prototype.contains = HTMLDivElement.prototype.contains;
 }
 ```

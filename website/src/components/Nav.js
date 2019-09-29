@@ -1,10 +1,10 @@
-import React, { Component, createRef } from 'react'
-import styled from 'styled-components'
-import { MEDIA, Link } from './Framework'
-import { StaticQuery, graphql } from 'gatsby'
-import { sortActivePages } from '../utils'
-import X from 'react-feather/dist/icons/x'
-import ElasticScroll from './ElasticScroll'
+import React, {Component, createRef} from 'react';
+import styled from 'styled-components';
+import {MEDIA, Link} from './Framework';
+import {StaticQuery, graphql} from 'gatsby';
+import {sortActivePages} from '../utils';
+import X from 'react-feather/dist/icons/x';
+import ElasticScroll from './ElasticScroll';
 
 const Navbar = styled.nav`
   display: ${props => (props.isMounted ? 'block' : 'none')};
@@ -39,13 +39,13 @@ const Navbar = styled.nav`
     opacity: 1;
     will-change: transform, opacity;
   }
-`
+`;
 
 const List = styled.ul`
   list-style: none;
   padding-left: 0;
   margin: 0;
-`
+`;
 
 const ListItem = styled.li`
   margin: 0;
@@ -79,7 +79,7 @@ const ListItem = styled.li`
       border-color: white;
     }
   }
-`
+`;
 
 const XButton = styled.button`
   position: absolute;
@@ -103,50 +103,50 @@ const XButton = styled.button`
   ${MEDIA.lg} {
     display: none;
   }
-`
+`;
 
 const XIcon = styled(X)`
   height: 2rem;
   width: 2rem;
-`
+`;
 
 class Nav extends Component {
   state = {
     isMounted: false,
     transitions: true,
-  }
+  };
 
-  ref = createRef()
+  ref = createRef();
 
   handleResize = () => {
-    this.setState({ transitions: false })
-    clearTimeout(this.timeout)
+    this.setState({transitions: false});
+    clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
-      this.setState({ transitions: true })
-    }, 100)
-  }
+      this.setState({transitions: true});
+    }, 100);
+  };
 
   handleClose = () => {
-    this.props.close()
-  }
+    this.props.close();
+  };
 
   handleBlur = e => {
     if (!e.currentTarget.contains(e.relatedTarget)) {
-      this.props.close()
+      this.props.close();
     }
-  }
+  };
 
   handleOutsideClick = e => {
     if (this.props.isOpen && !this.ref.current.contains(e.target)) {
-      this.props.close()
+      this.props.close();
     }
-  }
+  };
 
   componentDidMount() {
-    this.setState({ isMounted: true })
-    window.addEventListener('resize', this.handleResize)
-    window.addEventListener('mousedown', this.handleOutsideClick, true)
-    this.handleResize()
+    this.setState({isMounted: true});
+    window.addEventListener('resize', this.handleResize);
+    window.addEventListener('mousedown', this.handleOutsideClick, true);
+    this.handleResize();
 
     // TODO: Scroll the container so the currently active link is visible
     // this.ref.current.scrollTop = document
@@ -155,20 +155,20 @@ class Nav extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize)
-    window.removeEventListener('mousedown', this.handleOutsideClick, true)
-    clearTimeout(this.timeout)
+    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('mousedown', this.handleOutsideClick, true);
+    clearTimeout(this.timeout);
   }
 
   render() {
-    const { isOpen } = this.props
-    const { isMounted, transitions } = this.state
+    const {isOpen} = this.props;
+    const {isMounted, transitions} = this.state;
     return (
       <ElasticScroll>
         <Navbar
           id="main-nav"
           ref={this.ref}
-          style={{ transition: transitions ? '' : 'none' }}
+          style={{transition: transitions ? '' : 'none'}}
           isOpen={isOpen}
           isMounted={isMounted}
           onBlur={this.handleBlur}
@@ -180,23 +180,23 @@ class Nav extends Component {
             <StaticQuery
               query={allMdxQuery}
               render={data => {
-                return sortActivePages(data.allMdx.edges).map(({ node }) => (
+                return sortActivePages(data.allMdx.edges).map(({node}) => (
                   <ListItem key={node.frontmatter.path}>
                     <Link to={node.frontmatter.path}>
                       {node.frontmatter.title}
                     </Link>
                   </ListItem>
-                ))
+                ));
               }}
             />
           </List>
         </Navbar>
       </ElasticScroll>
-    )
+    );
   }
 }
 
-export default Nav
+export default Nav;
 
 const allMdxQuery = graphql`
   query {
@@ -212,4 +212,4 @@ const allMdxQuery = graphql`
       }
     }
   }
-`
+`;

@@ -3,16 +3,21 @@
  *
  * See: https://www.gatsbyjs.org/docs/browser-apis/
  */
-import redirects from './src/redirects'
+import redirects from './src/redirects';
 
-import './static/fonts.css'
+import './static/fonts.css';
 
 function redirect() {
-  if (redirects.has(window.location.pathname)) {
-    window.location.replace(redirects.get(window.location.pathname))
+  const {pathname} = window.location;
+  const {pathPrefix} = config;
+  const prefix = pathname.indexOf(pathPrefix) !== -1 ? pathPrefix : '';
+  const path = pathname.replace(pathPrefix, '');
+
+  if (redirects.has(path)) {
+    window.location.replace(prefix + redirects.get(path));
   }
 }
 
 export function onClientEntry() {
-  redirect()
+  redirect();
 }

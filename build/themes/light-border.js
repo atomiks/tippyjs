@@ -1,1 +1,1 @@
-import '../../src/scss/themes/light-border.scss'
+import '../../src/scss/themes/light-border.scss';

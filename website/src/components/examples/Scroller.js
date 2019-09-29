@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import styled from 'styled-components'
-import Tippy from '../Tippy'
-import { Button, MEDIA } from '../Framework'
-import ElasticScroll from '../ElasticScroll'
+import React, {Component} from 'react';
+import styled from 'styled-components';
+import Tippy from '../Tippy';
+import {Button, MEDIA} from '../Framework';
+import ElasticScroll from '../ElasticScroll';
 
 const ScrollingContainer = styled.div`
   position: relative;
@@ -38,43 +38,43 @@ const ScrollingContainer = styled.div`
     background-color: transparent;
     border-radius: 8px;
   }
-`
+`;
 
 const Type = styled.div`
   position: absolute;
   top: 0.75rem;
   left: 1rem;
   font-weight: bold;
-`
+`;
 
 const ScrollingBackground = styled.div`
   width: 600px;
   height: 600px;
   background: white;
-`
+`;
 
 class Scroller extends Component {
   handleScroll = () => {
     if (this.props.hideOnScroll) {
-      this.instance.hide(0)
+      this.instance.hide(0);
     }
-  }
+  };
 
   storeTippyInstance = instance => {
-    this.instance = instance
-  }
+    this.instance = instance;
+  };
 
   render() {
-    const props = {}
+    const props = {};
 
     if (this.props.flipOnUpdate) {
-      props.flipOnUpdate = true
-      props.appendTo = 'parent'
+      props.flipOnUpdate = true;
+      props.appendTo = 'parent';
     }
 
     if (this.props.boundary) {
-      props.boundary = 'window'
-      props.appendTo = ref => ref.parentNode
+      props.boundary = 'window';
+      props.appendTo = ref => ref.parentNode;
     }
 
     if (this.props.flipOnUpdate || this.props.boundary) {
@@ -84,7 +84,7 @@ class Scroller extends Component {
             boundariesElement: 'scrollParent',
           },
         },
-      }
+      };
     }
 
     return (
@@ -97,15 +97,15 @@ class Scroller extends Component {
               onCreate={this.storeTippyInstance}
               {...props}
             >
-              <Button style={{ transform: 'translate(85px, 11.5625rem)' }}>
+              <Button style={{transform: 'translate(85px, 11.5625rem)'}}>
                 Click to open
               </Button>
             </Tippy>
           </ScrollingBackground>
         </ScrollingContainer>
       </ElasticScroll>
-    )
+    );
   }
 }
 
-export default Scroller
+export default Scroller;

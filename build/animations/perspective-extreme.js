@@ -1,1 +1,1 @@
-import '../../src/scss/animations/perspective-extreme.scss'
+import '../../src/scss/animations/perspective-extreme.scss';

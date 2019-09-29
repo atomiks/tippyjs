@@ -1,14 +1,14 @@
-import React from 'react'
-import styled from 'styled-components'
-import Tippy from '../Tippy'
-import { Button } from '../Framework'
+import React from 'react';
+import styled from 'styled-components';
+import Tippy from '../Tippy';
+import {Button} from '../Framework';
 
 const List = styled.div`
   margin: 0;
   padding-left: 0;
   list-style: none;
   text-align: left;
-`
+`;
 
 const Reaction = styled.button`
   background: none;
@@ -23,20 +23,20 @@ const Reaction = styled.button`
   &:focus {
     transform: scale(1.25);
   }
-`
+`;
 
 const Text = styled.p`
   margin: 5px 0;
   color: #777;
-`
+`;
 
 const DropdownTippy = styled(Tippy)`
   hr {
     margin: 5px 0 10px;
   }
-`
+`;
 
-function Dropdown({ text = 'Dropdown' }) {
+function Dropdown({text = 'Dropdown'}) {
   return (
     <DropdownTippy
       content={
@@ -83,7 +83,7 @@ function Dropdown({ text = 'Dropdown' }) {
     >
       <Button>{text}</Button>
     </DropdownTippy>
-  )
+  );
 }
 
-export default Dropdown
+export default Dropdown;

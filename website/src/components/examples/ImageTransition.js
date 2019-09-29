@@ -1,24 +1,24 @@
-import React, { useState, useRef } from 'react'
-import Tippy from '../Tippy'
-import { Button } from '../Framework'
-import TippyTransition from '../TippyTransition'
+import React, {useState, useRef} from 'react';
+import Tippy from '../Tippy';
+import {Button} from '../Framework';
+import TippyTransition from '../TippyTransition';
 
 function DimensionsTransition() {
-  const [display, setDisplay] = useState('none')
-  const [expanded, setExpanded] = useState(false)
-  const imageContainerRef = useRef()
+  const [display, setDisplay] = useState('none');
+  const [expanded, setExpanded] = useState(false);
+  const imageContainerRef = useRef();
 
   function onClick() {
-    setExpanded(expanded => !expanded)
-    setDisplay(display => (display === 'none' ? 'block' : 'none'))
+    setExpanded(expanded => !expanded);
+    setDisplay(display => (display === 'none' ? 'block' : 'none'));
   }
 
   function onChange(instance) {
     if (!instance.state.isVisible) {
-      return
+      return;
     }
 
-    imageContainerRef.current.style.display = 'block'
+    imageContainerRef.current.style.display = 'block';
   }
 
   return (
@@ -26,12 +26,12 @@ function DimensionsTransition() {
       <Tippy
         content={
           <>
-            <Button onClick={onClick} style={{ margin: 10, width: 140 }}>
+            <Button onClick={onClick} style={{margin: 10, width: 140}}>
               {expanded ? 'Close' : 'Open'} Image
             </Button>
             <div
               className="TippyTransition-image"
-              style={{ display }}
+              style={{display}}
               ref={imageContainerRef}
             >
               <img
@@ -56,7 +56,7 @@ function DimensionsTransition() {
         <Button>Image transition (click)</Button>
       </Tippy>
     </TippyTransition>
-  )
+  );
 }
 
-export default DimensionsTransition
+export default DimensionsTransition;

@@ -1,1 +1,1 @@
-import '../../src/scss/animations/shift-away.scss'
+import '../../src/scss/animations/shift-away.scss';

@@ -18,8 +18,8 @@ returns the tippy instance directly, or returns an array of them.
 If passing an element directly, the instance is directly returned:
 
 ```js
-const button = document.querySelector('button')
-const instance = tippy(button) // type Instance
+const button = document.querySelector('button');
+const instance = tippy(button); // type Instance
 ```
 
 #### String, NodeList, Element[]
@@ -29,7 +29,7 @@ an array of instances get returned (since potentially many instances can be
 created):
 
 ```js
-const instances = tippy('button') // type Instance[] (array)
+const instances = tippy('button'); // type Instance[] (array)
 ```
 
 #### `_tippy` property
@@ -39,9 +39,9 @@ didn't assign the instance(s) to a variable. Both the reference element and the
 popper element have the instance attached as the `_tippy` property.
 
 ```js
-const button = document.querySelector('button')
-tippy(button)
-const instance = button._tippy
+const button = document.querySelector('button');
+tippy(button);
+const instance = button._tippy;
 ```
 
 ### Shape and properties
@@ -50,5 +50,5 @@ const instance = button._tippy
 in DevTools:
 
 ```js
-console.log(instance)
+console.log(instance);
 ```

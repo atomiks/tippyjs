@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import styled, { css, keyframes } from 'styled-components'
-import TippyLogo from '../images/logo.svg'
-import { MEDIA, Container, Flex, ExternalLink } from './Framework'
-import GitHub from 'react-feather/dist/icons/github'
-import Menu from 'react-feather/dist/icons/menu'
-import TextGradient from './TextGradient'
-import { version } from '../../../package.json'
+import React, {Component} from 'react';
+import styled, {css, keyframes} from 'styled-components';
+import TippyLogo from '../images/logo.svg';
+import {MEDIA, Container, Flex, ExternalLink} from './Framework';
+import GitHub from 'react-feather/dist/icons/github';
+import Menu from 'react-feather/dist/icons/menu';
+import TextGradient from './TextGradient';
+import {version} from '../../../package.json';
 
 const hover = keyframes`
   from {
@@ -15,7 +15,7 @@ const hover = keyframes`
   to {
     transform: translate3d(0, 10px, 0);
   }
-`
+`;
 
 const HeaderRoot = styled.header`
   position: relative;
@@ -48,14 +48,14 @@ const HeaderRoot = styled.header`
       left: -100px;
     }
   }
-`
+`;
 
 const Logo = styled.img`
   display: block;
   height: 70px;
   margin: 0 auto 10px;
   animation: ${hover} 2s ease-in-out infinite alternate;
-`
+`;
 
 const Title = styled.h1`
   display: inline-block;
@@ -63,7 +63,7 @@ const Title = styled.h1`
   font-weight: 400;
   margin-top: 0;
   margin-bottom: 1.5625rem;
-`
+`;
 
 const ButtonLink = styled(ExternalLink)`
   background: rgba(255, 255, 255, 0.15);
@@ -83,7 +83,7 @@ const ButtonLink = styled(ExternalLink)`
     box-shadow: 0 8px 1rem -2px rgba(0, 32, 128, 0.25);
     text-decoration: none;
   }
-`
+`;
 
 export const MenuButton = styled.button`
   position: absolute;
@@ -100,7 +100,7 @@ export const MenuButton = styled.button`
   ${MEDIA.lg} {
     display: none;
   }
-`
+`;
 
 const Version = styled.div`
   display: inline-block;
@@ -115,7 +115,7 @@ const Version = styled.div`
   ${MEDIA.md} {
     margin: 1rem 0;
   }
-`
+`;
 
 const svgStyles = css`
   margin: -1rem 0 -30px;
@@ -128,26 +128,26 @@ const svgStyles = css`
   @media (min-width: 1700px) {
     margin: -9% 0 -30px;
   }
-`
+`;
 
 const iconStyles = {
   verticalAlign: -6,
   marginRight: 8,
-}
+};
 
 const githubStyles = {
   ...iconStyles,
   color: '#333',
-}
+};
 
 const menuStyles = {
   width: 40,
   height: 40,
-}
+};
 
 class Header extends Component {
   render() {
-    const { isNavOpen, openNav } = this.props
+    const {isNavOpen, openNav} = this.props;
     return (
       <HeaderRoot>
         <Container>
@@ -181,8 +181,8 @@ class Header extends Component {
           </g>
         </svg>
       </HeaderRoot>
-    )
+    );
   }
 }
 
-export default Header
+export default Header;

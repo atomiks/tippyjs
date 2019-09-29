@@ -6,8 +6,8 @@ import React, {
   useLayoutEffect,
   useEffect,
   Children,
-} from 'react'
-import { createPortal } from 'react-dom'
+} from 'react';
+import {createPortal} from 'react-dom';
 import {
   createTippyWithPlugins,
   createSingleton,
@@ -15,40 +15,40 @@ import {
   followCursor,
   animateFill,
   roundArrow,
-} from '../../../'
-import { useInstance } from '../hooks'
-import '../../../dist/tippy.css'
+} from '../../../';
+import {useInstance} from '../hooks';
+import '../../../dist/tippy.css';
 
-const tippy = createTippyWithPlugins([followCursor, animateFill])
+const tippy = createTippyWithPlugins([followCursor, animateFill]);
 
 const isBrowser =
-  typeof window !== 'undefined' && typeof document !== 'undefined'
+  typeof window !== 'undefined' && typeof document !== 'undefined';
 
 function preserveRef(ref, node) {
   if (ref) {
     if (typeof ref === 'function') {
-      ref(node)
+      ref(node);
     }
 
     if ({}.hasOwnProperty.call(ref, 'current')) {
-      ref.current = node
+      ref.current = node;
     }
   }
 }
 
 function ssrSafeCreateDiv() {
-  return isBrowser && document.createElement('div')
+  return isBrowser && document.createElement('div');
 }
 
 function updateClassName(tooltip, action, classNames) {
   classNames.split(/\s+/).forEach(function(name) {
     if (name) {
-      tooltip.classList[action](name)
+      tooltip.classList[action](name);
     }
-  })
+  });
 }
 
-const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect
+const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect;
 
 function Tippy({
   children,
@@ -60,149 +60,149 @@ function Tippy({
   ignoreAttributes = true,
   ...restOfNativeProps
 }) {
-  const isControlledMode = visible !== undefined
+  const isControlledMode = visible !== undefined;
 
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(false);
   const component = useInstance(() => ({
     container: ssrSafeCreateDiv(),
     renders: 1,
-  }))
+  }));
 
   const props = {
     ignoreAttributes,
     multiple,
     ...restOfNativeProps,
     content: component.container,
-  }
+  };
 
   if (isControlledMode) {
-    props.trigger = 'manual'
+    props.trigger = 'manual';
   }
 
   // CREATE
   useIsomorphicLayoutEffect(() => {
-    const instance = tippy(component.reference, props)
+    const instance = tippy(component.reference, props);
 
-    component.instance = instance
+    component.instance = instance;
 
     if (!enabled) {
-      instance.disable()
+      instance.disable();
     }
 
     if (visible) {
-      instance.show()
+      instance.show();
     }
 
-    setMounted(true)
+    setMounted(true);
 
     return () => {
-      instance.destroy()
-    }
-  }, [children.type])
+      instance.destroy();
+    };
+  }, [children.type]);
 
   // UPDATE
   useIsomorphicLayoutEffect(() => {
     // Prevent this effect from running on the initial render
     if (component.renders === 1) {
-      component.renders++
-      return
+      component.renders++;
+      return;
     }
 
-    component.instance.setProps(props)
+    component.instance.setProps(props);
 
     if (enabled) {
-      component.instance.enable()
+      component.instance.enable();
     } else {
-      component.instance.disable()
+      component.instance.disable();
     }
 
     if (isControlledMode) {
       if (visible) {
-        component.instance.show()
+        component.instance.show();
       } else {
-        component.instance.hide()
+        component.instance.hide();
       }
     }
-  })
+  });
 
   // UPDATE className
   useIsomorphicLayoutEffect(() => {
     if (className) {
-      const tooltip = component.instance.popperChildren.tooltip
-      updateClassName(tooltip, 'add', className)
+      const tooltip = component.instance.popperChildren.tooltip;
+      updateClassName(tooltip, 'add', className);
       return () => {
-        updateClassName(tooltip, 'remove', className)
-      }
+        updateClassName(tooltip, 'remove', className);
+      };
     }
-  }, [className])
+  }, [className]);
 
   return (
     <>
       {cloneElement(children, {
         ref(node) {
-          component.reference = node
-          preserveRef(children.ref, node)
+          component.reference = node;
+          preserveRef(children.ref, node);
         },
       })}
       {mounted && createPortal(content, component.container)}
     </>
-  )
+  );
 }
 
-function TippySingleton({ children, ...props }) {
+function TippySingleton({children, ...props}) {
   const component = useInstance({
     instances: [],
     renders: 1,
-  })
+  });
 
   useIsomorphicLayoutEffect(() => {
-    const { instances } = component
-    const singleton = createSingleton(instances, props)
+    const {instances} = component;
+    const singleton = createSingleton(instances, props);
 
-    component.singleton = singleton
+    component.singleton = singleton;
 
     return () => {
-      singleton.destroy()
-      singleton.clearDelayTimeouts()
+      singleton.destroy();
+      singleton.clearDelayTimeouts();
 
-      component.instances = instances.filter(i => !i.state.isDestroyed)
-    }
-  }, [children.length])
+      component.instances = instances.filter(i => !i.state.isDestroyed);
+    };
+  }, [children.length]);
 
   useIsomorphicLayoutEffect(() => {
     if (component.renders === 1) {
-      component.renders++
-      return
+      component.renders++;
+      return;
     }
 
-    component.singleton.setProps(props)
-  })
+    component.singleton.setProps(props);
+  });
 
   return Children.map(children, child => {
     return cloneElement(child, {
       enabled: false,
       onCreate(instance) {
         if (child.props.onCreate) {
-          child.props.onCreate(instance)
+          child.props.onCreate(instance);
         }
 
-        component.instances.push(instance)
+        component.instances.push(instance);
       },
-    })
-  })
+    });
+  });
 }
 
-export default forwardRef(function TippyWrapper({ children, ...props }, ref) {
+export default forwardRef(function TippyWrapper({children, ...props}, ref) {
   return (
     <Tippy {...props}>
       {cloneElement(children, {
         ref(node) {
-          preserveRef(ref, node)
-          preserveRef(children.ref, node)
+          preserveRef(ref, node);
+          preserveRef(children.ref, node);
         },
       })}
     </Tippy>
-  )
-})
+  );
+});
 
-export { TippySingleton, tippy, createSingleton, delegate, roundArrow }
+export {TippySingleton, tippy, createSingleton, delegate, roundArrow};

@@ -1,4 +1,4 @@
-import { Props, Plugin } from './types'
+import {Props, Plugin} from './types';
 
 export const defaultProps: Props = {
   allowHTML: true,
@@ -45,7 +45,7 @@ export const defaultProps: Props = {
   triggerTarget: null,
   updateDuration: 0,
   zIndex: 9999,
-}
+};
 
 /**
  * If the setProps() method encounters one of these, the popperInstance must be
@@ -61,19 +61,19 @@ export const POPPER_INSTANCE_DEPENDENCIES: Array<keyof Props> = [
   'offset',
   'placement',
   'popperOptions',
-]
+];
 
 export function getExtendedProps(props: Props, plugins: Plugin[]): Props {
   return {
     ...props,
-    ...plugins.reduce<{ [key: string]: any }>((acc, plugin) => {
-      const { name, defaultValue } = plugin
+    ...plugins.reduce<{[key: string]: any}>((acc, plugin) => {
+      const {name, defaultValue} = plugin;
 
       if (name) {
-        acc[name] = props[name] !== undefined ? props[name] : defaultValue
+        acc[name] = props[name] !== undefined ? props[name] : defaultValue;
       }
 
-      return acc
+      return acc;
     }, {}),
-  }
+  };
 }

@@ -1,22 +1,22 @@
-import React, { Component, Children, cloneElement } from 'react'
-import elasticScroll from 'elastic-scroll-polyfill'
+import React, {Component, Children, cloneElement} from 'react';
+import elasticScroll from 'elastic-scroll-polyfill';
 
 const elasticWrapperStyles = {
   display: 'inline-block',
   width: '100%',
-}
+};
 
 class ElasticScroll extends Component {
   componentDidMount() {
     this.instance = elasticScroll({
       targets: this.scroller,
       ...this.props,
-    })
+    });
   }
 
   componentWillUnmount() {
-    this.instance.disable()
-    this.instance = null
+    this.instance.disable();
+    this.instance = null;
   }
 
   render() {
@@ -28,19 +28,19 @@ class ElasticScroll extends Component {
           </div>
         ),
         ref: node => {
-          this.scroller = node
-          const { ref } = child
+          this.scroller = node;
+          const {ref} = child;
           if (ref) {
             if (typeof ref === 'function') {
-              ref(node)
+              ref(node);
             } else if (ref.hasOwnProperty('current')) {
-              ref.current = node
+              ref.current = node;
             }
           }
         },
       }),
-    )
+    );
   }
 }
 
-export default ElasticScroll
+export default ElasticScroll;

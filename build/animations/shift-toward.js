@@ -1,1 +1,1 @@
-import '../../src/scss/animations/shift-toward.scss'
+import '../../src/scss/animations/shift-toward.scss';

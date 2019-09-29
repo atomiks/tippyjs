@@ -27,7 +27,7 @@ bottom of the page, like so:
     <script src="https://unpkg.com/popper.js@1"></script>
     <script src="https://unpkg.com/tippy.js@5"></script>
     <script>
-      tippy('button', { content: 'tooltip' })
+      tippy('button', {content: 'tooltip'});
     </script>
   </body>
 </html>
@@ -38,9 +38,9 @@ bottom of the page, like so:
 If you're using the ESM or CJS versions and importing like this:
 
 ```js
-import tippy from 'tippy.js'
+import tippy from 'tippy.js';
 // or
-const tippy = require('tippy.js')
+const tippy = require('tippy.js');
 ```
 
 Tippy uses a special expression to distinguish a development and production
@@ -61,7 +61,7 @@ Install the
 [`replace plugin`](https://www.npmjs.com/package/rollup-plugin-replace).
 
 ```js
-import replace from 'rollup-plugin-replace'
+import replace from 'rollup-plugin-replace';
 
 export default {
   // ...
@@ -77,7 +77,7 @@ export default {
     // You can also use process.env.NODE_ENV and set the env variables when
     // running the rollup command
   ],
-}
+};
 ```
 
 #### webpack
@@ -106,10 +106,10 @@ For example, let's say you want to update the `theme` for tooltips when changing
 between dark and light mode:
 
 ```js
-const instance = tippy(reference, { theme: 'custom-dark' })
+const instance = tippy(reference, {theme: 'custom-dark'});
 
 // When clicking the theme toggle button, you can do this:
-instance.setProps({ theme: 'custom-light' })
+instance.setProps({theme: 'custom-light'});
 ```
 
 It's also possible to attach a `MutationObserver` to the reference elements and
@@ -124,11 +124,11 @@ an argument and returns a string or element.
 ```js
 tippy('button', {
   content(reference) {
-    const title = reference.getAttribute('title')
-    reference.removeAttribute('title')
-    return title
+    const title = reference.getAttribute('title');
+    reference.removeAttribute('title');
+    return title;
   },
-})
+});
 ```
 
 The `title` attribute should be removed once you have its content so the
@@ -146,19 +146,19 @@ const titleAttribute = {
     return {
       onCreate(instance) {
         if (!instance.props.titleAttribute) {
-          return
+          return;
         }
 
-        const title = instance.reference.getAttribute('title')
+        const title = instance.reference.getAttribute('title');
 
         if (title) {
-          instance.setContent(title)
-          instance.reference.removeAttribute('title')
+          instance.setContent(title);
+          instance.reference.removeAttribute('title');
         }
       },
-    }
+    };
   },
-}
+};
 ```
 
 Note that the plugin does not take into account dynamic titles. Be cautious of

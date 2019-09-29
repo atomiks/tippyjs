@@ -1,8 +1,8 @@
-import React from 'react'
-import { StaticQuery, graphql } from 'gatsby'
-import Img from 'gatsby-image'
-import styled from 'styled-components'
-import { MEDIA } from '../components/Framework'
+import React from 'react';
+import {StaticQuery, graphql} from 'gatsby';
+import Img from 'gatsby-image';
+import styled from 'styled-components';
+import {MEDIA} from '../components/Framework';
 
 const ImgWrapper = styled.div`
   margin-left: -1rem;
@@ -18,9 +18,9 @@ const ImgWrapper = styled.div`
       border-radius: 8px;
     }
   }
-`
+`;
 
-const Image = ({ name }) => (
+const Image = ({name}) => (
   <StaticQuery
     query={graphql`
       query {
@@ -39,15 +39,15 @@ const Image = ({ name }) => (
     render={data => {
       const image = data.allImageSharp.edges.find(
         edge => edge.node.fluid.originalName === name,
-      )
+      );
 
       return image ? (
         <ImgWrapper>
           <Img fluid={image.node.fluid} />
         </ImgWrapper>
-      ) : null
+      ) : null;
     }}
   />
-)
+);
 
-export default Image
+export default Image;

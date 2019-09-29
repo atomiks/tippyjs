@@ -1,1 +1,1 @@
-import '../../src/scss/backdrop.scss'
+import '../../src/scss/backdrop.scss';

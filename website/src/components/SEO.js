@@ -1,20 +1,20 @@
-import React from 'react'
-import Helmet from 'react-helmet'
-import { StaticQuery, graphql } from 'gatsby'
+import React from 'react';
+import Helmet from 'react-helmet';
+import {StaticQuery, graphql} from 'gatsby';
 
-function SEO({ title, description, lang, meta, keywords, pageContext }) {
+function SEO({title, description, lang, meta, keywords, pageContext}) {
   return (
     <StaticQuery
       query={detailsQuery}
       render={data => {
         const metaDescription =
-          description || data.site.siteMetadata.description
-        const isIndex = pageContext.frontmatter.title === 'Demo'
+          description || data.site.siteMetadata.description;
+        const isIndex = pageContext.frontmatter.title === 'Demo';
         const computedTitle =
           title ||
           (isIndex
             ? 'Tippy.js - Tooltip and Popover Library'
-            : pageContext.frontmatter.title)
+            : pageContext.frontmatter.title);
         return (
           <Helmet
             htmlAttributes={{
@@ -68,19 +68,19 @@ function SEO({ title, description, lang, meta, keywords, pageContext }) {
               )
               .concat(meta)}
           />
-        )
+        );
       }}
     />
-  )
+  );
 }
 
 SEO.defaultProps = {
   lang: `en`,
   meta: [],
   keywords: [],
-}
+};
 
-export default SEO
+export default SEO;
 
 const detailsQuery = graphql`
   query DefaultSEOQuery {
@@ -92,4 +92,4 @@ const detailsQuery = graphql`
       }
     }
   }
-`
+`;

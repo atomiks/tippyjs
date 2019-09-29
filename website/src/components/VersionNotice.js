@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import { MEDIA } from './Framework'
+import React from 'react';
+import styled from 'styled-components';
+import {MEDIA} from './Framework';
 
 const Banner = styled.div`
   position: relative;
@@ -27,7 +27,7 @@ const Banner = styled.div`
     margin-left: 0;
     margin-bottom: 1.5625rem;
   }
-`
+`;
 
 function VersionNotice() {
   return (
@@ -50,7 +50,7 @@ function VersionNotice() {
         view the old docs for v3
       </a>
     </Banner>
-  )
+  );
 }
 
-export default VersionNotice
+export default VersionNotice;

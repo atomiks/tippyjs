@@ -1,8 +1,8 @@
-import { Instance, Props } from '../types'
-import tippy from '..'
-import { preserveInvocation, useIfDefined } from '../utils'
-import { defaultProps } from '../props'
-import { throwErrorWhen } from '../validation'
+import {Instance, Props} from '../types';
+import tippy from '..';
+import {preserveInvocation, useIfDefined} from '../utils';
+import {defaultProps} from '../props';
+import {throwErrorWhen} from '../validation';
 
 /**
  * Re-uses a single tippy element for many different tippy instances.
@@ -19,25 +19,25 @@ export default function createSingleton(
       instances.
   
       The passed value was: ${tippyInstances}`,
-    )
+    );
   }
 
   tippyInstances.forEach(instance => {
-    instance.disable()
-  })
+    instance.disable();
+  });
 
-  let currentAria: string | null | undefined
-  let currentTarget: Element
+  let currentAria: string | null | undefined;
+  let currentTarget: Element;
 
-  const userProps: Partial<Props> = {}
+  const userProps: Partial<Props> = {};
 
   function setUserProps(props: Partial<Props>): void {
     Object.keys(props).forEach((prop): void => {
-      userProps[prop] = useIfDefined(props[prop], userProps[prop])
-    })
+      userProps[prop] = useIfDefined(props[prop], userProps[prop]);
+    });
   }
 
-  setUserProps({ ...defaultProps, ...optionalProps })
+  setUserProps({...defaultProps, ...optionalProps});
 
   function handleAriaDescribedByAttribute(
     id: string,
@@ -45,63 +45,63 @@ export default function createSingleton(
     isShow: boolean,
   ): void {
     if (!currentAria) {
-      return
+      return;
     }
 
     if (isShow && !isInteractive) {
-      currentTarget.setAttribute(`aria-${currentAria}`, id)
+      currentTarget.setAttribute(`aria-${currentAria}`, id);
     } else {
-      currentTarget.removeAttribute(`aria-${currentAria}`)
+      currentTarget.removeAttribute(`aria-${currentAria}`);
     }
   }
 
-  const references = tippyInstances.map(instance => instance.reference)
+  const references = tippyInstances.map(instance => instance.reference);
 
   const singleton = tippy(document.createElement('div'), {
     ...optionalProps,
     aria: null,
     triggerTarget: references,
     onMount(instance) {
-      preserveInvocation(userProps.onMount, instance.props.onMount, [instance])
+      preserveInvocation(userProps.onMount, instance.props.onMount, [instance]);
       handleAriaDescribedByAttribute(
         instance.popperChildren.tooltip.id,
         instance.props.interactive,
         true,
-      )
+      );
     },
     onUntrigger(instance, event): void {
       preserveInvocation(userProps.onUntrigger, instance.props.onUntrigger, [
         instance,
         event,
-      ])
+      ]);
 
       handleAriaDescribedByAttribute(
         instance.popperChildren.tooltip.id,
         instance.props.interactive,
         false,
-      )
+      );
     },
     onTrigger(instance, event): void {
       preserveInvocation(userProps.onTrigger, instance.props.onTrigger, [
         instance,
         event,
-      ])
+      ]);
 
-      const target = event.currentTarget as Element
-      const index = references.indexOf(target)
+      const target = event.currentTarget as Element;
+      const index = references.indexOf(target);
 
-      currentTarget = target
-      currentAria = userProps.aria
+      currentTarget = target;
+      currentAria = userProps.aria;
 
       if (instance.state.isVisible) {
         handleAriaDescribedByAttribute(
           instance.popperChildren.tooltip.id,
           instance.props.interactive,
           true,
-        )
+        );
       }
 
-      instance.setContent(tippyInstances[index].props.content)
+      instance.setContent(tippyInstances[index].props.content);
 
       // Due to two updates performed upon mount, the second update will use
       // this object
@@ -111,29 +111,29 @@ export default function createSingleton(
         clientHeight: 0,
         clientWidth: 0,
         getBoundingClientRect(): ClientRect {
-          return target.getBoundingClientRect()
+          return target.getBoundingClientRect();
         },
-      }
+      };
     },
     onAfterUpdate(instance, partialProps): void {
       preserveInvocation(
         userProps.onAfterUpdate,
         instance.props.onAfterUpdate,
         [instance],
-      )
+      );
 
-      setUserProps(partialProps)
+      setUserProps(partialProps);
     },
     onDestroy(instance): void {
       preserveInvocation(userProps.onDestroy, instance.props.onDestroy, [
         instance,
-      ])
+      ]);
 
       tippyInstances.forEach(instance => {
-        instance.enable()
-      })
+        instance.enable();
+      });
     },
-  }) as Instance
+  }) as Instance;
 
-  return singleton
+  return singleton;
 }

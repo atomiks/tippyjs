@@ -14,8 +14,8 @@ Methods on instances allow you to control the tippy programmatically. See the
 Programmatically show the tippy at any time:
 
 ```js
-instance.show() // Default
-instance.show(0) // 0ms transition duration
+instance.show(); // Default
+instance.show(0); // 0ms transition duration
 ```
 
 #### hide
@@ -23,8 +23,8 @@ instance.show(0) // 0ms transition duration
 Programmatically hide the tippy at any time:
 
 ```js
-instance.hide() // Default
-instance.hide(500) // 500ms transition duration
+instance.hide(); // Default
+instance.hide(500); // 500ms transition duration
 ```
 
 #### disable
@@ -32,7 +32,7 @@ instance.hide(500) // 500ms transition duration
 Temporarily prevent a tippy from showing or hiding:
 
 ```js
-instance.disable()
+instance.disable();
 ```
 
 #### enable
@@ -40,7 +40,7 @@ instance.disable()
 Re-enable a tippy:
 
 ```js
-instance.enable()
+instance.enable();
 ```
 
 #### setProps
@@ -52,7 +52,7 @@ new props in:
 instance.setProps({
   arrow: true,
   animation: 'scale',
-})
+});
 ```
 
 #### setContent
@@ -60,7 +60,7 @@ instance.setProps({
 Updating the `content` prop has its own method as a shortcut:
 
 ```js
-instance.setContent('New content')
+instance.setContent('New content');
 ```
 
 #### destroy
@@ -68,7 +68,7 @@ instance.setContent('New content')
 To permanently destroy and clean up the instance, use this method:
 
 ```js
-instance.destroy()
+instance.destroy();
 ```
 
 The `_tippy` property is deleted from the reference element upon destruction.
@@ -83,14 +83,14 @@ instance.
 Set the default props for each new instance:
 
 ```js
-import tippy from 'tippy.js'
+import tippy from 'tippy.js';
 
 tippy.setDefaultProps({
   // Props
-})
+});
 
 // Access the current default props
-tippy.defaultProps
+tippy.defaultProps;
 ```
 
 #### hideAll
@@ -98,15 +98,15 @@ tippy.defaultProps
 Hide all visible tippys on the document:
 
 ```js
-import { hideAll } from 'tippy.js'
+import {hideAll} from 'tippy.js';
 
 // Use each tippy's own duration
-hideAll()
+hideAll();
 // Hide them all instantly
-hideAll({ duration: 0 })
+hideAll({duration: 0});
 // Hide them all except a particular one
-hideAll({ exclude: tippyInstance })
-hideAll({ exclude: referenceElement })
+hideAll({exclude: tippyInstance});
+hideAll({exclude: referenceElement});
 ```
 
 Note that this is not attached to `tippy` in ESM/CJS versions, it must be
