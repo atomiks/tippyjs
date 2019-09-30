@@ -5,7 +5,7 @@ import {
   BasePlacement,
   Placement,
 } from './types';
-import {innerHTML, div, isRealElement, splitBySpaces} from './utils';
+import {innerHTML, div, isElement, splitBySpaces} from './utils';
 import {isUCBrowser} from './browser';
 import {
   POPPER_CLASS,
@@ -23,7 +23,7 @@ import {
  * Sets the innerHTML of an element
  */
 export function setInnerHTML(element: Element, html: string | Element): void {
-  element[innerHTML()] = isRealElement(html) ? html[innerHTML()] : html;
+  element[innerHTML()] = isElement(html) ? html[innerHTML()] : html;
 }
 
 /**
@@ -33,7 +33,7 @@ export function setContent(
   contentEl: PopperChildren['content'],
   props: Props,
 ): void {
-  if (isRealElement(props.content)) {
+  if (isElement(props.content)) {
     setInnerHTML(contentEl, '');
     contentEl.appendChild(props.content);
   } else if (typeof props.content !== 'function') {
@@ -82,7 +82,7 @@ export function createArrowElement(arrow: Props['arrow']): HTMLDivElement {
   } else {
     arrowElement.className = SVG_ARROW_CLASS;
 
-    if (isRealElement(arrow)) {
+    if (isElement(arrow)) {
       arrowElement.appendChild(arrow);
     } else {
       setInnerHTML(arrowElement, arrow as string);

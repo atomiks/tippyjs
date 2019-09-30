@@ -41,6 +41,7 @@ import {
   splitBySpaces,
   normalizeToArray,
   useIfDefined,
+  isMouseEvent,
 } from './utils';
 import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
 
@@ -94,6 +95,11 @@ export default function createTippy(
   let currentTransitionEndListener: (event: TransitionEvent) => void;
   let listeners: Listener[] = [];
   let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce);
+
+  // Support iframe contexts
+  // The reference must never change its document context after the instance
+  // is created, since this is a static reference
+  const doc = reference.ownerDocument || document;
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   const id = idCounter++;
@@ -166,12 +172,13 @@ export default function createTippy(
       instance.clearDelayTimeouts();
     }
   });
+
   popper.addEventListener('mouseleave', (): void => {
     if (
       instance.props.interactive &&
       includes(instance.props.trigger, 'mouseenter')
     ) {
-      document.addEventListener('mousemove', debouncedOnMouseMove);
+      doc.addEventListener('mousemove', debouncedOnMouseMove);
     }
   });
 
@@ -278,8 +285,8 @@ export default function createTippy(
   }
 
   function cleanupInteractiveMouseListeners(): void {
-    document.body.removeEventListener('mouseleave', scheduleHide);
-    document.removeEventListener('mousemove', debouncedOnMouseMove);
+    doc.body.removeEventListener('mouseleave', scheduleHide);
+    doc.removeEventListener('mousemove', debouncedOnMouseMove);
     mouseMoveListeners = mouseMoveListeners.filter(
       (listener): boolean => listener !== debouncedOnMouseMove,
     );
@@ -330,11 +337,11 @@ export default function createTippy(
   }
 
   function addDocumentMouseDownListener(): void {
-    document.addEventListener('mousedown', onDocumentMouseDown, true);
+    doc.addEventListener('mousedown', onDocumentMouseDown, true);
   }
 
   function removeDocumentMouseDownListener(): void {
-    document.removeEventListener('mousedown', onDocumentMouseDown, true);
+    doc.removeEventListener('mousedown', onDocumentMouseDown, true);
   }
 
   function onTransitionedOut(duration: number, callback: () => void): void {
@@ -436,7 +443,7 @@ export default function createTippy(
 
     handleAriaExpandedAttribute();
 
-    if (!instance.state.isVisible && event instanceof MouseEvent) {
+    if (!instance.state.isVisible && isMouseEvent(event)) {
       // If scrolling, `mouseenter` events can be fired if the cursor lands
       // over a new target, but `mousemove` events don't get fired. This
       // causes interactive tooltips to get stuck open until the cursor is
@@ -497,8 +504,8 @@ export default function createTippy(
     }
 
     if (instance.props.interactive) {
-      document.body.addEventListener('mouseleave', scheduleHide);
-      document.addEventListener('mousemove', debouncedOnMouseMove);
+      doc.body.addEventListener('mouseleave', scheduleHide);
+      doc.addEventListener('mousemove', debouncedOnMouseMove);
       mouseMoveListeners.push(debouncedOnMouseMove);
 
       return;
