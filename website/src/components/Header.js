@@ -31,8 +31,8 @@ const HeaderRoot = styled.header`
   text-align: center;
   margin-bottom: 50px;
   color: white;
-  margin-left: -250px;
-  padding-left: 250px;
+  margin-left: -15.625rem;
+  padding-left: 15.625rem;
 
   &::before {
     content: '';
@@ -122,7 +122,7 @@ const svgStyles = css`
 
   ${MEDIA.md} {
     margin: -10% 0 -30px;
-    margin-left: -250px;
+    margin-left: -15.625rem;
   }
 
   @media (min-width: 1700px) {

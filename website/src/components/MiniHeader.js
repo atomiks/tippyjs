@@ -11,8 +11,8 @@ const HeaderRoot = styled.header`
   background-repeat: no-repeat;
   background-size: cover;
   text-align: center;
-  margin-left: -250px;
-  padding-left: 250px;
+  margin-left: -15.625rem;
+  padding-left: 15.625rem;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   margin-bottom: 2rem;
