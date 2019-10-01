@@ -95,6 +95,7 @@ export default function createTippy(
   let currentTransitionEndListener: (event: TransitionEvent) => void;
   let listeners: Listener[] = [];
   let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce);
+  let currentTarget: Element;
 
   // Support iframe contexts
   // Static check that assumes any of the `triggerTarget` or `reference`
@@ -201,7 +202,7 @@ export default function createTippy(
   }
 
   function getCurrentTarget(): Element {
-    return lastTriggerEvent ? (lastTriggerEvent.target as Element) : reference;
+    return currentTarget || reference;
   }
 
   function getDelay(isShow: boolean): number {
@@ -442,6 +443,7 @@ export default function createTippy(
     }
 
     lastTriggerEvent = event;
+    currentTarget = event.currentTarget as Element;
 
     handleAriaExpandedAttribute();
 
