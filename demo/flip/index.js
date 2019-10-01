@@ -34,24 +34,25 @@ let isExpanded = false;
 let wasInterrupted = false;
 let wasManuallyUpdated = false;
 const offsets = {prev: undefined, current: undefined, tween: undefined};
-const distance = {prev: undefined, current: undefined, tween: undefined};
 
 btn.onclick = () => {
   isExpanded = !isExpanded;
+
+  wasManuallyUpdated = true;
 
   flipper.recordBeforeUpdate();
 
   Object.keys(instance.popperChildren).forEach(key => {
     if (instance.popperChildren[key]) {
       instance.popperChildren[key].style.transitionDuration = '0ms';
+      instance.popperChildren[key].style.transitionProperty =
+        'opacity, visibility';
     }
   });
 
   const {tooltip} = instance.popperChildren;
   tooltip.style.width = isExpanded ? '' : `${originalDimensions.width}px`;
   tooltip.style.height = isExpanded ? '' : `${originalDimensions.height}px`;
-
-  wasManuallyUpdated = true;
 
   instance.popperInstance.update();
   flipper.onUpdate();
@@ -69,9 +70,12 @@ const instance = tippy(button, {
   trigger: 'click',
   flipOnUpdate: true,
   arrow: false,
+  updateDuration: 500,
   onCreate(instance) {
     const {popper} = instance;
     const {tooltip, content, arrow} = instance.popperChildren;
+
+    popper.style.transitionProperty = 'padding';
 
     // Very first transition is jerky otherwise.
     content.style.willChange = 'transform';
@@ -85,7 +89,7 @@ const instance = tippy(button, {
       spring: 'veryGentle',
       onStart() {
         // .disable() hides the tippy by default now
-        instance.state.isEnabled = false;
+        instance.popperInstance.disableEventListeners();
       },
       onComplete() {
         instance.enable();
@@ -104,35 +108,17 @@ const instance = tippy(button, {
 
         const {x: prevX, y: prevY} = offsets.prev;
         const {x: currentX, y: currentY} = offsets.current;
-        const {property: prevProperty, value: prevDistance} = distance.prev;
-        const {
-          property: currentProperty,
-          value: currentDistance,
-        } = distance.current;
 
-        // Calculate tweened offset and distance
+        // Calculate tweened offset
         const tweenedX = prevX - springValue * (prevX - currentX);
         const tweenedY = prevY - springValue * (prevY - currentY);
-        const tweenedDistance =
-          prevDistance -
-          Math.max(0, Math.min(springValue, 1)) *
-            (prevDistance - currentDistance);
 
         // Write the current tweened offsets due to the FLIP animation
         offsets.tween = {x: tweenedX, y: tweenedY};
-        distance.tween = {
-          property: currentProperty,
-          value: tweenedDistance,
-        };
 
         // Set tweened transform
         const tweenedTransform = `translate3d(${tweenedX}px, ${tweenedY}px, 0)`;
         instance.popper.style.transform = tweenedTransform;
-
-        // Set tweened distance
-        const {tooltip} = instance.popperChildren;
-        tooltip.style[prevProperty] = '0';
-        tooltip.style[currentProperty] = `${tweenedDistance}px`;
       },
     });
 
@@ -161,21 +147,26 @@ const instance = tippy(button, {
       wrapper.style.display = 'block';
     }
   },
+  onHidden() {
+    const {content, tooltip, arrow} = instance.popperChildren;
+
+    content.style.transform = '';
+    tooltip.style.transform = '';
+
+    if (arrow) {
+      arrow.style.transform = '';
+    }
+
+    wasManuallyUpdated = false;
+  },
   popperOptions: {
     onCreate(data) {
       const currentOffsets = parseTranslate3d(data.styles.transform);
       offsets.current = currentOffsets;
       offsets.prev = currentOffsets;
-
-      const {tooltip} = instance.popperChildren;
-      const property = tooltip.style.top ? 'top' : 'left';
-      const value = parseFloat(tooltip.style[property]);
-
-      distance.prev = {property, value};
-      distance.current = {property, value};
     },
     onUpdate(data) {
-      const {tooltip, arrow} = instance.popperChildren;
+      const {arrow} = instance.popperChildren;
 
       // `react-flip-toolkit` adds this
       if (arrow) {
@@ -184,19 +175,12 @@ const instance = tippy(button, {
 
       wasInterrupted = true;
       offsets.prev = offsets.current;
-      distance.prev = distance.current;
 
       // We need to parse it because Popper rounds the values but doesn't expose
       // the rounded values for us...
       const currentOffsets = parseTranslate3d(data.styles.transform);
-      const currentProperty = tooltip.style.top ? 'top' : 'left';
-      const currentValue = parseFloat(tooltip.style[currentProperty]);
 
       offsets.current = currentOffsets;
-      distance.current = {
-        property: currentProperty,
-        value: currentValue,
-      };
 
       // Runs AFTER first `onSpringUpdate` frame
       requestAnimationFrame(() => {
@@ -207,9 +191,7 @@ const instance = tippy(button, {
       // 1 frame glitch
       if (wasManuallyUpdated) {
         const {x, y} = offsets.tween || offsets.prev;
-        const {property, value} = distance.tween || distance.prev;
         instance.popper.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-        tooltip.style[property] = `${value}px`;
       }
     },
   },

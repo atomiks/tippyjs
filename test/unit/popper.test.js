@@ -428,145 +428,37 @@ describe('setInnerHTML', () => {
 });
 
 describe('isCursorOutsideInteractiveBorder', () => {
-  const props = {interactiveBorder: 5, distance: 10};
+  const interactiveBorder = 5;
   const popperRect = {top: 100, left: 100, right: 110, bottom: 110};
 
-  it('no popper placement returns true', () => {
-    expect(isCursorOutsideInteractiveBorder(null, {}, {}, {})).toBe(true);
-  });
+  const inside = [
+    {clientX: 95, clientY: 95},
+    {clientX: 115, clientY: 115},
+    {clientX: 115, clientY: 95},
+    {clientX: 95, clientY: 115},
+  ];
 
-  // TOP: bounded by x(95, 115) and y(95, 115)
-  it('PLACEMENT=top: inside', () => {
-    const mockEvents = [
-      {clientX: 95, clientY: 95},
-      {clientX: 115, clientY: 115},
-      {clientX: 115, clientY: 95},
-      {clientX: 95, clientY: 115},
-    ];
+  const outside = [
+    {clientX: 94, clientY: 94},
+    {clientX: 116, clientY: 116},
+    {clientX: 94, clientY: 100},
+    {clientX: 100, clientY: 94},
+    {clientX: 100, clientY: 116},
+    {clientX: 116, clientY: 100},
+  ];
 
-    mockEvents.forEach(coords => {
+  it('inside', () => {
+    inside.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('top', popperRect, coords, props),
+        isCursorOutsideInteractiveBorder(popperRect, coords, interactiveBorder),
       ).toBe(false);
     });
   });
 
-  // TOP: bounded by x(95, 115) and y(95, 115)
-  it('PLACEMENT=top: outside', () => {
-    const mockEvents = [
-      {clientX: 94, clientY: 84},
-      {clientX: 94, clientY: 126},
-      {clientX: 100, clientY: 84},
-      {clientX: 100, clientY: 126},
-      {clientX: 94, clientY: 100},
-      {clientX: 116, clientY: 100},
-    ];
-
-    mockEvents.forEach(coords => {
+  it('outside', () => {
+    outside.forEach(coords => {
       expect(
-        isCursorOutsideInteractiveBorder('top', popperRect, coords, props),
-      ).toBe(true);
-    });
-  });
-
-  // BOTTOM: bounded by x(95, 115) and y(95, 125])
-  it('PLACEMENT=bottom: inside', () => {
-    const mockEvents = [
-      {clientX: 95, clientY: 95},
-      {clientX: 115, clientY: 125},
-      {clientX: 115, clientY: 125},
-      {clientX: 95, clientY: 125},
-    ];
-
-    mockEvents.forEach(coords => {
-      expect(
-        isCursorOutsideInteractiveBorder('bottom', popperRect, coords, props),
-      ).toBe(false);
-    });
-  });
-
-  // BOTTOM: bounded by x(95, 115) and y(95, 125)
-  it('PLACEMENT=bottom: outside', () => {
-    const mockEvents = [
-      {clientX: 94, clientY: 94},
-      {clientX: 94, clientY: 126},
-      {clientX: 100, clientY: 94},
-      {clientX: 100, clientY: 126},
-      {clientX: 94, clientY: 100},
-      {clientX: 116, clientY: 100},
-    ];
-
-    mockEvents.forEach(coords => {
-      expect(
-        isCursorOutsideInteractiveBorder('bottom', popperRect, coords, props),
-      ).toBe(true);
-    });
-  });
-
-  // LEFT: bounded by x(85, 115) and y(95, 115)
-  it('PLACEMENT=left: inside', () => {
-    const mockEvents = [
-      {clientX: 85, clientY: 95},
-      {clientX: 115, clientY: 95},
-      {clientX: 85, clientY: 115},
-      {clientX: 115, clientY: 115},
-    ];
-
-    mockEvents.forEach(coords => {
-      expect(
-        isCursorOutsideInteractiveBorder('left', popperRect, coords, props),
-      ).toBe(false);
-    });
-  });
-
-  // LEFT: bounded by x(85, 115) and y(95, 115)
-  it('PLACEMENT=left: outside', () => {
-    const mockEvents = [
-      {clientX: 84, clientY: 94},
-      {clientX: 84, clientY: 116},
-      {clientX: 100, clientY: 94},
-      {clientX: 100, clientY: 116},
-      {clientX: 84, clientY: 100},
-      {clientX: 116, clientY: 100},
-    ];
-
-    mockEvents.forEach(coords => {
-      expect(
-        isCursorOutsideInteractiveBorder('left', popperRect, coords, props),
-      ).toBe(true);
-    });
-  });
-
-  // RIGHT: bounded by x(95, 125) and y(95, 115)
-  it('PLACEMENT=right: inside', () => {
-    const mockEvents = [
-      {clientX: 95, clientY: 95},
-      {clientX: 125, clientY: 95},
-      {clientX: 95, clientY: 115},
-      {clientX: 125, clientY: 115},
-    ];
-
-    mockEvents.forEach(coords => {
-      expect(
-        isCursorOutsideInteractiveBorder('right', popperRect, coords, props),
-      ).toBe(false);
-    });
-  });
-
-  // RIGHT: bounded by x(95, 125) and y(95, 115)
-  it('PLACEMENT=right: outside', () => {
-    const mockEvents = [
-      {clientX: 94, clientY: 94},
-      {clientX: 94, clientY: 126},
-      {clientX: 100, clientY: 94},
-      {clientX: 100, clientY: 126},
-      {clientX: 94, clientY: 100},
-      {clientX: 126, clientY: 100},
-    ];
-
-    mockEvents.forEach(coords => {
-      expect(
-        isCursorOutsideInteractiveBorder('right', popperRect, coords, props),
+        isCursorOutsideInteractiveBorder(popperRect, coords, interactiveBorder),
       ).toBe(true);
     });
   });

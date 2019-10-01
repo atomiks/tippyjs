@@ -901,49 +901,6 @@ describe('popperOptions', () => {
     expect(popperInstance.options.modifiers.preventOverflow.test).toBe(true);
   });
 
-  it('modifiers.preventOverflow.padding is not overwritten', () => {
-    const paddings = [15, {top: 15, bottom: -5, left: 50, right: 0}];
-    const placements = ['top', 'bottom', 'left', 'right'];
-
-    placements.forEach(placement => {
-      paddings.forEach(padding => {
-        const instance = tippy(h(), {
-          placement,
-          lazy: false,
-          popperOptions: {
-            modifiers: {
-              preventOverflow: {
-                padding,
-              },
-            },
-          },
-        });
-
-        jest.runAllTimers();
-
-        const preventOverflowPadding = instance.popperInstance.modifiers.find(
-          m => m.name === 'preventOverflow',
-        ).padding;
-
-        const paddingObject =
-          typeof padding === 'number'
-            ? {
-                top: padding,
-                right: padding,
-                bottom: padding,
-                left: padding,
-                [placement]: padding + 10,
-              }
-            : {
-                ...padding,
-                [placement]: padding[placement] + 10,
-              };
-
-        expect(preventOverflowPadding).toEqual(paddingObject);
-      });
-    });
-  });
-
   it('modifiers.arrow', () => {
     const {popperInstance} = tippy(h(), {
       lazy: false,

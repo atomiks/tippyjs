@@ -36,10 +36,10 @@ function useStableMemo(fn, deps) {
 }
 
 function TippyTransition({children, onChange}) {
+  const child = Children.only(children);
+
   const component = useInstance({
-    areDimensionsTransitioning: false,
     offsets: {},
-    distance: {},
   });
 
   function onCreate(instance) {
@@ -57,14 +57,11 @@ function TippyTransition({children, onChange}) {
       // TODO: Make this unique if this component is used more than once
       flipId: 'tooltip',
       spring: 'veryGentle',
-      onStart() {
-        component.instance.popperInstance.disableEventListeners();
-        component.areDimensionsTransitioning = true;
-      },
       onComplete() {
+        popper.style.transitionDuration = `${child.props.updateDuration}ms`;
+        popper.style.transitionProperty = '';
         component.instance.popperInstance.enableEventListeners();
         component.wasManuallyUpdated = false;
-        component.areDimensionsTransitioning = false;
       },
       onSpringUpdate(springValue) {
         if (component.wasInterrupted) {
@@ -76,38 +73,17 @@ function TippyTransition({children, onChange}) {
 
         const {x: prevX, y: prevY} = component.offsets.prev;
         const {x: currentX, y: currentY} = component.offsets.current;
-        const {
-          property: prevProperty,
-          value: prevDistance,
-        } = component.distance.prev;
-        const {
-          property: currentProperty,
-          value: currentDistance,
-        } = component.distance.current;
 
-        // Calculate tweened offset and distance
+        // Calculate tweened offset
         const tweenedX = prevX - springValue * (prevX - currentX);
         const tweenedY = prevY - springValue * (prevY - currentY);
-        const tweenedDistance =
-          prevDistance -
-          Math.max(0, Math.min(springValue, 1)) *
-            (prevDistance - currentDistance);
 
         // Write the current tweened offsets due to the FLIP animation
         component.offsets.tween = {x: tweenedX, y: tweenedY};
-        component.distance.tween = {
-          property: currentProperty,
-          value: tweenedDistance,
-        };
 
         // Set tweened transform
         const tweenedTransform = `translate3d(${tweenedX}px, ${tweenedY}px, 0)`;
         component.instance.popper.style.transform = tweenedTransform;
-
-        // Set tweened distance
-        const {tooltip} = component.instance.popperChildren;
-        tooltip.style[prevProperty] = '0';
-        tooltip.style[currentProperty] = `${tweenedDistance}px`;
       },
     });
 
@@ -170,6 +146,11 @@ function TippyTransition({children, onChange}) {
       return;
     }
 
+    // Allow `padding` to be transitioned if the popper switches placements
+    component.instance.popper.style.transitionProperty = 'padding';
+    component.instance.popper.style.transitionDuration = '500ms';
+    component.instance.popperInstance.disableEventListeners();
+
     component.flipper.onUpdate();
 
     if (onChange) {
@@ -202,18 +183,10 @@ function TippyTransition({children, onChange}) {
     component.offsets.prev = currentOffsets;
     component.offsets.current = currentOffsets;
     component.offsets.tween = currentOffsets;
-
-    const {tooltip} = component.instance.popperChildren;
-    const property = tooltip.style.top ? 'top' : 'left';
-    const value = parseFloat(tooltip.style[property]);
-
-    component.distance.prev = {property, value};
-    component.distance.current = {property, value};
-    component.distance.tween = {property, value};
   }
 
   function popperOnUpdate(data) {
-    const {tooltip, arrow} = component.instance.popperChildren;
+    const {arrow} = component.instance.popperChildren;
 
     // `react-flip-toolkit` adds this
     if (arrow) {
@@ -222,19 +195,12 @@ function TippyTransition({children, onChange}) {
 
     component.wasInterrupted = true;
     component.offsets.prev = component.offsets.current;
-    component.distance.prev = component.distance.current;
 
     // We need to parse it because Popper rounds the values but doesn't expose
     // the rounded values for us...
     const currentOffsets = parseTranslate3d(data.styles.transform);
-    const currentProperty = tooltip.style.top ? 'top' : 'left';
-    const currentValue = parseFloat(tooltip.style[currentProperty]);
 
     component.offsets.current = currentOffsets;
-    component.distance.current = {
-      property: currentProperty,
-      value: currentValue,
-    };
 
     // Runs AFTER first `onSpringUpdate` frame
     requestAnimationFrame(() => {
@@ -245,14 +211,9 @@ function TippyTransition({children, onChange}) {
     // 1 frame glitch
     if (component.wasManuallyUpdated) {
       const {x, y} = component.offsets.tween || component.offsets.prev;
-      const {property, value} =
-        component.distance.tween || component.distance.prev;
       component.instance.popper.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      tooltip.style[property] = `${value}px`;
     }
   }
-
-  const child = Children.only(children);
 
   const popperOptions = useStableMemo(
     () => ({
