@@ -180,6 +180,6 @@ export function validateTargets(targets: Targets): void {
     `tippy() was passed a plain object which is no longer supported as an
     argument.
     
-    See https://atomiks.github.io/tippyjs/misc#custom-position`,
+    See https://atomiks.github.io/tippyjs/misc/#custom-position`,
   );
 }
