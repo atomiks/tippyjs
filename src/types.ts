@@ -149,8 +149,10 @@ declare const tippy: Tippy;
 export default tippy;
 
 export type HideAll = (options: HideAllOptions) => void;
-
 declare const hideAll: HideAll;
+
+export type CreateTippyWithPlugins = (outerPlugins: Plugin[]) => Tippy;
+declare const createTippyWithPlugins: CreateTippyWithPlugins;
 
 export type Delegate = (
   targets: Targets,
@@ -204,6 +206,7 @@ declare const roundArrow: string;
 
 export {
   hideAll,
+  createTippyWithPlugins,
   delegate,
   createSingleton,
   animateFill,
