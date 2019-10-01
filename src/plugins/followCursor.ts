@@ -231,6 +231,7 @@ export default {
       },
       onHidden(): void {
         removeListener();
+        resetReference();
         triggerEvent = null;
       },
     };
