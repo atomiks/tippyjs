@@ -20,11 +20,11 @@ export function hasOwnProperty(obj: object, key: string): boolean {
  * Returns an array of elements based on the value
  */
 export function getArrayOfElements(value: Targets): Element[] {
-  if (isRealElement(value)) {
+  if (isElement(value)) {
     return [value];
   }
 
-  if (value instanceof NodeList) {
+  if (isNodeList(value)) {
     return arrayFrom(value);
   }
 
@@ -64,10 +64,32 @@ export function getModifier(obj: any, key: string): any {
 }
 
 /**
- * Determines if the value is a real element
+ * Determines if the value is of type
  */
-export function isRealElement(value: any): value is Element {
-  return value instanceof Element;
+export function isType(value: any, type: string): boolean {
+  const str = {}.toString.call(value);
+  return str.indexOf('[object') === 0 && str.indexOf(`${type}]`) > -1;
+}
+
+/**
+ * Determines if the value is of type Element
+ */
+export function isElement(value: any): value is Element {
+  return isType(value, 'Element');
+}
+
+/**
+ * Determines if the value is of type NodeList
+ */
+export function isNodeList(value: any): value is NodeList {
+  return isType(value, 'NodeList');
+}
+
+/**
+ * Determines if the value is of type MouseEvent
+ */
+export function isMouseEvent(value: any): value is MouseEvent {
+  return isType(value, 'MouseEvent');
 }
 
 /**

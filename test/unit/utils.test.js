@@ -324,3 +324,29 @@ describe('splitBySpaces', () => {
     expect(Utils.splitBySpaces(' one  two ')).toMatchObject(['one', 'two']);
   });
 });
+
+describe('isType', () => {
+  it('correctly determines types of Elements', () => {
+    expect(Utils.isType(document.createElement('div'), 'Element')).toBe(true);
+    expect(
+      Utils.isType(
+        document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
+        'Element',
+      ),
+    ).toBe(true);
+    expect(Utils.isType({}, 'Element')).toBe(false);
+    expect(Utils.isType('button', 'Element')).toBe(false);
+    expect(Utils.isType(document.querySelectorAll('a'), 'Element')).toBe(false);
+  });
+
+  it('correctly determines type of MouseEvents', () => {
+    expect(Utils.isType(new MouseEvent('mouseenter'), 'MouseEvent')).toBe(true);
+    expect(Utils.isType(new FocusEvent('focus'), 'MouseEvent')).toBe(false);
+  });
+
+  it('correctly determines type of NodeLists', () => {
+    expect(Utils.isType(document.querySelectorAll('a'), 'NodeList')).toBe(true);
+    expect(Utils.isType(document.createElement('div'), 'NodeList')).toBe(false);
+    expect(Utils.isType({}, 'NodeList')).toBe(false);
+  });
+});
