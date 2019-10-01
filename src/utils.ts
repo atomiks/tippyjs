@@ -275,3 +275,14 @@ export function normalizeToArray<T>(value: T | T[]): T[] {
   // @ts-ignore
   return [].concat(value);
 }
+
+/**
+ * Returns the ownerDocument of the first available element, otherwise global
+ * document
+ */
+export function getOwnerDocument(
+  elementOrElements: Element | Element[],
+): Document {
+  const [element] = normalizeToArray(elementOrElements);
+  return element ? element.ownerDocument || document : document;
+}

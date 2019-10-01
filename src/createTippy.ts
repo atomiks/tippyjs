@@ -42,6 +42,7 @@ import {
   normalizeToArray,
   useIfDefined,
   isMouseEvent,
+  getOwnerDocument,
 } from './utils';
 import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
 
@@ -100,9 +101,7 @@ export default function createTippy(
   // Support iframe contexts
   // Static check that assumes any of the `triggerTarget` or `reference`
   // nodes will never change documents, even when they are updated
-  const doc =
-    normalizeToArray(props.triggerTarget || reference)[0].ownerDocument ||
-    document;
+  const doc = getOwnerDocument(props.triggerTarget || reference);
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   const id = idCounter++;

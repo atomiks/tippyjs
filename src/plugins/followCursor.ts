@@ -10,7 +10,7 @@ import {
   closestCallback,
   useIfDefined,
   isMouseEvent,
-  normalizeToArray,
+  getOwnerDocument,
 } from '../utils';
 import {getBasePlacement} from '../popper';
 import {currentInput} from '../bindGlobalEventListeners';
@@ -24,9 +24,7 @@ export default {
     // Support iframe contexts
     // Static check that assumes any of the `triggerTarget` or `reference`
     // nodes will never change documents, even when they are updated
-    const doc =
-      normalizeToArray(instance.props.triggerTarget || reference)[0]
-        .ownerDocument || document;
+    const doc = getOwnerDocument(instance.props.triggerTarget || reference);
 
     // Internal state
     let lastMouseMoveEvent: MouseEvent;
