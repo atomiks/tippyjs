@@ -97,9 +97,11 @@ export default function createTippy(
   let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce);
 
   // Support iframe contexts
-  // The reference must never change its document context after the instance
-  // is created, since this is a static reference
-  const doc = reference.ownerDocument || document;
+  // Static check that assumes any of the `triggerTarget` or `reference`
+  // nodes will never change documents, even when they are updated
+  const doc =
+    normalizeToArray(props.triggerTarget || reference)[0].ownerDocument ||
+    document;
 
   /* ======================= 🔑 Public members 🔑 ======================= */
   const id = idCounter++;

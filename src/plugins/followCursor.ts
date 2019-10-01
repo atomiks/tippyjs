@@ -5,7 +5,13 @@ import {
   Placement,
   Instance,
 } from '../types';
-import {includes, closestCallback, useIfDefined, isMouseEvent} from '../utils';
+import {
+  includes,
+  closestCallback,
+  useIfDefined,
+  isMouseEvent,
+  normalizeToArray,
+} from '../utils';
 import {getBasePlacement} from '../popper';
 import {currentInput} from '../bindGlobalEventListeners';
 
@@ -14,7 +20,13 @@ export default {
   defaultValue: false,
   fn(instance: Instance): Partial<LifecycleHooks> {
     const {reference, popper} = instance;
-    const doc = reference.ownerDocument || document;
+
+    // Support iframe contexts
+    // Static check that assumes any of the `triggerTarget` or `reference`
+    // nodes will never change documents, even when they are updated
+    const doc =
+      normalizeToArray(instance.props.triggerTarget || reference)[0]
+        .ownerDocument || document;
 
     // Internal state
     let lastMouseMoveEvent: MouseEvent;
