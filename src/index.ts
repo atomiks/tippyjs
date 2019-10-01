@@ -6,9 +6,9 @@ import bindGlobalEventListeners, {
 } from './bindGlobalEventListeners';
 import {
   arrayFrom,
-  isRealElement,
   getArrayOfElements,
   isReferenceElement,
+  isElement,
 } from './utils';
 import {warnWhen, validateTargets, validateProps} from './validation';
 import {POPPER_SELECTOR} from './constants';
@@ -42,7 +42,7 @@ function tippy(
   const elements = getArrayOfElements(targets);
 
   if (__DEV__) {
-    const isSingleContentElement = isRealElement(props.content);
+    const isSingleContentElement = isElement(props.content);
     const isMoreThanOneReferenceElement = elements.length > 1;
     warnWhen(
       isSingleContentElement && isMoreThanOneReferenceElement,
@@ -71,7 +71,7 @@ function tippy(
     [],
   );
 
-  return isRealElement(targets) ? instances[0] : instances;
+  return isElement(targets) ? instances[0] : instances;
 }
 
 tippy.version = version;

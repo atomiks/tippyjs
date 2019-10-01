@@ -5,7 +5,13 @@ import {
   Placement,
   Instance,
 } from '../types';
-import {includes, closestCallback, useIfDefined} from '../utils';
+import {
+  includes,
+  closestCallback,
+  useIfDefined,
+  isMouseEvent,
+  normalizeToArray,
+} from '../utils';
 import {getBasePlacement} from '../popper';
 import {currentInput} from '../bindGlobalEventListeners';
 
@@ -14,6 +20,13 @@ export default {
   defaultValue: false,
   fn(instance: Instance): Partial<LifecycleHooks> {
     const {reference, popper} = instance;
+
+    // Support iframe contexts
+    // Static check that assumes any of the `triggerTarget` or `reference`
+    // nodes will never change documents, even when they are updated
+    const doc =
+      normalizeToArray(instance.props.triggerTarget || reference)[0]
+        .ownerDocument || document;
 
     // Internal state
     let lastMouseMoveEvent: MouseEvent;
@@ -55,7 +68,7 @@ export default {
     function getIsEnabled(): boolean {
       return (
         instance.props.followCursor &&
-        triggerEvent instanceof MouseEvent &&
+        isMouseEvent(triggerEvent) &&
         !(triggerEvent.clientX === 0 && triggerEvent.clientY === 0)
       );
     }
@@ -96,11 +109,11 @@ export default {
     }
 
     function addListener(): void {
-      document.addEventListener('mousemove', onMouseMove);
+      doc.addEventListener('mousemove', onMouseMove);
     }
 
     function removeListener(): void {
-      document.removeEventListener('mousemove', onMouseMove);
+      doc.removeEventListener('mousemove', onMouseMove);
     }
 
     function onMouseMove(event: MouseEvent): void {
@@ -186,7 +199,7 @@ export default {
 
         triggerEvent = event;
 
-        if (event instanceof MouseEvent) {
+        if (isMouseEvent(event)) {
           lastMouseMoveEvent = event;
         }
 
