@@ -1051,6 +1051,7 @@ export default function createTippy(
 
     isBeingDestroyed = true;
 
+    instance.clearDelayTimeouts();
     instance.hide(0);
 
     removeListenersFromTriggerTarget();
