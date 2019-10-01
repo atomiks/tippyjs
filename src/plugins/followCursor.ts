@@ -183,7 +183,7 @@ export default {
 
         // Wait for `.update()` to set `instance.state.currentPlacement` to
         // the new placement
-        setTimeout(triggerLastMouseMove);
+        requestAnimationFrame(triggerLastMouseMove);
       },
       onMount(): void {
         triggerLastMouseMove();
