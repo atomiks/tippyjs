@@ -163,6 +163,23 @@ describe('instance.destroy()', () => {
 
     expect(instance.state.isMounted).toBe(false);
   });
+
+  it('clears pending timeouts', () => {
+    instance = createTippy(h(), {...defaultProps, delay: 500});
+
+    // show() will warn about memory leak
+    const spy = jest.spyOn(console, 'warn');
+
+    instance.reference.dispatchEvent(MOUSEENTER);
+
+    instance.destroy();
+
+    jest.advanceTimersByTime(500);
+
+    expect(spy).not.toHaveBeenCalled();
+
+    spy.mockRestore();
+  });
 });
 
 describe('instance.show()', () => {
