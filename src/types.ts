@@ -154,14 +154,16 @@ declare const hideAll: HideAll;
 export type CreateTippyWithPlugins = (outerPlugins: Plugin[]) => Tippy;
 declare const createTippyWithPlugins: CreateTippyWithPlugins;
 
-export type Delegate = (
+export type Delegate<TProps = Props> = (
   targets: Targets,
-  props: Partial<Props> & {target: string},
+  props: Partial<TProps> & {target: string},
+  plugins?: Plugin[],
 ) => Instance | Instance[];
 
-export type CreateSingleton = (
+export type CreateSingleton<TProps = Props> = (
   tippyInstances: Instance[],
-  optionalProps?: Props,
+  optionalProps?: Partial<TProps>,
+  plugins?: Plugin[],
 ) => Instance;
 
 declare const delegate: Delegate;

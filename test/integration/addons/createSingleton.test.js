@@ -281,4 +281,11 @@ describe('createSingleton', () => {
       refs[0],
     );
   });
+
+  it('can accept plugins', () => {
+    const plugins = [{fn: () => ({})}];
+    const singletonInstance = createSingleton(tippy([h(), h()]), {}, plugins);
+
+    expect(singletonInstance.plugins).toEqual(plugins);
+  });
 });

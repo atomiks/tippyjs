@@ -1,4 +1,4 @@
-import {Targets, Instance, Props} from '../types';
+import {Targets, Instance, Props, Plugin} from '../types';
 import tippy from '..';
 import {throwErrorWhen} from '../validation';
 import {removeProperties, splitBySpaces} from '../utils';
@@ -18,6 +18,7 @@ interface ListenerObj {
 export default function delegate(
   targets: Targets,
   props: Partial<Props> & {target: string},
+  plugins: Plugin[] = [],
 ): Instance | Instance[] {
   if (__DEV__) {
     throwErrorWhen(
@@ -34,17 +35,22 @@ export default function delegate(
   const nativeProps = removeProperties(props, ['target']);
   const trigger = props.trigger || defaultProps.trigger;
 
-  const returnValue = tippy(targets, {...nativeProps, trigger: 'manual'});
+  const returnValue = tippy(
+    targets,
+    {...nativeProps, trigger: 'manual'},
+    plugins,
+  );
 
   function onTrigger(event: Event): void {
     if (event.target) {
       const targetNode = (event.target as Element).closest(target);
 
       if (targetNode) {
-        const instance = tippy(targetNode, {
-          ...nativeProps,
-          showOnCreate: true,
-        });
+        const instance = tippy(
+          targetNode,
+          {...nativeProps, showOnCreate: true},
+          plugins,
+        );
 
         if (instance) {
           childTippyInstances = childTippyInstances.concat(instance);
