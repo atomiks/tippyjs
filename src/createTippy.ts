@@ -9,7 +9,7 @@ import {
   LifecycleHooks,
 } from './types';
 import {isIE} from './browser';
-import {PASSIVE, PREVENT_OVERFLOW_PADDING} from './constants';
+import {PASSIVE} from './constants';
 import {currentInput} from './bindGlobalEventListeners';
 import {
   defaultProps,
@@ -45,13 +45,6 @@ import {
   getOwnerDocument,
 } from './utils';
 import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
-
-interface PaddingObject {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
 
 interface Listener {
   node: Element;
@@ -488,12 +481,9 @@ export default function createTippy(
 
     if (
       isCursorOutsideInteractiveBorder(
-        getBasePlacement(
-          instance.state.currentPlacement || instance.props.placement,
-        ),
         popper.getBoundingClientRect(),
         event,
-        instance.props,
+        instance.props.interactiveBorder,
       )
     ) {
       cleanupInteractiveMouseListeners();
@@ -551,10 +541,6 @@ export default function createTippy(
   function createPopperInstance(): void {
     const {popperOptions} = instance.props;
     const {arrow} = instance.popperChildren;
-    const preventOverflowModifier = getModifier(
-      popperOptions,
-      'preventOverflow',
-    );
 
     function applyMutations(data: Popper.Data): void {
       instance.state.currentPlacement = data.placement;
@@ -575,15 +561,16 @@ export default function createTippy(
       }
 
       const basePlacement = getBasePlacement(data.placement);
-      const isVerticalPlacement = includes(['top', 'bottom'], basePlacement);
-      const isSecondaryPlacement = includes(['bottom', 'right'], basePlacement);
+      const {distance} = instance.props;
 
-      // Apply `distance` prop
-      tooltip.style.top = '0';
-      tooltip.style.left = '0';
-      tooltip.style[
-        isVerticalPlacement ? 'top' : 'left'
-      ] = `${(isSecondaryPlacement ? 1 : -1) * instance.props.distance}px`;
+      const padding = {
+        bottom: `${distance}px 0 0 0`,
+        left: `0 ${distance}px 0 0`,
+        top: `0 0 ${distance}px 0`,
+        right: `0 0 0 ${distance}px`,
+      };
+
+      popper.style.padding = padding[basePlacement];
     }
 
     const config = {
@@ -594,46 +581,7 @@ export default function createTippy(
         ...(popperOptions && popperOptions.modifiers),
         preventOverflow: {
           boundariesElement: instance.props.boundary,
-          padding: PREVENT_OVERFLOW_PADDING,
-          ...preventOverflowModifier,
-        },
-        // Adds the `distance` calculation to preventOverflow padding
-        tippySetPreventOverflowPadding: {
-          enabled: true,
-          order: 299,
-          fn(data: Popper.Data): Popper.Data {
-            const basePlacement = getBasePlacement(data.placement);
-
-            const padding =
-              preventOverflowModifier &&
-              preventOverflowModifier.padding !== undefined
-                ? preventOverflowModifier.padding
-                : PREVENT_OVERFLOW_PADDING;
-
-            const isPaddingNumber = typeof padding === 'number';
-
-            const paddingObject = {top: 0, bottom: 0, left: 0, right: 0};
-
-            const computedPadding = (Object.keys(paddingObject) as Array<
-              keyof PaddingObject
-            >).reduce((obj: PaddingObject, key): PaddingObject => {
-              obj[key] = isPaddingNumber ? padding : padding[key];
-
-              if (basePlacement === key) {
-                obj[key] = isPaddingNumber
-                  ? padding + instance.props.distance
-                  : (padding[basePlacement] || 0) + instance.props.distance;
-              }
-
-              return obj;
-            }, paddingObject);
-
-            instance.popperInstance!.modifiers.filter(
-              (m): boolean => m.name === 'preventOverflow',
-            )[0].padding = computedPadding;
-
-            return data;
-          },
+          ...getModifier(popperOptions, 'preventOverflow'),
         },
         arrow: {
           element: arrow,
@@ -642,7 +590,6 @@ export default function createTippy(
         },
         flip: {
           enabled: instance.props.flip,
-          padding: instance.props.distance + PREVENT_OVERFLOW_PADDING,
           behavior: instance.props.flipBehavior,
           ...getModifier(popperOptions, 'flip'),
         },
