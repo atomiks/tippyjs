@@ -896,10 +896,8 @@ export default function createTippy(
       return;
     }
 
-    const isPrevented = instance.props.onShow(instance) === false;
     invokeHook('onShow', [instance], false);
-
-    if (isPrevented) {
+    if (instance.props.onShow(instance) === false) {
       return;
     }
 
@@ -957,10 +955,8 @@ export default function createTippy(
       return;
     }
 
-    const isPrevented = instance.props.onHide(instance) === false;
     invokeHook('onHide', [instance], false);
-
-    if (isPrevented && !isBeingDestroyed) {
+    if (instance.props.onHide(instance) === false && !isBeingDestroyed) {
       return;
     }
 
