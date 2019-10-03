@@ -187,7 +187,7 @@ export interface FollowCursor {
 
 export interface InlinePositioning {
   name: 'inlinePositioning';
-  defaultValue: true;
+  defaultValue: false;
   fn(instance: Instance): Partial<LifecycleHooks>;
 }
 
