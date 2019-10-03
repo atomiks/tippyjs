@@ -116,4 +116,15 @@ describe('delegate', () => {
 
     expect(button._tippy).toBeDefined();
   });
+
+  it('can accept plugins', () => {
+    const button = h('button');
+    const plugins = [{fn: () => ({})}];
+    const instance = delegate(document.body, {target: 'button'}, plugins);
+
+    button.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+
+    expect(instance.plugins).toEqual(plugins);
+    expect(button._tippy.plugins).toEqual(plugins);
+  });
 });

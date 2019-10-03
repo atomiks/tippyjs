@@ -1,4 +1,4 @@
-import {Instance, Props} from '../types';
+import {Instance, Props, Plugin} from '../types';
 import tippy from '..';
 import {preserveInvocation, useIfDefined} from '../utils';
 import {defaultProps} from '../props';
@@ -11,6 +11,7 @@ import {throwErrorWhen} from '../validation';
 export default function createSingleton(
   tippyInstances: Instance[],
   optionalProps?: Partial<Props>,
+  plugins: Plugin[] = [],
 ): Instance {
   if (__DEV__) {
     throwErrorWhen(
@@ -57,7 +58,7 @@ export default function createSingleton(
 
   const references = tippyInstances.map(instance => instance.reference);
 
-  const singleton = tippy(document.createElement('div'), {
+  const props: Partial<Props> = {
     ...optionalProps,
     aria: null,
     triggerTarget: references,
@@ -132,7 +133,7 @@ export default function createSingleton(
         instance.enable();
       });
     },
-  }) as Instance;
+  };
 
-  return singleton;
+  return tippy(document.createElement('div'), props, plugins) as Instance;
 }
