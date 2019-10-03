@@ -74,7 +74,6 @@ export default function createSingleton(
         instance,
         event,
       ]);
-
       handleAriaDescribedByAttribute(
         instance.popperChildren.tooltip.id,
         instance.props.interactive,
@@ -119,7 +118,7 @@ export default function createSingleton(
       preserveInvocation(
         userProps.onAfterUpdate,
         instance.props.onAfterUpdate,
-        [instance],
+        [instance, partialProps],
       );
 
       setUserProps(partialProps);
