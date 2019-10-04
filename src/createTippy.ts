@@ -104,6 +104,7 @@ export default function createTippy(
 
   // These two elements are static
   const {tooltip, content} = popperChildren;
+  const transitionableElements = [tooltip, content];
 
   const state = {
     // The current real placement (`data-placement` attribute)
@@ -187,10 +188,6 @@ export default function createTippy(
 
   function getIsCustomTouchBehavior(): boolean {
     return getNormalizedTouchSettings()[0] === 'hold';
-  }
-
-  function getTransitionableElements(): HTMLDivElement[] {
-    return [tooltip, content];
   }
 
   function getCurrentTarget(): Element {
@@ -910,7 +907,6 @@ export default function createTippy(
     // elements at a different placement
     // Check if the tippy was fully unmounted before `show()` was called, to
     // allow for smooth transition for `createSingleton()`
-    const transitionableElements = getTransitionableElements();
     if (!instance.state.isMounted) {
       setTransitionDuration(transitionableElements.concat(popper), 0);
     }
@@ -970,7 +966,6 @@ export default function createTippy(
     instance.state.isVisible = false;
     instance.state.isShown = false;
 
-    const transitionableElements = getTransitionableElements();
     setTransitionDuration(transitionableElements, duration);
     setVisibilityState(transitionableElements, 'hidden');
 
