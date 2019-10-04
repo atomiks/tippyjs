@@ -231,6 +231,36 @@ describe('instance.show()', () => {
 
     expect(spy).toHaveBeenCalledTimes(1);
   });
+
+  it('sets elements to duration 0 before mount, unless already mounted', () => {
+    instance = createTippy(h(), {
+      ...defaultProps,
+      updateDuration: 99,
+      duration: 99,
+    });
+
+    const {popper} = instance;
+    const {tooltip, content} = instance.popperChildren;
+
+    instance.show();
+
+    expect(popper.style.transitionDuration).toBe('0ms');
+    expect(tooltip.style.transitionDuration).toBe('0ms');
+    expect(content.style.transitionDuration).toBe('0ms');
+
+    jest.runAllTimers();
+
+    expect(popper.style.transitionDuration).toBe('99ms');
+    expect(tooltip.style.transitionDuration).toBe('99ms');
+    expect(content.style.transitionDuration).toBe('99ms');
+
+    instance.hide(99);
+    instance.show();
+
+    expect(popper.style.transitionDuration).toBe('99ms');
+    expect(tooltip.style.transitionDuration).toBe('99ms');
+    expect(content.style.transitionDuration).toBe('99ms');
+  });
 });
 
 describe('instance.hide()', () => {

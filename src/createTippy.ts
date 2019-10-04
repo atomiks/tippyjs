@@ -907,9 +907,13 @@ export default function createTippy(
     instance.state.isVisible = true;
 
     // Prevent a transition of the popper from its previous position and of the
-    // elements at a different placement.
+    // elements at a different placement
+    // Check if the tippy was fully unmounted before `show()` was called, to
+    // allow for smooth transition for `createSingleton()`
     const transitionableElements = getTransitionableElements();
-    setTransitionDuration(transitionableElements.concat(popper), 0);
+    if (!instance.state.isMounted) {
+      setTransitionDuration(transitionableElements.concat(popper), 0);
+    }
 
     currentMountCallback = (): void => {
       if (!instance.state.isVisible) {
