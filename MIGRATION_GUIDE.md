@@ -17,7 +17,7 @@ ensuring your bundler replaces `process.env.NODE_ENV` with the string
 ```html
 <script src="https://unpkg.com/popper.js@1"></script>
 <!-- Specify development file -->
-<script src="https://unpkg.com/tippy.js@5/dist/tippy-bundle.iife.js"></script>
+<script src="https://unpkg.com/tippy.js@5/dist/tippy-bundle.life.js"></script>
 <!-- 
 When you're finished, you can remove everything after @5 
 (or when deploying for production) 
