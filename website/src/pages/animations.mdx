@@ -126,66 +126,6 @@ tippy('button', {
 You can also use `@keyframes` and add the `animation` property to your animation
 selector too.
 
-### Spring animations
-
-Maybe CSS is too limiting and want the full power of a JavaScript animation
-library. `animejs` is a great library for creating realistic spring animations.
-
-Here's an example of how to integrate it:
-
-```js
-tippy('button', {
-  content: 'Hello world',
-  duration: 0, // Required to not interfere
-  onShow(instance) {
-    const {tooltip} = instance.popperChildren;
-
-    anime.remove(tooltip);
-    anime({
-      targets: tooltip,
-      scale: [0.75, 1],
-      translateY: [15, 0],
-      opacity: [0, 1],
-      duration: 1000,
-    });
-  },
-  onHide(instance) {
-    const {tooltip} = instance.popperChildren;
-
-    // Prevent an infinite loop by using a state flag
-    if (instance.state.hideCalledManually) {
-      instance.state.hideCalledManually = false;
-      return;
-    }
-
-    anime.remove(tooltip);
-    anime({
-      targets: tooltip,
-      scale: [1, 0.75],
-      opacity: [1, 0],
-      translateY: [0, 15],
-      duration: 200,
-      easing: 'easeInQuad',
-      complete() {
-        if (!instance.state.isVisible) {
-          instance.state.hideCalledManually = true;
-          instance.hide();
-        }
-      },
-    });
-
-    // We're going to call `.hide()` ourselves - we need to wait for
-    // animejs to complete its animation. We can cancel the lifecycle
-    // by returning `false`.
-
-    // We also need to set the `isVisible` state flag to `false`
-    // manually so the instance knows the tippy is currently hiding.
-    instance.state.isVisible = false;
-    return false;
-  },
-});
-```
-
 ### Dimensions transition
 
 While a tippy is showing, the content inside of it may change. How do you
@@ -205,9 +145,5 @@ View the [CodePen demo](https://codepen.io/atomiks/pen/LgjMbW).
   <TextTransition />
 </Demo>
 
-Code is still being developed and it is highly experimental at this stage. The
+Code for fully dynamic transitions is still being developed and it is highly experimental at this stage. The
 documentation will be updated once it's ready.
-
-For now, you can view WIP implementations:
-[vanilla](https://github.com/atomiks/tippyjs/blob/v5/demo/flip/index.js) or
-[React](https://github.com/atomiks/tippyjs/blob/v5/website/src/components/TippyTransition.js).

@@ -87,6 +87,31 @@ development messages, but there won't be any error. Use the
 [`mode`](https://webpack.js.org/configuration/mode/) option to specify
 `development` or `production` where necessary.
 
+### What global side effects are there?
+
+Tippy has some environment side effects to make it work better across different
+devices.
+
+#### iOS's inability to employ "click outside" behavior:
+
+Tippy adds this class to the `<body>` for iOS:
+
+```css
+.tippy-iOS {
+  cursor: pointer !important;
+  -webkit-tap-highlight-color: transparent;
+}
+```
+
+This allows tooltips to hide when the user taps off a focusable element. You
+can unset these values if they are causing problems - but be aware that "click
+outside" will no longer work on iOS if you remove it.
+
+#### Document and window listeners
+
+There are global listeners to determine the user's current input type (e.g.
+`touch`), and other UX helpers.
+
 ### I can't click things inside the tooltip
 
 To enable interactivity, set the `interactive` prop to `true`.
