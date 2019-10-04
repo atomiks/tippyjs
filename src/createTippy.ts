@@ -681,7 +681,9 @@ export default function createTippy(
         
         Ensure the tippy element is directly after the reference
         (or triggerTarget) element in the DOM source order. Using a wrapper
-        <div> or <span> element around it can solve this.`,
+        <div> or <span> element around it can solve this.
+        
+        See: https://atomiks.github.io/tippyjs/accessibility/#interactivity`,
       );
     }
 
