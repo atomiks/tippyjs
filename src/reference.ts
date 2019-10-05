@@ -10,10 +10,10 @@ export function getDataAttributeProps(
   reference: ReferenceElement,
   plugins?: Plugin[],
 ): Props {
-  const props = [
-    ...keys,
-    ...(plugins ? Object.keys(getExtendedProps(defaultProps, plugins)) : []),
-  ].reduce((acc: any, key): Partial<Props> => {
+  const props = (plugins
+    ? Object.keys(getExtendedProps(defaultProps, plugins))
+    : keys
+  ).reduce((acc: any, key): Partial<Props> => {
     const valueAsString = (
       reference.getAttribute(`data-tippy-${key}`) || ''
     ).trim();
