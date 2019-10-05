@@ -1,7 +1,7 @@
 import {Targets, Instance, Props, Plugin} from '../types';
 import tippy from '..';
 import {throwErrorWhen} from '../validation';
-import {removeProperties, splitBySpaces, normalizeToArray} from '../utils';
+import {removeProperties, normalizeToArray, includes} from '../utils';
 import {defaultProps} from '../props';
 
 interface ListenerObj {
@@ -10,6 +10,12 @@ interface ListenerObj {
   listener: EventListener;
   options: boolean | object;
 }
+
+const BUBBLING_EVENTS_MAP = {
+  mouseover: 'mouseenter',
+  focusin: 'focus',
+  click: 'click',
+};
 
 /**
  * Creates a delegate instance that controls the creation of tippy instances
@@ -32,30 +38,43 @@ export default function delegate(
   let childTippyInstances: Instance[] = [];
 
   const {target} = props;
-  const nativeProps = removeProperties(props, ['target']);
-  const trigger = props.trigger || defaultProps.trigger;
 
-  const returnValue = tippy(
-    targets,
-    {...nativeProps, trigger: 'manual'},
-    plugins,
-  );
+  const nativeProps = removeProperties(props, ['target']);
+  const parentProps = {...nativeProps, trigger: 'manual'};
+  const childProps = {...nativeProps, showOnCreate: true};
+
+  const returnValue = tippy(targets, parentProps, plugins);
+  const normalizedReturnValue = normalizeToArray(returnValue);
 
   function onTrigger(event: Event): void {
-    if (event.target) {
-      const targetNode = (event.target as Element).closest(target);
+    if (!event.target) {
+      return;
+    }
 
-      if (targetNode) {
-        const instance = tippy(
-          targetNode,
-          {...nativeProps, showOnCreate: true},
-          plugins,
-        );
+    const targetNode = (event.target as Element).closest(target);
 
-        if (instance) {
-          childTippyInstances = childTippyInstances.concat(instance);
-        }
-      }
+    if (!targetNode) {
+      return;
+    }
+
+    // Get relevant trigger with fallbacks:
+    // 1. Check `data-tippy-trigger` attribute on target node
+    // 2. Fallback to `trigger` passed to `delegate()`
+    // 3. Fallback to `defaultProps.trigger`
+    const trigger =
+      targetNode.getAttribute('data-tippy-trigger') ||
+      props.trigger ||
+      defaultProps.trigger;
+
+    // Only create the instance if the bubbling event matches the trigger type
+    if (!includes(trigger, (BUBBLING_EVENTS_MAP as any)[event.type])) {
+      return;
+    }
+
+    const instance = tippy(targetNode, childProps, plugins);
+
+    if (instance) {
+      childTippyInstances = childTippyInstances.concat(instance);
     }
   }
 
@@ -72,21 +91,9 @@ export default function delegate(
   function addEventListeners(instance: Instance): void {
     const {reference} = instance;
 
-    splitBySpaces(trigger).forEach((eventType): void => {
-      switch (eventType) {
-        case 'mouseenter': {
-          on(reference, 'mouseover', onTrigger);
-          break;
-        }
-        case 'focus': {
-          on(reference, 'focusin', onTrigger);
-          break;
-        }
-        case 'click': {
-          on(reference, 'click', onTrigger);
-        }
-      }
-    });
+    on(reference, 'mouseover', onTrigger);
+    on(reference, 'focusin', onTrigger);
+    on(reference, 'click', onTrigger);
   }
 
   function removeEventListeners(): void {
@@ -114,11 +121,9 @@ export default function delegate(
     };
 
     addEventListeners(instance);
-
-    instance.setProps({trigger: 'manual'});
   }
 
-  normalizeToArray(returnValue).forEach(applyMutations);
+  normalizedReturnValue.forEach(applyMutations);
 
   return returnValue;
 }
