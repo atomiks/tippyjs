@@ -1,19 +1,20 @@
 @import '../_mixins.scss';
 @import '../_vars.scss';
 
-$transparentLight: rgba(0, 8, 16, 0.08);
-$transparentDark: rgba(0, 8, 16, 0.15);
-$transparentDarker: rgba(0, 8, 16, 0.2);
+$color: white;
+$transparent-light: rgba(0, 8, 16, 0.08);
+$transparent-dark: rgba(0, 8, 16, 0.15);
+$transparent-darker: rgba(0, 8, 16, 0.2);
 
 .#{$namespace-prefix}-tooltip.light-border-theme {
-  background-color: white;
+  background-color: $color;
   background-clip: padding-box;
-  border: 1px solid $transparentDark;
+  border: 1px solid $transparent-dark;
   color: #26323d;
-  box-shadow: 0 3px 0.875rem -0.5px $transparentLight;
+  box-shadow: 0 0.25rem 0.875rem -0.1rem $transparent-light;
 
   .#{$namespace-prefix}-backdrop {
-    background-color: white;
+    background-color: $color;
   }
 
   .#{$namespace-prefix}-arrow,
@@ -27,16 +28,16 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
   }
 
   .#{$namespace-prefix}-svg-arrow {
-    fill: white;
+    fill: $color;
 
     &::after {
       background-image: url(data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEuNDE0MjEiIHZpZXdCb3g9IjAgMCAxOCA3IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0wIDdzMi4wMjEtLjAxNSA1LjI1My00LjIxOGMxLjMzMS0xLjczMSAyLjU0NC0yLjc3NSAzLjc0Ny0yLjc4MiAxLjIwMy0uMDA3IDIuNDE2IDEuMDM1IDMuNzYxIDIuNzgyIDMuMjUxIDQuMjIzIDUuMjM5IDQuMjE4IDUuMjM5IDQuMjE4eiIgZmlsbD0iIzMzMyIgZmlsbC1vcGFjaXR5PSIuMjM1Mjk0IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48L3N2Zz4=);
-      background-size: 1.125rem 7px;
-      width: 1.125rem;
-      height: 7px;
+      background-size: 18px $arrow-size;
+      width: 18px;
+      height: $arrow-size;
       left: 0;
       top: 0;
-      fill: $transparentDark;
+      fill: $transparent-dark;
     }
   }
 
@@ -50,11 +51,11 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
       border-top-color: #fff;
 
       &::after {
-        border-top: 7px solid white;
-        top: -7px;
+        border-top: $arrow-size solid $color;
+        top: -$arrow-size;
       }
       &::before {
-        border-top: 7px solid $transparentDarker;
+        border-top: $arrow-size solid $transparent-darker;
         bottom: -1px;
       }
     }
@@ -69,12 +70,12 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
       border-bottom-color: #fff;
 
       &::after {
-        border-bottom: 7px solid white;
-        bottom: -7px;
+        border-bottom: $arrow-size solid $color;
+        bottom: -$arrow-size;
       }
       &::before {
-        border-bottom: 7px solid $transparentDarker;
-        bottom: -6px;
+        border-bottom: $arrow-size solid $transparent-darker;
+        bottom: -($arrow-size - 1);
       }
     }
   }
@@ -90,12 +91,12 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
       border-left-color: #fff;
 
       &::after {
-        border-left: 7px solid white;
-        left: -7px;
+        border-left: $arrow-size solid $color;
+        left: -$arrow-size;
       }
       &::before {
-        border-left: 7px solid $transparentDarker;
-        left: -6px;
+        border-left: $arrow-size solid $transparent-darker;
+        left: -($arrow-size - 1);
       }
     }
   }
@@ -111,12 +112,12 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
       border-right-color: #fff;
 
       &::after {
-        border-right: 7px solid white;
-        right: -7px;
+        border-right: $arrow-size solid $color;
+        right: -$arrow-size;
       }
       &::before {
-        border-right: 7px solid $transparentDarker;
-        right: -6px;
+        border-right: $arrow-size solid $transparent-darker;
+        right: -($arrow-size - 1);
       }
     }
   }
@@ -131,9 +132,9 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
     .#{$namespace-prefix}-arrow {
       &::after,
       &::before {
-        left: -7px;
-        border-left: 7px solid transparent;
-        border-right: 7px solid transparent;
+        left: -$arrow-size;
+        border-left: $arrow-size solid transparent;
+        border-right: $arrow-size solid transparent;
       }
     }
   }
@@ -148,9 +149,9 @@ $transparentDarker: rgba(0, 8, 16, 0.2);
     .#{$namespace-prefix}-arrow {
       &::after,
       &::before {
-        top: -7px;
-        border-top: 7px solid transparent;
-        border-bottom: 7px solid transparent;
+        top: -$arrow-size;
+        border-top: $arrow-size solid transparent;
+        border-bottom: $arrow-size solid transparent;
       }
     }
   }

@@ -28,10 +28,10 @@
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
       .#{$namespace-prefix}-arrow {
-        @include arrow($placement, 8px, #333);
+        @include arrow($placement, $arrow-size + 1, #333);
         @include arrow-margin($placement);
-        @include arrow-transform-origin($placement, 7px);
-        @include arrow-position($placement, 7px, false);
+        @include arrow-transform-origin($placement, $arrow-size);
+        @include arrow-position($placement, $arrow-size, false);
       }
     }
   }

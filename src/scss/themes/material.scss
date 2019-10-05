@@ -11,7 +11,7 @@ $color: #505355;
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
       .#{$namespace-prefix}-arrow {
-        @include arrow($placement, 8px, $color);
+        @include arrow($placement, $arrow-size + 1, $color);
       }
     }
   }
