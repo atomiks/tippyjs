@@ -1,7 +1,7 @@
 import {Targets, Instance, Props, Plugin} from '../types';
 import tippy from '..';
 import {throwErrorWhen} from '../validation';
-import {removeProperties, splitBySpaces} from '../utils';
+import {removeProperties, splitBySpaces, normalizeToArray} from '../utils';
 import {defaultProps} from '../props';
 
 interface ListenerObj {
@@ -118,11 +118,7 @@ export default function delegate(
     instance.setProps({trigger: 'manual'});
   }
 
-  if (Array.isArray(returnValue)) {
-    returnValue.forEach(applyMutations);
-  } else {
-    applyMutations(returnValue);
-  }
+  normalizeToArray(returnValue).forEach(applyMutations);
 
   return returnValue;
 }
