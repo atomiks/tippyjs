@@ -677,11 +677,15 @@ export default function createTippy(
           appendTo === defaultProps.appendTo &&
           node.nextElementSibling !== popper,
         `Interactive tippy element may not be accessible via keyboard
-        navigation.
+        navigation because it is not directly after the reference element in
+        the DOM source order.
+
+        Using a wrapper <div> or <span> tag around the reference element solves
+        this by creating a new parentNode context.
         
-        Ensure the tippy element is directly after the reference
-        (or triggerTarget) element in the DOM source order. Using a wrapper
-        <div> or <span> element around it can solve this.
+        Specifying \`appendTo: document.body\` silences this warning, but it
+        assumes you are using a focus management solution to handle keyboard
+        navigation.
         
         See: https://atomiks.github.io/tippyjs/accessibility/#interactivity`,
       );
