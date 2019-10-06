@@ -1,4 +1,9 @@
-import {Instance, LifecycleHooks, InlinePositioningProps} from '../types';
+import {
+  Instance,
+  LifecycleHooks,
+  InlinePositioningProps,
+  BasePlacement,
+} from '../types';
 import {arrayFrom} from '../utils';
 import {getBasePlacement} from '../popper';
 
@@ -46,7 +51,7 @@ export default {
 };
 
 export function getInlineBoundingClientRect(
-  currentBasePlacement: Instance['state']['currentPlacement'],
+  currentBasePlacement: BasePlacement | null,
   boundingRect: ClientRect,
   clientRects: ClientRect[],
 ): ClientRect {

@@ -21,7 +21,6 @@ export default {
         ? popper.getBoundingClientRect()
         : null;
 
-      // Schedule an update if the reference rect has changed
       if (
         (currentRefRect && areRectsDifferent(prevRefRect, currentRefRect)) ||
         (currentPopRect && areRectsDifferent(prevPopRect, currentPopRect))

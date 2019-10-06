@@ -1,6 +1,6 @@
 import {LifecycleHooks, AnimateFillInstance} from '../types';
 import {BACKDROP_CLASS} from '../constants';
-import {div} from '../utils';
+import {div, setVisibilityState} from '../utils';
 import {isUCBrowser} from '../browser';
 import {warnWhen} from '../validation';
 
@@ -38,13 +38,10 @@ export default {
           // The content should fade in after the backdrop has mostly filled the
           // tooltip element. `clip-path` is the other alternative but is not
           // well-supported and is buggy on some devices.
-          //
-          // We don't have access to the real duration that could have been
-          // potentially passed as an argument to `.show()` or `.hide()`.
           content.style.transitionDelay = `${Math.round(duration / 10)}ms`;
 
           backdrop.style.transitionDuration = transitionDuration;
-          setDataState(backdrop, 'visible');
+          setVisibilityState([backdrop], 'visible');
 
           // Warn if the stylesheets are not loaded
           if (__DEV__) {
@@ -73,7 +70,7 @@ export default {
       },
       onHide(): void {
         if (backdrop) {
-          setDataState(backdrop, 'hidden');
+          setVisibilityState([backdrop], 'hidden');
         }
       },
       onAfterUpdate(): void {
@@ -90,10 +87,6 @@ export default {
 function createBackdropElement(): HTMLDivElement {
   const backdrop = div();
   backdrop.className = BACKDROP_CLASS;
-  setDataState(backdrop, 'hidden');
+  setVisibilityState([backdrop], 'hidden');
   return backdrop;
-}
-
-function setDataState(element: Element, value: 'visible' | 'hidden'): void {
-  element.setAttribute('data-state', value);
 }
