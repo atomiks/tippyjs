@@ -21,7 +21,6 @@
   font-size: 0.875rem;
   line-height: 1.4;
   background-color: #333;
-  overflow: hidden;
   transition-property: visibility, opacity, transform;
   outline: 0;
 
@@ -34,10 +33,6 @@
         @include arrow-position($placement, $arrow-size, false);
       }
     }
-  }
-
-  &[data-arrow] {
-    overflow: visible;
   }
 
   &[data-interactive] {
