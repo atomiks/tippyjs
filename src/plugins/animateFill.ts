@@ -26,6 +26,7 @@ export default {
 
           tooltip.insertBefore(backdrop, tooltip.firstElementChild!);
           tooltip.setAttribute('data-animatefill', '');
+          tooltip.style.overflow = 'hidden';
 
           instance.setProps({animation: 'shift-away', arrow: false});
         }
