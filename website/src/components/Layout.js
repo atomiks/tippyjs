@@ -7,7 +7,6 @@ import Tippy, {TippySingleton} from './Tippy';
 import Nav from './Nav';
 import NavButtons from './NavButtons';
 import Header from './Header';
-import MiniHeader from './MiniHeader';
 import Main from './Main';
 import Footer from './Footer';
 import SEO from './SEO';
@@ -27,11 +26,11 @@ import 'focus-visible';
 const LinkIcon = styled.a`
   display: inline-block;
   position: absolute;
-  padding: 10px 0;
+  padding: 0.625rem 0;
   opacity: 0;
   transition: opacity 0.2s;
-  width: 30px;
-  top: -11px;
+  width: 2rem;
+  top: -0.75rem;
   right: 0;
   color: #7761d1;
 
@@ -43,7 +42,7 @@ const LinkIcon = styled.a`
 
   ${MEDIA.md} {
     right: initial;
-    left: -30px;
+    left: -2rem;
 
     &:focus {
       width: 1.25rem;

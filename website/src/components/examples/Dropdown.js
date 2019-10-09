@@ -26,13 +26,13 @@ const Reaction = styled.button`
 `;
 
 const Text = styled.p`
-  margin: 5px 0;
+  margin: 0.375rem 0;
   color: #777;
 `;
 
 const DropdownTippy = styled(Tippy)`
   hr {
-    margin: 5px 0 10px;
+    margin: 0.375rem 0 0.625rem;
   }
 `;
 

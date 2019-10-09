@@ -17,7 +17,7 @@ const Navbar = styled.nav`
   backdrop-filter: saturate(180%);
   color: white;
   overflow-y: auto;
-  z-index: 1;
+  z-index: 2;
   transform: ${props =>
     props.isOpen
       ? 'translate3d(-4%, 0, 0) scaleX(1)'

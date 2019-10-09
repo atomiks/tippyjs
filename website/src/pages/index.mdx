@@ -65,7 +65,15 @@ Additionally, the tooltip can be shifted along the axis using the suffix
 <Demo>
   <Row>
     {ALL_PLACEMENTS.map((placement, i) => (
-      <Col key={placement} base={12} xs={6} md={4} lg={6} xl={4}>
+      <Col
+        key={placement}
+        base={12}
+        xs={6}
+        md={4}
+        lg={6}
+        xl={4}
+        style={{margin: '0.5rem 0'}}
+      >
         <Tippy
           key={placement}
           content="Tooltip"
@@ -77,8 +85,7 @@ Additionally, the tooltip can be shifted along the axis using the suffix
             style={{
               display: 'inline-block',
               width: '100%',
-              height: 50,
-              margin: '0.5rem 0',
+              height: '100%',
             }}
           >
             {placement}
@@ -148,13 +155,19 @@ These animations are included in the package and can be imported separately.
 <Demo>
   <Row>
     {EXTRA_ANIMATIONS.map(animation => (
-      <Col key={animation} base={12} md={4} lg={6} xl={4}>
+      <Col
+        key={animation}
+        base={12}
+        md={4}
+        lg={6}
+        xl={4}
+        style={{margin: '0.5rem 0'}}
+      >
         <Tippy animation={animation} animateFill={false}>
           <Button
             style={{
               width: '100%',
-              margin: '0.5rem 0',
-              height: 50,
+              height: '100%',
             }}
           >
             {animation}

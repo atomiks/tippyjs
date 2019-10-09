@@ -11,7 +11,7 @@ export const MEDIA_SIZES = {
 };
 
 export const MEDIA = Object.keys(MEDIA_SIZES).reduce((acc, mediaSize) => {
-  acc[mediaSize] = `@media (min-width: ${MEDIA_SIZES[mediaSize]}px)`;
+  acc[mediaSize] = `@media (min-width: ${MEDIA_SIZES[mediaSize] / 16}rem)`;
   return acc;
 }, {});
 
@@ -21,7 +21,7 @@ export const Center = styled.div`
 
 export const Container = styled.div`
   position: relative;
-  max-width: 940px;
+  max-width: 58.75rem;
   padding: 0 ${props => props.mobilePadding || '1'}rem;
   margin: 0 auto;
 
@@ -29,10 +29,10 @@ export const Container = styled.div`
     padding: 0 1.5625rem;
   }
   ${MEDIA.md} {
-    padding: 0 60px;
+    padding: 0 3.75rem;
   }
   ${MEDIA.lg} {
-    padding: 0 75px;
+    padding: 0 4.75rem;
   }
 `;
 
@@ -135,6 +135,6 @@ export const Demo = styled.div`
   }
 
   ${MEDIA.md} {
-    border-radius: 8px;
+    border-radius: 0.5rem;
   }
 `;
