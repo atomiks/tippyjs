@@ -134,6 +134,41 @@ Browser:
 
 ## Props
 
+### If you were using `interactive: true`
+
+<details>
+<summary>View details</summary>
+
+When using `interactive: true`, the tippy may be invisible or appear cut off if
+your reference element is in a container with:
+
+- `position` (e.g. fixed, absolute, sticky)
+- `overflow: hidden`
+
+To fix add the following prop (recommended):
+
+```js
+tippy(reference, {
+  // ...
+  popperOptions: {
+    positionFixed: true,
+  },
+});
+```
+
+Or, if the above causes issues:
+
+```js
+tippy(reference, {
+  // ...
+  appendTo: document.body,
+});
+```
+
+⚠️ For the latter, you need to be employing focus mangement for accessibility.
+
+</details>
+
 ### If you were using `arrowType: 'round'`
 
 <details>
