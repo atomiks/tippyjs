@@ -26,7 +26,7 @@
 
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-arrow {
+      > .#{$namespace-prefix}-arrow {
         @include arrow($placement, $arrow-size + 1, #333);
         @include arrow-margin($placement);
         @include arrow-transform-origin($placement, $arrow-size);
