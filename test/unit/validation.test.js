@@ -21,16 +21,16 @@ describe('validateProps', () => {
     validateProps({[prop]: true});
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
-        `The \`${prop}\` prop is not a valid prop. You may have spelled it 
-        incorrectly, or if it's a plugin, forgot to pass it in an array as a 3rd
-        argument to \`tippy()\`.
-  
+        `\`${prop}\` is not a valid prop. You may have spelled it incorrectly,
+        or if it's a plugin, forgot to pass it in an array as a 3rd argument to
+        \`tippy()\`.
+
         In v5, the following props were turned into plugins:
-  
+
         * animateFill
         * followCursor
         * sticky
-        
+
         All props: https://atomiks.github.io/tippyjs/all-props/
         Plugins: https://atomiks.github.io/tippyjs/plugins/`,
       ),
