@@ -148,6 +148,8 @@ tippy('#ajax-tippy', {
       return;
     }
 
+    instance.ajaxState.isFetching = true;
+
     fetch('https://unsplash.it/200/?random')
       .then(response => response.blob())
       .then(blob => {
