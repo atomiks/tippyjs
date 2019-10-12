@@ -13,7 +13,7 @@ const List = styled.div`
 const Reaction = styled.button`
   background: none;
   border: none;
-  font-size: 1.375rem;
+  font-size: 22px;
   color: inherit;
   transition: transform 0.1s ease-out;
   transform: scale(1.0001);
@@ -26,13 +26,13 @@ const Reaction = styled.button`
 `;
 
 const Text = styled.p`
-  margin: 0.375rem 0;
+  margin: 6px 0;
   color: #777;
 `;
 
 const DropdownTippy = styled(Tippy)`
   hr {
-    margin: 0.375rem 0 0.625rem;
+    margin: 6px 0 10px;
   }
 `;
 

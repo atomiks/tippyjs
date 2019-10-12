@@ -3,7 +3,7 @@ import {createGlobalStyle} from 'styled-components';
 export default createGlobalStyle`
   .tippy-tooltip.ajax-theme {
     position: absolute;
-    width: 12.5rem;
+    width: 200px;
     padding: 0;
     overflow: hidden;
 
@@ -71,7 +71,7 @@ export default createGlobalStyle`
 
   .tippy-tooltip.gradient-theme {
     background: linear-gradient(130deg, #507bf4,#ff8bcb);
-    box-shadow: 0 0.4rem 0.75rem #c9a0ff;
+    box-shadow: 0 8px 12px #c9a0ff;
     font-weight: bold;
   }
 

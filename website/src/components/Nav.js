@@ -12,7 +12,7 @@ const Navbar = styled.nav`
   top: 0;
   bottom: 0;
   left: 0;
-  width: 15.625rem;
+  width: 250px;
   background: linear-gradient(180deg, rgba(121, 148, 198, 0.92), #565791);
   backdrop-filter: saturate(180%);
   color: white;
@@ -27,7 +27,7 @@ const Navbar = styled.nav`
   transition-timing-function: ${props =>
     props.isOpen ? 'cubic-bezier(.165, 1.3, 0.4, 1)' : 'ease'};
   visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
-  box-shadow: 0.25rem 0 2rem 0 rgba(0, 32, 64, 0.25);
+  box-shadow: 4px 0 32px 0 rgba(0, 32, 64, 0.25);
   opacity: ${props => (props.isOpen ? 1 : 0)};
 
   ${MEDIA.lg} {
@@ -51,22 +51,22 @@ const ListItem = styled.li`
   margin: 0;
 
   &:first-child {
-    padding-top: 2rem;
+    padding-top: 32px;
   }
 
   &:last-child {
-    padding-bottom: 2rem;
+    padding-bottom: 32px;
   }
 
   > a {
     display: block;
-    padding: 0.25rem 1.5625rem;
-    padding-left: calc(1.5625rem + 4%);
-    font-size: 1.0625rem;
+    padding: 4px 25px;
+    padding-left: calc(25px + 4%);
+    font-size: 17px;
     border: 1px dashed transparent;
 
     ${MEDIA.lg} {
-      padding-left: 1.5625rem;
+      padding-left: 25px;
     }
 
     &:hover {
@@ -85,19 +85,19 @@ const XButton = styled.button`
   position: absolute;
   border: none;
   padding: 0;
-  top: 0.5rem;
-  right: 1rem;
-  border-radius: 2rem;
-  height: 2.5rem;
-  width: 2.5rem;
+  top: 8px;
+  right: 16px;
+  border-radius: 32px;
+  height: 40px;
+  width: 40px;
   cursor: pointer;
   background: white;
   color: #7761d1;
-  box-shadow: 0 0.3rem 0 rgba(0, 32, 64, 0.2);
+  box-shadow: 0 5px 0 rgba(0, 32, 64, 0.2);
 
   &:active {
-    box-shadow: 0 0.1rem 0 rgba(0, 32, 64, 0.2);
-    transform: translateY(0.2rem);
+    box-shadow: 0 2px 0 rgba(0, 32, 64, 0.2);
+    transform: translateY(4px);
   }
 
   ${MEDIA.lg} {
@@ -106,8 +106,8 @@ const XButton = styled.button`
 `;
 
 const XIcon = styled(X)`
-  height: 2rem;
-  width: 2rem;
+  height: 32px;
+  width: 32px;
 `;
 
 class Nav extends Component {

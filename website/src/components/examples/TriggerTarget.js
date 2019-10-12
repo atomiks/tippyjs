@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const PositioningTarget = styled.span`
   background: tomato;
   color: white;
-  padding: 0.25rem 0.5rem;
+  padding: 4px 8px;
 `;
 
 function TriggerTarget() {

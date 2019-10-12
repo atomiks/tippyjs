@@ -11,22 +11,22 @@ const HeaderRoot = styled.header`
   background-repeat: no-repeat;
   background-size: cover;
   text-align: center;
-  margin-left: -15.625rem;
-  padding-left: 15.625rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  margin-bottom: 2rem;
+  margin-left: -250px;
+  padding-left: 250px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 32px;
   border-bottom: 1px solid ${theme.border};
 `;
 
 const Logo = styled.img`
   display: block;
-  height: 3.5rem;
+  height: 60px;
 `;
 
 const MenuButtonDark = styled(MenuButton)`
   color: #7761d1;
-  margin-top: 1.125rem;
+  margin-top: 18px;
 `;
 
 const menuStyles = {

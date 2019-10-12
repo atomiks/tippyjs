@@ -26,11 +26,11 @@ import 'focus-visible';
 const LinkIcon = styled.a`
   display: inline-block;
   position: absolute;
-  padding: 0.625rem 0;
+  padding: 10px 0;
   opacity: 0;
   transition: opacity 0.2s;
-  width: 2rem;
-  top: -0.75rem;
+  width: 32px;
+  top: -12px;
   right: 0;
   color: #7761d1;
 
@@ -42,10 +42,10 @@ const LinkIcon = styled.a`
 
   ${MEDIA.md} {
     right: initial;
-    left: -2rem;
+    left: -32px;
 
     &:focus {
-      width: 1.25rem;
+      width: 20px;
     }
   }
 `;
