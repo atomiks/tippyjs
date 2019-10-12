@@ -17,8 +17,8 @@
 .#{$namespace-prefix}-tooltip {
   position: relative;
   color: white;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
+  border-radius: 4px;
+  font-size: 14px;
   line-height: 1.4;
   background-color: #333;
   transition-property: visibility, opacity, transform;
@@ -51,5 +51,5 @@
 }
 
 .#{$namespace-prefix}-content {
-  padding: 0.3125rem 0.5625rem;
+  padding: 5px 9px;
 }

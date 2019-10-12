@@ -21,7 +21,7 @@ export const defaultProps: Props = {
   interactiveBorder: 2,
   interactiveDebounce: 0,
   lazy: true,
-  maxWidth: '22rem',
+  maxWidth: 350,
   multiple: false,
   offset: 0,
   onAfterUpdate(): void {},
