@@ -1,26 +1,12 @@
 import {version} from '../package.json';
 import {defaultProps} from './props';
-import createTippy from './createTippy';
+import createTippy, {mountedInstances} from './createTippy';
 import bindGlobalEventListeners, {
   currentInput,
 } from './bindGlobalEventListeners';
-import {
-  arrayFrom,
-  getArrayOfElements,
-  isReferenceElement,
-  isElement,
-} from './utils';
+import {getArrayOfElements, isReferenceElement, isElement} from './utils';
 import {warnWhen, validateTargets, validateProps} from './validation';
-import {POPPER_SELECTOR} from './constants';
-import {
-  Props,
-  Instance,
-  Targets,
-  PopperElement,
-  HideAllOptions,
-  Plugin,
-  Tippy,
-} from './types';
+import {Props, Instance, Targets, HideAllOptions, Plugin, Tippy} from './types';
 
 /**
  * Exported module
@@ -118,24 +104,19 @@ export function hideAll({
   exclude: excludedReferenceOrInstance,
   duration,
 }: HideAllOptions = {}): void {
-  arrayFrom(document.querySelectorAll(POPPER_SELECTOR)).forEach(
-    (popper: PopperElement): void => {
-      const instance = popper._tippy;
+  mountedInstances.forEach(instance => {
+    let isExcluded = false;
 
-      if (instance) {
-        let isExcluded = false;
-        if (excludedReferenceOrInstance) {
-          isExcluded = isReferenceElement(excludedReferenceOrInstance)
-            ? instance.reference === excludedReferenceOrInstance
-            : popper === excludedReferenceOrInstance.popper;
-        }
+    if (excludedReferenceOrInstance) {
+      isExcluded = isReferenceElement(excludedReferenceOrInstance)
+        ? instance.reference === excludedReferenceOrInstance
+        : instance.popper === excludedReferenceOrInstance.popper;
+    }
 
-        if (!isExcluded) {
-          instance.hide(duration);
-        }
-      }
-    },
-  );
+    if (!isExcluded) {
+      instance.hide(duration);
+    }
+  });
 }
 
 export default tippy;

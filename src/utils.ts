@@ -286,3 +286,12 @@ export function getOwnerDocument(
   const [element] = normalizeToArray(elementOrElements);
   return element ? element.ownerDocument || document : document;
 }
+
+/**
+ * Adds item to array if array does not contain it
+ */
+export function pushIfUnique<T>(arr: T[], value: T): void {
+  if (arr.indexOf(value) === -1) {
+    arr.push(value);
+  }
+}

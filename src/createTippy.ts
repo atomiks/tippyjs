@@ -43,6 +43,7 @@ import {
   useIfDefined,
   isMouseEvent,
   getOwnerDocument,
+  pushIfUnique,
 } from './utils';
 import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
 
@@ -52,6 +53,8 @@ interface Listener {
   handler: EventListenerOrEventListenerObject;
   options: boolean | object;
 }
+
+export let mountedInstances: Instance[] = [];
 
 let idCounter = 1;
 // Workaround for IE11's lack of new MouseEvent constructor
@@ -496,7 +499,7 @@ export default function createTippy(
     if (instance.props.interactive) {
       doc.body.addEventListener('mouseleave', scheduleHide);
       doc.addEventListener('mousemove', debouncedOnMouseMove);
-      mouseMoveListeners.push(debouncedOnMouseMove);
+      pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
 
       return;
     }
@@ -929,6 +932,8 @@ export default function createTippy(
       handleAriaDescribedByAttribute();
       handleAriaExpandedAttribute();
 
+      pushIfUnique(mountedInstances, instance);
+
       instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
 
@@ -983,6 +988,10 @@ export default function createTippy(
       instance.popperInstance!.options.placement = instance.props.placement;
 
       popper.parentNode!.removeChild(popper);
+
+      mountedInstances = mountedInstances.filter(
+        (i): boolean => i !== instance,
+      );
 
       instance.state.isMounted = false;
       invokeHook('onHidden', [instance]);

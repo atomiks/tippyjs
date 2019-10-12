@@ -350,3 +350,16 @@ describe('isType', () => {
     expect(Utils.isType({}, 'NodeList')).toBe(false);
   });
 });
+
+describe('pushIfUnique', () => {
+  it('adds item only if unique', () => {
+    const item = {};
+    const arr = [];
+
+    Utils.pushIfUnique(arr, item);
+    Utils.pushIfUnique(arr, item);
+    Utils.pushIfUnique(arr, 2);
+
+    expect(arr).toEqual([item, 2]);
+  });
+});
