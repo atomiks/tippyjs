@@ -7,9 +7,10 @@ import {
   Instance,
   Content,
   LifecycleHooks,
+  PopperElement,
 } from './types';
 import {isIE} from './browser';
-import {PASSIVE} from './constants';
+import {PASSIVE, POPPER_SELECTOR} from './constants';
 import {currentInput} from './bindGlobalEventListeners';
 import {
   defaultProps,
@@ -44,6 +45,7 @@ import {
   isMouseEvent,
   getOwnerDocument,
   pushIfUnique,
+  arrayFrom,
 } from './utils';
 import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
 
@@ -479,13 +481,14 @@ export default function createTippy(
       return;
     }
 
-    if (
-      isCursorOutsideInteractiveBorder(
-        popper.getBoundingClientRect(),
-        event,
-        instance.props.interactiveBorder,
-      )
-    ) {
+    const popperTreeData = arrayFrom(popper.querySelectorAll(POPPER_SELECTOR))
+      .concat(popper)
+      .map((popper: PopperElement) => ({
+        popperRect: popper.getBoundingClientRect(),
+        interactiveBorder: popper._tippy!.props.interactiveBorder,
+      }));
+
+    if (isCursorOutsideInteractiveBorder(popperTreeData, event)) {
       cleanupInteractiveMouseListeners();
       scheduleHide(event);
     }

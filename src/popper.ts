@@ -262,16 +262,20 @@ export function updatePopperElement(
  * region
  */
 export function isCursorOutsideInteractiveBorder(
-  popperRect: ClientRect,
+  popperTreeData: {
+    popperRect: ClientRect;
+    interactiveBorder: Props['interactiveBorder'];
+  }[],
   event: MouseEvent,
-  interactiveBorder: Props['interactiveBorder'],
 ): boolean {
   const {clientX, clientY} = event;
 
-  const exceedsTop = popperRect.top > clientY + interactiveBorder;
-  const exceedsBottom = popperRect.bottom < clientY - interactiveBorder;
-  const exceedsLeft = popperRect.left > clientX + interactiveBorder;
-  const exceedsRight = popperRect.right < clientX - interactiveBorder;
+  return popperTreeData.every(({popperRect, interactiveBorder}) => {
+    const exceedsTop = popperRect.top > clientY + interactiveBorder;
+    const exceedsBottom = popperRect.bottom < clientY - interactiveBorder;
+    const exceedsLeft = popperRect.left > clientX + interactiveBorder;
+    const exceedsRight = popperRect.right < clientX - interactiveBorder;
 
-  return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight;
+    return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight;
+  });
 }

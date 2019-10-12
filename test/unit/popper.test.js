@@ -431,6 +431,8 @@ describe('isCursorOutsideInteractiveBorder', () => {
   const interactiveBorder = 5;
   const popperRect = {top: 100, left: 100, right: 110, bottom: 110};
 
+  const data = [{popperRect, interactiveBorder}];
+
   const inside = [
     {clientX: 95, clientY: 95},
     {clientX: 115, clientY: 115},
@@ -449,17 +451,13 @@ describe('isCursorOutsideInteractiveBorder', () => {
 
   it('inside', () => {
     inside.forEach(coords => {
-      expect(
-        isCursorOutsideInteractiveBorder(popperRect, coords, interactiveBorder),
-      ).toBe(false);
+      expect(isCursorOutsideInteractiveBorder(data, coords)).toBe(false);
     });
   });
 
   it('outside', () => {
     outside.forEach(coords => {
-      expect(
-        isCursorOutsideInteractiveBorder(popperRect, coords, interactiveBorder),
-      ).toBe(true);
+      expect(isCursorOutsideInteractiveBorder(data, coords)).toBe(true);
     });
   });
 });
