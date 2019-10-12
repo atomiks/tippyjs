@@ -1,5 +1,4 @@
-import {isIOS} from './browser';
-import {PASSIVE, IOS_CLASS} from './constants';
+import {PASSIVE} from './constants';
 
 export const currentInput = {isTouch: false};
 let lastMouseMoveTime = 0;
@@ -16,10 +15,6 @@ export function onDocumentTouchStart(): void {
   }
 
   currentInput.isTouch = true;
-
-  if (isIOS) {
-    document.body.classList.add(IOS_CLASS);
-  }
 
   if (window.performance) {
     document.addEventListener('mousemove', onDocumentMouseMove);
@@ -38,10 +33,6 @@ export function onDocumentMouseMove(): void {
     currentInput.isTouch = false;
 
     document.removeEventListener('mousemove', onDocumentMouseMove);
-
-    if (!isIOS) {
-      document.body.classList.remove(IOS_CLASS);
-    }
   }
 
   lastMouseMoveTime = now;

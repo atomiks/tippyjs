@@ -7,11 +7,13 @@ import {
   MOUSELEAVE,
   CLICK,
   setTestDefaultProps,
+  enableTouchEnvironment,
+  disableTouchEnvironment,
 } from '../utils';
 
 import {defaultProps} from '../../src/props';
-import createTippy from '../../src/createTippy';
-import {POPPER_SELECTOR} from '../../src/constants';
+import createTippy, {mountedInstances} from '../../src/createTippy';
+import {POPPER_SELECTOR, IOS_CLASS} from '../../src/constants';
 import animateFill from '../../src/plugins/animateFill';
 
 jest.useFakeTimers();
@@ -556,5 +558,71 @@ describe('instance.state', () => {
     instance.hide();
 
     expect(instance.state.isShown).toBe(false);
+  });
+});
+
+describe('mountedInstances', () => {
+  it('should correctly add and clear instances', () => {
+    instance = createTippy(h(), defaultProps);
+
+    instance.show();
+    jest.runAllTimers();
+
+    expect(mountedInstances[0]).toBe(instance);
+
+    const instance2 = createTippy(h(), defaultProps);
+
+    instance2.show();
+    jest.runAllTimers();
+
+    expect(mountedInstances[0]).toBe(instance);
+    expect(mountedInstances[1]).toBe(instance2);
+
+    instance.destroy();
+
+    expect(mountedInstances[0]).toBe(instance2);
+
+    instance2.hide();
+
+    expect(mountedInstances.length).toBe(0);
+
+    instance2.destroy();
+  });
+});
+
+describe('updateIOSClass', () => {
+  beforeEach(enableTouchEnvironment);
+  afterEach(disableTouchEnvironment);
+
+  it('should add on mount and remove on unmount', () => {
+    instance = createTippy(h(), defaultProps);
+
+    instance.show();
+    jest.runAllTimers();
+
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(true);
+
+    instance.hide();
+
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(false);
+  });
+
+  it('should only remove if mountedInstances.length is 0', () => {
+    instance = createTippy(h(), defaultProps);
+    const instance2 = createTippy(h(), defaultProps);
+
+    instance.show();
+    instance2.show();
+    jest.runAllTimers();
+
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(true);
+
+    instance.hide();
+
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(true);
+
+    instance2.destroy();
+
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(false);
   });
 });

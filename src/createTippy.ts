@@ -9,7 +9,7 @@ import {
   LifecycleHooks,
   PopperElement,
 } from './types';
-import {isIE} from './browser';
+import {isIE, updateIOSClass} from './browser';
 import {PASSIVE, POPPER_SELECTOR} from './constants';
 import {currentInput} from './bindGlobalEventListeners';
 import {
@@ -937,6 +937,8 @@ export default function createTippy(
 
       pushIfUnique(mountedInstances, instance);
 
+      updateIOSClass(true);
+
       instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
 
@@ -995,6 +997,10 @@ export default function createTippy(
       mountedInstances = mountedInstances.filter(
         (i): boolean => i !== instance,
       );
+
+      if (mountedInstances.length === 0) {
+        updateIOSClass(false);
+      }
 
       instance.state.isMounted = false;
       invokeHook('onHidden', [instance]);
