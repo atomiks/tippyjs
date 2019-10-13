@@ -35,7 +35,7 @@
     }
   }
 
-  &[data-interactive] {
+  &[data-interactive][data-state='visible'] {
     pointer-events: auto;
   }
 
