@@ -82,19 +82,19 @@ function setDefaultProps(partialProps: Partial<Props>): void {
  * Returns a proxy wrapper function that passes the plugins
  */
 export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
-  const fn = (
+  const tippyPluginsWrapper = (
     targets: Targets,
     optionalProps?: Partial<Props>,
     innerPlugins: Plugin[] = [],
   ): Instance | Instance[] =>
     tippy(targets, optionalProps, [...outerPlugins, ...innerPlugins]);
 
-  fn.version = version;
-  fn.defaultProps = defaultProps;
-  fn.setDefaultProps = setDefaultProps;
-  fn.currentInput = currentInput;
+  tippyPluginsWrapper.version = version;
+  tippyPluginsWrapper.defaultProps = defaultProps;
+  tippyPluginsWrapper.setDefaultProps = setDefaultProps;
+  tippyPluginsWrapper.currentInput = currentInput;
 
-  return fn;
+  return tippyPluginsWrapper;
 }
 
 /**
