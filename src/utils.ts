@@ -1,12 +1,11 @@
 import {Props, ReferenceElement, Targets, Plugin} from './types';
 import {getDataAttributeProps} from './reference';
-import {POPPER_CLASS} from './constants';
 
 /**
  * Determines if the value is a reference element
  */
 export function isReferenceElement(value: any): value is ReferenceElement {
-  return !!(value && value._tippy && !value.classList.contains(POPPER_CLASS));
+  return !!(value && value._tippy && value._tippy.reference === value);
 }
 
 /**
