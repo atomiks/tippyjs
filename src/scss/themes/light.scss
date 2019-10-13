@@ -12,17 +12,17 @@ $color: white;
 
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-arrow {
+      > .#{$namespace-prefix}-arrow {
         @include arrow($placement, $arrow-size + 1, $color);
       }
     }
   }
 
-  .#{$namespace-prefix}-backdrop {
+  > .#{$namespace-prefix}-backdrop {
     background-color: $color;
   }
 
-  .#{$namespace-prefix}-svg-arrow {
+  > .#{$namespace-prefix}-svg-arrow {
     fill: $color;
   }
 }

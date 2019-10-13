@@ -13,12 +13,12 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
   color: #26323d;
   box-shadow: 0 4px 14px -2px $transparent-light;
 
-  .#{$namespace-prefix}-backdrop {
+  > .#{$namespace-prefix}-backdrop {
     background-color: $color;
   }
 
-  .#{$namespace-prefix}-arrow,
-  .#{$namespace-prefix}-svg-arrow {
+  > .#{$namespace-prefix}-arrow,
+  > .#{$namespace-prefix}-svg-arrow {
     &::after,
     &::before {
       content: '';
@@ -27,7 +27,7 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
     }
   }
 
-  .#{$namespace-prefix}-svg-arrow {
+  > .#{$namespace-prefix}-svg-arrow {
     fill: $color;
 
     &::after {
@@ -42,12 +42,12 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
   }
 
   &[data-placement^='top'] {
-    .#{$namespace-prefix}-svg-arrow::after {
+    > .#{$namespace-prefix}-svg-arrow::after {
       top: 1px;
       transform: rotate(180deg);
     }
 
-    .#{$namespace-prefix}-arrow {
+    > .#{$namespace-prefix}-arrow {
       border-top-color: #fff;
 
       &::after {
@@ -62,11 +62,11 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
   }
 
   &[data-placement^='bottom'] {
-    .#{$namespace-prefix}-svg-arrow::after {
+    > .#{$namespace-prefix}-svg-arrow::after {
       top: -1px;
     }
 
-    .#{$namespace-prefix}-arrow {
+    > .#{$namespace-prefix}-arrow {
       border-bottom-color: #fff;
 
       &::after {
@@ -81,13 +81,13 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
   }
 
   &[data-placement^='left'] {
-    .#{$namespace-prefix}-svg-arrow::after {
+    > .#{$namespace-prefix}-svg-arrow::after {
       left: 1px;
       top: 0;
       transform: rotate(90deg);
     }
 
-    .#{$namespace-prefix}-arrow {
+    > .#{$namespace-prefix}-arrow {
       border-left-color: #fff;
 
       &::after {
@@ -102,13 +102,13 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
   }
 
   &[data-placement^='right'] {
-    .#{$namespace-prefix}-svg-arrow::after {
+    > .#{$namespace-prefix}-svg-arrow::after {
       left: -1px;
       top: 0;
       transform: rotate(-90deg);
     }
 
-    .#{$namespace-prefix}-arrow {
+    > .#{$namespace-prefix}-arrow {
       border-right-color: #fff;
 
       &::after {
@@ -124,12 +124,12 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
 
   &[data-placement^='top'],
   &[data-placement^='bottom'] {
-    .#{$namespace-prefix}-arrow,
-    .#{$namespace-prefix}-svg-arrow {
+    > .#{$namespace-prefix}-arrow,
+    > .#{$namespace-prefix}-svg-arrow {
       transform: translateX(-1px);
     }
 
-    .#{$namespace-prefix}-arrow {
+    > .#{$namespace-prefix}-arrow {
       &::after,
       &::before {
         left: -$arrow-size;
@@ -141,12 +141,12 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
 
   &[data-placement^='left'],
   &[data-placement^='right'] {
-    .#{$namespace-prefix}-arrow,
-    .#{$namespace-prefix}-svg-arrow {
+    > .#{$namespace-prefix}-arrow,
+    > .#{$namespace-prefix}-svg-arrow {
       transform: translateY(-1px);
     }
 
-    .#{$namespace-prefix}-arrow {
+    > .#{$namespace-prefix}-arrow {
       &::after,
       &::before {
         top: -$arrow-size;

@@ -8,17 +8,17 @@ $color: rgba(0, 0, 0, 0.7);
 
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-arrow {
+      > .#{$namespace-prefix}-arrow {
         @include arrow($placement, $arrow-size, $color);
       }
     }
   }
 
-  .#{$namespace-prefix}-backdrop {
+  > .#{$namespace-prefix}-backdrop {
     background-color: $color;
   }
 
-  .#{$namespace-prefix}-svg-arrow {
+  > .#{$namespace-prefix}-svg-arrow {
     fill: $color;
   }
 }

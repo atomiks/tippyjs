@@ -4,7 +4,7 @@
 .#{$namespace-prefix}-tooltip {
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-backdrop {
+      > .#{$namespace-prefix}-backdrop {
         transform-origin: nth(
           $backdrop-origins,
           index($placements, $placement)

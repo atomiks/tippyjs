@@ -4,7 +4,7 @@
 .#{$namespace-prefix}-tooltip {
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-svg-arrow {
+      > .#{$namespace-prefix}-svg-arrow {
         @include svg-arrow-transform-origin($placement, $arrow-size);
         @include arrow-margin($placement);
         @include arrow-position($placement, $arrow-size, true);
@@ -17,7 +17,7 @@
   }
 
   &[data-interactive] {
-    .#{$namespace-prefix}-svg-arrow path {
+    > .#{$namespace-prefix}-svg-arrow path {
       pointer-events: auto;
     }
   }
