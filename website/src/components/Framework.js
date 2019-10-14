@@ -32,7 +32,7 @@ export const Container = styled.div`
     padding: 0 60px;
   }
   ${MEDIA.lg} {
-    padding: 0 80px;
+    padding: 0 75px;
   }
 `;
 
@@ -109,7 +109,7 @@ export const Button = styled.button`
   color: #5183f5;
   border: 2px dashed #5183f5;
   will-change: opacity;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   padding: 8px 16px;
   border-radius: 4px;

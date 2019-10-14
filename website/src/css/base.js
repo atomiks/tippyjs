@@ -270,7 +270,7 @@ export default createGlobalStyle`
 
   [data-reach-skip-link] {
     position: fixed;
-    z-index: 2;
+    z-index: 3;
     padding: 10px;
     left: -9999px;
     background: white;

@@ -31,8 +31,6 @@ const HeaderRoot = styled.header`
   text-align: center;
   margin-bottom: 50px;
   color: white;
-  margin-left: -25px;
-  padding-left: 25px;
 
   &::before {
     content: '';
@@ -45,7 +43,7 @@ const HeaderRoot = styled.header`
     height: 100vh;
 
     ${MEDIA.lg} {
-      left: -100px;
+      left: -250px;
     }
   }
 `;
