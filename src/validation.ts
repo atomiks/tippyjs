@@ -107,9 +107,14 @@ export function validateProps(
       prop === 'arrowType',
       `The \`arrowType\` prop was removed in v5 in favor of overloading the
       \`arrow\` prop.
-  
+
+      "round" string was replaced with importing the string from the package.
+
+      * import {roundArrow} from 'tippy.js'; (ESM version)
+      * const {roundArrow} = tippy; (IIFE CDN version)
+
       Before: {arrow: true, arrowType: "round"}
-      After: {arrow: "round"}`,
+      After: {arrow: roundArrow}`,
     );
 
     warnWhen(
