@@ -5,7 +5,13 @@ import {
   BasePlacement,
   Placement,
 } from './types';
-import {innerHTML, div, isElement, splitBySpaces} from './utils';
+import {
+  innerHTML,
+  div,
+  isElement,
+  splitBySpaces,
+  appendPxIfNumber,
+} from './utils';
 import {isUCBrowser} from './browser';
 import {
   POPPER_CLASS,
@@ -208,8 +214,7 @@ export function updatePopperElement(
   popper.style.zIndex = '' + nextProps.zIndex;
 
   tooltip.setAttribute('data-animation', nextProps.animation);
-  tooltip.style.maxWidth =
-    nextProps.maxWidth + (typeof nextProps.maxWidth === 'number' ? 'px' : '');
+  tooltip.style.maxWidth = appendPxIfNumber(nextProps.maxWidth);
 
   if (nextProps.role) {
     tooltip.setAttribute('role', nextProps.role);

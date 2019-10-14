@@ -294,3 +294,10 @@ export function pushIfUnique<T>(arr: T[], value: T): void {
     arr.push(value);
   }
 }
+
+/**
+ * Adds `px` if value is a number, or returns it directly
+ */
+export function appendPxIfNumber(value: string | number): string {
+  return typeof value === 'number' ? `${value}px` : value;
+}

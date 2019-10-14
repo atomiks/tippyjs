@@ -1328,3 +1328,24 @@ describe('hideOnClick', () => {
     expect(instance.state.isVisible).toBe(false);
   });
 });
+
+describe('distance', () => {
+  // currentPlacement is always `top` for these
+  it('number: should set `padding` on popper element', () => {
+    const instance = tippy(h(), {distance: 100});
+
+    instance.show();
+    jest.runAllTimers();
+
+    expect(instance.popper.style.padding).toBe('0px 0px 100px 0px');
+  });
+
+  it('string: should set `padding` on popper element based', () => {
+    const instance = tippy(h(), {distance: '5rem'});
+
+    instance.show();
+    jest.runAllTimers();
+
+    expect(instance.popper.style.padding).toBe('0px 0px 5rem 0px');
+  });
+});

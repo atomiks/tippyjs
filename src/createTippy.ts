@@ -46,6 +46,7 @@ import {
   getOwnerDocument,
   pushIfUnique,
   arrayFrom,
+  appendPxIfNumber,
 } from './utils';
 import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
 
@@ -564,13 +565,13 @@ export default function createTippy(
       }
 
       const basePlacement = getBasePlacement(data.placement);
-      const {distance} = instance.props;
+      const distance = appendPxIfNumber(instance.props.distance);
 
       const padding = {
-        bottom: `${distance}px 0 0 0`,
-        left: `0 ${distance}px 0 0`,
-        top: `0 0 ${distance}px 0`,
-        right: `0 0 0 ${distance}px`,
+        bottom: `${distance} 0 0 0`,
+        left: `0 ${distance} 0 0`,
+        top: `0 0 ${distance} 0`,
+        right: `0 0 0 ${distance}`,
       };
 
       popper.style.padding = padding[basePlacement];

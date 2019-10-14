@@ -363,3 +363,15 @@ describe('pushIfUnique', () => {
     expect(arr).toEqual([item, 2]);
   });
 });
+
+describe('appendPxIfNumber', () => {
+  it('should append `px` if number', () => {
+    expect(Utils.appendPxIfNumber(200)).toBe('200px');
+    expect(Utils.appendPxIfNumber(0)).toBe('0px');
+  });
+
+  it('should not append `px` if string', () => {
+    expect(Utils.appendPxIfNumber('200rem')).toBe('200rem');
+    expect(Utils.appendPxIfNumber('10px')).toBe('10px');
+  });
+});

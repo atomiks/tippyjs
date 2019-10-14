@@ -48,7 +48,7 @@ export interface Props extends LifecycleHooks {
   boundary: 'scrollParent' | 'window' | 'viewport' | HTMLElement;
   content: Content;
   delay: number | [number, number];
-  distance: number;
+  distance: number | string;
   duration: number | [number, number];
   flip: boolean;
   flipBehavior: 'flip' | Placement[];
