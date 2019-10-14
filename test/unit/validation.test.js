@@ -42,9 +42,9 @@ describe('validateProps', () => {
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
         `The \`target\` prop was removed in v5 and replaced with the delegate()
-        method in order to conserve bundle size.
+        addon in order to conserve bundle size.
         
-        Read more: https//atomiks.github.io/tippyjs/addons#event-delegation`,
+        See: https://atomiks.github.io/tippyjs/addons/#event-delegation`,
       ),
     );
   });
