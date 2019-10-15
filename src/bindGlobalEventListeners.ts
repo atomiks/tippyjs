@@ -46,12 +46,12 @@ export function onDocumentMouseMove(): void {
  * TODO: find a better technique to solve this problem
  */
 export function onWindowBlur(): void {
-  const {activeElement} = document;
+  const activeElement = document.activeElement as HTMLElement | null;
 
   if (isReferenceElement(activeElement)) {
     const instance = activeElement._tippy!;
 
-    if (activeElement instanceof HTMLElement && !instance.state.isVisible) {
+    if (activeElement.blur && !instance.state.isVisible) {
       activeElement.blur();
     }
   }
