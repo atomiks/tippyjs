@@ -1,4 +1,5 @@
 import {PASSIVE} from './constants';
+import {isReferenceElement} from './utils';
 
 export const currentInput = {isTouch: false};
 let lastMouseMoveTime = 0;
@@ -45,16 +46,14 @@ export function onDocumentMouseMove(): void {
  * TODO: find a better technique to solve this problem
  */
 export function onWindowBlur(): void {
-  const {activeElement}: {activeElement: any} = document;
-  const instance = activeElement._tippy;
+  const activeElement = document.activeElement as HTMLElement | null;
 
-  if (
-    activeElement &&
-    activeElement.blur &&
-    instance &&
-    !instance.state.isVisible
-  ) {
-    activeElement.blur();
+  if (isReferenceElement(activeElement)) {
+    const instance = activeElement._tippy!;
+
+    if (activeElement.blur && !instance.state.isVisible) {
+      activeElement.blur();
+    }
   }
 }
 
