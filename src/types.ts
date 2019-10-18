@@ -85,6 +85,7 @@ export interface Props extends LifecycleHooks {
   trigger: string;
   triggerTarget: Element | Element[] | null;
   updateDuration: number;
+  transitionDimensions: boolean;
   zIndex: number;
 }
 
@@ -223,10 +224,16 @@ export interface Sticky extends Plugin {
   defaultValue: false;
 }
 
+export interface TransitionDimensions extends Plugin {
+  name: 'transitionDimensions';
+  defaultValue: false;
+}
+
 declare const animateFill: AnimateFill;
 declare const followCursor: FollowCursor;
 declare const inlinePositioning: InlinePositioning;
 declare const sticky: Sticky;
+declare const transitionDimensions: TransitionDimensions;
 
 // =============================================================================
 // Misc types
@@ -280,5 +287,6 @@ export {
   followCursor,
   inlinePositioning,
   sticky,
+  transitionDimensions,
   roundArrow,
 };

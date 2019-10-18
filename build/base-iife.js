@@ -5,10 +5,17 @@ import animateFill from '../src/plugins/animateFill';
 import followCursor from '../src/plugins/followCursor';
 import inlinePositioning from '../src/plugins/inlinePositioning';
 import sticky from '../src/plugins/sticky';
+import transitionDimensions from '../src/plugins/transitionDimensions';
 import {ROUND_ARROW} from '../src/constants';
 
 tippy.setDefaultProps({
-  plugins: [animateFill, followCursor, inlinePositioning, sticky],
+  plugins: [
+    animateFill,
+    followCursor,
+    inlinePositioning,
+    sticky,
+    transitionDimensions,
+  ],
 });
 
 tippy.createSingleton = createSingleton;

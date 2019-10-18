@@ -13,6 +13,7 @@ const pluginProps = {
   followCursor: false,
   inlinePositioning: false,
   sticky: false,
+  transitionDimensions: false,
 };
 
 export const defaultProps: DefaultProps = {
@@ -199,12 +200,8 @@ export function validateProps(
       typeof value === 'object' &&
       hasOwnProperty(value, 'placement');
 
-    const nonPluginProps = removeProperties(defaultProps, [
-      'animateFill',
-      'followCursor',
-      'inlinePositioning',
-      'sticky',
-    ]);
+    const pluginKeys = Object.keys(pluginProps) as Array<keyof DefaultProps>;
+    const nonPluginProps = removeProperties(defaultProps, pluginKeys);
 
     // These props have custom warnings
     const customWarningProps = [

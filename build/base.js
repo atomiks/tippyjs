@@ -5,4 +5,7 @@ export {default as animateFill} from '../src/plugins/animateFill';
 export {default as followCursor} from '../src/plugins/followCursor';
 export {default as inlinePositioning} from '../src/plugins/inlinePositioning';
 export {default as sticky} from '../src/plugins/sticky';
+export {
+  default as transitionDimensions,
+} from '../src/plugins/transitionDimensions';
 export {ROUND_ARROW as roundArrow} from '../src/constants';

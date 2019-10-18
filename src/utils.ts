@@ -352,3 +352,16 @@ export function getComputedPadding(
     return obj;
   }, freshPaddingObject);
 }
+
+/**
+ * Ponyfill for Array.prototype.find
+ */
+export function find<T>(
+  arr: T[],
+  callback: (item: T, index: number) => boolean,
+): T | undefined {
+  if (Array.prototype.find) {
+    return arr.find(callback);
+  }
+  return arr.filter(callback)[0];
+}
