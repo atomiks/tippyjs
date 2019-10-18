@@ -494,7 +494,7 @@ Singleton tippy with a transition:
 </Demo>
 
 ```js
-import {createSingleton} from 'tippy.js';
+import tippy, {createSingleton} from 'tippy.js';
 
 const instances = [];
 const buttons = document.querySelectorAll('button');
@@ -518,30 +518,6 @@ Tippys can be nested within other ones.
 <Demo>
   <Nesting />
 </Demo>
-
-```js
-const content = document.createElement('div');
-
-for (let i = 0; i < 3; i++) {
-  const button = document.createElement('button');
-  button.textContent = 'Text';
-  content.appendChild(button);
-
-  tippy(button, {
-    content: "I'm a Tippy tooltip!",
-    arrow: true,
-    animation: 'fade',
-  });
-}
-
-tippy('#myButton', {
-  content,
-  arrow: true,
-  theme: 'light-border',
-});
-
-// Note: Some extra logic is required to handle some other edge cases
-```
 
 ### Multiple
 
