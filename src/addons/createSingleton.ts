@@ -1,4 +1,4 @@
-import {Instance, Props, Plugin} from '../types';
+import {Instance, Props, Plugin, CreateSingleton} from '../types';
 import tippy from '..';
 import {preserveInvocation, useIfDefined} from '../utils';
 import {defaultProps} from '../props';
@@ -136,4 +136,18 @@ export default function createSingleton(
   };
 
   return tippy(document.createElement('div'), props, plugins) as Instance;
+}
+
+/**
+ * For IIFE version only.
+ */
+export function createCreateSingletonWithPlugins(
+  outerPlugins: Plugin[],
+): CreateSingleton {
+  return (tippyInstances, optionalProps = {}, innerPlugins = []): Instance => {
+    return createSingleton(tippyInstances, optionalProps, [
+      ...outerPlugins,
+      ...innerPlugins,
+    ]);
+  };
 }

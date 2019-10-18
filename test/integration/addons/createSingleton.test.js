@@ -6,7 +6,9 @@ import {
   setTestDefaultProps,
 } from '../../utils';
 
-import createSingleton from '../../../src/addons/createSingleton';
+import createSingleton, {
+  createCreateSingletonWithPlugins,
+} from '../../../src/addons/createSingleton';
 import tippy from '../../../src';
 import {clean} from '../../../src/validation';
 
@@ -287,5 +289,25 @@ describe('createSingleton', () => {
     const singletonInstance = createSingleton(tippy([h(), h()]), {}, plugins);
 
     expect(singletonInstance.plugins).toEqual(plugins);
+  });
+});
+
+describe('createCreateSingletonWithPlugins', () => {
+  it('passes outer plugins automatically', () => {
+    const fn = () => ({});
+    const plugins = [{name: 'a', fn}, {name: 'b', fn}];
+    const createSingleton = createCreateSingletonWithPlugins(plugins);
+    const singleton = createSingleton(tippy([h(), h()]));
+
+    expect(singleton.plugins.map(p => p.name)).toEqual(['a', 'b']);
+  });
+
+  it('allows inner plugins to be passed', () => {
+    const fn = () => ({});
+    const plugins = [{name: 'a', fn}, {name: 'b', fn}];
+    const createSingleton = createCreateSingletonWithPlugins([]);
+    const singleton = createSingleton(tippy([h(), h()]), {}, plugins);
+
+    expect(singleton.plugins.map(p => p.name)).toEqual(['a', 'b']);
   });
 });

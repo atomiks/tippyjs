@@ -1,4 +1,4 @@
-import {Targets, Instance, Props, Plugin} from '../types';
+import {Targets, Instance, Props, Plugin, Delegate} from '../types';
 import tippy from '..';
 import {throwErrorWhen} from '../validation';
 import {removeProperties, normalizeToArray, includes} from '../utils';
@@ -126,4 +126,17 @@ export default function delegate(
   normalizedReturnValue.forEach(applyMutations);
 
   return returnValue;
+}
+
+/**
+ * For IIFE version only.
+ */
+export function createDelegateWithPlugins(outerPlugins: Plugin[]): Delegate {
+  return (
+    targets,
+    props,
+    innerPlugins: Plugin[] = [],
+  ): Instance | Instance[] => {
+    return delegate(targets, props, [...outerPlugins, ...innerPlugins]);
+  };
 }
