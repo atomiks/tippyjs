@@ -92,21 +92,6 @@ export default {
       isInternallySettingControlledProp = false;
     }
 
-    function handleFlipOnUpdate(): void {
-      // With "initial" behavior, flipping may be incorrect for the first show
-      if (
-        getIsEnabled() &&
-        getIsInitialBehavior() &&
-        instance.props.flipOnUpdate !== true
-      ) {
-        isInternallySettingControlledProp = true;
-        instance.setProps({flipOnUpdate: true});
-        isInternallySettingControlledProp = false;
-      } else if (instance.props.flipOnUpdate !== userProps.flipOnUpdate) {
-        instance.setProps({flipOnUpdate: userProps.flipOnUpdate});
-      }
-    }
-
     function handlePopperListeners(): void {
       if (!instance.popperInstance) {
         return;
@@ -243,7 +228,6 @@ export default {
           lastMouseMoveEvent = event;
         }
 
-        handleFlipOnUpdate();
         handlePlacement();
         handleMouseMoveListener();
       },
