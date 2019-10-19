@@ -28,7 +28,7 @@ export default {
 
     // Internal state
     let lastMouseMoveEvent: MouseEvent;
-    let triggerEvent: Event | null = null;
+    let mouseCoords: {clientX: number; clientY: number} | null = null;
     let isInternallySettingControlledProp = false;
 
     // These are controlled by this plugin, so we need to store the user's
@@ -41,34 +41,19 @@ export default {
       });
     }
 
-    // Due to `getVirtualOffsets()`, we need to reverse the placement if it's
-    // shifted (start -> end, and vice-versa)
-    function setNormalizedPlacement(): void {
-      const {placement} = userProps;
-
-      if (!placement) {
-        return;
-      }
-
-      const shift = placement.split('-')[1];
-
-      isInternallySettingControlledProp = true;
-
-      instance.setProps({
-        placement: (getIsEnabled() && shift
-          ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
-          : placement) as Placement,
-      });
-
-      isInternallySettingControlledProp = false;
+    function getIsManual(): boolean {
+      return instance.props.trigger.trim() === 'manual';
     }
 
     function getIsEnabled(): boolean {
-      return (
-        instance.props.followCursor &&
-        isMouseEvent(triggerEvent) &&
-        !(triggerEvent.clientX === 0 && triggerEvent.clientY === 0)
-      );
+      // #597
+      const isValidMouseEvent = getIsManual()
+        ? true
+        : // Check if a keyboard "click"
+          mouseCoords !== null &&
+          !(mouseCoords.clientX === 0 && mouseCoords.clientY === 0);
+
+      return instance.props.followCursor && isValidMouseEvent;
     }
 
     function getIsInitialBehavior(): boolean {
@@ -84,7 +69,45 @@ export default {
       }
     }
 
-    function handleListeners(): void {
+    function handlePlacement(): void {
+      // Due to `getVirtualOffsets()`, we need to reverse the placement if it's
+      // shifted (start -> end, and vice-versa)
+
+      // Early bail-out
+      if (!getIsEnabled() && instance.props.placement === userProps.placement) {
+        return;
+      }
+
+      const {placement} = userProps;
+      const shift = placement.split('-')[1];
+
+      isInternallySettingControlledProp = true;
+
+      instance.setProps({
+        placement: (getIsEnabled() && shift
+          ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
+          : placement) as Placement,
+      });
+
+      isInternallySettingControlledProp = false;
+    }
+
+    function handleFlipOnUpdate(): void {
+      // With "initial" behavior, flipping may be incorrect for the first show
+      if (
+        getIsEnabled() &&
+        getIsInitialBehavior() &&
+        instance.props.flipOnUpdate !== true
+      ) {
+        isInternallySettingControlledProp = true;
+        instance.setProps({flipOnUpdate: true});
+        isInternallySettingControlledProp = false;
+      } else if (instance.props.flipOnUpdate !== userProps.flipOnUpdate) {
+        instance.setProps({flipOnUpdate: userProps.flipOnUpdate});
+      }
+    }
+
+    function handlePopperListeners(): void {
       if (!instance.popperInstance) {
         return;
       }
@@ -97,6 +120,14 @@ export default {
         (getIsInitialBehavior() || instance.props.followCursor !== true)
       ) {
         instance.popperInstance.disableEventListeners();
+      }
+    }
+
+    function handleMouseMoveListener(): void {
+      if (getIsEnabled()) {
+        addListener();
+      } else {
+        resetReference();
       }
     }
 
@@ -171,13 +202,13 @@ export default {
           setUserProps(partialProps);
 
           if (partialProps.placement) {
-            setNormalizedPlacement();
+            handlePlacement();
           }
         }
 
         // A new placement causes the popperInstance to be recreated
         if (partialProps.placement) {
-          handleListeners();
+          handlePopperListeners();
         }
 
         // Wait for `.update()` to set `instance.state.currentPlacement` to
@@ -186,52 +217,47 @@ export default {
       },
       onMount(): void {
         triggerLastMouseMove();
-        handleListeners();
+        handlePopperListeners();
+      },
+      onShow(): void {
+        if (getIsManual()) {
+          // Since there's no trigger event to use, we have to use these as
+          // baseline coords
+          mouseCoords = {clientX: 0, clientY: 0};
+          // Ensure `lastMouseMoveEvent` doesn't access any other properties
+          // of a MouseEvent here
+          lastMouseMoveEvent = mouseCoords as MouseEvent;
+
+          handlePlacement();
+          handleMouseMoveListener();
+        }
       },
       onTrigger(_, event): void {
         // Tapping on touch devices can trigger `mouseenter` then `focus`
-        if (triggerEvent) {
+        if (mouseCoords) {
           return;
         }
 
-        triggerEvent = event;
-
         if (isMouseEvent(event)) {
+          mouseCoords = {clientX: event.clientX, clientY: event.clientY};
           lastMouseMoveEvent = event;
         }
 
-        // With "initial" behavior, flipping may be incorrect for the first show
-        if (getIsEnabled() && getIsInitialBehavior()) {
-          isInternallySettingControlledProp = true;
-          instance.setProps({flipOnUpdate: true});
-          isInternallySettingControlledProp = false;
-        } else {
-          instance.setProps({flipOnUpdate: userProps.flipOnUpdate});
-        }
-
-        setNormalizedPlacement();
-
-        if (getIsEnabled()) {
-          // Ignore any trigger events fired immediately after the first one
-          // e.g. `focus` can be fired right after `mouseenter` on touch devices
-          if (event === triggerEvent) {
-            addListener();
-          }
-        } else {
-          resetReference();
-        }
+        handleFlipOnUpdate();
+        handlePlacement();
+        handleMouseMoveListener();
       },
       onUntrigger(): void {
         // If untriggered before showing (`onHidden` will never be invoked)
         if (!instance.state.isVisible) {
           removeListener();
-          triggerEvent = null;
+          mouseCoords = null;
         }
       },
       onHidden(): void {
         removeListener();
         resetReference();
-        triggerEvent = null;
+        mouseCoords = null;
       },
     };
   },

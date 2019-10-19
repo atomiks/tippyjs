@@ -438,4 +438,24 @@ describe('followCursor', () => {
 
     expect(instance.popperInstance.state.eventsEnabled).toBe(false);
   });
+
+  it('works with manual trigger and .show()', () => {
+    instance = tippy(h(), {
+      followCursor: true,
+      trigger: 'manual',
+    });
+
+    instance.show();
+    jest.runAllTimers();
+
+    document.dispatchEvent(firstMouseMoveEvent);
+
+    rect = instance.popperInstance.reference.getBoundingClientRect();
+    matches({
+      top: first.clientY,
+      bottom: first.clientY,
+      left: first.clientX,
+      right: first.clientX,
+    });
+  });
 });
