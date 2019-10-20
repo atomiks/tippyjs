@@ -102,8 +102,8 @@ export default function createSingleton(
       }
 
       instance.popperInstance!.reference = {
-        // @ts-ignore - awaiting popper.js@1.16.0 release
         referenceNode: target,
+        // These `client` values don't get used by Popper.js if they are 0
         clientHeight: 0,
         clientWidth: 0,
         getBoundingClientRect(): ClientRect {
