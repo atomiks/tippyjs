@@ -101,10 +101,6 @@ export default function createSingleton(
         );
       }
 
-      instance.setContent(tippyInstances[index].props.content);
-
-      // Due to two updates performed upon mount, the second update will use
-      // this object
       instance.popperInstance!.reference = {
         // @ts-ignore - awaiting popper.js@1.16.0 release
         referenceNode: target,
@@ -114,6 +110,8 @@ export default function createSingleton(
           return target.getBoundingClientRect();
         },
       };
+
+      instance.setContent(tippyInstances[index].props.content);
     },
     onAfterUpdate(instance, partialProps): void {
       preserveInvocation(
