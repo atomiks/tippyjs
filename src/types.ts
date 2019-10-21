@@ -47,9 +47,9 @@ export interface Props extends LifecycleHooks {
   arrow: boolean | string | SVGElement;
   boundary: 'scrollParent' | 'window' | 'viewport' | HTMLElement;
   content: Content;
-  delay: number | [number, number];
+  delay: number | [number | null, number | null];
   distance: number | string;
-  duration: number | [number, number];
+  duration: number | [number | null, number | null];
   flip: boolean;
   flipBehavior: 'flip' | Placement[];
   flipOnUpdate: boolean;
@@ -74,6 +74,11 @@ export interface Props extends LifecycleHooks {
   updateDuration: number;
   zIndex: number;
   [key: string]: any;
+}
+
+export interface DefaultProps extends Props {
+  delay: number | [number, number];
+  duration: number | [number, number];
 }
 
 export interface AnimateFillProps {

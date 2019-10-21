@@ -6,7 +6,15 @@ import bindGlobalEventListeners, {
 } from './bindGlobalEventListeners';
 import {getArrayOfElements, isReferenceElement, isElement} from './utils';
 import {warnWhen, validateTargets, validateProps} from './validation';
-import {Props, Instance, Targets, HideAllOptions, Plugin, Tippy} from './types';
+import {
+  Props,
+  Instance,
+  Targets,
+  HideAllOptions,
+  Plugin,
+  Tippy,
+  DefaultProps,
+} from './types';
 
 /**
  * Exported module
@@ -68,7 +76,7 @@ tippy.currentInput = currentInput;
 /**
  * Mutates the defaultProps object by setting the props specified
  */
-function setDefaultProps(partialProps: Partial<Props>): void {
+function setDefaultProps(partialProps: Partial<DefaultProps>): void {
   if (__DEV__) {
     validateProps(partialProps, []);
   }

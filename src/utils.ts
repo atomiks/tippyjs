@@ -38,9 +38,9 @@ export function getArrayOfElements(value: Targets): Element[] {
  * Returns a value at a given index depending on if it's an array or number
  */
 export function getValueAtIndexOrReturn<T>(
-  value: T | T[],
+  value: T | [T | null, T | null],
   index: number,
-  defaultValue: T | T[],
+  defaultValue: T | [T, T],
 ): T {
   if (Array.isArray(value)) {
     const v = value[index];

@@ -1,6 +1,6 @@
-import {Props, Plugin} from './types';
+import {Props, DefaultProps, Plugin} from './types';
 
-export const defaultProps: Props = {
+export const defaultProps: DefaultProps = {
   allowHTML: true,
   animation: 'fade',
   appendTo: (): Element => document.body,
