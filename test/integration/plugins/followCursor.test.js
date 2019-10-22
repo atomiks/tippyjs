@@ -6,20 +6,18 @@ import {
   setTestDefaultProps,
 } from '../../utils';
 
-import {createTippyWithPlugins} from '../../../src';
+import tippy from '../../../src';
 import followCursor, {
   getVirtualOffsets,
 } from '../../../src/plugins/followCursor';
 import {getBasePlacement} from '../../../src/popper';
 
-setTestDefaultProps();
+setTestDefaultProps({plugins: [followCursor]});
 jest.useFakeTimers();
 
 afterEach(cleanDocumentBody);
 
 describe('followCursor', () => {
-  const tippy = createTippyWithPlugins([followCursor]);
-
   // NOTE: Jest's simulated window dimensions are 1024 x 768. These values
   // should be within that
   const mouseenter = new MouseEvent('mouseenter', {clientX: 1, clientY: 1});

@@ -19,8 +19,8 @@ export function cleanDocumentBody() {
   document.body.innerHTML = '';
 }
 
-export function setTestDefaultProps() {
-  tippy.setDefaultProps({duration: 0, delay: 0});
+export function setTestDefaultProps(props) {
+  tippy.setDefaultProps({duration: 0, delay: 0, ...props});
 }
 
 export function h(nodeName = 'button', attributes = {}) {

@@ -1,9 +1,7 @@
 import {h, cleanDocumentBody, MOUSEENTER, CLICK} from '../../utils';
 
 import tippy from '../../../src';
-import delegate, {
-  createDelegateWithPlugins,
-} from '../../../src/addons/delegate';
+import delegate from '../../../src/addons/delegate';
 import {clean} from '../../../src/validation';
 import {normalizeToArray} from '../../../src/utils';
 
@@ -159,25 +157,5 @@ describe('delegate', () => {
 
     focusButton.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
     expect(focusButton._tippy).toBeDefined();
-  });
-});
-
-describe('createDelegateWithPlugins', () => {
-  it('passes outer plugins automatically', () => {
-    const fn = () => ({});
-    const plugins = [{name: 'a', fn}, {name: 'b', fn}];
-    const delegate = createDelegateWithPlugins(plugins);
-    const instance = delegate(h(), {target: 'button'});
-
-    expect(instance.plugins.map(p => p.name)).toEqual(['a', 'b']);
-  });
-
-  it('allows inner plugins to be passed', () => {
-    const fn = () => ({});
-    const plugins = [{name: 'a', fn}, {name: 'b', fn}];
-    const delegate = createDelegateWithPlugins([]);
-    const instance = delegate(h(), {target: 'button'}, plugins);
-
-    expect(instance.plugins.map(p => p.name)).toEqual(['a', 'b']);
   });
 });

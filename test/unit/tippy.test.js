@@ -169,4 +169,20 @@ describe('createTippyWithPlugins', () => {
     expect(tippy.setDefaultProps).toBeDefined();
     expect(tippy.currentInput).toBeDefined();
   });
+
+  it('warns', () => {
+    const spy = jest.spyOn(console, 'warn');
+
+    createTippyWithPlugins([]);
+
+    expect(spy).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        `createTippyWithPlugins([...]) has been deprecated.
+
+      Use tippy.setDefaultProps({plugins: [...]}) instead.`,
+      ),
+    );
+
+    spy.mockRestore();
+  });
 });

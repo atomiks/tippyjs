@@ -22,8 +22,7 @@ describe('validateProps', () => {
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
         `\`${prop}\` is not a valid prop. You may have spelled it incorrectly,
-        or if it's a plugin, forgot to pass it in an array as a 3rd argument to
-        \`tippy()\`.
+        or if it's a plugin, forgot to pass it in an array as props.plugins.
 
         In v5, the following props were turned into plugins:
 

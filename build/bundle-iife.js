@@ -1,9 +1,9 @@
 import css from '../dist/tippy.css';
 import {injectCSS} from '../src/css';
 import {isBrowser} from '../src/browser';
-import {hideAll, createTippyWithPlugins} from '../src';
-import {createCreateSingletonWithPlugins} from '../src/addons/createSingleton';
-import {createDelegateWithPlugins} from '../src/addons/delegate';
+import tippy, {hideAll} from '../src';
+import createSingleton from '../src/addons/createSingleton';
+import delegate from '../src/addons/delegate';
 import animateFill from '../src/plugins/animateFill';
 import followCursor from '../src/plugins/followCursor';
 import inlinePositioning from '../src/plugins/inlinePositioning';
@@ -14,12 +14,13 @@ if (isBrowser) {
   injectCSS(css);
 }
 
-const plugins = [animateFill, followCursor, inlinePositioning, sticky];
-const extendedTippy = createTippyWithPlugins(plugins);
+tippy.setDefaultProps({
+  plugins: [animateFill, followCursor, inlinePositioning, sticky],
+});
 
-extendedTippy.createSingleton = createCreateSingletonWithPlugins(plugins);
-extendedTippy.delegate = createDelegateWithPlugins(plugins);
-extendedTippy.hideAll = hideAll;
-extendedTippy.roundArrow = ROUND_ARROW;
+tippy.createSingleton = createSingleton;
+tippy.delegate = delegate;
+tippy.hideAll = hideAll;
+tippy.roundArrow = ROUND_ARROW;
 
-export default extendedTippy;
+export default tippy;

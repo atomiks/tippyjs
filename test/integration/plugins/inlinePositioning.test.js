@@ -5,20 +5,18 @@ import {
   setTestDefaultProps,
 } from '../../utils';
 
-import {createTippyWithPlugins} from '../../../src';
+import tippy from '../../../src';
 import inlinePositioning, {
   getInlineBoundingClientRect,
 } from '../../../src/plugins/inlinePositioning';
 import inlinePositioningSnapshots from './__inlinePositioningSnapshots__';
 
-setTestDefaultProps();
+setTestDefaultProps({plugins: [inlinePositioning]});
 jest.useFakeTimers();
 
 afterEach(cleanDocumentBody);
 
 describe('inlinePositioning', () => {
-  const tippy = createTippyWithPlugins([inlinePositioning]);
-
   it('true: sets popperInstance.reference = ReferenceObject onTrigger', () => {
     const instance = tippy(h(), {
       inlinePositioning: true,

@@ -75,14 +75,10 @@ import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/animations/shift-away.css';
 
-tippy(
-  targets,
-  {
-    content: 'tooltip',
-    animateFill: true,
-  },
-  [animateFill],
-);
+tippy(targets, {
+  animateFill: true,
+  plugins: [animateFill],
+});
 ```
 
 Browser:
@@ -211,7 +207,10 @@ Node:
 ```js
 import tippy, {followCursor} from 'tippy.js';
 
-tippy('button', {followCursor: true}, [followCursor]);
+tippy('button', {
+  followCursor: true,
+  plugins: [followCursor],
+});
 ```
 
 Browser:
@@ -230,7 +229,10 @@ Node:
 ```js
 import tippy, {sticky} from 'tippy.js';
 
-tippy('button', {sticky: true}, [sticky]);
+tippy('button', {
+  sticky: true,
+  plugins: [sticky],
+});
 ```
 
 Browser:
