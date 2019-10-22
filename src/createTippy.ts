@@ -3,7 +3,6 @@ import {
   ReferenceElement,
   PopperInstance,
   Props,
-  Plugin,
   Instance,
   Content,
   LifecycleHooks,
@@ -71,12 +70,9 @@ let mouseMoveListeners: ((event: MouseEvent) => void)[] = [];
 export default function createTippy(
   reference: ReferenceElement,
   collectionProps: Props,
-  plugins: Plugin[] = [],
 ): Instance | null {
-  const props = getExtendedProps(
-    evaluateProps(reference, collectionProps, plugins),
-    plugins,
-  );
+  const props = getExtendedProps(evaluateProps(reference, collectionProps));
+  const {plugins} = props;
 
   // If the reference shouldn't have multiple tippys, return null early
   if (!props.multiple && reference._tippy) {
@@ -797,6 +793,19 @@ export default function createTippy(
 
     if (__DEV__) {
       validateProps(partialProps, plugins);
+      warnWhen(
+        partialProps.plugins
+          ? partialProps.plugins.length !== plugins.length ||
+              plugins.some((p, i) => {
+                if (partialProps.plugins && partialProps.plugins[i]) {
+                  return p !== partialProps.plugins[i];
+                } else {
+                  return true;
+                }
+              })
+          : false,
+        `Cannot update plugins`,
+      );
     }
 
     invokeHook('onBeforeUpdate', [instance, partialProps]);
@@ -804,15 +813,11 @@ export default function createTippy(
     removeListenersFromTriggerTarget();
 
     const prevProps = instance.props;
-    const nextProps = evaluateProps(
-      reference,
-      {
-        ...instance.props,
-        ...partialProps,
-        ignoreAttributes: true,
-      },
-      plugins,
-    );
+    const nextProps = evaluateProps(reference, {
+      ...instance.props,
+      ...partialProps,
+      ignoreAttributes: true,
+    });
 
     nextProps.ignoreAttributes = useIfDefined(
       partialProps.ignoreAttributes,

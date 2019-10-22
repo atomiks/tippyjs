@@ -94,7 +94,7 @@ describe('createTippy', () => {
   });
 
   it('extends `instance.props` with plugin props', () => {
-    instance = createTippy(h(), defaultProps, [animateFill]);
+    instance = createTippy(h(), {...defaultProps, plugins: [animateFill]});
 
     expect(instance.props.animateFill).toBe(animateFill.defaultValue);
   });

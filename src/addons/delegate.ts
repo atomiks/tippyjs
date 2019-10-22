@@ -1,4 +1,4 @@
-import {Targets, Instance, Props, Plugin, Delegate} from '../types';
+import {Targets, Instance, Props, Plugin} from '../types';
 import tippy from '..';
 import {throwErrorWhen} from '../validation';
 import {removeProperties, normalizeToArray, includes} from '../utils';
@@ -24,6 +24,7 @@ const BUBBLING_EVENTS_MAP = {
 export default function delegate(
   targets: Targets,
   props: Partial<Props> & {target: string},
+  /** @deprecated use Props.plugins */
   plugins: Plugin[] = [],
 ): Instance | Instance[] {
   if (__DEV__) {
@@ -34,16 +35,18 @@ export default function delegate(
     );
   }
 
+  plugins = defaultProps.plugins.concat(props.plugins || plugins);
+
   let listeners: ListenerObj[] = [];
   let childTippyInstances: Instance[] = [];
 
   const {target} = props;
 
   const nativeProps = removeProperties(props, ['target']);
-  const parentProps = {...nativeProps, trigger: 'manual'};
-  const childProps = {...nativeProps, showOnCreate: true};
+  const parentProps = {...nativeProps, plugins, trigger: 'manual'};
+  const childProps = {...nativeProps, plugins, showOnCreate: true};
 
-  const returnValue = tippy(targets, parentProps, plugins);
+  const returnValue = tippy(targets, parentProps);
   const normalizedReturnValue = normalizeToArray(returnValue);
 
   function onTrigger(event: Event): void {
@@ -71,7 +74,7 @@ export default function delegate(
       return;
     }
 
-    const instance = tippy(targetNode, childProps, plugins);
+    const instance = tippy(targetNode, childProps);
 
     if (instance) {
       childTippyInstances = childTippyInstances.concat(instance);
@@ -126,17 +129,4 @@ export default function delegate(
   normalizedReturnValue.forEach(applyMutations);
 
   return returnValue;
-}
-
-/**
- * For IIFE version only.
- */
-export function createDelegateWithPlugins(outerPlugins: Plugin[]): Delegate {
-  return (
-    targets,
-    props,
-    innerPlugins: Plugin[] = [],
-  ): Instance | Instance[] => {
-    return delegate(targets, props, [...outerPlugins, ...innerPlugins]);
-  };
 }

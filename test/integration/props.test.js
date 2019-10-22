@@ -1349,3 +1349,43 @@ describe('distance', () => {
     expect(instance.popper.style.padding).toBe('0px 0px 5rem 0px');
   });
 });
+
+describe('plugins', () => {
+  it('passes correctly', () => {
+    const plugins = [{name: 'x', fn: () => ({})}];
+    const instance = tippy(h(), {plugins});
+    expect(instance.plugins).toEqual(plugins);
+  });
+
+  it('warns when changed plugins passed to .setProps()', () => {
+    const instance = tippy(h(), {plugins: []});
+    const spy = jest.spyOn(console, 'warn');
+
+    instance.setProps({plugins: []});
+
+    expect(spy).not.toHaveBeenCalledWith(
+      ...getFormattedMessage('Cannot update plugins'),
+    );
+
+    instance.setProps({plugins: [{}]});
+
+    expect(spy).toHaveBeenCalledWith(
+      ...getFormattedMessage('Cannot update plugins'),
+    );
+
+    spy.mockRestore();
+  });
+
+  it('does not warn if plugin was passed', () => {
+    const spy = jest.spyOn(console, 'warn');
+
+    tippy(h(), {
+      x: true,
+      plugins: [{name: 'x', fn: () => ({})}],
+    });
+
+    expect(spy).not.toHaveBeenCalled();
+
+    spy.mockRestore();
+  });
+});

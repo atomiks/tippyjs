@@ -21,9 +21,12 @@ import {
  */
 function tippy(
   targets: Targets,
-  optionalProps?: Partial<Props>,
+  optionalProps: Partial<Props> = {},
+  /** @deprecated - use Props.plugins */
   plugins: Plugin[] = [],
 ): Instance | Instance[] {
+  plugins = defaultProps.plugins.concat(optionalProps.plugins || plugins);
+
   if (__DEV__) {
     validateTargets(targets);
     validateProps(optionalProps, plugins);
@@ -31,7 +34,11 @@ function tippy(
 
   bindGlobalEventListeners();
 
-  const props: Props = {...defaultProps, ...optionalProps};
+  const props: Props = {
+    ...defaultProps,
+    ...optionalProps,
+    plugins,
+  };
 
   const elements = getArrayOfElements(targets);
 
@@ -54,7 +61,7 @@ function tippy(
 
   const instances = elements.reduce<Instance[]>(
     (acc, reference): Instance[] => {
-      const instance = reference && createTippy(reference, props, plugins);
+      const instance = reference && createTippy(reference, props);
 
       if (instance) {
         acc.push(instance);
@@ -88,14 +95,31 @@ function setDefaultProps(partialProps: Partial<DefaultProps>): void {
 
 /**
  * Returns a proxy wrapper function that passes the plugins
+ * @deprecated use tippy.setDefaultProps({plugins: [...]});
  */
 export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
+  if (__DEV__) {
+    warnWhen(
+      true,
+      `createTippyWithPlugins([...]) has been deprecated.
+
+      Use tippy.setDefaultProps({plugins: [...]}) instead.`,
+    );
+  }
+
   const tippyPluginsWrapper = (
     targets: Targets,
-    optionalProps?: Partial<Props>,
+    optionalProps: Partial<Props> = {},
     innerPlugins: Plugin[] = [],
-  ): Instance | Instance[] =>
-    tippy(targets, optionalProps, [...outerPlugins, ...innerPlugins]);
+  ): Instance | Instance[] => {
+    innerPlugins = defaultProps.plugins.concat(
+      optionalProps.plugins || innerPlugins,
+    );
+    return tippy(targets, {
+      ...optionalProps,
+      plugins: [...outerPlugins, ...innerPlugins],
+    });
+  };
 
   tippyPluginsWrapper.version = version;
   tippyPluginsWrapper.defaultProps = defaultProps;

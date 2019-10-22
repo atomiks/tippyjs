@@ -32,43 +32,14 @@ import 'tippy.js/animations/shift-away.css';
 > requests. Using a bundler like webpack is recommended instead to benefit from
 > treeshaking.
 
-Pass the plugin(s) in an array as a 3rd argument to `tippy()`:
-
 ```js
 import tippy, {followCursor} from 'tippy.js';
 
-tippy(reference, {followCursor: true}, [followCursor]);
+tippy(reference, {
+  followCursor: true,
+  plugins: [followCursor],
+});
 ```
-
-#### Helper function
-
-There is a helper function that returns a higher-order tippy function that will
-pass the plugin(s) for you:
-
-`src/tippy.js`:
-
-```js
-import {createTippyWithPlugins, followCursor} from 'tippy.js';
-
-export default createTippyWithPlugins([followCursor]);
-```
-
-Import `tippy` from this file instead of `node_modules`.
-
-`src/index.js`:
-
-```js
-import tippy from './tippy';
-
-tippy(reference, {followCursor: true});
-```
-
-If bundle size is important, you can create different tippy files with pass
-particular plugins, or stick to using the 3rd argument, so that only the routes
-or components that require the plugin import it.
-
-If the cost of the plugins is neglibile for you, then you can use a central file
-that passes all plugins that your app requires.
 
 ### Creating your own custom plugin
 
@@ -100,9 +71,9 @@ it are in focus (for interactivity):
 const hideOnPopperBlur = {
   name: 'hideOnPopperBlur',
   defaultValue: true,
-  fn() {
+  fn(instance) {
     return {
-      onCreate(instance) {
+      onCreate() {
         instance.popper.addEventListener('focusout', event => {
           if (
             instance.props.hideOnPopperBlur &&
@@ -118,7 +89,9 @@ const hideOnPopperBlur = {
 };
 
 // Our new prop is enabled by default (defaultValue: true)
-tippy(reference, {}, [hideOnPopperBlur]);
+tippy(reference, {
+  plugins: [hideOnPopperBlur],
+});
 ```
 
 Plugins are invoked per-instance and the plugin function definition takes the

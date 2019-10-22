@@ -1,4 +1,4 @@
-import {Props, ReferenceElement, Targets, Plugin} from './types';
+import {Props, ReferenceElement, Targets} from './types';
 import {getDataAttributeProps} from './reference';
 
 /**
@@ -155,14 +155,13 @@ export function setVisibilityState(
 export function evaluateProps(
   reference: ReferenceElement,
   props: Props,
-  plugins: Plugin[],
 ): Props {
   const out = {
     ...props,
     content: invokeWithArgsOrReturn(props.content, [reference]),
     ...(props.ignoreAttributes
       ? {}
-      : getDataAttributeProps(reference, plugins)),
+      : getDataAttributeProps(reference, props.plugins)),
   };
 
   if (out.interactive) {

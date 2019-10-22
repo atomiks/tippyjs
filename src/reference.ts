@@ -8,10 +8,10 @@ const keys = Object.keys(defaultProps);
  */
 export function getDataAttributeProps(
   reference: ReferenceElement,
-  plugins?: Plugin[],
+  plugins: Plugin[],
 ): Props {
   const props = (plugins
-    ? Object.keys(getExtendedProps(defaultProps, plugins))
+    ? Object.keys(getExtendedProps({...defaultProps, plugins}))
     : keys
   ).reduce((acc: any, key): Partial<Props> => {
     const valueAsString = (

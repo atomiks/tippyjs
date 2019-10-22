@@ -76,8 +76,9 @@ export function validateProps(
 
     const didSpecifyPlacementInPopperOptions =
       prop === 'popperOptions' && value && hasOwnProperty(value, 'placement');
+
     const didPassUnknownProp =
-      !hasOwnProperty(getExtendedProps(defaultProps, plugins), prop) &&
+      !hasOwnProperty(getExtendedProps({...defaultProps, plugins}), prop) &&
       !includes(
         ['a11y', 'arrowType', 'showOnInit', 'size', 'target', 'touchHold'],
         prop,
@@ -149,8 +150,7 @@ export function validateProps(
     warnWhen(
       didPassUnknownProp,
       `\`${prop}\` is not a valid prop. You may have spelled it incorrectly,
-      or if it's a plugin, forgot to pass it in an array as a 3rd argument to
-      \`tippy()\`.
+      or if it's a plugin, forgot to pass it in an array as props.plugins.
 
       In v5, the following props were turned into plugins:
 
