@@ -1,4 +1,4 @@
-import {createTippyWithPlugins} from '../../src';
+import tippy from '../../src';
 import animateFill from '../../src/plugins/animateFill';
 import followCursor from '../../src/plugins/followCursor';
 import inlinePositioning from '../../src/plugins/inlinePositioning';
@@ -8,12 +8,9 @@ import '../../src/scss/index.scss';
 import '../../src/scss/backdrop.scss';
 import '../../src/scss/animations/shift-away.scss';
 
-const tippy = createTippyWithPlugins([
-  animateFill,
-  followCursor,
-  sticky,
-  inlinePositioning,
-]);
+tippy.setDefaultProps({
+  plugins: [animateFill, followCursor, sticky, inlinePositioning],
+});
 
 tippy('.followCursor', {
   content: 'tooltip',

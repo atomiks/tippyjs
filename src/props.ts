@@ -1,4 +1,4 @@
-import {Props, DefaultProps, Plugin} from './types';
+import {Props, DefaultProps} from './types';
 
 export const defaultProps: DefaultProps = {
   allowHTML: true,
@@ -36,6 +36,7 @@ export const defaultProps: DefaultProps = {
   onTrigger(): void {},
   onUntrigger(): void {},
   placement: 'top',
+  plugins: [],
   popperOptions: {},
   role: 'tooltip',
   showOnCreate: false,
@@ -63,10 +64,10 @@ export const POPPER_INSTANCE_DEPENDENCIES: Array<keyof Props> = [
   'popperOptions',
 ];
 
-export function getExtendedProps(props: Props, plugins: Plugin[]): Props {
+export function getExtendedProps(props: Props): Props {
   return {
     ...props,
-    ...plugins.reduce<{[key: string]: any}>((acc, plugin) => {
+    ...props.plugins.reduce<{[key: string]: any}>((acc, plugin) => {
       const {name, defaultValue} = plugin;
 
       if (name) {

@@ -64,6 +64,7 @@ export interface Props extends LifecycleHooks {
   multiple: boolean;
   offset: number | string;
   placement: Placement;
+  plugins: Plugin[];
   popperOptions: Popper.PopperOptions;
   role: string;
   showOnCreate: boolean;
@@ -141,9 +142,12 @@ export interface Plugin {
 }
 
 export interface Tippy<TProps = Props> {
-  (targets: Targets, optionalProps?: Partial<TProps>, plugins?: Plugin[]):
-    | Instance
-    | Instance[];
+  (
+    targets: Targets,
+    optionalProps?: Partial<TProps>,
+    /** @deprecated use Props.plugins */
+    plugins?: Plugin[],
+  ): Instance | Instance[];
   readonly currentInput: {isTouch: boolean};
   readonly defaultProps: Props;
   readonly version: string;
@@ -156,18 +160,23 @@ export default tippy;
 export type HideAll = (options: HideAllOptions) => void;
 declare const hideAll: HideAll;
 
+/**
+ * @deprecated use tippy.setDefaultProps({plugins: [...]});
+ */
 export type CreateTippyWithPlugins = (outerPlugins: Plugin[]) => Tippy;
 declare const createTippyWithPlugins: CreateTippyWithPlugins;
 
 export type Delegate<TProps = Props> = (
   targets: Targets,
   props: Partial<TProps> & {target: string},
+  /** @deprecated use Props.plugins */
   plugins?: Plugin[],
 ) => Instance | Instance[];
 
 export type CreateSingleton<TProps = Props> = (
   tippyInstances: Instance[],
   optionalProps?: Partial<TProps>,
+  /** @deprecated use Props.plugins */
   plugins?: Plugin[],
 ) => Instance;
 

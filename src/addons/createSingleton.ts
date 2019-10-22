@@ -1,4 +1,4 @@
-import {Instance, Props, Plugin, CreateSingleton} from '../types';
+import {Instance, Props, Plugin} from '../types';
 import tippy from '..';
 import {preserveInvocation, useIfDefined} from '../utils';
 import {defaultProps} from '../props';
@@ -10,7 +10,8 @@ import {throwErrorWhen} from '../validation';
  */
 export default function createSingleton(
   tippyInstances: Instance[],
-  optionalProps?: Partial<Props>,
+  optionalProps: Partial<Props> = {},
+  /** @deprecated use Props.plugins */
   plugins: Plugin[] = [],
 ): Instance {
   if (__DEV__) {
@@ -22,6 +23,8 @@ export default function createSingleton(
       The passed value was: ${tippyInstances}`,
     );
   }
+
+  plugins = defaultProps.plugins.concat(optionalProps.plugins || plugins);
 
   tippyInstances.forEach(instance => {
     instance.disable();
@@ -60,6 +63,7 @@ export default function createSingleton(
 
   const props: Partial<Props> = {
     ...optionalProps,
+    plugins,
     aria: null,
     triggerTarget: references,
     onMount(instance) {
@@ -133,19 +137,5 @@ export default function createSingleton(
     },
   };
 
-  return tippy(document.createElement('div'), props, plugins) as Instance;
-}
-
-/**
- * For IIFE version only.
- */
-export function createCreateSingletonWithPlugins(
-  outerPlugins: Plugin[],
-): CreateSingleton {
-  return (tippyInstances, optionalProps = {}, innerPlugins = []): Instance => {
-    return createSingleton(tippyInstances, optionalProps, [
-      ...outerPlugins,
-      ...innerPlugins,
-    ]);
-  };
+  return tippy(document.createElement('div'), props) as Instance;
 }
