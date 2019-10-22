@@ -145,9 +145,9 @@ export interface Tippy<TProps = Props> {
     | Instance
     | Instance[];
   readonly currentInput: {isTouch: boolean};
-  readonly defaultProps: Props;
+  readonly defaultProps: DefaultProps;
   readonly version: string;
-  setDefaultProps(partialProps: Partial<Props>): void;
+  setDefaultProps(partialProps: Partial<DefaultProps>): void;
 }
 
 declare const tippy: Tippy;
