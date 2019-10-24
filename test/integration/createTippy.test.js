@@ -1,11 +1,7 @@
+import {fireEvent} from '@testing-library/dom';
 import {
   h,
   cleanDocumentBody,
-  MOUSEENTER,
-  BLUR,
-  FOCUS,
-  MOUSELEAVE,
-  CLICK,
   setTestDefaultProps,
   enableTouchEnvironment,
   disableTouchEnvironment,
@@ -74,22 +70,22 @@ describe('createTippy', () => {
       trigger: 'mouseenter focus click',
     });
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(MOUSELEAVE);
+    fireEvent.mouseLeave(instance.reference);
     expect(instance.state.isVisible).toBe(false);
 
-    instance.reference.dispatchEvent(FOCUS);
+    fireEvent.focus(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(BLUR);
+    fireEvent.blur(instance.reference);
     expect(instance.state.isVisible).toBe(false);
 
-    instance.reference.dispatchEvent(CLICK);
+    fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(CLICK);
+    fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(false);
   });
 
@@ -128,7 +124,7 @@ describe('instance.destroy()', () => {
     });
 
     instance.destroy();
-    ref.dispatchEvent(new Event('mouseenter'));
+    fireEvent.mouseEnter(ref);
 
     expect(instance.state.isVisible).toBe(false);
   });
@@ -172,7 +168,7 @@ describe('instance.destroy()', () => {
     // show() will warn about memory leak
     const spy = jest.spyOn(console, 'warn');
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
 
     instance.destroy();
 
@@ -420,11 +416,11 @@ describe('instance.setProps()', () => {
     instance = createTippy(ref, defaultProps);
 
     instance.setProps({trigger: 'click'});
-    ref.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(ref);
 
     expect(instance.state.isVisible).toBe(false);
 
-    ref.dispatchEvent(CLICK);
+    fireEvent.click(ref);
     expect(instance.state.isVisible).toBe(true);
   });
 

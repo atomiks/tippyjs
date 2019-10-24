@@ -1,9 +1,5 @@
-import {
-  h,
-  cleanDocumentBody,
-  MOUSEENTER,
-  setTestDefaultProps,
-} from '../../utils';
+import {fireEvent} from '@testing-library/dom';
+import {h, cleanDocumentBody, setTestDefaultProps} from '../../utils';
 
 import tippy from '../../../src';
 import inlinePositioning, {
@@ -27,7 +23,7 @@ describe('inlinePositioning', () => {
       },
     });
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     jest.runAllTimers();
   });
 
@@ -39,7 +35,7 @@ describe('inlinePositioning', () => {
       },
     });
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     jest.runAllTimers();
   });
 
@@ -50,7 +46,7 @@ describe('inlinePositioning', () => {
       },
     });
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     jest.runAllTimers();
     instance.hide();
   });
