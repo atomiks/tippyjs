@@ -1,4 +1,5 @@
-import {h, cleanDocumentBody, MOUSEENTER, CLICK} from '../../utils';
+import {fireEvent} from '@testing-library/dom';
+import {h, cleanDocumentBody} from '../../utils';
 
 import tippy from '../../../src';
 import delegate from '../../../src/addons/delegate';
@@ -25,7 +26,7 @@ describe('delegate', () => {
 
     expect(button._tippy).toBeUndefined();
 
-    button.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+    fireEvent.mouseOver(button);
 
     expect(button._tippy).toBeDefined();
 
@@ -41,7 +42,7 @@ describe('delegate', () => {
 
     expect(button._tippy).toBeUndefined();
 
-    button.dispatchEvent(CLICK);
+    fireEvent.click(button);
 
     expect(button._tippy).toBeDefined();
 
@@ -58,7 +59,7 @@ describe('delegate', () => {
 
     expect(button._tippy).toBeUndefined();
 
-    button.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+    fireEvent.mouseOver(button);
 
     expect(button._tippy).toBeDefined();
 
@@ -68,8 +69,8 @@ describe('delegate', () => {
   it('does not show its own tippy', () => {
     instance = delegate(document.body, {target: 'button'});
 
-    document.body.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
-    document.body.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseOver(document.body);
+    fireEvent.mouseEnter(document.body);
 
     jest.runAllTimers();
 
@@ -101,7 +102,7 @@ describe('delegate', () => {
     instance = delegate(document.body, {target: 'button'});
 
     instance.destroy();
-    button.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+    fireEvent.mouseOver(button);
 
     expect(button._tippy).toBeUndefined();
   });
@@ -110,7 +111,7 @@ describe('delegate', () => {
     const button = h('button');
     instance = delegate(document.body, {target: 'button'});
 
-    button.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+    fireEvent.mouseOver(button);
     instance.destroy();
 
     expect(button._tippy).toBeUndefined();
@@ -120,7 +121,7 @@ describe('delegate', () => {
     const button = h('button');
     instance = delegate(document.body, {target: 'button'});
 
-    button.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+    fireEvent.mouseOver(button);
     instance.destroy(false);
 
     expect(button._tippy).toBeDefined();
@@ -131,7 +132,7 @@ describe('delegate', () => {
     const plugins = [{fn: () => ({})}];
     instance = delegate(document.body, {target: 'button'}, plugins);
 
-    button.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+    fireEvent.mouseOver(button);
 
     expect(instance.plugins).toEqual(plugins);
     expect(button._tippy.plugins).toEqual(plugins);
@@ -146,16 +147,16 @@ describe('delegate', () => {
       trigger: 'mouseenter',
     });
 
-    clickButton.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+    fireEvent.mouseOver(clickButton);
     expect(clickButton._tippy).toBeUndefined();
 
-    clickButton.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+    fireEvent.click(clickButton);
     expect(clickButton._tippy).toBeDefined();
 
-    focusButton.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+    fireEvent.mouseOver(focusButton);
     expect(focusButton._tippy).toBeUndefined();
 
-    focusButton.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+    fireEvent.focusIn(focusButton);
     expect(focusButton._tippy).toBeDefined();
   });
 });
