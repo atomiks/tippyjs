@@ -18,3 +18,13 @@ global.requestAnimationFrame = cb => cb();
 
 // Only relevant for bindGlobalEventListeners.test.js
 Object.defineProperty(window.navigator, 'platform', {value: 'iPhone'});
+
+// Prevents console from spamming test output while still allowing for debugging
+// while writting tests
+const nativeConsoleWarn = global.console.warn;
+beforeEach(() => {
+  global.console.warn = jest.fn();
+});
+afterEach(() => {
+  global.console.warn = nativeConsoleWarn;
+});

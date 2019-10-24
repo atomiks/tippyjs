@@ -44,7 +44,7 @@
     "dev:addons": "parcel demo/addons/index.html -d .devserver",
     "dev:plugins": "parcel demo/plugins/index.html -d .devserver",
     "build": "node rollup.pre-build && rollup --config && bundlesize",
-    "test": "jest --coverage --silent",
+    "test": "jest --coverage",
     "check-types": "tsc",
     "lint": "eslint --report-unused-disable-directives . --ext .ts,.js",
     "format": "prettier --write \"**/*.{js,ts,json,md,mdx,scss,css}\"",
@@ -55,7 +55,7 @@
     "globals": {
       "__DEV__": true
     },
-    "setupFiles": [
+    "setupFilesAfterEnv": [
       "./test/setup.js"
     ],
     "testRegex": "./test/.*.test.js$"
