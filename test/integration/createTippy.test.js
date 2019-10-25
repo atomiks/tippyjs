@@ -175,8 +175,6 @@ describe('instance.destroy()', () => {
     jest.advanceTimersByTime(500);
 
     expect(spy).not.toHaveBeenCalled();
-
-    spy.mockRestore();
   });
 });
 
