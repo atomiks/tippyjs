@@ -161,7 +161,7 @@ class Header extends Component {
               View on GitHub
             </ButtonLink>
           </Flex>
-          <Version href="https://github.com/atomiks/tippyjs/releases/latest">
+          <Version href="https://github.com/atomiks/tippyjs/releases">
             v{version}
           </Version>
           <MenuButton
