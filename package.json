@@ -44,7 +44,7 @@
     "dev:addons": "parcel demo/addons/index.html -d .devserver",
     "dev:plugins": "parcel demo/plugins/index.html -d .devserver",
     "build": "node rollup.pre-build && rollup --config && bundlesize",
-    "test": "npm run test:unit && npm run test:types",
+    "test": "npm run test:types && npm run test:unit",
     "test:unit": "jest --coverage",
     "test:types": "tsc && tsd",
     "lint": "eslint --report-unused-disable-directives . --ext .ts,.js",
