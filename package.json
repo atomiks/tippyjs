@@ -44,8 +44,9 @@
     "dev:addons": "parcel demo/addons/index.html -d .devserver",
     "dev:plugins": "parcel demo/plugins/index.html -d .devserver",
     "build": "node rollup.pre-build && rollup --config && bundlesize",
-    "test": "jest --coverage",
-    "check-types": "tsc",
+    "test": "npm run test:unit && npm run test:types",
+    "test:unit": "jest --coverage",
+    "test:types": "tsc && tsd",
     "lint": "eslint --report-unused-disable-directives . --ext .ts,.js",
     "format": "prettier --write \"**/*.{js,ts,json,md,mdx,scss,css}\"",
     "clean": "rimraf dist/ themes/ animations/ coverage/ .devserver/ .cache/ ./index.d.ts",
@@ -132,6 +133,7 @@
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-sass": "^1.2.2",
     "rollup-plugin-terser": "^5.1.1",
+    "tsd": "^0.10.0",
     "typescript": "^3.5.3"
   },
   "dependencies": {

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["dom", "es2015"],
     "moduleResolution": "node",
     "noEmit": true,
     "resolveJsonModule": true,
@@ -8,5 +9,5 @@
     "types": ["node"],
     "allowJs": true
   },
-  "include": ["src/**/*", "index.d.ts"]
+  "include": ["src/**/*", "index.d.ts", "index.test-d.ts"]
 }
