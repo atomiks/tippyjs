@@ -300,3 +300,22 @@ export function pushIfUnique<T>(arr: T[], value: T): void {
 export function appendPxIfNumber(value: string | number): string {
   return typeof value === 'number' ? `${value}px` : value;
 }
+
+/**
+ * Returns number from number or CSS units string
+ */
+export function getNumber(value: string | number): number {
+  return typeof value === 'number' ? value : parseFloat(value);
+}
+
+/**
+ * Gets number or CSS string units in pixels (e.g. `1rem` -> 16)
+ */
+export function getUnitsInPx(doc: Document, value: string | number): number {
+  const html = doc.documentElement;
+  const rootFontSize = html
+    ? parseFloat(getComputedStyle(html).fontSize) || 16
+    : 16;
+  const isRem = typeof value === 'string' && includes(value, 'rem');
+  return isRem ? rootFontSize * getNumber(value) : getNumber(value);
+}

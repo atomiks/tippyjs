@@ -376,3 +376,31 @@ describe('appendPxIfNumber', () => {
     expect(Utils.appendPxIfNumber('10px')).toBe('10px');
   });
 });
+
+describe('getNumber', () => {
+  it('number: returns number', () => {
+    expect(Utils.getNumber(0)).toBe(0);
+    expect(Utils.getNumber(100)).toBe(100);
+    expect(Utils.getNumber(-1.13812)).toBe(-1.13812);
+  });
+
+  it('string: returns number from CSS string', () => {
+    expect(Utils.getNumber('0px')).toBe(0);
+    expect(Utils.getNumber('100rem')).toBe(100);
+    expect(Utils.getNumber('-21.35em')).toBe(-21.35);
+  });
+});
+
+describe('getUnitsInPx', () => {
+  it('number: returns number', () => {
+    expect(Utils.getUnitsInPx(document, 0)).toBe(0);
+    expect(Utils.getUnitsInPx(document, 100)).toBe(100);
+    expect(Utils.getUnitsInPx(document, -20.4)).toBe(-20.4);
+  });
+
+  it('string: returns number as px from units', () => {
+    expect(Utils.getUnitsInPx(document, '1rem')).toBe(16);
+    expect(Utils.getUnitsInPx(document, '-1.5rem')).toBe(-24);
+    expect(Utils.getUnitsInPx(document, '50px')).toBe(50);
+  });
+});

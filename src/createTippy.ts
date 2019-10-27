@@ -45,7 +45,7 @@ import {
   getOwnerDocument,
   pushIfUnique,
   arrayFrom,
-  appendPxIfNumber,
+  getUnitsInPx,
 } from './utils';
 import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
 
@@ -480,10 +480,17 @@ export default function createTippy(
 
     const popperTreeData = arrayFrom(popper.querySelectorAll(POPPER_SELECTOR))
       .concat(popper)
-      .map((popper: PopperElement) => ({
-        popperRect: popper.getBoundingClientRect(),
-        interactiveBorder: popper._tippy!.props.interactiveBorder,
-      }));
+      .map((popper: PopperElement) => {
+        const instance = popper._tippy!;
+        const {tooltip} = instance.popperChildren;
+        const {interactiveBorder} = instance.props;
+
+        return {
+          popperRect: popper.getBoundingClientRect(),
+          tooltipRect: tooltip.getBoundingClientRect(),
+          interactiveBorder,
+        };
+      });
 
     if (isCursorOutsideInteractiveBorder(popperTreeData, event)) {
       cleanupInteractiveMouseListeners();
@@ -542,6 +549,10 @@ export default function createTippy(
     const {popperOptions} = instance.props;
     const {arrow} = instance.popperChildren;
 
+    // Limitation: Assumes `html` font size won't change for the lifetime
+    // of the instance (it almost certainly never will)
+    const distancePx = getUnitsInPx(doc, instance.props.distance);
+
     function applyMutations(data: Popper.Data): void {
       instance.state.currentPlacement = data.placement;
 
@@ -561,16 +572,15 @@ export default function createTippy(
       }
 
       const basePlacement = getBasePlacement(data.placement);
-      const distance = appendPxIfNumber(instance.props.distance);
 
-      const padding = {
-        bottom: `${distance} 0 0 0`,
-        left: `0 ${distance} 0 0`,
-        top: `0 0 ${distance} 0`,
-        right: `0 0 0 ${distance}`,
-      };
+      const isVerticalPlacement = includes(['top', 'bottom'], basePlacement);
+      const isSecondaryPlacement = includes(['bottom', 'right'], basePlacement);
 
-      popper.style.padding = padding[basePlacement];
+      // Apply `distance` prop
+      tooltip.style.top = '0';
+      tooltip.style.left = '0';
+      tooltip.style[isVerticalPlacement ? 'top' : 'left'] =
+        (isSecondaryPlacement ? 1 : -1) * distancePx + 'px';
     }
 
     const config = {
@@ -583,6 +593,55 @@ export default function createTippy(
           boundariesElement: instance.props.boundary,
           ...getModifier(popperOptions, 'preventOverflow'),
         },
+        // We can't use `padding` on the popper el because of these bugs when
+        // flipping from a vertical to horizontal placement or vice-versa,
+        // there is severe flickering.
+        // https://github.com/FezVrasta/popper.js/issues/720
+        // This workaround increases bundle size by 250B minzip unfortunately,
+        // due to need to custom compute the distance (since Popper rect does
+        // not get affected by the inner tooltip's distance offset)
+        tippySetPreventOverflowPadding: {
+          enabled: true,
+          // Reduce chance of conflict by choosing this order (must be 200-299)
+          // runs before `preventOverflow` modifier
+          order: 287,
+          fn(data: Popper.Data): Popper.Data {
+            const basePlacement = getBasePlacement(data.placement);
+
+            const poModifier = getModifier(popperOptions, 'preventOverflow');
+            const padding =
+              poModifier && poModifier.padding !== undefined
+                ? poModifier.padding
+                : 5;
+
+            const isPaddingNumber = typeof padding === 'number';
+            const paddingObject = {top: 0, bottom: 0, left: 0, right: 0};
+
+            // Adds extra padding (+ distance) to the current placement of the
+            // paddingObject
+            const computedPadding = Object.keys(paddingObject).reduce<{
+              [key: string]: number;
+            }>((obj, key) => {
+              obj[key] = isPaddingNumber ? padding : padding[key];
+
+              if (basePlacement === key) {
+                obj[key] = isPaddingNumber
+                  ? padding + distancePx
+                  : padding[basePlacement] + distancePx;
+              }
+
+              return obj;
+            }, paddingObject);
+
+            // Set the padding here to be read before `preventOverflow` modifier
+            // runs
+            instance.popperInstance!.modifiers.filter(
+              m => m.name === 'preventOverflow',
+            )[0].padding = computedPadding;
+
+            return data;
+          },
+        },
         arrow: {
           element: arrow,
           enabled: !!arrow,
@@ -591,6 +650,8 @@ export default function createTippy(
         flip: {
           enabled: instance.props.flip,
           behavior: instance.props.flipBehavior,
+          // Due to `distance` workaround
+          padding: distancePx + 5,
           ...getModifier(popperOptions, 'flip'),
         },
         offset: {
