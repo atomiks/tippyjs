@@ -24,7 +24,7 @@ export default function createSingleton(
     );
   }
 
-  plugins = defaultProps.plugins.concat(optionalProps.plugins || plugins);
+  plugins = optionalProps.plugins || plugins;
 
   tippyInstances.forEach(instance => {
     instance.disable();

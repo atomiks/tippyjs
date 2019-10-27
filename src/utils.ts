@@ -302,6 +302,13 @@ export function appendPxIfNumber(value: string | number): string {
 }
 
 /**
+ * Filters out duplicate elements in an array
+ */
+export function unique<T>(arr: T[]): T[] {
+  return arr.filter((item, index) => arr.indexOf(item) === index);
+}
+
+/**
  * Returns number from number or CSS units string
  */
 export function getNumber(value: string | number): number {

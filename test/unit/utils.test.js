@@ -377,6 +377,15 @@ describe('appendPxIfNumber', () => {
   });
 });
 
+describe('unique', () => {
+  it('filters out duplicate elements', () => {
+    const ref1 = {};
+    const ref2 = {};
+    expect(Utils.unique([0, 1, 0, 2, 3, 2, 3, 3, 4])).toEqual([0, 1, 2, 3, 4]);
+    expect(Utils.unique([ref1, ref1, ref2])).toEqual([ref1, ref2]);
+  });
+});
+
 describe('getNumber', () => {
   it('number: returns number', () => {
     expect(Utils.getNumber(0)).toBe(0);

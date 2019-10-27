@@ -94,6 +94,15 @@ describe('createTippy', () => {
 
     expect(instance.props.animateFill).toBe(animateFill.defaultValue);
   });
+
+  it('`instance.plugins` does not contain duplicate plugins', () => {
+    instance = createTippy(h(), {
+      ...defaultProps,
+      plugins: [animateFill, animateFill],
+    });
+
+    expect(instance.plugins).toEqual([animateFill]);
+  });
 });
 
 describe('instance.destroy()', () => {

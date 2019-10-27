@@ -45,6 +45,7 @@ import {
   getOwnerDocument,
   pushIfUnique,
   arrayFrom,
+  unique,
   getUnitsInPx,
 } from './utils';
 import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
@@ -72,7 +73,6 @@ export default function createTippy(
   collectionProps: Props,
 ): Instance | null {
   const props = getExtendedProps(evaluateProps(reference, collectionProps));
-  const {plugins} = props;
 
   // If the reference shouldn't have multiple tippys, return null early
   if (!props.multiple && reference._tippy) {
@@ -103,6 +103,7 @@ export default function createTippy(
   const popper = createPopperElement(id, props);
   const popperChildren = getChildren(popper);
   const popperInstance: PopperInstance | null = null;
+  const plugins = unique(props.plugins);
 
   // These two elements are static
   const {tooltip, content} = popperChildren;
