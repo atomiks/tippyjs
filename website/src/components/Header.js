@@ -100,7 +100,7 @@ export const MenuButton = styled.button`
   }
 `;
 
-const Version = styled.div`
+const Version = styled.a`
   display: inline-block;
   background: rgb(255, 255, 255, 0.95);
   color: #7761d1;
@@ -161,7 +161,9 @@ class Header extends Component {
               View on GitHub
             </ButtonLink>
           </Flex>
-          <Version>v{version}</Version>
+          <Version href="https://github.com/atomiks/tippyjs/releases">
+            v{version}
+          </Version>
           <MenuButton
             aria-label="Menu"
             aria-expanded={isNavOpen ? 'true' : 'false'}
