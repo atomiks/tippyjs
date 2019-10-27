@@ -554,6 +554,7 @@ export default function createTippy(
     const distancePx = getUnitsInPx(doc, instance.props.distance);
 
     function applyMutations(data: Popper.Data): void {
+      const prevPlacement = instance.state.currentPlacement;
       instance.state.currentPlacement = data.placement;
 
       if (instance.props.flip && !instance.props.flipOnUpdate) {
@@ -581,6 +582,12 @@ export default function createTippy(
       tooltip.style.left = '0';
       tooltip.style[isVerticalPlacement ? 'top' : 'left'] =
         (isSecondaryPlacement ? 1 : -1) * distancePx + 'px';
+
+      // Careful not to cause an infinite loop here
+      // Fixes https://github.com/FezVrasta/popper.js/issues/784
+      if (prevPlacement && prevPlacement !== data.placement) {
+        instance.popperInstance!.update();
+      }
     }
 
     const config = {
