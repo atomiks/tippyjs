@@ -35,7 +35,7 @@ export default function delegate(
     );
   }
 
-  plugins = defaultProps.plugins.concat(props.plugins || plugins);
+  plugins = props.plugins || plugins;
 
   let listeners: ListenerObj[] = [];
   let childTippyInstances: Instance[] = [];

@@ -300,3 +300,10 @@ export function pushIfUnique<T>(arr: T[], value: T): void {
 export function appendPxIfNumber(value: string | number): string {
   return typeof value === 'number' ? `${value}px` : value;
 }
+
+/**
+ * Filters out duplicate elements in an array
+ */
+export function unique<T>(arr: T[]): T[] {
+  return arr.filter((item, index) => arr.indexOf(item) === index);
+}
