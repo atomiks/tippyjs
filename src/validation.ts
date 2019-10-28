@@ -139,6 +139,13 @@ export function validateProps(
     );
 
     warnWhen(
+      prop === 'distance' &&
+        typeof value === 'string' &&
+        !(includes(value, 'rem') || includes(value, 'px')),
+      `Only "px" and "rem" units are allowed for the \`distance\` prop.`,
+    );
+
+    warnWhen(
       didSpecifyPlacementInPopperOptions,
       `Specifying placement in \`popperOptions\` is not supported. Use the
       base-level \`placement\` prop instead.

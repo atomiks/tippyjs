@@ -130,6 +130,26 @@ describe('validateProps', () => {
       ),
     );
   });
+
+  it('recognizes invalid units for `distance`', () => {
+    validateProps({distance: '10cm'});
+    expect(spy).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        `Only "px" and "rem" units are allowed for the \`distance\` prop.`,
+      ),
+    );
+
+    spy.mockClear();
+
+    validateProps({distance: '10px'});
+    expect(spy).not.toHaveBeenCalled();
+
+    validateProps({distance: '10rem'});
+    expect(spy).not.toHaveBeenCalled();
+
+    validateProps({distance: 10});
+    expect(spy).not.toHaveBeenCalled();
+  });
 });
 
 describe('validateTargets', () => {
