@@ -101,7 +101,7 @@ export default function delegate(
 
   function removeEventListeners(): void {
     listeners.forEach(
-      ({element, eventType, listener, options}: ListenerObj): void => {
+      ({element, eventType, listener, options}: ListenerObj) => {
         element.removeEventListener(eventType, listener, options);
       },
     );
@@ -112,7 +112,7 @@ export default function delegate(
     const originalDestroy = instance.destroy;
     instance.destroy = (shouldDestroyChildInstances = true): void => {
       if (shouldDestroyChildInstances) {
-        childTippyInstances.forEach((instance): void => {
+        childTippyInstances.forEach(instance => {
           instance.destroy();
         });
       }
