@@ -88,7 +88,7 @@ function setDefaultProps(partialProps: Partial<DefaultProps>): void {
     validateProps(partialProps, []);
   }
 
-  Object.keys(partialProps).forEach((key): void => {
+  Object.keys(partialProps).forEach(key => {
     defaultProps[key] = partialProps[key];
   });
 }

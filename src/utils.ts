@@ -110,7 +110,7 @@ export function invokeWithArgsOrReturn(value: any, args: any[]): any {
  * Sets a popperInstance `flip` modifier's enabled state
  */
 export function setFlipModifierEnabled(modifiers: any[], value: any): void {
-  modifiers.filter((m): boolean => m.name === 'flip')[0].enabled = value;
+  modifiers.filter(m => m.name === 'flip')[0].enabled = value;
 }
 
 /**
@@ -127,7 +127,7 @@ export function setTransitionDuration(
   els: (HTMLDivElement | null)[],
   value: number,
 ): void {
-  els.forEach((el): void => {
+  els.forEach(el => {
     if (el) {
       el.style.transitionDuration = `${value}ms`;
     }
@@ -141,7 +141,7 @@ export function setVisibilityState(
   els: (HTMLDivElement | null)[],
   state: 'visible' | 'hidden',
 ): void {
-  els.forEach((el): void => {
+  els.forEach(el => {
     if (el) {
       el.setAttribute('data-state', state);
     }
@@ -189,7 +189,7 @@ export function debounce<T>(
 
   return (arg): void => {
     clearTimeout(timeout);
-    timeout = setTimeout((): void => {
+    timeout = setTimeout(() => {
       fn(arg);
     }, ms);
   };
@@ -213,7 +213,7 @@ export function preserveInvocation<T>(
  */
 export function removeProperties<T>(obj: T, keys: Array<keyof T>): Partial<T> {
   const clone = {...obj};
-  keys.forEach((key): void => {
+  keys.forEach(key => {
     delete clone[key];
   });
   return clone;
