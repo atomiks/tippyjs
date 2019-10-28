@@ -151,7 +151,7 @@ export function updateTheme(
   action: 'add' | 'remove',
   theme: Props['theme'],
 ): void {
-  splitBySpaces(theme).forEach((name): void => {
+  splitBySpaces(theme).forEach(name => {
     tooltip.classList[action](`${name}-theme`);
   });
 }

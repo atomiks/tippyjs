@@ -71,7 +71,7 @@ export function validateProps(
   partialProps: Partial<Props> = {},
   plugins: Plugin[] = [],
 ): void {
-  Object.keys(partialProps).forEach((prop): void => {
+  Object.keys(partialProps).forEach(prop => {
     const value = partialProps[prop];
 
     const didSpecifyPlacementInPopperOptions =
