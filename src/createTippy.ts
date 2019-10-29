@@ -8,6 +8,7 @@ import {
   LifecycleHooks,
   PopperElement,
 } from './types';
+import {ListenerObject} from './types-internal';
 import {isIE, updateIOSClass} from './browser';
 import {PASSIVE, POPPER_SELECTOR} from './constants';
 import {currentInput} from './bindGlobalEventListeners';
@@ -15,6 +16,7 @@ import {
   defaultProps,
   POPPER_INSTANCE_DEPENDENCIES,
   getExtendedProps,
+  evaluateProps,
 } from './props';
 import {
   createPopperElement,
@@ -23,7 +25,6 @@ import {
   getBasePlacement,
   updateTransitionEndListener,
   isCursorOutsideInteractiveBorder,
-  reflow,
 } from './popper';
 import {
   hasOwnProperty,
@@ -32,7 +33,6 @@ import {
   includes,
   invokeWithArgsOrReturn,
   setFlipModifierEnabled,
-  evaluateProps,
   setTransitionDuration,
   setVisibilityState,
   debounce,
@@ -47,21 +47,17 @@ import {
   arrayFrom,
   appendPxIfNumber,
   unique,
+  reflow,
 } from './utils';
 import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
 
-interface Listener {
-  node: Element;
-  eventType: string;
-  handler: EventListenerOrEventListenerObject;
-  options: boolean | object;
-}
-
-export let mountedInstances: Instance[] = [];
-
 let idCounter = 1;
-// Workaround for IE11's lack of new MouseEvent constructor
 let mouseMoveListeners: ((event: MouseEvent) => void)[] = [];
+
+/**
+ * Used by `hideAll()`
+ */
+export let mountedInstances: Instance[] = [];
 
 /**
  * Creates and returns a Tippy object. We're using a closure pattern instead of
@@ -89,7 +85,7 @@ export default function createTippy(
   let lastTriggerEvent: Event;
   let currentMountCallback: () => void;
   let currentTransitionEndListener: (event: TransitionEvent) => void;
-  let listeners: Listener[] = [];
+  let listeners: ListenerObject[] = [];
   let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce);
   let currentTarget: Element;
 
@@ -356,9 +352,6 @@ export default function createTippy(
   }
 
   function onTransitionEnd(duration: number, callback: () => void): void {
-    /**
-     * Listener added as the `transitionend` handler
-     */
     function listener(event: TransitionEvent): void {
       if (event.target === tooltip) {
         updateTransitionEndListener(tooltip, 'remove', listener);
@@ -419,7 +412,7 @@ export default function createTippy(
   }
 
   function removeListenersFromTriggerTarget(): void {
-    listeners.forEach(({node, eventType, handler, options}: Listener) => {
+    listeners.forEach(({node, eventType, handler, options}: ListenerObject) => {
       node.removeEventListener(eventType, handler, options);
     });
     listeners = [];

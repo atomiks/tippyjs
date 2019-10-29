@@ -176,45 +176,6 @@ describe('div', () => {
   });
 });
 
-describe('evaluateProps', () => {
-  it('ignores attributes if `ignoreAttributes: true`', () => {
-    const props = {animation: 'scale', ignoreAttributes: true};
-    const reference = h();
-
-    reference.setAttribute('data-tippy-animation', 'fade');
-
-    expect(Utils.evaluateProps(reference, props)).toEqual({
-      animation: 'scale',
-      ignoreAttributes: true,
-    });
-  });
-
-  it('does not ignore attributes if `ignoreAttributes: false`', () => {
-    const props = {animation: 'scale', ignoreAttributes: false};
-    const reference = h();
-
-    reference.setAttribute('data-tippy-animation', 'fade');
-
-    expect(Utils.evaluateProps(reference, props)).toEqual({
-      animation: 'fade',
-      ignoreAttributes: false,
-    });
-  });
-
-  it('considers plugin props', () => {
-    const plugins = [{name: 'plugin', fn: () => ({})}];
-    const props = {plugin: 'x', plugins};
-    const reference = h();
-
-    reference.setAttribute('data-tippy-plugin', 'y');
-
-    expect(Utils.evaluateProps(reference, props)).toEqual({
-      plugin: 'y',
-      plugins,
-    });
-  });
-});
-
 describe('setTransitionDuration', () => {
   it('sets the `transition-duration` property on a list of elements with the value specified', () => {
     const els = [h(), h(), null, h()];
@@ -383,5 +344,15 @@ describe('unique', () => {
     const ref2 = {};
     expect(Utils.unique([0, 1, 0, 2, 3, 2, 3, 3, 4])).toEqual([0, 1, 2, 3, 4]);
     expect(Utils.unique([ref1, ref1, ref2])).toEqual([ref1, ref2]);
+  });
+});
+
+describe('setInnerHTML', () => {
+  it('sets the innerHTML of an element with a string', () => {
+    const ref = h();
+
+    Utils.setInnerHTML(ref, '<strong></strong>');
+
+    expect(ref.querySelector('strong')).not.toBe(null);
   });
 });

@@ -1,5 +1,18 @@
-import {Props, ReferenceElement, Targets} from './types';
-import {getDataAttributeProps} from './reference';
+import {ReferenceElement, Targets} from './types';
+
+/**
+ * Triggers reflow
+ */
+export function reflow(element: HTMLElement): void {
+  void element.offsetHeight;
+}
+
+/**
+ * Sets the innerHTML of an element
+ */
+export function setInnerHTML(element: Element, html: string): void {
+  element[innerHTML()] = html;
+}
 
 /**
  * Determines if the value is a reference element
@@ -146,29 +159,6 @@ export function setVisibilityState(
       el.setAttribute('data-state', state);
     }
   });
-}
-
-/**
- * Evaluates the props object by merging data attributes and disabling
- * conflicting props where necessary
- */
-export function evaluateProps(
-  reference: ReferenceElement,
-  props: Props,
-): Props {
-  const out = {
-    ...props,
-    content: invokeWithArgsOrReturn(props.content, [reference]),
-    ...(props.ignoreAttributes
-      ? {}
-      : getDataAttributeProps(reference, props.plugins)),
-  };
-
-  if (out.interactive) {
-    out.aria = null;
-  }
-
-  return out;
 }
 
 /**

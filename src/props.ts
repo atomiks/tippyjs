@@ -1,4 +1,6 @@
-import {Props, DefaultProps} from './types';
+import {Props, DefaultProps, ReferenceElement, Plugin} from './types';
+import {invokeWithArgsOrReturn} from './utils';
+import {validateProps} from './validation';
 
 export const defaultProps: DefaultProps = {
   allowHTML: true,
@@ -48,6 +50,8 @@ export const defaultProps: DefaultProps = {
   zIndex: 9999,
 };
 
+const defaultKeys = Object.keys(defaultProps);
+
 /**
  * If the setProps() method encounters one of these, the popperInstance must be
  * recreated
@@ -64,6 +68,22 @@ export const POPPER_INSTANCE_DEPENDENCIES: Array<keyof Props> = [
   'popperOptions',
 ];
 
+/**
+ * Mutates the defaultProps object by setting the props specified
+ */
+export function setDefaultProps(partialProps: Partial<DefaultProps>): void {
+  if (__DEV__) {
+    validateProps(partialProps, []);
+  }
+
+  Object.keys(partialProps).forEach(key => {
+    defaultProps[key] = partialProps[key];
+  });
+}
+
+/**
+ * Returns an extended props object including plugin props
+ */
 export function getExtendedProps(props: Props): Props {
   return {
     ...props,
@@ -77,4 +97,62 @@ export function getExtendedProps(props: Props): Props {
       return acc;
     }, {}),
   };
+}
+
+/**
+ * Returns an object of optional props from data-tippy-* attributes
+ */
+export function getDataAttributeProps(
+  reference: ReferenceElement,
+  plugins: Plugin[],
+): Props {
+  const props = (plugins
+    ? Object.keys(getExtendedProps({...defaultProps, plugins}))
+    : defaultKeys
+  ).reduce((acc: any, key): Partial<Props> => {
+    const valueAsString = (
+      reference.getAttribute(`data-tippy-${key}`) || ''
+    ).trim();
+
+    if (!valueAsString) {
+      return acc;
+    }
+
+    if (key === 'content') {
+      acc[key] = valueAsString;
+    } else {
+      try {
+        acc[key] = JSON.parse(valueAsString);
+      } catch (e) {
+        acc[key] = valueAsString;
+      }
+    }
+
+    return acc;
+  }, {});
+
+  return props;
+}
+
+/**
+ * Evaluates the props object by merging data attributes and disabling
+ * conflicting props where necessary
+ */
+export function evaluateProps(
+  reference: ReferenceElement,
+  props: Props,
+): Props {
+  const out = {
+    ...props,
+    content: invokeWithArgsOrReturn(props.content, [reference]),
+    ...(props.ignoreAttributes
+      ? {}
+      : getDataAttributeProps(reference, props.plugins)),
+  };
+
+  if (out.interactive) {
+    out.aria = null;
+  }
+
+  return out;
 }

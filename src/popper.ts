@@ -6,11 +6,11 @@ import {
   Placement,
 } from './types';
 import {
-  innerHTML,
   div,
   isElement,
   splitBySpaces,
   appendPxIfNumber,
+  setInnerHTML,
 } from './utils';
 import {isUCBrowser} from './browser';
 import {
@@ -26,10 +26,38 @@ import {
 } from './constants';
 
 /**
- * Sets the innerHTML of an element
+ * Returns the popper's placement, ignoring shifting (top-start, etc)
  */
-export function setInnerHTML(element: Element, html: string | Element): void {
-  element[innerHTML()] = isElement(html) ? html[innerHTML()] : html;
+export function getBasePlacement(placement: Placement): BasePlacement {
+  return placement.split('-')[0] as BasePlacement;
+}
+
+/**
+ * Adds `data-inertia` attribute
+ */
+export function addInertia(tooltip: PopperChildren['tooltip']): void {
+  tooltip.setAttribute('data-inertia', '');
+}
+
+/**
+ * Removes `data-inertia` attribute
+ */
+export function removeInertia(tooltip: PopperChildren['tooltip']): void {
+  tooltip.removeAttribute('data-inertia');
+}
+
+/**
+ * Adds interactive-related attributes
+ */
+export function addInteractive(tooltip: PopperChildren['tooltip']): void {
+  tooltip.setAttribute('data-interactive', '');
+}
+
+/**
+ * Removes interactive-related attributes
+ */
+export function removeInteractive(tooltip: PopperChildren['tooltip']): void {
+  tooltip.removeAttribute('data-interactive');
 }
 
 /**
@@ -64,20 +92,6 @@ export function getChildren(popper: PopperElement): PopperChildren {
 }
 
 /**
- * Adds `data-inertia` attribute
- */
-export function addInertia(tooltip: PopperChildren['tooltip']): void {
-  tooltip.setAttribute('data-inertia', '');
-}
-
-/**
- * Removes `data-inertia` attribute
- */
-export function removeInertia(tooltip: PopperChildren['tooltip']): void {
-  tooltip.removeAttribute('data-inertia');
-}
-
-/**
  * Creates an arrow element and returns it
  */
 export function createArrowElement(arrow: Props['arrow']): HTMLDivElement {
@@ -96,64 +110,6 @@ export function createArrowElement(arrow: Props['arrow']): HTMLDivElement {
   }
 
   return arrowElement;
-}
-
-/**
- * Adds interactive-related attributes
- */
-export function addInteractive(tooltip: PopperChildren['tooltip']): void {
-  tooltip.setAttribute('data-interactive', '');
-}
-
-/**
- * Removes interactive-related attributes
- */
-export function removeInteractive(tooltip: PopperChildren['tooltip']): void {
-  tooltip.removeAttribute('data-interactive');
-}
-
-/**
- * Add/remove transitionend listener from tooltip
- */
-export function updateTransitionEndListener(
-  tooltip: PopperChildren['tooltip'],
-  action: 'add' | 'remove',
-  listener: (event: TransitionEvent) => void,
-): void {
-  const eventName =
-    isUCBrowser && document.body.style.webkitTransition !== undefined
-      ? 'webkitTransitionEnd'
-      : 'transitionend';
-  tooltip[
-    (action + 'EventListener') as 'addEventListener' | 'removeEventListener'
-  ](eventName, listener as EventListener);
-}
-
-/**
- * Returns the popper's placement, ignoring shifting (top-start, etc)
- */
-export function getBasePlacement(placement: Placement): BasePlacement {
-  return placement.split('-')[0] as BasePlacement;
-}
-
-/**
- * Triggers reflow
- */
-export function reflow(popper: PopperElement): void {
-  void popper.offsetHeight;
-}
-
-/**
- * Adds/removes theme from tooltip's classList
- */
-export function updateTheme(
-  tooltip: PopperChildren['tooltip'],
-  action: 'add' | 'remove',
-  theme: Props['theme'],
-): void {
-  splitBySpaces(theme).forEach(name => {
-    tooltip.classList[action](`${name}-theme`);
-  });
 }
 
 /**
@@ -260,6 +216,36 @@ export function updatePopperElement(
     updateTheme(tooltip, 'remove', prevProps.theme);
     updateTheme(tooltip, 'add', nextProps.theme);
   }
+}
+
+/**
+ * Add/remove transitionend listener from tooltip
+ */
+export function updateTransitionEndListener(
+  tooltip: PopperChildren['tooltip'],
+  action: 'add' | 'remove',
+  listener: (event: TransitionEvent) => void,
+): void {
+  const eventName =
+    isUCBrowser && document.body.style.webkitTransition !== undefined
+      ? 'webkitTransitionEnd'
+      : 'transitionend';
+  tooltip[
+    (action + 'EventListener') as 'addEventListener' | 'removeEventListener'
+  ](eventName, listener as EventListener);
+}
+
+/**
+ * Adds/removes theme from tooltip's classList
+ */
+export function updateTheme(
+  tooltip: PopperChildren['tooltip'],
+  action: 'add' | 'remove',
+  theme: Props['theme'],
+): void {
+  splitBySpaces(theme).forEach(name => {
+    tooltip.classList[action](`${name}-theme`);
+  });
 }
 
 /**
