@@ -309,10 +309,16 @@ export function getNumber(value: string | number): number {
  * Gets number or CSS string units in pixels (e.g. `1rem` -> 16)
  */
 export function getUnitsInPx(doc: Document, value: string | number): number {
-  const html = doc.documentElement;
-  const rootFontSize = html
-    ? parseFloat(getComputedStyle(html).fontSize) || 16
-    : 16;
   const isRem = typeof value === 'string' && includes(value, 'rem');
-  return isRem ? rootFontSize * getNumber(value) : getNumber(value);
+  const html = doc.documentElement;
+  const rootFontSize = 16;
+
+  if (html && isRem) {
+    return (
+      parseFloat(getComputedStyle(html).fontSize || String(rootFontSize)) *
+      getNumber(value)
+    );
+  }
+
+  return getNumber(value);
 }
