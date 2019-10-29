@@ -406,36 +406,195 @@ describe('setContent', () => {
 });
 
 describe('isCursorOutsideInteractiveBorder', () => {
+  const distance = 10;
   const interactiveBorder = 5;
   const popperRect = {top: 100, left: 100, right: 110, bottom: 110};
+  const base = {popperRect, interactiveBorder};
 
-  const data = [{popperRect, interactiveBorder}];
+  function getMergedRect(rectA, rectB) {
+    return {
+      top: Math.min(rectA.top, rectB.top),
+      right: Math.max(rectA.right, rectB.right),
+      bottom: Math.max(rectA.bottom, rectB.bottom),
+      left: Math.min(rectA.left, rectB.left),
+    };
+  }
 
-  const inside = [
-    {clientX: 95, clientY: 95},
-    {clientX: 115, clientY: 115},
-    {clientX: 115, clientY: 95},
-    {clientX: 95, clientY: 115},
-  ];
+  const data = {
+    top: {
+      tooltipRect: {
+        top: popperRect.top - distance,
+        left: popperRect.left,
+        right: popperRect.right,
+        bottom: popperRect.bottom - distance,
+      },
+    },
+    right: {
+      tooltipRect: {
+        top: popperRect.top,
+        left: popperRect.left + distance,
+        right: popperRect.right + distance,
+        bottom: popperRect.bottom,
+      },
+    },
+    bottom: {
+      tooltipRect: {
+        top: popperRect.top + distance,
+        left: popperRect.left,
+        right: popperRect.right,
+        bottom: popperRect.bottom + distance,
+      },
+    },
+    left: {
+      tooltipRect: {
+        top: popperRect.top,
+        left: popperRect.left - distance,
+        right: popperRect.right - distance,
+        bottom: popperRect.bottom,
+      },
+    },
+  };
 
-  const outside = [
-    {clientX: 94, clientY: 94},
-    {clientX: 116, clientY: 116},
-    {clientX: 94, clientY: 100},
-    {clientX: 100, clientY: 94},
-    {clientX: 100, clientY: 116},
-    {clientX: 116, clientY: 100},
-  ];
+  Object.values(data).forEach(placementObject => {
+    const mergedRect = getMergedRect(popperRect, placementObject.tooltipRect);
 
-  it('inside', () => {
-    inside.forEach(coords => {
-      expect(isCursorOutsideInteractiveBorder(data, coords)).toBe(false);
+    placementObject.inside = [
+      {
+        clientX: mergedRect.left - interactiveBorder,
+        clientY: mergedRect.top - interactiveBorder,
+      },
+      {
+        clientX: mergedRect.left - interactiveBorder,
+        clientY: mergedRect.bottom + interactiveBorder,
+      },
+      {
+        clientX: mergedRect.right + interactiveBorder,
+        clientY: mergedRect.top - interactiveBorder,
+      },
+      {
+        clientX: mergedRect.right + interactiveBorder,
+        clientY: mergedRect.bottom + interactiveBorder,
+      },
+    ];
+
+    placementObject.outside = [
+      // All outside
+      {
+        clientX: mergedRect.left - interactiveBorder - 1,
+        clientY: mergedRect.top - interactiveBorder - 1,
+      },
+      {
+        clientX: mergedRect.left - interactiveBorder - 1,
+        clientY: mergedRect.bottom + interactiveBorder + 1,
+      },
+      {
+        clientX: mergedRect.right + interactiveBorder + 1,
+        clientY: mergedRect.top - interactiveBorder - 1,
+      },
+      {
+        clientX: mergedRect.right + interactiveBorder + 1,
+        clientY: mergedRect.bottom + interactiveBorder + 1,
+      },
+
+      // x outside
+      {
+        clientX: mergedRect.left - interactiveBorder - 1,
+        clientY: mergedRect.top - interactiveBorder,
+      },
+      {
+        clientX: mergedRect.left - interactiveBorder - 1,
+        clientY: mergedRect.bottom + interactiveBorder,
+      },
+      {
+        clientX: mergedRect.right + interactiveBorder + 1,
+        clientY: mergedRect.top - interactiveBorder,
+      },
+      {
+        clientX: mergedRect.right + interactiveBorder + 1,
+        clientY: mergedRect.bottom + interactiveBorder,
+      },
+
+      // y outside
+      {
+        clientX: mergedRect.left - interactiveBorder,
+        clientY: mergedRect.top - interactiveBorder - 1,
+      },
+      {
+        clientX: mergedRect.left - interactiveBorder,
+        clientY: mergedRect.bottom + interactiveBorder + 1,
+      },
+      {
+        clientX: mergedRect.right + interactiveBorder,
+        clientY: mergedRect.top - interactiveBorder - 1,
+      },
+      {
+        clientX: mergedRect.right + interactiveBorder,
+        clientY: mergedRect.bottom + interactiveBorder + 1,
+      },
+    ];
+  });
+
+  it('top inside', () => {
+    data.top.inside.forEach(coords => {
+      expect(
+        isCursorOutsideInteractiveBorder([{...base, ...data.top}], coords),
+      ).toBe(false);
     });
   });
 
-  it('outside', () => {
-    outside.forEach(coords => {
-      expect(isCursorOutsideInteractiveBorder(data, coords)).toBe(true);
+  it('bottom inside', () => {
+    data.bottom.inside.forEach(coords => {
+      expect(
+        isCursorOutsideInteractiveBorder([{...base, ...data.bottom}], coords),
+      ).toBe(false);
+    });
+  });
+
+  it('left inside', () => {
+    data.left.inside.forEach(coords => {
+      expect(
+        isCursorOutsideInteractiveBorder([{...base, ...data.left}], coords),
+      ).toBe(false);
+    });
+  });
+
+  it('right inside', () => {
+    data.right.inside.forEach(coords => {
+      expect(
+        isCursorOutsideInteractiveBorder([{...base, ...data.right}], coords),
+      ).toBe(false);
+    });
+  });
+
+  it('top outside', () => {
+    data.top.outside.forEach(coords => {
+      expect(
+        isCursorOutsideInteractiveBorder([{...base, ...data.top}], coords),
+      ).toBe(true);
+    });
+  });
+
+  it('bottom outside', () => {
+    data.bottom.outside.forEach(coords => {
+      expect(
+        isCursorOutsideInteractiveBorder([{...base, ...data.bottom}], coords),
+      ).toBe(true);
+    });
+  });
+
+  it('left outside', () => {
+    data.left.outside.forEach(coords => {
+      expect(
+        isCursorOutsideInteractiveBorder([{...base, ...data.left}], coords),
+      ).toBe(true);
+    });
+  });
+
+  it('right outside', () => {
+    data.right.outside.forEach(coords => {
+      expect(
+        isCursorOutsideInteractiveBorder([{...base, ...data.right}], coords),
+      ).toBe(true);
     });
   });
 });

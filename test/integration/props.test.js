@@ -1301,22 +1301,24 @@ describe('hideOnClick', () => {
 
 describe('distance', () => {
   // currentPlacement is always `top` for these
-  it('number: should set `padding` on popper element', () => {
+  it('number: should set `top` on tooltip element', () => {
     const instance = tippy(h(), {distance: 100});
+    const {tooltip} = instance.popperChildren;
 
     instance.show();
     jest.runAllTimers();
 
-    expect(instance.popper.style.padding).toBe('0px 0px 100px 0px');
+    expect(tooltip.style.top).toBe('-100px');
   });
 
-  it('string: should set `padding` on popper element based', () => {
+  it('string: should set `top` on tooltip element', () => {
     const instance = tippy(h(), {distance: '5rem'});
+    const {tooltip} = instance.popperChildren;
 
     instance.show();
     jest.runAllTimers();
 
-    expect(instance.popper.style.padding).toBe('0px 0px 5rem 0px');
+    expect(tooltip.style.top).toBe(`-${5 * 16}px`);
   });
 });
 
