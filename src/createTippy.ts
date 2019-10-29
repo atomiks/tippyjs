@@ -8,6 +8,7 @@ import {
   LifecycleHooks,
   PopperElement,
 } from './types';
+import {ListenerObject} from './types-internal';
 import {isIE, updateIOSClass} from './browser';
 import {PASSIVE, POPPER_SELECTOR} from './constants';
 import {currentInput} from './bindGlobalEventListeners';
@@ -15,6 +16,7 @@ import {
   defaultProps,
   POPPER_INSTANCE_DEPENDENCIES,
   getExtendedProps,
+  evaluateProps,
 } from './props';
 import {
   createPopperElement,
@@ -23,7 +25,6 @@ import {
   getBasePlacement,
   updateTransitionEndListener,
   isCursorOutsideInteractiveBorder,
-  reflow,
 } from './popper';
 import {
   hasOwnProperty,
@@ -32,7 +33,6 @@ import {
   includes,
   invokeWithArgsOrReturn,
   setFlipModifierEnabled,
-  evaluateProps,
   setTransitionDuration,
   setVisibilityState,
   debounce,
@@ -47,21 +47,17 @@ import {
   arrayFrom,
   unique,
   getUnitsInPx,
+  reflow,
 } from './utils';
 import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
 
-interface Listener {
-  node: Element;
-  eventType: string;
-  handler: EventListenerOrEventListenerObject;
-  options: boolean | object;
-}
-
-export let mountedInstances: Instance[] = [];
-
 let idCounter = 1;
-// Workaround for IE11's lack of new MouseEvent constructor
 let mouseMoveListeners: ((event: MouseEvent) => void)[] = [];
+
+/**
+ * Used by `hideAll()`
+ */
+export let mountedInstances: Instance[] = [];
 
 /**
  * Creates and returns a Tippy object. We're using a closure pattern instead of
@@ -89,7 +85,7 @@ export default function createTippy(
   let lastTriggerEvent: Event;
   let currentMountCallback: () => void;
   let currentTransitionEndListener: (event: TransitionEvent) => void;
-  let listeners: Listener[] = [];
+  let listeners: ListenerObject[] = [];
   let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce);
   let currentTarget: Element;
 
@@ -166,13 +162,13 @@ export default function createTippy(
 
   // Prevent a tippy with a delay from hiding if the cursor left then returned
   // before it started hiding
-  popper.addEventListener('mouseenter', (): void => {
+  popper.addEventListener('mouseenter', () => {
     if (instance.props.interactive && instance.state.isVisible) {
       instance.clearDelayTimeouts();
     }
   });
 
-  popper.addEventListener('mouseleave', (): void => {
+  popper.addEventListener('mouseleave', () => {
     if (
       instance.props.interactive &&
       includes(instance.props.trigger, 'mouseenter')
@@ -245,7 +241,7 @@ export default function createTippy(
     const id = tooltip.id;
     const nodes = normalizeToArray(instance.props.triggerTarget || reference);
 
-    nodes.forEach((node): void => {
+    nodes.forEach(node => {
       const currentValue = node.getAttribute(attr);
 
       if (instance.state.isVisible) {
@@ -265,7 +261,7 @@ export default function createTippy(
   function handleAriaExpandedAttribute(): void {
     const nodes = normalizeToArray(instance.props.triggerTarget || reference);
 
-    nodes.forEach((node): void => {
+    nodes.forEach(node => {
       if (instance.props.interactive) {
         node.setAttribute(
           'aria-expanded',
@@ -283,7 +279,7 @@ export default function createTippy(
     doc.body.removeEventListener('mouseleave', scheduleHide);
     doc.removeEventListener('mousemove', debouncedOnMouseMove);
     mouseMoveListeners = mouseMoveListeners.filter(
-      (listener): boolean => listener !== debouncedOnMouseMove,
+      listener => listener !== debouncedOnMouseMove,
     );
   }
 
@@ -318,7 +314,7 @@ export default function createTippy(
       // currentTarget. This lets a tippy with `focus` trigger know that it
       // should not show
       didHideDueToDocumentMouseDown = true;
-      setTimeout((): void => {
+      setTimeout(() => {
         didHideDueToDocumentMouseDown = false;
       });
 
@@ -340,7 +336,7 @@ export default function createTippy(
   }
 
   function onTransitionedOut(duration: number, callback: () => void): void {
-    onTransitionEnd(duration, (): void => {
+    onTransitionEnd(duration, () => {
       if (
         !instance.state.isVisible &&
         popper.parentNode &&
@@ -356,9 +352,6 @@ export default function createTippy(
   }
 
   function onTransitionEnd(duration: number, callback: () => void): void {
-    /**
-     * Listener added as the `transitionend` handler
-     */
     function listener(event: TransitionEvent): void {
       if (event.target === tooltip) {
         updateTransitionEndListener(tooltip, 'remove', listener);
@@ -400,7 +393,7 @@ export default function createTippy(
       on('touchend', onMouseLeave as EventListener, PASSIVE);
     }
 
-    splitBySpaces(instance.props.trigger).forEach((eventType): void => {
+    splitBySpaces(instance.props.trigger).forEach(eventType => {
       if (eventType === 'manual') {
         return;
       }
@@ -419,7 +412,7 @@ export default function createTippy(
   }
 
   function removeListenersFromTriggerTarget(): void {
-    listeners.forEach(({node, eventType, handler, options}: Listener): void => {
+    listeners.forEach(({node, eventType, handler, options}: ListenerObject) => {
       node.removeEventListener(eventType, handler, options);
     });
     listeners = [];
@@ -444,7 +437,7 @@ export default function createTippy(
       // over a new target, but `mousemove` events don't get fired. This
       // causes interactive tooltips to get stuck open until the cursor is
       // moved
-      mouseMoveListeners.forEach((listener): void => listener(event));
+      mouseMoveListeners.forEach(listener => listener(event));
     }
 
     // Toggle show/hide when clicking click-triggered tooltips
@@ -460,7 +453,7 @@ export default function createTippy(
       if (currentInput.isTouch && value === 'hold' && duration) {
         // We can hijack the show timeout here, it will be cleared by
         // `scheduleHide()` when necessary
-        showTimeout = setTimeout((): void => {
+        showTimeout = setTimeout(() => {
           scheduleShow(event);
         }, duration);
       } else {
@@ -472,7 +465,7 @@ export default function createTippy(
   function onMouseMove(event: MouseEvent): void {
     const isCursorOverReferenceOrPopper = closestCallback(
       event.target as Element,
-      (el: Element): boolean => el === reference || el === popper,
+      (el: Element) => el === reference || el === popper,
     );
 
     if (isCursorOverReferenceOrPopper) {
@@ -797,7 +790,7 @@ export default function createTippy(
     const delay = getDelay(true);
 
     if (delay) {
-      showTimeout = setTimeout((): void => {
+      showTimeout = setTimeout(() => {
         instance.show();
       }, delay);
     } else {
@@ -819,7 +812,7 @@ export default function createTippy(
     const delay = getDelay(false);
 
     if (delay) {
-      hideTimeout = setTimeout((): void => {
+      hideTimeout = setTimeout(() => {
         if (instance.state.isVisible) {
           instance.hide();
         }
@@ -827,7 +820,7 @@ export default function createTippy(
     } else {
       // Fixes a `transitionend` problem when it fires 1 frame too
       // late sometimes, we don't want hide() to be called.
-      scheduleHideAnimationFrame = requestAnimationFrame((): void => {
+      scheduleHideAnimationFrame = requestAnimationFrame(() => {
         instance.hide();
       });
     }
@@ -910,7 +903,7 @@ export default function createTippy(
 
     // Ensure stale aria-expanded attributes are removed
     if (prevProps.triggerTarget && !nextProps.triggerTarget) {
-      normalizeToArray(prevProps.triggerTarget).forEach((node): void => {
+      normalizeToArray(prevProps.triggerTarget).forEach(node => {
         node.removeAttribute('aria-expanded');
       });
     } else if (nextProps.triggerTarget) {
@@ -921,7 +914,7 @@ export default function createTippy(
 
     if (instance.popperInstance) {
       if (
-        POPPER_INSTANCE_DEPENDENCIES.some((prop): boolean => {
+        POPPER_INSTANCE_DEPENDENCIES.some(prop => {
           return (
             hasOwnProperty(partialProps, prop as string) &&
             partialProps[prop] !== prevProps[prop]
@@ -947,7 +940,7 @@ export default function createTippy(
   }
 
   function show(
-    duration: number = getValueAtIndexOrReturn(
+    duration = getValueAtIndexOrReturn(
       instance.props.duration,
       0,
       defaultProps.duration,
@@ -1017,7 +1010,7 @@ export default function createTippy(
       instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
 
-      onTransitionedIn(duration, (): void => {
+      onTransitionedIn(duration, () => {
         instance.state.isShown = true;
         invokeHook('onShown', [instance]);
       });
@@ -1027,7 +1020,7 @@ export default function createTippy(
   }
 
   function hide(
-    duration: number = getValueAtIndexOrReturn(
+    duration = getValueAtIndexOrReturn(
       instance.props.duration,
       1,
       defaultProps.duration,
@@ -1063,15 +1056,13 @@ export default function createTippy(
     handleAriaDescribedByAttribute();
     handleAriaExpandedAttribute();
 
-    onTransitionedOut(duration, (): void => {
+    onTransitionedOut(duration, () => {
       instance.popperInstance!.disableEventListeners();
       instance.popperInstance!.options.placement = instance.props.placement;
 
       popper.parentNode!.removeChild(popper);
 
-      mountedInstances = mountedInstances.filter(
-        (i): boolean => i !== instance,
-      );
+      mountedInstances = mountedInstances.filter(i => i !== instance);
 
       if (mountedInstances.length === 0) {
         updateIOSClass(false);

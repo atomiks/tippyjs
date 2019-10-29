@@ -36,7 +36,7 @@ export default function createSingleton(
   const userProps: Partial<Props> = {};
 
   function setUserProps(props: Partial<Props>): void {
-    Object.keys(props).forEach((prop): void => {
+    Object.keys(props).forEach(prop => {
       userProps[prop] = useIfDefined(props[prop], userProps[prop]);
     });
   }

@@ -3,13 +3,7 @@ import tippy from '..';
 import {throwErrorWhen} from '../validation';
 import {removeProperties, normalizeToArray, includes} from '../utils';
 import {defaultProps} from '../props';
-
-interface ListenerObj {
-  element: Element;
-  eventType: string;
-  listener: EventListener;
-  options: boolean | object;
-}
+import {ListenerObject} from '../types-internal';
 
 const BUBBLING_EVENTS_MAP = {
   mouseover: 'mouseenter',
@@ -37,7 +31,7 @@ export default function delegate(
 
   plugins = props.plugins || plugins;
 
-  let listeners: ListenerObj[] = [];
+  let listeners: ListenerObject[] = [];
   let childTippyInstances: Instance[] = [];
 
   const {target} = props;
@@ -82,13 +76,13 @@ export default function delegate(
   }
 
   function on(
-    element: Element,
+    node: Element,
     eventType: string,
-    listener: EventListener,
+    handler: EventListener,
     options: object | boolean = false,
   ): void {
-    element.addEventListener(eventType, listener, options);
-    listeners.push({element, eventType, listener, options});
+    node.addEventListener(eventType, handler, options);
+    listeners.push({node, eventType, handler, options});
   }
 
   function addEventListeners(instance: Instance): void {
@@ -100,11 +94,9 @@ export default function delegate(
   }
 
   function removeEventListeners(): void {
-    listeners.forEach(
-      ({element, eventType, listener, options}: ListenerObj): void => {
-        element.removeEventListener(eventType, listener, options);
-      },
-    );
+    listeners.forEach(({node, eventType, handler, options}: ListenerObject) => {
+      node.removeEventListener(eventType, handler, options);
+    });
     listeners = [];
   }
 
@@ -112,7 +104,7 @@ export default function delegate(
     const originalDestroy = instance.destroy;
     instance.destroy = (shouldDestroyChildInstances = true): void => {
       if (shouldDestroyChildInstances) {
-        childTippyInstances.forEach((instance): void => {
+        childTippyInstances.forEach(instance => {
           instance.destroy();
         });
       }

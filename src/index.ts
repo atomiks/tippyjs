@@ -1,24 +1,13 @@
 import {version} from '../package.json';
-import {defaultProps} from './props';
+import {defaultProps, setDefaultProps} from './props';
 import createTippy, {mountedInstances} from './createTippy';
 import bindGlobalEventListeners, {
   currentInput,
 } from './bindGlobalEventListeners';
 import {getArrayOfElements, isReferenceElement, isElement} from './utils';
 import {warnWhen, validateTargets, validateProps} from './validation';
-import {
-  Props,
-  Instance,
-  Targets,
-  HideAllOptions,
-  Plugin,
-  Tippy,
-  DefaultProps,
-} from './types';
+import {Props, Instance, Targets, HideAllOptions, Plugin, Tippy} from './types';
 
-/**
- * Exported module
- */
 function tippy(
   targets: Targets,
   optionalProps: Partial<Props> = {},
@@ -80,54 +69,7 @@ tippy.defaultProps = defaultProps;
 tippy.setDefaultProps = setDefaultProps;
 tippy.currentInput = currentInput;
 
-/**
- * Mutates the defaultProps object by setting the props specified
- */
-function setDefaultProps(partialProps: Partial<DefaultProps>): void {
-  if (__DEV__) {
-    validateProps(partialProps, []);
-  }
-
-  Object.keys(partialProps).forEach((key): void => {
-    defaultProps[key] = partialProps[key];
-  });
-}
-
-/**
- * Returns a proxy wrapper function that passes the plugins
- * @deprecated use tippy.setDefaultProps({plugins: [...]});
- */
-export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
-  if (__DEV__) {
-    warnWhen(
-      true,
-      `createTippyWithPlugins([...]) has been deprecated.
-
-      Use tippy.setDefaultProps({plugins: [...]}) instead.`,
-    );
-  }
-
-  const tippyPluginsWrapper = (
-    targets: Targets,
-    optionalProps: Partial<Props> = {},
-    innerPlugins: Plugin[] = [],
-  ): Instance | Instance[] => {
-    innerPlugins = defaultProps.plugins.concat(
-      optionalProps.plugins || innerPlugins,
-    );
-    return tippy(targets, {
-      ...optionalProps,
-      plugins: [...outerPlugins, ...innerPlugins],
-    });
-  };
-
-  tippyPluginsWrapper.version = version;
-  tippyPluginsWrapper.defaultProps = defaultProps;
-  tippyPluginsWrapper.setDefaultProps = setDefaultProps;
-  tippyPluginsWrapper.currentInput = currentInput;
-
-  return tippyPluginsWrapper;
-}
+export default tippy;
 
 /**
  * Hides all visible poppers on the document
@@ -151,4 +93,36 @@ export function hideAll({
   });
 }
 
-export default tippy;
+/**
+ * Returns a proxy wrapper function that passes the plugins
+ * @deprecated use tippy.setDefaultProps({plugins: [...]});
+ */
+export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
+  if (__DEV__) {
+    warnWhen(
+      true,
+      `createTippyWithPlugins([...]) has been deprecated.
+
+      Use tippy.setDefaultProps({plugins: [...]}) instead.`,
+    );
+  }
+
+  const tippyPluginsWrapper = (
+    targets: Targets,
+    optionalProps: Partial<Props> = {},
+    innerPlugins: Plugin[] = [],
+  ): Instance | Instance[] => {
+    innerPlugins = optionalProps.plugins || innerPlugins;
+    return tippy(targets, {
+      ...optionalProps,
+      plugins: [...outerPlugins, ...innerPlugins],
+    });
+  };
+
+  tippyPluginsWrapper.version = version;
+  tippyPluginsWrapper.defaultProps = defaultProps;
+  tippyPluginsWrapper.setDefaultProps = setDefaultProps;
+  tippyPluginsWrapper.currentInput = currentInput;
+
+  return tippyPluginsWrapper;
+}

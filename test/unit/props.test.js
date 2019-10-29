@@ -1,6 +1,7 @@
 import {h, cleanDocumentBody} from '../utils';
 
-import {getDataAttributeProps} from '../../src/reference';
+import {getDataAttributeProps, evaluateProps} from '../../src/props';
+import {getChildren} from '../../src/popper';
 
 afterEach(cleanDocumentBody);
 
@@ -75,5 +76,44 @@ describe('getDataAttributeProps', () => {
 
     ref.setAttribute('data-tippy-content', '{');
     expect(() => getDataAttributeProps(ref)).not.toThrow();
+  });
+});
+
+describe('evaluateProps', () => {
+  it('ignores attributes if `ignoreAttributes: true`', () => {
+    const props = {animation: 'scale', ignoreAttributes: true};
+    const reference = h();
+
+    reference.setAttribute('data-tippy-animation', 'fade');
+
+    expect(evaluateProps(reference, props)).toEqual({
+      animation: 'scale',
+      ignoreAttributes: true,
+    });
+  });
+
+  it('does not ignore attributes if `ignoreAttributes: false`', () => {
+    const props = {animation: 'scale', ignoreAttributes: false};
+    const reference = h();
+
+    reference.setAttribute('data-tippy-animation', 'fade');
+
+    expect(evaluateProps(reference, props)).toEqual({
+      animation: 'fade',
+      ignoreAttributes: false,
+    });
+  });
+
+  it('considers plugin props', () => {
+    const plugins = [{name: 'plugin', fn: () => ({})}];
+    const props = {plugin: 'x', plugins};
+    const reference = h();
+
+    reference.setAttribute('data-tippy-plugin', 'y');
+
+    expect(evaluateProps(reference, props)).toEqual({
+      plugin: 'y',
+      plugins,
+    });
   });
 });

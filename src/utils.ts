@@ -1,5 +1,18 @@
-import {Props, ReferenceElement, Targets} from './types';
-import {getDataAttributeProps} from './reference';
+import {ReferenceElement, Targets} from './types';
+
+/**
+ * Triggers reflow
+ */
+export function reflow(element: HTMLElement): void {
+  void element.offsetHeight;
+}
+
+/**
+ * Sets the innerHTML of an element
+ */
+export function setInnerHTML(element: Element, html: string): void {
+  element[innerHTML()] = html;
+}
 
 /**
  * Determines if the value is a reference element
@@ -110,7 +123,7 @@ export function invokeWithArgsOrReturn(value: any, args: any[]): any {
  * Sets a popperInstance `flip` modifier's enabled state
  */
 export function setFlipModifierEnabled(modifiers: any[], value: any): void {
-  modifiers.filter((m): boolean => m.name === 'flip')[0].enabled = value;
+  modifiers.filter(m => m.name === 'flip')[0].enabled = value;
 }
 
 /**
@@ -127,7 +140,7 @@ export function setTransitionDuration(
   els: (HTMLDivElement | null)[],
   value: number,
 ): void {
-  els.forEach((el): void => {
+  els.forEach(el => {
     if (el) {
       el.style.transitionDuration = `${value}ms`;
     }
@@ -141,34 +154,11 @@ export function setVisibilityState(
   els: (HTMLDivElement | null)[],
   state: 'visible' | 'hidden',
 ): void {
-  els.forEach((el): void => {
+  els.forEach(el => {
     if (el) {
       el.setAttribute('data-state', state);
     }
   });
-}
-
-/**
- * Evaluates the props object by merging data attributes and disabling
- * conflicting props where necessary
- */
-export function evaluateProps(
-  reference: ReferenceElement,
-  props: Props,
-): Props {
-  const out = {
-    ...props,
-    content: invokeWithArgsOrReturn(props.content, [reference]),
-    ...(props.ignoreAttributes
-      ? {}
-      : getDataAttributeProps(reference, props.plugins)),
-  };
-
-  if (out.interactive) {
-    out.aria = null;
-  }
-
-  return out;
 }
 
 /**
@@ -189,7 +179,7 @@ export function debounce<T>(
 
   return (arg): void => {
     clearTimeout(timeout);
-    timeout = setTimeout((): void => {
+    timeout = setTimeout(() => {
       fn(arg);
     }, ms);
   };
@@ -213,7 +203,7 @@ export function preserveInvocation<T>(
  */
 export function removeProperties<T>(obj: T, keys: Array<keyof T>): Partial<T> {
   const clone = {...obj};
-  keys.forEach((key): void => {
+  keys.forEach(key => {
     delete clone[key];
   });
   return clone;

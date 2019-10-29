@@ -36,7 +36,7 @@ export default {
     const userProps = instance.props;
 
     function setUserProps(props: Partial<Props>): void {
-      Object.keys(props).forEach((prop): void => {
+      Object.keys(props).forEach(prop => {
         userProps[prop] = useIfDefined(props[prop], userProps[prop]);
       });
     }
@@ -141,7 +141,7 @@ export default {
       // over the reference element
       const isCursorOverReference = closestCallback(
         event.target as Element,
-        (el: Element): boolean => el === reference,
+        (el: Element) => el === reference,
       );
 
       const rect = reference.getBoundingClientRect();

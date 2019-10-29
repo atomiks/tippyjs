@@ -10,7 +10,6 @@ import {
   removeInertia,
   addInteractive,
   removeInteractive,
-  setInnerHTML,
   setContent,
   isCursorOutsideInteractiveBorder,
   getBasePlacement,
@@ -401,27 +400,6 @@ describe('setContent', () => {
     const content = '<strong>some content</strong>';
 
     setContent(ref, {allowHTML: true, content});
-
-    expect(ref.querySelector('strong')).not.toBe(null);
-  });
-});
-
-describe('setInnerHTML', () => {
-  it('sets the innerHTML of an element with a string', () => {
-    const ref = h();
-
-    setInnerHTML(ref, '<strong></strong>');
-
-    expect(ref.querySelector('strong')).not.toBe(null);
-  });
-
-  it('sets the innerHTML of an element with an element', () => {
-    const ref = h();
-    const div = document.createElement('div');
-
-    div.innerHTML = '<strong></strong>';
-
-    setInnerHTML(ref, div);
 
     expect(ref.querySelector('strong')).not.toBe(null);
   });

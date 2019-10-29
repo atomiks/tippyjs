@@ -176,45 +176,6 @@ describe('div', () => {
   });
 });
 
-describe('evaluateProps', () => {
-  it('ignores attributes if `ignoreAttributes: true`', () => {
-    const props = {animation: 'scale', ignoreAttributes: true};
-    const reference = h();
-
-    reference.setAttribute('data-tippy-animation', 'fade');
-
-    expect(Utils.evaluateProps(reference, props)).toEqual({
-      animation: 'scale',
-      ignoreAttributes: true,
-    });
-  });
-
-  it('does not ignore attributes if `ignoreAttributes: false`', () => {
-    const props = {animation: 'scale', ignoreAttributes: false};
-    const reference = h();
-
-    reference.setAttribute('data-tippy-animation', 'fade');
-
-    expect(Utils.evaluateProps(reference, props)).toEqual({
-      animation: 'fade',
-      ignoreAttributes: false,
-    });
-  });
-
-  it('considers plugin props', () => {
-    const plugins = [{name: 'plugin', fn: () => ({})}];
-    const props = {plugin: 'x', plugins};
-    const reference = h();
-
-    reference.setAttribute('data-tippy-plugin', 'y');
-
-    expect(Utils.evaluateProps(reference, props)).toEqual({
-      plugin: 'y',
-      plugins,
-    });
-  });
-});
-
 describe('setTransitionDuration', () => {
   it('sets the `transition-duration` property on a list of elements with the value specified', () => {
     const els = [h(), h(), null, h()];
@@ -411,5 +372,15 @@ describe('getUnitsInPx', () => {
     expect(Utils.getUnitsInPx(document, '1rem')).toBe(16);
     expect(Utils.getUnitsInPx(document, '-1.5rem')).toBe(-24);
     expect(Utils.getUnitsInPx(document, '50px')).toBe(50);
+  });
+});
+
+describe('setInnerHTML', () => {
+  it('sets the innerHTML of an element with a string', () => {
+    const ref = h();
+
+    Utils.setInnerHTML(ref, '<strong></strong>');
+
+    expect(ref.querySelector('strong')).not.toBe(null);
   });
 });
