@@ -26,7 +26,7 @@ export default {
           instance.popperInstance!.reference = reference;
         }
       },
-      onTrigger(): void {
+      onShow(): void {
         if (!getIsEnabled()) {
           return;
         }

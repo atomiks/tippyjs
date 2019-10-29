@@ -13,10 +13,10 @@ jest.useFakeTimers();
 afterEach(cleanDocumentBody);
 
 describe('inlinePositioning', () => {
-  it('true: sets popperInstance.reference = ReferenceObject onTrigger', () => {
+  it('true: sets popperInstance.reference = ReferenceObject onShow', () => {
     const instance = tippy(h(), {
       inlinePositioning: true,
-      onTrigger(instance) {
+      onShow(instance) {
         expect({}.toString.call(instance.popperInstance.reference)).toBe(
           '[object Object]',
         );
@@ -27,10 +27,10 @@ describe('inlinePositioning', () => {
     jest.runAllTimers();
   });
 
-  it('false: does not set instance.popperInstance = ReferenceObject onTrigger', () => {
+  it('false: does not set instance.popperInstance = ReferenceObject onShow', () => {
     const instance = tippy(h(), {
       inlinePositioning: false,
-      onTrigger(instance) {
+      onShow(instance) {
         expect(instance.popperInstance.reference).toBe(instance.reference);
       },
     });
