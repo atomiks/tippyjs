@@ -757,22 +757,15 @@ export default function createTippy(
       );
     }
 
-    if (instance.popperInstance) {
-      setFlipModifierEnabled(
-        instance.popperInstance.modifiers,
-        instance.props.flip,
-      );
+    setFlipModifierEnabled(
+      instance.popperInstance!.modifiers,
+      instance.props.flip,
+    );
 
-      instance.popperInstance.enableEventListeners();
+    instance.popperInstance!.enableEventListeners();
 
-      // Mounting callback invoked in `onUpdate`
-      instance.popperInstance.update();
-    } else {
-      // Mounting callback invoked in `onCreate`
-      createPopperInstance();
-
-      instance.popperInstance!.enableEventListeners();
-    }
+    // Mounting callback invoked in `onUpdate`
+    instance.popperInstance!.update();
   }
 
   function scheduleShow(event?: Event): void {
@@ -972,6 +965,10 @@ export default function createTippy(
     // Using a wrapper element (i.e. <span>) is recommended.
     if (getCurrentTarget().hasAttribute('disabled')) {
       return;
+    }
+
+    if (!instance.popperInstance) {
+      createPopperInstance();
     }
 
     invokeHook('onShow', [instance], false);
