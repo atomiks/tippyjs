@@ -1,11 +1,11 @@
 import {version} from '../package.json';
-import {defaultProps, setDefaultProps} from './props';
+import {defaultProps, setDefaultProps, validateProps} from './props';
 import createTippy, {mountedInstances} from './createTippy';
 import bindGlobalEventListeners, {
   currentInput,
 } from './bindGlobalEventListeners';
 import {getArrayOfElements, isReferenceElement, isElement} from './utils';
-import {warnWhen, validateTargets, validateProps} from './validation';
+import {warnWhen, validateTargets} from './validation';
 import {Props, Instance, Targets, HideAllOptions, Plugin, Tippy} from './types';
 
 function tippy(

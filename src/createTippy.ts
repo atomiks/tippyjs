@@ -17,6 +17,7 @@ import {
   POPPER_INSTANCE_DEPENDENCIES,
   getExtendedProps,
   evaluateProps,
+  validateProps,
 } from './props';
 import {
   createPopperElement,
@@ -49,7 +50,7 @@ import {
   unique,
   reflow,
 } from './utils';
-import {warnWhen, validateProps, createMemoryLeakWarning} from './validation';
+import {warnWhen, createMemoryLeakWarning} from './validation';
 
 let idCounter = 1;
 let mouseMoveListeners: ((event: MouseEvent) => void)[] = [];
