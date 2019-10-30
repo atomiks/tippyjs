@@ -120,30 +120,55 @@ describe('createSingleton', () => {
     }).not.toThrow();
   });
 
-  it('preserves `onTrigger`, `onDestroy`, and `onAfterUpdate` calls', () => {
+  it('preserves lifecycle hook calls', () => {
     const instances = tippy([h()]);
 
+    const onMountSpy = jest.fn();
     const onTriggerSpy = jest.fn();
+    const onUntriggerSpy = jest.fn();
     const onDestroySpy = jest.fn();
     const onAfterUpdateSpy = jest.fn();
+    const onAfterUpdateSpy2 = jest.fn();
 
     const singleton = createSingleton(instances, {
+      onMount: onMountSpy,
       onTrigger: onTriggerSpy,
+      onUntrigger: onUntriggerSpy,
       onDestroy: onDestroySpy,
       onAfterUpdate: onAfterUpdateSpy,
     });
 
     fireEvent.mouseEnter(instances[0].reference);
 
-    expect(onTriggerSpy).toHaveBeenCalled();
+    expect(onTriggerSpy).toHaveBeenCalledWith(
+      singleton,
+      new MouseEvent('mouseenter'),
+    );
+
+    jest.runAllTimers();
+
+    expect(onMountSpy).toHaveBeenCalledWith(singleton);
 
     singleton.setProps({});
 
-    expect(onAfterUpdateSpy).toHaveBeenCalled();
+    expect(onAfterUpdateSpy).toHaveBeenCalledWith(singleton, {});
+
+    fireEvent.mouseLeave(instances[0].reference);
+
+    expect(onUntriggerSpy).toHaveBeenCalledWith(
+      singleton,
+      new MouseEvent('mouseenter'),
+    );
+
+    singleton.setProps({onAfterUpdate: onAfterUpdateSpy2});
+
+    expect(onAfterUpdateSpy2).toHaveBeenCalledWith(singleton, {
+      onAfterUpdate: onAfterUpdateSpy2,
+    });
 
     singleton.destroy();
 
-    expect(onDestroySpy).toHaveBeenCalled();
+    expect(onDestroySpy).toHaveBeenCalledWith(singleton);
   });
 
   it('allows updates to `onTrigger`, `onDestroy`, and `onAfterUpdate`', () => {
