@@ -120,10 +120,15 @@ export function invokeWithArgsOrReturn(value: any, args: any[]): any {
 }
 
 /**
- * Sets a popperInstance `flip` modifier's enabled state
+ * Sets a popperInstance modifier's property to a value
  */
-export function setFlipModifierEnabled(modifiers: any[], value: any): void {
-  modifiers.filter(m => m.name === 'flip')[0].enabled = value;
+export function setModifierValue(
+  modifiers: any[],
+  name: string,
+  property: string,
+  value: unknown,
+): void {
+  modifiers.filter(m => m.name === name)[0][property] = value;
 }
 
 /**

@@ -159,13 +159,24 @@ describe('includes', () => {
   });
 });
 
-describe('setFlipModifierEnabled', () => {
+describe('setModifierValue', () => {
   it('sets it correctly', () => {
-    const modifiers = [{name: 'x'}, {name: 'flip', enabled: true}];
-    Utils.setFlipModifierEnabled(modifiers, false);
+    const modifiers = [
+      {name: 'preventOverflow', padding: 0},
+      {name: 'flip', enabled: true},
+    ];
+
+    Utils.setModifierValue(modifiers, 'flip', 'enabled', false);
     expect(modifiers[1].enabled).toBe(false);
-    Utils.setFlipModifierEnabled(modifiers, true);
+
+    Utils.setModifierValue(modifiers, 'flip', 'enabled', true);
     expect(modifiers[1].enabled).toBe(true);
+
+    Utils.setModifierValue(modifiers, 'preventOverflow', 'padding', 10);
+    expect(modifiers[0].padding).toBe(10);
+
+    Utils.setModifierValue(modifiers, 'preventOverflow', 'padding', 2);
+    expect(modifiers[0].padding).toBe(2);
   });
 });
 

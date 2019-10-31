@@ -33,7 +33,6 @@ import {
   getModifier,
   includes,
   invokeWithArgsOrReturn,
-  setFlipModifierEnabled,
   setTransitionDuration,
   setVisibilityState,
   debounce,
@@ -49,6 +48,7 @@ import {
   unique,
   getUnitsInPx,
   reflow,
+  setModifierValue,
 } from './utils';
 import {warnWhen, createMemoryLeakWarning} from './validation';
 
@@ -557,7 +557,12 @@ export default function createTippy(
           instance.popperInstance!.options.placement = data.placement;
         }
 
-        setFlipModifierEnabled(instance.popperInstance!.modifiers, false);
+        setModifierValue(
+          instance.popperInstance!.modifiers,
+          'flip',
+          'enabled',
+          false,
+        );
       }
 
       tooltip.setAttribute('data-placement', data.placement);
@@ -637,9 +642,12 @@ export default function createTippy(
 
             // Set the padding here to be read before `preventOverflow` modifier
             // runs
-            instance.popperInstance!.modifiers.filter(
-              m => m.name === 'preventOverflow',
-            )[0].padding = computedPadding;
+            setModifierValue(
+              instance.popperInstance!.modifiers,
+              'preventOverflow',
+              'padding',
+              computedPadding,
+            );
 
             return data;
           },
@@ -757,8 +765,10 @@ export default function createTippy(
       );
     }
 
-    setFlipModifierEnabled(
+    setModifierValue(
       instance.popperInstance!.modifiers,
+      'flip',
+      'enabled',
       instance.props.flip,
     );
 
