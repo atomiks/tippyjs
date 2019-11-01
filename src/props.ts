@@ -5,6 +5,7 @@ import {PropsV4} from './types-internal';
 
 export const defaultProps: DefaultProps = {
   allowHTML: true,
+  animateFill: false,
   animation: 'fade',
   appendTo: () => document.body,
   aria: 'describedby',
@@ -17,8 +18,10 @@ export const defaultProps: DefaultProps = {
   flip: true,
   flipBehavior: 'flip',
   flipOnUpdate: false,
+  followCursor: false,
   hideOnClick: true,
   ignoreAttributes: false,
+  inlinePositioning: false,
   inertia: false,
   interactive: false,
   interactiveBorder: 2,
@@ -43,6 +46,7 @@ export const defaultProps: DefaultProps = {
   popperOptions: {},
   role: 'tooltip',
   showOnCreate: false,
+  sticky: false,
   theme: '',
   touch: true,
   trigger: 'mouseenter focus',

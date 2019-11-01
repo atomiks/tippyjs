@@ -51,6 +51,7 @@ export interface LifecycleHooks<TProps = Props> {
 
 export interface Props extends LifecycleHooks {
   allowHTML: boolean;
+  animateFill: boolean;
   animation: string;
   appendTo: 'parent' | Element | ((ref: Element) => Element);
   aria: 'describedby' | 'labelledby' | null;
@@ -63,9 +64,11 @@ export interface Props extends LifecycleHooks {
   flip: boolean;
   flipBehavior: 'flip' | Placement[];
   flipOnUpdate: boolean;
+  followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
   hideOnClick: boolean | 'toggle';
   ignoreAttributes: boolean;
   inertia: boolean;
+  inlinePositioning: boolean;
   interactive: boolean;
   interactiveBorder: number;
   interactiveDebounce: number;
@@ -78,6 +81,7 @@ export interface Props extends LifecycleHooks {
   popperOptions: Popper.PopperOptions;
   role: string;
   showOnCreate: boolean;
+  sticky: boolean | 'reference' | 'popper';
   theme: string;
   touch: boolean | 'hold' | ['hold', number];
   trigger: string;
@@ -89,22 +93,6 @@ export interface Props extends LifecycleHooks {
 export interface DefaultProps extends Props {
   delay: number | [number, number];
   duration: number | [number, number];
-}
-
-export interface AnimateFillProps {
-  animateFill: boolean;
-}
-
-export interface FollowCursorProps {
-  followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
-}
-
-export interface InlinePositioningProps {
-  inlinePositioning: boolean;
-}
-
-export interface StickyProps {
-  sticky: boolean | 'reference' | 'popper';
 }
 
 export interface Instance<TProps = Props> {
@@ -176,16 +164,9 @@ export interface Tippy<TProps = Props> extends TippyStatics {
 }
 
 declare const tippy: Tippy;
-export default tippy;
 
 export type HideAll = (options: HideAllOptions) => void;
 declare const hideAll: HideAll;
-
-/**
- * @deprecated use tippy.setDefaultProps({plugins: [...]});
- */
-export type CreateTippyWithPlugins = (outerPlugins: Plugin[]) => Tippy;
-declare const createTippyWithPlugins: CreateTippyWithPlugins;
 
 export interface Delegate<TProps = Props> {
   (
@@ -215,33 +196,29 @@ export type CreateSingleton<TProps = Props> = (
 declare const delegate: Delegate;
 declare const createSingleton: CreateSingleton;
 
-export interface AnimateFillInstance
-  extends Instance<Props & AnimateFillProps> {
+export interface AnimateFillInstance extends Instance {
   popperChildren: PopperChildren & {
     backdrop: HTMLDivElement | null;
   };
 }
 
-export interface AnimateFill extends Plugin<Props & AnimateFillProps> {
+export interface AnimateFill extends Plugin {
   name: 'animateFill';
   defaultValue: false;
-  fn(
-    instance: AnimateFillInstance,
-  ): Partial<LifecycleHooks<Props & AnimateFillProps>>;
+  fn(instance: AnimateFillInstance): Partial<LifecycleHooks>;
 }
 
-export interface FollowCursor extends Plugin<Props & FollowCursorProps> {
+export interface FollowCursor extends Plugin {
   name: 'followCursor';
   defaultValue: false;
 }
 
-export interface InlinePositioning
-  extends Plugin<Props & InlinePositioningProps> {
+export interface InlinePositioning extends Plugin {
   name: 'inlinePositioning';
   defaultValue: false;
 }
 
-export interface Sticky extends Plugin<Props & StickyProps> {
+export interface Sticky extends Plugin {
   name: 'sticky';
   defaultValue: false;
 }
@@ -253,6 +230,33 @@ declare const sticky: Sticky;
 
 declare const roundArrow: string;
 
+/**
+ * @deprecated use tippy.setDefaultProps({plugins: [...]});
+ */
+export type CreateTippyWithPlugins = (outerPlugins: Plugin[]) => Tippy;
+declare const createTippyWithPlugins: CreateTippyWithPlugins;
+
+/** @deprecated */
+export interface AnimateFillProps {
+  animateFill: Props['animateFill'];
+}
+
+/** @deprecated */
+export interface FollowCursorProps {
+  followCursor: Props['followCursor'];
+}
+
+/** @deprecated */
+export interface InlinePositioningProps {
+  inlinePositioning: Props['inlinePositioning'];
+}
+
+/** @deprecated */
+export interface StickyProps {
+  sticky: Props['sticky'];
+}
+
+export default tippy;
 export {
   hideAll,
   createTippyWithPlugins,
