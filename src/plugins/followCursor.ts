@@ -1,9 +1,9 @@
 import {
-  Props,
   PopperElement,
-  LifecycleHooks,
   Placement,
-  Instance,
+  FollowCursor,
+  FollowCursorProps,
+  Props,
 } from '../types';
 import {
   includes,
@@ -15,10 +15,12 @@ import {
 import {getBasePlacement} from '../popper';
 import {currentInput} from '../bindGlobalEventListeners';
 
-export default {
+type ExtendedProps = Props & FollowCursorProps;
+
+const followCursor: FollowCursor = {
   name: 'followCursor',
   defaultValue: false,
-  fn(instance: Instance): Partial<LifecycleHooks> {
+  fn(instance) {
     const {reference, popper} = instance;
 
     // Support iframe contexts
@@ -35,9 +37,10 @@ export default {
     // original prop value
     const userProps = instance.props;
 
-    function setUserProps(props: Partial<Props>): void {
-      Object.keys(props).forEach(prop => {
-        userProps[prop] = useIfDefined(props[prop], userProps[prop]);
+    function setUserProps(props: Partial<ExtendedProps>): void {
+      const keys = Object.keys(props) as Array<keyof ExtendedProps>;
+      keys.forEach(prop => {
+        (userProps as any)[prop] = useIfDefined(props[prop], userProps[prop]);
       });
     }
 
@@ -245,6 +248,8 @@ export default {
     };
   },
 };
+
+export default followCursor;
 
 export function getVirtualOffsets(
   popper: PopperElement,

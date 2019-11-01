@@ -1,13 +1,13 @@
-import {LifecycleHooks, AnimateFillInstance} from '../types';
+import {AnimateFill} from '../types';
 import {BACKDROP_CLASS} from '../constants';
 import {div, setVisibilityState} from '../utils';
 import {isUCBrowser} from '../browser';
 import {warnWhen} from '../validation';
 
-export default {
+const animateFill: AnimateFill = {
   name: 'animateFill',
   defaultValue: false,
-  fn(instance: AnimateFillInstance): Partial<LifecycleHooks> {
+  fn(instance) {
     const {tooltip, content} = instance.popperChildren;
 
     const backdrop =
@@ -84,6 +84,8 @@ export default {
     };
   },
 };
+
+export default animateFill;
 
 function createBackdropElement(): HTMLDivElement {
   const backdrop = div();

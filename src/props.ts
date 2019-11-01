@@ -1,6 +1,7 @@
-import {Props, DefaultProps, ReferenceElement, Plugin} from './types';
+import {Props, DefaultProps, ReferenceElement, Plugin, Tippy} from './types';
 import {invokeWithArgsOrReturn, hasOwnProperty, includes} from './utils';
 import {warnWhen} from './validation';
+import {PropsV4} from './types-internal';
 
 export const defaultProps: DefaultProps = {
   allowHTML: true,
@@ -71,27 +72,32 @@ export const POPPER_INSTANCE_DEPENDENCIES: Array<keyof Props> = [
 /**
  * Mutates the defaultProps object by setting the props specified
  */
-export function setDefaultProps(partialProps: Partial<DefaultProps>): void {
+export const setDefaultProps: Tippy['setDefaultProps'] = (
+  partialProps,
+): void => {
   if (__DEV__) {
     validateProps(partialProps, []);
   }
 
-  Object.keys(partialProps).forEach(key => {
-    defaultProps[key] = partialProps[key];
+  const keys = Object.keys(partialProps) as Array<keyof DefaultProps>;
+  keys.forEach(key => {
+    (defaultProps as any)[key] = partialProps[key];
   });
-}
+};
 
 /**
  * Returns an extended props object including plugin props
  */
 export function getExtendedProps(props: Props): Props {
+  const iProps: Props & {[key: string]: any} = props;
+
   return {
     ...props,
     ...props.plugins.reduce<{[key: string]: any}>((acc, plugin) => {
       const {name, defaultValue} = plugin;
 
       if (name) {
-        acc[name] = props[name] !== undefined ? props[name] : defaultValue;
+        acc[name] = iProps[name] !== undefined ? iProps[name] : defaultValue;
       }
 
       return acc;
@@ -161,14 +167,18 @@ export function evaluateProps(
  * Validates props with the valid `defaultProps` object
  */
 export function validateProps(
-  partialProps: Partial<Props> = {},
+  partialProps: Partial<PropsV4> = {},
   plugins: Plugin[] = [],
 ): void {
-  Object.keys(partialProps).forEach(prop => {
+  const keys = Object.keys(partialProps) as Array<keyof PropsV4>;
+  keys.forEach(prop => {
     const value = partialProps[prop];
 
     const didSpecifyPlacementInPopperOptions =
-      prop === 'popperOptions' && value && hasOwnProperty(value, 'placement');
+      prop === 'popperOptions' &&
+      value !== null &&
+      typeof value === 'object' &&
+      hasOwnProperty(value, 'placement');
 
     const didPassUnknownProp =
       !hasOwnProperty(getExtendedProps({...defaultProps, plugins}), prop) &&

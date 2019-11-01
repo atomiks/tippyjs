@@ -1,4 +1,4 @@
-import {Targets, Instance, Props, Plugin} from '../types';
+import {Instance, Delegate} from '../types';
 import tippy from '..';
 import {throwErrorWhen} from '../validation';
 import {removeProperties, normalizeToArray, includes} from '../utils';
@@ -15,12 +15,7 @@ const BUBBLING_EVENTS_MAP = {
  * Creates a delegate instance that controls the creation of tippy instances
  * for child elements (`target` CSS selector).
  */
-export default function delegate(
-  targets: Targets,
-  props: Partial<Props> & {target: string},
-  /** @deprecated use Props.plugins */
-  plugins: Plugin[] = [],
-): Instance | Instance[] {
+const delegate: Delegate = (targets, props, plugins = []) => {
   if (__DEV__) {
     throwErrorWhen(
       !props || !props.target,
@@ -121,4 +116,6 @@ export default function delegate(
   normalizedReturnValue.forEach(applyMutations);
 
   return returnValue;
-}
+};
+
+export default delegate;

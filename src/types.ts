@@ -25,18 +25,24 @@ export interface PopperInstance extends Popper {
   modifiers: {name: string; padding: object | number}[];
 }
 
-export interface LifecycleHooks {
-  onAfterUpdate(instance: Instance, partialProps: Partial<Props>): void;
-  onBeforeUpdate(instance: Instance, partialProps: Partial<Props>): void;
-  onCreate(instance: Instance): void;
-  onDestroy(instance: Instance): void;
-  onHidden(instance: Instance): void;
-  onHide(instance: Instance): void | false;
-  onMount(instance: Instance): void;
-  onShow(instance: Instance): void | false;
-  onShown(instance: Instance): void;
-  onTrigger(instance: Instance, event: Event): void;
-  onUntrigger(instance: Instance, event: Event): void;
+export interface LifecycleHooks<TProps = Props> {
+  onAfterUpdate(
+    instance: Instance<TProps>,
+    partialProps: Partial<TProps>,
+  ): void;
+  onBeforeUpdate(
+    instance: Instance<TProps>,
+    partialProps: Partial<TProps>,
+  ): void;
+  onCreate(instance: Instance<TProps>): void;
+  onDestroy(instance: Instance<TProps>): void;
+  onHidden(instance: Instance<TProps>): void;
+  onHide(instance: Instance<TProps>): void | false;
+  onMount(instance: Instance<TProps>): void;
+  onShow(instance: Instance<TProps>): void | false;
+  onShown(instance: Instance<TProps>): void;
+  onTrigger(instance: Instance<TProps>, event: Event): void;
+  onUntrigger(instance: Instance<TProps>, event: Event): void;
 }
 
 export interface Props extends LifecycleHooks {
@@ -74,7 +80,6 @@ export interface Props extends LifecycleHooks {
   triggerTarget: Element | Element[] | null;
   updateDuration: number;
   zIndex: number;
-  [key: string]: any;
 }
 
 export interface DefaultProps extends Props {
@@ -98,7 +103,7 @@ export interface StickyProps {
   sticky: boolean | 'reference' | 'popper';
 }
 
-export interface Instance {
+export interface Instance<TProps = Props> {
   clearDelayTimeouts(): void;
   destroy(): void;
   disable(): void;
@@ -109,10 +114,10 @@ export interface Instance {
   popper: PopperElement;
   popperChildren: PopperChildren;
   popperInstance: PopperInstance | null;
-  props: Props;
+  props: TProps;
   reference: ReferenceElement;
   setContent(content: Content): void;
-  setProps(partialProps: Partial<Props>): void;
+  setProps(partialProps: Partial<TProps>): void;
   show(duration?: number): void;
   state: {
     currentPlacement: Placement | null;
@@ -135,10 +140,10 @@ export interface HideAllOptions {
   exclude?: Instance | ReferenceElement;
 }
 
-export interface Plugin {
+export interface Plugin<TProps = Props> {
   name?: string;
   defaultValue?: any;
-  fn(instance: Instance): Partial<LifecycleHooks>;
+  fn(instance: Instance<TProps>): Partial<LifecycleHooks<TProps>>;
 }
 
 export interface Tippy<TProps = Props> {
@@ -147,7 +152,7 @@ export interface Tippy<TProps = Props> {
     optionalProps?: Partial<TProps>,
     /** @deprecated use Props.plugins */
     plugins?: Plugin[],
-  ): Instance | Instance[];
+  ): Instance<TProps> | Instance<TProps>[];
   readonly currentInput: {isTouch: boolean};
   readonly defaultProps: DefaultProps;
   readonly version: string;
@@ -171,46 +176,47 @@ export type Delegate<TProps = Props> = (
   props: Partial<TProps> & {target: string},
   /** @deprecated use Props.plugins */
   plugins?: Plugin[],
-) => Instance | Instance[];
+) => Instance<TProps> | Instance<TProps>[];
 
 export type CreateSingleton<TProps = Props> = (
   tippyInstances: Instance[],
   optionalProps?: Partial<TProps>,
   /** @deprecated use Props.plugins */
   plugins?: Plugin[],
-) => Instance;
+) => Instance<TProps>;
 
 declare const delegate: Delegate;
 declare const createSingleton: CreateSingleton;
 
-export interface AnimateFillInstance extends Instance {
+export interface AnimateFillInstance
+  extends Instance<Props & AnimateFillProps> {
   popperChildren: PopperChildren & {
     backdrop: HTMLDivElement | null;
   };
 }
 
-export interface AnimateFill {
+export interface AnimateFill extends Plugin<Props & AnimateFillProps> {
   name: 'animateFill';
   defaultValue: false;
-  fn(instance: AnimateFillInstance): Partial<LifecycleHooks>;
+  fn(
+    instance: AnimateFillInstance,
+  ): Partial<LifecycleHooks<Props & AnimateFillProps>>;
 }
 
-export interface FollowCursor {
+export interface FollowCursor extends Plugin<Props & FollowCursorProps> {
   name: 'followCursor';
   defaultValue: false;
-  fn(instance: Instance): Partial<LifecycleHooks>;
 }
 
-export interface InlinePositioning {
+export interface InlinePositioning
+  extends Plugin<Props & InlinePositioningProps> {
   name: 'inlinePositioning';
   defaultValue: false;
-  fn(instance: Instance): Partial<LifecycleHooks>;
 }
 
-export interface Sticky {
+export interface Sticky extends Plugin<Props & StickyProps> {
   name: 'sticky';
   defaultValue: false;
-  fn(instance: Instance): Partial<LifecycleHooks>;
 }
 
 declare const animateFill: AnimateFill;
