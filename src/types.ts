@@ -6,7 +6,11 @@ export type Placement = Popper.Placement;
 
 export type Content = string | Element | ((ref: Element) => Element | string);
 
-export type Targets = string | Element | Element[] | NodeList;
+export type SingleTarget = Element;
+
+export type MultipleTargets = string | Element[] | NodeList;
+
+export type Targets = SingleTarget | MultipleTargets;
 
 export interface ReferenceElement extends Element {
   _tippy?: Instance;
@@ -146,17 +150,29 @@ export interface Plugin<TProps = Props> {
   fn(instance: Instance<TProps>): Partial<LifecycleHooks<TProps>>;
 }
 
-export interface Tippy<TProps = Props> {
-  (
-    targets: Targets,
-    optionalProps?: Partial<TProps>,
-    /** @deprecated use Props.plugins */
-    plugins?: Plugin[],
-  ): Instance<TProps> | Instance<TProps>[];
+export interface TippyStatics {
   readonly currentInput: {isTouch: boolean};
   readonly defaultProps: DefaultProps;
   readonly version: string;
   setDefaultProps(partialProps: Partial<DefaultProps>): void;
+}
+
+export interface Tippy<TProps = Props> extends TippyStatics {
+  (
+    targets: SingleTarget,
+    optionalProps?: Partial<TProps>,
+    /** @deprecated use Props.plugins */
+    plugins?: Plugin[],
+  ): Instance<TProps>;
+}
+
+export interface Tippy<TProps = Props> extends TippyStatics {
+  (
+    targets: MultipleTargets,
+    optionalProps?: Partial<TProps>,
+    /** @deprecated use Props.plugins */
+    plugins?: Plugin[],
+  ): Instance<TProps>[];
 }
 
 declare const tippy: Tippy;
@@ -171,12 +187,23 @@ declare const hideAll: HideAll;
 export type CreateTippyWithPlugins = (outerPlugins: Plugin[]) => Tippy;
 declare const createTippyWithPlugins: CreateTippyWithPlugins;
 
-export type Delegate<TProps = Props> = (
-  targets: Targets,
-  props: Partial<TProps> & {target: string},
-  /** @deprecated use Props.plugins */
-  plugins?: Plugin[],
-) => Instance<TProps> | Instance<TProps>[];
+export interface Delegate<TProps = Props> {
+  (
+    targets: SingleTarget,
+    props: Partial<TProps> & {target: string},
+    /** @deprecated use Props.plugins */
+    plugins?: Plugin[],
+  ): Instance<TProps>;
+}
+
+export interface Delegate<TProps = Props> {
+  (
+    targets: MultipleTargets,
+    props: Partial<TProps> & {target: string},
+    /** @deprecated use Props.plugins */
+    plugins?: Plugin[],
+  ): Instance<TProps>[];
+}
 
 export type CreateSingleton<TProps = Props> = (
   tippyInstances: Instance[],

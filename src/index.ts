@@ -124,5 +124,6 @@ export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
   tippyPluginsWrapper.setDefaultProps = setDefaultProps;
   tippyPluginsWrapper.currentInput = currentInput;
 
+  // @ts-ignore
   return tippyPluginsWrapper;
 }
