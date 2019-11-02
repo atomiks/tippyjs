@@ -168,13 +168,17 @@ declare const tippy: Tippy;
 export type HideAll = (options: HideAllOptions) => void;
 declare const hideAll: HideAll;
 
+export interface DelegateInstance<TProps = Props> extends Instance<TProps> {
+  destroy(shouldDestroyTargetInstances?: boolean): void;
+}
+
 export interface Delegate<TProps = Props> {
   (
     targets: SingleTarget,
     props: Partial<TProps> & {target: string},
     /** @deprecated use Props.plugins */
     plugins?: Plugin[],
-  ): Instance<TProps>;
+  ): DelegateInstance<TProps>;
 }
 
 export interface Delegate<TProps = Props> {
@@ -183,7 +187,7 @@ export interface Delegate<TProps = Props> {
     props: Partial<TProps> & {target: string},
     /** @deprecated use Props.plugins */
     plugins?: Plugin[],
-  ): Instance<TProps>[];
+  ): DelegateInstance<TProps>[];
 }
 
 export type CreateSingleton<TProps = Props> = (
