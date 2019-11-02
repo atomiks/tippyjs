@@ -1,6 +1,5 @@
 import {
-  Instance,
-  LifecycleHooks,
+  InlinePositioning,
   InlinePositioningProps,
   BasePlacement,
 } from '../types';
@@ -10,10 +9,10 @@ import {getBasePlacement} from '../popper';
 // TODO: Work on a "cursor" value so it chooses a rect optimal to the cursor
 // position. This will require the `followCursor` plugin's fixes for overflow
 // due to using event.clientX/Y values. (normalizedPlacement, getVirtualOffsets)
-export default {
+const inlinePositioning: InlinePositioning = {
   name: 'inlinePositioning',
   defaultValue: false,
-  fn(instance: Instance): Partial<LifecycleHooks> {
+  fn(instance) {
     const {reference} = instance;
 
     function getIsEnabled(): InlinePositioningProps['inlinePositioning'] {
@@ -49,6 +48,8 @@ export default {
     };
   },
 };
+
+export default inlinePositioning;
 
 export function getInlineBoundingClientRect(
   currentBasePlacement: BasePlacement | null,

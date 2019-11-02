@@ -1,9 +1,9 @@
-import {LifecycleHooks, Instance} from '../types';
+import {Sticky} from '../types';
 
-export default {
+const sticky: Sticky = {
   name: 'sticky',
   defaultValue: false,
-  fn(instance: Instance): Partial<LifecycleHooks> {
+  fn(instance) {
     const {reference, popper} = instance;
 
     function shouldCheck(value: 'reference' | 'popper'): boolean {
@@ -45,6 +45,8 @@ export default {
     };
   },
 };
+
+export default sticky;
 
 function areRectsDifferent(
   rectA: ClientRect | null,

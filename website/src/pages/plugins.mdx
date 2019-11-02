@@ -97,3 +97,44 @@ tippy(reference, {
 Plugins are invoked per-instance and the plugin function definition takes the
 instance as an argument, so you can use private variables to create internal
 state in the plugin closure. This is how the `followCursor` plugin works.
+
+### TypeScript
+
+To enable type checking for custom props, you can create a central file with the
+plugins your app passes:
+
+```ts
+import tippy, {Tippy, Props, Plugin, LifecycleHooks} from 'tippy.js';
+
+interface CustomProps extends Omit<Props, keyof LifecycleHooks> {
+  myCustomProp: boolean;
+}
+
+type ExtendedProps = CustomProps & LifecycleHooks<CustomProps>;
+
+export const myCustomProp: Plugin<ExtendedProps> = {
+  name: 'myCustomProp',
+  defaultValue: false,
+  fn: () => ({}),
+};
+
+export default (tippy as unknown) as Tippy<ExtendedProps>;
+```
+
+In your app you can import from this file:
+
+```ts
+import tippy, {myCustomProp} from './tippy';
+
+tippy(reference, {
+  // Type checking for this prop now works
+  myCustomProp: true,
+  // There is a DEV warning if you forget to pass the plugin
+  plugins: [myCustomProp],
+  // LifecycleHooks `instance` is typed with the ExtendedProps
+  onCreate(instance) {
+    instance.props.myCustomProp;
+    instance.setProps({myCustomProp: false});
+  },
+});
+```

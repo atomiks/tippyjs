@@ -1,4 +1,4 @@
-import {Instance, Props, Plugin} from '../types';
+import {Instance, Props, CreateSingleton} from '../types';
 import tippy from '..';
 import {preserveInvocation, useIfDefined} from '../utils';
 import {defaultProps} from '../props';
@@ -8,12 +8,12 @@ import {throwErrorWhen} from '../validation';
  * Re-uses a single tippy element for many different tippy instances.
  * Replaces v4's `tippy.group()`.
  */
-export default function createSingleton(
-  tippyInstances: Instance[],
-  optionalProps: Partial<Props> = {},
+const createSingleton: CreateSingleton = (
+  tippyInstances,
+  optionalProps = {},
   /** @deprecated use Props.plugins */
-  plugins: Plugin[] = [],
-): Instance {
+  plugins = [],
+) => {
   if (__DEV__) {
     throwErrorWhen(
       !Array.isArray(tippyInstances),
@@ -33,15 +33,14 @@ export default function createSingleton(
   let currentAria: string | null | undefined;
   let currentTarget: Element;
 
-  const userProps: Partial<Props> = {};
+  const userProps = {...defaultProps, ...optionalProps};
 
   function setUserProps(props: Partial<Props>): void {
-    Object.keys(props).forEach(prop => {
-      userProps[prop] = useIfDefined(props[prop], userProps[prop]);
+    const keys = Object.keys(props) as Array<keyof Props>;
+    keys.forEach(prop => {
+      (userProps as any)[prop] = useIfDefined(props[prop], userProps[prop]);
     });
   }
-
-  setUserProps({...defaultProps, ...optionalProps});
 
   function handleAriaDescribedByAttribute(
     id: string,
@@ -138,4 +137,6 @@ export default function createSingleton(
   };
 
   return tippy(document.createElement('div'), props) as Instance;
-}
+};
+
+export default createSingleton;
