@@ -1,8 +1,8 @@
-import {Instance, Props, CreateSingleton} from '../types';
+import {Instance, CreateSingleton, Plugin} from '../types';
 import tippy from '..';
-import {preserveInvocation, useIfDefined} from '../utils';
 import {defaultProps} from '../props';
 import {throwErrorWhen} from '../validation';
+import {div} from '../utils';
 
 /**
  * Re-uses a single tippy element for many different tippy instances.
@@ -30,113 +30,87 @@ const createSingleton: CreateSingleton = (
     instance.disable();
   });
 
+  let userAria = {...defaultProps, ...optionalProps}.aria;
   let currentAria: string | null | undefined;
   let currentTarget: Element;
-
-  const userProps = {...defaultProps, ...optionalProps};
-
-  function setUserProps(props: Partial<Props>): void {
-    const keys = Object.keys(props) as Array<keyof Props>;
-    keys.forEach(prop => {
-      (userProps as any)[prop] = useIfDefined(props[prop], userProps[prop]);
-    });
-  }
-
-  function handleAriaDescribedByAttribute(
-    id: string,
-    isInteractive: boolean,
-    isShow: boolean,
-  ): void {
-    if (!currentAria) {
-      return;
-    }
-
-    if (isShow && !isInteractive) {
-      currentTarget.setAttribute(`aria-${currentAria}`, id);
-    } else {
-      currentTarget.removeAttribute(`aria-${currentAria}`);
-    }
-  }
+  let shouldSkipUpdate = false;
 
   const references = tippyInstances.map(instance => instance.reference);
 
-  const props: Partial<Props> = {
-    ...optionalProps,
-    plugins,
-    aria: null,
-    triggerTarget: references,
-    onMount(instance) {
-      preserveInvocation(userProps.onMount, instance.props.onMount, [instance]);
-      handleAriaDescribedByAttribute(
-        instance.popperChildren.tooltip.id,
-        instance.props.interactive,
-        true,
-      );
-    },
-    onUntrigger(instance, event): void {
-      preserveInvocation(userProps.onUntrigger, instance.props.onUntrigger, [
-        instance,
-        event,
-      ]);
-      handleAriaDescribedByAttribute(
-        instance.popperChildren.tooltip.id,
-        instance.props.interactive,
-        false,
-      );
-    },
-    onTrigger(instance, event): void {
-      preserveInvocation(userProps.onTrigger, instance.props.onTrigger, [
-        instance,
-        event,
-      ]);
+  const singleton: Plugin = {
+    fn(instance) {
+      function handleAriaDescribedByAttribute(isShow: boolean): void {
+        if (!currentAria) {
+          return;
+        }
 
-      const target = event.currentTarget as Element;
-      const index = references.indexOf(target);
+        const attr = `aria-${currentAria}`;
 
-      currentTarget = target;
-      currentAria = userProps.aria;
-
-      if (instance.state.isVisible) {
-        handleAriaDescribedByAttribute(
-          instance.popperChildren.tooltip.id,
-          instance.props.interactive,
-          true,
-        );
+        if (isShow && !instance.props.interactive) {
+          currentTarget.setAttribute(attr, instance.popperChildren.tooltip.id);
+        } else {
+          currentTarget.removeAttribute(attr);
+        }
       }
 
-      instance.popperInstance!.reference = {
-        referenceNode: target,
-        // These `client` values don't get used by Popper.js if they are 0
-        clientHeight: 0,
-        clientWidth: 0,
-        getBoundingClientRect(): ClientRect {
-          return target.getBoundingClientRect();
+      return {
+        onAfterUpdate(_, {aria}): void {
+          // Ensure `aria` for the singleton instance stays `null`, while
+          // changing the `userAria` value
+          if (aria !== undefined && aria !== userAria) {
+            if (!shouldSkipUpdate) {
+              userAria = aria;
+            } else {
+              shouldSkipUpdate = true;
+              instance.setProps({aria: null});
+              shouldSkipUpdate = false;
+            }
+          }
+        },
+        onDestroy(): void {
+          tippyInstances.forEach(instance => {
+            instance.enable();
+          });
+        },
+        onMount(): void {
+          handleAriaDescribedByAttribute(true);
+        },
+        onUntrigger(): void {
+          handleAriaDescribedByAttribute(false);
+        },
+        onTrigger(_, event): void {
+          const target = event.currentTarget as Element;
+          const index = references.indexOf(target);
+
+          currentTarget = target;
+          currentAria = userAria;
+
+          if (instance.state.isVisible) {
+            handleAriaDescribedByAttribute(true);
+          }
+
+          instance.popperInstance!.reference = {
+            referenceNode: target,
+            // These `client` values don't get used by Popper.js if they are 0
+            clientHeight: 0,
+            clientWidth: 0,
+            getBoundingClientRect(): ClientRect {
+              return target.getBoundingClientRect();
+            },
+          };
+
+          instance.setContent(tippyInstances[index].props.content);
         },
       };
-
-      instance.setContent(tippyInstances[index].props.content);
-    },
-    onAfterUpdate(instance, partialProps): void {
-      preserveInvocation(
-        userProps.onAfterUpdate,
-        instance.props.onAfterUpdate,
-        [instance, partialProps],
-      );
-
-      setUserProps(partialProps);
-    },
-    onDestroy(instance): void {
-      preserveInvocation(userProps.onDestroy, instance.props.onDestroy, [
-        instance,
-      ]);
-
-      tippyInstances.forEach(instance => {
-        instance.enable();
-      });
     },
   };
 
-  return tippy(document.createElement('div'), props) as Instance;
+  return tippy(div(), {
+    ...optionalProps,
+    plugins: [singleton, ...plugins],
+    aria: null,
+    triggerTarget: references,
+  }) as Instance;
 };
 
 export default createSingleton;

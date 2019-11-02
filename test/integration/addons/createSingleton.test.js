@@ -120,57 +120,6 @@ describe('createSingleton', () => {
     }).not.toThrow();
   });
 
-  it('preserves lifecycle hook calls', () => {
-    const instances = tippy([h()]);
-
-    const onMountSpy = jest.fn();
-    const onTriggerSpy = jest.fn();
-    const onUntriggerSpy = jest.fn();
-    const onDestroySpy = jest.fn();
-    const onAfterUpdateSpy = jest.fn();
-    const onAfterUpdateSpy2 = jest.fn();
-
-    const singleton = createSingleton(instances, {
-      onMount: onMountSpy,
-      onTrigger: onTriggerSpy,
-      onUntrigger: onUntriggerSpy,
-      onDestroy: onDestroySpy,
-      onAfterUpdate: onAfterUpdateSpy,
-    });
-
-    fireEvent.mouseEnter(instances[0].reference);
-
-    expect(onTriggerSpy).toHaveBeenCalledWith(
-      singleton,
-      new MouseEvent('mouseenter'),
-    );
-
-    jest.runAllTimers();
-
-    expect(onMountSpy).toHaveBeenCalledWith(singleton);
-
-    singleton.setProps({});
-
-    expect(onAfterUpdateSpy).toHaveBeenCalledWith(singleton, {});
-
-    fireEvent.mouseLeave(instances[0].reference);
-
-    expect(onUntriggerSpy).toHaveBeenCalledWith(
-      singleton,
-      new MouseEvent('mouseenter'),
-    );
-
-    singleton.setProps({onAfterUpdate: onAfterUpdateSpy2});
-
-    expect(onAfterUpdateSpy2).toHaveBeenCalledWith(singleton, {
-      onAfterUpdate: onAfterUpdateSpy2,
-    });
-
-    singleton.destroy();
-
-    expect(onDestroySpy).toHaveBeenCalledWith(singleton);
-  });
-
   it('allows updates to `onTrigger`, `onDestroy`, and `onAfterUpdate`', () => {
     const instances = tippy([h()]);
 
@@ -279,33 +228,27 @@ describe('createSingleton', () => {
     expect(firstRef.getAttribute('aria-describedby')).toBe(null);
     expect(secondRef.getAttribute('aria-describedby')).toBe(id);
 
-    singletonInstance.setProps({aria: null});
+    singletonInstance.setProps({aria: 'labelledby'});
 
     fireEvent.mouseLeave(secondRef);
     fireEvent.mouseEnter(firstRef);
 
-    expect(firstRef.getAttribute('aria-describedby')).toBe(null);
-    expect(secondRef.getAttribute('aria-describedby')).toBe(null);
-  });
+    expect(firstRef.getAttribute('aria-labelledby')).toBe(id);
+    expect(secondRef.getAttribute('aria-labelledby')).toBe(null);
 
-  it('specifying lifecycle hook does not override internal hooks', () => {
-    const refs = [h(), h()];
-    const singletonInstance = createSingleton(tippy(refs), {
-      onTrigger() {},
-    });
+    singletonInstance.setProps({aria: null});
 
-    fireEvent.mouseEnter(refs[0]);
-    jest.runAllTimers();
+    fireEvent.mouseLeave(firstRef);
+    fireEvent.mouseEnter(secondRef);
 
-    expect(singletonInstance.popperInstance.reference.referenceNode).toBe(
-      refs[0],
-    );
+    expect(firstRef.getAttribute('aria-labelledby')).toBe(null);
+    expect(secondRef.getAttribute('aria-labelledby')).toBe(null);
   });
 
   it('can accept plugins', () => {
     const plugins = [{fn: () => ({})}];
     const singletonInstance = createSingleton(tippy([h(), h()]), {}, plugins);
 
-    expect(singletonInstance.plugins).toEqual(plugins);
+    expect(singletonInstance.plugins.slice(1)).toEqual(plugins);
   });
 });
