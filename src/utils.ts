@@ -1,4 +1,5 @@
-import {ReferenceElement, Targets} from './types';
+import {ReferenceElement, Targets, BasePlacement} from './types';
+import Popper from 'popper.js';
 
 /**
  * Triggers reflow
@@ -326,4 +327,29 @@ export function getUnitsInPx(doc: Document, value: string | number): number {
   }
 
   return getNumber(value);
+}
+
+/**
+ * Adds the `distancePx` value to the placement of a Popper.Padding object
+ */
+export function getComputedPadding(
+  basePlacement: BasePlacement,
+  padding: number | Popper.Padding = 5,
+  distancePx: number,
+): Popper.Padding {
+  const freshPaddingObject = {top: 0, right: 0, bottom: 0, left: 0};
+  const keys = Object.keys(freshPaddingObject) as BasePlacement[];
+
+  return keys.reduce<Popper.Padding>((obj, key) => {
+    obj[key] = typeof padding === 'number' ? padding : (padding as any)[key];
+
+    if (basePlacement === key) {
+      obj[key] =
+        typeof padding === 'number'
+          ? padding + distancePx
+          : (padding as any)[basePlacement] + distancePx;
+    }
+
+    return obj;
+  }, freshPaddingObject);
 }

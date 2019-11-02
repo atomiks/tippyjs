@@ -395,3 +395,64 @@ describe('setInnerHTML', () => {
     expect(ref.querySelector('strong')).not.toBe(null);
   });
 });
+
+describe('getComputedPadding', () => {
+  const paddingNumber = 8;
+  const paddingObject = {top: 3, right: 9, bottom: 19, left: 32};
+  const distance = 124;
+
+  const numberPaddingObject = {
+    top: paddingNumber,
+    right: paddingNumber,
+    bottom: paddingNumber,
+    left: paddingNumber,
+  };
+
+  it('number: should add the `distance` to the placement key', () => {
+    expect(Utils.getComputedPadding('top', paddingNumber, distance)).toEqual({
+      ...numberPaddingObject,
+      top: paddingNumber + distance,
+    });
+
+    expect(Utils.getComputedPadding('right', paddingNumber, distance)).toEqual({
+      ...numberPaddingObject,
+      right: paddingNumber + distance,
+    });
+
+    expect(Utils.getComputedPadding('bottom', paddingNumber, distance)).toEqual(
+      {
+        ...numberPaddingObject,
+        bottom: paddingNumber + distance,
+      },
+    );
+
+    expect(Utils.getComputedPadding('left', paddingNumber, distance)).toEqual({
+      ...numberPaddingObject,
+      left: paddingNumber + distance,
+    });
+  });
+
+  it('object: should add the `distance` to the placement key', () => {
+    expect(Utils.getComputedPadding('top', paddingObject, distance)).toEqual({
+      ...paddingObject,
+      top: paddingObject.top + distance,
+    });
+
+    expect(Utils.getComputedPadding('right', paddingObject, distance)).toEqual({
+      ...paddingObject,
+      right: paddingObject.right + distance,
+    });
+
+    expect(Utils.getComputedPadding('bottom', paddingObject, distance)).toEqual(
+      {
+        ...paddingObject,
+        bottom: paddingObject.bottom + distance,
+      },
+    );
+
+    expect(Utils.getComputedPadding('left', paddingObject, distance)).toEqual({
+      ...paddingObject,
+      left: paddingObject.left + distance,
+    });
+  });
+});

@@ -49,6 +49,7 @@ import {
   getUnitsInPx,
   reflow,
   setModifierValue,
+  getComputedPadding,
 } from './utils';
 import {warnWhen, createMemoryLeakWarning} from './validation';
 
@@ -543,10 +544,13 @@ export default function createTippy(
   function createPopperInstance(): void {
     const {popperOptions} = instance.props;
     const {arrow} = instance.popperChildren;
+    const flipModifier = getModifier(popperOptions, 'flip');
+    const preventOverflowModifier = getModifier(
+      popperOptions,
+      'preventOverflow',
+    );
 
-    // Limitation: Assumes `html` font size won't change for the lifetime
-    // of the instance (it almost certainly never will)
-    const distancePx = getUnitsInPx(doc, instance.props.distance);
+    let distancePx: number;
 
     function applyMutations(data: Popper.Data): void {
       const prevPlacement = instance.state.currentPlacement;
@@ -596,10 +600,6 @@ export default function createTippy(
       ...popperOptions,
       modifiers: {
         ...(popperOptions && popperOptions.modifiers),
-        preventOverflow: {
-          boundariesElement: instance.props.boundary,
-          ...getModifier(popperOptions, 'preventOverflow'),
-        },
         // We can't use `padding` on the popper el because of these bugs when
         // flipping from a vertical to horizontal placement or vice-versa,
         // there is severe flickering.
@@ -607,62 +607,58 @@ export default function createTippy(
         // This workaround increases bundle size by 250B minzip unfortunately,
         // due to need to custom compute the distance (since Popper rect does
         // not get affected by the inner tooltip's distance offset)
-        tippySetPreventOverflowPadding: {
+        tippyDistance: {
           enabled: true,
-          // Reduce chance of conflict by choosing this order (must be 200-299)
-          // runs before `preventOverflow` modifier
-          order: 287,
+          order: 0,
           fn(data: Popper.Data): Popper.Data {
+            // `html` fontSize may change while `popperInstance` is alive
+            // e.g. on resize in media queries
+            distancePx = getUnitsInPx(doc, instance.props.distance);
+
             const basePlacement = getBasePlacement(data.placement);
 
-            const poModifier = getModifier(popperOptions, 'preventOverflow');
-            const padding =
-              poModifier && poModifier.padding !== undefined
-                ? poModifier.padding
-                : 5;
+            const computedPreventOverflowPadding = getComputedPadding(
+              basePlacement,
+              preventOverflowModifier && preventOverflowModifier.padding,
+              distancePx,
+            );
+            const computedFlipPadding = getComputedPadding(
+              basePlacement,
+              flipModifier && flipModifier.padding,
+              distancePx,
+            );
 
-            const isPaddingNumber = typeof padding === 'number';
-            const paddingObject = {top: 0, bottom: 0, left: 0, right: 0};
+            const instanceModifiers = instance.popperInstance!.modifiers;
 
-            // Adds extra padding (+ distance) to the current placement of the
-            // paddingObject
-            const computedPadding = Object.keys(paddingObject).reduce<{
-              [key: string]: number;
-            }>((obj, key) => {
-              obj[key] = isPaddingNumber ? padding : padding[key];
-
-              if (basePlacement === key) {
-                obj[key] = isPaddingNumber
-                  ? padding + distancePx
-                  : padding[basePlacement] + distancePx;
-              }
-
-              return obj;
-            }, paddingObject);
-
-            // Set the padding here to be read before `preventOverflow` modifier
-            // runs
             setModifierValue(
-              instance.popperInstance!.modifiers,
+              instanceModifiers,
               'preventOverflow',
               'padding',
-              computedPadding,
+              computedPreventOverflowPadding,
+            );
+            setModifierValue(
+              instanceModifiers,
+              'flip',
+              'padding',
+              computedFlipPadding,
             );
 
             return data;
           },
         },
-        arrow: {
-          element: arrow,
-          enabled: !!arrow,
-          ...getModifier(popperOptions, 'arrow'),
+        preventOverflow: {
+          boundariesElement: instance.props.boundary,
+          ...preventOverflowModifier,
         },
         flip: {
           enabled: instance.props.flip,
           behavior: instance.props.flipBehavior,
-          // Due to `distance` workaround
-          padding: distancePx + 5,
-          ...getModifier(popperOptions, 'flip'),
+          ...flipModifier,
+        },
+        arrow: {
+          element: arrow,
+          enabled: !!arrow,
+          ...getModifier(popperOptions, 'arrow'),
         },
         offset: {
           offset: instance.props.offset,
