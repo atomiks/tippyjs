@@ -1,5 +1,10 @@
 import {Props, DefaultProps, ReferenceElement, Plugin, Tippy} from './types';
-import {invokeWithArgsOrReturn, hasOwnProperty, includes} from './utils';
+import {
+  invokeWithArgsOrReturn,
+  hasOwnProperty,
+  includes,
+  removeProperties,
+} from './utils';
 import {warnWhen} from './validation';
 import {PropsV4} from './types-internal';
 
@@ -184,12 +189,32 @@ export function validateProps(
       typeof value === 'object' &&
       hasOwnProperty(value, 'placement');
 
-    const didPassUnknownProp =
-      !hasOwnProperty(getExtendedProps({...defaultProps, plugins}), prop) &&
-      !includes(
-        ['a11y', 'arrowType', 'showOnInit', 'size', 'target', 'touchHold'],
-        prop,
-      );
+    const nonPluginProps = removeProperties(defaultProps, [
+      'animateFill',
+      'followCursor',
+      'inlinePositioning',
+      'sticky',
+    ]);
+
+    // These props have custom warnings
+    const customWarningProps = [
+      'a11y',
+      'arrowType',
+      'showOnInit',
+      'size',
+      'target',
+      'touchHold',
+    ];
+
+    let didPassUnknownProp =
+      !hasOwnProperty(nonPluginProps, prop) &&
+      !includes(customWarningProps, prop);
+
+    // Check if the prop exists in `plugins`
+    if (didPassUnknownProp) {
+      didPassUnknownProp =
+        plugins.filter(plugin => plugin.name === prop).length === 0;
+    }
 
     warnWhen(
       prop === 'target',

@@ -153,6 +153,60 @@ describe('validateProps', () => {
     );
   });
 
+  it('handles included plugin props', () => {
+    const prop = 'followCursor';
+    const plugins = [{name: prop, fn: () => ({})}];
+
+    validateProps({[prop]: true});
+    expect(spy).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        `\`${prop}\` is not a valid prop. You may have spelled it incorrectly,
+        or if it's a plugin, forgot to pass it in an array as props.plugins.
+
+        In v5, the following props were turned into plugins:
+
+        * animateFill
+        * followCursor
+        * sticky
+
+        All props: https://atomiks.github.io/tippyjs/all-props/
+        Plugins: https://atomiks.github.io/tippyjs/plugins/`,
+      ),
+    );
+
+    spy.mockClear();
+
+    validateProps({[prop]: true}, plugins);
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('handles custom plugin props', () => {
+    const prop = '__custom';
+    const plugins = [{name: prop, fn: () => ({})}];
+
+    validateProps({[prop]: true});
+    expect(spy).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        `\`${prop}\` is not a valid prop. You may have spelled it incorrectly,
+        or if it's a plugin, forgot to pass it in an array as props.plugins.
+
+        In v5, the following props were turned into plugins:
+
+        * animateFill
+        * followCursor
+        * sticky
+
+        All props: https://atomiks.github.io/tippyjs/all-props/
+        Plugins: https://atomiks.github.io/tippyjs/plugins/`,
+      ),
+    );
+
+    spy.mockClear();
+
+    validateProps({[prop]: true}, plugins);
+    expect(spy).not.toHaveBeenCalled();
+  });
+
   it('recognizes the old `target` prop', () => {
     validateProps({target: 'button'});
     expect(spy).toHaveBeenCalledWith(
