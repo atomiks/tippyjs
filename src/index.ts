@@ -6,12 +6,20 @@ import bindGlobalEventListeners, {
 } from './bindGlobalEventListeners';
 import {getArrayOfElements, isReferenceElement, isElement} from './utils';
 import {warnWhen, validateTargets} from './validation';
-import {Props, Instance, Targets, HideAllOptions, Plugin, Tippy} from './types';
+import {
+  Props,
+  Instance,
+  Targets,
+  HideAllOptions,
+  Plugin,
+  Tippy,
+  HideAll,
+} from './types';
 
 function tippy(
   targets: Targets,
   optionalProps: Partial<Props> = {},
-  /** @deprecated - use Props.plugins */
+  /** @deprecated use Props.plugins */
   plugins: Plugin[] = [],
 ): Instance | Instance[] {
   plugins = defaultProps.plugins.concat(optionalProps.plugins || plugins);
@@ -74,24 +82,25 @@ export default tippy;
 /**
  * Hides all visible poppers on the document
  */
-export function hideAll({
+export const hideAll: HideAll = <TProps>({
   exclude: excludedReferenceOrInstance,
   duration,
-}: HideAllOptions = {}): void {
+}: HideAllOptions<TProps> = {}) => {
   mountedInstances.forEach(instance => {
     let isExcluded = false;
 
     if (excludedReferenceOrInstance) {
       isExcluded = isReferenceElement(excludedReferenceOrInstance)
         ? instance.reference === excludedReferenceOrInstance
-        : instance.popper === excludedReferenceOrInstance.popper;
+        : instance.popper ===
+          (excludedReferenceOrInstance as Instance<TProps>).popper;
     }
 
     if (!isExcluded) {
       instance.hide(duration);
     }
   });
-}
+};
 
 /**
  * Returns a proxy wrapper function that passes the plugins
