@@ -594,7 +594,7 @@ export default function createTippy(
       }
     }
 
-    const config = {
+    const config: Popper.PopperOptions = {
       eventsEnabled: false,
       placement: instance.props.placement,
       ...popperOptions,
