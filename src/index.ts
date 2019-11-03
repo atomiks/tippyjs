@@ -82,18 +82,17 @@ export default tippy;
 /**
  * Hides all visible poppers on the document
  */
-export const hideAll: HideAll = <TProps>({
+export const hideAll: HideAll = ({
   exclude: excludedReferenceOrInstance,
   duration,
-}: HideAllOptions<TProps> = {}) => {
+}: HideAllOptions = {}) => {
   mountedInstances.forEach(instance => {
     let isExcluded = false;
 
     if (excludedReferenceOrInstance) {
       isExcluded = isReferenceElement(excludedReferenceOrInstance)
         ? instance.reference === excludedReferenceOrInstance
-        : instance.popper ===
-          (excludedReferenceOrInstance as Instance<TProps>).popper;
+        : instance.popper === (excludedReferenceOrInstance as Instance).popper;
     }
 
     if (!isExcluded) {

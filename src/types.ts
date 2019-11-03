@@ -131,7 +131,7 @@ export interface TippyStatics {
 }
 
 export interface Tippy<TProps = Props> extends TippyStatics {
-  <TProps = Props>(
+  (
     targets: SingleTarget,
     optionalProps?: Partial<TProps>,
     /** @deprecated use Props.plugins */
@@ -139,8 +139,8 @@ export interface Tippy<TProps = Props> extends TippyStatics {
   ): Instance<TProps>;
 }
 
-export interface Tippy extends TippyStatics {
-  <TProps = Props>(
+export interface Tippy<TProps = Props> extends TippyStatics {
+  (
     targets: MultipleTargets,
     optionalProps?: Partial<TProps>,
     /** @deprecated use Props.plugins */
@@ -158,7 +158,7 @@ export interface DelegateInstance<TProps = Props> extends Instance<TProps> {
 }
 
 export interface Delegate<TProps = Props> {
-  <TProps = Props>(
+  (
     targets: SingleTarget,
     props: Partial<TProps> & {target: string},
     /** @deprecated use Props.plugins */
@@ -166,8 +166,8 @@ export interface Delegate<TProps = Props> {
   ): DelegateInstance<TProps>;
 }
 
-export interface Delegate {
-  <TProps = Props>(
+export interface Delegate<TProps = Props> {
+  (
     targets: MultipleTargets,
     props: Partial<TProps> & {target: string},
     /** @deprecated use Props.plugins */
@@ -175,16 +175,12 @@ export interface Delegate {
   ): DelegateInstance<TProps>[];
 }
 
-// Don't remove (says it's never read, but is required for type assertion)
-// (createSingleton as unknown) as CreateSingleton<ExtendedProps>
-export interface CreateSingleton<TProps = Props> {
-  <TProps = Props>(
-    tippyInstances: Instance<TProps | Props>[],
-    optionalProps?: Partial<TProps>,
-    /** @deprecated use Props.plugins */
-    plugins?: Plugin<TProps>[],
-  ): Instance<TProps>;
-}
+export type CreateSingleton<TProps = Props> = (
+  tippyInstances: Instance<TProps | Props>[],
+  optionalProps?: Partial<TProps>,
+  /** @deprecated use Props.plugins */
+  plugins?: Plugin<TProps>[],
+) => Instance<TProps>;
 
 declare const delegate: Delegate;
 declare const createSingleton: CreateSingleton;
@@ -233,12 +229,12 @@ declare const sticky: Sticky;
 // =============================================================================
 // Misc types
 // =============================================================================
-export interface HideAllOptions<TProps = Props> {
+export interface HideAllOptions {
   duration?: number;
-  exclude?: Instance<TProps> | ReferenceElement<TProps>;
+  exclude?: Instance | ReferenceElement;
 }
 
-export type HideAll = <TProps>(options?: HideAllOptions<TProps>) => void;
+export type HideAll = (options?: HideAllOptions) => void;
 
 declare const hideAll: HideAll;
 declare const roundArrow: string;
