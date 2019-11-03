@@ -95,16 +95,16 @@ export const setDefaultProps: Tippy['setDefaultProps'] = partialProps => {
 /**
  * Returns an extended props object including plugin props
  */
-export function getExtendedProps(props: Props): Props {
-  const iProps: Props & {[key: string]: any} = props;
-
+export function getExtendedProps(
+  props: Props & Record<string, unknown>,
+): Props & Record<string, unknown> {
   return {
     ...props,
-    ...props.plugins.reduce<{[key: string]: any}>((acc, plugin) => {
+    ...props.plugins.reduce<Record<string, unknown>>((acc, plugin) => {
       const {name, defaultValue} = plugin;
 
       if (name) {
-        acc[name] = iProps[name] !== undefined ? iProps[name] : defaultValue;
+        acc[name] = props[name] !== undefined ? props[name] : defaultValue;
       }
 
       return acc;
@@ -118,31 +118,35 @@ export function getExtendedProps(props: Props): Props {
 export function getDataAttributeProps(
   reference: ReferenceElement,
   plugins: Plugin[],
-): Props {
-  const props = (plugins
+): Partial<Props> & Record<string, unknown> {
+  const propKeys = plugins
     ? Object.keys(getExtendedProps({...defaultProps, plugins}))
-    : defaultKeys
-  ).reduce((acc: any, key): Partial<Props> => {
-    const valueAsString = (
-      reference.getAttribute(`data-tippy-${key}`) || ''
-    ).trim();
+    : defaultKeys;
 
-    if (!valueAsString) {
-      return acc;
-    }
+  const props = propKeys.reduce(
+    (acc: Partial<Props> & Record<string, unknown>, key) => {
+      const valueAsString = (
+        reference.getAttribute(`data-tippy-${key}`) || ''
+      ).trim();
 
-    if (key === 'content') {
-      acc[key] = valueAsString;
-    } else {
-      try {
-        acc[key] = JSON.parse(valueAsString);
-      } catch (e) {
-        acc[key] = valueAsString;
+      if (!valueAsString) {
+        return acc;
       }
-    }
 
-    return acc;
-  }, {});
+      if (key === 'content') {
+        acc[key] = valueAsString;
+      } else {
+        try {
+          acc[key] = JSON.parse(valueAsString);
+        } catch (e) {
+          acc[key] = valueAsString;
+        }
+      }
+
+      return acc;
+    },
+    {},
+  );
 
   return props;
 }
@@ -154,7 +158,7 @@ export function getDataAttributeProps(
 export function evaluateProps(
   reference: ReferenceElement,
   props: Props,
-): Props {
+): Props & Record<string, unknown> {
   const out = {
     ...props,
     content: invokeWithArgsOrReturn(props.content, [reference]),
