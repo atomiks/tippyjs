@@ -123,17 +123,6 @@ export interface PopperChildren {
   arrow: HTMLDivElement | null;
 }
 
-export interface HideAllOptions<TProps = Props> {
-  duration?: number;
-  exclude?: Instance<TProps> | ReferenceElement<TProps>;
-}
-
-export interface Plugin<TProps = Props> {
-  name?: string;
-  defaultValue?: any;
-  fn(instance: Instance<TProps>): Partial<LifecycleHooks<TProps>>;
-}
-
 export interface TippyStatics {
   readonly currentInput: {isTouch: boolean};
   readonly defaultProps: DefaultProps;
@@ -161,9 +150,9 @@ export interface Tippy extends TippyStatics {
 
 declare const tippy: Tippy;
 
-export type HideAll = <TProps>(options?: HideAllOptions<TProps>) => void;
-declare const hideAll: HideAll;
-
+// =============================================================================
+// Addon types
+// =============================================================================
 export interface DelegateInstance<TProps = Props> extends Instance<TProps> {
   destroy(shouldDestroyTargetInstances?: boolean): void;
 }
@@ -200,6 +189,15 @@ export interface CreateSingleton<TProps = Props> {
 declare const delegate: Delegate;
 declare const createSingleton: CreateSingleton;
 
+// =============================================================================
+// Plugin types
+// =============================================================================
+export interface Plugin<TProps = Props> {
+  name?: string;
+  defaultValue?: any;
+  fn(instance: Instance<TProps>): Partial<LifecycleHooks<TProps>>;
+}
+
 export interface AnimateFillInstance extends Instance {
   popperChildren: PopperChildren & {
     backdrop: HTMLDivElement | null;
@@ -232,8 +230,22 @@ declare const followCursor: FollowCursor;
 declare const inlinePositioning: InlinePositioning;
 declare const sticky: Sticky;
 
+// =============================================================================
+// Misc types
+// =============================================================================
+export interface HideAllOptions<TProps = Props> {
+  duration?: number;
+  exclude?: Instance<TProps> | ReferenceElement<TProps>;
+}
+
+export type HideAll = <TProps>(options?: HideAllOptions<TProps>) => void;
+
+declare const hideAll: HideAll;
 declare const roundArrow: string;
 
+// =============================================================================
+// Deprecated types - these will be removed in the next major
+// =============================================================================
 /**
  * @deprecated use tippy.setDefaultProps({plugins: [...]});
  */
