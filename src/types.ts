@@ -1,4 +1,4 @@
-import Popper, {ReferenceObject} from 'popper.js';
+import Popper from 'popper.js';
 
 export type BasePlacement = 'top' | 'bottom' | 'left' | 'right';
 
@@ -12,21 +12,17 @@ export type MultipleTargets = string | Element[] | NodeList;
 
 export type Targets = SingleTarget | MultipleTargets;
 
-export interface ReferenceElement extends Element {
-  _tippy?: Instance;
+export interface ReferenceElement<TProps = Props> extends Element {
+  _tippy?: Instance<TProps>;
 }
 
-export interface PopperElement extends HTMLDivElement {
-  _tippy?: Instance;
+export interface PopperElement<TProps = Props> extends HTMLDivElement {
+  _tippy?: Instance<TProps>;
 }
 
 export interface PopperInstance extends Popper {
-  reference: ReferenceElement | ReferenceObject;
-  popper: PopperElement;
-  data: {
-    placement: Placement;
-  };
-  modifiers: {name: string; padding: object | number}[];
+  // Undo the static so we can mutate values inside for `tippyDistance`
+  modifiers: Popper.BaseModifier[];
 }
 
 export interface LifecycleHooks<TProps = Props> {
@@ -102,12 +98,12 @@ export interface Instance<TProps = Props> {
   enable(): void;
   hide(duration?: number): void;
   id: number;
-  plugins: Plugin[];
-  popper: PopperElement;
+  plugins: Plugin<TProps>[];
+  popper: PopperElement<TProps>;
   popperChildren: PopperChildren;
   popperInstance: PopperInstance | null;
   props: TProps;
-  reference: ReferenceElement;
+  reference: ReferenceElement<TProps>;
   setContent(content: Content): void;
   setProps(partialProps: Partial<TProps>): void;
   show(duration?: number): void;
@@ -127,9 +123,9 @@ export interface PopperChildren {
   arrow: HTMLDivElement | null;
 }
 
-export interface HideAllOptions {
+export interface HideAllOptions<TProps = Props> {
   duration?: number;
-  exclude?: Instance | ReferenceElement;
+  exclude?: Instance<TProps> | ReferenceElement<TProps>;
 }
 
 export interface Plugin<TProps = Props> {
@@ -146,26 +142,26 @@ export interface TippyStatics {
 }
 
 export interface Tippy<TProps = Props> extends TippyStatics {
-  (
+  <TProps = Props>(
     targets: SingleTarget,
     optionalProps?: Partial<TProps>,
     /** @deprecated use Props.plugins */
-    plugins?: Plugin[],
+    plugins?: Plugin<TProps>[],
   ): Instance<TProps>;
 }
 
-export interface Tippy<TProps = Props> extends TippyStatics {
-  (
+export interface Tippy extends TippyStatics {
+  <TProps = Props>(
     targets: MultipleTargets,
     optionalProps?: Partial<TProps>,
     /** @deprecated use Props.plugins */
-    plugins?: Plugin[],
+    plugins?: Plugin<TProps>[],
   ): Instance<TProps>[];
 }
 
 declare const tippy: Tippy;
 
-export type HideAll = (options: HideAllOptions) => void;
+export type HideAll = <TProps>(options?: HideAllOptions<TProps>) => void;
 declare const hideAll: HideAll;
 
 export interface DelegateInstance<TProps = Props> extends Instance<TProps> {
@@ -173,29 +169,33 @@ export interface DelegateInstance<TProps = Props> extends Instance<TProps> {
 }
 
 export interface Delegate<TProps = Props> {
-  (
+  <TProps = Props>(
     targets: SingleTarget,
     props: Partial<TProps> & {target: string},
     /** @deprecated use Props.plugins */
-    plugins?: Plugin[],
+    plugins?: Plugin<TProps>[],
   ): DelegateInstance<TProps>;
 }
 
-export interface Delegate<TProps = Props> {
-  (
+export interface Delegate {
+  <TProps = Props>(
     targets: MultipleTargets,
     props: Partial<TProps> & {target: string},
     /** @deprecated use Props.plugins */
-    plugins?: Plugin[],
+    plugins?: Plugin<TProps>[],
   ): DelegateInstance<TProps>[];
 }
 
-export type CreateSingleton<TProps = Props> = (
-  tippyInstances: Instance[],
-  optionalProps?: Partial<TProps>,
-  /** @deprecated use Props.plugins */
-  plugins?: Plugin[],
-) => Instance<TProps>;
+// Don't remove (says it's never read, but is required for type assertion)
+// (createSingleton as unknown) as CreateSingleton<ExtendedProps>
+export interface CreateSingleton<TProps = Props> {
+  <TProps = Props>(
+    tippyInstances: Instance<TProps | Props>[],
+    optionalProps?: Partial<TProps>,
+    /** @deprecated use Props.plugins */
+    plugins?: Plugin<TProps>[],
+  ): Instance<TProps>;
+}
 
 declare const delegate: Delegate;
 declare const createSingleton: CreateSingleton;
