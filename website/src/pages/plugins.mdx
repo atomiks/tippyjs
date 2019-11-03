@@ -100,17 +100,17 @@ state in the plugin closure. This is how the `followCursor` plugin works.
 
 ### TypeScript
 
-To enable type checking for custom props, you can create a central file with the
-plugins your app passes:
+Functions that take `Props` are generics that accept an extended interface:
 
 ```ts
-import tippy, {Tippy, Props, Plugin, LifecycleHooks} from 'tippy.js';
+import tippy, {Props, Plugin, LifecycleHooks} from 'tippy.js';
 
+// Your custom plugin types
 interface CustomProps extends Omit<Props, keyof LifecycleHooks> {
   myCustomProp: boolean;
 }
 
-type ExtendedProps = CustomProps & LifecycleHooks<CustomProps>;
+export type ExtendedProps = CustomProps & LifecycleHooks<CustomProps>;
 
 export const myCustomProp: Plugin<ExtendedProps> = {
   name: 'myCustomProp',
@@ -118,23 +118,14 @@ export const myCustomProp: Plugin<ExtendedProps> = {
   fn: () => ({}),
 };
 
-export default (tippy as unknown) as Tippy<ExtendedProps>;
+tippy<ExtendedProps>('button', {
+  myCustomProp: true,
+  plugins: [myCustomProp],
+});
 ```
 
-In your app you can import from this file:
+You can also export from a central file without passing the interface each time:
 
 ```ts
-import tippy, {myCustomProp} from './tippy';
-
-tippy(reference, {
-  // Type checking for this prop now works
-  myCustomProp: true,
-  // There is a DEV warning if you forget to pass the plugin
-  plugins: [myCustomProp],
-  // LifecycleHooks `instance` is typed with the ExtendedProps
-  onCreate(instance) {
-    instance.props.myCustomProp;
-    instance.setProps({myCustomProp: false});
-  },
-});
+export default (tippy as unknown) as Tippy<ExtendedProps>;
 ```
