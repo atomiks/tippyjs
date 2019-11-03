@@ -5,8 +5,8 @@ index: 14
 ---
 
 Plugins are an extensible way to add functionality to tippy instances. By
-splitting functionality into a plugin, users who don't need the code provided by
-the plugin are not burdened with its cost by default.
+splitting functionality into a plugin, components or routes that don't need the
+plugin are not burdened with its bundle size cost.
 
 ### Exported plugins
 
@@ -100,7 +100,7 @@ state in the plugin closure. This is how the `followCursor` plugin works.
 
 ### TypeScript
 
-Functions that take `Props` are generics that accept an extended interface:
+Interfaces that take `Props` are generics that accept an extended interface:
 
 ```ts
 import tippy, {Props, Plugin, LifecycleHooks} from 'tippy.js';
@@ -118,14 +118,5 @@ export const myCustomProp: Plugin<ExtendedProps> = {
   fn: () => ({}),
 };
 
-tippy<ExtendedProps>('button', {
-  myCustomProp: true,
-  plugins: [myCustomProp],
-});
-```
-
-You can also export from a central file without passing the interface each time:
-
-```ts
 export default (tippy as unknown) as Tippy<ExtendedProps>;
 ```
