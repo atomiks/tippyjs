@@ -81,9 +81,7 @@ export const POPPER_INSTANCE_DEPENDENCIES: Array<keyof Props> = [
 /**
  * Mutates the defaultProps object by setting the props specified
  */
-export const setDefaultProps: Tippy['setDefaultProps'] = (
-  partialProps,
-): void => {
+export const setDefaultProps: Tippy['setDefaultProps'] = partialProps => {
   if (__DEV__) {
     validateProps(partialProps, []);
   }
