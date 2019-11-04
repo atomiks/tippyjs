@@ -100,17 +100,20 @@ state in the plugin closure. This is how the `followCursor` plugin works.
 
 ### TypeScript
 
-Interfaces that take `Props` are generics that accept an extended interface:
+Types that take `Props` (e.g. `Tippy`, `Delegate`, `CreateSingleton`) are
+generics that accept an extended props interface:
 
 ```ts
-import tippy, {Props, Plugin, LifecycleHooks} from 'tippy.js';
+import tippy, {Tippy, Props, Plugin, LifecycleHooks} from 'tippy.js';
 
-// Your custom plugin types
-interface CustomProps extends Omit<Props, keyof LifecycleHooks> {
+interface CustomProps {
   myCustomProp: boolean;
 }
 
-export type ExtendedProps = CustomProps & LifecycleHooks<CustomProps>;
+type FilteredProps = CustomProps &
+  Omit<Props, keyof CustomProps | keyof LifecycleHooks>;
+
+type ExtendedProps = FilteredProps & LifecycleHooks<FilteredProps>;
 
 export const myCustomProp: Plugin<ExtendedProps> = {
   name: 'myCustomProp',
