@@ -269,6 +269,21 @@ describe('delay', () => {
 
     expect(instance.state.isVisible).toBe(true);
   });
+
+  it('is respected by `showOnCreate` prop', () => {
+    const instance = tippy(h(), {
+      delay: 100,
+      showOnCreate: true,
+    });
+
+    jest.advanceTimersByTime(99);
+
+    expect(instance.state.isVisible).toBe(false);
+
+    jest.advanceTimersByTime(1);
+
+    expect(instance.state.isVisible).toBe(true);
+  });
 });
 
 describe('content', () => {

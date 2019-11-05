@@ -159,4 +159,19 @@ describe('delegate', () => {
     fireEvent.focusIn(focusButton);
     expect(focusButton._tippy).toBeDefined();
   });
+
+  it('respects `delay` on first show', () => {
+    const button = h('button');
+    instance = delegate(document.body, {target: 'button', delay: 100});
+
+    fireEvent.mouseOver(button);
+
+    jest.advanceTimersByTime(99);
+
+    expect(button._tippy.state.isVisible).toBe(false);
+
+    jest.advanceTimersByTime(1);
+
+    expect(button._tippy.state.isVisible).toBe(true);
+  });
 });

@@ -202,7 +202,7 @@ export default function createTippy(
     if (
       (instance.state.isMounted && !instance.state.isVisible) ||
       currentInput.isTouch ||
-      (lastTriggerEvent ? lastTriggerEvent.type === 'focus' : true)
+      (lastTriggerEvent && lastTriggerEvent.type === 'focus')
     ) {
       return 0;
     }
