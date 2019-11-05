@@ -3,7 +3,7 @@ import {MEDIA} from './Framework';
 
 const Main = styled.main`
   ${MEDIA.lg} {
-    margin-left: 15.625rem;
+    margin-left: 250px;
   }
 `;
 

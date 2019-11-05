@@ -5,9 +5,9 @@ function Emoji({emoji}) {
     <span
       style={{
         position: 'relative',
-        fontSize: '1.5rem',
-        top: '0.125rem',
-        left: '-0.125rem',
+        fontSize: '24px',
+        top: '2px',
+        left: '-2px',
       }}
     >
       {emoji}

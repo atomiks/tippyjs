@@ -4,7 +4,7 @@
 .#{$namespace-prefix}-tooltip {
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-backdrop {
+      > .#{$namespace-prefix}-backdrop {
         transform-origin: nth(
           $backdrop-origins,
           index($placements, $placement)
@@ -38,7 +38,7 @@
   position: absolute;
   background-color: #333;
   border-radius: 50%;
-  width: calc(110% + 2rem);
+  width: calc(110% + 32px);
   left: 50%;
   top: 50%;
   z-index: -1;

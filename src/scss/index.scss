@@ -9,37 +9,33 @@
 
 .#{$namespace-prefix}-popper {
   pointer-events: none;
-  max-width: calc(100% - 10px);
+  max-width: calc(100vw - 10px);
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition-property: transform;
 }
 
 .#{$namespace-prefix}-tooltip {
   position: relative;
   color: white;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
+  border-radius: 4px;
+  font-size: 14px;
   line-height: 1.4;
   background-color: #333;
-  overflow: hidden;
   transition-property: visibility, opacity, transform;
   outline: 0;
 
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-arrow {
-        @include arrow($placement, 8px, #333);
+      > .#{$namespace-prefix}-arrow {
+        @include arrow($placement, $arrow-size + 1, #333);
         @include arrow-margin($placement);
-        @include arrow-transform-origin($placement, 7px);
-        @include arrow-position($placement, 7px, false);
+        @include arrow-transform-origin($placement, $arrow-size);
+        @include arrow-position($placement, $arrow-size, false);
       }
     }
   }
 
-  &[data-arrow] {
-    overflow: visible;
-  }
-
-  &[data-interactive] {
+  &[data-interactive][data-state='visible'] {
     pointer-events: auto;
   }
 
@@ -55,5 +51,5 @@
 }
 
 .#{$namespace-prefix}-content {
-  padding: 0.3125rem 0.5625rem;
+  padding: 5px 9px;
 }

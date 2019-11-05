@@ -7,7 +7,6 @@ import Tippy, {TippySingleton} from './Tippy';
 import Nav from './Nav';
 import NavButtons from './NavButtons';
 import Header from './Header';
-import MiniHeader from './MiniHeader';
 import Main from './Main';
 import Footer from './Footer';
 import SEO from './SEO';
@@ -30,8 +29,8 @@ const LinkIcon = styled.a`
   padding: 10px 0;
   opacity: 0;
   transition: opacity 0.2s;
-  width: 30px;
-  top: -11px;
+  width: 32px;
+  top: -12px;
   right: 0;
   color: #7761d1;
 
@@ -43,10 +42,10 @@ const LinkIcon = styled.a`
 
   ${MEDIA.md} {
     right: initial;
-    left: -30px;
+    left: -32px;
 
     &:focus {
-      width: 1.25rem;
+      width: 20px;
     }
   }
 `;

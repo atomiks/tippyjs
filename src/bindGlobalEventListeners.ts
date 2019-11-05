@@ -1,5 +1,5 @@
-import {isIOS} from './browser';
-import {PASSIVE, IOS_CLASS} from './constants';
+import {PASSIVE} from './constants';
+import {isReferenceElement} from './utils';
 
 export const currentInput = {isTouch: false};
 let lastMouseMoveTime = 0;
@@ -16,10 +16,6 @@ export function onDocumentTouchStart(): void {
   }
 
   currentInput.isTouch = true;
-
-  if (isIOS) {
-    document.body.classList.add(IOS_CLASS);
-  }
 
   if (window.performance) {
     document.addEventListener('mousemove', onDocumentMouseMove);
@@ -38,10 +34,6 @@ export function onDocumentMouseMove(): void {
     currentInput.isTouch = false;
 
     document.removeEventListener('mousemove', onDocumentMouseMove);
-
-    if (!isIOS) {
-      document.body.classList.remove(IOS_CLASS);
-    }
   }
 
   lastMouseMoveTime = now;
@@ -54,16 +46,14 @@ export function onDocumentMouseMove(): void {
  * TODO: find a better technique to solve this problem
  */
 export function onWindowBlur(): void {
-  const {activeElement}: {activeElement: any} = document;
-  const instance = activeElement._tippy;
+  const activeElement = document.activeElement as HTMLElement | null;
 
-  if (
-    activeElement &&
-    activeElement.blur &&
-    instance &&
-    !instance.state.isVisible
-  ) {
-    activeElement.blur();
+  if (isReferenceElement(activeElement)) {
+    const instance = activeElement._tippy!;
+
+    if (activeElement.blur && !instance.state.isVisible) {
+      activeElement.blur();
+    }
   }
 }
 

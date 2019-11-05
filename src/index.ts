@@ -1,35 +1,29 @@
 import {version} from '../package.json';
-import {defaultProps} from './props';
-import createTippy from './createTippy';
+import {defaultProps, setDefaultProps, validateProps} from './props';
+import createTippy, {mountedInstances} from './createTippy';
 import bindGlobalEventListeners, {
   currentInput,
 } from './bindGlobalEventListeners';
-import {
-  arrayFrom,
-  isRealElement,
-  getArrayOfElements,
-  isReferenceElement,
-} from './utils';
-import {warnWhen, validateTargets, validateProps} from './validation';
-import {POPPER_SELECTOR} from './constants';
+import {getArrayOfElements, isReferenceElement, isElement} from './utils';
+import {warnWhen, validateTargets} from './validation';
 import {
   Props,
   Instance,
   Targets,
-  PopperElement,
   HideAllOptions,
   Plugin,
   Tippy,
+  HideAll,
 } from './types';
 
-/**
- * Exported module
- */
 function tippy(
   targets: Targets,
-  optionalProps?: Partial<Props>,
+  optionalProps: Partial<Props> = {},
+  /** @deprecated use Props.plugins */
   plugins: Plugin[] = [],
 ): Instance | Instance[] {
+  plugins = defaultProps.plugins.concat(optionalProps.plugins || plugins);
+
   /* istanbul ignore else */
   if (__DEV__) {
     validateTargets(targets);
@@ -38,13 +32,17 @@ function tippy(
 
   bindGlobalEventListeners();
 
-  const props: Props = {...defaultProps, ...optionalProps};
+  const props: Props = {
+    ...defaultProps,
+    ...optionalProps,
+    plugins,
+  };
 
   const elements = getArrayOfElements(targets);
 
   /* istanbul ignore else */
   if (__DEV__) {
-    const isSingleContentElement = isRealElement(props.content);
+    const isSingleContentElement = isElement(props.content);
     const isMoreThanOneReferenceElement = elements.length > 1;
     warnWhen(
       isSingleContentElement && isMoreThanOneReferenceElement,
@@ -62,7 +60,7 @@ function tippy(
 
   const instances = elements.reduce<Instance[]>(
     (acc, reference): Instance[] => {
-      const instance = reference && createTippy(reference, props, plugins);
+      const instance = reference && createTippy(reference, props);
 
       if (instance) {
         acc.push(instance);
@@ -73,7 +71,7 @@ function tippy(
     [],
   );
 
-  return isRealElement(targets) ? instances[0] : instances;
+  return isElement(targets) ? instances[0] : instances;
 }
 
 tippy.version = version;
@@ -81,64 +79,62 @@ tippy.defaultProps = defaultProps;
 tippy.setDefaultProps = setDefaultProps;
 tippy.currentInput = currentInput;
 
-/**
- * Mutates the defaultProps object by setting the props specified
- */
-function setDefaultProps(partialProps: Partial<Props>): void {
-  /* istanbul ignore else */
-  if (__DEV__) {
-    validateProps(partialProps, []);
-  }
-
-  Object.keys(partialProps).forEach((key): void => {
-    defaultProps[key] = partialProps[key];
-  });
-}
-
-/**
- * Returns a proxy wrapper function that passes the plugins
- */
-export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
-  const fn = (
-    targets: Targets,
-    optionalProps?: Partial<Props>,
-    innerPlugins: Plugin[] = [],
-  ): Instance | Instance[] =>
-    tippy(targets, optionalProps, [...outerPlugins, ...innerPlugins]);
-
-  fn.version = version;
-  fn.defaultProps = defaultProps;
-  fn.setDefaultProps = setDefaultProps;
-  fn.currentInput = currentInput;
-
-  return fn;
-}
+export default tippy;
 
 /**
  * Hides all visible poppers on the document
  */
-export function hideAll({
+export const hideAll: HideAll = ({
   exclude: excludedReferenceOrInstance,
   duration,
-}: HideAllOptions = {}): void {
-  arrayFrom(document.querySelectorAll(POPPER_SELECTOR)).forEach(
-    (popper: PopperElement): void => {
-      const instance = popper._tippy;
+}: HideAllOptions = {}) => {
+  mountedInstances.forEach(instance => {
+    let isExcluded = false;
 
-      if (instance) {
-        let isExcluded = false;
-        if (excludedReferenceOrInstance) {
-          isExcluded = isReferenceElement(excludedReferenceOrInstance)
-            ? instance.reference === excludedReferenceOrInstance
-            : popper === excludedReferenceOrInstance.popper;
-        }
+    if (excludedReferenceOrInstance) {
+      isExcluded = isReferenceElement(excludedReferenceOrInstance)
+        ? instance.reference === excludedReferenceOrInstance
+        : instance.popper === (excludedReferenceOrInstance as Instance).popper;
+    }
 
-        if (!isExcluded) {
-          instance.hide(duration);
-        }
-      }
-    },
-  );
+    if (!isExcluded) {
+      instance.hide(duration);
+    }
+  });
+};
+
+/**
+ * Returns a proxy wrapper function that passes the plugins
+ * @deprecated use tippy.setDefaultProps({plugins: [...]});
+ */
+export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
+  /* istanbul ignore else */
+  if (__DEV__) {
+    warnWhen(
+      true,
+      `createTippyWithPlugins([...]) has been deprecated.
+
+      Use tippy.setDefaultProps({plugins: [...]}) instead.`,
+    );
+  }
+
+  const tippyPluginsWrapper = (
+    targets: Targets,
+    optionalProps: Partial<Props> = {},
+    innerPlugins: Plugin[] = [],
+  ): Instance | Instance[] => {
+    innerPlugins = optionalProps.plugins || innerPlugins;
+    return tippy(targets, {
+      ...optionalProps,
+      plugins: [...outerPlugins, ...innerPlugins],
+    });
+  };
+
+  tippyPluginsWrapper.version = version;
+  tippyPluginsWrapper.defaultProps = defaultProps;
+  tippyPluginsWrapper.setDefaultProps = setDefaultProps;
+  tippyPluginsWrapper.currentInput = currentInput;
+
+  // @ts-ignore
+  return tippyPluginsWrapper;
 }
-
-export default tippy;

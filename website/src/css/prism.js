@@ -26,12 +26,12 @@ export default createGlobalStyle`
   }
 
   pre[class*='language-'] {
-    padding: 1.25rem 1rem;
+    padding: 20px 16px;
     margin-top: 0;
-    margin-left: -1rem;
-    margin-right: -1rem;
+    margin-left: -16px;
+    margin-right: -16px;
     background: radial-gradient(50% 80% at 80% 0%,rgb(61, 59, 98),rgb(40, 40, 75));
-    font-size: 1rem;
+    font-size: 16px;
     line-height: 1.5;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
@@ -41,17 +41,17 @@ export default createGlobalStyle`
     }
 
     ${MEDIA.sm} {
-      margin-left: -1.5625rem;
-      margin-right: -1.5625rem;
-      padding: 1.25rem 1.5625rem;
+      margin-left: -25px;
+      margin-right: -25px;
+      padding: 20px 25px;
     }
 
     ${MEDIA.md} {
-      border-radius: 0.5rem;
+      border-radius: 8px;
       margin-left: 0;
       margin-right: 0;
-      padding: 1rem 1.5625rem;
-      font-size: 1.0625rem;
+      padding: 16px 25px;
+      font-size: 17px;
     }
   }
 
@@ -219,12 +219,12 @@ export default createGlobalStyle`
 
   .gatsby-highlight {
     position: relative;
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-top: 24px;
+    margin-bottom: 24px;
   
     ${MEDIA.md} {
-      margin-left: -1.5625rem;
-      margin-right: -1.5625rem;
+      margin-left: -25px;
+      margin-right: -25px;
     }
 
     &[data-language="html"]::before {
@@ -248,21 +248,21 @@ export default createGlobalStyle`
       display: block;
       position: absolute;
       font-weight: bold;
-      padding: 8px 0.9375rem;
+      padding: 8px 15px;
       font-family: ${MONOSPACE_FONT_STACK};
       color: white;
-      width: calc(100% + 2rem);
-      margin-left: -1rem;
-      padding-left: 1rem;
+      width: calc(100% + 32px);
+      margin-left: -16px;
+      padding-left: 16px;
       text-transform: uppercase;
-      font-size: 0.9375rem;
+      font-size: 15px;
       text-align: right;
       pointer-events: none;
 
       ${MEDIA.sm} {
         width: calc(100% + 50px);
-        margin-left: -1.5625rem;
-        padding-left: 1.5625rem;
+        margin-left: -25px;
+        padding-left: 25px;
       }
 
       ${MEDIA.md} {

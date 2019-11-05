@@ -1,17 +1,15 @@
+import {fireEvent} from '@testing-library/dom';
 import {
   h,
   cleanDocumentBody,
-  MOUSEENTER,
-  BLUR,
-  FOCUS,
-  MOUSELEAVE,
-  CLICK,
   setTestDefaultProps,
+  enableTouchEnvironment,
+  disableTouchEnvironment,
 } from '../utils';
 
 import {defaultProps} from '../../src/props';
-import createTippy from '../../src/createTippy';
-import {POPPER_SELECTOR} from '../../src/constants';
+import createTippy, {mountedInstances} from '../../src/createTippy';
+import {POPPER_SELECTOR, IOS_CLASS} from '../../src/constants';
 import animateFill from '../../src/plugins/animateFill';
 
 jest.useFakeTimers();
@@ -72,29 +70,38 @@ describe('createTippy', () => {
       trigger: 'mouseenter focus click',
     });
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(MOUSELEAVE);
+    fireEvent.mouseLeave(instance.reference);
     expect(instance.state.isVisible).toBe(false);
 
-    instance.reference.dispatchEvent(FOCUS);
+    fireEvent.focus(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(BLUR);
+    fireEvent.blur(instance.reference);
     expect(instance.state.isVisible).toBe(false);
 
-    instance.reference.dispatchEvent(CLICK);
+    fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(CLICK);
+    fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(false);
   });
 
   it('extends `instance.props` with plugin props', () => {
-    instance = createTippy(h(), defaultProps, [animateFill]);
+    instance = createTippy(h(), {...defaultProps, plugins: [animateFill]});
 
     expect(instance.props.animateFill).toBe(animateFill.defaultValue);
+  });
+
+  it('`instance.plugins` does not contain duplicate plugins', () => {
+    instance = createTippy(h(), {
+      ...defaultProps,
+      plugins: [animateFill, animateFill],
+    });
+
+    expect(instance.plugins).toEqual([animateFill]);
   });
 });
 
@@ -126,7 +133,7 @@ describe('instance.destroy()', () => {
     });
 
     instance.destroy();
-    ref.dispatchEvent(new Event('mouseenter'));
+    fireEvent.mouseEnter(ref);
 
     expect(instance.state.isVisible).toBe(false);
   });
@@ -162,6 +169,21 @@ describe('instance.destroy()', () => {
     instance.destroy();
 
     expect(instance.state.isMounted).toBe(false);
+  });
+
+  it('clears pending timeouts', () => {
+    instance = createTippy(h(), {...defaultProps, delay: 500});
+
+    // show() will warn about memory leak
+    const spy = jest.spyOn(console, 'warn');
+
+    fireEvent.mouseEnter(instance.reference);
+
+    instance.destroy();
+
+    jest.advanceTimersByTime(500);
+
+    expect(spy).not.toHaveBeenCalled();
   });
 });
 
@@ -213,6 +235,36 @@ describe('instance.show()', () => {
     instance.show();
 
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('sets elements to duration 0 before mount, unless already mounted', () => {
+    instance = createTippy(h(), {
+      ...defaultProps,
+      updateDuration: 99,
+      duration: 99,
+    });
+
+    const {popper} = instance;
+    const {tooltip, content} = instance.popperChildren;
+
+    instance.show();
+
+    expect(popper.style.transitionDuration).toBe('0ms');
+    expect(tooltip.style.transitionDuration).toBe('0ms');
+    expect(content.style.transitionDuration).toBe('0ms');
+
+    jest.runAllTimers();
+
+    expect(popper.style.transitionDuration).toBe('99ms');
+    expect(tooltip.style.transitionDuration).toBe('99ms');
+    expect(content.style.transitionDuration).toBe('99ms');
+
+    instance.hide(99);
+    instance.show();
+
+    expect(popper.style.transitionDuration).toBe('99ms');
+    expect(tooltip.style.transitionDuration).toBe('99ms');
+    expect(content.style.transitionDuration).toBe('99ms');
   });
 });
 
@@ -371,11 +423,11 @@ describe('instance.setProps()', () => {
     instance = createTippy(ref, defaultProps);
 
     instance.setProps({trigger: 'click'});
-    ref.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(ref);
 
     expect(instance.state.isVisible).toBe(false);
 
-    ref.dispatchEvent(CLICK);
+    fireEvent.click(ref);
     expect(instance.state.isVisible).toBe(true);
   });
 
@@ -509,5 +561,71 @@ describe('instance.state', () => {
     instance.hide();
 
     expect(instance.state.isShown).toBe(false);
+  });
+});
+
+describe('mountedInstances', () => {
+  it('should correctly add and clear instances', () => {
+    instance = createTippy(h(), defaultProps);
+
+    instance.show();
+    jest.runAllTimers();
+
+    expect(mountedInstances[0]).toBe(instance);
+
+    const instance2 = createTippy(h(), defaultProps);
+
+    instance2.show();
+    jest.runAllTimers();
+
+    expect(mountedInstances[0]).toBe(instance);
+    expect(mountedInstances[1]).toBe(instance2);
+
+    instance.destroy();
+
+    expect(mountedInstances[0]).toBe(instance2);
+
+    instance2.hide();
+
+    expect(mountedInstances.length).toBe(0);
+
+    instance2.destroy();
+  });
+});
+
+describe('updateIOSClass', () => {
+  beforeEach(enableTouchEnvironment);
+  afterEach(disableTouchEnvironment);
+
+  it('should add on mount and remove on unmount', () => {
+    instance = createTippy(h(), defaultProps);
+
+    instance.show();
+    jest.runAllTimers();
+
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(true);
+
+    instance.hide();
+
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(false);
+  });
+
+  it('should only remove if mountedInstances.length is 0', () => {
+    instance = createTippy(h(), defaultProps);
+    const instance2 = createTippy(h(), defaultProps);
+
+    instance.show();
+    instance2.show();
+    jest.runAllTimers();
+
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(true);
+
+    instance.hide();
+
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(true);
+
+    instance2.destroy();
+
+    expect(document.body.classList.contains(IOS_CLASS)).toBe(false);
   });
 });

@@ -1,4 +1,4 @@
-import {hideAll, createTippyWithPlugins} from '../src';
+import tippy, {hideAll} from '../src';
 import createSingleton from '../src/addons/createSingleton';
 import delegate from '../src/addons/delegate';
 import animateFill from '../src/plugins/animateFill';
@@ -7,16 +7,13 @@ import inlinePositioning from '../src/plugins/inlinePositioning';
 import sticky from '../src/plugins/sticky';
 import {ROUND_ARROW} from '../src/constants';
 
-const extendedTippy = createTippyWithPlugins([
-  animateFill,
-  followCursor,
-  inlinePositioning,
-  sticky,
-]);
+tippy.setDefaultProps({
+  plugins: [animateFill, followCursor, inlinePositioning, sticky],
+});
 
-extendedTippy.createSingleton = createSingleton;
-extendedTippy.delegate = delegate;
-extendedTippy.hideAll = hideAll;
-extendedTippy.roundArrow = ROUND_ARROW;
+tippy.createSingleton = createSingleton;
+tippy.delegate = delegate;
+tippy.hideAll = hideAll;
+tippy.roundArrow = ROUND_ARROW;
 
-export default extendedTippy;
+export default tippy;

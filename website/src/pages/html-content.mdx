@@ -88,7 +88,9 @@ this case) and returns template content:
 ```js
 tippy('button', {
   content(reference) {
-    return document.getElementById(reference.getAttribute('data-template'));
+    const id = reference.getAttribute('data-template');
+    const template = document.getElementById(id);
+    return template.innerHTML;
   },
 });
 ```

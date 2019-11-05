@@ -1,16 +1,14 @@
 import {h, cleanDocumentBody, setTestDefaultProps} from '../../utils';
 
-import {createTippyWithPlugins} from '../../../src';
+import tippy from '../../../src';
 import animateFill from '../../../src/plugins/animateFill';
 
-setTestDefaultProps();
+setTestDefaultProps({plugins: [animateFill]});
 jest.useFakeTimers();
 
 afterEach(cleanDocumentBody);
 
 describe('animateFill', () => {
-  const tippy = createTippyWithPlugins([animateFill]);
-
   it('true: sets `data-animatefill` attribute on tooltip', () => {
     const ref = h();
     const instance = tippy(ref, {animateFill: true});

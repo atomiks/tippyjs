@@ -8,10 +8,10 @@ const Square = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 300px;
-  height: 150px;
+  width: 280px;
+  height: 200px;
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 24px;
   left: 50%;
   transform: translateX(-50%);
 `;

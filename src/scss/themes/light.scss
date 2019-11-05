@@ -1,26 +1,28 @@
 @import '../_mixins.scss';
 @import '../_vars.scss';
 
+$color: white;
+
 .#{$namespace-prefix}-tooltip.light-theme {
   color: #26323d;
-  box-shadow: 0 0 1.25rem 4px rgba(154, 161, 177, 0.15),
+  box-shadow: 0 0 20px 4px rgba(154, 161, 177, 0.15),
     0 4px 80px -8px rgba(36, 40, 47, 0.25),
     0 4px 4px -2px rgba(91, 94, 105, 0.15);
-  background-color: white;
+  background-color: $color;
 
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-arrow {
-        @include arrow($placement, 8px, white);
+      > .#{$namespace-prefix}-arrow {
+        @include arrow($placement, $arrow-size + 1, $color);
       }
     }
   }
 
-  .#{$namespace-prefix}-backdrop {
-    background-color: white;
+  > .#{$namespace-prefix}-backdrop {
+    background-color: $color;
   }
 
-  .#{$namespace-prefix}-svg-arrow {
-    fill: white;
+  > .#{$namespace-prefix}-svg-arrow {
+    fill: $color;
   }
 }

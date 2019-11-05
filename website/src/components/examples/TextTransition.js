@@ -1,8 +1,13 @@
 import React, {useState, useEffect} from 'react';
+import styled from 'styled-components';
 import Tippy from '../Tippy';
 import {Button} from '../Framework';
 import TippyTransition from '../TippyTransition';
 import {useInstance} from '../../hooks';
+
+const StyledTippy = styled(Tippy)`
+  overflow: hidden;
+`;
 
 const contents = [
   'Hello there!',
@@ -50,7 +55,7 @@ function DimensionsTransition() {
 
   return (
     <TippyTransition>
-      <Tippy
+      <StyledTippy
         content={content}
         onCreate={onCreate}
         onHidden={onHidden}
@@ -60,7 +65,7 @@ function DimensionsTransition() {
         trigger="click"
       >
         <Button>Text transition (click)</Button>
-      </Tippy>
+      </StyledTippy>
     </TippyTransition>
   );
 }

@@ -4,6 +4,7 @@
  * See: https://www.gatsbyjs.org/docs/browser-apis/
  */
 import redirects from './src/redirects';
+import config from './gatsby-config';
 
 import './static/fonts.css';
 

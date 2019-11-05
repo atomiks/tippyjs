@@ -1,6 +1,4 @@
-import {Props, Targets, Plugin} from './types';
-import {hasOwnProperty, includes} from './utils';
-import {defaultProps, getExtendedProps} from './props';
+import {Targets} from './types';
 
 export function createMemoryLeakWarning(method: string): string {
   const txt = method === 'destroy' ? 'n already-' : ' ';
@@ -65,101 +63,6 @@ export function throwErrorWhen(condition: boolean, message: string): void {
 }
 
 /**
- * Validates props with the valid `defaultProps` object
- */
-export function validateProps(
-  partialProps: Partial<Props> = {},
-  plugins: Plugin[] = [],
-): void {
-  Object.keys(partialProps).forEach((prop): void => {
-    const value = partialProps[prop];
-
-    const didSpecifyPlacementInPopperOptions =
-      prop === 'popperOptions' && value && hasOwnProperty(value, 'placement');
-    const didPassUnknownProp =
-      !hasOwnProperty(getExtendedProps(defaultProps, plugins), prop) &&
-      !includes(
-        ['a11y', 'arrowType', 'showOnInit', 'size', 'target', 'touchHold'],
-        prop,
-      );
-
-    warnWhen(
-      prop === 'target',
-      `The \`target\` prop was removed in v5 and replaced with the delegate()
-      method in order to conserve bundle size.
-      
-      Read more: https//atomiks.github.io/tippyjs/addons#event-delegation`,
-    );
-
-    warnWhen(
-      prop === 'a11y',
-      `The \`a11y\` prop was removed in v5. Make sure the element you are giving
-      a tippy to is natively focusable, such as <button> or <input>, not <div>
-      or <span>.`,
-    );
-
-    warnWhen(
-      prop === 'showOnInit',
-      `The \`showOnInit\` prop was renamed to \`showOnCreate\` in v5.`,
-    );
-
-    warnWhen(
-      prop === 'arrowType',
-      `The \`arrowType\` prop was removed in v5 in favor of overloading the
-      \`arrow\` prop.
-  
-      Before: {arrow: true, arrowType: "round"}
-      After: {arrow: "round"}`,
-    );
-
-    warnWhen(
-      prop === 'touchHold',
-      `The \`touchHold\` prop was removed in v5 in favor of overloading the
-      \`touch\` prop.
-      
-      Before: {touchHold: true}
-      After: {touch: "hold"}`,
-    );
-
-    warnWhen(
-      prop === 'size',
-      `The \`size\` prop was removed in v5. Instead, use a theme that specifies
-      CSS padding and font-size properties.`,
-    );
-
-    warnWhen(
-      prop === 'theme' && value === 'google',
-      `The included theme "google" was renamed to "material" in v5.`,
-    );
-
-    warnWhen(
-      didSpecifyPlacementInPopperOptions,
-      `Specifying placement in \`popperOptions\` is not supported. Use the
-      base-level \`placement\` prop instead.
-      
-      Before: {popperOptions: {placement: "bottom"}}
-      After: {placement: "bottom"}`,
-    );
-
-    warnWhen(
-      didPassUnknownProp,
-      `The \`${prop}\` prop is not a valid prop. You may have spelled it 
-      incorrectly, or if it's a plugin, forgot to pass it in an array as a 3rd
-      argument to \`tippy()\`.
-
-      In v5, the following props were turned into plugins:
-
-      * animateFill
-      * followCursor
-      * sticky
-      
-      All props: https://atomiks.github.io/tippyjs/all-props/
-      Plugins: https://atomiks.github.io/tippyjs/plugins/`,
-    );
-  });
-}
-
-/**
  * Validates the `targets` value passed to `tippy()`
  */
 export function validateTargets(targets: Targets): void {
@@ -180,6 +83,6 @@ export function validateTargets(targets: Targets): void {
     `tippy() was passed a plain object which is no longer supported as an
     argument.
     
-    See https://atomiks.github.io/tippyjs/misc#custom-position`,
+    See https://atomiks.github.io/tippyjs/misc/#custom-position`,
   );
 }

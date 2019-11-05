@@ -5,8 +5,8 @@ index: 14
 ---
 
 Plugins are an extensible way to add functionality to tippy instances. By
-splitting functionality into a plugin, users who don't need the code provided by
-the plugin are not burdened with its cost by default.
+splitting functionality into a plugin, components or routes that don't need the
+plugin are not burdened with its bundle size cost.
 
 ### Exported plugins
 
@@ -32,43 +32,14 @@ import 'tippy.js/animations/shift-away.css';
 > requests. Using a bundler like webpack is recommended instead to benefit from
 > treeshaking.
 
-Pass the plugin(s) in an array as a 3rd argument to `tippy()`:
-
 ```js
 import tippy, {followCursor} from 'tippy.js';
 
-tippy(reference, {followCursor: true}, [followCursor]);
+tippy(reference, {
+  followCursor: true,
+  plugins: [followCursor],
+});
 ```
-
-#### Helper function
-
-There is a helper function that returns a higher-order tippy function that will
-pass the plugin(s) for you:
-
-`src/tippy.js`:
-
-```js
-import {createTippyWithPlugins, followCursor} from 'tippy.js';
-
-export default createTippyWithPlugins([followCursor]);
-```
-
-Import `tippy` from this file instead of `node_modules`.
-
-`src/index.js`:
-
-```js
-import tippy from './tippy';
-
-tippy(reference, {followCursor: true});
-```
-
-If bundle size is important, you can create different tippy files with pass
-particular plugins, or stick to using the 3rd argument, so that only the routes
-or components that require the plugin import it.
-
-If the cost of the plugins is neglibile for you, then you can use a central file
-that passes all plugins that your app requires.
 
 ### Creating your own custom plugin
 
@@ -91,7 +62,7 @@ const plugin = {
 ```
 
 The plugin's function `fn` returns an object of
-[lifecycle hooks](/lifecycle-hooks).
+[lifecycle hooks](/lifecycle-hooks/).
 
 Here's an example of a plugin that causes a popper to hide if no elements within
 it are in focus (for interactivity):
@@ -100,9 +71,9 @@ it are in focus (for interactivity):
 const hideOnPopperBlur = {
   name: 'hideOnPopperBlur',
   defaultValue: true,
-  fn() {
+  fn(instance) {
     return {
-      onCreate(instance) {
+      onCreate() {
         instance.popper.addEventListener('focusout', event => {
           if (
             instance.props.hideOnPopperBlur &&
@@ -118,9 +89,37 @@ const hideOnPopperBlur = {
 };
 
 // Our new prop is enabled by default (defaultValue: true)
-tippy(reference, {}, [hideOnPopperBlur]);
+tippy(reference, {
+  plugins: [hideOnPopperBlur],
+});
 ```
 
 Plugins are invoked per-instance and the plugin function definition takes the
 instance as an argument, so you can use private variables to create internal
 state in the plugin closure. This is how the `followCursor` plugin works.
+
+### TypeScript
+
+Types that take `Props` (e.g. `Tippy`, `Delegate`, `CreateSingleton`) are
+generics that accept an extended props interface:
+
+```ts
+import tippy, {Tippy, Props, Plugin, LifecycleHooks} from 'tippy.js';
+
+interface CustomProps {
+  myCustomProp: boolean;
+}
+
+type FilteredProps = CustomProps &
+  Omit<Props, keyof CustomProps | keyof LifecycleHooks>;
+
+type ExtendedProps = FilteredProps & LifecycleHooks<FilteredProps>;
+
+export const myCustomProp: Plugin<ExtendedProps> = {
+  name: 'myCustomProp',
+  defaultValue: false,
+  fn: () => ({}),
+};
+
+export default (tippy as unknown) as Tippy<ExtendedProps>;
+```

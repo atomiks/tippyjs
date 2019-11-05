@@ -22,11 +22,11 @@ export const Center = styled.div`
 export const Container = styled.div`
   position: relative;
   max-width: 940px;
-  padding: 0 ${props => props.mobilePadding || '1'}rem;
+  padding: 0 ${props => props.mobilePadding || '16'}px;
   margin: 0 auto;
 
   ${MEDIA.sm} {
-    padding: 0 1.5625rem;
+    padding: 0 25px;
   }
   ${MEDIA.md} {
     padding: 0 60px;
@@ -40,14 +40,14 @@ export const Row = styled(({spacing, ...rest}) => <div {...rest} />)`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 0 -${props => props.spacing || '0.5'}rem;
+  margin: 0 -${props => props.spacing || '8'}px;
 `;
 
 export const Col = styled(({base, xs, sm, md, lg, xl, spacing, ...rest}) => (
   <div {...rest} />
 ))`
   flex: 1;
-  padding: 0 ${props => props.spacing || '0.5'}rem;
+  padding: 0 ${props => props.spacing || '8'}px;
   ${props =>
     props.base &&
     css`
@@ -97,8 +97,8 @@ export const Flex = styled.div`
   align-items: ${props => props.align || 'center'};
 
   > div {
-    margin-right: 0.9375rem;
-    margin-bottom: 0.9375rem;
+    margin-right: 15px;
+    margin-bottom: 15px;
     flex: ${props => props.type === 'even' && 1};
   }
 `;
@@ -109,11 +109,11 @@ export const Button = styled.button`
   color: #5183f5;
   border: 2px dashed #5183f5;
   will-change: opacity;
-  font-size: 1.0625rem;
+  font-size: 16px;
   font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
-  margin: ${props => (props.marginless ? '0' : '0 0.5rem 0.5rem 0')};
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin: ${props => (props.marginless ? '0' : '0 8px 8px 0')};
   transition: background 0.2s, color 0.1s;
 
   &:hover {
@@ -124,14 +124,14 @@ export const Button = styled.button`
 
 export const Demo = styled.div`
   background: #eeeefa;
-  margin: 0.9375rem -1rem 1.5625rem;
-  padding: 1.5625rem 1rem 1rem;
+  margin: 15px -16px 25px;
+  padding: 25px 16px 16px;
 
   ${MEDIA.sm} {
-    padding-left: 1.5625rem;
-    padding-right: 1.5625rem;
-    margin-left: -1.5625rem;
-    margin-right: -1.5625rem;
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-left: -25px;
+    margin-right: -25px;
   }
 
   ${MEDIA.md} {

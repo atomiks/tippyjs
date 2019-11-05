@@ -1,17 +1,10 @@
+import {fireEvent} from '@testing-library/dom';
 import {
   h,
   cleanDocumentBody,
   withTestProps,
   enableTouchEnvironment,
   disableTouchEnvironment,
-  MOUSEENTER,
-  MOUSELEAVE,
-  FOCUS,
-  TOUCHEND,
-  TOUCHSTART,
-  MOUSEDOWN,
-  CLICK,
-  BLUR,
   setTestDefaultProps,
 } from '../utils';
 
@@ -123,7 +116,7 @@ describe('delay', () => {
       delay,
     });
 
-    ref.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(ref);
 
     expect(state.isVisible).toBe(false);
 
@@ -139,11 +132,11 @@ describe('delay', () => {
       delay,
     });
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
 
     jest.advanceTimersByTime(delay);
 
-    instance.reference.dispatchEvent(MOUSELEAVE);
+    fireEvent.mouseLeave(instance.reference);
 
     expect(instance.state.isVisible).toBe(true);
 
@@ -156,7 +149,7 @@ describe('delay', () => {
     const delay = [20, 100];
     const instance = tippy(h(), {trigger: 'mouseenter', delay});
 
-    instance.reference.dispatchEvent(new Event('mouseenter'));
+    fireEvent.mouseEnter(instance.reference);
 
     expect(instance.state.isVisible).toBe(false);
 
@@ -169,7 +162,7 @@ describe('delay', () => {
     const delay = [100, 20];
     const instance = tippy(h(), {trigger: 'mouseenter', delay});
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
 
     expect(instance.state.isVisible).toBe(false);
 
@@ -177,7 +170,7 @@ describe('delay', () => {
 
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(new Event('mouseleave'));
+    fireEvent.mouseLeave(instance.reference);
     jest.advanceTimersByTime(delay[1]);
 
     expect(instance.state.isVisible).toBe(false);
@@ -188,7 +181,7 @@ describe('delay', () => {
 
     const instance = tippy(h(), {delay: 100});
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
 
     expect(instance.state.isVisible).toBe(true);
 
@@ -198,48 +191,42 @@ describe('delay', () => {
   it('is 0 in keyboard context', () => {
     const instance = tippy(h(), {delay: 100});
 
-    instance.reference.dispatchEvent(FOCUS);
+    fireEvent.focus(instance.reference);
 
     expect(instance.state.isVisible).toBe(true);
   });
 
   it('instance does not hide if cursor returned after leaving before delay finished', () => {
     const instance = tippy(h(), {delay: 100, interactive: true});
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
 
     jest.advanceTimersByTime(100);
 
-    instance.popper.dispatchEvent(MOUSELEAVE);
-    document.body.dispatchEvent(
-      new MouseEvent('mousemove', {
-        bubbles: true,
-        clientX: 1000,
-        clientY: 1000,
-      }),
-    );
+    fireEvent.mouseLeave(instance.popper);
+    fireEvent.mouseMove(document.body, {
+      clientX: 1000,
+      clientY: 1000,
+    });
 
     expect(instance.state.isVisible).toBe(true);
 
     jest.advanceTimersByTime(99);
 
-    instance.popper.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.popper);
 
     jest.advanceTimersByTime(1);
 
     expect(instance.state.isVisible).toBe(true);
 
-    instance.popper.dispatchEvent(MOUSELEAVE);
-    document.body.dispatchEvent(
-      new MouseEvent('mousemove', {
-        bubbles: true,
-        clientX: 1000,
-        clientY: 1000,
-      }),
-    );
+    fireEvent.mouseLeave(instance.popper);
+    fireEvent.mouseMove(document.body, {
+      clientX: 1000,
+      clientY: 1000,
+    });
 
     jest.advanceTimersByTime(101);
 
-    instance.popper.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.popper);
 
     expect(instance.state.isVisible).toBe(false);
   });
@@ -251,40 +238,49 @@ describe('delay', () => {
       trigger: 'click',
     });
 
-    instance.reference.dispatchEvent(CLICK);
+    fireEvent.click(instance.reference);
     jest.advanceTimersByTime(100);
 
-    instance.popper.dispatchEvent(MOUSELEAVE);
-    document.body.dispatchEvent(
-      new MouseEvent('mousemove', {
-        bubbles: true,
-        clientX: 1000,
-        clientY: 1000,
-      }),
-    );
+    fireEvent.mouseLeave(instance.popper);
+    fireEvent.mouseMove(document.body, {
+      clientX: 1000,
+      clientY: 1000,
+    });
 
     expect(instance.state.isVisible).toBe(true);
 
     jest.advanceTimersByTime(99);
 
-    instance.popper.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.popper);
 
     jest.advanceTimersByTime(1);
 
     expect(instance.state.isVisible).toBe(true);
 
-    instance.popper.dispatchEvent(MOUSELEAVE);
-    document.body.dispatchEvent(
-      new MouseEvent('mousemove', {
-        bubbles: true,
-        clientX: 1000,
-        clientY: 1000,
-      }),
-    );
+    fireEvent.mouseLeave(instance.popper);
+    fireEvent.mouseMove(document.body, {
+      clientX: 1000,
+      clientY: 1000,
+    });
 
     jest.advanceTimersByTime(101);
 
-    instance.popper.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.popper);
+
+    expect(instance.state.isVisible).toBe(true);
+  });
+
+  it('is respected by `showOnCreate` prop', () => {
+    const instance = tippy(h(), {
+      delay: 100,
+      showOnCreate: true,
+    });
+
+    jest.advanceTimersByTime(99);
+
+    expect(instance.state.isVisible).toBe(false);
+
+    jest.advanceTimersByTime(1);
 
     expect(instance.state.isVisible).toBe(true);
   });
@@ -353,74 +349,74 @@ describe('trigger', () => {
   it('default: many triggers', () => {
     const instance = tippy(h());
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(MOUSELEAVE);
+    fireEvent.mouseLeave(instance.reference);
     expect(instance.state.isVisible).toBe(false);
 
-    instance.reference.dispatchEvent(FOCUS);
+    fireEvent.focus(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(BLUR);
+    fireEvent.blur(instance.reference);
     expect(instance.state.isVisible).toBe(false);
   });
 
   it('mouseenter', () => {
     const instance = tippy(h(), {trigger: 'mouseenter'});
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(MOUSELEAVE);
+    fireEvent.mouseLeave(instance.reference);
     expect(instance.state.isVisible).toBe(false);
   });
 
   it('focus', () => {
     const instance = tippy(h(), {trigger: 'focus'});
 
-    instance.reference.dispatchEvent(FOCUS);
+    fireEvent.focus(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(BLUR);
+    fireEvent.blur(instance.reference);
     expect(instance.state.isVisible).toBe(false);
   });
 
   it('focus + interactive: focus switching to inside popper does not hide tippy', () => {
     const instance = tippy(h(), {interactive: true, trigger: 'focus'});
 
-    instance.reference.dispatchEvent(new Event('focus'));
+    fireEvent.focus(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(
-      new FocusEvent('blur', {relatedTarget: instance.popper}),
-    );
+    fireEvent.blur(instance.reference, {
+      relatedTarget: instance.popper,
+    });
     expect(instance.state.isVisible).toBe(true);
   });
 
   it('click', () => {
     const instance = tippy(h(), {trigger: 'click'});
 
-    instance.reference.dispatchEvent(new Event('click'));
+    fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(new Event('click'));
+    fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(false);
   });
 
   it('manual', () => {
     const instance = tippy(h(), {trigger: 'manual'});
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     expect(instance.state.isVisible).toBe(false);
 
-    instance.reference.dispatchEvent(FOCUS);
+    fireEvent.focus(instance.reference);
     expect(instance.state.isVisible).toBe(false);
 
-    instance.reference.dispatchEvent(CLICK);
+    fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(false);
 
-    instance.reference.dispatchEvent(new Event('touchstart'));
+    fireEvent.touchStart(instance.reference);
     expect(instance.state.isVisible).toBe(false);
   });
 });
@@ -430,7 +426,7 @@ describe('interactive', () => {
     const instance = tippy(h(), {interactive: true});
 
     instance.show();
-    instance.popperChildren.tooltip.dispatchEvent(CLICK);
+    fireEvent.click(instance.popperChildren.tooltip);
 
     expect(instance.state.isVisible).toBe(true);
   });
@@ -441,38 +437,29 @@ describe('interactive', () => {
     instance.show();
     jest.runAllTimers();
 
-    instance.popperChildren.tooltip.dispatchEvent(
-      new MouseEvent('mousedown', {bubbles: true}),
-    );
+    fireEvent.mouseDown(instance.popperChildren.tooltip);
 
     expect(instance.state.isVisible).toBe(false);
   });
 
   it('tippy does not hide as cursor moves over it or the reference', () => {
     const instance = tippy(h(), {interactive: true});
-    instance.reference.dispatchEvent(new Event('mouseenter'));
+    fireEvent.mouseEnter(instance.reference);
 
-    instance.reference.dispatchEvent(new Event('mouseleave'));
-    instance.popper.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));
+    fireEvent.mouseLeave(instance.reference);
+    fireEvent.mouseMove(instance.popper);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.popperChildren.tooltip.dispatchEvent(
-      new Event('mousemove', {bubbles: true}),
-    );
+    fireEvent.mouseMove(instance.popperChildren.tooltip);
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(
-      new MouseEvent('mousemove', {bubbles: true}),
-    );
+    fireEvent.mouseMove(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    document.body.dispatchEvent(
-      new MouseEvent('mousemove', {
-        bubbles: true,
-        clientX: 1000,
-        clientY: 1000,
-      }),
-    );
+    fireEvent.mouseMove(document.body, {
+      clientX: 1000,
+      clientY: 1000,
+    });
     expect(instance.state.isVisible).toBe(false);
   });
 
@@ -493,7 +480,7 @@ describe('interactive', () => {
 
     instance.setProps({triggerTarget});
 
-    triggerTarget.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(triggerTarget);
     jest.runAllTimers();
 
     expect(instance.reference.getAttribute('aria-expanded')).toBe(null);
@@ -546,11 +533,17 @@ describe('interactive', () => {
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
         `Interactive tippy element may not be accessible via keyboard
+        navigation because it is not directly after the reference element in
+        the DOM source order.
+
+        Using a wrapper <div> or <span> tag around the reference element solves
+        this by creating a new parentNode context.
+
+        Specifying \`appendTo: document.body\` silences this warning, but it
+        assumes you are using a focus management solution to handle keyboard
         navigation.
-        
-        Ensure the tippy element is directly after the reference
-        (or triggerTarget) element in the DOM source order. Using a wrapper
-        <div> or <span> element around it can solve this.`,
+
+        See: https://atomiks.github.io/tippyjs/accessibility/#interactivity`,
       ),
     );
 
@@ -800,9 +793,9 @@ describe('onTrigger', () => {
     const spy = jest.fn();
     const instance = tippy(h(), {onTrigger: spy});
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
 
-    expect(spy).toHaveBeenCalledWith(instance, MOUSEENTER);
+    expect(spy).toHaveBeenCalledWith(instance, new MouseEvent('mouseenter'));
   });
 
   it('is not called without an event to pass (showOnCreate)', () => {
@@ -899,49 +892,6 @@ describe('popperOptions', () => {
     });
 
     expect(popperInstance.options.modifiers.preventOverflow.test).toBe(true);
-  });
-
-  it('modifiers.preventOverflow.padding is not overwritten', () => {
-    const paddings = [15, {top: 15, bottom: -5, left: 50, right: 0}];
-    const placements = ['top', 'bottom', 'left', 'right'];
-
-    placements.forEach(placement => {
-      paddings.forEach(padding => {
-        const instance = tippy(h(), {
-          placement,
-          lazy: false,
-          popperOptions: {
-            modifiers: {
-              preventOverflow: {
-                padding,
-              },
-            },
-          },
-        });
-
-        jest.runAllTimers();
-
-        const preventOverflowPadding = instance.popperInstance.modifiers.find(
-          m => m.name === 'preventOverflow',
-        ).padding;
-
-        const paddingObject =
-          typeof padding === 'number'
-            ? {
-                top: padding,
-                right: padding,
-                bottom: padding,
-                left: padding,
-                [placement]: padding + 10,
-              }
-            : {
-                ...padding,
-                [placement]: padding[placement] + 10,
-              };
-
-        expect(preventOverflowPadding).toEqual(paddingObject);
-      });
-    });
   });
 
   it('modifiers.arrow', () => {
@@ -1129,11 +1079,14 @@ describe('touch', () => {
   it('"hold": uses `touch` listeners instead', () => {
     const ref = h();
     const instance = tippy(ref, {touch: 'hold'});
-    ref.dispatchEvent(new Event('mouseenter'));
+
+    fireEvent.mouseEnter(ref);
     expect(instance.state.isVisible).toBe(false);
-    ref.dispatchEvent(new Event('focus'));
+
+    fireEvent.focus(ref);
     expect(instance.state.isVisible).toBe(false);
-    ref.dispatchEvent(new Event('touchstart'));
+
+    fireEvent.touchStart(ref);
     expect(instance.state.isVisible).toBe(true);
   });
 
@@ -1141,13 +1094,13 @@ describe('touch', () => {
     const ref = h();
     const instance = tippy(ref, {touch: 'hold'});
 
-    ref.dispatchEvent(TOUCHSTART);
+    fireEvent.touchStart(ref);
     expect(instance.state.isVisible).toBe(true);
 
-    ref.dispatchEvent(MOUSELEAVE);
+    fireEvent.mouseLeave(ref);
     expect(instance.state.isVisible).toBe(true);
 
-    ref.dispatchEvent(TOUCHEND);
+    fireEvent.touchEnd(ref);
     expect(instance.state.isVisible).toBe(false);
   });
 
@@ -1155,16 +1108,13 @@ describe('touch', () => {
     const ref = h();
     const instance = tippy(ref, {touch: ['hold', 100]});
 
-    ref.dispatchEvent(TOUCHSTART);
-
+    fireEvent.touchStart(ref);
     expect(instance.state.isVisible).toBe(false);
 
     jest.advanceTimersByTime(99);
-
     expect(instance.state.isVisible).toBe(false);
 
     jest.advanceTimersByTime(1);
-
     expect(instance.state.isVisible).toBe(true);
   });
 
@@ -1172,13 +1122,11 @@ describe('touch', () => {
     const ref = h();
     const instance = tippy(ref, {touch: ['hold', 100]});
 
-    ref.dispatchEvent(TOUCHSTART);
-
+    fireEvent.touchStart(ref);
     expect(instance.state.isVisible).toBe(false);
 
-    ref.dispatchEvent(TOUCHEND);
+    fireEvent.touchEnd(ref);
     jest.advanceTimersByTime(100);
-
     expect(instance.state.isVisible).toBe(false);
   });
 });
@@ -1229,11 +1177,11 @@ describe('triggerTarget', () => {
     const node = h('div');
     const instance = tippy(h(), {triggerTarget: node});
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
 
     expect(instance.state.isVisible).toBe(false);
 
-    node.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(node);
 
     expect(instance.state.isVisible).toBe(true);
   });
@@ -1245,11 +1193,11 @@ describe('triggerTarget', () => {
 
     instance.setProps({triggerTarget: node2});
 
-    node.dispatchEvent(new Event('mouseenter'));
+    fireEvent.mouseEnter(node);
 
     expect(instance.state.isVisible).toBe(false);
 
-    node2.dispatchEvent(new Event('mouseenter'));
+    fireEvent.mouseEnter(node2);
 
     expect(instance.state.isVisible).toBe(true);
   });
@@ -1261,15 +1209,15 @@ describe('triggerTarget', () => {
     const instance = tippy(h(), {triggerTarget: nodes});
 
     nodes.forEach(node => {
-      instance.reference.dispatchEvent(MOUSEENTER);
+      fireEvent.mouseEnter(instance.reference);
 
       expect(instance.state.isVisible).toBe(false);
 
-      node.dispatchEvent(MOUSEENTER);
+      fireEvent.mouseEnter(node);
 
       expect(instance.state.isVisible).toBe(true);
 
-      node.dispatchEvent(MOUSELEAVE);
+      fireEvent.mouseLeave(node);
 
       expect(instance.state.isVisible).toBe(false);
     });
@@ -1281,7 +1229,7 @@ describe('hideOnClick', () => {
     const instance = tippy(h(), {hideOnClick: true});
 
     instance.show();
-    instance.reference.dispatchEvent(MOUSEDOWN);
+    fireEvent.mouseDown(instance.reference);
 
     expect(instance.state.isVisible).toBe(false);
   });
@@ -1291,8 +1239,8 @@ describe('hideOnClick', () => {
 
     instance.show();
 
-    instance.popperChildren.tooltip.dispatchEvent(MOUSEDOWN);
-    instance.popperChildren.tooltip.dispatchEvent(CLICK);
+    fireEvent.mouseDown(instance.popperChildren.tooltip);
+    fireEvent.click(instance.popperChildren.tooltip);
 
     expect(instance.state.isVisible).toBe(true);
   });
@@ -1303,8 +1251,8 @@ describe('hideOnClick', () => {
     instance.show();
     jest.runAllTimers();
 
-    instance.popperChildren.tooltip.dispatchEvent(MOUSEDOWN);
-    instance.popperChildren.tooltip.dispatchEvent(CLICK);
+    fireEvent.mouseDown(instance.popperChildren.tooltip);
+    fireEvent.click(instance.popperChildren.tooltip);
 
     expect(instance.state.isVisible).toBe(false);
   });
@@ -1314,8 +1262,8 @@ describe('hideOnClick', () => {
 
     instance.show();
 
-    instance.reference.dispatchEvent(MOUSEDOWN);
-    instance.reference.dispatchEvent(CLICK);
+    fireEvent.mouseDown(instance.reference);
+    fireEvent.click(instance.reference);
 
     expect(instance.state.isVisible).toBe(true);
   });
@@ -1325,12 +1273,12 @@ describe('hideOnClick', () => {
 
     instance.show();
 
-    instance.popperChildren.tooltip.dispatchEvent(MOUSEDOWN);
-    instance.popperChildren.tooltip.dispatchEvent(CLICK);
-    instance.reference.dispatchEvent(MOUSEDOWN);
-    instance.reference.dispatchEvent(CLICK);
-    document.body.dispatchEvent(MOUSEDOWN);
-    document.body.dispatchEvent(CLICK);
+    fireEvent.mouseDown(instance.popperChildren.tooltip);
+    fireEvent.click(instance.popperChildren.tooltip);
+    fireEvent.mouseDown(instance.reference);
+    fireEvent.click(instance.reference);
+    fireEvent.mouseDown(document.body);
+    fireEvent.click(document.body);
 
     expect(instance.state.isVisible).toBe(true);
   });
@@ -1342,15 +1290,15 @@ describe('hideOnClick', () => {
 
     jest.runAllTimers();
 
-    document.body.dispatchEvent(MOUSEDOWN);
-    document.body.dispatchEvent(CLICK);
-    instance.popperChildren.tooltip.dispatchEvent(MOUSEDOWN);
-    instance.popperChildren.tooltip.dispatchEvent(CLICK);
+    fireEvent.mouseDown(document.body);
+    fireEvent.click(document.body);
+    fireEvent.mouseDown(instance.popperChildren.tooltip);
+    fireEvent.click(instance.popperChildren.tooltip);
 
     expect(instance.state.isVisible).toBe(true);
 
-    instance.reference.dispatchEvent(MOUSEDOWN);
-    instance.reference.dispatchEvent(CLICK);
+    fireEvent.mouseDown(instance.reference);
+    fireEvent.click(instance.reference);
 
     expect(instance.state.isVisible).toBe(false);
   });
@@ -1358,10 +1306,73 @@ describe('hideOnClick', () => {
   it('handles `mousedown` -> `focus` quirk', () => {
     const instance = tippy(h(), {hideOnClick: true});
 
-    instance.reference.dispatchEvent(MOUSEENTER);
-    instance.reference.dispatchEvent(MOUSEDOWN);
-    instance.reference.dispatchEvent(FOCUS);
+    fireEvent.mouseEnter(instance.reference);
+    fireEvent.mouseDown(instance.reference);
+    fireEvent.click(instance.reference);
 
     expect(instance.state.isVisible).toBe(false);
+  });
+});
+
+describe('distance', () => {
+  // currentPlacement is always `top` for these
+  it('number: should set `top` on tooltip element', () => {
+    const instance = tippy(h(), {distance: 100});
+    const {tooltip} = instance.popperChildren;
+
+    instance.show();
+    jest.runAllTimers();
+
+    expect(tooltip.style.top).toBe('-100px');
+  });
+
+  it('string: should set `top` on tooltip element', () => {
+    const instance = tippy(h(), {distance: '5rem'});
+    const {tooltip} = instance.popperChildren;
+
+    instance.show();
+    jest.runAllTimers();
+
+    expect(tooltip.style.top).toBe(`-${5 * 16}px`);
+  });
+});
+
+describe('plugins', () => {
+  it('passes correctly', () => {
+    const plugins = [{name: 'x', fn: () => ({})}];
+    const instance = tippy(h(), {plugins});
+    expect(instance.plugins).toEqual(plugins);
+  });
+
+  it('warns when changed plugins passed to .setProps()', () => {
+    const instance = tippy(h(), {plugins: []});
+    const spy = jest.spyOn(console, 'warn');
+
+    instance.setProps({plugins: []});
+
+    expect(spy).not.toHaveBeenCalledWith(
+      ...getFormattedMessage('Cannot update plugins'),
+    );
+
+    instance.setProps({plugins: [{}]});
+
+    expect(spy).toHaveBeenCalledWith(
+      ...getFormattedMessage('Cannot update plugins'),
+    );
+
+    spy.mockRestore();
+  });
+
+  it('does not warn if plugin was passed', () => {
+    const spy = jest.spyOn(console, 'warn');
+
+    tippy(h(), {
+      x: true,
+      plugins: [{name: 'x', fn: () => ({})}],
+    });
+
+    expect(spy).not.toHaveBeenCalled();
+
+    spy.mockRestore();
   });
 });

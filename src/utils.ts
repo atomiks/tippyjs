@@ -1,12 +1,25 @@
-import {Props, ReferenceElement, Targets, Plugin} from './types';
-import {getDataAttributeProps} from './reference';
-import {POPPER_CLASS} from './constants';
+import {ReferenceElement, Targets, BasePlacement} from './types';
+import Popper from 'popper.js';
+
+/**
+ * Triggers reflow
+ */
+export function reflow(element: HTMLElement): void {
+  void element.offsetHeight;
+}
+
+/**
+ * Sets the innerHTML of an element
+ */
+export function setInnerHTML(element: Element, html: string): void {
+  element[innerHTML()] = html;
+}
 
 /**
  * Determines if the value is a reference element
  */
 export function isReferenceElement(value: any): value is ReferenceElement {
-  return !!(value && value._tippy && !value.classList.contains(POPPER_CLASS));
+  return !!(value && value._tippy && value._tippy.reference === value);
 }
 
 /**
@@ -20,11 +33,11 @@ export function hasOwnProperty(obj: object, key: string): boolean {
  * Returns an array of elements based on the value
  */
 export function getArrayOfElements(value: Targets): Element[] {
-  if (isRealElement(value)) {
+  if (isElement(value)) {
     return [value];
   }
 
-  if (value instanceof NodeList) {
+  if (isNodeList(value)) {
     return arrayFrom(value);
   }
 
@@ -39,9 +52,9 @@ export function getArrayOfElements(value: Targets): Element[] {
  * Returns a value at a given index depending on if it's an array or number
  */
 export function getValueAtIndexOrReturn<T>(
-  value: T | T[],
+  value: T | [T | null, T | null],
   index: number,
-  defaultValue: T | T[],
+  defaultValue: T | [T, T],
 ): T {
   if (Array.isArray(value)) {
     const v = value[index];
@@ -64,10 +77,32 @@ export function getModifier(obj: any, key: string): any {
 }
 
 /**
- * Determines if the value is a real element
+ * Determines if the value is of type
  */
-export function isRealElement(value: any): value is Element {
-  return value instanceof Element;
+export function isType(value: any, type: string): boolean {
+  const str = {}.toString.call(value);
+  return str.indexOf('[object') === 0 && str.indexOf(`${type}]`) > -1;
+}
+
+/**
+ * Determines if the value is of type Element
+ */
+export function isElement(value: any): value is Element {
+  return isType(value, 'Element');
+}
+
+/**
+ * Determines if the value is of type NodeList
+ */
+export function isNodeList(value: any): value is NodeList {
+  return isType(value, 'NodeList');
+}
+
+/**
+ * Determines if the value is of type MouseEvent
+ */
+export function isMouseEvent(value: any): value is MouseEvent {
+  return isType(value, 'MouseEvent');
 }
 
 /**
@@ -86,10 +121,15 @@ export function invokeWithArgsOrReturn(value: any, args: any[]): any {
 }
 
 /**
- * Sets a popperInstance `flip` modifier's enabled state
+ * Sets a popperInstance modifier's property to a value
  */
-export function setFlipModifierEnabled(modifiers: any[], value: any): void {
-  modifiers.filter((m): boolean => m.name === 'flip')[0].enabled = value;
+export function setModifierValue(
+  modifiers: any[],
+  name: string,
+  property: string,
+  value: unknown,
+): void {
+  modifiers.filter(m => m.name === name)[0][property] = value;
 }
 
 /**
@@ -106,7 +146,7 @@ export function setTransitionDuration(
   els: (HTMLDivElement | null)[],
   value: number,
 ): void {
-  els.forEach((el): void => {
+  els.forEach(el => {
     if (el) {
       el.style.transitionDuration = `${value}ms`;
     }
@@ -120,35 +160,11 @@ export function setVisibilityState(
   els: (HTMLDivElement | null)[],
   state: 'visible' | 'hidden',
 ): void {
-  els.forEach((el): void => {
+  els.forEach(el => {
     if (el) {
       el.setAttribute('data-state', state);
     }
   });
-}
-
-/**
- * Evaluates the props object by merging data attributes and disabling
- * conflicting props where necessary
- */
-export function evaluateProps(
-  reference: ReferenceElement,
-  props: Props,
-  plugins: Plugin[],
-): Props {
-  const out = {
-    ...props,
-    content: invokeWithArgsOrReturn(props.content, [reference]),
-    ...(props.ignoreAttributes
-      ? {}
-      : getDataAttributeProps(reference, plugins)),
-  };
-
-  if (out.interactive) {
-    out.aria = null;
-  }
-
-  return out;
 }
 
 /**
@@ -169,7 +185,7 @@ export function debounce<T>(
 
   return (arg): void => {
     clearTimeout(timeout);
-    timeout = setTimeout((): void => {
+    timeout = setTimeout(() => {
       fn(arg);
     }, ms);
   };
@@ -193,7 +209,7 @@ export function preserveInvocation<T>(
  */
 export function removeProperties<T>(obj: T, keys: Array<keyof T>): Partial<T> {
   const clone = {...obj};
-  keys.forEach((key): void => {
+  keys.forEach(key => {
     delete clone[key];
   });
   return clone;
@@ -252,4 +268,88 @@ export function useIfDefined(nextValue: any, currentValue: any): any {
 export function normalizeToArray<T>(value: T | T[]): T[] {
   // @ts-ignore
   return [].concat(value);
+}
+
+/**
+ * Returns the ownerDocument of the first available element, otherwise global
+ * document
+ */
+export function getOwnerDocument(
+  elementOrElements: Element | Element[],
+): Document {
+  const [element] = normalizeToArray(elementOrElements);
+  return element ? element.ownerDocument || document : document;
+}
+
+/**
+ * Adds item to array if array does not contain it
+ */
+export function pushIfUnique<T>(arr: T[], value: T): void {
+  if (arr.indexOf(value) === -1) {
+    arr.push(value);
+  }
+}
+
+/**
+ * Adds `px` if value is a number, or returns it directly
+ */
+export function appendPxIfNumber(value: string | number): string {
+  return typeof value === 'number' ? `${value}px` : value;
+}
+
+/**
+ * Filters out duplicate elements in an array
+ */
+export function unique<T>(arr: T[]): T[] {
+  return arr.filter((item, index) => arr.indexOf(item) === index);
+}
+
+/**
+ * Returns number from number or CSS units string
+ */
+export function getNumber(value: string | number): number {
+  return typeof value === 'number' ? value : parseFloat(value);
+}
+
+/**
+ * Gets number or CSS string units in pixels (e.g. `1rem` -> 16)
+ */
+export function getUnitsInPx(doc: Document, value: string | number): number {
+  const isRem = typeof value === 'string' && includes(value, 'rem');
+  const html = doc.documentElement;
+  const rootFontSize = 16;
+
+  if (html && isRem) {
+    return (
+      parseFloat(getComputedStyle(html).fontSize || String(rootFontSize)) *
+      getNumber(value)
+    );
+  }
+
+  return getNumber(value);
+}
+
+/**
+ * Adds the `distancePx` value to the placement of a Popper.Padding object
+ */
+export function getComputedPadding(
+  basePlacement: BasePlacement,
+  padding: number | Popper.Padding = 5,
+  distancePx: number,
+): Popper.Padding {
+  const freshPaddingObject = {top: 0, right: 0, bottom: 0, left: 0};
+  const keys = Object.keys(freshPaddingObject) as BasePlacement[];
+
+  return keys.reduce<Popper.Padding>((obj, key) => {
+    obj[key] = typeof padding === 'number' ? padding : (padding as any)[key];
+
+    if (basePlacement === key) {
+      obj[key] =
+        typeof padding === 'number'
+          ? padding + distancePx
+          : (padding as any)[basePlacement] + distancePx;
+    }
+
+    return obj;
+  }, freshPaddingObject);
 }

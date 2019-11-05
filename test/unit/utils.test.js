@@ -159,13 +159,24 @@ describe('includes', () => {
   });
 });
 
-describe('setFlipModifierEnabled', () => {
+describe('setModifierValue', () => {
   it('sets it correctly', () => {
-    const modifiers = [{name: 'x'}, {name: 'flip', enabled: true}];
-    Utils.setFlipModifierEnabled(modifiers, false);
+    const modifiers = [
+      {name: 'preventOverflow', padding: 0},
+      {name: 'flip', enabled: true},
+    ];
+
+    Utils.setModifierValue(modifiers, 'flip', 'enabled', false);
     expect(modifiers[1].enabled).toBe(false);
-    Utils.setFlipModifierEnabled(modifiers, true);
+
+    Utils.setModifierValue(modifiers, 'flip', 'enabled', true);
     expect(modifiers[1].enabled).toBe(true);
+
+    Utils.setModifierValue(modifiers, 'preventOverflow', 'padding', 10);
+    expect(modifiers[0].padding).toBe(10);
+
+    Utils.setModifierValue(modifiers, 'preventOverflow', 'padding', 2);
+    expect(modifiers[0].padding).toBe(2);
   });
 });
 
@@ -173,44 +184,6 @@ describe('div', () => {
   it('creates and returns a div element', () => {
     const d = Utils.div();
     expect(d.nodeName).toBe('DIV');
-  });
-});
-
-describe('evaluateProps', () => {
-  it('ignores attributes if `ignoreAttributes: true`', () => {
-    const props = {animation: 'scale', ignoreAttributes: true};
-    const reference = h();
-
-    reference.setAttribute('data-tippy-animation', 'fade');
-
-    expect(Utils.evaluateProps(reference, props, [])).toEqual({
-      animation: 'scale',
-      ignoreAttributes: true,
-    });
-  });
-
-  it('does not ignore attributes if `ignoreAttributes: false`', () => {
-    const props = {animation: 'scale', ignoreAttributes: false};
-    const reference = h();
-
-    reference.setAttribute('data-tippy-animation', 'fade');
-
-    expect(Utils.evaluateProps(reference, props, [])).toEqual({
-      animation: 'fade',
-      ignoreAttributes: false,
-    });
-  });
-
-  it('considers plugin props', () => {
-    const props = {plugin: 'x'};
-    const plugins = [{name: 'plugin', fn: () => ({})}];
-    const reference = h();
-
-    reference.setAttribute('data-tippy-plugin', 'y');
-
-    expect(Utils.evaluateProps(reference, props, plugins)).toEqual({
-      plugin: 'y',
-    });
   });
 });
 
@@ -322,5 +295,164 @@ describe('splitBySpaces', () => {
   it('ignores surrounding whitespace', () => {
     expect(Utils.splitBySpaces('  one  ')).toMatchObject(['one']);
     expect(Utils.splitBySpaces(' one  two ')).toMatchObject(['one', 'two']);
+  });
+});
+
+describe('isType', () => {
+  it('correctly determines types of Elements', () => {
+    expect(Utils.isType(document.createElement('div'), 'Element')).toBe(true);
+    expect(
+      Utils.isType(
+        document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
+        'Element',
+      ),
+    ).toBe(true);
+    expect(Utils.isType({}, 'Element')).toBe(false);
+    expect(Utils.isType('button', 'Element')).toBe(false);
+    expect(Utils.isType(document.querySelectorAll('a'), 'Element')).toBe(false);
+  });
+
+  it('correctly determines type of MouseEvents', () => {
+    expect(Utils.isType(new MouseEvent('mouseenter'), 'MouseEvent')).toBe(true);
+    expect(Utils.isType(new FocusEvent('focus'), 'MouseEvent')).toBe(false);
+  });
+
+  it('correctly determines type of NodeLists', () => {
+    expect(Utils.isType(document.querySelectorAll('a'), 'NodeList')).toBe(true);
+    expect(Utils.isType(document.createElement('div'), 'NodeList')).toBe(false);
+    expect(Utils.isType({}, 'NodeList')).toBe(false);
+  });
+});
+
+describe('pushIfUnique', () => {
+  it('adds item only if unique', () => {
+    const item = {};
+    const arr = [];
+
+    Utils.pushIfUnique(arr, item);
+    Utils.pushIfUnique(arr, item);
+    Utils.pushIfUnique(arr, 2);
+
+    expect(arr).toEqual([item, 2]);
+  });
+});
+
+describe('appendPxIfNumber', () => {
+  it('should append `px` if number', () => {
+    expect(Utils.appendPxIfNumber(200)).toBe('200px');
+    expect(Utils.appendPxIfNumber(0)).toBe('0px');
+  });
+
+  it('should not append `px` if string', () => {
+    expect(Utils.appendPxIfNumber('200rem')).toBe('200rem');
+    expect(Utils.appendPxIfNumber('10px')).toBe('10px');
+  });
+});
+
+describe('unique', () => {
+  it('filters out duplicate elements', () => {
+    const ref1 = {};
+    const ref2 = {};
+    expect(Utils.unique([0, 1, 0, 2, 3, 2, 3, 3, 4])).toEqual([0, 1, 2, 3, 4]);
+    expect(Utils.unique([ref1, ref1, ref2])).toEqual([ref1, ref2]);
+  });
+});
+
+describe('getNumber', () => {
+  it('number: returns number', () => {
+    expect(Utils.getNumber(0)).toBe(0);
+    expect(Utils.getNumber(100)).toBe(100);
+    expect(Utils.getNumber(-1.13812)).toBe(-1.13812);
+  });
+
+  it('string: returns number from CSS string', () => {
+    expect(Utils.getNumber('0px')).toBe(0);
+    expect(Utils.getNumber('100rem')).toBe(100);
+    expect(Utils.getNumber('-21.35em')).toBe(-21.35);
+  });
+});
+
+describe('getUnitsInPx', () => {
+  it('number: returns number', () => {
+    expect(Utils.getUnitsInPx(document, 0)).toBe(0);
+    expect(Utils.getUnitsInPx(document, 100)).toBe(100);
+    expect(Utils.getUnitsInPx(document, -20.4)).toBe(-20.4);
+  });
+
+  it('string: returns number as px from units', () => {
+    expect(Utils.getUnitsInPx(document, '1rem')).toBe(16);
+    expect(Utils.getUnitsInPx(document, '-1.5rem')).toBe(-24);
+    expect(Utils.getUnitsInPx(document, '50px')).toBe(50);
+  });
+});
+
+describe('setInnerHTML', () => {
+  it('sets the innerHTML of an element with a string', () => {
+    const ref = h();
+
+    Utils.setInnerHTML(ref, '<strong></strong>');
+
+    expect(ref.querySelector('strong')).not.toBe(null);
+  });
+});
+
+describe('getComputedPadding', () => {
+  const paddingNumber = 8;
+  const paddingObject = {top: 3, right: 9, bottom: 19, left: 32};
+  const distance = 124;
+
+  const numberPaddingObject = {
+    top: paddingNumber,
+    right: paddingNumber,
+    bottom: paddingNumber,
+    left: paddingNumber,
+  };
+
+  it('number: should add the `distance` to the placement key', () => {
+    expect(Utils.getComputedPadding('top', paddingNumber, distance)).toEqual({
+      ...numberPaddingObject,
+      top: paddingNumber + distance,
+    });
+
+    expect(Utils.getComputedPadding('right', paddingNumber, distance)).toEqual({
+      ...numberPaddingObject,
+      right: paddingNumber + distance,
+    });
+
+    expect(Utils.getComputedPadding('bottom', paddingNumber, distance)).toEqual(
+      {
+        ...numberPaddingObject,
+        bottom: paddingNumber + distance,
+      },
+    );
+
+    expect(Utils.getComputedPadding('left', paddingNumber, distance)).toEqual({
+      ...numberPaddingObject,
+      left: paddingNumber + distance,
+    });
+  });
+
+  it('object: should add the `distance` to the placement key', () => {
+    expect(Utils.getComputedPadding('top', paddingObject, distance)).toEqual({
+      ...paddingObject,
+      top: paddingObject.top + distance,
+    });
+
+    expect(Utils.getComputedPadding('right', paddingObject, distance)).toEqual({
+      ...paddingObject,
+      right: paddingObject.right + distance,
+    });
+
+    expect(Utils.getComputedPadding('bottom', paddingObject, distance)).toEqual(
+      {
+        ...paddingObject,
+        bottom: paddingObject.bottom + distance,
+      },
+    );
+
+    expect(Utils.getComputedPadding('left', paddingObject, distance)).toEqual({
+      ...paddingObject,
+      left: paddingObject.left + distance,
+    });
   });
 });

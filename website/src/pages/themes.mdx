@@ -74,12 +74,15 @@ props so that it stays visible when focus is switched to the DevTools window.
 The tippy element by default gets appended to the very end of the `<body>`, so
 you should scroll down the elements panel.
 
+> **Note**: If `interactive: true`, then by default the tippy is appended to the
+> reference element's parentNode instead.
+
 <Image name="browser-devtools-tippy-element.jpg" />
 
 ### Creating a theme
 
 Themes are created by including a class on the `tippy-tooltip` element as part
-of a selector in the form `.tippy-tooltip.mythemename-theme`. Let's demonstrate
+of a selector in the form `.tippy-tooltip.x-theme`. Let's demonstrate
 this by creating our own theme called `tomato`.
 
 ```css
@@ -87,14 +90,7 @@ this by creating our own theme called `tomato`.
   background-color: tomato;
   color: yellow;
 }
-
-.tippy-tooltip.tomato-theme .tippy-backdrop {
-  background-color: tomato;
-}
 ```
-
-The `.tippy-backdrop` element is the background "filling" effect enabled when
-you import `backdrop.css` and set `animateFill: true`.
 
 To apply the theme, specify a `theme` prop without the `-theme` suffix:
 

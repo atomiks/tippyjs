@@ -1,7 +1,12 @@
 import React, {useState, useRef} from 'react';
+import styled from 'styled-components';
 import Tippy from '../Tippy';
 import {Button} from '../Framework';
 import TippyTransition from '../TippyTransition';
+
+const StyledTippy = styled(Tippy)`
+  overflow: hidden;
+`;
 
 function DimensionsTransition() {
   const [display, setDisplay] = useState('none');
@@ -23,7 +28,7 @@ function DimensionsTransition() {
 
   return (
     <TippyTransition onChange={onChange}>
-      <Tippy
+      <StyledTippy
         content={
           <>
             <Button onClick={onClick} style={{margin: 10, width: 140}}>
@@ -54,7 +59,7 @@ function DimensionsTransition() {
         trigger="click"
       >
         <Button>Image transition (click)</Button>
-      </Tippy>
+      </StyledTippy>
     </TippyTransition>
   );
 }

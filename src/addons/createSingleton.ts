@@ -1,17 +1,19 @@
-import {Instance, Props} from '../types';
+import {Instance, CreateSingleton, Plugin} from '../types';
 import tippy from '..';
-import {preserveInvocation, useIfDefined} from '../utils';
 import {defaultProps} from '../props';
 import {throwErrorWhen} from '../validation';
+import {div} from '../utils';
 
 /**
  * Re-uses a single tippy element for many different tippy instances.
  * Replaces v4's `tippy.group()`.
  */
-export default function createSingleton(
-  tippyInstances: Instance[],
-  optionalProps?: Partial<Props>,
-): Instance {
+const createSingleton: CreateSingleton = (
+  tippyInstances,
+  optionalProps = {},
+  /** @deprecated use Props.plugins */
+  plugins = [],
+) => {
   /* istanbul ignore else */
   if (__DEV__) {
     throwErrorWhen(
@@ -23,118 +25,93 @@ export default function createSingleton(
     );
   }
 
+  plugins = optionalProps.plugins || plugins;
+
   tippyInstances.forEach(instance => {
     instance.disable();
   });
 
+  let userAria = {...defaultProps, ...optionalProps}.aria;
   let currentAria: string | null | undefined;
   let currentTarget: Element;
-
-  const userProps: Partial<Props> = {};
-
-  function setUserProps(props: Partial<Props>): void {
-    Object.keys(props).forEach((prop): void => {
-      userProps[prop] = useIfDefined(props[prop], userProps[prop]);
-    });
-  }
-
-  setUserProps({...defaultProps, ...optionalProps});
-
-  function handleAriaDescribedByAttribute(
-    id: string,
-    isInteractive: boolean,
-    isShow: boolean,
-  ): void {
-    if (!currentAria) {
-      return;
-    }
-
-    if (isShow && !isInteractive) {
-      currentTarget.setAttribute(`aria-${currentAria}`, id);
-    } else {
-      currentTarget.removeAttribute(`aria-${currentAria}`);
-    }
-  }
+  let shouldSkipUpdate = false;
 
   const references = tippyInstances.map(instance => instance.reference);
 
-  const singleton = tippy(document.createElement('div'), {
-    ...optionalProps,
-    aria: null,
-    triggerTarget: references,
-    onMount(instance) {
-      preserveInvocation(userProps.onMount, instance.props.onMount, [instance]);
-      handleAriaDescribedByAttribute(
-        instance.popperChildren.tooltip.id,
-        instance.props.interactive,
-        true,
-      );
-    },
-    onUntrigger(instance, event): void {
-      preserveInvocation(userProps.onUntrigger, instance.props.onUntrigger, [
-        instance,
-        event,
-      ]);
+  const singleton: Plugin = {
+    fn(instance) {
+      function handleAriaDescribedByAttribute(isShow: boolean): void {
+        if (!currentAria) {
+          return;
+        }
 
-      handleAriaDescribedByAttribute(
-        instance.popperChildren.tooltip.id,
-        instance.props.interactive,
-        false,
-      );
-    },
-    onTrigger(instance, event): void {
-      preserveInvocation(userProps.onTrigger, instance.props.onTrigger, [
-        instance,
-        event,
-      ]);
+        const attr = `aria-${currentAria}`;
 
-      const target = event.currentTarget as Element;
-      const index = references.indexOf(target);
-
-      currentTarget = target;
-      currentAria = userProps.aria;
-
-      if (instance.state.isVisible) {
-        handleAriaDescribedByAttribute(
-          instance.popperChildren.tooltip.id,
-          instance.props.interactive,
-          true,
-        );
+        if (isShow && !instance.props.interactive) {
+          currentTarget.setAttribute(attr, instance.popperChildren.tooltip.id);
+        } else {
+          currentTarget.removeAttribute(attr);
+        }
       }
 
-      instance.setContent(tippyInstances[index].props.content);
+      return {
+        onAfterUpdate(_, {aria}): void {
+          // Ensure `aria` for the singleton instance stays `null`, while
+          // changing the `userAria` value
+          if (aria !== undefined && aria !== userAria) {
+            if (!shouldSkipUpdate) {
+              userAria = aria;
+            } else {
+              shouldSkipUpdate = true;
+              instance.setProps({aria: null});
+              shouldSkipUpdate = false;
+            }
+          }
+        },
+        onDestroy(): void {
+          tippyInstances.forEach(instance => {
+            instance.enable();
+          });
+        },
+        onMount(): void {
+          handleAriaDescribedByAttribute(true);
+        },
+        onUntrigger(): void {
+          handleAriaDescribedByAttribute(false);
+        },
+        onTrigger(_, event): void {
+          const target = event.currentTarget as Element;
+          const index = references.indexOf(target);
 
-      // Due to two updates performed upon mount, the second update will use
-      // this object
-      instance.popperInstance!.reference = {
-        // @ts-ignore - awaiting popper.js@1.16.0 release
-        referenceNode: target,
-        clientHeight: 0,
-        clientWidth: 0,
-        getBoundingClientRect(): ClientRect {
-          return target.getBoundingClientRect();
+          currentTarget = target;
+          currentAria = userAria;
+
+          if (instance.state.isVisible) {
+            handleAriaDescribedByAttribute(true);
+          }
+
+          instance.popperInstance!.reference = {
+            referenceNode: target,
+            // These `client` values don't get used by Popper.js if they are 0
+            clientHeight: 0,
+            clientWidth: 0,
+            getBoundingClientRect(): ClientRect {
+              return target.getBoundingClientRect();
+            },
+          };
+
+          instance.setContent(tippyInstances[index].props.content);
         },
       };
     },
-    onAfterUpdate(instance, partialProps): void {
-      preserveInvocation(
-        userProps.onAfterUpdate,
-        instance.props.onAfterUpdate,
-        [instance],
-      );
+  };
 
-      setUserProps(partialProps);
-    },
-    onDestroy(instance): void {
-      preserveInvocation(userProps.onDestroy, instance.props.onDestroy, [
-        instance,
-      ]);
-
-      tippyInstances.forEach(instance => {
-        instance.enable();
-      });
-    },
+  return tippy(div(), {
+    ...optionalProps,
+    plugins: [singleton, ...plugins],
+    aria: null,
+    triggerTarget: references,
   }) as Instance;
+};
 
-  return singleton;
-}
+export default createSingleton;

@@ -5,12 +5,13 @@ import styled from 'styled-components';
 import {MEDIA} from '../components/Framework';
 
 const ImgWrapper = styled.div`
-  margin-left: -1rem;
-  margin-right: -1rem;
+  margin-left: -16px;
+  margin-right: -16px;
+  margin-bottom: 16px;
 
   ${MEDIA.sm} {
-    margin-left: -1.5625rem;
-    margin-right: -1.5625rem;
+    margin-left: -25px;
+    margin-right: -25px;
   }
 
   ${MEDIA.md} {

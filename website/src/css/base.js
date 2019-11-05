@@ -18,11 +18,11 @@ export default createGlobalStyle`
     margin: 0;
     color: #515168;
     height: 100%;
-    font-size: 1.075rem;
+    font-size: 17px;
     -webkit-tap-highlight-color: transparent;
 
     ${MEDIA.md} {
-      font-size: 1.125rem;
+      font-size: 18px;
     }
   }
 
@@ -58,7 +58,7 @@ export default createGlobalStyle`
   h6 {
     position: relative;
     margin-top: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 16px;
     color: #333;
 
     &:hover .link-icon {
@@ -67,12 +67,12 @@ export default createGlobalStyle`
   }
 
   h1 {
-    font-size: 2.488rem;
-    margin-top: 2.488rem;
+    font-size: 40px;
+    margin-top: 40px;
   }
 
   h2 {
-    font-size: 3rem;
+    font-size: 48px;
     display: inline-block;
     color: inherit;
     text-shadow: -2px 2px 0px #ffffff, -4px 3px 0px #ffffff;
@@ -97,7 +97,7 @@ export default createGlobalStyle`
       top: 0;
       bottom: 0;
       width: calc(15% + 40px);
-      margin-left: -1.5625rem;
+      margin-left: -25px;
       background: linear-gradient(45deg,#fff2df,#99ffec,#faa7ff);
       z-index: -1;
       transition: width 0.4s cubic-bezier(.23, 1, .32, 1);
@@ -105,34 +105,34 @@ export default createGlobalStyle`
     }
 
     ${MEDIA.md} {
-      font-size: 4rem;
+      font-size: 64px;
     }
   }
 
   h3 {
-    font-size: 2rem;
-    margin-top: 4rem;
-    margin-bottom: 1.5rem;
+    font-size: 32px;
+    margin-top: 60px;
+    margin-bottom: 24px;
     padding-right: 30px;
 
     ${MEDIA.md} {
-      font-size: 2.25rem;
+      font-size: 36px;
     }
   }
 
   h4 {
-    font-size: 1.44rem;
-    margin-top: 2.2rem;
+    font-size: 24px;
+    margin-top: 35px;
     color: #666c80;
 
     ${MEDIA.md} {
-      font-size: 1.728rem;
+      font-size: 28px;
     }
   }
 
   h5 {
-    font-size: 1.44rem;
-    margin-top: 2rem;
+    font-size: 22px;
+    margin-top: 32px;
     color: #666c80;
     font-weight: 500;
   }
@@ -140,11 +140,11 @@ export default createGlobalStyle`
   p, 
   li {
     line-height: 1.6;
-    margin-top: 0.5rem;
+    margin-top: 8px;
   }
 
   ul {
-    padding-left: 1.125rem;
+    padding-left: 18px;
   }
 
   table {
@@ -154,11 +154,11 @@ export default createGlobalStyle`
     padding: 0;
     line-height: 1.4;
     border-radius: 0 0 10px 10px;
-    font-size: 1rem;
+    font-size: 16px;
 
     ${MEDIA.xl} {
       width: calc(100% + 50px);
-      margin-left: -1.5625rem;
+      margin-left: -25px;
     }
   }
 
@@ -177,28 +177,28 @@ export default createGlobalStyle`
   td:first-child code {
     background: none;
     border: none;
-    font-size: 1.125rem;
+    font-size: 18px;
     color: #333;
     padding: 0;
   }
 
   th:last-child, td:last-child {
-    padding-left: 1.5625rem;
+    padding-left: 25px;
   }
 
   table th, table td {
     text-align: left;
-    padding: 0.9375rem;
+    padding: 15px;
 
     ${MEDIA.xl} {
-      padding: 0.9375rem 1.5625rem;
+      padding: 15px 25px;
     }
   }
 
   table th {
     position: relative;
     z-index: 1;
-    font-size: 0.875rem;
+    font-size: 14px;
     text-transform: uppercase;
     background: rgb(238, 238, 250);
     position: sticky;
@@ -240,7 +240,7 @@ export default createGlobalStyle`
     }
 
     th:last-child, td:last-child {
-      padding-left: 0.9375rem;
+      padding-left: 15px;
     }
 
     table td::before {
@@ -249,7 +249,7 @@ export default createGlobalStyle`
       font-weight: bold;
       text-transform: uppercase;
       opacity: 0.7;
-      font-size: 0.8125rem;
+      font-size: 13px;
       margin-bottom: 5px;
     }
 
@@ -270,13 +270,13 @@ export default createGlobalStyle`
 
   [data-reach-skip-link] {
     position: fixed;
-    z-index: 2;
+    z-index: 3;
     padding: 10px;
     left: -9999px;
     background: white;
     border-radius: 4px;
     font-weight: bold;
-    font-size: 0.9375rem;
+    font-size: 15px;
 
     &:focus {
       left: 5px;
@@ -296,6 +296,6 @@ export default createGlobalStyle`
     color: #828fa1;
     border-left: 5px solid #ced4dd;
     margin: 0;
-    padding-left: 0.9375rem;
+    padding-left: 15px;
   }
 `;

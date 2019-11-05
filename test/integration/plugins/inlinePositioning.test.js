@@ -1,47 +1,41 @@
-import {
-  h,
-  cleanDocumentBody,
-  MOUSEENTER,
-  setTestDefaultProps,
-} from '../../utils';
+import {fireEvent} from '@testing-library/dom';
+import {h, cleanDocumentBody, setTestDefaultProps} from '../../utils';
 
-import {createTippyWithPlugins} from '../../../src';
+import tippy from '../../../src';
 import inlinePositioning, {
   getInlineBoundingClientRect,
 } from '../../../src/plugins/inlinePositioning';
 import inlinePositioningSnapshots from './__inlinePositioningSnapshots__';
 
-setTestDefaultProps();
+setTestDefaultProps({plugins: [inlinePositioning]});
 jest.useFakeTimers();
 
 afterEach(cleanDocumentBody);
 
 describe('inlinePositioning', () => {
-  const tippy = createTippyWithPlugins([inlinePositioning]);
-
-  it('true: sets popperInstance.reference = ReferenceObject onTrigger', () => {
+  it('true: sets popperInstance.reference = ReferenceObject onShow', () => {
     const instance = tippy(h(), {
       inlinePositioning: true,
-      onTrigger(instance) {
+      onShow(instance) {
         expect({}.toString.call(instance.popperInstance.reference)).toBe(
           '[object Object]',
         );
       },
     });
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     jest.runAllTimers();
   });
 
-  it('false: does not set instance.popperInstance = ReferenceObject onTrigger', () => {
+  it('false: does not set instance.popperInstance = ReferenceObject onShow', () => {
     const instance = tippy(h(), {
       inlinePositioning: false,
-      onTrigger(instance) {
+      onShow(instance) {
         expect(instance.popperInstance.reference).toBe(instance.reference);
       },
     });
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     jest.runAllTimers();
   });
 
@@ -52,7 +46,7 @@ describe('inlinePositioning', () => {
       },
     });
 
-    instance.reference.dispatchEvent(MOUSEENTER);
+    fireEvent.mouseEnter(instance.reference);
     jest.runAllTimers();
     instance.hide();
   });

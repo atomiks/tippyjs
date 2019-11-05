@@ -5,7 +5,13 @@ import {
   BasePlacement,
   Placement,
 } from './types';
-import {innerHTML, div, isRealElement, splitBySpaces} from './utils';
+import {
+  div,
+  isElement,
+  splitBySpaces,
+  appendPxIfNumber,
+  setInnerHTML,
+} from './utils';
 import {isUCBrowser} from './browser';
 import {
   POPPER_CLASS,
@@ -20,10 +26,38 @@ import {
 } from './constants';
 
 /**
- * Sets the innerHTML of an element
+ * Returns the popper's placement, ignoring shifting (top-start, etc)
  */
-export function setInnerHTML(element: Element, html: string | Element): void {
-  element[innerHTML()] = isRealElement(html) ? html[innerHTML()] : html;
+export function getBasePlacement(placement: Placement): BasePlacement {
+  return placement.split('-')[0] as BasePlacement;
+}
+
+/**
+ * Adds `data-inertia` attribute
+ */
+export function addInertia(tooltip: PopperChildren['tooltip']): void {
+  tooltip.setAttribute('data-inertia', '');
+}
+
+/**
+ * Removes `data-inertia` attribute
+ */
+export function removeInertia(tooltip: PopperChildren['tooltip']): void {
+  tooltip.removeAttribute('data-inertia');
+}
+
+/**
+ * Adds interactive-related attributes
+ */
+export function addInteractive(tooltip: PopperChildren['tooltip']): void {
+  tooltip.setAttribute('data-interactive', '');
+}
+
+/**
+ * Removes interactive-related attributes
+ */
+export function removeInteractive(tooltip: PopperChildren['tooltip']): void {
+  tooltip.removeAttribute('data-interactive');
 }
 
 /**
@@ -33,7 +67,7 @@ export function setContent(
   contentEl: PopperChildren['content'],
   props: Props,
 ): void {
-  if (isRealElement(props.content)) {
+  if (isElement(props.content)) {
     setInnerHTML(contentEl, '');
     contentEl.appendChild(props.content);
   } else if (typeof props.content !== 'function') {
@@ -58,20 +92,6 @@ export function getChildren(popper: PopperElement): PopperChildren {
 }
 
 /**
- * Adds `data-inertia` attribute
- */
-export function addInertia(tooltip: PopperChildren['tooltip']): void {
-  tooltip.setAttribute('data-inertia', '');
-}
-
-/**
- * Removes `data-inertia` attribute
- */
-export function removeInertia(tooltip: PopperChildren['tooltip']): void {
-  tooltip.removeAttribute('data-inertia');
-}
-
-/**
  * Creates an arrow element and returns it
  */
 export function createArrowElement(arrow: Props['arrow']): HTMLDivElement {
@@ -82,7 +102,7 @@ export function createArrowElement(arrow: Props['arrow']): HTMLDivElement {
   } else {
     arrowElement.className = SVG_ARROW_CLASS;
 
-    if (isRealElement(arrow)) {
+    if (isElement(arrow)) {
       arrowElement.appendChild(arrow);
     } else {
       setInnerHTML(arrowElement, arrow as string);
@@ -90,64 +110,6 @@ export function createArrowElement(arrow: Props['arrow']): HTMLDivElement {
   }
 
   return arrowElement;
-}
-
-/**
- * Adds interactive-related attributes
- */
-export function addInteractive(tooltip: PopperChildren['tooltip']): void {
-  tooltip.setAttribute('data-interactive', '');
-}
-
-/**
- * Removes interactive-related attributes
- */
-export function removeInteractive(tooltip: PopperChildren['tooltip']): void {
-  tooltip.removeAttribute('data-interactive');
-}
-
-/**
- * Add/remove transitionend listener from tooltip
- */
-export function updateTransitionEndListener(
-  tooltip: PopperChildren['tooltip'],
-  action: 'add' | 'remove',
-  listener: (event: TransitionEvent) => void,
-): void {
-  const eventName =
-    isUCBrowser && document.body.style.webkitTransition !== undefined
-      ? 'webkitTransitionEnd'
-      : 'transitionend';
-  tooltip[
-    (action + 'EventListener') as 'addEventListener' | 'removeEventListener'
-  ](eventName, listener as EventListener);
-}
-
-/**
- * Returns the popper's placement, ignoring shifting (top-start, etc)
- */
-export function getBasePlacement(placement: Placement): BasePlacement {
-  return placement.split('-')[0] as BasePlacement;
-}
-
-/**
- * Triggers reflow
- */
-export function reflow(popper: PopperElement): void {
-  void popper.offsetHeight;
-}
-
-/**
- * Adds/removes theme from tooltip's classList
- */
-export function updateTheme(
-  tooltip: PopperChildren['tooltip'],
-  action: 'add' | 'remove',
-  theme: Props['theme'],
-): void {
-  splitBySpaces(theme).forEach((name): void => {
-    tooltip.classList[action](`${name}-theme`);
-  });
 }
 
 /**
@@ -208,8 +170,7 @@ export function updatePopperElement(
   popper.style.zIndex = '' + nextProps.zIndex;
 
   tooltip.setAttribute('data-animation', nextProps.animation);
-  tooltip.style.maxWidth =
-    nextProps.maxWidth + (typeof nextProps.maxWidth === 'number' ? 'px' : '');
+  tooltip.style.maxWidth = appendPxIfNumber(nextProps.maxWidth);
 
   if (nextProps.role) {
     tooltip.setAttribute('role', nextProps.role);
@@ -258,45 +219,66 @@ export function updatePopperElement(
 }
 
 /**
+ * Add/remove transitionend listener from tooltip
+ */
+export function updateTransitionEndListener(
+  tooltip: PopperChildren['tooltip'],
+  action: 'add' | 'remove',
+  listener: (event: TransitionEvent) => void,
+): void {
+  const eventName =
+    isUCBrowser && document.body.style.webkitTransition !== undefined
+      ? 'webkitTransitionEnd'
+      : 'transitionend';
+  tooltip[
+    (action + 'EventListener') as 'addEventListener' | 'removeEventListener'
+  ](eventName, listener as EventListener);
+}
+
+/**
+ * Adds/removes theme from tooltip's classList
+ */
+export function updateTheme(
+  tooltip: PopperChildren['tooltip'],
+  action: 'add' | 'remove',
+  theme: Props['theme'],
+): void {
+  splitBySpaces(theme).forEach(name => {
+    tooltip.classList[action](`${name}-theme`);
+  });
+}
+
+/**
  * Determines if the mouse cursor is outside of the popper's interactive border
  * region
  */
 export function isCursorOutsideInteractiveBorder(
-  popperPlacement: BasePlacement,
-  popperRect: ClientRect,
+  popperTreeData: {
+    popperRect: ClientRect;
+    tooltipRect: ClientRect;
+    interactiveBorder: Props['interactiveBorder'];
+  }[],
   event: MouseEvent,
-  props: Props,
 ): boolean {
-  if (!popperPlacement) {
-    return true;
-  }
+  const {clientX, clientY} = event;
 
-  const {clientX: x, clientY: y} = event;
-  const {interactiveBorder, distance} = props;
+  return popperTreeData.every(
+    ({popperRect, tooltipRect, interactiveBorder}) => {
+      // Get min/max bounds of both the popper and tooltip rects due to
+      // `distance` offset
+      const mergedRect = {
+        top: Math.min(popperRect.top, tooltipRect.top),
+        right: Math.max(popperRect.right, tooltipRect.right),
+        bottom: Math.max(popperRect.bottom, tooltipRect.bottom),
+        left: Math.min(popperRect.left, tooltipRect.left),
+      };
 
-  const exceedsTop =
-    popperRect.top - y >
-    (popperPlacement === 'top'
-      ? interactiveBorder + distance
-      : interactiveBorder);
+      const exceedsTop = mergedRect.top - clientY > interactiveBorder;
+      const exceedsBottom = clientY - mergedRect.bottom > interactiveBorder;
+      const exceedsLeft = mergedRect.left - clientX > interactiveBorder;
+      const exceedsRight = clientX - mergedRect.right > interactiveBorder;
 
-  const exceedsBottom =
-    y - popperRect.bottom >
-    (popperPlacement === 'bottom'
-      ? interactiveBorder + distance
-      : interactiveBorder);
-
-  const exceedsLeft =
-    popperRect.left - x >
-    (popperPlacement === 'left'
-      ? interactiveBorder + distance
-      : interactiveBorder);
-
-  const exceedsRight =
-    x - popperRect.right >
-    (popperPlacement === 'right'
-      ? interactiveBorder + distance
-      : interactiveBorder);
-
-  return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight;
+      return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight;
+    },
+  );
 }

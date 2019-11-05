@@ -1,14 +1,18 @@
-import {Instance, LifecycleHooks, InlinePositioningProps} from '../types';
+import {
+  InlinePositioning,
+  InlinePositioningProps,
+  BasePlacement,
+} from '../types';
 import {arrayFrom} from '../utils';
 import {getBasePlacement} from '../popper';
 
 // TODO: Work on a "cursor" value so it chooses a rect optimal to the cursor
 // position. This will require the `followCursor` plugin's fixes for overflow
 // due to using event.clientX/Y values. (normalizedPlacement, getVirtualOffsets)
-export default {
+const inlinePositioning: InlinePositioning = {
   name: 'inlinePositioning',
   defaultValue: false,
-  fn(instance: Instance): Partial<LifecycleHooks> {
+  fn(instance) {
     const {reference} = instance;
 
     function getIsEnabled(): InlinePositioningProps['inlinePositioning'] {
@@ -21,14 +25,14 @@ export default {
           instance.popperInstance!.reference = reference;
         }
       },
-      onTrigger(): void {
+      onShow(): void {
         if (!getIsEnabled()) {
           return;
         }
 
         instance.popperInstance!.reference = {
-          // @ts-ignore - awaiting popper.js@1.16.0 release
           referenceNode: reference,
+          // These `client` values don't get used by Popper.js if they are 0
           clientWidth: 0,
           clientHeight: 0,
           getBoundingClientRect(): ClientRect | DOMRect {
@@ -45,8 +49,10 @@ export default {
   },
 };
 
+export default inlinePositioning;
+
 export function getInlineBoundingClientRect(
-  currentBasePlacement: Instance['state']['currentPlacement'],
+  currentBasePlacement: BasePlacement | null,
   boundingRect: ClientRect,
   clientRects: ClientRect[],
 ): ClientRect {

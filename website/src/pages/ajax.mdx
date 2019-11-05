@@ -148,6 +148,8 @@ tippy('#ajax-tippy', {
       return;
     }
 
+    instance.ajaxState.isFetching = true;
+
     fetch('https://unsplash.it/200/?random')
       .then(response => response.blob())
       .then(blob => {
@@ -177,4 +179,4 @@ hides and resets back to `Loading...`, both of which appear "buggy".
 Currently, the image instantly replaces the `Loading...` text without any smooth
 transition. How do we make it so the tooltip smoothly transitions in height?
 
-[See the Animations page for details](/animations#dimensions-transition).
+[See the Animations page for details](/animations/#dimensions-transition).

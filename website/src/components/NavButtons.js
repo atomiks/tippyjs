@@ -8,17 +8,17 @@ import ArrowLeft from 'react-feather/dist/icons/arrow-left';
 import theme from '../css/theme';
 
 const NavButtonsContainer = styled.div`
-  margin-top: 4rem;
+  margin-top: 64px;
   border-top: 1px solid ${theme.border};
 `;
 
 const FlexContainer = styled(Flex)`
   flex-direction: column;
-  margin: 0 -1rem;
+  margin: 0 -16px;
 
   ${MEDIA.sm} {
     flex-direction: row;
-    margin: 0 -1.5625rem;
+    margin: 0 -25px;
   }
 `;
 
@@ -26,8 +26,8 @@ const NavButton = styled(Link)`
   display: block;
   font-weight: bold;
   border-bottom: 2px solid transparent;
-  font-size: 1.75rem;
-  padding: 3rem 1rem;
+  font-size: 28px;
+  padding: 48px 16px;
   width: 100%;
 
   &:nth-child(2) {
@@ -38,7 +38,7 @@ const NavButton = styled(Link)`
 
   ${MEDIA.sm} {
     width: 50%;
-    padding: 4rem 1.5625rem;
+    padding: 64px 25px;
 
     &:nth-child(2) {
       border-left: 1px solid ${theme.border};
@@ -80,8 +80,8 @@ function NavButtons({next}) {
                       aria-label="Previous"
                       style={{
                         verticalAlign: -6,
-                        width: '2rem',
-                        height: '2rem',
+                        width: 32,
+                        height: 32,
                       }}
                     />{' '}
                     {prevLink.frontmatter.title}
@@ -94,8 +94,8 @@ function NavButtons({next}) {
                       aria-label="Next"
                       style={{
                         verticalAlign: -6,
-                        width: '2rem',
-                        height: '2rem',
+                        width: 32,
+                        height: 32,
                       }}
                     />
                   </NavButton>

@@ -5,26 +5,26 @@ $color: #505355;
 
 .#{$namespace-prefix}-tooltip.material-theme {
   background-color: $color;
-  font-size: 0.8125rem;
+  font-size: 13px;
   font-weight: 600;
 
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
-      .#{$namespace-prefix}-arrow {
-        @include arrow($placement, 8px, $color);
+      > .#{$namespace-prefix}-arrow {
+        @include arrow($placement, $arrow-size + 1, $color);
       }
     }
   }
 
-  .#{$namespace-prefix}-content {
-    padding: 0.25rem 0.4375rem;
+  > .#{$namespace-prefix}-content {
+    padding: 4px 7px;
   }
 
-  .#{$namespace-prefix}-backdrop {
+  > .#{$namespace-prefix}-backdrop {
     background-color: $color;
   }
 
-  .#{$namespace-prefix}-svg-arrow {
+  > .#{$namespace-prefix}-svg-arrow {
     fill: $color;
   }
 }
