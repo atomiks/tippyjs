@@ -4,6 +4,8 @@ export type BasePlacement = 'top' | 'bottom' | 'left' | 'right';
 
 export type Placement = Popper.Placement;
 
+export type Boundary = Popper.Boundary | HTMLElement;
+
 export type Content = string | Element | ((ref: Element) => Element | string);
 
 export type SingleTarget = Element;
@@ -52,7 +54,7 @@ export interface Props extends LifecycleHooks {
   appendTo: 'parent' | Element | ((ref: Element) => Element);
   aria: 'describedby' | 'labelledby' | null;
   arrow: boolean | string | SVGElement;
-  boundary: 'scrollParent' | 'window' | 'viewport' | HTMLElement;
+  boundary: Boundary;
   content: Content;
   delay: number | [number | null, number | null];
   distance: number | string;
