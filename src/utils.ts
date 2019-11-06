@@ -266,8 +266,7 @@ export function useIfDefined(nextValue: any, currentValue: any): any {
  * Converts a value that's an array or single value to an array
  */
 export function normalizeToArray<T>(value: T | T[]): T[] {
-  // @ts-ignore
-  return [].concat(value);
+  return ([] as T[]).concat(value);
 }
 
 /**
