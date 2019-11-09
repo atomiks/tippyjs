@@ -1,63 +1,57 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Tippy from '../Tippy';
 import {Button} from '../Framework';
 
+function Img({src}) {
+  return (
+    <img
+      style={{
+        width: 200,
+        height: 200,
+        display: 'block',
+      }}
+      alt="Unsplash"
+      src={src}
+    />
+  );
+}
+
 function Ajax({children}) {
-  const initialContent = 'Loading...';
+  const [fetching, setFetching] = useState(false);
+  const [src, setSrc] = useState(null);
+  const [error, setError] = useState(null);
+
+  const content = error || src ? <Img src={src} /> : 'Loading...';
 
   return (
     <Tippy
-      content={initialContent}
-      animation="fade"
-      animateFill={false}
-      flipOnUpdate
-      updateDuration={350}
-      onShow={async tip => {
-        if (!tip.state.ajax) {
-          tip.state.ajax = {
-            isFetching: false,
-            canFetch: true,
-          };
-        }
-
-        if (tip.state.ajax.isFetching || !tip.state.ajax.canFetch) {
+      content={content}
+      flipOnUpdate={true}
+      onShow={async () => {
+        if (fetching || src || error) {
           return;
         }
 
-        tip.state.ajax.isFetching = true;
-        tip.state.ajax.canFetch = false;
+        setFetching(true);
 
         try {
           const response = await fetch('https://unsplash.it/200/?random');
           const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          if (tip.state.isVisible) {
-            const img = new Image();
-            img.width = 200;
-            img.height = 200;
-            img.src = url;
-            img.style.display = 'block';
-            tip.popper.style.transitionDuration = '0ms';
-            tip.setContent(img);
-          }
+          setSrc(URL.createObjectURL(blob));
         } catch (e) {
-          tip.setContent(`Fetch failed. ${e}`);
+          setError(`Fetch failed. ${e}`);
         } finally {
-          tip.state.ajax.isFetching = false;
+          setFetching(false);
         }
       }}
-      onHidden={tip => {
-        tip.state.ajax.canFetch = true;
-        tip.setContent(initialContent);
+      onHidden={() => {
+        setSrc(null);
+        setError(null);
       }}
     >
       <Button>{children}</Button>
     </Tippy>
   );
 }
-
-Ajax.defaultProps = {
-  withoutState: false,
-};
 
 export default Ajax;

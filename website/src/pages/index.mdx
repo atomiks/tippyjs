@@ -13,30 +13,25 @@ import Multiple from '../components/examples/Multiple';
 Tippy.js is a highly customizable tooltip and popover library powered by
 [Popper.js](https://popper.js.org).
 
-- <Emoji emoji="🍀" /> <strong>Versatile:</strong> Create anything from static text tooltips to complex interactive HTML popovers
-- <Emoji emoji="⚡" /> <strong>Fast:</strong> Optimized positioning engine for flipping and overflow
+- <Emoji emoji="🧠" /> <strong>Smart:</strong> optimized positioning engine for flipping and overflow
 prevention
-- <Emoji emoji="🖱️" /> <strong>Universal:</strong> Compatible with mouse, keyboard, and touch inputs
-- <Emoji emoji="♿" /> <strong>Accessible:</strong> Focus and ARIA attributes taken care of by default
-- <Emoji emoji="🖌" /> <strong>Themeable:</strong> Style via custom CSS, includes extra themes and animations
-- <Emoji emoji="🌳" /> <strong>Tree shakeable:</strong> Code is split into separate pieces via addons and plugins
-- <Emoji emoji="🌐" /> <strong>Supports IE11+:</strong> About 99% of desktop users and 97% of mobile users
+- <Emoji emoji="⚡" /> <strong>Fast:</strong> high performance for low-end devices
+- <Emoji emoji="🖱️" /> <strong>Universal:</strong> works with mouse, keyboard, and touch inputs
+- <Emoji emoji="♿" /> <strong>Accessible:</strong> WAI-ARIA compatible
+- <Emoji emoji="🖌" /> <strong>Themeable:</strong> style via custom CSS, includes extra themes and animations
+- <Emoji emoji="🔌" /> <strong>Pluggable:</strong> enhance functionality with plugins
+- <Emoji emoji="🌳" /> <strong>Tree-shakable:</strong> minimize bundle size by importing what you need
+- <Emoji emoji="🧩" /> <strong>Typed:</strong> TypeScript support out of the box
+- <Emoji emoji="🌐" /> <strong>Supports IE11+:</strong> compatible with 99% of desktop and 97% of mobile users
 
-### Exploring Tippy's features
+Ready to start? Visit [Getting Started](/getting-started/), or view a demo of
+Tippy's features below.
 
-Given an element on the document...
-
-```html
-<button id="myButton">My Button</button>
-```
-
-We can give it many different types of tippy tooltips. Let's explore some of
-them below!
+---
 
 ### Default
 
-The default tippy tooltip looks like this: a background color of `#333` and an
-arrow:
+The default tippy tooltip looks like this:
 
 <Demo>
   <Tippy>
@@ -44,7 +39,17 @@ arrow:
   </Tippy>
 </Demo>
 
-Here's how you initialize it:
+It has a background color of `#333` and an arrow pointing toward the element,
+and is triggered by either `mouseenter` or `focus` events so it appears when
+hovered, focused via keyboard navigation, or tapped when using a touch device.
+
+With a button element on the document like this:
+
+```html
+<button id="myButton">My Button</button>
+```
+
+You can initialize it like so:
 
 ```js
 tippy('#myButton', {
@@ -52,9 +57,7 @@ tippy('#myButton', {
 });
 ```
 
-By default, a tippy is triggered by either `mouseenter` or `focus` events so
-they appear when hovered, focused via keyboard navigation, or tapped when using
-a touch device.
+---
 
 ### Placement
 
@@ -107,11 +110,12 @@ If a tippy cannot fit within its desired placement, it will flip to the opposite
 placement if there is not enough space. In the above examples, flipping has been
 disabled to demonstrate each placement properly.
 
+---
+
 ### Arrows
 
-Tooltips can have an arrow that points toward the reference element. The size
-and proportion can also be modified with CSS. Getting even more advanced, you
-can use any type of SVG shape as the arrow, like a speech bubble shape.
+The arrow that points toward the element can have its proportion or shape
+modified, or be disabled completely.
 
 <Demo>
   <Tippy arrow animation="fade">
@@ -136,12 +140,12 @@ can use any type of SVG shape as the arrow, like a speech bubble shape.
 
 ```js
 tippy('#myButton', {
-  // Default CSS arrow
-  arrow: true,
-  // Your own element
+  // Your own shape
   arrow: String | SVGElement,
 });
 ```
+
+---
 
 ### Animations
 
@@ -188,8 +192,7 @@ These animations are included in the package and can be imported separately.
 
 #### Inertia / slingshot elastic effect
 
-The CSS transition-timing-function can be modified, by default it's subtle and
-looks like this:
+Add CSS spring physics to the animation using `transition-timing-function`.
 
 <Demo>
   {EXTRA_ANIMATIONS.filter(animation => animation.includes('scale')).map(
@@ -248,9 +251,24 @@ for example using the `animate.css` package:
   </Tippy>
 </Demo>
 
-#### JavaScript spring animations
+#### Duration
 
-Animation libraries like `animejs` can also be integrated.
+<Demo>
+  <Tippy duration={0}>
+    <Button>0</Button>
+  </Tippy>
+  <Tippy duration={1000}>
+    <Button>1000</Button>
+  </Tippy>
+  <Tippy duration={[0, 500]}>
+    <Button>[0, 500]</Button>
+  </Tippy>
+  <Tippy duration={[500, 0]}>
+    <Button>[500, 0]</Button>
+  </Tippy>
+</Demo>
+
+---
 
 ### Themes
 
@@ -286,6 +304,8 @@ You can apply any CSS to a tippy via a theme.
   ))}
 </Demo>
 
+---
+
 ### Triggers
 
 Tooltips can also be triggered by `click` or `focus` events.
@@ -305,6 +325,8 @@ tippy('#myButton', {
 });
 ```
 
+---
+
 ### Interactivity
 
 Tooltips can be interactive, allowing you to hover over and click inside them.
@@ -321,6 +343,8 @@ tippy('#myButton', {
   interactive: true,
 });
 ```
+
+---
 
 ### HTML Content
 
@@ -345,30 +369,7 @@ tippy('#myButton', {
 });
 ```
 
-### Duration
-
-Tooltips can have different animation durations.
-
-<Demo>
-  <Tippy duration={0}>
-    <Button>0</Button>
-  </Tippy>
-  <Tippy duration={1000}>
-    <Button>1000</Button>
-  </Tippy>
-  <Tippy duration={[800, 100]}>
-    <Button>[800, 100]</Button>
-  </Tippy>
-</Demo>
-
-```js
-tippy('#myButton', {
-  // number: show and hide durations are the same
-  duration: 0,
-  // [number, number]: [show, hide] duration
-  duration: [800, 100],
-});
-```
+---
 
 ### Delay
 
@@ -394,6 +395,8 @@ tippy('#myButton', {
   delay: [500, 0],
 });
 ```
+
+---
 
 ### Follow Cursor
 
@@ -445,6 +448,8 @@ tippy('#myButton', {
 });
 ```
 
+---
+
 ### SVGs
 
 Tooltips can be placed on SVG nodes, where `followCursor: 'initial'` becomes
@@ -468,6 +473,8 @@ tippy('line', {
   delay: 200,
 });
 ```
+
+---
 
 ### Singleton
 
@@ -511,17 +518,23 @@ for (let i = 0; i < buttons.length; i++) {
 createSingleton(instances, {delay: [300, 600]});
 ```
 
+---
+
 ### Nesting
 
-Tippys can be nested within other ones.
+A tippy can be nested within another one.
 
 <Demo>
   <Nesting />
 </Demo>
 
+This allows you to create a hover menu system.
+
+---
+
 ### Multiple
 
-Attach many tippys to a single element.
+Attach many tippies to a single element.
 
 <Demo>
   <Multiple />
@@ -548,6 +561,8 @@ placements
     });
   });
 ```
+
+---
 
 ### Miscellaneous
 

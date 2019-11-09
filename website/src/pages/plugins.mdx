@@ -26,16 +26,23 @@ import 'tippy.js/animations/shift-away.css';
 
 ### Usage
 
-> **Note:** if you are using the CDN (IIFE) version, there is no need to do the
-> following steps. The plugins will work by default. This comes with the
-> downside of adding extra KBs which is a tradeoff made to reduce extra HTTP
-> requests. Using a bundler like webpack is recommended instead to benefit from
-> treeshaking.
+#### CDN (iife)
+
+Included plugins (part of the [All Props](/all-props/) table) will work as
+normal.
+
+```js
+tippy(targets, {
+  followCursor: true,
+});
+```
+
+#### Node (esm or cjs)
 
 ```js
 import tippy, {followCursor} from 'tippy.js';
 
-tippy(reference, {
+tippy(targets, {
   followCursor: true,
   plugins: [followCursor],
 });
@@ -89,7 +96,7 @@ const hideOnPopperBlur = {
 };
 
 // Our new prop is enabled by default (defaultValue: true)
-tippy(reference, {
+tippy(targets, {
   plugins: [hideOnPopperBlur],
 });
 ```

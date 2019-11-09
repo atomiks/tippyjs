@@ -7,13 +7,14 @@ import Menu from 'react-feather/dist/icons/menu';
 import TextGradient from './TextGradient';
 import {version} from '../../../package.json';
 
+// Firefox needs `rotate()` for it to be smooth...
 const hover = keyframes`
   from {
-    transform: translate3d(0, 4px, 0);
+    transform: translate3d(0, 4px, 0) rotate(0);
   }
 
   to {
-    transform: translate3d(0, 10px, 0);
+    transform: translate3d(0, 10px, 0) rotate(0.01deg);
   }
 `;
 
@@ -41,10 +42,6 @@ const HeaderRoot = styled.header`
     background-size: cover;
     width: 100%;
     height: 100vh;
-
-    ${MEDIA.lg} {
-      margin-left: -100px;
-    }
   }
 `;
 

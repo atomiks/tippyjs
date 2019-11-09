@@ -9,7 +9,7 @@ index: 17
 Both are elements positioned near a "reference" element, and are hidden until
 they are triggered. They help conserve space by hiding secondary information or
 functionality behind a hover or click. They are positioned outside the normal
-flow of the document so when they are triggered, they are overlayed on top of
+flow of the document so when they are triggered, they are overlaid on top of
 the existing UI without disrupting the flow of content.
 
 Tippy.js distinguishes them in the following way:
@@ -58,9 +58,9 @@ complex, so this is effectively a "baseline" library if you want to even use
 popper elements (tooltips, popovers, dropdowns) in your app in the first place
 without them having poor UX.
 
-For people who want to build the appearance and behavior of their popper
-elements from scratch, this is a fantastic library. If you want "out of the box"
-(abstracted) behavior, then using Tippy might be better.
+If you want to build the appearance and behavior of your popper elements from
+scratch, this is a fantastic library. If you want "out of the box" (abstracted)
+behavior, then using Tippy might be better.
 
 Tippy takes advantage of Popper as a dependency, so you can use them together
 without incurring additional cost:
@@ -72,21 +72,18 @@ import tippy from 'tippy.js';
 
 If you're using the CDN, the `Popper` constructor will already be available.
 
-### Comparison with Tooltip.js
+### Comparison with CSS tooltip libraries like Microtip or Balloon.css
 
-**Size: 2.3 KB** (including Popper: 9.6 KB)
+**Size: 1 KB**
 
-Tooltip.js is a small tooltip library built on top of Popper, much like Tippy
-is.
+CSS tooltips can be tiny in size, but come with some drawbacks:
 
-Unlike Tippy, however, it lacks certain features to be 3 KB smaller:
-
-- Does not come with styling or animations
-- Is less accessible out of the box
-- Has no lifecycle hooks for AJAX or plugin extensibility
-- Is more complex to set up, particularly using HTML
-- Interactivity is not possible with a hover event
-- Does not handle touch input adequately
+- Lack of positioning engine means overflow prevention & flipping are not
+  possible
+- Interactivity can be complicated or inaccessible
+- Using HTML content within them is cumbersome (especially with UI libraries
+  like React), with limited dynamism for updating content or reacting to state
+- No dynamic arrow positioning or features like `followCursor`
 
 ### Comparison with Tooltipster
 
@@ -94,25 +91,6 @@ Unlike Tippy, however, it lacks certain features to be 3 KB smaller:
 
 Tooltipster is a fantastic library with very similar functionality, but requires
 a jQuery dependency, unlike Tippy. To many people these days, this is a
-dealbreaker! jQuery's minzipped size is about 30 KB, and Tooltipster including
+deal-breaker! jQuery's minzipped size is about 30 KB, and Tooltipster including
 CSS is about 10 KB. To people using frameworks like React, Vue, or Angular, it
 can be hard to deal with such a large dependency.
-
-Tooltipster is also receiving less frequent updates than Tippy, its last version
-was released over a year ago (as of Feb 2019).
-
-### Comparison with Microtip and Balloon.css
-
-**Size: 1 KB**
-
-Both of these are pure CSS tooltip libraries. CSS tooltips can be tiny in size,
-but come with many drawbacks:
-
-- Lack of positioning engine means overflow prevention & flipping are not
-  possible
-- No interactivity
-- No dynamic arrow positioning
-- Using HTML content within them (e.g. popovers) is cumbersome or not possible
-
-If you don't need the above, then a CSS tooltip library might better fit your
-needs.

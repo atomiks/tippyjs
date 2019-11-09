@@ -31,6 +31,29 @@ tippy('#singleElement', {
 });
 ```
 
+### Content types
+
+Plain text and HTML (string or element) are allowed.
+
+If you're passing unknown user data to `content`, disable HTML for safety:
+
+```js
+tippy('#singleElement', {
+  content: unsafeUserData,
+  allowHTML: false,
+});
+```
+
+If you intend to allow HTML inside the tooltip that contains user data, you must
+use a sanitization library like
+[`DOMPurify`](https://github.com/cure53/DOMPurify) to prevent XSS:
+
+```js
+tippy('#singleElement', {
+  content: DOMPurify.sanitize(unsafeUserData),
+});
+```
+
 ### Target types
 
 The first argument you pass to `tippy()` is the targets you want to give
@@ -50,20 +73,6 @@ tippy([element1, element2, element3]);
 
 // NodeList
 tippy(document.querySelectorAll('.my-elements'));
-```
-
-### Client-rendered elements
-
-Every time you create a new element with JavaScript, you should pass it to
-`tippy()` in order to apply a tooltip to it.
-
-```js
-const strong = document.createElement('strong');
-strong.textContent = 'reference';
-document.body.appendChild(strong);
-
-// `content` is the JavaScript form of the `data-tippy-content` HTML attribute
-tippy(strong, {content: 'tooltip'});
 ```
 
 ### Disabled elements
@@ -87,7 +96,7 @@ a tippy.
 Please note that this has accessibility concerns and should be avoided if
 possible.
 
-### ⚠️ SVG in IE11
+### SVG in IE11
 
 If you need to support SVG elements in IE11, you will need to include a polyfill
 for `SVGElement.prototype.contains`.

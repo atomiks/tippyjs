@@ -74,6 +74,7 @@ class Heading extends React.Component {
 
     let href = slugify(String(this.props.children), {
       lower: true,
+      remove: /[*+~.()'"`!:@,?]/g,
     });
 
     // Check for duplicate #s
@@ -198,6 +199,10 @@ class Layout extends Component {
   closeNav = () => {
     this.setState({isNavOpen: false});
   };
+
+  componentDidMount() {
+    hrefs = [];
+  }
 
   render() {
     const {isNavOpen} = this.state;

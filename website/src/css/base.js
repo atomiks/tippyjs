@@ -293,9 +293,29 @@ export default createGlobalStyle`
   }
 
   blockquote {
-    color: #828fa1;
-    border-left: 5px solid #ced4dd;
+    color: #806450;
+    border-left: 4px dashed #cd7847;
+    background: #fff5c5;
     margin: 0;
-    padding-left: 15px;
+    padding: 5px 15px;
+    margin-left: -15px;
+    margin-right: -15px;
+    border-radius: 0 8px 8px 0;
+    font-size: 95%;
+    margin-bottom: 15px;
+
+    ${MEDIA.md} {
+      padding: 5px 20px;
+      margin-left: -25px;
+      margin-right: -25px;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    strong {
+      color: #cd7847;
+    }
   }
 `;

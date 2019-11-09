@@ -4,24 +4,24 @@ path: /html-content/
 index: 5
 ---
 
-Tippy can take a string or HTML element as its `content` prop.
+The `content` prop can accept a string, element, or function.
 
-Note that if you want to be able to interact with the content inside the tippy,
-you'll need to set `interactive: true`.
+To interact with the content inside the tippy, set `interactive: true`.
 
 ### String
 
 ```js
-tippy('button', {content: '<strong>Bolded content</strong>'});
+tippy('button', {
+  content: '<strong>Bolded content</strong>',
+});
 ```
 
-⚠️ Be aware of XSS attacks. Always ensure strings containing user input are
-escaped and sanitized properly. To avoid strings being parsed as HTML, set
-`allowHTML: false`.
+> Ensure strings containing user data are sanitized properly to prevent XSS
+> attacks.
 
 #### Element.innerHTML
 
-You can pass in an elements' `.innerHTML` strings.
+You can pass in an element's `.innerHTML` string:
 
 <!-- prettier-ignore -->
 ```html
@@ -33,31 +33,28 @@ You can pass in an elements' `.innerHTML` strings.
 ```js
 const template = document.getElementById('template');
 
-// Since we're targeting many different elements, we can pass its `innerHTML`
-// as a string
-tippy('button', {content: template.innerHTML});
+tippy('button', {
+  content: template.innerHTML,
+});
 ```
-
-You may want to use the `<template>` element instead (though it needs polyfill
-for IE11). The content inside a `<template>` does not get rendered, so
-network-expensive elements like images won't load until necessary.
 
 ### Element
 
-You can pass the element itself, useful for keeping event listeners attached (or
-when a framework is controlling elements inside):
+You can pass the element itself, which is useful for keeping event listeners
+attached (or when a framework is controlling elements inside):
 
 ```js
 const template = document.getElementById('example');
 template.style.display = 'block';
 
-tippy(singleButton, {content: template});
+tippy(singleButton, {
+  content: template,
+});
 ```
 
-> **We're passing a single element, so it can only exist in a single tippy since
-> it's not being cloned.**
-
-Tippy will move the template from the document into the tooltip.
+This differs from passing a `string` in that a single element can only exist in
+a single tippy. The template will be moved from the document and into the tippy
+itself.
 
 ### Template linking
 

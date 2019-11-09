@@ -9,9 +9,8 @@ a second argument to customize the tooltips being created:
 
 ```js
 tippy('button', {
-  animation: 'scale',
   duration: 0,
-  arrow: true,
+  arrow: false,
   delay: [1000, 200],
 });
 ```
@@ -20,9 +19,8 @@ You can also specify props on the element using data attributes:
 
 ```html
 <button
-  data-tippy-animation="scale"
   data-tippy-duration="0"
-  data-tippy-arrow="true"
+  data-tippy-arrow="false"
   data-tippy-delay="[1000, 200]"
 >
   Text
@@ -44,8 +42,7 @@ for individual config here and there:
 // Global config for all <button>s
 tippy('button', {
   content: 'Global content',
-  animation: 'scale',
-  theme: 'light',
+  trigger: 'click',
 });
 ```
 

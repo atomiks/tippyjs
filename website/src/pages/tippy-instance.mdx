@@ -10,39 +10,42 @@ programmatically.
 
 ### Accessing an instance
 
-`tippy()` is a generic constructor to **create** tippy instances. It either
-returns the tippy instance directly, or returns an array of them.
+`tippy()` creates new instances. It returns a single instance or an array of
+instances depending on the type of argument it's supplied.
 
 #### Element
 
-If passing an element directly, the instance is directly returned:
+The instance is directly returned, as this represents a single target:
 
 ```js
-const button = document.querySelector('button');
-const instance = tippy(button); // type Instance
+// type Instance
+const instance = tippy(document.querySelector('button'));
 ```
 
 #### String, NodeList, Element[]
 
-If passing a CSS selector `String`, `NodeList`, or an array of `Element`s, then
-an array of instances get returned (since potentially many instances can be
-created):
+An array of instances are returned, as these represent multiple targets:
 
 ```js
-const instances = tippy('button'); // type Instance[] (array)
+// type Instance[]
+const instances1 = tippy('button');
+const instances2 = tippy([element1, element2]);
+const instances3 = tippy(document.querySelectorAll('.btn'));
 ```
 
 #### `_tippy` property
 
 If you need to access the instance later, this property can be useful if you
-didn't assign the instance(s) to a variable. Both the reference element and the
-popper element have the instance attached as the `_tippy` property.
+didn't assign the instance(s) to a variable:
 
 ```js
 const button = document.querySelector('button');
 tippy(button);
 const instance = button._tippy;
 ```
+
+Both the reference element and the popper element have the instance attached as
+this property.
 
 ### Shape and properties
 

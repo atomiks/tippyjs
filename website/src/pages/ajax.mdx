@@ -5,7 +5,6 @@ index: 11
 ---
 
 import Ajax from '../components/examples/Ajax';
-import AjaxSmooth from '../components/examples/AjaxSmooth';
 
 Initiating AJAX requests is facilitated by lifecycle hooks. This allows you to
 do very powerful things. For example, let's say you wanted to show a new image
@@ -54,9 +53,7 @@ tippy('#ajax-tippy', {
 });
 ```
 
-Modern browsers support the `fetch` API, so we'll use it for this example
-because it's cleaner than `XMLHttpRequest`. We are using an Unsplash API to
-fetch a random 200x200 image:
+Using `fetch`, we can fetch a random image from an Unsplash API:
 
 ```js
 tippy('#ajax-tippy', {
@@ -75,44 +72,20 @@ tippy('#ajax-tippy', {
         image.src = url;
         // Update the tippy content with the image
         instance.setContent(image);
+      })
+      .catch(error => {
+        // Fallback if the network request failed
+        instance.setContent(`Request failed. ${error}`);
       });
   },
 });
 ```
 
-<Demo>
-  <Tippy
-    content="Loading..."
-    onShow={instance => {
-      fetch('https://unsplash.it/200/?random')
-        .then(response => response.blob())
-        .then(blob => {
-          // Convert the blob into a URL
-          const url = URL.createObjectURL(blob);
-          // Create an image
-          const image = new Image();
-          image.width = 200;
-          image.height = 200;
-          image.style.display = 'block';
-          image.src = url;
-          // Update the tippy content with the image
-          instance.setContent(image);
-        })
-        .catch(error => {
-          // Fallback if the network request failed
-          instance.setContent(`Request failed. ${error}`);
-        });
-    }}
-  >
-    <Button>Hover for a new image</Button>
-  </Tippy>
-</Demo>
-
 There are currently two problems with this:
 
 - When the tippy is hidden, it doesn't reset back to `Loading...`
 - If you quickly hover in and out of the tippy, it initiates many different
-  requests and each image rapidly replaces the old one as each request finishes.
+  requests and each image rapidly replaces the old one as each request finishes
 
 The first one can be solved by using the `onHidden` lifecycle, which is executed
 once the tippy fully transitions out and is unmounted from the DOM:
@@ -126,55 +99,47 @@ tippy('#ajax-tippy', {
 });
 ```
 
-The second one is trickier and requires using state. This will let us know the
-current condition the tooltip is in.
+The second one requires some state:
 
 ```js
 tippy('#ajax-tippy', {
   // ...
   onCreate(instance) {
-    // Attach a state object to keep track of the request status
-    instance.ajaxState = {
-      isFetching: false,
-      canFetch: true,
-    };
+    // Setup our own custom state properties
+    instance._isFetching = false;
+    instance._src = null;
+    instance._error = null;
   },
   onShow(instance) {
-    // Now we will avoid initiating a new request unless the old one
-    // finished (`isFetching`).
-    // We also only want to initiate a request if the tooltip has been
-    // reset back to Loading... (`canFetch`).
-    if (instance.ajaxState.isFetching || !instance.ajaxState.canFetch) {
+    if (instance._isFetching || instance._src || instance._error) {
       return;
     }
 
-    instance.ajaxState.isFetching = true;
+    instance._isFetching = true;
 
     fetch('https://unsplash.it/200/?random')
       .then(response => response.blob())
       .then(blob => {
+        const src = URL.createObjectURL(blob);
+        instance._src = src;
         // ...
       })
       .catch(error => {
-        // ...
+        instance._error = error;
+        instance.setContent(`Request failed. ${error}`);
       })
       .finally(() => {
-        // Make sure to set it back to false so new requests can be
-        // initiated
-        instance.ajaxState.isFetching = false;
+        instance._isFetching = false;
       });
   },
   onHidden(instance) {
     instance.setContent('Loading...');
-    instance.ajaxState.canFetch = true;
+    // Unset these properties so new network requests can be initiated
+    instance._src = null;
+    instance._error = null;
   },
 });
 ```
-
-We use state to keep track of the request's status. Without the state booleans,
-unexpected effects may occur, such as initiating too many requests before
-waiting for the previous one to finish, or showing new images before the tooltip
-hides and resets back to `Loading...`, both of which appear "buggy".
 
 Currently, the image instantly replaces the `Loading...` text without any smooth
 transition. How do we make it so the tooltip smoothly transitions in height?

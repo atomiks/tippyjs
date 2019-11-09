@@ -4,7 +4,9 @@ path: /getting-started/
 index: 1
 ---
 
-The package is available on npm:
+There are two ways to install the package.
+
+### 1. Package Manager
 
 ```bash
 # npm
@@ -23,9 +25,9 @@ import 'tippy.js/dist/tippy.css';
 
 This assumes you're using a module bundler like webpack, Rollup, or Parcel. If
 you're getting an error message about `process` inside the browser,
-[read the FAQ for help setting it up.](/faq/#im-getting-uncaught-referenceerror-process-is-not-defined)
+[see the FAQ for help.](/faq/#im-getting-uncaught-referenceerror-process-is-not-defined)
 
-### Script tags via CDN
+### 2. CDN
 
 ```html
 <script src="https://unpkg.com/popper.js@1"></script>
@@ -51,10 +53,8 @@ everything after `@5` (the production file as listed before).
 
 ### Node vs. Browser
 
-The `tippy.js` package is generally used via Node using a module bundler, or in
-the browser using a CDN. This documentation defaults to module imports in all
-examples, so be aware that the following import path using a module bundler in
-Node:
+This documentation defaults to module imports in all examples, so be aware that
+the following import path using a module bundler in Node:
 
 ```js
 import 'tippy.js/dist/backdrop.css';
@@ -68,22 +68,26 @@ Is equivalent to this using a CDN in the browser:
 
 ### CSS
 
-Tippy includes a 600 B CSS stylesheet by default for the base tooltip styling,
-fade animation, CSS arrows, and other required CSS.
+Tippy includes a CSS stylesheet by default for the base tooltip styling, fade
+animation, CSS arrows, and other required CSS.
+
+#### CDN
 
 When including the script link above via CDN, the CSS stylesheet is injected
 into its own `<style>` tag in `<head>`. If you have CSP enabled, you should use
 `dist/tippy.iife.js` and link the stylesheet `dist/tippy.css` separately instead
 of relying on injection.
 
+#### Contents
+
 [View the package contents on unpkg](https://unpkg.com/tippy.js@5/)
 
 - `dist/tippy-bundle.js` = Core JS + Core CSS injected into `<head>` (default
-  for IIFE CDN version)
+  for CDN version)
 - `dist/tippy.js` = Core JS (default for ESM/CJS versions)
 - `dist/tippy.css` = Core CSS
 
-### Frameworks
+### Component wrappers
 
 - React: [@tippy.js/react](https://github.com/atomiks/tippy.js-react)
 

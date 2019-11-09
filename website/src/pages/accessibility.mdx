@@ -4,10 +4,12 @@ path: /accessibility/
 index: 12
 ---
 
-Tooltip and popover UI elements may not necessarily be considered a mouse-only
-UI element. There is also keyboard and touch navigation to be aware of,
-including people with disabilities that rely on assistive technology such as
-screenreaders to navigate user interfaces.
+Tooltip and popovers are usually not mouse-only UI elements. If vital
+functionality or information is contained within them, they should be accessible
+to keyboard and touch inputs so that users who navigate interfaces without using
+a mouse are not locked out. This is especially true for people with disabilities
+such as low vision who rely on screen reader technology to assist them with
+using an application.
 
 To ensure these users get the best possible experience, Tippy already employs
 baked-in defaults to ensure accessibility. However, some special consideration
@@ -17,9 +19,8 @@ potential accessibility problems that may arise.
 ### Use natively focusable elements
 
 Tooltips should only be applied to natively focusable elements like `<button>`
-or `<input>`. Some screenreader software may not announce the tooltip on an
-element like `<div>`, even if you add a `tabindex="0"` attribute on it so that
-it can receive focus.
+or `<input>`. If you are using a `<div>` or `<span>` element, ensure you add
+`tabindex="0"` so that it can receive focus.
 
 ### Mouse, keyboard, and touch input
 
@@ -40,15 +41,15 @@ attribute once they show:
 </div>
 ```
 
-This allows screenreader software to announce the tooltip content describing the
-reference element once it's in focus.
+This allows screen reader software to announce the tooltip content describing
+the reference element once it's in focus.
 
 ### Interactivity
 
 Tippy uses two techniques to ensure interactive popovers are accessible:
 
 - `aria-expanded` attribute
-- `appendTo: "parent"` order
+- `appendTo: "parent"`
 
 This means once the reference element has focus, the assistive technology will
 let the user know it has an expandable popover attached to it.
@@ -84,3 +85,4 @@ You should wrap the reference element in its own parent element (`<div>` or
 Sometimes, this behavior won't work for your app due to clipping issues. In this
 case, you need to specify a custom `appendTo` element outside of the parent node
 context and use a focus management solution to handle keyboard navigation.
+[More details here](/faq/#my-tooltip-appears-cut-off-or-is-not-showing-at-all).

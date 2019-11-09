@@ -7,11 +7,11 @@ index: 7
 import ImageTransition from '../components/examples/ImageTransition';
 import TextTransition from '../components/examples/TextTransition';
 
-Tippy elements use an opacity `fade` transition by default.
+Tippies use an opacity `fade` transition by default.
 
 ### Included animations
 
-The `tippy.js` package comes with extra animations for you to use:
+The package comes with extra animations for you to use:
 
 - `shift-away`
 - `shift-toward`
@@ -24,7 +24,7 @@ They need to be imported separately.
 import 'tippy.js/animations/scale.css';
 ```
 
-Pass the animation name (string) as the `animation` prop:
+Pass the animation name as the `animation` prop:
 
 ```js
 tippy('button', {
@@ -32,13 +32,12 @@ tippy('button', {
 });
 ```
 
-Each of these animations also has 3 variants (normal, subtle, and extreme).
+Each of these animations also has 3 variants (normal, subtle, and extreme) using the following format:
 
 ```js
 import 'tippy.js/animations/scale.css';
 import 'tippy.js/animations/scale-subtle.css';
 import 'tippy.js/animations/scale-extreme.css';
-// `perspective` and `shift-toward` follow the same format as above
 ```
 
 ### Custom animations
@@ -53,6 +52,7 @@ To create your own animation:
 
 ```css
 .tippy-tooltip[data-animation='rotate'][data-state='hidden'] {
+  opacity: 0;
   transform: rotate(90deg);
 }
 ```
@@ -92,7 +92,7 @@ import tippy, {animateFill} from 'tippy.js';
 import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/animations/shift-away.css';
 
-tippy(reference, {
+tippy(targets, {
   animateFill: true,
   plugins: [animateFill],
 });

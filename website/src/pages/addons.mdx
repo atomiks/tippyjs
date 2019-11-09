@@ -4,9 +4,8 @@ path: /addons/
 index: 13
 ---
 
-Addons are external functionality added to Tippy.js that don't need to belong in
-the core library. This means users who don't need this functionality aren't
-burdened with extra download size. By default, two useful addons are included.
+Addons are external functions that control or create many different Tippy
+instances, and can be tree-shaken away by bundlers.
 
 ### Event delegation
 
@@ -45,7 +44,7 @@ delegate('#parent', {
 });
 ```
 
-In the CDN (IIFE) version, it's available as `tippy.delegate()`
+In the CDN (`iife`) version, it's available as `tippy.delegate()`
 
 #### Return type
 
@@ -84,6 +83,8 @@ delegateInstance.destroy(false);
 This addon uses `Element.prototype.closest()`, which is not supported in older
 browsers. You will need to polyfill this method to get full support.
 
+---
+
 ### Singleton
 
 A singleton is a single tippy element that takes the place of an array of
@@ -93,9 +94,10 @@ This allows two things:
 
 - Smooth transitions of the tippy between many different reference element
   targets
-- Instances with a `delay` can be "grouped" such that appear to share a timeout,
-  which greatly improves the UX for elements near each other when their tooltips
-  have a delay
+- Elements with tooltips next to each other that have a `delay` can be "grouped"
+  so they appear to share a timeout, which greatly improves UX
+
+See the [demo](/#singleton) for it in action.
 
 #### Usage
 
@@ -109,7 +111,7 @@ const tippyInstances = tippy('button');
 const singleton = createSingleton(tippyInstances, {delay: 1000});
 ```
 
-In the CDN (IIFE) version, it's available as `tippy.createSingleton()`
+In the CDN (`iife`) version, it's available as `tippy.createSingleton()`
 
 #### Smooth transitions
 

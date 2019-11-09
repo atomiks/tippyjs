@@ -75,16 +75,13 @@ The `_tippy` property is deleted from the reference element upon destruction.
 
 ### Static methods
 
-Static methods belong to the `tippy` module function rather than a tippy
-instance.
+Static methods belong to the `tippy` module for global behavior.
 
 #### setDefaultProps
 
 Set the default props for each new instance:
 
 ```js
-import tippy from 'tippy.js';
-
 tippy.setDefaultProps({
   // Props
 });
@@ -95,7 +92,7 @@ tippy.defaultProps;
 
 #### hideAll
 
-Hide all visible tippys on the document:
+Hide all visible tippies on the document:
 
 ```js
 import {hideAll} from 'tippy.js';
@@ -109,6 +106,4 @@ hideAll({exclude: tippyInstance});
 hideAll({exclude: referenceElement});
 ```
 
-Note that this is not attached to `tippy` in ESM/CJS versions, it must be
-imported separately. In the CDN (IIFE) version, it's available as
-`tippy.hideAll()`.
+In the CDN (`iife`) version, it's available as `tippy.hideAll()`.
