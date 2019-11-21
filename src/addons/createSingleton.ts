@@ -89,15 +89,7 @@ const createSingleton: CreateSingleton = (
             handleAriaDescribedByAttribute(true);
           }
 
-          instance.popperInstance!.reference = {
-            referenceNode: target,
-            // These `client` values don't get used by Popper.js if they are 0
-            clientHeight: 0,
-            clientWidth: 0,
-            getBoundingClientRect(): ClientRect {
-              return target.getBoundingClientRect();
-            },
-          };
+          instance.popperInstance!.reference = target;
 
           instance.setContent(tippyInstances[index].props.content);
         },
