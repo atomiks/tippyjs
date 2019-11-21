@@ -1,10 +1,4 @@
-import {
-  PopperElement,
-  Placement,
-  FollowCursor,
-  FollowCursorProps,
-  Props,
-} from '../types';
+import {PopperElement, Placement, FollowCursor, Props} from '../types';
 import {
   includes,
   closestCallback,
@@ -14,8 +8,6 @@ import {
 } from '../utils';
 import {getBasePlacement} from '../popper';
 import {currentInput} from '../bindGlobalEventListeners';
-
-type ExtendedProps = Props & FollowCursorProps;
 
 const followCursor: FollowCursor = {
   name: 'followCursor',
@@ -37,8 +29,8 @@ const followCursor: FollowCursor = {
     // original prop value
     const userProps = instance.props;
 
-    function setUserProps(props: Partial<ExtendedProps>): void {
-      const keys = Object.keys(props) as Array<keyof ExtendedProps>;
+    function setUserProps(props: Partial<Props>): void {
+      const keys = Object.keys(props) as Array<keyof Props>;
       keys.forEach(prop => {
         (userProps as any)[prop] = useIfDefined(props[prop], userProps[prop]);
       });
