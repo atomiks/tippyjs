@@ -1,8 +1,4 @@
-import {
-  InlinePositioning,
-  InlinePositioningProps,
-  BasePlacement,
-} from '../types';
+import {InlinePositioning, BasePlacement} from '../types';
 import {arrayFrom} from '../utils';
 import {getBasePlacement} from '../popper';
 
@@ -15,8 +11,8 @@ const inlinePositioning: InlinePositioning = {
   fn(instance) {
     const {reference} = instance;
 
-    function getIsEnabled(): InlinePositioningProps['inlinePositioning'] {
-      return instance.props.inlinePositioning;
+    function getIsEnabled(): boolean {
+      return !!instance.props.inlinePositioning;
     }
 
     return {
@@ -61,8 +57,6 @@ export function getInlineBoundingClientRect(
     return boundingRect;
   }
 
-  let rectToUse: ClientRect;
-
   switch (currentBasePlacement) {
     case 'top':
     case 'bottom': {
@@ -77,9 +71,7 @@ export function getInlineBoundingClientRect(
       const width = right - left;
       const height = bottom - top;
 
-      rectToUse = {top, bottom, left, right, width, height};
-
-      break;
+      return {top, bottom, left, right, width, height};
     }
     case 'left':
     case 'right': {
@@ -98,14 +90,10 @@ export function getInlineBoundingClientRect(
       const width = right - left;
       const height = bottom - top;
 
-      rectToUse = {top, bottom, left, right, width, height};
-
-      break;
+      return {top, bottom, left, right, width, height};
     }
     default: {
-      rectToUse = boundingRect;
+      return boundingRect;
     }
   }
-
-  return rectToUse;
 }
