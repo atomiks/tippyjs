@@ -52,6 +52,9 @@ tippy(reference, {
 });
 ```
 
+> **Note:** plugins ignore `return false` due to compositional issues. Only a
+> tippy instance's own props can use this feature.
+
 #### onMount
 
 Executed when the tippy element is mounted to the DOM.
@@ -103,6 +106,9 @@ tippy(reference, {
   },
 });
 ```
+
+> **Note:** plugins ignore `return false` due to compositional issues. Only a
+> tippy instance's own props can use this feature.
 
 #### onHidden
 
