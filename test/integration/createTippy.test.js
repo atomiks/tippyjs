@@ -477,6 +477,18 @@ describe('instance.setProps()', () => {
 
     expect(instance.reference.getAttribute('aria-expanded')).toBe('false');
   });
+
+  it('preserves previous `instance.popperInstance.reference`', () => {
+    instance = createTippy(h(), {...defaultProps, lazy: false});
+
+    const testRef = h();
+    instance.popperInstance.reference = testRef;
+
+    // Re-creates the popperInstance
+    instance.setProps({placement: 'bottom'});
+
+    expect(instance.popperInstance.reference).toBe(testRef);
+  });
 });
 
 describe('instance.setContent()', () => {

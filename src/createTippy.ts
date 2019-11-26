@@ -921,8 +921,10 @@ export default function createTippy(
           );
         })
       ) {
+        const currentReference = instance.popperInstance.reference;
         instance.popperInstance.destroy();
         createPopperInstance();
+        instance.popperInstance.reference = currentReference;
 
         if (instance.state.isVisible) {
           instance.popperInstance.enableEventListeners();
