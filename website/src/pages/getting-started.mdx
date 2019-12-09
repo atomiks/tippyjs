@@ -18,9 +18,13 @@ yarn add tippy.js
 
 In your application, import the `tippy` module, and the core CSS:
 
-```js
+```javascript
 import tippy from 'tippy.js';
-import 'tippy.js/dist/tippy.css';
+import 'tippy.js/dist/tippy.css'; // assuming webpack with style-loader or equivalent
+// ...
+tippy(myElement, {
+    content: `I'm a pretty tooltip!`
+});
 ```
 
 This assumes you're using a module bundler like webpack, Rollup, or Parcel. If
