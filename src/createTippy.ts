@@ -773,11 +773,11 @@ export default function createTippy(
 
         Using a wrapper <div> or <span> tag around the reference element solves
         this by creating a new parentNode context.
-        
+
         Specifying \`appendTo: document.body\` silences this warning, but it
         assumes you are using a focus management solution to handle keyboard
         navigation.
-        
+
         See: https://atomiks.github.io/tippyjs/accessibility/#interactivity`,
       );
     }
