@@ -82,6 +82,7 @@ export default function createTippy(
   let hideTimeout: any;
   let scheduleHideAnimationFrame: number;
   let isBeingDestroyed = false;
+  let tipIsVisibleFromClick = false;
   let didHideDueToDocumentMouseDown = false;
   let popperUpdates = 0;
   let lastTriggerEvent: Event;
@@ -309,6 +310,7 @@ export default function createTippy(
     }
 
     if (instance.props.hideOnClick === true) {
+      tipIsVisibleFromClick = false;
       instance.clearDelayTimeouts();
       instance.hide();
 
@@ -421,6 +423,8 @@ export default function createTippy(
   }
 
   function onTrigger(event: Event): void {
+    let shouldScheduleClickHide = false;
+
     if (
       !instance.state.isEnabled ||
       isEventListenerStopped(event) ||
@@ -445,10 +449,15 @@ export default function createTippy(
     // Toggle show/hide when clicking click-triggered tooltips
     if (
       event.type === 'click' &&
+      // If triggering with mouseenter as well, only toggle when hideOnClick
+      // is explicitly set to 'toggle', and the tip has been shown via click
+      // (so the tip doesn't hide on click while hovered).
+      (!includes(instance.props.trigger, 'mouseenter') ||
+        (instance.props.hideOnClick === 'toggle' && tipIsVisibleFromClick)) &&
       instance.props.hideOnClick !== false &&
       instance.state.isVisible
     ) {
-      scheduleHide(event);
+      shouldScheduleClickHide = true;
     } else {
       const [value, duration] = getNormalizedTouchSettings();
 
@@ -461,6 +470,14 @@ export default function createTippy(
       } else {
         scheduleShow(event);
       }
+    }
+
+    if (event.type === 'click') {
+      tipIsVisibleFromClick = !shouldScheduleClickHide;
+    }
+
+    if (shouldScheduleClickHide) {
+      scheduleHide(event);
     }
   }
 
@@ -504,6 +521,10 @@ export default function createTippy(
       doc.addEventListener('mousemove', debouncedOnMouseMove);
       pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
 
+      return;
+    }
+
+    if (includes(instance.props.trigger, 'click') && tipIsVisibleFromClick) {
       return;
     }
 
