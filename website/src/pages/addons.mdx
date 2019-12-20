@@ -40,7 +40,7 @@ should match the child elements which should receive a tippy.
 import {delegate} from 'tippy.js';
 
 delegate('#parent', {
-  target: '.child',
+  target: '.child'
 });
 ```
 
@@ -53,11 +53,11 @@ value depending on the type supplied, just like `tippy()`.
 
 ```js
 const delegateInstances = delegate('.parent', {
-  target: '.child',
+  target: '.child'
 }); // Instance[]
 
 const delegateInstance = delegate(parentElement, {
-  target: '.child',
+  target: '.child'
 }); // Instance
 ```
 
@@ -69,7 +69,7 @@ behavior, pass `false` as an argument:
 
 ```js
 const delegateInstance = delegate(parentElement, {
-  target: '.child',
+  target: '.child'
 });
 
 // Prevents further creation and destroys any created child tippy instances
@@ -121,9 +121,55 @@ position updates of the tippy element:
 ```js
 const singleton = createSingleton(tippyInstances, {
   delay: 1000,
-  updateDuration: 500,
+  updateDuration: 500
 });
 ```
+
+> **Important note:** enabling transitions may cause overflow issues if the
+> tippy content is near the right/bottom edge of a boundary (e.g. window) and
+> the tippy content changes from small to large. This is because of the
+> transition causing the tippy to expand the boundary, making Popper.js think it
+> will fit.
+
+##### Solution 1: constrain to viewport
+
+```js
+createSingleton(instances, {
+  boundary: 'viewport'
+});
+```
+
+##### Solution 2: clipping container
+
+If the first solution is not suitable (i.e. you prefer the `window` boundary),
+you can change your DOM context to prevent the boundary from expanding by
+placing the tippy within a positioned container with `overflow-x: hidden`.
+
+```html
+<div class="overflow-container">
+  <button>Reference</button>
+</div>
+```
+
+```css
+.overflow-container {
+  position: relative;
+  overflow-x: hidden;
+  /*
+  The container can cut the tippy off, so ensure the tippy can fit within it!
+  You'll need to use a value that suits your application.
+  */
+  height: 200px;
+}
+```
+
+```js
+createSingleton(instances, {
+  appendTo: 'parent'
+});
+```
+
+### Timing function
 
 The `transition-timing-function` by default is `easeOutQuint`. Usually this
 looks nice, but you can change this (to add an inertial slingshot effect for
@@ -135,6 +181,6 @@ const singleton = createSingleton(tippyInstances, {
   onCreate({popper}) {
     // Any easing function you want.
     popper.style.transitionTimingFunction = 'cubic-bezier(...)';
-  },
+  }
 });
 ```
