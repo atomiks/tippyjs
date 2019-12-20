@@ -1,10 +1,17 @@
-import {Sticky} from '../types';
+import {Sticky, ReferenceElement} from '../types';
+import Popper from 'popper.js';
 
 const sticky: Sticky = {
   name: 'sticky',
   defaultValue: false,
   fn(instance) {
     const {reference, popper} = instance;
+
+    function getReference(): ReferenceElement | Popper.ReferenceObject {
+      return instance.popperInstance
+        ? instance.popperInstance.reference
+        : reference;
+    }
 
     function shouldCheck(value: 'reference' | 'popper'): boolean {
       return instance.props.sticky === true || instance.props.sticky === value;
@@ -15,7 +22,7 @@ const sticky: Sticky = {
 
     function updatePosition(): void {
       const currentRefRect = shouldCheck('reference')
-        ? reference.getBoundingClientRect()
+        ? getReference().getBoundingClientRect()
         : null;
       const currentPopRect = shouldCheck('popper')
         ? popper.getBoundingClientRect()
