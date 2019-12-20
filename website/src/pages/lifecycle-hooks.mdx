@@ -20,7 +20,7 @@ Executed a single time when a tippy is first created.
 tippy(reference, {
   onCreate(instance) {
     // ...
-  },
+  }
 });
 ```
 
@@ -33,7 +33,7 @@ click), but before it starts to show.
 tippy(reference, {
   onTrigger(instance, event) {
     // ...
-  },
+  }
 });
 ```
 
@@ -48,7 +48,7 @@ tippy(reference, {
   onShow(instance) {
     // ...
     return false; // cancels it
-  },
+  }
 });
 ```
 
@@ -63,7 +63,7 @@ Executed when the tippy element is mounted to the DOM.
 tippy(reference, {
   onMount(instance) {
     // ...
-  },
+  }
 });
 ```
 
@@ -75,7 +75,7 @@ Executed when a tippy has fully transitioned in.
 tippy(reference, {
   onShown(instance) {
     // ...
-  },
+  }
 });
 ```
 
@@ -88,7 +88,7 @@ click), but before it starts to hide.
 tippy(reference, {
   onUntrigger(instance, event) {
     // ...
-  },
+  }
 });
 ```
 
@@ -103,7 +103,7 @@ tippy(reference, {
   onHide(instance) {
     // ...
     return false; // cancels it
-  },
+  }
 });
 ```
 
@@ -118,7 +118,7 @@ Executed when a tippy has fully transitioned out and unmounted from the DOM.
 tippy(reference, {
   onHidden(instance) {
     // ...
-  },
+  }
 });
 ```
 
@@ -131,7 +131,7 @@ Executed before a tippy's props are updated (via `.setContent()` or
 tippy(reference, {
   onBeforeUpdate(instance, updatedProps) {
     // ...
-  },
+  }
 });
 ```
 
@@ -144,7 +144,7 @@ Executed after a tippy's props are updated (via `.setContent()` or
 tippy(reference, {
   onAfterUpdate(instance, updatedProps) {
     // ...
-  },
+  }
 });
 ```
 
@@ -156,6 +156,6 @@ Executed a single time when a tippy is destroyed.
 tippy(reference, {
   onDestroy(instance) {
     // ...
-  },
+  }
 });
 ```

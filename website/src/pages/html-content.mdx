@@ -12,7 +12,7 @@ To interact with the content inside the tippy, set `interactive: true`.
 
 ```js
 tippy('button', {
-  content: '<strong>Bolded content</strong>',
+  content: '<strong>Bolded content</strong>'
 });
 ```
 
@@ -34,7 +34,7 @@ You can pass in an element's `.innerHTML` string:
 const template = document.getElementById('template');
 
 tippy('button', {
-  content: template.innerHTML,
+  content: template.innerHTML
 });
 ```
 
@@ -48,7 +48,7 @@ const template = document.getElementById('example');
 template.style.display = 'block';
 
 tippy(singleButton, {
-  content: template,
+  content: template
 });
 ```
 
@@ -88,6 +88,6 @@ tippy('button', {
     const id = reference.getAttribute('data-template');
     const template = document.getElementById(id);
     return template.innerHTML;
-  },
+  }
 });
 ```

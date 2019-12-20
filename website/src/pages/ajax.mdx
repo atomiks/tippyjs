@@ -28,7 +28,7 @@ Now, let's add some JavaScript:
 tippy('#ajax-tippy', {
   content: 'Loading...',
   // This prop is recommended if your tooltip changes size while showing
-  flipOnUpdate: true,
+  flipOnUpdate: true
 });
 ```
 
@@ -49,7 +49,7 @@ tippy('#ajax-tippy', {
   flipOnUpdate: true,
   onShow(instance) {
     // Code here is executed every time the tippy shows
-  },
+  }
 });
 ```
 
@@ -77,7 +77,7 @@ tippy('#ajax-tippy', {
         // Fallback if the network request failed
         instance.setContent(`Request failed. ${error}`);
       });
-  },
+  }
 });
 ```
 
@@ -95,7 +95,7 @@ tippy('#ajax-tippy', {
   // ...
   onHidden(instance) {
     instance.setContent('Loading...');
-  },
+  }
 });
 ```
 
@@ -137,7 +137,7 @@ tippy('#ajax-tippy', {
     // Unset these properties so new network requests can be initiated
     instance._src = null;
     instance._error = null;
-  },
+  }
 });
 ```
 

@@ -28,11 +28,12 @@ Pass the animation name as the `animation` prop:
 
 ```js
 tippy('button', {
-  animation: 'scale',
+  animation: 'scale'
 });
 ```
 
-Each of these animations also has 3 variants (normal, subtle, and extreme) using the following format:
+Each of these animations also has 3 variants (normal, subtle, and extreme) using
+the following format:
 
 ```js
 import 'tippy.js/animations/scale.css';
@@ -59,7 +60,7 @@ To create your own animation:
 
 ```js
 tippy('button', {
-  animation: 'rotate',
+  animation: 'rotate'
 });
 ```
 
@@ -70,7 +71,7 @@ tippy, which is a limited CSS-only way to mimic spring physics.
 
 ```js
 tippy('button', {
-  inertia: true,
+  inertia: true
 });
 ```
 
@@ -94,7 +95,7 @@ import 'tippy.js/animations/shift-away.css';
 
 tippy(targets, {
   animateFill: true,
-  plugins: [animateFill],
+  plugins: [animateFill]
 });
 ```
 
@@ -116,7 +117,7 @@ tippy('button', {
     const {tooltip} = instance.popperChildren;
     tooltip.classList.remove('animated');
     tooltip.classList.remove('wobble');
-  },
+  }
 });
 ```
 
@@ -142,5 +143,5 @@ View the [CodePen demo](https://codepen.io/atomiks/pen/LgjMbW).
   <TextTransition />
 </Demo>
 
-Code for fully dynamic transitions is still being developed and it is highly experimental at this stage. The
-documentation will be updated once it's ready.
+Code for fully dynamic transitions is still being developed and it is highly
+experimental at this stage. The documentation will be updated once it's ready.

@@ -47,8 +47,8 @@ To fix add the following prop (recommended):
 tippy(targets, {
   // ...
   popperOptions: {
-    positionFixed: true,
-  },
+    positionFixed: true
+  }
 });
 ```
 
@@ -57,7 +57,7 @@ Or, if the above causes issues:
 ```js
 tippy(targets, {
   // ...
-  appendTo: document.body,
+  appendTo: document.body
 });
 ```
 
@@ -98,15 +98,15 @@ export default {
   plugins: [
     // Production config
     replace({
-      'process.env.NODE_ENV': JSON.stringify('production'),
+      'process.env.NODE_ENV': JSON.stringify('production')
     }),
     // OR development config
     replace({
-      'process.env.NODE_ENV': JSON.stringify('development'),
-    }),
+      'process.env.NODE_ENV': JSON.stringify('development')
+    })
     // You can also use process.env.NODE_ENV and set the env variables when
     // running the rollup command to merge the above into one call
-  ],
+  ]
 };
 ```
 
@@ -199,7 +199,7 @@ tippy('button', {
     const title = reference.getAttribute('title');
     reference.removeAttribute('title');
     return title;
-  },
+  }
 });
 ```
 
@@ -227,9 +227,9 @@ const titleAttribute = {
           instance.setContent(title);
           instance.reference.removeAttribute('title');
         }
-      },
+      }
     };
-  },
+  }
 };
 ```
 

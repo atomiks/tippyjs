@@ -27,7 +27,7 @@ attribute:
 
 ```js
 tippy('#singleElement', {
-  content: 'Tooltip',
+  content: 'Tooltip'
 });
 ```
 
@@ -40,7 +40,7 @@ If you're passing unknown user data to `content`, disable HTML for safety:
 ```js
 tippy('#singleElement', {
   content: unsafeUserData,
-  allowHTML: false,
+  allowHTML: false
 });
 ```
 
@@ -50,7 +50,7 @@ use a sanitization library like
 
 ```js
 tippy('#singleElement', {
-  content: DOMPurify.sanitize(unsafeUserData),
+  content: DOMPurify.sanitize(unsafeUserData)
 });
 ```
 

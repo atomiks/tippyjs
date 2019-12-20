@@ -53,7 +53,7 @@ You can initialize it like so:
 
 ```js
 tippy('#myButton', {
-  content: "I'm a Tippy tooltip!",
+  content: "I'm a Tippy tooltip!"
 });
 ```
 
@@ -88,7 +88,7 @@ Additionally, the tooltip can be shifted along the axis using the suffix
             style={{
               display: 'inline-block',
               width: '100%',
-              height: '100%',
+              height: '100%'
             }}
           >
             {placement}
@@ -102,7 +102,7 @@ Additionally, the tooltip can be shifted along the axis using the suffix
 ```js
 tippy('#myButton', {
   placement: 'bottom',
-  arrow: false,
+  arrow: false
 });
 ```
 
@@ -141,7 +141,7 @@ modified, or be disabled completely.
 ```js
 tippy('#myButton', {
   // Your own shape
-  arrow: String | SVGElement,
+  arrow: String | SVGElement
 });
 ```
 
@@ -171,7 +171,7 @@ These animations are included in the package and can be imported separately.
           <Button
             style={{
               width: '100%',
-              height: '100%',
+              height: '100%'
             }}
           >
             {animation}
@@ -206,7 +206,7 @@ Add CSS spring physics to the animation using `transition-timing-function`.
       >
         <Button>{animation}</Button>
       </Tippy>
-    ),
+    )
   )}
 </Demo>
 
@@ -228,7 +228,7 @@ for example using the `animate.css` package:
     onHidden={instance => {
       instance.popperChildren.tooltip.classList.remove(
         'rubberBand',
-        'animated',
+        'animated'
       );
     }}
   >
@@ -288,7 +288,7 @@ These themes are included in the package and can be imported separately.
 
 ```js
 tippy('#myButton', {
-  theme: 'light',
+  theme: 'light'
 });
 ```
 
@@ -321,7 +321,7 @@ Tooltips can also be triggered by `click` or `focus` events.
 
 ```js
 tippy('#myButton', {
-  trigger: 'click', // or 'focus'
+  trigger: 'click' // or 'focus'
 });
 ```
 
@@ -340,7 +340,7 @@ Tooltips can be interactive, allowing you to hover over and click inside them.
 ```js
 tippy('#myButton', {
   content: 'You can select the text inside here.',
-  interactive: true,
+  interactive: true
 });
 ```
 
@@ -365,7 +365,7 @@ Tooltips can contain HTML.
 
 ```js
 tippy('#myButton', {
-  content: '<strong>Bolded <span style="color: aqua;">content</span></strong>',
+  content: '<strong>Bolded <span style="color: aqua;">content</span></strong>'
 });
 ```
 
@@ -392,7 +392,7 @@ tippy('#myButton', {
   // number: show and hide delay are the same
   delay: 500,
   // [number, number]: [show, hide] delay
-  delay: [500, 0],
+  delay: [500, 0]
 });
 ```
 
@@ -444,7 +444,7 @@ tippy('#myButton', {
   // Follow y-axis
   followCursor: 'vertical',
   // Follow initial cursor without listening
-  followCursor: 'initial',
+  followCursor: 'initial'
 });
 ```
 
@@ -470,7 +470,7 @@ very useful, since it can be placed directly on the line.
 ```js
 tippy('line', {
   followCursor: 'initial',
-  delay: 200,
+  delay: 200
 });
 ```
 
@@ -510,8 +510,8 @@ for (let i = 0; i < buttons.length; i++) {
   instances.push(
     tippy(buttons[i], {
       content: `Tooltip ${i + 1}`,
-      updateDuration: 400,
-    }),
+      updateDuration: 400
+    })
   );
 }
 
@@ -549,15 +549,15 @@ placements
       acc.concat(
         basePlacement,
         `${basePlacement}-start`,
-        `${basePlacement}-end`,
+        `${basePlacement}-end`
       ),
-    [],
+    []
   )
   .forEach(placement => {
     tippy('#square', {
       content: placement,
       placement,
-      multiple: true,
+      multiple: true
     });
   });
 ```
