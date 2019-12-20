@@ -1,4 +1,10 @@
-import {PopperElement, Placement, FollowCursor, Props} from '../types';
+import {
+  PopperElement,
+  Placement,
+  FollowCursor,
+  Props,
+  ReferenceElement,
+} from '../types';
 import {
   includes,
   closestCallback,
@@ -8,12 +14,18 @@ import {
 } from '../utils';
 import {getBasePlacement} from '../popper';
 import {currentInput} from '../bindGlobalEventListeners';
+import Popper from 'popper.js';
 
 const followCursor: FollowCursor = {
   name: 'followCursor',
   defaultValue: false,
   fn(instance) {
     const {reference, popper} = instance;
+
+    let originalReference:
+      | ReferenceElement
+      | Popper.ReferenceObject
+      | null = null;
 
     // Support iframe contexts
     // Static check that assumes any of the `triggerTarget` or `reference`
@@ -59,8 +71,8 @@ const followCursor: FollowCursor = {
     }
 
     function resetReference(): void {
-      if (instance.popperInstance) {
-        instance.popperInstance.reference = reference;
+      if (instance.popperInstance && originalReference) {
+        instance.popperInstance.reference = originalReference;
       }
     }
 
@@ -152,6 +164,12 @@ const followCursor: FollowCursor = {
       const {size, x, y} = getVirtualOffsets(popper, isVerticalPlacement);
 
       if (isCursorOverReference || !instance.props.interactive) {
+        // Preserve custom position ReferenceObjects, which may not be the
+        // original targets reference passed as an argument
+        if (originalReference === null) {
+          originalReference = instance.popperInstance.reference;
+        }
+
         instance.popperInstance.reference = {
           referenceNode: reference,
           // These `client` values don't get used by Popper.js if they are 0
