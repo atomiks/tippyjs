@@ -306,6 +306,31 @@ natively focusable elements everywhere possible.
 
 </details>
 
+### If you were using `wait`
+
+<details>
+<summary>View details</summary>
+
+Use the `onTrigger` and `onUntrigger` lifecycles and temporarily disable the instance.
+
+```js
+tippy(targets, {
+  onTrigger(instance) {
+    instance.disable();
+    // Make your async call...
+    // Once finished:
+    instance.enable();
+    instance.show();
+  },
+  onUntrigger(instance) {
+    // Re-enable the instance here depending on the async cancellation logic
+    instance.enable();
+  },
+});
+```
+
+</details>
+
 ## Instances
 
 ### If you were using `instance.set()`
