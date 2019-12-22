@@ -85,9 +85,11 @@ describe('createTippy', () => {
     fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
-    // Clicking the reference only toggles the tippy when hideOnClick='toggle'.
-    fireEvent.click(instance.reference);
+    fireEvent.mouseLeave(instance.reference);
     expect(instance.state.isVisible).toBe(true);
+
+    fireEvent.click(instance.reference);
+    expect(instance.state.isVisible).toBe(false);
   });
 
   it('extends `instance.props` with plugin props', () => {

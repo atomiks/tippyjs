@@ -449,11 +449,8 @@ export default function createTippy(
     // Toggle show/hide when clicking click-triggered tooltips
     if (
       event.type === 'click' &&
-      // If triggering with mouseenter as well, only toggle when hideOnClick
-      // is explicitly set to 'toggle', and the tip has been shown via click
-      // (so the tip doesn't hide on click while hovered).
       (!includes(instance.props.trigger, 'mouseenter') ||
-        (instance.props.hideOnClick === 'toggle' && tipIsVisibleFromClick)) &&
+        tipIsVisibleFromClick) &&
       instance.props.hideOnClick !== false &&
       instance.state.isVisible
     ) {
