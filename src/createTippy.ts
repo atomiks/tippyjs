@@ -82,7 +82,7 @@ export default function createTippy(
   let hideTimeout: any;
   let scheduleHideAnimationFrame: number;
   let isBeingDestroyed = false;
-  let tipIsVisibleFromClick = false;
+  let isVisibleFromClick = false;
   let didHideDueToDocumentMouseDown = false;
   let popperUpdates = 0;
   let lastTriggerEvent: Event;
@@ -310,7 +310,7 @@ export default function createTippy(
     }
 
     if (instance.props.hideOnClick === true) {
-      tipIsVisibleFromClick = false;
+      isVisibleFromClick = false;
       instance.clearDelayTimeouts();
       instance.hide();
 
@@ -449,8 +449,7 @@ export default function createTippy(
     // Toggle show/hide when clicking click-triggered tooltips
     if (
       event.type === 'click' &&
-      (!includes(instance.props.trigger, 'mouseenter') ||
-        tipIsVisibleFromClick) &&
+      (!includes(instance.props.trigger, 'mouseenter') || isVisibleFromClick) &&
       instance.props.hideOnClick !== false &&
       instance.state.isVisible
     ) {
@@ -470,7 +469,7 @@ export default function createTippy(
     }
 
     if (event.type === 'click') {
-      tipIsVisibleFromClick = !shouldScheduleClickHide;
+      isVisibleFromClick = !shouldScheduleClickHide;
     }
 
     if (shouldScheduleClickHide) {
@@ -521,7 +520,7 @@ export default function createTippy(
       return;
     }
 
-    if (includes(instance.props.trigger, 'click') && tipIsVisibleFromClick) {
+    if (includes(instance.props.trigger, 'click') && isVisibleFromClick) {
       return;
     }
 
