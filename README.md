@@ -17,7 +17,7 @@
 
 ## Demo and Documentation
 
-🚀 **[View the latest demo & docs here](https://atomiks.github.io/tippyjs/)**
+➡️ **[View the latest demo & docs here](https://atomiks.github.io/tippyjs/)**
 
 [View migration guide from v4 to v5](https://github.com/atomiks/tippyjs/blob/master/MIGRATION_GUIDE.md)
 
@@ -35,12 +35,25 @@ npm i tippy.js
 yarn add tippy.js
 ```
 
+Import the `tippy` constructor and the core CSS:
+
+```js
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+```
+
 ### CDN
 
 ```html
 <script src="https://unpkg.com/popper.js@1"></script>
 <script src="https://unpkg.com/tippy.js@5"></script>
 ```
+
+The core CSS comes bundled with the default unpkg import.
+
+## Usage
+
+For detailed usage information, [visit the docs](https://atomiks.github.io/tippyjs/creating-tooltips/).
 
 ## Component Wrappers
 
