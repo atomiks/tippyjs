@@ -82,6 +82,7 @@ export default function createTippy(
   let hideTimeout: any;
   let scheduleHideAnimationFrame: number;
   let isBeingDestroyed = false;
+  let isVisibleFromClick = false;
   let didHideDueToDocumentMouseDown = false;
   let popperUpdates = 0;
   let lastTriggerEvent: Event;
@@ -309,6 +310,7 @@ export default function createTippy(
     }
 
     if (instance.props.hideOnClick === true) {
+      isVisibleFromClick = false;
       instance.clearDelayTimeouts();
       instance.hide();
 
@@ -421,6 +423,8 @@ export default function createTippy(
   }
 
   function onTrigger(event: Event): void {
+    let shouldScheduleClickHide = false;
+
     if (
       !instance.state.isEnabled ||
       isEventListenerStopped(event) ||
@@ -445,10 +449,11 @@ export default function createTippy(
     // Toggle show/hide when clicking click-triggered tooltips
     if (
       event.type === 'click' &&
+      (!includes(instance.props.trigger, 'mouseenter') || isVisibleFromClick) &&
       instance.props.hideOnClick !== false &&
       instance.state.isVisible
     ) {
-      scheduleHide(event);
+      shouldScheduleClickHide = true;
     } else {
       const [value, duration] = getNormalizedTouchSettings();
 
@@ -461,6 +466,14 @@ export default function createTippy(
       } else {
         scheduleShow(event);
       }
+    }
+
+    if (event.type === 'click') {
+      isVisibleFromClick = !shouldScheduleClickHide;
+    }
+
+    if (shouldScheduleClickHide) {
+      scheduleHide(event);
     }
   }
 
@@ -504,6 +517,10 @@ export default function createTippy(
       doc.addEventListener('mousemove', debouncedOnMouseMove);
       pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
 
+      return;
+    }
+
+    if (includes(instance.props.trigger, 'click') && isVisibleFromClick) {
       return;
     }
 
@@ -752,11 +769,11 @@ export default function createTippy(
 
         Using a wrapper <div> or <span> tag around the reference element solves
         this by creating a new parentNode context.
-        
+
         Specifying \`appendTo: document.body\` silences this warning, but it
         assumes you are using a focus management solution to handle keyboard
         navigation.
-        
+
         See: https://atomiks.github.io/tippyjs/accessibility/#interactivity`,
       );
     }

@@ -85,6 +85,9 @@ describe('createTippy', () => {
     fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(true);
 
+    fireEvent.mouseLeave(instance.reference);
+    expect(instance.state.isVisible).toBe(true);
+
     fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(false);
   });
