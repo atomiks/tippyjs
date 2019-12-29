@@ -15,9 +15,9 @@ import {currentInput} from './bindGlobalEventListeners';
 import {
   defaultProps,
   POPPER_INSTANCE_DEPENDENCIES,
-  getExtendedProps,
   evaluateProps,
   validateProps,
+  getExtendedPassedProps,
 } from './props';
 import {
   createPopperElement,
@@ -68,9 +68,12 @@ export let mountedInstances: Instance[] = [];
  */
 export default function createTippy(
   reference: ReferenceElement,
-  collectionProps: Props,
+  passedProps: Partial<Props>,
 ): Instance | null {
-  const props = getExtendedProps(evaluateProps(reference, collectionProps));
+  const props: Props = evaluateProps(reference, {
+    ...defaultProps,
+    ...getExtendedPassedProps(passedProps),
+  });
 
   // If the reference shouldn't have multiple tippys, return null early
   if (!props.multiple && reference._tippy) {
@@ -357,7 +360,7 @@ export default function createTippy(
 
   function onTransitionEnd(duration: number, callback: () => void): void {
     function listener(event: TransitionEvent): void {
-      if (event.target === tooltip) {
+      if (event.target === tooltip && event.propertyName === 'visibility') {
         updateTransitionEndListener(tooltip, 'remove', listener);
         callback();
       }

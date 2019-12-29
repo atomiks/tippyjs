@@ -31,16 +31,12 @@ function tippy(
 
   bindGlobalEventListeners();
 
-  const props: Props = {
-    ...defaultProps,
-    ...optionalProps,
-    plugins,
-  };
+  const passedProps: Partial<Props> = {...optionalProps, plugins};
 
   const elements = getArrayOfElements(targets);
 
   if (__DEV__) {
-    const isSingleContentElement = isElement(props.content);
+    const isSingleContentElement = isElement(passedProps.content);
     const isMoreThanOneReferenceElement = elements.length > 1;
     warnWhen(
       isSingleContentElement && isMoreThanOneReferenceElement,
@@ -60,7 +56,7 @@ function tippy(
 
   const instances = elements.reduce<Instance[]>(
     (acc, reference): Instance[] => {
-      const instance = reference && createTippy(reference, props);
+      const instance = reference && createTippy(reference, passedProps);
 
       if (instance) {
         acc.push(instance);
