@@ -3,26 +3,29 @@ import {h, cleanDocumentBody} from '../../utils';
 
 import tippy from '../../../src';
 import delegate from '../../../src/addons/delegate';
-import {clean} from '../../../src/validation';
+import {clean, getFormattedMessage} from '../../../src/validation';
 import {normalizeToArray} from '../../../src/utils';
 
 tippy.setDefaultProps({duration: 0, delay: 0});
 jest.useFakeTimers();
 
 let instance;
+let delegateElement = h();
 
 afterEach(() => {
   if (instance) {
     normalizeToArray(instance).forEach(i => i.destroy());
   }
 
+  delegateElement = h();
+
   cleanDocumentBody();
 });
 
 describe('delegate', () => {
   it('creates an instance for the child target', () => {
-    const button = h('button');
-    instance = delegate(document.body, {target: 'button'});
+    const button = h('button', {}, delegateElement);
+    instance = delegate(delegateElement, {target: 'button'});
 
     expect(button._tippy).toBeUndefined();
 
@@ -34,8 +37,8 @@ describe('delegate', () => {
   });
 
   it('works with `trigger: click`', () => {
-    const button = h('button');
-    instance = delegate(document.body, {
+    const button = h('button', {}, delegateElement);
+    instance = delegate(delegateElement, {
       target: 'button',
       trigger: 'click',
     });
@@ -67,10 +70,10 @@ describe('delegate', () => {
   });
 
   it('does not show its own tippy', () => {
-    instance = delegate(document.body, {target: 'button'});
+    instance = delegate(delegateElement, {target: 'button'});
 
-    fireEvent.mouseOver(document.body);
-    fireEvent.mouseEnter(document.body);
+    fireEvent.mouseOver(delegateElement);
+    fireEvent.mouseEnter(delegateElement);
 
     jest.runAllTimers();
 
@@ -80,26 +83,49 @@ describe('delegate', () => {
   });
 
   it('throws if delegate target is falsy', () => {
-    expect(() => delegate(null, {target: 'button'})).toThrow();
+    delegate(null, {target: 'button'});
+
+    expect(console.error).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        [
+          'tippy() was passed',
+          '`' + String(null) + '`',
+          'as its targets (first) argument. Valid types are: String, Element, Element[],',
+          'or NodeList.',
+        ].join(' '),
+      ),
+    );
   });
 
-  it('throws if passed falsy `target` prop', () => {
-    const message = clean(
-      `You must specify a \`target\` prop indicating the CSS selector string
-    matching the target elements that should receive a tippy.`,
-    );
+  it('errors if passed missing props object', () => {
+    expect(() => delegate(delegateElement)).toThrow();
 
-    expect(() => {
-      delegate(document.body);
-    }).toThrow(message);
-    expect(() => {
-      delegate(document.body, {target: ''});
-    }).toThrow(message);
+    expect(console.error).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        [
+          'You must specity a `target` prop indicating a CSS selector string matching',
+          'the target elements that should receive a tippy.',
+        ].join(' '),
+      ),
+    );
+  });
+
+  it('errors if passed falsy or missing `target` prop', () => {
+    delegate(delegateElement, {target: ''});
+
+    expect(console.error).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        [
+          'You must specity a `target` prop indicating a CSS selector string matching',
+          'the target elements that should receive a tippy.',
+        ].join(' '),
+      ),
+    );
   });
 
   it('can be destroyed', () => {
-    const button = h('button');
-    instance = delegate(document.body, {target: 'button'});
+    const button = h('button', {}, delegateElement);
+    instance = delegate(delegateElement, {target: 'button'});
 
     instance.destroy();
     fireEvent.mouseOver(button);
@@ -108,8 +134,8 @@ describe('delegate', () => {
   });
 
   it('destroys child instance by default too', () => {
-    const button = h('button');
-    instance = delegate(document.body, {target: 'button'});
+    const button = h('button', {}, delegateElement);
+    instance = delegate(delegateElement, {target: 'button'});
 
     fireEvent.mouseOver(button);
     instance.destroy();
@@ -118,8 +144,8 @@ describe('delegate', () => {
   });
 
   it('does not destroy child instance if passed `false`', () => {
-    const button = h('button');
-    instance = delegate(document.body, {target: 'button'});
+    const button = h('button', {}, delegateElement);
+    instance = delegate(delegateElement, {target: 'button'});
 
     fireEvent.mouseOver(button);
     instance.destroy(false);
@@ -128,9 +154,9 @@ describe('delegate', () => {
   });
 
   it('can accept plugins', () => {
-    const button = h('button');
+    const button = h('button', {}, delegateElement);
     const plugins = [{fn: () => ({})}];
-    instance = delegate(document.body, {target: 'button'}, plugins);
+    instance = delegate(delegateElement, {target: 'button'}, plugins);
 
     fireEvent.mouseOver(button);
 
@@ -139,10 +165,18 @@ describe('delegate', () => {
   });
 
   it('handles `data-tippy-trigger` attribute', () => {
-    const clickButton = h('button', {'data-tippy-trigger': 'click'});
-    const focusButton = h('button', {'data-tippy-trigger': 'focus'});
+    const clickButton = h(
+      'button',
+      {'data-tippy-trigger': 'click'},
+      delegateElement,
+    );
+    const focusButton = h(
+      'button',
+      {'data-tippy-trigger': 'focus'},
+      delegateElement,
+    );
 
-    instance = delegate(document.body, {
+    instance = delegate(delegateElement, {
       target: 'button',
       trigger: 'mouseenter',
     });
@@ -161,8 +195,8 @@ describe('delegate', () => {
   });
 
   it('respects `delay` on first show', () => {
-    const button = h('button');
-    instance = delegate(document.body, {target: 'button', delay: 100});
+    const button = h('button', {}, delegateElement);
+    instance = delegate(delegateElement, {target: 'button', delay: 100});
 
     fireEvent.mouseOver(button);
 

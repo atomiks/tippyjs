@@ -525,31 +525,29 @@ describe('interactive', () => {
     const inbetweenNode = h();
     instance.reference.parentNode.appendChild(inbetweenNode);
 
-    const spy = jest.spyOn(console, 'warn');
-
     instance.show();
     jest.runAllTimers();
 
-    expect(spy).toHaveBeenCalledWith(
+    expect(console.warn).toHaveBeenCalledWith(
       ...getFormattedMessage(
-        `Interactive tippy element may not be accessible via keyboard
-        navigation because it is not directly after the reference element in
-        the DOM source order.
-
-        Using a wrapper <div> or <span> tag around the reference element solves
-        this by creating a new parentNode context.
-
-        Specifying \`appendTo: document.body\` silences this warning, but it
-        assumes you are using a focus management solution to handle keyboard
-        navigation.
-
-        See: https://atomiks.github.io/tippyjs/accessibility/#interactivity`,
+        [
+          'Interactive tippy element may not be accessible via keyboard navigation',
+          'because it is not directly after the reference element in the DOM source',
+          'order.',
+          '\n\n',
+          'Using a wrapper <div> or <span> tag around the reference element solves',
+          'this by creating a new parentNode context.',
+          '\n\n',
+          'Specifying `appendTo: document.body` silences this warning, but it',
+          'assumes you are using a focus management solution to handle keyboard',
+          'navigation.',
+          '\n\n',
+          'See: https://atomiks.github.io/tippyjs/accessibility/#interactivity',
+        ].join(' '),
       ),
     );
 
     instance.reference.parentNode.removeChild(inbetweenNode);
-
-    spy.mockRestore();
   });
 
   it('handles `aria-expanded` attribute correctly with .setProps()', () => {
@@ -1346,33 +1344,26 @@ describe('plugins', () => {
 
   it('warns when changed plugins passed to .setProps()', () => {
     const instance = tippy(h(), {plugins: []});
-    const spy = jest.spyOn(console, 'warn');
 
     instance.setProps({plugins: []});
 
-    expect(spy).not.toHaveBeenCalledWith(
+    expect(console.warn).not.toHaveBeenCalledWith(
       ...getFormattedMessage('Cannot update plugins'),
     );
 
     instance.setProps({plugins: [{}]});
 
-    expect(spy).toHaveBeenCalledWith(
+    expect(console.warn).toHaveBeenCalledWith(
       ...getFormattedMessage('Cannot update plugins'),
     );
-
-    spy.mockRestore();
   });
 
   it('does not warn if plugin was passed', () => {
-    const spy = jest.spyOn(console, 'warn');
-
     tippy(h(), {
       x: true,
       plugins: [{name: 'x', fn: () => ({})}],
     });
 
-    expect(spy).not.toHaveBeenCalled();
-
-    spy.mockRestore();
+    expect(console.warn).not.toHaveBeenCalled();
   });
 });

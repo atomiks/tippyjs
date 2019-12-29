@@ -43,14 +43,6 @@ export default [
         left: 220,
       },
     ],
-    result: {
-      top: 145.5,
-      bottom: 199.5,
-      left: 252.90625,
-      right: 431.296875,
-      width: 178.390625,
-      height: 54,
-    },
   },
   {
     placement: 'bottom',
@@ -96,14 +88,6 @@ export default [
         left: 220,
       },
     ],
-    result: {
-      top: 229.5,
-      bottom: 283.5,
-      left: 220,
-      right: 287.3125,
-      width: 67.3125,
-      height: 54,
-    },
   },
   {
     placement: 'left',
@@ -149,14 +133,6 @@ export default [
         left: 220,
       },
     ],
-    result: {
-      top: 247.5,
-      bottom: 283.5,
-      left: 220,
-      right: 468.578125,
-      width: 248.578125,
-      height: 36,
-    },
   },
   {
     placement: 'right',
@@ -202,14 +178,6 @@ export default [
         left: 220,
       },
     ],
-    result: {
-      top: 355.5,
-      bottom: 373.5,
-      left: 220,
-      right: 468.578125,
-      width: 248.578125,
-      height: 18,
-    },
   },
   {
     placement: 'unknown',
@@ -255,15 +223,5 @@ export default [
         left: 220,
       },
     ],
-    result: {
-      x: 220,
-      y: 337.5,
-      width: 248.578125,
-      height: 54,
-      top: 337.5,
-      right: 468.578125,
-      bottom: 391.5,
-      left: 220,
-    },
   },
 ];

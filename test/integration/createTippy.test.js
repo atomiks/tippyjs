@@ -177,8 +177,7 @@ describe('instance.destroy()', () => {
   it('clears pending timeouts', () => {
     instance = createTippy(h(), {...defaultProps, delay: 500});
 
-    // show() will warn about memory leak
-    const spy = jest.spyOn(console, 'warn');
+    const spy = jest.spyOn(instance, 'clearDelayTimeouts');
 
     fireEvent.mouseEnter(instance.reference);
 
@@ -186,7 +185,7 @@ describe('instance.destroy()', () => {
 
     jest.advanceTimersByTime(500);
 
-    expect(spy).not.toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 });
 

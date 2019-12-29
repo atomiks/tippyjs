@@ -1,40 +1,37 @@
-import {clean, validateTargets} from '../../src/validation';
-
-let spy;
-
-beforeEach(() => {
-  spy = jest.spyOn(console, 'warn');
-});
-
-afterEach(() => {
-  spy.mockRestore();
-});
+import {
+  clean,
+  validateTargets,
+  getFormattedMessage,
+} from '../../src/validation';
 
 describe('validateTargets', () => {
   it('recognizes a falsy target', () => {
-    const falsy = [null, undefined, false, NaN, 0, ''];
-    falsy.forEach(falsy => {
-      expect(() => {
-        validateTargets(falsy);
-      }).toThrow(
-        clean(
-          `tippy() was passed \`${falsy}\` as its targets (first) argument.
+    const falsys = [null, undefined, false, NaN, 0, ''];
+    falsys.forEach(falsy => {
+      validateTargets(falsy);
 
-          Valid types are: String, Element, Element[], or NodeList.`,
+      expect(console.error).toHaveBeenCalledWith(
+        ...getFormattedMessage(
+          [
+            'tippy() was passed',
+            '`' + String(falsy) + '`',
+            'as its targets (first) argument. Valid types are: String, Element, Element[],',
+            'or NodeList.',
+          ].join(' '),
         ),
       );
     });
   });
 
   it('recognizes a plain object', () => {
-    expect(() => {
-      validateTargets({});
-    }).toThrow(
-      clean(
-        `tippy() was passed a plain object which is no longer supported as an
-        argument.
-        
-        See https://atomiks.github.io/tippyjs/misc/#custom-position`,
+    validateTargets({});
+
+    expect(console.error).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        [
+          'tippy() was passed a plain object which is no longer supported as an argument.',
+          'See: https://atomiks.github.io/tippyjs/misc/#custom-position',
+        ].join(' '),
       ),
     );
   });

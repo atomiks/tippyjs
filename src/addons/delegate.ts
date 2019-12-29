@@ -1,6 +1,6 @@
 import {Instance, Targets, Plugin, Props} from '../types';
 import tippy from '..';
-import {throwErrorWhen} from '../validation';
+import {errorWhen} from '../validation';
 import {removeProperties, normalizeToArray, includes} from '../utils';
 import {defaultProps} from '../props';
 import {ListenerObject} from '../types-internal';
@@ -22,10 +22,12 @@ function delegate(
   plugins: Plugin[] = [],
 ): Instance | Instance[] {
   if (__DEV__) {
-    throwErrorWhen(
-      !props || !props.target,
-      `You must specify a \`target\` prop indicating the CSS selector string
-      matching the target elements that should receive a tippy.`,
+    errorWhen(
+      !(props && props.target),
+      [
+        'You must specity a `target` prop indicating a CSS selector string matching',
+        'the target elements that should receive a tippy.',
+      ].join(' '),
     );
   }
 

@@ -24,49 +24,50 @@ describe('tippy', () => {
   });
 
   it('warns if invalid props(s) are supplied', () => {
-    const spy = jest.spyOn(console, 'warn');
-
     tippy(h(), {placement: 'top', _someInvalidProp: true});
 
-    expect(spy).toHaveBeenCalledTimes(1);
-
-    spy.mockRestore();
+    expect(console.warn).toHaveBeenCalledTimes(1);
   });
 
   it('handles falsy reference in an array', () => {
     tippy([null, false, 0, undefined]);
   });
 
-  it('throws if passed falsy Target type', () => {
-    expect(() => tippy(null)).toThrow();
-    expect(() => tippy(undefined)).toThrow();
-    expect(() => tippy(false)).toThrow();
-    expect(() => tippy(0)).toThrow();
-    expect(() => tippy(NaN)).toThrow();
-    expect(() => tippy('')).toThrow();
+  it('errors if passed falsy Target type', () => {
+    tippy(null);
+
+    expect(console.error).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        [
+          'tippy() was passed',
+          '`' + String(null) + '`',
+          'as its targets (first) argument. Valid types are: String, Element, Element[],',
+          'or NodeList.',
+        ].join(' '),
+      ),
+    );
   });
 
   it('warns if passed a single content element for many different references', () => {
-    const spy = jest.spyOn(console, 'warn');
     const targets = [h(), h()];
 
     tippy(targets, {content: document.createElement('div')});
 
-    expect(spy).toHaveBeenCalledWith(
+    expect(console.warn).toHaveBeenCalledWith(
       ...getFormattedMessage(
-        `tippy() was passed an Element as the \`content\` prop, but more than one
-      tippy instance was created by this invocation. This means the content
-      element will only be appended to the last tippy instance.
-      
-      Instead, pass the .innerHTML of the element, or use a function that
-      returns a cloned version of the element instead.
-      
-      1) content: () => element.cloneNode(true)
-      2) content: element.innerHTML`,
+        [
+          'tippy() was passed an Element as the `content` prop, but more than one tippy',
+          'instance was created by this invocation. This means the content element will',
+          'only be appended to the last tippy instance.',
+          '\n\n',
+          'Instead, pass the .innerHTML of the element, or use a function that returns a',
+          'cloned version of the element instead.',
+          '\n\n',
+          '1) content: element.innerHTML\n',
+          '2) content: () => element.cloneNode(true)',
+        ].join(' '),
       ),
     );
-
-    spy.mockRestore();
   });
 });
 
@@ -80,17 +81,13 @@ describe('tippy.setDefaultProps()', () => {
   });
 
   it('is validated', () => {
-    const spy = jest.spyOn(console, 'warn');
-
     tippy.setDefaultProps({theme: 'google'});
 
-    expect(spy).toHaveBeenCalledWith(
+    expect(console.warn).toHaveBeenCalledWith(
       ...getFormattedMessage(
         `The included theme "google" was renamed to "material" in v5.`,
       ),
     );
-
-    spy.mockRestore();
   });
 });
 
@@ -171,18 +168,16 @@ describe('createTippyWithPlugins', () => {
   });
 
   it('warns', () => {
-    const spy = jest.spyOn(console, 'warn');
-
     createTippyWithPlugins([]);
 
-    expect(spy).toHaveBeenCalledWith(
+    expect(console.warn).toHaveBeenCalledWith(
       ...getFormattedMessage(
-        `createTippyWithPlugins([...]) has been deprecated.
-
-      Use tippy.setDefaultProps({plugins: [...]}) instead.`,
+        [
+          'createTippyWithPlugins([...]) has been deprecated.',
+          '\n\n',
+          'Use tippy.setDefaultProps({plugins: [...]}) instead.',
+        ].join(' '),
       ),
     );
-
-    spy.mockRestore();
   });
 });

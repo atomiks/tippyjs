@@ -14,7 +14,7 @@ export function setTestDefaultProps(props) {
   tippy.setDefaultProps({duration: 0, delay: 0, ...props});
 }
 
-export function h(nodeName = 'button', attributes = {}) {
+export function h(nodeName = 'button', attributes = {}, to = document.body) {
   const el = document.createElement(nodeName);
   el.className = IDENTIFIER;
 
@@ -22,7 +22,7 @@ export function h(nodeName = 'button', attributes = {}) {
     el.setAttribute(attr, attributes[attr]);
   }
 
-  document.body.appendChild(el);
+  to.appendChild(el);
 
   return el;
 }

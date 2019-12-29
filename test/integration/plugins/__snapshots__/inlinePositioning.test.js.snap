@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getInlineBoundingClientRect matches placement snapshots 1`] = `
+Object {
+  "bottom": 199.5,
+  "height": 54,
+  "left": 252.90625,
+  "right": 431.296875,
+  "top": 145.5,
+  "width": 178.390625,
+}
+`;
+
+exports[`getInlineBoundingClientRect matches placement snapshots 2`] = `
+Object {
+  "bottom": 283.5,
+  "height": 54,
+  "left": 220,
+  "right": 287.3125,
+  "top": 229.5,
+  "width": 67.3125,
+}
+`;
+
+exports[`getInlineBoundingClientRect matches placement snapshots 3`] = `
+Object {
+  "bottom": 283.5,
+  "height": 36,
+  "left": 220,
+  "right": 468.578125,
+  "top": 247.5,
+  "width": 248.578125,
+}
+`;
+
+exports[`getInlineBoundingClientRect matches placement snapshots 4`] = `
+Object {
+  "bottom": 373.5,
+  "height": 18,
+  "left": 220,
+  "right": 468.578125,
+  "top": 355.5,
+  "width": 248.578125,
+}
+`;
+
+exports[`getInlineBoundingClientRect matches placement snapshots 5`] = `
+Object {
+  "bottom": 391.5,
+  "height": 54,
+  "left": 220,
+  "right": 468.578125,
+  "top": 337.5,
+  "width": 248.578125,
+  "x": 220,
+  "y": 337.5,
+}
+`;

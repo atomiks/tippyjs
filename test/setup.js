@@ -21,10 +21,13 @@ Object.defineProperty(window.navigator, 'platform', {value: 'iPhone'});
 
 // Prevents console from spamming test output while still allowing for debugging
 // while writing tests
-const nativeConsoleWarn = global.console.warn;
-beforeEach(() => {
-  global.console.warn = jest.fn();
-});
+global.console = {
+  log: console.log,
+  warn: jest.fn(),
+  error: jest.fn(),
+};
+
 afterEach(() => {
-  global.console.warn = nativeConsoleWarn;
+  global.console.warn.mockReset();
+  global.console.error.mockReset();
 });

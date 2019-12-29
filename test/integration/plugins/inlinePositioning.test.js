@@ -5,7 +5,7 @@ import tippy from '../../../src';
 import inlinePositioning, {
   getInlineBoundingClientRect,
 } from '../../../src/plugins/inlinePositioning';
-import inlinePositioningSnapshots from './__inlinePositioningSnapshots__';
+import inlinePositioningData from './inlinePositioningData';
 
 setTestDefaultProps({plugins: [inlinePositioning]});
 jest.useFakeTimers();
@@ -54,14 +54,14 @@ describe('inlinePositioning', () => {
 
 describe('getInlineBoundingClientRect', () => {
   it('matches placement snapshots', () => {
-    inlinePositioningSnapshots.forEach(snapshot => {
+    inlinePositioningData.forEach(testData => {
       expect(
         getInlineBoundingClientRect(
-          snapshot.placement,
-          snapshot.boundingRect,
-          snapshot.clientRects,
+          testData.placement,
+          testData.boundingRect,
+          testData.clientRects,
         ),
-      ).toEqual(snapshot.result);
+      ).toMatchSnapshot();
     });
   });
 

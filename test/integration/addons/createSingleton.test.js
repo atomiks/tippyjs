@@ -3,7 +3,7 @@ import {h, cleanDocumentBody, setTestDefaultProps} from '../../utils';
 
 import createSingleton from '../../../src/addons/createSingleton';
 import tippy from '../../../src';
-import {clean} from '../../../src/validation';
+import {clean, getFormattedMessage} from '../../../src/validation';
 
 setTestDefaultProps();
 jest.useFakeTimers();
@@ -103,11 +103,16 @@ describe('createSingleton', () => {
   it('throws if not passed an array', () => {
     expect(() => {
       createSingleton(null);
-    }).toThrow(
-      clean(`The first argument passed to createSingleton() must be an array of tippy
-      instances.
+    }).toThrow();
 
-      The passed value was: ${null}`),
+    expect(console.error).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        [
+          'The first argument passed to createSingleton() must be an array of tippy',
+          'instances. The passed value was',
+          String(null),
+        ].join(' '),
+      ),
     );
   });
 

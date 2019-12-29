@@ -44,15 +44,17 @@ function tippy(
     const isMoreThanOneReferenceElement = elements.length > 1;
     warnWhen(
       isSingleContentElement && isMoreThanOneReferenceElement,
-      `tippy() was passed an Element as the \`content\` prop, but more than one
-      tippy instance was created by this invocation. This means the content
-      element will only be appended to the last tippy instance.
-      
-      Instead, pass the .innerHTML of the element, or use a function that
-      returns a cloned version of the element instead.
-      
-      1) content: () => element.cloneNode(true)
-      2) content: element.innerHTML`,
+      [
+        'tippy() was passed an Element as the `content` prop, but more than one tippy',
+        'instance was created by this invocation. This means the content element will',
+        'only be appended to the last tippy instance.',
+        '\n\n',
+        'Instead, pass the .innerHTML of the element, or use a function that returns a',
+        'cloned version of the element instead.',
+        '\n\n',
+        '1) content: element.innerHTML\n',
+        '2) content: () => element.cloneNode(true)',
+      ].join(' '),
     );
   }
 
@@ -109,9 +111,11 @@ export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
   if (__DEV__) {
     warnWhen(
       true,
-      `createTippyWithPlugins([...]) has been deprecated.
-
-      Use tippy.setDefaultProps({plugins: [...]}) instead.`,
+      [
+        'createTippyWithPlugins([...]) has been deprecated.',
+        '\n\n',
+        'Use tippy.setDefaultProps({plugins: [...]}) instead.',
+      ].join(' '),
     );
   }
 

@@ -1,7 +1,7 @@
 import {Instance, CreateSingleton, Plugin} from '../types';
 import tippy from '..';
 import {defaultProps} from '../props';
-import {throwErrorWhen} from '../validation';
+import {errorWhen} from '../validation';
 import {div} from '../utils';
 
 /**
@@ -15,12 +15,13 @@ const createSingleton: CreateSingleton = (
   plugins = [],
 ) => {
   if (__DEV__) {
-    throwErrorWhen(
+    errorWhen(
       !Array.isArray(tippyInstances),
-      `The first argument passed to createSingleton() must be an array of tippy
-      instances.
-  
-      The passed value was: ${tippyInstances}`,
+      [
+        'The first argument passed to createSingleton() must be an array of tippy',
+        'instances. The passed value was',
+        String(tippyInstances),
+      ].join(' '),
     );
   }
 

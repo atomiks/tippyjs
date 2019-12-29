@@ -54,11 +54,11 @@ export function warnWhen(condition: boolean, message: string): void {
 }
 
 /**
- * Helpful wrapper around thrown errors
+ * Helpful wrapper around `console.error()`
  */
-export function throwErrorWhen(condition: boolean, message: string): void {
+export function errorWhen(condition: boolean, message: string): void {
   if (condition) {
-    throw new Error(clean(message));
+    console.error(...getFormattedMessage(message));
   }
 }
 
@@ -71,18 +71,21 @@ export function validateTargets(targets: Targets): void {
     Object.prototype.toString.call(targets) === '[object Object]' &&
     !(targets as any).addEventListener;
 
-  throwErrorWhen(
+  errorWhen(
     didPassFalsyValue,
-    `tippy() was passed \`${targets}\` as its targets (first) argument.
-
-    Valid types are: String, Element, Element[], or NodeList.`,
+    [
+      'tippy() was passed',
+      '`' + String(targets) + '`',
+      'as its targets (first) argument. Valid types are: String, Element, Element[],',
+      'or NodeList.',
+    ].join(' '),
   );
 
-  throwErrorWhen(
+  errorWhen(
     didPassPlainObject,
-    `tippy() was passed a plain object which is no longer supported as an
-    argument.
-    
-    See https://atomiks.github.io/tippyjs/misc/#custom-position`,
+    [
+      'tippy() was passed a plain object which is no longer supported as an argument.',
+      'See: https://atomiks.github.io/tippyjs/misc/#custom-position',
+    ].join(' '),
   );
 }
