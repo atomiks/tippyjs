@@ -17,7 +17,7 @@ export function onDocumentTouchStart(): void {
 
   currentInput.isTouch = true;
 
-  if (window.performance) {
+  if (window.performance && window.performance.now) {
     document.addEventListener('mousemove', onDocumentMouseMove);
   }
 }
@@ -28,7 +28,7 @@ export function onDocumentTouchStart(): void {
  * well, but very rarely that quickly.
  */
 export function onDocumentMouseMove(): void {
-  const now = performance.now();
+  const now = window.performance.now();
 
   if (now - lastMouseMoveTime < 20) {
     currentInput.isTouch = false;
