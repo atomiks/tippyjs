@@ -1,5 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, {forwardRef} from 'react';
+import styled from '@emotion/styled';
+import {css} from '@emotion/core';
 import Tippy from '../Tippy';
 import {Button} from '../Framework';
 
@@ -30,11 +31,17 @@ const Text = styled.p`
   color: #777;
 `;
 
-const DropdownTippy = styled(Tippy)`
-  hr {
-    margin: 6px 0 10px;
-  }
-`;
+const DropdownTippy = forwardRef((props, ref) => (
+  <Tippy
+    css={css`
+      hr {
+        margin: 6px 0 10px;
+      }
+    `}
+    ref={ref}
+    {...props}
+  />
+));
 
 function Dropdown({text = 'Dropdown'}) {
   return (
@@ -78,7 +85,7 @@ function Dropdown({text = 'Dropdown'}) {
       distance={7}
       placement="bottom"
       animation="fade"
-      theme="light-border dropdown"
+      theme="light-border"
       trigger="click"
     >
       <Button>{text}</Button>

@@ -6,8 +6,6 @@
 import redirects from './src/redirects';
 import config from './gatsby-config';
 
-import './static/fonts.css';
-
 function redirect() {
   const {pathname} = window.location;
   const {pathPrefix} = config;

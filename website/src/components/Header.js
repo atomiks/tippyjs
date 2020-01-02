@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import styled, {css, keyframes} from 'styled-components';
+import styled from '@emotion/styled';
+import {css, keyframes} from '@emotion/core';
 import TippyLogo from '../images/logo.svg';
 import {MEDIA, Container, Flex, ExternalLink} from './Framework';
 import GitHub from 'react-feather/dist/icons/github';

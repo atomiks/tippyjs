@@ -125,11 +125,12 @@ const singleton = createSingleton(tippyInstances, {
 });
 ```
 
-> **Important note:** enabling transitions may cause overflow issues if the
-> tippy content is near the right/bottom edge of a boundary (e.g. window) and
-> the tippy content changes from small to large. This is because of the
-> transition causing the tippy to expand the boundary, making Popper.js think it
-> will fit.
+> **Note**
+>
+> Enabling transitions may cause overflow issues if the tippy content is near
+> the right/bottom edge of a boundary (e.g. window) and the tippy content
+> changes from small to large. This is because of the transition causing the
+> tippy to expand the boundary, making Popper.js think it will fit.
 
 ##### Solution 1: constrain to viewport
 

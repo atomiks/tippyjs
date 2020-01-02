@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import TippyLogo from '../images/logo.svg';
 import {Container, Flex, Link} from './Framework';
 import Menu from 'react-feather/dist/icons/menu';

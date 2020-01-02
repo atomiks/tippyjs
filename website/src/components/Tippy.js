@@ -32,7 +32,7 @@ export default forwardRef(({...props}, ref) => {
   return (
     <Tippy
       content="I'm a Tippy tooltip!"
-      plugins={[followCursor, animateFill]}
+      plugins={[followCursor, animateFill, ...(props.plugins || [])]}
       {...props}
       ref={ref}
     />

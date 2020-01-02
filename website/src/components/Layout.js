@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {SkipNavLink, SkipNavContent} from '@reach/skip-nav';
 import {MDXProvider} from '@mdx-js/react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import {Container, Demo, Button, Row, Col, Flex, MEDIA} from './Framework';
 import Tippy, {TippySingleton} from './Tippy';
 import Nav from './Nav';
@@ -31,7 +31,7 @@ const LinkIcon = styled.a`
   transition: opacity 0.2s;
   width: 32px;
   top: -12px;
-  right: 0;
+  right: -16px;
   color: #7761d1;
 
   &:hover,
@@ -42,7 +42,7 @@ const LinkIcon = styled.a`
 
   ${MEDIA.md} {
     right: initial;
-    left: -32px;
+    left: -1em;
 
     &:focus {
       width: 20px;
@@ -98,10 +98,11 @@ class Heading extends React.Component {
   }
 
   render() {
-    const Tag = `h${this.props.level}`;
+    const {level, ...props} = this.props;
+    const Tag = `h${level}`;
 
     return (
-      <Tag {...this.props}>
+      <Tag {...props}>
         <LinkIcon
           className="link-icon"
           id={this.state.href}
@@ -109,7 +110,7 @@ class Heading extends React.Component {
         >
           #
         </LinkIcon>
-        {this.props.children}
+        {props.children}
       </Tag>
     );
   }

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const TextGradient = styled.span`
   background: linear-gradient(45deg, #fff2df, #99ffec, #faa7ff);

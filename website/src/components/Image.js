@@ -1,7 +1,7 @@
 import React from 'react';
 import {StaticQuery, graphql} from 'gatsby';
 import Img from 'gatsby-image';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import {MEDIA} from '../components/Framework';
 
 const ImgWrapper = styled.div`

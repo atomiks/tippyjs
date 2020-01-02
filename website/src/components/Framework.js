@@ -1,5 +1,6 @@
 import React from 'react';
-import styled, {css} from 'styled-components';
+import styled from '@emotion/styled';
+import {css} from '@emotion/core';
 import {Link as GatsbyLink} from 'gatsby';
 
 export const MEDIA_SIZES = {
@@ -21,7 +22,7 @@ export const Center = styled.div`
 
 export const Container = styled.div`
   position: relative;
-  max-width: 940px;
+  max-width: 840px;
   padding: 0 ${props => props.mobilePadding || '16'}px;
   margin: 0 auto;
 
@@ -43,56 +44,66 @@ export const Row = styled(({spacing, ...rest}) => <div {...rest} />)`
   margin: 0 -${props => props.spacing || '8'}px;
 `;
 
-export const Col = styled(({base, xs, sm, md, lg, xl, spacing, ...rest}) => (
-  <div {...rest} />
-))`
-  flex: 1;
-  padding: 0 ${props => props.spacing || '8'}px;
-  ${props =>
-    props.base &&
-    css`
-      flex-basis: ${props => (100 * props.base) / 12}%;
+export const Col = props => {
+  const {spacing = 8, base, xs, sm, md, lg, xl, ...rest} = props;
+
+  const mediaCss = ['xs', 'sm', 'md', 'lg', 'xl']
+    .filter(size => props[size])
+    .map(
+      size => css`
+        ${MEDIA[size]} {
+          flex-basis: calc(${(100 * props[size]) / 12}% - ${2 * spacing}px);
+        }
+      `,
+    );
+
+  return (
+    <div
+      css={css`
+        flex: 1;
+        padding: 0 ${spacing}px;
+        flex-basis: ${(100 * base) / 12}%;
+        ${mediaCss}
+      `}
+      {...rest}
+    />
+  );
+};
+
+export const Link = props => (
+  <GatsbyLink
+    css={css`
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
     `}
-  ${props =>
-    ['xs', 'sm', 'md', 'lg', 'xl']
-      .filter(size => props[size])
-      .map(
-        size => css`
-          ${MEDIA[size]} {
-            flex-basis: ${props => (100 * props[size]) / 12}%;
-          }
-        `,
-      )};
-`;
+    activeStyle={{fontWeight: '600', background: 'white', color: '#7761d1'}}
+    {...props}
+  />
+);
 
-export const Link = styled(GatsbyLink).attrs(() => ({
-  activeStyle: {
-    fontWeight: '600',
-    background: 'white',
-    color: '#7761d1',
-  },
-}))`
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.15s;
-`;
+export const ExternalLink = props => (
+  <a
+    target="_blank"
+    rel="noopener noreferrer"
+    css={css`
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
 
-export const ExternalLink = styled.a.attrs(() => ({
-  target: '_blank',
-  rel: 'noopener noreferrer',
-}))`
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.15s;
-
-  &:hover {
-    color: #2263e5;
-  }
-`;
+      &:hover {
+        color: #2263e5;
+      }
+    `}
+    {...props}
+  >
+    {/* jsx a11y rule */}
+    {props.children}
+  </a>
+);
 
 export const Flex = styled.div`
   display: flex;
-  flex-wrap: wrap;
   justify-content: ${props => props.justify || 'space-between'};
   align-items: ${props => props.align || 'center'};
 

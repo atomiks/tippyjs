@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import Tippy from '../Tippy';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const PositioningTarget = styled.span`
   background: tomato;

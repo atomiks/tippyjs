@@ -1,5 +1,5 @@
 import React, {Component, createRef} from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import {MEDIA, Link} from './Framework';
 import {StaticQuery, graphql} from 'gatsby';
 import {sortActivePages} from '../utils';
@@ -14,7 +14,6 @@ const Navbar = styled.nav`
   left: 0;
   width: 250px;
   background: linear-gradient(180deg, rgba(121, 148, 198, 0.92), #565791);
-  backdrop-filter: saturate(180%);
   color: white;
   overflow-y: auto;
   z-index: 2;
@@ -50,11 +49,11 @@ const List = styled.ul`
 const ListItem = styled.li`
   margin: 0;
 
-  &:first-child {
+  &:first-of-type {
     padding-top: 32px;
   }
 
-  &:last-child {
+  &:last-of-type {
     padding-bottom: 32px;
   }
 

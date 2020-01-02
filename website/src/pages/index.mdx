@@ -99,13 +99,6 @@ Additionally, the tooltip can be shifted along the axis using the suffix
   </Row>
 </Demo>
 
-```js
-tippy('#myButton', {
-  placement: 'bottom',
-  arrow: false
-});
-```
-
 If a tippy cannot fit within its desired placement, it will flip to the opposite
 placement if there is not enough space. In the above examples, flipping has been
 disabled to demonstrate each placement properly.
@@ -137,13 +130,6 @@ modified, or be disabled completely.
     <Button>Narrow</Button>
   </Tippy>
 </Demo>
-
-```js
-tippy('#myButton', {
-  // Your own shape
-  arrow: String | SVGElement
-});
-```
 
 ---
 
@@ -286,12 +272,6 @@ These themes are included in the package and can be imported separately.
   ))}
 </Demo>
 
-```js
-tippy('#myButton', {
-  theme: 'light'
-});
-```
-
 #### Custom themes
 
 You can apply any CSS to a tippy via a theme.
@@ -319,12 +299,6 @@ Tooltips can also be triggered by `click` or `focus` events.
   </Tippy>
 </Demo>
 
-```js
-tippy('#myButton', {
-  trigger: 'click' // or 'focus'
-});
-```
-
 ---
 
 ### Interactivity
@@ -336,13 +310,6 @@ Tooltips can be interactive, allowing you to hover over and click inside them.
     <Button>Interactive</Button>
   </Tippy>
 </Demo>
-
-```js
-tippy('#myButton', {
-  content: 'You can select the text inside here.',
-  interactive: true
-});
-```
 
 ---
 
@@ -363,12 +330,6 @@ Tooltips can contain HTML.
   <Dropdown />
 </Demo>
 
-```js
-tippy('#myButton', {
-  content: '<strong>Bolded <span style="color: aqua;">content</span></strong>'
-});
-```
-
 ---
 
 ### Delay
@@ -386,15 +347,6 @@ Tooltips can delay hiding or showing after a trigger.
     <Button>[0, 800]</Button>
   </Tippy>
 </Demo>
-
-```js
-tippy('#myButton', {
-  // number: show and hide delay are the same
-  delay: 500,
-  // [number, number]: [show, hide] delay
-  delay: [500, 0]
-});
-```
 
 ---
 
@@ -435,19 +387,6 @@ following (initial).
   </Tippy>
 </Demo>
 
-```js
-tippy('#myButton', {
-  // Follow both x and y axes
-  followCursor: true,
-  // Follow x-axis
-  followCursor: 'horizontal',
-  // Follow y-axis
-  followCursor: 'vertical',
-  // Follow initial cursor without listening
-  followCursor: 'initial'
-});
-```
-
 ---
 
 ### SVGs
@@ -466,13 +405,6 @@ very useful, since it can be placed directly on the line.
     />
   </Tippy>
 </svg>
-
-```js
-tippy('line', {
-  followCursor: 'initial',
-  delay: 200
-});
-```
 
 ---
 
@@ -500,24 +432,6 @@ Singleton tippy with a transition:
   <Singleton group transition />
 </Demo>
 
-```js
-import tippy, {createSingleton} from 'tippy.js';
-
-const instances = [];
-const buttons = document.querySelectorAll('button');
-
-for (let i = 0; i < buttons.length; i++) {
-  instances.push(
-    tippy(buttons[i], {
-      content: `Tooltip ${i + 1}`,
-      updateDuration: 400
-    })
-  );
-}
-
-createSingleton(instances, {delay: [300, 600]});
-```
-
 ---
 
 ### Nesting
@@ -539,28 +453,6 @@ Attach many tippies to a single element.
 <Demo>
   <Multiple />
 </Demo>
-
-```js
-const placements = ['top', 'bottom', 'left', 'right'];
-
-placements
-  .reduce(
-    (acc, basePlacement) =>
-      acc.concat(
-        basePlacement,
-        `${basePlacement}-start`,
-        `${basePlacement}-end`
-      ),
-    []
-  )
-  .forEach(placement => {
-    tippy('#square', {
-      content: placement,
-      placement,
-      multiple: true
-    });
-  });
-```
 
 ---
 

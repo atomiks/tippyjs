@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Tippy from '../Tippy';
 import {Button} from '../Framework';
 import TippyTransition from '../TippyTransition';
