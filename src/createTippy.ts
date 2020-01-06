@@ -515,15 +515,15 @@ export default function createTippy(
       return;
     }
 
+    if (includes(instance.props.trigger, 'click') && isVisibleFromClick) {
+      return;
+    }
+
     if (instance.props.interactive) {
       doc.body.addEventListener('mouseleave', scheduleHide);
       doc.addEventListener('mousemove', debouncedOnMouseMove);
       pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
 
-      return;
-    }
-
-    if (includes(instance.props.trigger, 'click') && isVisibleFromClick) {
       return;
     }
 
