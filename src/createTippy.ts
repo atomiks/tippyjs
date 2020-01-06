@@ -831,6 +831,19 @@ export default function createTippy(
       return;
     }
 
+    // For interactive tippies, scheduleHide is added to a document.body handler
+    // from onMouseLeave so must intercept scheduled hides from mousemove/leave
+    // events when trigger contains mouseenter and click, and the tip is
+    // currently shown as a result of a click.
+    if (
+      includes(instance.props.trigger, 'mouseenter') &&
+      includes(instance.props.trigger, 'click') &&
+      (event.type === 'mouseleave' || event.type === 'mousemove') &&
+      isVisibleFromClick
+    ) {
+      return;
+    }
+
     const delay = getDelay(false);
 
     if (delay) {
