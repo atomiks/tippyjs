@@ -838,7 +838,7 @@ export default function createTippy(
     if (
       includes(instance.props.trigger, 'mouseenter') &&
       includes(instance.props.trigger, 'click') &&
-      (event.type === 'mouseleave' || event.type === 'mousemove') &&
+      includes(['mouseleave', 'mousemove'], event.type) &&
       isVisibleFromClick
     ) {
       return;
