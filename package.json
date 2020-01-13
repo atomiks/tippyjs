@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "5.1.3",
+  "version": "5.1.4",
   "description": "Highly customizable tooltip and popover library",
   "main": "dist/tippy.cjs.js",
   "module": "dist/tippy.esm.js",
