@@ -8,7 +8,7 @@
   "types": "index.d.ts",
   "sideEffects": [
     "dist/tippy-bundle*",
-    "./**/*.css"
+    "**/*.css"
   ],
   "author": "atomiks",
   "contributors": [
