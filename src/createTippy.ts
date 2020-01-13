@@ -360,7 +360,7 @@ export default function createTippy(
 
   function onTransitionEnd(duration: number, callback: () => void): void {
     function listener(event: TransitionEvent): void {
-      if (event.target === tooltip && event.propertyName === 'visibility') {
+      if (event.target === tooltip) {
         updateTransitionEndListener(tooltip, 'remove', listener);
         callback();
       }
