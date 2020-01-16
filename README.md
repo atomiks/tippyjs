@@ -59,6 +59,8 @@ For detailed usage information, [visit the docs](https://atomiks.github.io/tippy
 
 React: [@tippy.js/react](https://github.com/atomiks/tippy.js-react)
 
+Vue: [@KABBOUCHI/vue-tippy](https://github.com/KABBOUCHI/vue-tippy)
+
 ## License
 
 MIT
