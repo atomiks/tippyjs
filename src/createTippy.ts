@@ -414,6 +414,9 @@ export default function createTippy(
         case 'focus':
           on(isIE ? 'focusout' : 'blur', onBlur as EventListener);
           break;
+        case 'focusin':
+          on('focusout', onBlur as EventListener);
+          break;
       }
     });
   }
