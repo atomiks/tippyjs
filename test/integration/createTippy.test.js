@@ -97,7 +97,6 @@ describe('createTippy', () => {
     fireEvent.focusOut(instance.reference);
     expect(instance.state.isVisible).toBe(false);
 
-
     // For completeness, it would seem to make sense to test that the tippy *is*
     // hidden on clicking it's content (as this is a non-interactive instance);
     // however, we use CSS pointer-events: none for non-interaction, so firing a
@@ -152,6 +151,7 @@ describe('createTippy', () => {
     // As above, bubble the mouseLeave event so the document.body handler
     // invokes scheduleHide (but exits early and doesn't actually hide the tippy
     // in this case).
+    fireEvent.mouseEnter(instance.reference);
     fireEvent.mouseLeave(instance.popperChildren.content, {bubbles: true});
     expect(instance.state.isVisible).toBe(true);
   });
