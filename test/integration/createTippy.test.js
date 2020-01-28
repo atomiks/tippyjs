@@ -67,7 +67,7 @@ describe('createTippy', () => {
   it('adds correct listeners to the reference element based on `trigger` (`interactive`: false)', () => {
     instance = createTippy(h(), {
       ...defaultProps,
-      trigger: 'mouseenter focus click',
+      trigger: 'mouseenter focus click focusin',
     });
 
     fireEvent.mouseEnter(instance.reference);
@@ -91,6 +91,12 @@ describe('createTippy', () => {
     fireEvent.click(instance.reference);
     expect(instance.state.isVisible).toBe(false);
 
+    fireEvent.focusIn(instance.reference);
+    expect(instance.state.isVisible).toBe(true);
+
+    fireEvent.focusOut(instance.reference);
+    expect(instance.state.isVisible).toBe(false);
+
     // For completeness, it would seem to make sense to test that the tippy *is*
     // hidden on clicking it's content (as this is a non-interactive instance);
     // however, we use CSS pointer-events: none for non-interaction, so firing a
@@ -103,7 +109,7 @@ describe('createTippy', () => {
     instance = createTippy(h(), {
       ...defaultProps,
       interactive: true,
-      trigger: 'mouseenter focus click',
+      trigger: 'mouseenter focus click focusin',
     });
 
     fireEvent.mouseEnter(instance.reference);
@@ -136,9 +142,16 @@ describe('createTippy', () => {
     fireEvent.click(instance.popperChildren.content);
     expect(instance.state.isVisible).toBe(true);
 
+    fireEvent.focusIn(instance.reference);
+    expect(instance.state.isVisible).toBe(true);
+
+    fireEvent.focusOut(instance.reference);
+    expect(instance.state.isVisible).toBe(false);
+
     // As above, bubble the mouseLeave event so the document.body handler
     // invokes scheduleHide (but exits early and doesn't actually hide the tippy
     // in this case).
+    fireEvent.mouseEnter(instance.reference);
     fireEvent.mouseLeave(instance.popperChildren.content, {bubbles: true});
     expect(instance.state.isVisible).toBe(true);
   });

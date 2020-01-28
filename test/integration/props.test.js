@@ -394,6 +394,28 @@ describe('trigger', () => {
     expect(instance.state.isVisible).toBe(true);
   });
 
+  it('focusin', () => {
+    const instance = tippy(h(), {trigger: 'focusin'});
+
+    fireEvent.focusIn(instance.reference);
+    expect(instance.state.isVisible).toBe(true);
+
+    fireEvent.focusOut(instance.reference);
+    expect(instance.state.isVisible).toBe(false);
+  });
+
+  it('focusin + interactive: focus switching to inside popper does not hide tippy', () => {
+    const instance = tippy(h(), {interactive: true, trigger: 'focusin'});
+
+    fireEvent.focusIn(instance.reference);
+    expect(instance.state.isVisible).toBe(true);
+
+    fireEvent.focusOut(instance.reference, {
+      relatedTarget: instance.popper,
+    });
+    expect(instance.state.isVisible).toBe(true);
+  });
+
   it('click', () => {
     const instance = tippy(h(), {trigger: 'click'});
 
