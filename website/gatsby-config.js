@@ -2,7 +2,7 @@ module.exports = {
   pathPrefix: '/tippyjs',
   siteMetadata: {
     title: `Tippy.js`,
-    description: `A simple, easy-to-use vanilla JavaScript library for creating tooltips and popovers to use in web sites and apps. The flat-level option API makes customizing a tooltip and popover as easy as adding a single object property or data attribute. Make tooltips follow the mouse cursor, have an arrow, change duration and delay, have custom themes and animations, HTML content, touch support, and more...`,
+    description: `Highly customizable library to create tooltips and popovers with ease.`,
     author: `@atomiks`,
   },
   plugins: [
@@ -65,5 +65,6 @@ module.exports = {
         ],
       },
     },
+    `gatsby-plugin-client-side-redirect`, // keep it in last in list
   ],
 };

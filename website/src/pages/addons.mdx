@@ -132,7 +132,7 @@ const singleton = createSingleton(tippyInstances, {
 > changes from small to large. This is because of the transition causing the
 > tippy to expand the boundary, making Popper.js think it will fit.
 
-##### Solution 1: constrain to viewport
+To solve this, constrain the tippy to the viewport:
 
 ```js
 createSingleton(instances, {
@@ -140,37 +140,7 @@ createSingleton(instances, {
 });
 ```
 
-##### Solution 2: clipping container
-
-If the first solution is not suitable (i.e. you prefer the `window` boundary),
-you can change your DOM context to prevent the boundary from expanding by
-placing the tippy within a positioned container with `overflow-x: hidden`.
-
-```html
-<div class="overflow-container">
-  <button>Reference</button>
-</div>
-```
-
-```css
-.overflow-container {
-  position: relative;
-  overflow-x: hidden;
-  /*
-  The container can cut the tippy off, so ensure the tippy can fit within it!
-  You'll need to use a value that suits your application.
-  */
-  height: 200px;
-}
-```
-
-```js
-createSingleton(instances, {
-  appendTo: 'parent'
-});
-```
-
-### Timing function
+#### Timing function
 
 The `transition-timing-function` by default is `easeOutQuint`. Usually this
 looks nice, but you can change this (to add an inertial slingshot effect for

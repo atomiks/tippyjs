@@ -42,7 +42,7 @@ const LinkIcon = styled.a`
 
   ${MEDIA.md} {
     right: initial;
-    left: -1em;
+    left: -0.9em;
 
     &:focus {
       width: 20px;

@@ -16,7 +16,7 @@ To give them a tippy tooltip, call the `tippy()` function with a CSS selector
 matching these elements:
 
 ```js
-tippy('button');
+tippy('[data-tippy-content]');
 ```
 
 The `data-tippy-content` attribute allows you to give different tooltip content
@@ -31,26 +31,21 @@ tippy('#singleElement', {
 });
 ```
 
+Tippy will create tooltips for elements even if you forget to give them content,
+which creates an odd shape with no content, so ensure your CSS selector is
+specific enough to guarantee their content.
+
 ### Content types
 
 Plain text and HTML (string or element) are allowed.
 
-If you're passing unknown user data to `content`, disable HTML for safety:
+If you're passing unknown user data to `content`, disable HTML for safety,
+unless explicitly sanitizing it:
 
 ```js
 tippy('#singleElement', {
   content: unsafeUserData,
   allowHTML: false
-});
-```
-
-If you intend to allow HTML inside the tooltip that contains user data, you must
-use a sanitization library like
-[`DOMPurify`](https://github.com/cure53/DOMPurify) to prevent XSS:
-
-```js
-tippy('#singleElement', {
-  content: DOMPurify.sanitize(unsafeUserData)
 });
 ```
 

@@ -1,7 +1,12 @@
 /**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/node-apis/
+ * TODO: For some reason this doesn't work, get it to work :-(
  */
-
-// You can delete this file if you're not using it
+exports.createPages = ({graphql, actions}) => {
+  const {createRedirect} = actions;
+  createRedirect({
+    fromPath: '/all-options/',
+    toPath: '/all-props/',
+    isPermanent: true,
+    redirectInBrowser: true,
+  });
+};

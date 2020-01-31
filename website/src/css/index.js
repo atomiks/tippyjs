@@ -429,11 +429,7 @@ const prism = css`
     margin-top: 0;
     margin-left: -16px;
     margin-right: -16px;
-    background: radial-gradient(
-      50% 80% at 80% 0%,
-      rgb(61, 59, 98),
-      rgb(40, 40, 75)
-    );
+    background: #272642;
     font-size: 16px;
     line-height: 1.5;
     overflow: auto;
@@ -473,7 +469,7 @@ const prism = css`
   .token.atrule,
   .token.keyword,
   .token.attribute {
-    color: #d0aeff;
+    color: #d296ff;
   }
 
   .token.comment,
@@ -498,7 +494,6 @@ const prism = css`
 
   .token.punctuation {
     color: #93e2ff;
-    text-shadow: 0 0 2px #000, 0 0 14px #46e3ff;
   }
 
   .token.block {
@@ -570,19 +565,17 @@ const prism = css`
   .token.entity,
   .style .token.string {
     color: #ecd6ba;
-    text-shadow: 0 1px 3px transparentize(#ecd6ba, 0.5);
   }
 
   .token.function,
   .language-css .token.property {
-    color: #9bb5ff;
-    text-shadow: 0 0 10px #2f36ff, 0 0 22px #9d91ff;
+    color: #92afff;
+    text-shadow: 0 0px 7px #0066ff, 0 1px 4px black;
   }
 
   .token.method,
   .language-css .token.function {
-    color: #67d2ff;
-    text-shadow: 0 0px 10px #39c5ff, 0 0px 2px black;
+    color: #42c7ff;
   }
 
   .token.variable {

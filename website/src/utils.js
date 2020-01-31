@@ -1,9 +1,7 @@
-import redirects from './redirects';
-
 export function sortActivePages(edges) {
-  return [...edges]
-    .sort((a, b) => a.node.frontmatter.index - b.node.frontmatter.index)
-    .filter(({node}) => !redirects.has(node.frontmatter.path));
+  return [...edges].sort(
+    (a, b) => a.node.frontmatter.index - b.node.frontmatter.index,
+  );
 }
 
 export const ALL_PLACEMENTS = ['top', 'right', 'bottom', 'left'].reduce(

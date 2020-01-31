@@ -22,7 +22,7 @@ export const Center = styled.div`
 
 export const Container = styled.div`
   position: relative;
-  max-width: 840px;
+  max-width: 800px;
   padding: 0 ${props => props.mobilePadding || '16'}px;
   margin: 0 auto;
 
