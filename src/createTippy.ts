@@ -152,6 +152,9 @@ export default function createTippy(
   popper._tippy = instance;
 
   const pluginsHooks = plugins.map(plugin => plugin.fn(instance));
+  const hadAriaExpandedAttributeOnCreate = reference.hasAttribute(
+    'aria-expanded',
+  );
 
   addListenersToTriggerTarget();
   handleAriaExpandedAttribute();
@@ -265,6 +268,13 @@ export default function createTippy(
   }
 
   function handleAriaExpandedAttribute(): void {
+    // If the user has specified `aria-expanded` on their reference when the
+    // instance was created, we have to assume they're controlling it externally
+    // themselves
+    if (hadAriaExpandedAttributeOnCreate) {
+      return;
+    }
+
     const nodes = normalizeToArray(instance.props.triggerTarget || reference);
 
     nodes.forEach(node => {

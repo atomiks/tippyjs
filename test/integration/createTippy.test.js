@@ -170,6 +170,13 @@ describe('createTippy', () => {
 
     expect(instance.plugins).toEqual([animateFill]);
   });
+
+  it('does not remove an existing `aria-expanded` attribute', () => {
+    const ref = h('div', {'aria-expanded': 'true'});
+    instance = createTippy(ref, {interactive: false});
+
+    expect(ref.hasAttribute('aria-expanded')).toBe(true);
+  });
 });
 
 describe('instance.destroy()', () => {
