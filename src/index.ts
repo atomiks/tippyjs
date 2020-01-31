@@ -1,29 +1,19 @@
-import {version} from '../package.json';
 import {defaultProps, setDefaultProps, validateProps} from './props';
 import createTippy, {mountedInstances} from './createTippy';
 import bindGlobalEventListeners, {
   currentInput,
 } from './bindGlobalEventListeners';
-import {getArrayOfElements, isReferenceElement, isElement} from './utils';
+import {getArrayOfElements, isReferenceElement, isElement} from './dom-utils';
 import {warnWhen, validateTargets} from './validation';
-import {
-  Props,
-  Instance,
-  Targets,
-  HideAllOptions,
-  Plugin,
-  Tippy,
-  HideAll,
-} from './types';
+import {Props, Instance, Targets, HideAllOptions, HideAll} from './types';
 
 function tippy(
   targets: Targets,
   optionalProps: Partial<Props> = {},
-  /** @deprecated use Props.plugins */
-  plugins: Plugin[] = [],
 ): Instance | Instance[] {
-  plugins = defaultProps.plugins.concat(optionalProps.plugins || plugins);
+  const plugins = defaultProps.plugins.concat(optionalProps.plugins || []);
 
+  /* istanbul ignore else */
   if (__DEV__) {
     validateTargets(targets);
     validateProps(optionalProps, plugins);
@@ -35,18 +25,19 @@ function tippy(
 
   const elements = getArrayOfElements(targets);
 
+  /* istanbul ignore else */
   if (__DEV__) {
     const isSingleContentElement = isElement(passedProps.content);
     const isMoreThanOneReferenceElement = elements.length > 1;
     warnWhen(
       isSingleContentElement && isMoreThanOneReferenceElement,
       [
-        'tippy() was passed an Element as the `content` prop, but more than one tippy',
-        'instance was created by this invocation. This means the content element will',
-        'only be appended to the last tippy instance.',
+        'tippy() was passed an Element as the `content` prop, but more than',
+        'one tippy instance was created by this invocation. This means the',
+        'content element will only be appended to the last tippy instance.',
         '\n\n',
-        'Instead, pass the .innerHTML of the element, or use a function that returns a',
-        'cloned version of the element instead.',
+        'Instead, pass the .innerHTML of the element, or use a function that',
+        'returns a cloned version of the element instead.',
         '\n\n',
         '1) content: element.innerHTML\n',
         '2) content: () => element.cloneNode(true)',
@@ -70,16 +61,12 @@ function tippy(
   return isElement(targets) ? instances[0] : instances;
 }
 
-tippy.version = version;
 tippy.defaultProps = defaultProps;
 tippy.setDefaultProps = setDefaultProps;
 tippy.currentInput = currentInput;
 
 export default tippy;
 
-/**
- * Hides all visible poppers on the document
- */
 export const hideAll: HideAll = ({
   exclude: excludedReferenceOrInstance,
   duration,
@@ -94,44 +81,10 @@ export const hideAll: HideAll = ({
     }
 
     if (!isExcluded) {
-      instance.hide(duration);
+      const originalDuration = instance.props.duration;
+      instance.setProps({duration});
+      instance.hide();
+      instance.setProps({duration: originalDuration});
     }
   });
 };
-
-/**
- * Returns a proxy wrapper function that passes the plugins
- * @deprecated use tippy.setDefaultProps({plugins: [...]});
- */
-export function createTippyWithPlugins(outerPlugins: Plugin[]): Tippy {
-  if (__DEV__) {
-    warnWhen(
-      true,
-      [
-        'createTippyWithPlugins([...]) has been deprecated.',
-        '\n\n',
-        'Use tippy.setDefaultProps({plugins: [...]}) instead.',
-      ].join(' '),
-    );
-  }
-
-  const tippyPluginsWrapper = (
-    targets: Targets,
-    optionalProps: Partial<Props> = {},
-    innerPlugins: Plugin[] = [],
-  ): Instance | Instance[] => {
-    innerPlugins = optionalProps.plugins || innerPlugins;
-    return tippy(targets, {
-      ...optionalProps,
-      plugins: [...outerPlugins, ...innerPlugins],
-    });
-  };
-
-  tippyPluginsWrapper.version = version;
-  tippyPluginsWrapper.defaultProps = defaultProps;
-  tippyPluginsWrapper.setDefaultProps = setDefaultProps;
-  tippyPluginsWrapper.currentInput = currentInput;
-
-  // @ts-ignore
-  return tippyPluginsWrapper;
-}

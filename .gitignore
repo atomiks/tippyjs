@@ -1,9 +1,9 @@
 .DS_Store
-/.cache
-/coverage
-/.devserver
-node_modules
-/dist
-/themes
-/animations
-/index.d.ts
+.parcel-cache/
+coverage/
+.devserver/
+node_modules/
+dist/
+themes/
+animations/
+index.d.ts

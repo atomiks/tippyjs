@@ -6,11 +6,11 @@ $transparent-light: rgba(0, 8, 16, 0.08);
 $transparent-dark: rgba(0, 8, 16, 0.15);
 $transparent-darker: rgba(0, 8, 16, 0.2);
 
-.#{$namespace-prefix}-tooltip.light-border-theme {
+.#{$namespace-prefix}-box[data-theme~='light-border'] {
   background-color: $color;
   background-clip: padding-box;
   border: 1px solid $transparent-dark;
-  color: #26323d;
+  color: #333;
   box-shadow: 0 4px 14px -2px $transparent-light;
 
   > .#{$namespace-prefix}-backdrop {
@@ -19,140 +19,141 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
 
   > .#{$namespace-prefix}-arrow,
   > .#{$namespace-prefix}-svg-arrow {
-    &::after,
-    &::before {
+    width: 18px;
+    height: 18px;
+
+    &::after {
       content: '';
       position: absolute;
       z-index: -1;
     }
   }
 
-  > .#{$namespace-prefix}-svg-arrow {
-    fill: $color;
-
-    &::after {
-      background-image: url(data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEuNDE0MjEiIHZpZXdCb3g9IjAgMCAxOCA3IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0wIDdzMi4wMjEtLjAxNSA1LjI1My00LjIxOGMxLjMzMS0xLjczMSAyLjU0NC0yLjc3NSAzLjc0Ny0yLjc4MiAxLjIwMy0uMDA3IDIuNDE2IDEuMDM1IDMuNzYxIDIuNzgyIDMuMjUxIDQuMjIzIDUuMjM5IDQuMjE4IDUuMjM5IDQuMjE4eiIgZmlsbD0iIzMzMyIgZmlsbC1vcGFjaXR5PSIuMjM1Mjk0IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48L3N2Zz4=);
-      background-size: 18px $arrow-size;
-      width: 18px;
-      height: $arrow-size;
-      left: 0;
-      top: 0;
-      fill: $transparent-dark;
-    }
+  > .#{$namespace-prefix}-arrow::after {
+    border-color: transparent;
+    border-style: solid;
   }
 
   &[data-placement^='top'] {
-    > .#{$namespace-prefix}-svg-arrow::after {
-      top: 1px;
-      transform: rotate(180deg);
-    }
-
     > .#{$namespace-prefix}-arrow {
-      border-top-color: #fff;
+      &::before {
+        border-top-color: $color;
+      }
 
       &::after {
-        border-top: $arrow-size solid $color;
-        top: -$arrow-size;
+        border-top-color: $transparent-darker;
+        border-width: 7px 7px 0;
+        top: 19px;
+        left: 1px;
       }
-      &::before {
-        border-top: $arrow-size solid $transparent-darker;
-        bottom: -1px;
+    }
+
+    > .#{$namespace-prefix}-svg-arrow {
+      > svg {
+        top: 18px;
+      }
+
+      &::after {
+        top: 19px;
       }
     }
   }
 
   &[data-placement^='bottom'] {
-    > .#{$namespace-prefix}-svg-arrow::after {
-      top: -1px;
-    }
-
     > .#{$namespace-prefix}-arrow {
-      border-bottom-color: #fff;
+      &::before {
+        border-bottom-color: $color;
+        bottom: 18px;
+      }
 
       &::after {
-        border-bottom: $arrow-size solid $color;
-        bottom: -$arrow-size;
+        border-bottom-color: $transparent-darker;
+        border-width: 0 7px 7px;
+        bottom: 19px;
+        left: 1px;
       }
-      &::before {
-        border-bottom: $arrow-size solid $transparent-darker;
-        bottom: -($arrow-size - 1);
+    }
+
+    > .#{$namespace-prefix}-svg-arrow {
+      > svg {
+        bottom: 18px;
+      }
+
+      &::after {
+        bottom: 19px;
       }
     }
   }
 
   &[data-placement^='left'] {
-    > .#{$namespace-prefix}-svg-arrow::after {
-      left: 1px;
-      top: 0;
-      transform: rotate(90deg);
-    }
-
     > .#{$namespace-prefix}-arrow {
-      border-left-color: #fff;
+      &::before {
+        border-left-color: $color;
+      }
 
       &::after {
-        border-left: $arrow-size solid $color;
-        left: -$arrow-size;
+        border-left-color: $transparent-darker;
+        border-width: 7px 0 7px 7px;
+        left: 19px;
+        top: 1px;
       }
-      &::before {
-        border-left: $arrow-size solid $transparent-darker;
-        left: -($arrow-size - 1);
+    }
+
+    > .#{$namespace-prefix}-svg-arrow {
+      > svg {
+        left: 13px;
+      }
+
+      &::after {
+        left: 14px;
       }
     }
   }
 
   &[data-placement^='right'] {
-    > .#{$namespace-prefix}-svg-arrow::after {
-      left: -1px;
-      top: 0;
-      transform: rotate(-90deg);
-    }
-
     > .#{$namespace-prefix}-arrow {
-      border-right-color: #fff;
+      &::before {
+        border-right-color: $color;
+        right: 18px;
+      }
 
       &::after {
-        border-right: $arrow-size solid $color;
-        right: -$arrow-size;
-      }
-      &::before {
-        border-right: $arrow-size solid $transparent-darker;
-        right: -($arrow-size - 1);
+        border-width: 7px 7px 7px 0;
+        right: 19px;
+        top: 1px;
+        border-right-color: $transparent-darker;
       }
     }
-  }
 
-  &[data-placement^='top'],
-  &[data-placement^='bottom'] {
-    > .#{$namespace-prefix}-arrow,
     > .#{$namespace-prefix}-svg-arrow {
-      transform: translateX(-1px);
-    }
+      > svg {
+        right: 13px;
+      }
 
-    > .#{$namespace-prefix}-arrow {
-      &::after,
-      &::before {
-        left: -$arrow-size;
-        border-left: $arrow-size solid transparent;
-        border-right: $arrow-size solid transparent;
+      &::after {
+        right: 14px;
       }
     }
   }
 
   &[data-placement^='left'],
   &[data-placement^='right'] {
-    > .#{$namespace-prefix}-arrow,
     > .#{$namespace-prefix}-svg-arrow {
-      transform: translateY(-1px);
-    }
-
-    > .#{$namespace-prefix}-arrow {
-      &::after,
-      &::before {
-        top: -$arrow-size;
-        border-top: $arrow-size solid transparent;
-        border-bottom: $arrow-size solid transparent;
+      > svg,
+      &::after {
+        top: calc(50% - 4px);
       }
+    }
+  }
+
+  > .#{$namespace-prefix}-svg-arrow {
+    fill: white;
+
+    &::after {
+      background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMCA2czEuNzk2LS4wMTMgNC42Ny0zLjYxNUM1Ljg1MS45IDYuOTMuMDA2IDggMGMxLjA3LS4wMDYgMi4xNDguODg3IDMuMzQzIDIuMzg1QzE0LjIzMyA2LjAwNSAxNiA2IDE2IDZIMHoiIGZpbGw9InJnYmEoMCwgOCwgMTYsIDAuMikiIC8+PC9zdmc+);
+      background-size: $arrow-size 6px;
+      width: $arrow-size;
+      height: 6px;
     }
   }
 }

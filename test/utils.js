@@ -10,10 +10,6 @@ export function cleanDocumentBody() {
   document.body.innerHTML = '';
 }
 
-export function setTestDefaultProps(props) {
-  tippy.setDefaultProps({duration: 0, delay: 0, ...props});
-}
-
 export function h(nodeName = 'button', attributes = {}, to = document.body) {
   const el = document.createElement(nodeName);
   el.className = IDENTIFIER;
@@ -27,12 +23,6 @@ export function h(nodeName = 'button', attributes = {}, to = document.body) {
   return el;
 }
 
-export const withTestProps = props => ({
-  lazy: false,
-  content: 'content',
-  ...props,
-});
-
 export function enableTouchEnvironment() {
   window.ontouchstart = true;
   onDocumentTouchStart();
@@ -42,4 +32,26 @@ export function disableTouchEnvironment() {
   delete window.ontouchstart;
   onDocumentMouseMove();
   onDocumentMouseMove();
+}
+
+export async function screenshotTest(page, name) {
+  const rect = await page.evaluate(selector => {
+    const element = document.querySelector(selector);
+    const {x, y, width, height} = element.getBoundingClientRect();
+    return {left: x, top: y, width, height, id: element.id};
+  }, `#${name}`);
+
+  return page.screenshot({
+    path: null,
+    clip: {
+      x: rect.left,
+      y: rect.top,
+      width: rect.width,
+      height: rect.height,
+    },
+  });
+}
+
+export async function navigateToTest(page, name) {
+  return page.$eval(`button[data-id="${name}"]`, el => el.click());
 }

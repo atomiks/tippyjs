@@ -1,42 +1,69 @@
-@import './_mixins.scss';
 @import './_vars.scss';
 @import './animations/fade.scss';
+
+$color: #333;
 
 .#{$namespace-prefix}-iOS {
   cursor: pointer !important;
   -webkit-tap-highlight-color: transparent;
 }
 
-.#{$namespace-prefix}-popper {
-  pointer-events: none;
+[data-#{$namespace-prefix}-root] {
   max-width: calc(100vw - 10px);
-  transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
-  transition-property: transform;
 }
 
-.#{$namespace-prefix}-tooltip {
+.#{$namespace-prefix}-box {
   position: relative;
+  background-color: $color;
   color: white;
   border-radius: 4px;
   font-size: 14px;
   line-height: 1.4;
-  background-color: #333;
-  transition-property: visibility, opacity, transform;
   outline: 0;
+  transition-property: transform, visibility, opacity;
 
-  @each $placement in $placements {
-    &[data-placement^='#{$placement}'] {
-      > .#{$namespace-prefix}-arrow {
-        @include arrow($placement, $arrow-size + 1, #333);
-        @include arrow-margin($placement);
-        @include arrow-transform-origin($placement, $arrow-size);
-        @include arrow-position($placement, $arrow-size, false);
-      }
+  &[data-placement^='top'] > .#{$namespace-prefix}-arrow {
+    bottom: 0;
+
+    &::before {
+      border-width: 8px 8px 0;
+      border-top-color: $color;
+      bottom: -7px;
+      transform-origin: center top;
     }
   }
 
-  &[data-interactive][data-state='visible'] {
-    pointer-events: auto;
+  &[data-placement^='bottom'] > .#{$namespace-prefix}-arrow {
+    top: 0;
+
+    &::before {
+      top: -7px;
+      border-width: 0 8px 8px;
+      border-bottom-color: $color;
+      transform-origin: center bottom;
+    }
+  }
+
+  &[data-placement^='left'] > .#{$namespace-prefix}-arrow {
+    right: 0;
+
+    &::before {
+      border-width: 8px 0 8px 8px;
+      border-left-color: $color;
+      right: -7px;
+      transform-origin: center left;
+    }
+  }
+
+  &[data-placement^='right'] > .#{$namespace-prefix}-arrow {
+    left: 0;
+
+    &::before {
+      left: -7px;
+      border-width: 8px 8px 8px 0;
+      border-right-color: $color;
+      transform-origin: center right;
+    }
   }
 
   &[data-inertia][data-state='visible'] {
@@ -45,9 +72,23 @@
 }
 
 .#{$namespace-prefix}-arrow {
-  position: absolute;
-  border-color: transparent;
-  border-style: solid;
+  &,
+  &::before {
+    position: absolute;
+  }
+
+  & {
+    pointer-events: none;
+    width: $arrow-size;
+    height: $arrow-size;
+  }
+
+  &::before {
+    content: '';
+    border-color: transparent;
+    border-style: solid;
+    pointer-events: auto;
+  }
 }
 
 .#{$namespace-prefix}-content {

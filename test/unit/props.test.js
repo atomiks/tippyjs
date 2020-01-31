@@ -7,8 +7,6 @@ import {
 } from '../../src/props';
 import {getFormattedMessage} from '../../src/validation';
 
-afterEach(cleanDocumentBody);
-
 describe('getDataAttributeProps', () => {
   it('uses data-tippy-content', () => {
     const ref = h();
@@ -129,15 +127,9 @@ describe('validateProps', () => {
     expect(console.warn).toHaveBeenCalledWith(
       ...getFormattedMessage(
         [
-          '`' + prop + '`',
-          "is not a valid prop. You may have spelled it incorrectly, or if it's a",
-          'plugin, forgot to pass it in an array as props.plugins.',
-          '\n\n',
-          'In v5, the following props were turned into plugins:',
-          '\n\n',
-          '* animateFill\n',
-          '* followCursor\n',
-          '* sticky',
+          `\`${prop}\``,
+          "is not a valid prop. You may have spelled it incorrectly, or if it's",
+          'a plugin, forgot to pass it in an array as props.plugins.',
           '\n\n',
           'All props: https://atomiks.github.io/tippyjs/all-props/\n',
           'Plugins: https://atomiks.github.io/tippyjs/plugins/',
@@ -154,15 +146,9 @@ describe('validateProps', () => {
     expect(console.warn).toHaveBeenCalledWith(
       ...getFormattedMessage(
         [
-          '`' + prop + '`',
-          "is not a valid prop. You may have spelled it incorrectly, or if it's a",
-          'plugin, forgot to pass it in an array as props.plugins.',
-          '\n\n',
-          'In v5, the following props were turned into plugins:',
-          '\n\n',
-          '* animateFill\n',
-          '* followCursor\n',
-          '* sticky',
+          `\`${prop}\``,
+          "is not a valid prop. You may have spelled it incorrectly, or if it's",
+          'a plugin, forgot to pass it in an array as props.plugins.',
           '\n\n',
           'All props: https://atomiks.github.io/tippyjs/all-props/\n',
           'Plugins: https://atomiks.github.io/tippyjs/plugins/',
@@ -184,15 +170,9 @@ describe('validateProps', () => {
     expect(console.warn).toHaveBeenCalledWith(
       ...getFormattedMessage(
         [
-          '`' + prop + '`',
-          "is not a valid prop. You may have spelled it incorrectly, or if it's a",
-          'plugin, forgot to pass it in an array as props.plugins.',
-          '\n\n',
-          'In v5, the following props were turned into plugins:',
-          '\n\n',
-          '* animateFill\n',
-          '* followCursor\n',
-          '* sticky',
+          `\`${prop}\``,
+          "is not a valid prop. You may have spelled it incorrectly, or if it's",
+          'a plugin, forgot to pass it in an array as props.plugins.',
           '\n\n',
           'All props: https://atomiks.github.io/tippyjs/all-props/\n',
           'Plugins: https://atomiks.github.io/tippyjs/plugins/',
@@ -204,111 +184,5 @@ describe('validateProps', () => {
 
     validateProps({[prop]: true}, plugins);
     expect(console.warn).not.toHaveBeenCalled();
-  });
-
-  it('recognizes the old `target` prop', () => {
-    validateProps({target: 'button'});
-    expect(console.warn).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        [
-          'The `target` prop was removed in v5 and replaced with the delegate() addon',
-          'in order to conserve bundle size.',
-          'See: https://atomiks.github.io/tippyjs/addons/#event-delegation',
-        ].join(' '),
-      ),
-    );
-  });
-
-  it('recognizes the old `a11y` prop', () => {
-    validateProps({a11y: true});
-    expect(console.warn).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        [
-          'The `a11y` prop was removed in v5. Make sure the element you are giving a',
-          'tippy to is natively focusable, such as <button> or <input>, not <div>',
-          'or <span>.',
-        ].join(' '),
-      ),
-    );
-  });
-
-  it('recognizes the old `showOnInit` prop', () => {
-    validateProps({showOnInit: true});
-    expect(console.warn).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        `The \`showOnInit\` prop was renamed to \`showOnCreate\` in v5.`,
-      ),
-    );
-  });
-
-  it('recognizes the old `arrowType` prop', () => {
-    validateProps({arrowType: 'round'});
-    expect(console.warn).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        [
-          'The `arrowType` prop was removed in v5 in favor of overloading the `arrow`',
-          'prop.',
-          '\n\n',
-          '"round" string was replaced with importing the string from the package.',
-          '\n\n',
-          "* import {roundArrow} from 'tippy.js'; (ESM version)\n",
-          '* const {roundArrow} = tippy; (IIFE CDN version)',
-          '\n\n',
-          'Before: {arrow: true, arrowType: "round"}\n',
-          'After: {arrow: roundArrow}`',
-        ].join(' '),
-      ),
-    );
-  });
-
-  it('recognizes the old `touchHold` prop', () => {
-    validateProps({touchHold: true});
-    expect(console.warn).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        [
-          'The `touchHold` prop was removed in v5 in favor of overloading the `touch`',
-          'prop.',
-          '\n\n',
-          'Before: {touchHold: true}\n',
-          'After: {touch: "hold"}',
-        ].join(' '),
-      ),
-    );
-  });
-
-  it('recognizes the old `size` prop', () => {
-    validateProps({size: 'small'});
-    expect(console.warn).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        [
-          'The `size` prop was removed in v5. Instead, use a theme that specifies',
-          'CSS padding and font-size properties.',
-        ].join(' '),
-      ),
-    );
-  });
-
-  it('recognizes the old `google` theme', () => {
-    validateProps({theme: 'google'});
-    expect(console.warn).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        `The included theme "google" was renamed to "material" in v5.`,
-      ),
-    );
-  });
-
-  it('recognizes specifying `placement` in `popperOptions`', () => {
-    validateProps({popperOptions: {placement: 'auto'}});
-    expect(console.warn).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        [
-          'Specifying placement in `popperOptions` is not supported. Use the base-level',
-          '`placement` prop instead.',
-          '\n\n',
-          'Before: {popperOptions: {placement: "bottom"}}\n',
-          'After: {placement: "bottom"}',
-        ].join(' '),
-      ),
-    );
   });
 });

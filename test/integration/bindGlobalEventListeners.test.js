@@ -3,8 +3,6 @@ import {cleanDocumentBody, h} from '../utils';
 import tippy from '../../src';
 import * as Listeners from '../../src/bindGlobalEventListeners';
 
-afterEach(cleanDocumentBody);
-
 describe('onDocumentTouchStart', () => {
   it('sets currentInput.isTouch to `true`', () => {
     Listeners.onDocumentTouchStart();

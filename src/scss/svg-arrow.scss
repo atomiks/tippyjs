@@ -1,18 +1,43 @@
-@import './_mixins.scss';
 @import './_vars.scss';
 
-.#{$namespace-prefix}-tooltip {
-  @each $placement in $placements {
-    &[data-placement^='#{$placement}'] {
-      > .#{$namespace-prefix}-svg-arrow {
-        @include svg-arrow-transform-origin($placement, $arrow-size);
-        @include arrow-margin($placement);
-        @include arrow-position($placement, $arrow-size, true);
+.#{$namespace-prefix}-box {
+  &[data-placement^='top'] > .#{$namespace-prefix}-svg-arrow {
+    bottom: 0;
 
-        svg {
-          @include svg-arrow-transform($placement);
-        }
-      }
+    &::after,
+    > svg {
+      top: 16px;
+      transform: rotate(180deg);
+    }
+  }
+
+  &[data-placement^='bottom'] > .#{$namespace-prefix}-svg-arrow {
+    top: 0;
+
+    > svg {
+      bottom: 16px;
+    }
+  }
+
+  &[data-placement^='left'] > .#{$namespace-prefix}-svg-arrow {
+    right: 0;
+
+    &::after,
+    > svg {
+      transform: rotate(90deg);
+      top: calc(50% - 3px);
+      left: 11px;
+    }
+  }
+
+  &[data-placement^='right'] > .#{$namespace-prefix}-svg-arrow {
+    left: 0;
+
+    &::after,
+    > svg {
+      transform: rotate(-90deg);
+      top: calc(50% - 3px);
+      right: 11px;
     }
   }
 
@@ -25,13 +50,12 @@
 
 .#{$namespace-prefix}-svg-arrow {
   position: absolute;
-  width: 18px;
+  width: $arrow-size;
   height: $arrow-size;
   fill: #333;
   pointer-events: none;
 
-  svg {
+  > svg {
     position: absolute;
-    left: 0;
   }
 }

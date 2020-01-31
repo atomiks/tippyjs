@@ -1,4 +1,4 @@
-import {Props} from './types';
+import {Props, BasePlacement} from './types';
 
 export interface ListenerObject {
   node: Element;
@@ -7,11 +7,9 @@ export interface ListenerObject {
   options: boolean | object;
 }
 
-export interface PropsV4 extends Props {
-  a11y: boolean;
-  arrowType: 'sharp' | 'round';
-  showOnInit: boolean;
-  size: 'small' | 'regular' | 'large';
-  target: string;
-  touchHold: boolean;
+export interface PopperTreeData {
+  popperRect: ClientRect;
+  basePlacement: BasePlacement;
+  offsetData: any;
+  props: Props;
 }

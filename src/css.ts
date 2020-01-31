@@ -1,6 +1,3 @@
-/**
- * Injects a string of CSS styles to a style node in <head>
- */
 export function injectCSS(css: string): void {
   const style = document.createElement('style');
   style.textContent = css;

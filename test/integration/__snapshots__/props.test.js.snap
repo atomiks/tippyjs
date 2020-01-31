@@ -1,0 +1,179 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`aria does not set any attribute if \`null\` 1`] = `
+<button
+  class="__tippy"
+/>
+`;
+
+exports[`content Element is injected into the tippy node 1`] = `
+<div
+  class="__NAMESPACE_PREFIX__-content"
+  data-state="visible"
+  style="transition-duration: 0ms;"
+>
+  <button
+    class="__tippy"
+  >
+    string
+  </button>
+</div>
+`;
+
+exports[`content Function is injected into the tippy node 1`] = `
+<div
+  class="__NAMESPACE_PREFIX__-content"
+  data-state="visible"
+  style="transition-duration: 0ms;"
+>
+  string
+</div>
+`;
+
+exports[`content string is injected into the tippy node 1`] = `
+<div
+  class="__NAMESPACE_PREFIX__-content"
+  data-state="visible"
+  style="transition-duration: 0ms;"
+>
+  string
+</div>
+`;
+
+exports[`popperOptions merges modifiers correctly 1`] = `
+Object {
+  "modifiers": Array [
+    Object {
+      "enabled": false,
+      "name": "offset",
+      "options": Object {
+        "offset": Array [
+          0,
+          10,
+        ],
+      },
+    },
+    Object {
+      "enabled": true,
+      "name": "arrow",
+      "options": Object {
+        "element": <div
+          class="__NAMESPACE_PREFIX__-arrow"
+          style="position: absolute; left: 0px; transform: translate(3px, 0px);"
+        />,
+        "padding": 3,
+      },
+    },
+    Object {
+      "name": "preventOverflow",
+      "options": Object {
+        "padding": Object {
+          "bottom": 2,
+          "left": 5,
+          "right": 5,
+          "top": 2,
+        },
+        "rootBoundary": "document",
+      },
+    },
+    Object {
+      "name": "flip",
+      "options": Object {
+        "fallbackPlacements": Array [
+          "right",
+        ],
+        "padding": Object {
+          "bottom": 2,
+          "left": 5,
+          "right": 5,
+          "top": 2,
+        },
+      },
+    },
+    Object {
+      "name": "computeStyles",
+      "options": Object {
+        "adaptive": true,
+      },
+    },
+    Object {
+      "name": "flip",
+      "options": Object {
+        "fallbackPlacements": Array [
+          "right",
+        ],
+      },
+    },
+    Object {
+      "name": "preventOverflow",
+      "options": Object {
+        "rootBoundary": "document",
+      },
+    },
+    Object {
+      "enabled": false,
+      "name": "offset",
+    },
+    Object {
+      "name": "offset",
+      "options": Object {
+        "offset": Array [
+          0,
+          10,
+        ],
+      },
+    },
+    Object {
+      "name": "preventOverflow",
+      "options": Object {
+        "padding": Object {
+          "bottom": 2,
+          "left": 5,
+          "right": 5,
+          "top": 2,
+        },
+      },
+    },
+    Object {
+      "name": "flip",
+      "options": Object {
+        "padding": Object {
+          "bottom": 2,
+          "left": 5,
+          "right": 5,
+          "top": 2,
+        },
+      },
+    },
+    Object {
+      "name": "computeStyles",
+      "options": Object {
+        "adaptive": true,
+      },
+    },
+    Object {
+      "enabled": true,
+      "fn": [Function],
+      "name": "$$tippy",
+      "phase": "beforeWrite",
+      "requires": Array [
+        "computeStyles",
+      ],
+    },
+    Object {
+      "enabled": true,
+      "name": "arrow",
+      "options": Object {
+        "element": <div
+          class="__NAMESPACE_PREFIX__-arrow"
+          style="position: absolute; left: 0px; transform: translate(3px, 0px);"
+        />,
+        "padding": 3,
+      },
+    },
+  ],
+  "onFirstUpdate": [Function],
+  "placement": "top",
+  "strategy": "fixed",
+}
+`;

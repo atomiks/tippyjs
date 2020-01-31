@@ -1,0 +1,102 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createTippy returns the instance with expected properties 1`] = `
+Object {
+  "clearDelayTimeouts": [Function],
+  "destroy": [Function],
+  "disable": [Function],
+  "enable": [Function],
+  "hide": [Function],
+  "id": 1,
+  "plugins": Array [],
+  "popper": <div
+    data-__namespace_prefix__-root=""
+    id="__NAMESPACE_PREFIX__-1"
+    style="z-index: 9999;"
+  >
+    <div
+      class="__NAMESPACE_PREFIX__-box"
+      data-animation="fade"
+      data-state="hidden"
+      role="tooltip"
+      style="max-width: 350px;"
+      tabindex="-1"
+    >
+      <div
+        class="__NAMESPACE_PREFIX__-content"
+        data-state="hidden"
+      >
+        tippy
+      </div>
+      <div
+        class="__NAMESPACE_PREFIX__-arrow"
+      />
+    </div>
+  </div>,
+  "popperInstance": null,
+  "props": Object {
+    "allowHTML": false,
+    "animateFill": false,
+    "animation": "fade",
+    "appendTo": [Function],
+    "aria": "describedby",
+    "arrow": true,
+    "content": "tippy",
+    "delay": 0,
+    "duration": 0,
+    "followCursor": false,
+    "getReferenceClientRect": null,
+    "hideOnClick": true,
+    "ignoreAttributes": false,
+    "inertia": false,
+    "inlinePositioning": false,
+    "interactive": false,
+    "interactiveBorder": 2,
+    "interactiveDebounce": 0,
+    "maxWidth": 350,
+    "moveTransition": "",
+    "offset": Array [
+      0,
+      10,
+    ],
+    "onAfterUpdate": [Function],
+    "onBeforeUpdate": [Function],
+    "onCreate": [Function],
+    "onDestroy": [Function],
+    "onHidden": [Function],
+    "onHide": [Function],
+    "onMount": [Function],
+    "onShow": [Function],
+    "onShown": [Function],
+    "onTrigger": [Function],
+    "onUntrigger": [Function],
+    "placement": "top",
+    "plugins": Array [],
+    "popperOptions": Object {},
+    "render": [Function],
+    "role": "tooltip",
+    "showOnCreate": false,
+    "sticky": false,
+    "theme": "",
+    "touch": true,
+    "trigger": "mouseenter focus",
+    "triggerTarget": null,
+    "zIndex": 9999,
+  },
+  "reference": <button
+    class="__tippy"
+  />,
+  "setContent": [Function],
+  "setProps": [Function],
+  "show": [Function],
+  "state": Object {
+    "currentPlacement": null,
+    "isDestroyed": false,
+    "isEnabled": true,
+    "isMounted": false,
+    "isShown": false,
+    "isVisible": false,
+  },
+  "unmount": [Function],
+}
+`;

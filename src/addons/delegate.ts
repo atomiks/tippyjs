@@ -1,7 +1,7 @@
-import {Instance, Targets, Plugin, Props} from '../types';
+import {Instance, Targets, Props} from '../types';
 import tippy from '..';
 import {errorWhen} from '../validation';
-import {removeProperties, normalizeToArray, includes} from '../utils';
+import {removeProperties, normalizeToArray} from '../utils';
 import {defaultProps} from '../props';
 import {ListenerObject} from '../types-internal';
 
@@ -18,9 +18,8 @@ const BUBBLING_EVENTS_MAP = {
 function delegate(
   targets: Targets,
   props: Partial<Props> & {target: string},
-  /** @deprecated use Props.plugins */
-  plugins: Plugin[] = [],
 ): Instance | Instance[] {
+  /* istanbul ignore else */
   if (__DEV__) {
     errorWhen(
       !(props && props.target),
@@ -31,16 +30,14 @@ function delegate(
     );
   }
 
-  plugins = props.plugins || plugins;
-
   let listeners: ListenerObject[] = [];
   let childTippyInstances: Instance[] = [];
 
   const {target} = props;
 
   const nativeProps = removeProperties(props, ['target']);
-  const parentProps = {...nativeProps, plugins, trigger: 'manual'};
-  const childProps = {...nativeProps, plugins, showOnCreate: true};
+  const parentProps = {...nativeProps, trigger: 'manual'};
+  const childProps = {...nativeProps, showOnCreate: true};
 
   const returnValue = tippy(targets, parentProps);
   const normalizedReturnValue = normalizeToArray(returnValue);
@@ -65,8 +62,13 @@ function delegate(
       props.trigger ||
       defaultProps.trigger;
 
-    // Only create the instance if the bubbling event matches the trigger type
-    if (!includes(trigger, (BUBBLING_EVENTS_MAP as any)[event.type])) {
+    // Only create the instance if the bubbling event matches the trigger type,
+    // or the node already has a tippy instance attached
+    if (
+      trigger.indexOf((BUBBLING_EVENTS_MAP as any)[event.type]) < 0 ||
+      // @ts-ignore
+      targetNode._tippy
+    ) {
       return;
     }
 

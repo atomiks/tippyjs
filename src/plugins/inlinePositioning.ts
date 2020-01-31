@@ -1,45 +1,57 @@
 import {InlinePositioning, BasePlacement} from '../types';
-import {arrayFrom} from '../utils';
-import {getBasePlacement} from '../popper';
+import {getBasePlacement, arrayFrom} from '../utils';
+import {Modifier, Placement} from '@popperjs/core';
 
 // TODO: Work on a "cursor" value so it chooses a rect optimal to the cursor
-// position. This will require the `followCursor` plugin's fixes for overflow
-// due to using event.clientX/Y values. (normalizedPlacement, getVirtualOffsets)
+// position.
 const inlinePositioning: InlinePositioning = {
   name: 'inlinePositioning',
   defaultValue: false,
   fn(instance) {
     const {reference} = instance;
 
-    function getIsEnabled(): boolean {
+    function isEnabled(): boolean {
       return !!instance.props.inlinePositioning;
     }
 
-    return {
-      onHidden(): void {
-        if (getIsEnabled()) {
-          instance.popperInstance!.reference = reference;
+    let placement: Placement;
+
+    const modifier: Modifier<{}> = {
+      name: 'tippyInlinePositioning',
+      enabled: true,
+      phase: 'afterWrite',
+      fn({state}) {
+        if (isEnabled()) {
+          if (placement !== state.placement) {
+            instance.setProps({
+              getReferenceClientRect: () =>
+                getReferenceClientRect(state.placement),
+            });
+          }
+
+          placement = state.placement;
         }
       },
-      onShow(): void {
-        if (!getIsEnabled()) {
-          return;
-        }
+    };
 
-        instance.popperInstance!.reference = {
-          referenceNode: reference,
-          // These `client` values don't get used by Popper.js if they are 0
-          clientWidth: 0,
-          clientHeight: 0,
-          getBoundingClientRect(): ClientRect | DOMRect {
-            return getInlineBoundingClientRect(
-              instance.state.currentPlacement &&
-                getBasePlacement(instance.state.currentPlacement),
-              reference.getBoundingClientRect(),
-              arrayFrom(reference.getClientRects()),
-            );
+    function getReferenceClientRect(placement: Placement): ClientRect {
+      return getInlineBoundingClientRect(
+        getBasePlacement(placement),
+        reference.getBoundingClientRect(),
+        arrayFrom(reference.getClientRects()),
+      );
+    }
+
+    return {
+      onCreate(): void {
+        instance.setProps({
+          popperOptions: {
+            modifiers: [
+              ...(instance.popperInstance?.state.options.modifiers || []),
+              modifier,
+            ],
           },
-        };
+        });
       },
     };
   },

@@ -1,5 +1,5 @@
 import {Sticky, ReferenceElement} from '../types';
-import Popper from 'popper.js';
+import {VirtualElement} from '@popperjs/core';
 
 const sticky: Sticky = {
   name: 'sticky',
@@ -7,9 +7,9 @@ const sticky: Sticky = {
   fn(instance) {
     const {reference, popper} = instance;
 
-    function getReference(): ReferenceElement | Popper.ReferenceObject {
+    function getReference(): ReferenceElement | VirtualElement {
       return instance.popperInstance
-        ? instance.popperInstance.reference
+        ? instance.popperInstance.state.elements.reference
         : reference;
     }
 
@@ -32,7 +32,9 @@ const sticky: Sticky = {
         (currentRefRect && areRectsDifferent(prevRefRect, currentRefRect)) ||
         (currentPopRect && areRectsDifferent(prevPopRect, currentPopRect))
       ) {
-        instance.popperInstance!.update();
+        if (instance.popperInstance) {
+          instance.popperInstance.update();
+        }
       }
 
       prevRefRect = currentRefRect;

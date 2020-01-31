@@ -1,0 +1,222 @@
+<!DOCTYPE html> <title>test</title>
+
+<meta charset="utf8" />
+<link rel="stylesheet" href="dist/bundle.css" />
+
+<style>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: sans-serif;
+  }
+
+  #controls {
+    position: fixed;
+    top: 0;
+    right: 0;
+    overflow-y: auto;
+    width: calc(100vw - 816px);
+    height: 100vh;
+    padding: 15px 25px;
+    background: #eee;
+  }
+
+  .link {
+    position: relative;
+    display: block;
+    color: #333;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    font-size: 100%;
+    cursor: pointer;
+    margin: 5px 0;
+    outline: 0;
+  }
+
+  .link:focus {
+    box-shadow: 0 0 0 1px purple;
+  }
+
+  .link[data-current] {
+    font-weight: bold;
+    color: purple;
+  }
+
+  .link[data-current]::before {
+    content: '•';
+    color: purple;
+    position: absolute;
+    left: -10px;
+  }
+
+  button:not(.link) {
+    font-size: 125%;
+    border: none;
+    background: #eee;
+    padding: 8px 16px;
+  }
+
+  .container {
+    position: relative;
+    display: none;
+    overflow: hidden;
+    border: 2px dashed red;
+    height: 500px;
+    width: 800px;
+    padding: 25px;
+    place-items: center;
+  }
+</style>
+
+<div id="controls">
+  <h1>Tippy Development</h1>
+</div>
+
+<div class="container" id="default">
+  <div class="wrapper">
+    <button class="reference">Reference</button>
+  </div>
+</div>
+
+<div class="container" id="sticky">
+  <style>
+    @keyframes sticky-shift {
+      to {
+        transform: translate(0, -150px);
+      }
+    }
+
+    #sticky .animate {
+      animation: sticky-shift 2s ease-in-out infinite alternate;
+    }
+  </style>
+  <div class="wrapper">
+    <button class="reference">Reference</button>
+    <button class="animation">Enable animation</button>
+  </div>
+</div>
+
+<div class="container" id="inlinePositioning">
+  <style>
+    #inlinePositioning .wrapper {
+      max-width: 300px;
+    }
+
+    #inlinePositioning .reference {
+      color: white;
+      outline: 1px solid black;
+    }
+  </style>
+  <div class="wrapper">
+    This is some text and an inline element that
+    <span class="reference"
+      >spans over many lines to demonstrate this inline positioning
+      solution</span
+    >, and some more text.
+  </div>
+</div>
+
+<div class="container" id="followCursor">
+  <div class="wrapper">
+    <button class="reference">Reference</button>
+  </div>
+</div>
+
+<div class="container" id="themes">
+  <style>
+    #themes button {
+      font-size: 12px;
+      padding: 2px 4px;
+    }
+  </style>
+  <div class="wrapper" style="text-align: right;"></div>
+</div>
+
+<div class="container" id="animations">
+  <style>
+    #animations button {
+      margin: 5px;
+      font-size: 12px;
+    }
+  </style>
+  <div class="wrapper"></div>
+</div>
+
+<div class="container" id="createSingleton">
+  <div class="wrapper">
+    <button class="reference" data-tippy-content="Tippy A">Reference</button>
+    <button class="reference" data-tippy-content="Tippy B">Reference</button>
+    <button class="reference" data-tippy-content="Tippy C">Reference</button>
+  </div>
+</div>
+
+<div class="container" id="animateFill">
+  <div class="wrapper">
+    <button class="reference">Reference</button>
+  </div>
+</div>
+
+<script src="dist/bundle.js"></script>
+<script>
+  const containers = document.querySelectorAll('.container');
+
+  containers.forEach(container => {
+    const button = document.createElement('button');
+
+    button.textContent = container.id;
+    button.className = 'link';
+    button.setAttribute('data-id', container.id);
+
+    document.querySelector('#controls').appendChild(button);
+
+    button.onclick = () => {
+      hide();
+
+      state.currentTest = container.id;
+
+      show();
+      run();
+    };
+
+    if (container.id === 'default') {
+      button.click();
+    }
+  });
+
+  function hide() {
+    const container = document.getElementById(state.currentTest);
+    const button = document.querySelector(
+      `button[data-id="${state.currentTest}"]`,
+    );
+
+    if (container) {
+      container.style.display = 'none';
+      button.removeAttribute('data-current');
+    }
+  }
+
+  function show() {
+    const container = document.getElementById(state.currentTest);
+    const button = document.querySelector(
+      `button[data-id="${state.currentTest}"]`,
+    );
+
+    if (container) {
+      container.style.display = 'grid';
+      button.setAttribute('data-current', '');
+    }
+  }
+
+  function run() {
+    if (window.cleanup) {
+      window.cleanup();
+    }
+
+    window.cleanup = state.tests[state.currentTest]();
+  }
+</script>

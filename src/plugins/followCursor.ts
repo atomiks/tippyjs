@@ -1,31 +1,12 @@
-import {
-  PopperElement,
-  Placement,
-  FollowCursor,
-  Props,
-  ReferenceElement,
-} from '../types';
-import {
-  includes,
-  closestCallback,
-  useIfDefined,
-  isMouseEvent,
-  getOwnerDocument,
-} from '../utils';
-import {getBasePlacement} from '../popper';
+import {FollowCursor} from '../types';
+import {closestCallback, isMouseEvent, getOwnerDocument} from '../dom-utils';
 import {currentInput} from '../bindGlobalEventListeners';
-import Popper from 'popper.js';
 
 const followCursor: FollowCursor = {
   name: 'followCursor',
   defaultValue: false,
   fn(instance) {
-    const {reference, popper} = instance;
-
-    let originalReference:
-      | ReferenceElement
-      | Popper.ReferenceObject
-      | null = null;
+    const {reference} = instance;
 
     // Support iframe contexts
     // Static check that assumes any of the `triggerTarget` or `reference`
@@ -35,18 +16,6 @@ const followCursor: FollowCursor = {
     // Internal state
     let lastMouseMoveEvent: MouseEvent;
     let mouseCoords: {clientX: number; clientY: number} | null = null;
-    let isInternallySettingControlledProp = false;
-
-    // These are controlled by this plugin, so we need to store the user's
-    // original prop value
-    const userProps = instance.props;
-
-    function setUserProps(props: Partial<Props>): void {
-      const keys = Object.keys(props) as Array<keyof Props>;
-      keys.forEach(prop => {
-        (userProps as any)[prop] = useIfDefined(props[prop], userProps[prop]);
-      });
-    }
 
     function getIsManual(): boolean {
       return instance.props.trigger.trim() === 'manual';
@@ -71,45 +40,7 @@ const followCursor: FollowCursor = {
     }
 
     function resetReference(): void {
-      if (instance.popperInstance && originalReference) {
-        instance.popperInstance.reference = originalReference;
-      }
-    }
-
-    function handlePlacement(): void {
-      // Due to `getVirtualOffsets()`, we need to reverse the placement if it's
-      // shifted (start -> end, and vice-versa)
-
-      // Early bail-out
-      if (!getIsEnabled() && instance.props.placement === userProps.placement) {
-        return;
-      }
-
-      const {placement} = userProps;
-      const shift = placement.split('-')[1];
-
-      isInternallySettingControlledProp = true;
-
-      instance.setProps({
-        placement: (getIsEnabled() && shift
-          ? placement.replace(shift, shift === 'start' ? 'end' : 'start')
-          : placement) as Placement,
-      });
-
-      isInternallySettingControlledProp = false;
-    }
-
-    function handlePopperListeners(): void {
-      if (!instance.popperInstance) {
-        return;
-      }
-
-      // Popper's scroll listeners make sense for `true` only. TODO: work out
-      // how to only listen horizontal scroll for "horizontal" and vertical
-      // scroll for "vertical"
-      if (getIsEnabled() && getIsInitialBehavior()) {
-        instance.popperInstance.disableEventListeners();
-      }
+      instance.setProps({getReferenceClientRect: null});
     }
 
     function handleMouseMoveListener(): void {
@@ -137,54 +68,29 @@ const followCursor: FollowCursor = {
     function onMouseMove(event: MouseEvent): void {
       const {clientX, clientY} = (lastMouseMoveEvent = event);
 
-      if (!instance.popperInstance || !instance.state.currentPlacement) {
-        return;
-      }
-
       // If the instance is interactive, avoid updating the position unless it's
       // over the reference element
       const isCursorOverReference = closestCallback(
         event.target as Element,
         (el: Element) => el === reference,
       );
-
       const {followCursor} = instance.props;
-      const isHorizontal = followCursor === 'horizontal';
-      const isVertical = followCursor === 'vertical';
-      const isVerticalPlacement = includes(
-        ['top', 'bottom'],
-        getBasePlacement(instance.state.currentPlacement),
-      );
-
-      // The virtual reference needs some size to prevent itself from overflowing
-      const {size, x, y} = getVirtualOffsets(popper, isVerticalPlacement);
 
       if (isCursorOverReference || !instance.props.interactive) {
-        // Preserve custom position ReferenceObjects, which may not be the
-        // original targets reference passed as an argument
-        if (originalReference === null) {
-          originalReference = instance.popperInstance.reference;
-        }
-
-        instance.popperInstance.reference = {
-          referenceNode: reference,
-          // These `client` values don't get used by Popper.js if they are 0
-          clientWidth: 0,
-          clientHeight: 0,
-          getBoundingClientRect(): DOMRect | ClientRect {
+        instance.setProps({
+          getReferenceClientRect() {
             const rect = reference.getBoundingClientRect();
+
             return {
-              width: isVerticalPlacement ? size : 0,
-              height: isVerticalPlacement ? 0 : size,
-              top: (isHorizontal ? rect.top : clientY) - y,
-              bottom: (isHorizontal ? rect.bottom : clientY) + y,
-              left: (isVertical ? rect.left : clientX) - x,
-              right: (isVertical ? rect.right : clientX) + x,
+              width: 0,
+              height: 0,
+              top: followCursor === 'horizontal' ? rect.top : clientY,
+              bottom: followCursor === 'horizontal' ? rect.bottom : clientY,
+              left: followCursor === 'vertical' ? rect.left : clientX,
+              right: followCursor === 'vertical' ? rect.right : clientX,
             };
           },
-        };
-
-        instance.popperInstance.update();
+        });
       }
 
       if (getIsInitialBehavior()) {
@@ -193,27 +99,8 @@ const followCursor: FollowCursor = {
     }
 
     return {
-      onAfterUpdate(_, partialProps): void {
-        if (!isInternallySettingControlledProp) {
-          setUserProps(partialProps);
-
-          if (partialProps.placement) {
-            handlePlacement();
-          }
-        }
-
-        // A new placement causes the popperInstance to be recreated
-        if (partialProps.placement) {
-          handlePopperListeners();
-        }
-
-        // Wait for `.update()` to set `instance.state.currentPlacement` to
-        // the new placement
-        requestAnimationFrame(triggerLastMouseMove);
-      },
       onMount(): void {
         triggerLastMouseMove();
-        handlePopperListeners();
       },
       onShow(): void {
         if (getIsManual()) {
@@ -224,7 +111,6 @@ const followCursor: FollowCursor = {
           // of a MouseEvent here
           lastMouseMoveEvent = mouseCoords as MouseEvent;
 
-          handlePlacement();
           handleMouseMoveListener();
         }
       },
@@ -239,7 +125,6 @@ const followCursor: FollowCursor = {
           lastMouseMoveEvent = event;
         }
 
-        handlePlacement();
         handleMouseMoveListener();
       },
       onUntrigger(): void {
@@ -259,20 +144,3 @@ const followCursor: FollowCursor = {
 };
 
 export default followCursor;
-
-export function getVirtualOffsets(
-  popper: PopperElement,
-  isVerticalPlacement: boolean,
-): {
-  size: number;
-  x: number;
-  y: number;
-} {
-  const size = isVerticalPlacement ? popper.offsetWidth : popper.offsetHeight;
-
-  return {
-    size,
-    x: isVerticalPlacement ? size : 0,
-    y: isVerticalPlacement ? 0 : size,
-  };
-}

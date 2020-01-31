@@ -3,14 +3,45 @@
 
 $color: rgba(0, 0, 0, 0.7);
 
-.#{$namespace-prefix}-tooltip.translucent-theme {
+.#{$namespace-prefix}-box[data-theme~='translucent'] {
   background-color: $color;
 
-  @each $placement in $placements {
-    &[data-placement^='#{$placement}'] {
-      > .#{$namespace-prefix}-arrow {
-        @include arrow($placement, $arrow-size, $color);
-      }
+  > .#{$namespace-prefix}-arrow {
+    width: 14px;
+    height: 14px;
+  }
+
+  /**
+  * We use an 8px arrow with 1px overlap by default, since some browsers (at
+  * least they used to) caused a 1px gap between the arrow and the popper.
+  * However, with the translucent theme, this causes darkening since it 
+  * overlaps.
+  */
+  &[data-placement^='top'] > .#{$namespace-prefix}-arrow {
+    &::before {
+      border-width: 7px 7px 0;
+      border-top-color: $color;
+    }
+  }
+
+  &[data-placement^='bottom'] > .#{$namespace-prefix}-arrow {
+    &::before {
+      border-width: 0 7px 7px;
+      border-bottom-color: $color;
+    }
+  }
+
+  &[data-placement^='left'] > .#{$namespace-prefix}-arrow {
+    &::before {
+      border-width: 7px 0 7px 7px;
+      border-left-color: $color;
+    }
+  }
+
+  &[data-placement^='right'] > .#{$namespace-prefix}-arrow {
+    &::before {
+      border-width: 7px 7px 7px 0;
+      border-right-color: $color;
     }
   }
 
