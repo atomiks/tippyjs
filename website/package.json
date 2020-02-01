@@ -53,6 +53,7 @@
   "license": "MIT",
   "scripts": {
     "build": "npm run patch && gatsby build",
+    "build:ci": "gatsby build --prefix-paths",
     "develop": "gatsby develop",
     "start": "npm run patch && npm run develop",
     "patch": "node src/patch",
