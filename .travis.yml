@@ -7,7 +7,10 @@ jobs:
     - stage: Deploy docs
       if: branch = master
       node_js: 12
-      before_install: cd website
+      before_install:
+        - cd website
+        # this will terminate the job early if conditions are met
+        - source ./scripts/should-deploy-docs.sh
       script: npm run build:ci
       deploy:
         # https://docs.travis-ci.com/user/deployment/pages/
