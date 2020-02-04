@@ -422,10 +422,10 @@ export default function createTippy(
           on('mouseleave', onMouseLeave as EventListener);
           break;
         case 'focus':
-          on(isIE ? 'focusout' : 'blur', onBlur as EventListener);
+          on(isIE ? 'focusout' : 'blur', onBlurOrFocusOut as EventListener);
           break;
         case 'focusin':
-          on('focusout', onBlur as EventListener);
+          on('focusout', onBlurOrFocusOut as EventListener);
           break;
       }
     });
@@ -543,8 +543,8 @@ export default function createTippy(
     scheduleHide(event);
   }
 
-  function onBlur(event: FocusEvent): void {
-    if (event.target !== getCurrentTarget()) {
+  function onBlurOrFocusOut(event: FocusEvent): void {
+    if (event.type === 'blur' && event.target !== getCurrentTarget()) {
       return;
     }
 
