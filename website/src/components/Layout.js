@@ -2,7 +2,16 @@ import React, {Component} from 'react';
 import {SkipNavLink, SkipNavContent} from '@reach/skip-nav';
 import {MDXProvider} from '@mdx-js/react';
 import styled from '@emotion/styled';
-import {Container, Demo, Button, Row, Col, Flex, MEDIA} from './Framework';
+import {
+  Container,
+  Demo,
+  Button,
+  Row,
+  Col,
+  Flex,
+  MEDIA,
+  ExternalLink,
+} from './Framework';
 import Tippy, {TippySingleton} from './Tippy';
 import Nav from './Nav';
 import NavButtons from './NavButtons';
@@ -11,7 +20,7 @@ import Main from './Main';
 import Footer from './Footer';
 import SEO from './SEO';
 import Image from './Image';
-import Emoji from './Emoji';
+import Icon from './Icon';
 import CSS from '../css';
 import slugify from 'slugify';
 import elasticScroll from 'elastic-scroll-polyfill';
@@ -125,7 +134,7 @@ const components = {
   Col,
   Flex,
   Image,
-  Emoji,
+  Icon,
   a: props => {
     const extendedProps = {...props};
 
@@ -230,7 +239,15 @@ class Layout extends Component {
             </Container>
             <NavButtons next={pageContext.frontmatter.index + 1} />
           </SkipNavContent>
-          <Footer>© {new Date().getFullYear()} - MIT License</Footer>
+          <Footer>
+            <p>© {new Date().getFullYear()} — MIT License</p>
+            <small>
+              Icons made by Freepik from{' '}
+              <ExternalLink href="https://flaticon.com">
+                www.flaticon.com
+              </ExternalLink>
+            </small>
+          </Footer>
         </Main>
       </MDXProvider>
     );
