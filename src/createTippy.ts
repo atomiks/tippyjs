@@ -544,7 +544,10 @@ export default function createTippy(
   }
 
   function onBlurOrFocusOut(event: FocusEvent): void {
-    if (event.type === 'blur' && event.target !== getCurrentTarget()) {
+    if (
+      !includes(instance.props.trigger, 'focusin') &&
+      event.target !== getCurrentTarget()
+    ) {
       return;
     }
 
