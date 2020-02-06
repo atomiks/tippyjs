@@ -22,7 +22,7 @@ import SEO from './SEO';
 import Image from './Image';
 import Icon from './Icon';
 import CSS from '../css';
-import slugify from 'slugify';
+import slug from 'url-slug';
 import elasticScroll from 'elastic-scroll-polyfill';
 
 import 'normalize.css';
@@ -81,10 +81,7 @@ class Heading extends React.Component {
   constructor(props) {
     super(props);
 
-    let href = slugify(String(this.props.children), {
-      lower: true,
-      remove: /[*+~.()'"`!:@,?]/g,
-    });
+    let href = slug(String(this.props.children));
 
     // Check for duplicate #s
     if (hrefs.indexOf(href) !== -1) {

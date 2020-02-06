@@ -51,21 +51,6 @@ helpful warnings and error messages when something goes wrong:
 When you're finished developing (or deploying for production), you can remove
 everything after `@5` (the production file as listed before).
 
-### Node vs. Browser
-
-This documentation defaults to module imports in all examples, so be aware that
-the following import path using a module bundler in Node:
-
-```js
-import 'tippy.js/dist/backdrop.css';
-```
-
-Is equivalent to this using a CDN in the browser:
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/tippy.js@5/dist/backdrop.css" />
-```
-
 ### CSS
 
 Tippy includes a CSS stylesheet by default for the base tooltip styling, fade
@@ -86,6 +71,32 @@ of relying on injection.
   for CDN version)
 - `dist/tippy.js` = Core JS (default for ESM/CJS versions)
 - `dist/tippy.css` = Core CSS
+
+### Optional extra imports
+
+For brevity, this documentation shows imports via a module bundler in Node. If
+you're using the CDN, you'll be using `<link>` tags instead.
+
+> **Note**
+>
+> This is not a required import — it's just a demonstration of how you will
+> import extra parts of the library depending on your choice when reading the
+> documentation.
+
+This optional extra import in the documentation:
+
+```js
+import 'tippy.js/animations/scale.css';
+```
+
+Is equivalent to this using a CDN in the browser:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/tippy.js@5/animations/scale.css"
+/>
+```
 
 ### Component wrappers
 
