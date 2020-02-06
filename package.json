@@ -116,7 +116,7 @@
     "husky": "^3.0.3",
     "jest": "^24.8.0",
     "lint-staged": "^9.2.1",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "parcel-bundler": "^1.12.4",
     "postcss": "^7.0.17",
     "prettier": "^1.18.2",
@@ -131,7 +131,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-sass": "^1.2.2",
-    "rollup-plugin-terser": "^5.1.1",
+    "rollup-plugin-terser": "^5.2.0",
     "typescript": "^3.5.3"
   },
   "dependencies": {
