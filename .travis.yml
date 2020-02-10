@@ -9,7 +9,6 @@ jobs:
       node_js: 12
       before_install:
         - cd website
-        # this will terminate the job early if conditions are met
         - source ./scripts/should-deploy-docs.sh
       script: npm run build:ci
       deploy:

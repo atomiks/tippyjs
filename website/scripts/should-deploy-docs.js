@@ -14,7 +14,9 @@ if (TRAVIS_COMMIT_RANGE) {
   const COMMIT_RANGE = TRAVIS_COMMIT_RANGE.replace('...', '..');
   const BASE_COMMIT = COMMIT_RANGE.split('..')[0];
 
-  const baseCommitType = execSync(`git cat-file -t ${BASE_COMMIT}`)
+  // make sure that the command doesn't error out,
+  // the output is being validated below
+  const baseCommitType = execSync(`git cat-file -t ${BASE_COMMIT} || true`)
     .toString()
     .trim();
 
