@@ -4,7 +4,7 @@
 
 <div align="center">
   <h1>Tippy.js</h1>
-  <p>A highly customizable tooltip and popover library powered by Popper.js.</p>
+  <p>A highly customizable tooltip and popover library powered by Popper.</p>
   <a href="https://www.npmjs.com/package/tippy.js">
    <img src="https://img.shields.io/npm/dm/tippy.js.svg?color=%235599ff&style=for-the-badge" alt="npm Downloads per Month">
   <a>
@@ -29,10 +29,10 @@
 
 ```bash
 # npm
-npm i tippy.js
+npm i tippy.js@next
 
 # Yarn
-yarn add tippy.js
+yarn add tippy.js@next
 ```
 
 Import the `tippy` constructor and the core CSS:
@@ -45,8 +45,8 @@ import 'tippy.js/dist/tippy.css';
 ### CDN
 
 ```html
-<script src="https://unpkg.com/popper.js@1"></script>
-<script src="https://unpkg.com/tippy.js@5"></script>
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@next"></script>
 ```
 
 The core CSS comes bundled with the default unpkg import.
