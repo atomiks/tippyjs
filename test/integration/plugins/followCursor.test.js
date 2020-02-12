@@ -406,28 +406,6 @@ describe('followCursor', () => {
     expect(instance.popperInstance.state.eventsEnabled).toBe(false);
   });
 
-  it('disables listeners for "horizontal"', () => {
-    instance = tippy(h(), {
-      followCursor: 'horizontal',
-    });
-
-    fireEvent.mouseEnter(instance.reference, defaultPosition);
-    jest.runAllTimers();
-
-    expect(instance.popperInstance.state.eventsEnabled).toBe(false);
-  });
-
-  it('disables listeners for "vertical"', () => {
-    instance = tippy(h(), {
-      followCursor: 'vertical',
-    });
-
-    fireEvent.mouseEnter(instance.reference, defaultPosition);
-    jest.runAllTimers();
-
-    expect(instance.popperInstance.state.eventsEnabled).toBe(false);
-  });
-
   it('works with manual trigger and .show()', () => {
     instance = tippy(h(), {
       followCursor: true,

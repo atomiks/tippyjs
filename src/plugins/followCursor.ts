@@ -107,10 +107,7 @@ const followCursor: FollowCursor = {
       // Popper's scroll listeners make sense for `true` only. TODO: work out
       // how to only listen horizontal scroll for "horizontal" and vertical
       // scroll for "vertical"
-      if (
-        getIsEnabled() &&
-        (getIsInitialBehavior() || instance.props.followCursor !== true)
-      ) {
+      if (getIsEnabled() && getIsInitialBehavior()) {
         instance.popperInstance.disableEventListeners();
       }
     }
@@ -151,7 +148,6 @@ const followCursor: FollowCursor = {
         (el: Element) => el === reference,
       );
 
-      const rect = reference.getBoundingClientRect();
       const {followCursor} = instance.props;
       const isHorizontal = followCursor === 'horizontal';
       const isVertical = followCursor === 'vertical';
@@ -175,14 +171,17 @@ const followCursor: FollowCursor = {
           // These `client` values don't get used by Popper.js if they are 0
           clientWidth: 0,
           clientHeight: 0,
-          getBoundingClientRect: (): DOMRect | ClientRect => ({
-            width: isVerticalPlacement ? size : 0,
-            height: isVerticalPlacement ? 0 : size,
-            top: (isHorizontal ? rect.top : clientY) - y,
-            bottom: (isHorizontal ? rect.bottom : clientY) + y,
-            left: (isVertical ? rect.left : clientX) - x,
-            right: (isVertical ? rect.right : clientX) + x,
-          }),
+          getBoundingClientRect(): DOMRect | ClientRect {
+            const rect = reference.getBoundingClientRect();
+            return {
+              width: isVerticalPlacement ? size : 0,
+              height: isVerticalPlacement ? 0 : size,
+              top: (isHorizontal ? rect.top : clientY) - y,
+              bottom: (isHorizontal ? rect.bottom : clientY) + y,
+              left: (isVertical ? rect.left : clientX) - x,
+              right: (isVertical ? rect.right : clientX) + x,
+            };
+          },
         };
 
         instance.popperInstance.update();
