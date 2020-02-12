@@ -177,11 +177,12 @@ export default function createTippy(
     }
   });
 
-  popper.addEventListener('mouseleave', () => {
+  popper.addEventListener('mouseleave', event => {
     if (
       instance.props.interactive &&
       includes(instance.props.trigger, 'mouseenter')
     ) {
+      debouncedOnMouseMove(event);
       doc.addEventListener('mousemove', debouncedOnMouseMove);
     }
   });
@@ -499,7 +500,7 @@ export default function createTippy(
       (el: Element) => el === reference || el === popper,
     );
 
-    if (isCursorOverReferenceOrPopper) {
+    if (event.type === 'mousemove' && isCursorOverReferenceOrPopper) {
       return;
     }
 
@@ -536,6 +537,7 @@ export default function createTippy(
       doc.body.addEventListener('mouseleave', scheduleHide);
       doc.addEventListener('mousemove', debouncedOnMouseMove);
       pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
+      debouncedOnMouseMove(event);
 
       return;
     }
