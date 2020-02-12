@@ -9,4 +9,5 @@ module.exports = {
   testEnvironment: 'jest-environment-jsdom-fourteen',
   setupFilesAfterEnv: ['<rootDir>/test/setup.js'],
   setupFiles: ['dotenv/config'],
+  reporters: ['default', require.resolve('./test/image-reporter.js')],
 };

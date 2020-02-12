@@ -117,6 +117,7 @@
     "parcel": "^2.0.0-alpha.3.2",
     "popmotion": "^8.7.1",
     "postcss": "^7.0.26",
+    "poster": "0.0.9",
     "prettier": "^1.19.1",
     "promise": "^8.0.3",
     "puppeteer": "^2.1.0",
