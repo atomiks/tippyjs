@@ -1,7 +1,6 @@
 import {AnimateFill} from '../types';
 import {BACKDROP_CLASS} from '../constants';
 import {div, setVisibilityState} from '../utils';
-import {isUCBrowser} from '../browser';
 import {warnWhen} from '../validation';
 
 const animateFill: AnimateFill = {
@@ -10,10 +9,9 @@ const animateFill: AnimateFill = {
   fn(instance) {
     const {tooltip, content} = instance.popperChildren;
 
-    const backdrop =
-      instance.props.animateFill && !isUCBrowser
-        ? createBackdropElement()
-        : null;
+    const backdrop = instance.props.animateFill
+      ? createBackdropElement()
+      : null;
 
     function addBackdropToPopperChildren(): void {
       instance.popperChildren.backdrop = backdrop;

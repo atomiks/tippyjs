@@ -12,7 +12,6 @@ import {
   appendPxIfNumber,
   setInnerHTML,
 } from './utils';
-import {isUCBrowser} from './browser';
 import {
   POPPER_CLASS,
   TOOLTIP_CLASS,
@@ -226,13 +225,11 @@ export function updateTransitionEndListener(
   action: 'add' | 'remove',
   listener: (event: TransitionEvent) => void,
 ): void {
-  const eventName =
-    isUCBrowser && document.body.style.webkitTransition !== undefined
-      ? 'webkitTransitionEnd'
-      : 'transitionend';
-  tooltip[
-    (action + 'EventListener') as 'addEventListener' | 'removeEventListener'
-  ](eventName, listener as EventListener);
+  ['transitionend', 'webkitTransitionEnd'].forEach(event => {
+    tooltip[
+      (action + 'EventListener') as 'addEventListener' | 'removeEventListener'
+    ](event, listener as EventListener);
+  });
 }
 
 /**
