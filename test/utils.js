@@ -35,6 +35,18 @@ export function disableTouchEnvironment() {
 }
 
 export async function screenshotTest(page, name) {
+  await page.addStyleTag({
+    content: `
+    * { 
+      color: transparent !important; 
+    }
+
+    .container {
+      border: none !important;
+    }
+    `,
+  });
+
   const rect = await page.evaluate(selector => {
     const element = document.querySelector(selector);
     const {x, y, width, height} = element.getBoundingClientRect();
