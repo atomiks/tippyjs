@@ -55,10 +55,15 @@
   }
 
   button:not(.link) {
-    font-size: 125%;
+    all: unset;
+    font-size: 16px;
     border: none;
     background: #eee;
     padding: 8px 16px;
+  }
+
+  button:not(.link):focus {
+    outline: 1px solid;
   }
 
   .container {
