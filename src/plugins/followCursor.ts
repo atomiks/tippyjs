@@ -76,18 +76,30 @@ const followCursor: FollowCursor = {
       );
       const {followCursor} = instance.props;
 
+      const rect = reference.getBoundingClientRect();
+      const relativeX = clientX - rect.left;
+      const relativeY = clientY - rect.top;
+
       if (isCursorOverReference || !instance.props.interactive) {
         instance.setProps({
           getReferenceClientRect() {
             const rect = reference.getBoundingClientRect();
 
+            let x = clientX;
+            let y = clientY;
+
+            if (followCursor === 'initial') {
+              x = rect.left + relativeX;
+              y = rect.top + relativeY;
+            }
+
             return {
               width: 0,
               height: 0,
-              top: followCursor === 'horizontal' ? rect.top : clientY,
-              bottom: followCursor === 'horizontal' ? rect.bottom : clientY,
-              left: followCursor === 'vertical' ? rect.left : clientX,
-              right: followCursor === 'vertical' ? rect.right : clientX,
+              top: followCursor === 'horizontal' ? rect.top : y,
+              bottom: followCursor === 'horizontal' ? rect.bottom : y,
+              left: followCursor === 'vertical' ? rect.left : x,
+              right: followCursor === 'vertical' ? rect.right : x,
             };
           },
         });
