@@ -173,23 +173,3 @@ describe('getNumber', () => {
     expect(Utils.getNumber('-21.35em')).toBe(-21.35);
   });
 });
-
-describe('mergeModifiers', () => {
-  it('merges several modifiers into one object', () => {
-    const modifiers = [
-      {name: 'flip', options: {a: true}},
-      {name: 'flip', options: {b: false}},
-      {name: 'x'},
-      {name: 'z'},
-      {name: 'flip', enabled: false},
-      {name: 'x'},
-      {name: 'flip', options: {a: false, c: true}},
-    ];
-
-    expect(Utils.mergeModifier(modifiers, 'flip')).toEqual({
-      name: 'flip',
-      enabled: false,
-      options: {a: false, b: false, c: true},
-    });
-  });
-});

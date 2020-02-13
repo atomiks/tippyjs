@@ -84,25 +84,6 @@ export function getNumber(value: string | number): number {
   return typeof value === 'number' ? value : parseFloat(value);
 }
 
-export function mergeModifier(
-  modifiers: Array<Partial<Modifier<any>>>,
-  name: string,
-): Partial<Modifier<any>> {
-  return modifiers
-    .filter(modifier => modifier.name === name)
-    .reduce(
-      (acc, modifier) => ({
-        ...acc,
-        ...modifier,
-        options: {
-          ...acc.options,
-          ...modifier.options,
-        },
-      }),
-      {},
-    );
-}
-
 export function getBasePlacement(placement: Placement): BasePlacement {
   return placement.split('-')[0] as BasePlacement;
 }

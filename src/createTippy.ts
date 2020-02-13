@@ -21,7 +21,6 @@ import {
   normalizeToArray,
   pushIfUnique,
   unique,
-  mergeModifier,
   getBasePlacement,
   arrayFrom,
 } from './utils';
@@ -625,8 +624,7 @@ export default function createTippy(
       },
     };
 
-    const mergeableModifiers: Array<Partial<Modifier<any>>> = [
-      ...(popperOptions?.modifiers || []),
+    const modifiers: Array<Partial<Modifier<any>>> = [
       {
         name: 'offset',
         options: {
@@ -661,21 +659,16 @@ export default function createTippy(
           adaptive: !moveTransition,
         },
       },
+      ...(isDefaultRenderFn(instance.props.render) ? [arrowModifier] : []),
+      ...(popperOptions?.modifiers || []),
       tippyModifier,
-    ].concat(isDefaultRenderFn(instance.props.render) ? [arrowModifier] : []);
+    ];
 
     instance.popperInstance = createPopper(computedReference, popper, {
       ...popperOptions,
       placement,
       onFirstUpdate,
-      modifiers: [
-        mergeModifier(mergeableModifiers, 'offset'),
-        mergeModifier(mergeableModifiers, 'arrow'),
-        mergeModifier(mergeableModifiers, 'preventOverflow'),
-        mergeModifier(mergeableModifiers, 'flip'),
-        mergeModifier(mergeableModifiers, 'computeStyles'),
-        ...mergeableModifiers,
-      ],
+      modifiers,
     });
   }
 
