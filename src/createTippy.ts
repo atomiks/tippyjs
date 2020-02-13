@@ -164,6 +164,7 @@ export default function createTippy(
     ) {
       debouncedOnMouseMove(event);
       doc.addEventListener('mousemove', debouncedOnMouseMove);
+      debouncedOnMouseMove(event);
     }
   });
 
@@ -502,11 +503,11 @@ export default function createTippy(
       .map(popper => {
         const instance = popper._tippy!;
 
-        if (instance.popperInstance) {
+        if (instance.popperInstance && instance.state.currentPlacement) {
           return {
             popperRect: popper.getBoundingClientRect(),
-            basePlacement: getBasePlacement(instance.state.currentPlacement!),
-            offsetData: instance.popperInstance!.state.modifiersData.offset,
+            basePlacement: getBasePlacement(instance.state.currentPlacement),
+            offsetData: instance.popperInstance.state.modifiersData.offset,
             props,
           };
         }
