@@ -159,7 +159,7 @@ const prodConfig = [
 // its evaluation
 const configs = {
   dev: () => ({
-    input: 'test/visual/index.js',
+    input: 'test/visual/tests.js',
     plugins: [
       plugins.babel,
       plugins.json,
@@ -179,7 +179,7 @@ const configs = {
     },
   }),
   test: () => ({
-    input: 'test/visual/index.js',
+    input: 'test/visual/tests.js',
     plugins: [
       plugins.babel,
       plugins.json,
