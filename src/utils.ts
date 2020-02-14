@@ -1,4 +1,3 @@
-import {Modifier} from '@popperjs/core';
 import {Placement, BasePlacement} from './types';
 
 export function hasOwnProperty(obj: object, key: string): boolean {
