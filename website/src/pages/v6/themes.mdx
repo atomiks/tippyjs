@@ -36,8 +36,8 @@ of a tippy element:
 
 <!-- prettier-ignore -->
 ```html
-<div class="tippy-popper">
-  <div class="tippy-tooltip" data-placement="top">
+<div data-tippy-root>
+  <div class="tippy-box" data-placement="top">
     <div class="tippy-content">
       My content
     </div>
@@ -47,17 +47,17 @@ of a tippy element:
 
 A tippy is essentially three nested `div`s.
 
-- `tippy-popper` is the outermost node. It is what Popper.js uses to position
+- `[data-tippy-root]` is the outermost node. It is what Popper uses to position
   the tippy. You don't need to apply any styles to this element.
-- `tippy-tooltip` is the actual tooltip node.
+- `tippy-box` is the actual box node.
 - `tippy-content` is the content node.
 
 Depending on the props supplied, there will exist other elements inside it:
 
 <!-- prettier-ignore -->
 ```html
-<div class="tippy-popper">
-  <div class="tippy-tooltip" data-placement="top">
+<div data-tippy-root>
+  <div class="tippy-box" data-placement="top">
     <div class="tippy-backdrop"></div> <!-- animateFill: true -->
     <div class="tippy-arrow"></div> <!-- arrow: true -->
     <div class="tippy-content">
@@ -69,21 +69,21 @@ Depending on the props supplied, there will exist other elements inside it:
 
 ### Creating a theme
 
-Themes are created by including a class on the `tippy-tooltip` element as part
-of a selector in the form `.tippy-tooltip.x-theme`. Let's demonstrate this by
-creating our own theme called `tomato`:
+Themes are created by including a class on the `tippy-box` element as part of a
+selector in the form `.tippy-box[data-theme~='theme']`. Let's demonstrate this
+by creating our own theme called `tomato`:
 
 ```css
-.tippy-tooltip.tomato-theme {
+.tippy-box[data-theme~='tomato'] {
   background-color: tomato;
   color: yellow;
 }
 ```
 
-To apply the theme, specify a `theme` prop without the `-theme` suffix:
+To apply the theme:
 
 ```js
-tippy('button', {
+tippy(targets, {
   theme: 'tomato'
 });
 ```
@@ -94,6 +94,11 @@ tippy('button', {
   </Tippy>
 </Demo>
 
+> **What is `~=`?**
+>
+> Since `theme` can have multiple names, it allows you to target a single theme
+> inside the space-separated list.
+
 ### Styling the arrow
 
 There are two types of arrows:
@@ -103,21 +108,22 @@ There are two types of arrows:
 
 #### CSS arrow
 
-To style the default CSS arrow, you'll need to target each different base
-placement using the `data-placement` attribute and apply it to the
-`.tippy-arrow` element:
+To style the default CSS arrow, target each different base placement using the
+`data-placement` attribute and apply it to the `.tippy-arrow` element's
+`::before` pseudo-element:
 
+<!-- prettier-ignore -->
 ```css
-.tippy-tooltip.tomato-theme[data-placement^='top'] .tippy-arrow {
+.tippy-box[data-theme~='tomato'][data-placement^='top'] > .tippy-arrow::before {
   border-top-color: tomato;
 }
-.tippy-tooltip.tomato-theme[data-placement^='bottom'] .tippy-arrow {
+.tippy-box[data-theme~='tomato'][data-placement^='bottom'] > .tippy-arrow::before {
   border-bottom-color: tomato;
 }
-.tippy-tooltip.tomato-theme[data-placement^='left'] .tippy-arrow {
+.tippy-box[data-theme~='tomato'][data-placement^='left'] > .tippy-arrow::before {
   border-left-color: tomato;
 }
-.tippy-tooltip.tomato-theme[data-placement^='right'] .tippy-arrow {
+.tippy-box[data-theme~='tomato'][data-placement^='right'] > .tippy-arrow::before {
   border-right-color: tomato;
 }
 ```
@@ -134,7 +140,7 @@ To color an SVG arrow, specify `fill` and target `.tippy-svg-arrow`:
 
 <!-- prettier-ignore -->
 ```css
-.tippy-tooltip.tomato-theme .tippy-svg-arrow {
+.tippy-box[data-theme~='tomato'] > .tippy-svg-arrow {
   fill: tomato;
 }
 ```
@@ -145,7 +151,7 @@ require the CSS arrow's more verbose styles.
 There is a default round arrow SVG shape exported from the package for you to
 use.
 
-#### CDN (iife)
+#### CDN (`umd`)
 
 ```js
 tippy(targets, {
@@ -153,7 +159,7 @@ tippy(targets, {
 });
 ```
 
-#### Node (esm or cjs)
+#### Modules (`esm`)
 
 ```js
 import {roundArrow} from 'tippy.js';
@@ -179,7 +185,7 @@ tippy(targets, {
 This is the easiest technique and works for most cases:
 
 ```css
-.tippy-tooltip.tomato-theme .tippy-arrow {
+.tippy-box[data-theme~='tomato'] > .tippy-arrow::before {
   transform: scale(1.5);
 }
 ```
@@ -190,26 +196,13 @@ If your tippy theme has a `border` (e.g. the included `light-border` theme),
 then the `transform: scale()` technique distorts the border width of the arrow.
 Instead, you will need to change the size of the arrow in pixels directly.
 
-You will also need to change the size of the border pseudo-elements (`::before`
-and `::after`) as well. It's recommended to investigate the CSS of the arrow via
-DevTools.
-
-```css
-.tippy-tooltip.tomato-theme[data-placement^='top'] .tippy-arrow {
-  border-width: 12px 12px 0;
-  border-top-color: tomato;
-}
-
-/* And so on for each placement... */
-```
-
 <Demo>
-  <Tippy theme="tomato scaled-arrow" arrow>
+  <Tippy theme="tomato scaled-arrow">
     <Button>Scaled arrow</Button>
   </Tippy>
 </Demo>
 
-#### Browser DevTools
+### Browser DevTools
 
 It's highly recommended you inspect a tippy element via your browser's DevTools.
 An easy way to do this is to give it `hideOnClick: false` and `trigger: 'click'`
@@ -218,5 +211,3 @@ props so that it stays visible when focus is switched to the DevTools window.
 The tippy element gets appended to the very end of the `<body>`, so you should
 scroll down the elements panel. If `interactive: true`, then the tippy is
 appended to the reference element's parentNode instead.
-
-<Image name="browser-devtools-tippy-element.jpg" />

@@ -1,7 +1,6 @@
 import React from 'react';
 import {MEDIA} from '../components/Framework';
 import {Global, css} from '@emotion/core';
-import theme from './theme';
 
 const MONOSPACE_FONT_STACK = `Menlo, "Dank Mono", Inconsolata, "Operator Mono", Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", "Courier New", Courier, monospace`;
 
@@ -138,7 +137,7 @@ const core = css`
   p,
   li {
     line-height: 1.6;
-    margin-top: 8px;
+    margin-top: 12px;
   }
 
   ul {
@@ -314,7 +313,7 @@ const core = css`
 `;
 
 const tippy = css`
-  .tippy-tooltip.ajax-theme {
+  .tippy-box[data-theme~='ajax'] {
     position: absolute;
     width: 200px;
     padding: 0;
@@ -326,20 +325,21 @@ const tippy = css`
     }
   }
 
-  .tippy-tooltip.tomato-theme[data-placement^='top'] .tippy-arrow {
-    border-top-color: tomato;
-  }
-  .tippy-tooltip.tomato-theme[data-placement^='bottom'] .tippy-arrow {
-    border-bottom-color: tomato;
-  }
-
-  .tippy-tooltip.tomato-theme {
+  .tippy-box[data-theme~='tomato'] {
     font-weight: bold;
     color: yellow;
     background: tomato;
 
-    &[data-animatefill] {
-      background-color: transparent;
+    &[data-placement^='top'] {
+      > .tippy-arrow::before {
+        border-top-color: tomato;
+      }
+    }
+
+    &[data-placement^='bottom'] {
+      > .tippy-arrow::before {
+        border-bottom-color: tomato;
+      }
     }
 
     .tippy-backdrop {
@@ -348,54 +348,44 @@ const tippy = css`
 
     .tippy-svg-arrow {
       fill: tomato;
+      transform: scale(2);
     }
   }
 
-  .tippy-tooltip.scaled-arrow-theme .tippy-arrow {
-    transform: scale(1.5);
+  .tippy-box[data-theme~='scaled-arrow'] > .tippy-arrow::before {
+    transform: scale(1.25);
   }
 
-  .tippy-tooltip.dropdown-theme {
-    text-align: left;
-    font-size: 95%;
-  }
-
-  .tippy-tooltip.crazy-inertia-theme {
-    &[data-inertia][data-state='visible'] {
-      transition-timing-function: cubic-bezier(0.54, 100, 0.2, 0.26);
-    }
-  }
-
-  .tippy-tooltip.large-arrow-theme .tippy-arrow {
+  .tippy-box[data-theme~='large-arrow'] > .tippy-arrow::before {
     transform: scale(1.75);
   }
 
-  .tippy-tooltip.small-arrow-theme .tippy-arrow {
+  .tippy-box[data-theme~='small-arrow'] > .tippy-arrow::before {
     transform: scale(0.75);
   }
 
-  .tippy-tooltip.wide-arrow-theme .tippy-arrow {
+  .tippy-box[data-theme~='wide-arrow'] > .tippy-arrow::before {
     transform: scaleX(1.5);
   }
 
-  .tippy-tooltip.narrow-arrow-theme .tippy-arrow {
+  .tippy-box[data-theme~='narrow-arrow'] > .tippy-arrow::before {
     transform: scale(0.6, 1.2);
   }
 
-  .tippy-tooltip.gradient-theme {
+  .tippy-box[data-theme~='gradient'] {
     background: linear-gradient(130deg, #507bf4, #ff8bcb);
     box-shadow: 0 8px 12px #c9a0ff;
     font-weight: bold;
   }
 
-  .tippy-tooltip.retro-theme {
+  .tippy-box[data-theme~='retro'] {
     background: beige;
     border: 2px solid tomato;
     color: tomato;
     font-weight: bold;
   }
 
-  .tippy-tooltip.forest-theme {
+  .tippy-box[data-theme~='forest'] {
     background: linear-gradient(90deg, #9fe597, #cce581);
     color: #683b33;
     font-weight: bold;
@@ -455,9 +445,8 @@ const prism = css`
   }
 
   code.language-text {
-    border: 1px solid ${theme.border};
-    background: white;
-    color: inherit;
+    background: rgba(69, 0, 179, 0.1);
+    color: #4e1cc7;
     font-weight: bold;
     padding: 0.15em 0.4em;
     border-radius: 0.25em;

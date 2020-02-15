@@ -14,8 +14,7 @@ Methods on instances allow you to control the tippy programmatically. See the
 Programmatically show the tippy at any time:
 
 ```js
-instance.show(); // Default
-instance.show(0); // 0ms transition duration
+instance.show();
 ```
 
 #### hide
@@ -23,8 +22,7 @@ instance.show(0); // 0ms transition duration
 Programmatically hide the tippy at any time:
 
 ```js
-instance.hide(); // Default
-instance.hide(500); // 500ms transition duration
+instance.hide();
 ```
 
 #### disable
@@ -62,6 +60,18 @@ Updating the `content` prop has its own method as a shortcut:
 ```js
 instance.setContent('New content');
 ```
+
+#### unmount
+
+Unmount the tippy from the DOM:
+
+```js
+instance.unmount();
+```
+
+This allows you to integrate spring animation libraries as an alternative to
+CSS. For instance, you'd call this in their `onComplete()` (or equivalent)
+callback.
 
 #### destroy
 
@@ -106,4 +116,4 @@ hideAll({exclude: tippyInstance});
 hideAll({exclude: referenceElement});
 ```
 
-In the CDN (`iife`) version, it's available as `tippy.hideAll()`.
+In the CDN (`umd`) version, it's available as `tippy.hideAll()`.

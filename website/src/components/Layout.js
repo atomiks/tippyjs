@@ -38,7 +38,7 @@ const LinkIcon = styled.a`
   opacity: 0;
   transition: opacity 0.2s;
   width: 32px;
-  top: -12px;
+  top: -10px;
   right: -16px;
   color: #7761d1;
 
@@ -50,11 +50,9 @@ const LinkIcon = styled.a`
 
   ${MEDIA.md} {
     right: initial;
-    left: -0.9em;
-
-    &:focus {
-      width: 20px;
-    }
+    text-align: center;
+    width: 30px;
+    left: -30px;
   }
 `;
 
@@ -80,9 +78,13 @@ class Heading extends React.Component {
   constructor(props) {
     super(props);
 
-    let href = String(this.props.children)
+    let href = []
+      .concat(this.props.children)
+      .filter(child => typeof child === 'string')
+      .join(' ')
       .replace(/[^a-zA-Z0-9]/g, '-')
       .replace(/-+/g, '-')
+      .replace(/-$/g, '')
       .toLowerCase();
 
     // Check for duplicate #s
@@ -136,8 +138,9 @@ const components = {
   Icon,
   a: props => {
     const extendedProps = {...props};
+    const re = /^(\.\.)?[/#]/.test(props.href);
 
-    if (props.href && props.href[0] !== '/') {
+    if (props.href && !re) {
       extendedProps.rel = 'nofollow noreferrer';
       extendedProps.target = '_blank';
     }

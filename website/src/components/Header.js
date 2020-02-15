@@ -88,7 +88,7 @@ export const MenuButton = styled.button`
   position: absolute;
   top: -8px;
   left: 15px;
-  color: inherit;
+  color: rgb(36, 58, 89);
   font-weight: bold;
   border: none;
   background: none;

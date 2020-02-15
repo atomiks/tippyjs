@@ -5,12 +5,7 @@ import {css} from '@emotion/core';
 import {ChevronDown} from 'react-feather';
 import {Location} from '@reach/router';
 import {MEDIA, Link, Button} from './Framework';
-import {
-  sortActivePages,
-  getVersionFromPath,
-  CURRENT_MAJOR,
-  HOME_PATHS,
-} from '../utils';
+import {sortActivePages, getVersionFromPath} from '../utils';
 import X from 'react-feather/dist/icons/x';
 import ElasticScroll from './ElasticScroll';
 import Tippy from './Tippy';
@@ -133,17 +128,6 @@ const Li = styled.li`
   }
 `;
 
-function shouldShowLink(path, currentPath) {
-  const version = getVersionFromPath(path);
-
-  // Default to latest docs
-  if (HOME_PATHS.includes(currentPath)) {
-    return path.includes(CURRENT_MAJOR);
-  }
-
-  return currentPath.includes(version);
-}
-
 class Nav extends Component {
   state = {
     isMounted: false,
@@ -218,14 +202,14 @@ class Nav extends Component {
                   <Tippy
                     theme="light"
                     placement="bottom-start"
-                    trigger="mousedown focus"
-                    hideOnClick={'toggle'}
+                    trigger="mouseenter click"
                     interactive={true}
                     arrow={false}
-                    distance={5}
+                    offset={[0, 5]}
                     duration={[200, 100]}
                     css={css`
                       font-size: 16px;
+                      padding: 8px;
                     `}
                     content={
                       <ul
@@ -260,24 +244,15 @@ class Nav extends Component {
                 <StaticQuery
                   query={allMdxQuery}
                   render={data => {
-                    return sortActivePages(data.allMdx.edges)
-                      .filter(
-                        ({node}) =>
-                          shouldShowLink(
-                            node.frontmatter.path,
-                            location.pathname,
-                          ) ||
-                          (HOME_PATHS.includes(node.frontmatter.path) &&
-                            getVersionFromPath(location.pathname) ===
-                              CURRENT_MAJOR),
-                      )
-                      .map(({node}) => (
+                    return sortActivePages(data.allMdx.edges, location).map(
+                      ({node}) => (
                         <ListItem key={node.frontmatter.path}>
                           <Link to={node.frontmatter.path}>
                             {node.frontmatter.title}
                           </Link>
                         </ListItem>
-                      ));
+                      ),
+                    );
                   }}
                 />
               </List>

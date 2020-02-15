@@ -1,7 +1,7 @@
 ---
 title: Addons
 path: /v6/addons/
-index: 13
+index: 12
 ---
 
 Addons are external functions that control or create many different Tippy
@@ -44,7 +44,7 @@ delegate('#parent', {
 });
 ```
 
-In the CDN (`iife`) version, it's available as `tippy.delegate()`
+In the CDN (`umd`) version, it's available as `tippy.delegate()`
 
 #### Return type
 
@@ -111,47 +111,16 @@ const tippyInstances = tippy('button');
 const singleton = createSingleton(tippyInstances, {delay: 1000});
 ```
 
-In the CDN (`iife`) version, it's available as `tippy.createSingleton()`
+In the CDN (`umd`) version, it's available as `tippy.createSingleton()`
 
 #### Smooth transitions
 
-Utilize the `updateDuration` prop, which is the transition duration between
-position updates of the tippy element:
+Utilize the `moveTransition` prop, which is the transition between moves
+(position updates) of the tippy element:
 
 ```js
 const singleton = createSingleton(tippyInstances, {
   delay: 1000,
-  updateDuration: 500
-});
-```
-
-> **Note**
->
-> Enabling transitions may cause overflow issues if the tippy content is near
-> the right/bottom edge of a boundary (e.g. window) and the tippy content
-> changes from small to large. This is because of the transition causing the
-> tippy to expand the boundary, making Popper.js think it will fit.
-
-To solve this, constrain the tippy to the viewport:
-
-```js
-createSingleton(instances, {
-  boundary: 'viewport'
-});
-```
-
-#### Timing function
-
-The `transition-timing-function` by default is `easeOutQuint`. Usually this
-looks nice, but you can change this (to add an inertial slingshot effect for
-example) like so:
-
-```js
-const singleton = createSingleton(tippyInstances, {
-  updateDuration: 500,
-  onCreate({popper}) {
-    // Any easing function you want.
-    popper.style.transitionTimingFunction = 'cubic-bezier(...)';
-  }
+  moveTransition: 'transform 0.2s ease-out'
 });
 ```

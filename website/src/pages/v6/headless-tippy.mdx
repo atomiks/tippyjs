@@ -1,0 +1,51 @@
+---
+title: Headless Tippy
+path: /v6/headless-tippy/
+index: 16
+---
+
+"Headless Tippy" refers to Tippy without any of the default element rendering or
+CSS. This allows you to create your own element from scratch and use Tippy for
+its logic only.
+
+This means all props marked with the R symbol in [All Props](../all-props/) no
+longer "work" by default, since it's your responsibility to create these
+features.
+
+### Usage
+
+```js
+import tippy from 'tippy.js/dist/tippy-headless.esm.js';
+
+tippy(targets, {
+  content: 'Hello!',
+  render(props) {
+    const popper = document.createElement('div');
+    popper.className = 'my-custom-class';
+    popper.textContent = props.content;
+
+    function update(prevProps, nextProps) {
+      if (prevProps.content !== nextProps.content) {
+        popper.textContent = nextProps.content;
+      }
+    }
+
+    // Return an object with two properties: `popper` (the root popper element),
+    // and an `update` function whenever .setProps() or .setContent() is called
+    return {
+      popper,
+      update
+    };
+  }
+});
+```
+
+> **Mutations**
+>
+> Two mutations are done to your popper element by Tippy:
+>
+> - `id` attribute is set on it
+> - `data-tippy-root` attribute is set on it
+>
+> This has no effect on libraries/frameworks like React or Vue, provided you
+> don't specify these attributes.

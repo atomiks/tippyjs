@@ -107,16 +107,16 @@ animations (e.g. `animate.css`):
 ```js
 tippy('button', {
   onMount(instance) {
-    const {tooltip} = instance.popperChildren;
+    const box = instance.popper.firstElementChild;
     requestAnimationFrame(() => {
-      tooltip.classList.add('animated');
-      tooltip.classList.add('wobble');
+      box.classList.add('animated');
+      box.classList.add('wobble');
     });
   },
   onHidden(instance) {
-    const {tooltip} = instance.popperChildren;
-    tooltip.classList.remove('animated');
-    tooltip.classList.remove('wobble');
+    const box = instance.popper.firstElementChild;
+    box.classList.remove('animated');
+    box.classList.remove('wobble');
   }
 });
 ```
@@ -124,6 +124,7 @@ tippy('button', {
 You can also use `@keyframes` and add the `animation` property to your animation
 selector too.
 
+<!--
 ### Dimensions transition
 
 While a tippy is showing, the content inside of it may change. How do you
@@ -145,3 +146,4 @@ View the [CodePen demo](https://codepen.io/atomiks/pen/LgjMbW).
 
 Code for fully dynamic transitions is still being developed and it is highly
 experimental at this stage. The documentation will be updated once it's ready.
+-->

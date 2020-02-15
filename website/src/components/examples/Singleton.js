@@ -5,7 +5,6 @@ import {Button} from '../Framework';
 const array = Array(4).fill();
 
 function Singleton({group, transition}) {
-  const updateDuration = transition ? 300 : 0;
   const delay = transition ? [100, 500] : 500;
 
   const children = array.map((_, i) => (
@@ -18,8 +17,9 @@ function Singleton({group, transition}) {
     children
   ) : (
     <TippySingleton
-      updateDuration={updateDuration}
-      flipOnUpdate={true}
+      moveTransition={
+        transition ? 'transform 0.45s cubic-bezier(0.23, 1, 0.32, 1)' : ''
+      }
       delay={delay}
     >
       {children}

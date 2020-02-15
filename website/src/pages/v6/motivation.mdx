@@ -26,7 +26,7 @@ Both of these are called a "tippy" when using Tippy.js!
 
 ### Tippy.js
 
-**Size: 5.5 KB (core)** (including Popper: 12.8 KB)
+**Size: 4.5 kB minzip (core)** (including Popper: 10.5 kB)
 
 > **Note**
 >
@@ -40,25 +40,11 @@ But, how does Tippy compare to other solutions?
 
 ### Comparison with Popper.js
 
-**Size: 7.3 KB**
+**Size: 6 kB minzip** (full)
 
 Popper.js is a positioning engine, not a tooltip library. Popper's only goal is
 to position an absolutely positioned element (the tooltip) near another element
 (the reference).
-
-Since the element is absolutely positioned, naively centering it above the
-reference element can cause it to:
-
-- **Overflow the boundary** (viewport, window, scrollParent) and therefore get
-  cut off
-- **Overlap its reference element (due to overflow prevention)**, so it should
-  flip to the opposite side
-- **Detach from the reference element** if inside a scrolling container
-
-Popper solves all of these problems. The expected logic to do this is very
-complex, so this is effectively a "baseline" library if you want to even use
-popper elements (tooltips, popovers, dropdowns) in your app in the first place
-without them having poor UX.
 
 If you want to build the appearance and behavior of your popper elements from
 scratch, this is a fantastic library. If you want "out of the box" (abstracted)
@@ -68,15 +54,16 @@ Tippy takes advantage of Popper as a dependency, so you can use them together
 without incurring additional cost:
 
 ```js
-import Popper from 'popper.js';
+import {createPopper} from '@popperjs/core';
 import tippy from 'tippy.js';
 ```
 
-If you're using the CDN, the `Popper` constructor will already be available.
+If you're using the CDN, the `Popper.createPopper()` constructor will already be
+available.
 
 ### Comparison with CSS tooltip libraries like Microtip or Balloon.css
 
-**Size: 1 KB**
+**Size: 1 kB minzip**
 
 CSS tooltips can be tiny in size, but come with some drawbacks:
 
@@ -89,7 +76,7 @@ CSS tooltips can be tiny in size, but come with some drawbacks:
 
 ### Comparison with Tooltipster
 
-**Size: 10 KB** (including jQuery: 40 KB)
+**Size: 10 kB minzip** (including jQuery: 40 kB)
 
 Tooltipster is a fantastic library with very similar functionality, but requires
 a jQuery dependency, unlike Tippy. To many people these days, this is a

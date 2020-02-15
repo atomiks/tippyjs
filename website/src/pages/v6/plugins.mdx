@@ -1,7 +1,7 @@
 ---
 title: Plugins
 path: /v6/plugins/
-index: 14
+index: 13
 ---
 
 Plugins are an extensible way to add functionality to tippy instances. By
@@ -12,29 +12,14 @@ plugin are not burdened with its bundle size cost.
 
 These plugins are exported by the package:
 
-- `animateFill` <Emoji emoji="🖌️" />
+- `animateFill`
 - `followCursor`
 - `inlinePositioning`
 - `sticky`
 
-<Emoji emoji="🖌️" />
-Requires
-importing
-the
-following
-CSS
-stylesheets
-to
-work:
-
-```js
-import 'tippy.js/dist/backdrop.css';
-import 'tippy.js/animations/shift-away.css';
-```
-
 ### Usage
 
-#### CDN (iife)
+#### CDN (umd)
 
 Included plugins (part of the [All Props](/all-props/) table) will work as
 normal.
@@ -45,7 +30,10 @@ tippy(targets, {
 });
 ```
 
-#### Node (esm or cjs)
+#### Modules (esm)
+
+Modules have the benefit of tree-shaking, so explicitly importing the plugin is
+required:
 
 ```js
 import tippy, {followCursor} from 'tippy.js';
@@ -76,8 +64,7 @@ const plugin = {
 };
 ```
 
-The plugin's function `fn` returns an object of
-[lifecycle hooks](/lifecycle-hooks/).
+The plugin's function `fn` returns an object of lifecycle hooks.
 
 Here's an example of a plugin that causes a popper to hide if no elements within
 it are in focus (for interactivity):

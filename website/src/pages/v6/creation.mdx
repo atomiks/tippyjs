@@ -35,20 +35,6 @@ Tippy will create tooltips for elements even if you forget to give them content,
 which creates an odd shape with no content, so ensure your CSS selector is
 specific enough to guarantee their content.
 
-### Content types
-
-Plain text and HTML (string or element) are allowed.
-
-If you're passing unknown user data to `content`, disable HTML for safety,
-unless explicitly sanitizing it:
-
-```js
-tippy('#singleElement', {
-  content: unsafeUserData,
-  allowHTML: false
-});
-```
-
 ### Target types
 
 The first argument you pass to `tippy()` is the targets you want to give
@@ -77,7 +63,6 @@ If an element is disabled, you will need to use a wrapper element (`<span>` or
 aren't interactive, meaning users cannot focus, hover, or click them to trigger
 a tippy.
 
-<!-- prettier-ignore -->
 ```html
 <!-- Won't work! -->
 <button data-tippy-content="Tooltip" disabled>Text</button>
@@ -90,16 +75,3 @@ a tippy.
 
 Please note that this has accessibility concerns and should be avoided if
 possible.
-
-### SVG in IE11
-
-If you need to support SVG elements in IE11, you will need to include a polyfill
-for `SVGElement.prototype.contains`.
-
-The polyfill is small:
-
-```js
-if (!SVGElement.prototype.contains) {
-  SVGElement.prototype.contains = HTMLDivElement.prototype.contains;
-}
-```

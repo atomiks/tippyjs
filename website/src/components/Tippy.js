@@ -1,6 +1,12 @@
 import React, {forwardRef} from 'react';
 import Tippy, {TippySingleton, tippy} from '@tippy.js/react';
-import {roundArrow, followCursor, animateFill} from 'tippy.js';
+import {
+  roundArrow,
+  followCursor,
+  animateFill,
+  inlinePositioning,
+  sticky,
+} from 'tippy.js';
 
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/backdrop.css';
@@ -32,7 +38,13 @@ export default forwardRef(({...props}, ref) => {
   return (
     <Tippy
       content="I'm a Tippy tooltip!"
-      plugins={[followCursor, animateFill, ...(props.plugins || [])]}
+      plugins={[
+        followCursor,
+        animateFill,
+        inlinePositioning,
+        sticky,
+        ...(props.plugins || []),
+      ]}
       {...props}
       ref={ref}
     />

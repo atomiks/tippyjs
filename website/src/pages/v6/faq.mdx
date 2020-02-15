@@ -1,7 +1,7 @@
 ---
 title: FAQ
 path: /v6/faq/
-index: 16
+index: 15
 ---
 
 ### What syntax theme is used on this website?
@@ -24,8 +24,8 @@ bottom of the page, like so:
     <button>Text</button>
 
     <!-- Very end of the body -->
-    <script src="https://unpkg.com/popper.js@1"></script>
-    <script src="https://unpkg.com/tippy.js@5"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
     <script>
       tippy('button', {content: 'tooltip'});
     </script>
@@ -38,10 +38,23 @@ bottom of the page, like so:
 When using `interactive: true`, the tippy may be invisible or appear cut off if
 your reference element is in a container with:
 
-- `position` (e.g. fixed, absolute, sticky)
-- `overflow: hidden`
+- CSS `position`
+- CSS `overflow`
 
-To fix add the following prop (recommended):
+There are a couple of solutions.
+
+1. Specify an `appendTo` element outside of the clipping container context. This
+   requires a focus management solution usually.
+
+```js
+tippy(targets, {
+  // ...
+  appendTo: document.body
+});
+```
+
+2. Use `strategy: "fixed"` (this has some quirks on some browsers like Safari
+   regarding updating the position on scroll), so avoid it if possible.
 
 ```js
 tippy(targets, {
@@ -51,17 +64,6 @@ tippy(targets, {
   }
 });
 ```
-
-Or, if the above causes issues:
-
-```js
-tippy(targets, {
-  // ...
-  appendTo: document.body
-});
-```
-
-⚠️ For the latter, you need to be employing focus management for accessibility.
 
 ### I'm getting Uncaught ReferenceError: process is not defined
 
@@ -88,10 +90,10 @@ Tools like `create-react-app` and `Parcel` bundler handle this automatically.
 #### Rollup
 
 Install the
-[`replace plugin`](https://www.npmjs.com/package/rollup-plugin-replace).
+[`replace plugin`](https://www.npmjs.com/package/@rollup/plugin-replace).
 
 ```js
-import replace from 'rollup-plugin-replace';
+import replace from '@rollup/plugin-replace';
 
 export default {
   // ...
@@ -116,21 +118,7 @@ For brevity, this documentation uses `import` syntax and assumes a module
 bundler environment. If you're using the CDN version, then you'll be using
 `<link>` tags to import separate CSS stylesheets.
 
-[See the example here](/getting-started/#optional-extra-imports).
-
-### What are those "iife", "esm" and "cjs" initialisms?
-
-They represent JavaScript formats. You don't need to know how they work, just
-which one you're using:
-
-| Initialism |                Full Name                | Usage                                          | Tree-Shaking?              |
-| ---------- | :-------------------------------------: | ---------------------------------------------- | -------------------------- |
-| `iife`     | Immediately Invoked Function Expression | Used via script tags in the browser (CDN)      | No                         |
-| `esm`      |            ECMAScript Module            | Used via `import` syntax in module bundlers    | Yes                        |
-| `cjs`      |             CommonJS Module             | Used via `require()` syntax in module bundlers | Only in `Parcel` currently |
-
-Using `tippy.js` via the `esm` format is the most recommended way, since you get
-the benefits of tree-shaking in all bundlers.
+[See the example here](../getting-started/#optional-extra-imports).
 
 ### What global side effects are there?
 
@@ -171,7 +159,7 @@ also set `hideOnClick: false`.
 ### Changing data-tippy-\* attributes does not update the tooltip
 
 Updating the data-tippy-\* attribute on an element will currently not update the
-tooltip. You must use the [`setProps()` method](/methods/#setprops) on a Tippy
+tooltip. You must use the [`setProps()` method](../methods/#setprops) on a Tippy
 instance.
 
 For example, let's say you want to update the `theme` for tooltips when changing

@@ -7,6 +7,7 @@ import ArrowRight from 'react-feather/dist/icons/arrow-right';
 import ArrowLeft from 'react-feather/dist/icons/arrow-left';
 import theme from '../css/theme';
 import {css} from '@emotion/core';
+import {Location} from '@reach/router';
 
 const NavButtonsContainer = styled.div`
   margin-top: 64px;
@@ -137,33 +138,45 @@ function NavButtons({next}) {
   return (
     <NavButtonsContainer>
       <Container>
-        <StaticQuery
-          query={allMdxQuery}
-          render={data => {
-            const links = sortActivePages(data.allMdx.edges).map(
-              ({node}) => node,
-            );
-            const nextLink = links[next];
-            const prevLink = next > 1 ? links[next - 2] : null;
+        <Location>
+          {({location}) => (
+            <StaticQuery
+              query={allMdxQuery}
+              render={data => {
+                const links = sortActivePages(data.allMdx.edges, location).map(
+                  ({node}) => node,
+                );
+                const nextLink = links[next];
+                const prevLink = next > 1 ? links[next - 2] : null;
 
-            return (
-              <NavButtonFlex>
-                {prevLink && (
-                  <NavButton to={prevLink.frontmatter.path} data-prev>
-                    <ArrowLeft aria-label="Previous" css={arrowCss} data-prev />{' '}
-                    {prevLink.frontmatter.title}
-                  </NavButton>
-                )}
-                {nextLink && (
-                  <NavButton to={nextLink.frontmatter.path} data-next>
-                    {nextLink.frontmatter.title}{' '}
-                    <ArrowRight aria-label="Next" css={arrowCss} data-next />
-                  </NavButton>
-                )}
-              </NavButtonFlex>
-            );
-          }}
-        />
+                return (
+                  <NavButtonFlex>
+                    {prevLink && (
+                      <NavButton to={prevLink.frontmatter.path} data-prev>
+                        <ArrowLeft
+                          aria-label="Previous"
+                          css={arrowCss}
+                          data-prev
+                        />{' '}
+                        {prevLink.frontmatter.title}
+                      </NavButton>
+                    )}
+                    {nextLink && (
+                      <NavButton to={nextLink.frontmatter.path} data-next>
+                        {nextLink.frontmatter.title}{' '}
+                        <ArrowRight
+                          aria-label="Next"
+                          css={arrowCss}
+                          data-next
+                        />
+                      </NavButton>
+                    )}
+                  </NavButtonFlex>
+                );
+              }}
+            />
+          )}
+        </Location>
       </Container>
     </NavButtonsContainer>
   );
