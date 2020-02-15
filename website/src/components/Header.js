@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import styled from '@emotion/styled';
 import {css, keyframes} from '@emotion/core';
+import {Location} from '@reach/router';
 import TippyLogo from '../images/logo.svg';
 import {MEDIA, Container, Flex, ExternalLink} from './Framework';
 import GitHub from 'react-feather/dist/icons/github';
 import Menu from 'react-feather/dist/icons/menu';
 import TextGradient from './TextGradient';
 import {version} from '../../../package.json';
+import {Link} from 'gatsby';
+import {getVersionFromPath, CURRENT_MAJOR} from '../utils';
 
 // Firefox needs `rotate()` for it to be smooth...
 const hover = keyframes`
@@ -113,6 +116,17 @@ const Version = styled.a`
   }
 `;
 
+const OldVersionWarning = styled.div`
+  position: relative;
+  background: #fff5c5;
+  color: #333;
+  z-index: 2;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 16px;
+  font-weight: bold;
+`;
+
 const svgStyles = css`
   margin: -16px 0 -32px;
 
@@ -146,41 +160,60 @@ const menuStyles = {
 class Header extends Component {
   render() {
     const {isNavOpen, openNav} = this.props;
+
     return (
-      <HeaderRoot>
-        <Container>
-          <Logo src={TippyLogo} draggable="false" alt="Tippy Logo" />
-          <Title>
-            <TextGradient>Tippy.js</TextGradient>
-          </Title>
-          <Flex justify="center">
-            <ButtonLink href="https://github.com/atomiks/tippyjs">
-              <GitHub style={githubStyles} />
-              View on GitHub
-            </ButtonLink>
-          </Flex>
-          <Version href="https://github.com/atomiks/tippyjs/releases">
-            v{version}
-          </Version>
-          <MenuButton
-            aria-label="Menu"
-            aria-expanded={isNavOpen ? 'true' : 'false'}
-            onClick={openNav}
+      <>
+        <Location>
+          {({location}) =>
+            getVersionFromPath(location.pathname) !== CURRENT_MAJOR && (
+              <OldVersionWarning>
+                <Container>
+                  <span role="img" aria-label="alert">
+                    ❗
+                  </span>{' '}
+                  You're viewing the previous major version's docs.{' '}
+                  <Link to="/">Click here</Link> to view the latest version.
+                </Container>
+              </OldVersionWarning>
+            )
+          }
+        </Location>
+
+        <HeaderRoot>
+          <Container>
+            <Logo src={TippyLogo} draggable="false" alt="Tippy Logo" />
+            <Title>
+              <TextGradient>Tippy.js</TextGradient>
+            </Title>
+            <Flex justify="center">
+              <ButtonLink href="https://github.com/atomiks/tippyjs">
+                <GitHub style={githubStyles} />
+                View on GitHub
+              </ButtonLink>
+            </Flex>
+            <Version href="https://github.com/atomiks/tippyjs/releases">
+              Currently v{version}
+            </Version>
+            <MenuButton
+              aria-label="Menu"
+              aria-expanded={isNavOpen ? 'true' : 'false'}
+              onClick={openNav}
+            >
+              <Menu style={menuStyles} />
+            </MenuButton>
+          </Container>
+          <svg
+            css={svgStyles}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1920 240"
+            fill="white"
           >
-            <Menu style={menuStyles} />
-          </MenuButton>
-        </Container>
-        <svg
-          css={svgStyles}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1920 240"
-          fill="white"
-        >
-          <g>
-            <path d="M1920,144.5l0,95.5l-1920,0l0,-65.5c196,-36 452.146,-15.726 657.5,8.5c229.698,27.098 870,57 1262.5,-38.5Z" />
-          </g>
-        </svg>
-      </HeaderRoot>
+            <g>
+              <path d="M1920,144.5l0,95.5l-1920,0l0,-65.5c196,-36 452.146,-15.726 657.5,8.5c229.698,27.098 870,57 1262.5,-38.5Z" />
+            </g>
+          </svg>
+        </HeaderRoot>
+      </>
     );
   }
 }

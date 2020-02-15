@@ -1,10 +1,19 @@
 import React, {Component, createRef} from 'react';
 import styled from '@emotion/styled';
-import {MEDIA, Link} from './Framework';
 import {StaticQuery, graphql} from 'gatsby';
-import {sortActivePages} from '../utils';
+import {css} from '@emotion/core';
+import {ChevronDown} from 'react-feather';
+import {Location} from '@reach/router';
+import {MEDIA, Link, Button} from './Framework';
+import {
+  sortActivePages,
+  getVersionFromPath,
+  CURRENT_MAJOR,
+  HOME_PATHS,
+} from '../utils';
 import X from 'react-feather/dist/icons/x';
 import ElasticScroll from './ElasticScroll';
+import Tippy from './Tippy';
 
 const Navbar = styled.nav`
   display: ${props => (props.isMounted ? 'block' : 'none')};
@@ -48,10 +57,6 @@ const List = styled.ul`
 
 const ListItem = styled.li`
   margin: 0;
-
-  &:first-of-type {
-    padding-top: 32px;
-  }
 
   &:last-of-type {
     padding-bottom: 32px;
@@ -109,6 +114,36 @@ const XIcon = styled(X)`
   width: 32px;
 `;
 
+const VersionButton = styled(Button)`
+  border: none;
+  margin: 15px 25px;
+
+  &:hover {
+    background-color: white;
+    color: #555;
+  }
+`;
+
+const Li = styled.li`
+  list-style: none;
+
+  &:not(:last-of-type) {
+    margin-bottom: 5px;
+    margin-top: 0;
+  }
+`;
+
+function shouldShowLink(path, currentPath) {
+  const version = getVersionFromPath(path);
+
+  // Default to latest docs
+  if (HOME_PATHS.includes(currentPath)) {
+    return path.includes(CURRENT_MAJOR);
+  }
+
+  return currentPath.includes(version);
+}
+
 class Nav extends Component {
   state = {
     isMounted: false,
@@ -162,35 +197,94 @@ class Nav extends Component {
   render() {
     const {isOpen} = this.props;
     const {isMounted, transitions} = this.state;
+
     return (
-      <ElasticScroll>
-        <Navbar
-          id="main-nav"
-          ref={this.ref}
-          style={{transition: transitions ? '' : 'none'}}
-          isOpen={isOpen}
-          isMounted={isMounted}
-          onBlur={this.handleBlur}
-        >
-          <XButton aria-label="Close Menu" onClick={this.handleClose}>
-            <XIcon />
-          </XButton>
-          <List>
-            <StaticQuery
-              query={allMdxQuery}
-              render={data => {
-                return sortActivePages(data.allMdx.edges).map(({node}) => (
-                  <ListItem key={node.frontmatter.path}>
-                    <Link to={node.frontmatter.path}>
-                      {node.frontmatter.title}
-                    </Link>
-                  </ListItem>
-                ));
-              }}
-            />
-          </List>
-        </Navbar>
-      </ElasticScroll>
+      <Location>
+        {({location}) => (
+          <ElasticScroll>
+            <Navbar
+              id="main-nav"
+              ref={this.ref}
+              style={{transition: transitions ? '' : 'none'}}
+              isOpen={isOpen}
+              isMounted={isMounted}
+              onBlur={this.handleBlur}
+            >
+              <XButton aria-label="Close Menu" onClick={this.handleClose}>
+                <XIcon />
+              </XButton>
+              <List>
+                <div>
+                  <Tippy
+                    theme="light"
+                    placement="bottom-start"
+                    trigger="mousedown focus"
+                    hideOnClick={'toggle'}
+                    interactive={true}
+                    arrow={false}
+                    distance={5}
+                    duration={[200, 100]}
+                    css={css`
+                      font-size: 16px;
+                    `}
+                    content={
+                      <ul
+                        css={css`
+                          padding-left: 0;
+                        `}
+                      >
+                        <Li>
+                          <Link to="/v6/getting-started/">
+                            v6.x docs (latest)
+                          </Link>
+                        </Li>
+                        <Li>
+                          <Link to="/v5/getting-started/">v5.x docs</Link>
+                        </Li>
+                      </ul>
+                    }
+                  >
+                    <VersionButton>
+                      {getVersionFromPath(location.pathname)}.x{' '}
+                      <ChevronDown
+                        size={20}
+                        style={{
+                          position: 'relative',
+                          verticalAlign: -5,
+                          top: 1,
+                        }}
+                      />
+                    </VersionButton>
+                  </Tippy>
+                </div>
+                <StaticQuery
+                  query={allMdxQuery}
+                  render={data => {
+                    return sortActivePages(data.allMdx.edges)
+                      .filter(
+                        ({node}) =>
+                          shouldShowLink(
+                            node.frontmatter.path,
+                            location.pathname,
+                          ) ||
+                          (HOME_PATHS.includes(node.frontmatter.path) &&
+                            getVersionFromPath(location.pathname) ===
+                              CURRENT_MAJOR),
+                      )
+                      .map(({node}) => (
+                        <ListItem key={node.frontmatter.path}>
+                          <Link to={node.frontmatter.path}>
+                            {node.frontmatter.title}
+                          </Link>
+                        </ListItem>
+                      ));
+                  }}
+                />
+              </List>
+            </Navbar>
+          </ElasticScroll>
+        )}
+      </Location>
     );
   }
 }
