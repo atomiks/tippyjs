@@ -22,7 +22,6 @@ import SEO from './SEO';
 import Image from './Image';
 import Icon from './Icon';
 import CSS from '../css';
-import slug from 'url-slug';
 import elasticScroll from 'elastic-scroll-polyfill';
 
 import 'normalize.css';
@@ -81,7 +80,10 @@ class Heading extends React.Component {
   constructor(props) {
     super(props);
 
-    let href = slug(String(this.props.children));
+    let href = String(this.props.children)
+      .replace(/[^a-zA-Z0-9]/g, '-')
+      .replace(/-+/g, '-')
+      .toLowerCase();
 
     // Check for duplicate #s
     if (hrefs.indexOf(href) !== -1) {
