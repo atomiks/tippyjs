@@ -93,13 +93,18 @@ const followCursor: FollowCursor = {
               y = rect.top + relativeY;
             }
 
+            const top = followCursor === 'horizontal' ? rect.top : y;
+            const right = followCursor === 'vertical' ? rect.right : x;
+            const bottom = followCursor === 'horizontal' ? rect.bottom : y;
+            const left = followCursor === 'vertical' ? rect.left : x;
+
             return {
-              width: 0,
-              height: 0,
-              top: followCursor === 'horizontal' ? rect.top : y,
-              bottom: followCursor === 'horizontal' ? rect.bottom : y,
-              left: followCursor === 'vertical' ? rect.left : x,
-              right: followCursor === 'vertical' ? rect.right : x,
+              width: right - left,
+              height: bottom - top,
+              top,
+              right,
+              bottom,
+              left,
             };
           },
         });
