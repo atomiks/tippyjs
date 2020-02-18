@@ -131,8 +131,8 @@ describe('validateProps', () => {
           "is not a valid prop. You may have spelled it incorrectly, or if it's",
           'a plugin, forgot to pass it in an array as props.plugins.',
           '\n\n',
-          'All props: https://atomiks.github.io/tippyjs/all-props/\n',
-          'Plugins: https://atomiks.github.io/tippyjs/plugins/',
+          'All props: https://atomiks.github.io/tippyjs/v6/all-props/\n',
+          'Plugins: https://atomiks.github.io/tippyjs/v6/plugins/',
         ].join(' '),
       ),
     );
@@ -150,8 +150,8 @@ describe('validateProps', () => {
           "is not a valid prop. You may have spelled it incorrectly, or if it's",
           'a plugin, forgot to pass it in an array as props.plugins.',
           '\n\n',
-          'All props: https://atomiks.github.io/tippyjs/all-props/\n',
-          'Plugins: https://atomiks.github.io/tippyjs/plugins/',
+          'All props: https://atomiks.github.io/tippyjs/v6/all-props/\n',
+          'Plugins: https://atomiks.github.io/tippyjs/v6/plugins/',
         ].join(' '),
       ),
     );
@@ -174,8 +174,8 @@ describe('validateProps', () => {
           "is not a valid prop. You may have spelled it incorrectly, or if it's",
           'a plugin, forgot to pass it in an array as props.plugins.',
           '\n\n',
-          'All props: https://atomiks.github.io/tippyjs/all-props/\n',
-          'Plugins: https://atomiks.github.io/tippyjs/plugins/',
+          'All props: https://atomiks.github.io/tippyjs/v6/all-props/\n',
+          'Plugins: https://atomiks.github.io/tippyjs/v6/plugins/',
         ].join(' '),
       ),
     );

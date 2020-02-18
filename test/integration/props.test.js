@@ -519,7 +519,7 @@ describe('interactive', () => {
             'assumes you are using a focus management solution to handle',
             'keyboard navigation.',
             '\n\n',
-            'See: https://atomiks.github.io/tippyjs/accessibility/#interactivity',
+            'See: https://atomiks.github.io/tippyjs/v6/accessibility/#interactivity',
           ].join(' '),
         ),
       );
