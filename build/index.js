@@ -1,3 +1,6 @@
+// This file builds the CSS dist files. The main `rollup.config.js` builds the
+// JS dist files.
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require('fs');
 const {rollup} = require('rollup');

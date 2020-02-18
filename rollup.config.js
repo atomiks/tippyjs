@@ -129,7 +129,7 @@ const prodConfig = [
     plugins: pluginConfigs.base,
     external: ['@popperjs/core'],
     output: {
-      file: 'dist/tippy-headless.esm.js',
+      file: 'headless/dist/tippy-headless.esm.js',
       format: 'esm',
       banner,
       sourcemap: true,
@@ -141,7 +141,7 @@ const prodConfig = [
     external: ['@popperjs/core'],
     output: {
       ...commonUMDOutputOptions,
-      file: 'dist/tippy-headless.umd.js',
+      file: 'headless/dist/tippy-headless.umd.js',
     },
   },
   {
@@ -150,7 +150,7 @@ const prodConfig = [
     external: ['@popperjs/core'],
     output: {
       ...commonUMDOutputOptions,
-      file: 'dist/tippy-headless.umd.min.js',
+      file: 'headless/dist/tippy-headless.umd.min.js',
     },
   },
 ];

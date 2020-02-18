@@ -37,7 +37,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=dev rollup -c --watch",
-    "build": "node rollup.css && rollup -c && bundlesize",
+    "build": "node build/index.js && rollup -c && bundlesize",
     "build:visual": "NODE_ENV=test rollup -c",
     "serve": "serve test/visual",
     "test:dom": "jest unit integration --coverage",
@@ -60,7 +60,7 @@
       "maxSize": "10 kB"
     },
     {
-      "path": "dist/tippy-headless.umd.min.js",
+      "path": "headless/dist/tippy-headless.umd.min.js",
       "maxSize": "10 kB"
     },
     {
