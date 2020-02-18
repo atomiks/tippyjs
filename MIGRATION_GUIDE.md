@@ -1,4 +1,271 @@
-# Migration Guide: v4 to v5
+# Migration Guide
+
+- [5.x to 6.x](#5x-to-6x)
+- [4.x to 5.x](#4x-to-5x)
+
+---
+
+# 5.x to 6.x
+
+Popper.js was updated to v2. The `instance.popperInstance` and `popperOptions`
+APIs have changed. You can
+[view its documentation here](https://popper.js.org/docs/v2/).
+
+## Imports
+
+`iife` and `cjs` were replaced with `umd` (Rollup chunking has been removed).
+
+## HTML Content
+
+To protect against XSS by default, `allowHTML` is now `false` by default. If
+you're passing strings of HTML to `content`, you must set `allowHTML: true`.
+
+## Themes
+
+### If you were creating custom themes
+
+<details>
+<summary>View details</summary>
+
+`.tippy-tooltip` has become `.tippy-box`, and theming is done via an attribute
+now, to match the other props.
+
+The following:
+
+```css
+.tippy-tooltip.tomato-theme {
+  background-color: tomato;
+}
+```
+
+Has become:
+
+```css
+.tippy-box[data-theme~='tomato'] {
+  background-color: tomato;
+}
+```
+
+> The `~=` attribute operator allows you to specify mutliple theme names like
+> before with class names.
+
+For `.tippy-arrow`, you'll need to specify its color on the `::before`
+pseudo-element.
+
+The following:
+
+```css
+.tippy-tooltip.tomato-theme[data-placement^='top'] > .tippy-arrow {
+  border-top-color: tomato;
+}
+```
+
+Has become:
+
+```css
+.tippy-box[data-theme~='tomato'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: tomato;
+}
+```
+
+In addition, if you were altering the pixel values, it may need to be adjusted.
+
+</details>
+
+### If you were targeting `.tippy-popper`
+
+<details>
+<summary>View details</summary>
+
+`.tippy-popper` is no longer a selector, and is considered an implementation
+detail for the most part now. `[data-tippy-root]` attribute selector replaces it
+if necessary.
+
+</details>
+
+## Methods
+
+### If you were using `.show()` or `.hide()` with a duration argument
+
+<details>
+<summary>View details</summary>
+
+These no longer take a duration argument. Instead, use
+`.setProps({duration: ...})` before calling them if necessary.
+
+To replicate `.hide(0)`, use `.unmount()`:
+
+```js
+instance.unmount();
+```
+
+</details>
+
+## Props
+
+### If you were using `boundary`
+
+<details>
+<summary>View details</summary>
+
+Often, this was to solve a problem in Popper 1, where you set
+`boundary: "window"`. This is no longer necessary. If you'd like to change it
+anyway, you can set it in `popperOptions`:
+
+```js
+tippy(targets, {
+  popperOptions: {
+    modifiers: [
+      {
+        name: 'preventOverflow',
+        options: {
+          // `boundary` and `rootBoundary` are accepted here
+        },
+      },
+    ],
+  },
+});
+```
+
+</details>
+
+### If you were using `distance` or `offset`
+
+<details>
+<summary>View details</summary>
+
+These have been merged into a single `offset` prop, to match Popper 2's new API.
+
+The following:
+
+```js
+tippy(targets, {
+  offset: 5,
+  distance: 10,
+});
+```
+
+Has become:
+
+```js
+tippy(targets, {
+  offset: [5, 10],
+});
+```
+
+This tuple also directly replaces `offset: "5, 10"`.
+
+</details>
+
+### If you were using `flip`, `flipBehavior`, or `flipOnUpdate`
+
+<details>
+<summary>View details</summary>
+
+All of these have been removed. To configure these, specify them in
+`popperOptions`:
+
+```js
+tippy(targets, {
+  placement: 'bottom',
+  popperOptions: {
+    modifiers: [
+      {
+        name: 'flip',
+        // flip: false
+        enabled: false,
+        options: {
+          // flipBehavior: ['bottom', 'right', 'top']
+          fallbackPlacements: ['right', 'top'],
+        },
+      },
+    ],
+  },
+});
+```
+
+`flipOnUpdate` has no replacement yet. It's always `true`.
+
+</details>
+
+### If you were using `multiple` or relying on its behavior
+
+<details>
+<summary>View details</summary>
+
+Due to static typing issues, it's been removed. Calling `tippy()` again on the
+same element will now always create a new tippy for it. Avoid calling `tippy()`
+multiple times on the same reference if you don't want multiple tippies created
+for it.
+
+</details>
+
+### If you were using `updateDuration`
+
+<details>
+<summary>View details</summary>
+
+It's now `moveTransition`, which is a whole transition string. This allows you
+to specify the easing function.
+
+```js
+tippy(targets, {
+  moveTransition: 'transform 0.2s ease-out',
+});
+```
+
+</details>
+
+### If you were using `lazy`
+
+<details>
+<summary>View details</summary>
+
+It's been removed. The `popperInstance` is now created and destroyed on
+mount/unmount. If you were using this for ReferenceObjects, see below.
+
+The following:
+
+```js
+tippy(targets, {
+  lazy: false,
+  onCreate(instance) {
+    instance.popperInstance.reference = {
+      clientWidth: 0,
+      clientHeight: 0,
+      getBoundingClientRect() {
+        return {
+          // ...
+        };
+      },
+    };
+  },
+});
+```
+
+Has become a single prop:
+
+```js
+tippy(targets, {
+  getReferenceClientRect: () => ({
+    // ...
+  }),
+});
+```
+
+This implements Popper 2's
+[Virtual Elements API](https://popper.js.org/docs/v2/virtual-elements/).
+
+</details>
+
+## IE11
+
+IE11 is not supported by default anymore, but can be polyfilled. View the
+Browser Support page on the documentation for details.
+
+---
+
+# 4.x to 5.x
 
 ### Node
 
@@ -311,7 +578,8 @@ natively focusable elements everywhere possible.
 <details>
 <summary>View details</summary>
 
-Use the `onTrigger` and `onUntrigger` lifecycles and temporarily disable the instance.
+Use the `onTrigger` and `onUntrigger` lifecycles and temporarily disable the
+instance.
 
 ```js
 tippy(targets, {
