@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest a feature for Tippy.js
+about: Suggest a feature
 title: ''
 labels: "\U0001F48E enhancement"
 assignees: ''
