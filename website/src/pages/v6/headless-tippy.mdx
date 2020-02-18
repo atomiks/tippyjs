@@ -19,7 +19,7 @@ import tippy from 'tippy.js/headless';
 
 tippy(targets, {
   content: 'Hello!',
-  render(props) {
+  render({props}) {
     const popper = document.createElement('div');
     popper.className = 'my-custom-class';
     popper.textContent = props.content;
