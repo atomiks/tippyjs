@@ -98,19 +98,3 @@ describe('isReferenceElement', () => {
     expect(DomUtils.isReferenceElement(instance.popper)).toBe(false);
   });
 });
-
-describe('closestCallback', () => {
-  it('works like Element.prototype.closest but uses a callback instead', () => {
-    const ref = h('div', {class: 'parent'});
-    const child = h('div', {class: 'child'});
-
-    ref.append(child);
-
-    expect(
-      DomUtils.closestCallback(ref, node => node.className === 'parent'),
-    ).toBe(ref);
-    expect(
-      DomUtils.closestCallback(child, node => node.className === 'parent'),
-    ).toBe(ref);
-  });
-});

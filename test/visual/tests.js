@@ -93,25 +93,34 @@ tests.inlinePositioning = () => {
 };
 
 tests.followCursor = () => {
-  let interval;
+  const instances = [];
 
-  const [instance] = tippy('#followCursor .reference', {
-    content: Math.random(),
-    followCursor: 'initial',
-    plugins: [followCursor],
-    delay: [100, 10000],
-    appendTo: 'parent',
-    onCreate({setContent}) {
-      interval = setInterval(() => {
-        setContent(Math.random());
-      }, 1000);
-    },
-    onDestroy() {
-      clearInterval(interval);
-    },
+  [true, false, 'vertical', 'horizontal', 'initial'].forEach(option => {
+    let interval;
+
+    const [instance] = tippy(`#followCursor [data-option="${option}"]`, {
+      content: Math.random(),
+      followCursor: option,
+      plugins: [followCursor],
+      delay: [50, 0],
+      duration: 0,
+      appendTo: 'parent',
+      onCreate({setContent}) {
+        interval = setInterval(() => {
+          setContent(Math.random());
+        }, 1000);
+      },
+      onDestroy() {
+        clearInterval(interval);
+      },
+    });
+
+    instances.push(instance);
   });
 
-  return instance.destroy;
+  return () => {
+    instances.forEach(instance => instance.destroy());
+  };
 };
 
 tests.themes = () => {
