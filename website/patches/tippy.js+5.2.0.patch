@@ -137,7 +137,7 @@ index f9a296c..93393dc 100644
 +.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}.tippy-iOS{cursor:pointer!important;-webkit-tap-highlight-color:transparent}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{border-width:8px 8px 0;border-top-color:#333;bottom:-7px;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;border-width:0 8px 8px;border-bottom-color:#333;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:#333;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:#333;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow,.tippy-arrow:before{position:absolute}.tippy-arrow{pointer-events:none;width:16px;height:16px}.tippy-arrow:before{content:"";border-color:transparent;border-style:solid;pointer-events:auto}.tippy-content{padding:5px 9px}
 \ No newline at end of file
 diff --git a/node_modules/tippy.js/dist/tippy.esm.js b/node_modules/tippy.js/dist/tippy.esm.js
-index 2bac78e..70b48bc 100644
+index 2bac78e..1616426 100644
 --- a/node_modules/tippy.js/dist/tippy.esm.js
 +++ b/node_modules/tippy.js/dist/tippy.esm.js
 @@ -1,91 +1,1548 @@
@@ -259,15 +259,10 @@ index 2bac78e..70b48bc 100644
 +    (_console2 = console).error.apply(_console2, getFormattedMessage(message));
 +  }
 +}
- /**
-- * Re-uses a single tippy element for many different tippy instances.
-- * Replaces v4's `tippy.group()`.
++/**
 + * Validates the `targets` value passed to `tippy()`
-  */
- 
--var createSingleton = function createSingleton(tippyInstances, optionalProps,
--/** @deprecated use Props.plugins */
--plugins) {
++ */
++
 +function validateTargets(targets) {
 +  var didPassFalsyValue = !targets;
 +  var didPassPlainObject = Object.prototype.toString.call(targets) === '[object Object]' && !targets.addEventListener;
@@ -522,13 +517,18 @@ index 2bac78e..70b48bc 100644
 +  isTouch: false
 +};
 +var lastMouseMoveTime = 0;
-+/**
+ /**
+- * Re-uses a single tippy element for many different tippy instances.
+- * Replaces v4's `tippy.group()`.
 + * When a `touchstart` event is fired, it's assumed the user is using touch
 + * input. We'll bind a `mousemove` event listener to listen for mouse input in
 + * the future. This way, the `isTouch` property is fully dynamic and will handle
 + * hybrid devices that use a mix of touch + mouse input.
-+ */
-+
+  */
+ 
+-var createSingleton = function createSingleton(tippyInstances, optionalProps,
+-/** @deprecated use Props.plugins */
+-plugins) {
 +function onDocumentTouchStart() {
 +  if (currentInput.isTouch) {
 +    return;
@@ -1185,10 +1185,7 @@ index 2bac78e..70b48bc 100644
 +  }
 +
 +  function isEventListenerStopped(event) {
-+    var supportsTouch = 'ontouchstart' in window;
-+    var isTouchEvent = event.type.indexOf('touch') >= 0;
-+    var isCustomTouch = getIsCustomTouchBehavior();
-+    return supportsTouch && currentInput.isTouch && isCustomTouch && !isTouchEvent || currentInput.isTouch && !isCustomTouch && isTouchEvent;
++    return currentInput.isTouch ? getIsCustomTouchBehavior() !== event.type.indexOf('touch') >= 0 : false;
 +  }
 +
 +  function createPopperInstance() {
@@ -1468,7 +1465,10 @@ index 2bac78e..70b48bc 100644
 +    popper.style.visibility = 'visible';
 +    handleInteractiveStyles();
 +    addDocumentMouseDownListener();
-+    popper.style.transition = 'none';
++
++    if (!instance.state.isMounted) {
++      popper.style.transition = 'none';
++    }
 +
 +    onFirstUpdate = function onFirstUpdate() {
 +      if (!instance.state.isVisible || ignoreOnFirstUpdate) {
