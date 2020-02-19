@@ -3,8 +3,8 @@
  */
 import {navigateToTest, screenshotTest} from '../utils';
 
-function generateSelector(option) {
-  return `#followCursor [data-option="${option}"]`;
+function generateSelector(test) {
+  return `#followCursor [data-test="${test}"]`;
 }
 
 describe('followCursor', () => {
@@ -29,6 +29,20 @@ describe('followCursor', () => {
 
       expect(await screenshotTest(page, 'followCursor')).toMatchImageSnapshot();
     });
+  });
+
+  it('stays at cursor when content changes', async () => {
+    const selector = generateSelector('contentChange');
+    const page = await browser.newPage();
+
+    await page.setViewport({width: 1200, height: 800});
+    await page.goto('http://localhost:5000');
+    await navigateToTest(page, 'followCursor');
+
+    await page.hover(selector);
+    await page.waitFor(150);
+
+    expect(await screenshotTest(page, 'followCursor')).toMatchImageSnapshot();
   });
 
   describe('false', () => {

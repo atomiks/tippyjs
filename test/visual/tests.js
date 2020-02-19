@@ -95,28 +95,39 @@ tests.inlinePositioning = () => {
 tests.followCursor = () => {
   const instances = [];
 
-  [true, false, 'vertical', 'horizontal', 'initial'].forEach(option => {
-    let interval;
+  [true, false, 'vertical', 'horizontal', 'initial', 'contentChange'].forEach(
+    test => {
+      let interval;
 
-    const [instance] = tippy(`#followCursor [data-option="${option}"]`, {
-      content: Math.random(),
-      followCursor: option,
-      plugins: [followCursor],
-      delay: [50, 0],
-      duration: 0,
-      appendTo: 'parent',
-      onCreate({setContent}) {
-        interval = setInterval(() => {
-          setContent(Math.random());
-        }, 1000);
-      },
-      onDestroy() {
-        clearInterval(interval);
-      },
-    });
+      const [instance] = tippy(`#followCursor [data-test="${test}"]`, {
+        content: 'tippy',
+        followCursor: test === 'contentChange' ? true : test,
+        plugins: [followCursor],
+        delay: [50, 0],
+        duration: 0,
+        appendTo: 'parent',
+        ...(test === 'contentChange' && {
+          onCreate({setContent}) {
+            const contentLoop = ['.', '....', '..........'];
+            let index = 0;
 
-    instances.push(instance);
-  });
+            interval = setInterval(() => {
+              setContent(contentLoop[index++]);
+
+              if (index === 3) {
+                clearInterval(interval);
+              }
+            }, 50);
+          },
+          onDestroy() {
+            clearInterval(interval);
+          },
+        }),
+      });
+
+      instances.push(instance);
+    },
+  );
 
   return () => {
     instances.forEach(instance => instance.destroy());
