@@ -69,14 +69,13 @@ $color: #333;
   &[data-inertia][data-state='visible'] {
     transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
   }
+
+  &[data-interactive] > .#{$namespace-prefix}-arrow::before {
+    pointer-events: auto;
+  }
 }
 
 .#{$namespace-prefix}-arrow {
-  &,
-  &::before {
-    position: absolute;
-  }
-
   & {
     pointer-events: none;
     width: $arrow-size;
@@ -85,9 +84,9 @@ $color: #333;
 
   &::before {
     content: '';
+    position: absolute;
     border-color: transparent;
     border-style: solid;
-    pointer-events: auto;
   }
 }
 
