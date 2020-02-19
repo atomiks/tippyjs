@@ -39,15 +39,17 @@ const followCursor: FollowCursor = {
       );
     }
 
-    function resetReference(): void {
-      instance.setProps({getReferenceClientRect: null});
+    function unsetReferenceClientRect(shouldUnset: any): void {
+      if (shouldUnset) {
+        instance.setProps({getReferenceClientRect: null});
+      }
     }
 
     function handleMouseMoveListener(): void {
       if (getIsEnabled()) {
         addListener();
       } else {
-        resetReference();
+        unsetReferenceClientRect(instance.props.followCursor);
       }
     }
 
@@ -116,6 +118,11 @@ const followCursor: FollowCursor = {
     }
 
     return {
+      onAfterUpdate(_, {followCursor}): void {
+        if (followCursor !== undefined && !followCursor) {
+          unsetReferenceClientRect(true);
+        }
+      },
       onMount(): void {
         triggerLastMouseMove();
       },
@@ -153,7 +160,6 @@ const followCursor: FollowCursor = {
       },
       onHidden(): void {
         removeListener();
-        resetReference();
         mouseCoords = null;
       },
     };
