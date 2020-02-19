@@ -926,7 +926,9 @@ export default function createTippy(
     handleInteractiveStyles();
     addDocumentMouseDownListener();
 
-    popper.style.transition = 'none';
+    if (!instance.state.isMounted) {
+      popper.style.transition = 'none';
+    }
 
     onFirstUpdate = (): void => {
       if (!instance.state.isVisible || ignoreOnFirstUpdate) {
