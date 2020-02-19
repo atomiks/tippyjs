@@ -7,6 +7,65 @@ index: 12
 Addons are external functions that control or create many different Tippy
 instances, and can be tree-shaken away by bundlers.
 
+### Singleton
+
+A singleton is a single tippy element that takes the place of an array of
+regular tippy instances.
+
+This allows two things:
+
+- Smooth transitions of the tippy between many different reference element
+  targets
+- Elements with tooltips next to each other that have a `delay` can be "grouped"
+  so they appear to share a timeout, which greatly improves UX
+
+See the [demo](../#singleton) for it in action.
+
+#### Usage
+
+Pass an **array** of tippy instances to the `createSingleton` addon function,
+and a `delay` prop:
+
+```js
+import tippy, {createSingleton} from 'tippy.js';
+
+const tippyInstances = tippy('button');
+const singleton = createSingleton(tippyInstances, {delay: 1000});
+```
+
+In the CDN (`umd`) version, it's available as `tippy.createSingleton()`.
+
+#### Overrides
+
+You may want the singleton instance to have some of its props overridden by the
+individual tippy instances. For example the `placement` or `theme` if you'd like
+to reuse the singleton globally throughout many parts of the application.
+
+You can do this by specifying the prop keys as an array with `overrides`:
+
+```js
+createSingleton(tippyInstances, {
+  placement: 'right',
+  theme: 'spaceship',
+  // The props in the current `tippyInstance` will override the ones above
+  overrides: ['placement', 'theme']
+});
+```
+
+#### Smooth transitions
+
+Utilize the `moveTransition` prop, which is the transition between moves
+(position updates) of the tippy element:
+
+```js
+const singleton = createSingleton(tippyInstances, {
+  delay: 1000,
+  moveTransition: 'transform 0.2s ease-out'
+});
+```
+
+---
+
 ### Event delegation
 
 Event delegation allows you to let a common parent element handle the creation
@@ -82,45 +141,3 @@ delegateInstance.destroy(false);
 
 This addon uses `Element.prototype.closest()`, which is not supported in older
 browsers. You will need to polyfill this method to get full support.
-
----
-
-### Singleton
-
-A singleton is a single tippy element that takes the place of an array of
-regular tippy instances.
-
-This allows two things:
-
-- Smooth transitions of the tippy between many different reference element
-  targets
-- Elements with tooltips next to each other that have a `delay` can be "grouped"
-  so they appear to share a timeout, which greatly improves UX
-
-See the [demo](/#singleton) for it in action.
-
-#### Usage
-
-Pass an **array** of tippy instances to the `createSingleton` addon function,
-and a `delay` prop:
-
-```js
-import tippy, {createSingleton} from 'tippy.js';
-
-const tippyInstances = tippy('button');
-const singleton = createSingleton(tippyInstances, {delay: 1000});
-```
-
-In the CDN (`umd`) version, it's available as `tippy.createSingleton()`
-
-#### Smooth transitions
-
-Utilize the `moveTransition` prop, which is the transition between moves
-(position updates) of the tippy element:
-
-```js
-const singleton = createSingleton(tippyInstances, {
-  delay: 1000,
-  moveTransition: 'transform 0.2s ease-out'
-});
-```
