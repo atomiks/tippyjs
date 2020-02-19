@@ -1,21 +1,15 @@
 import {FollowCursor} from '../types';
-import {closestCallback, isMouseEvent, getOwnerDocument} from '../dom-utils';
+import {isMouseEvent, getOwnerDocument} from '../dom-utils';
 import {currentInput} from '../bindGlobalEventListeners';
 
 const followCursor: FollowCursor = {
   name: 'followCursor',
   defaultValue: false,
   fn(instance) {
-    const {reference} = instance;
-
-    // Support iframe contexts
-    // Static check that assumes any of the `triggerTarget` or `reference`
-    // nodes will never change documents, even when they are updated
+    const reference = instance.reference;
     const doc = getOwnerDocument(instance.props.triggerTarget || reference);
 
-    // Internal state
-    let lastMouseMoveEvent: MouseEvent;
-    let mouseCoords: {clientX: number; clientY: number} | null = null;
+    let initialMouseCoords: {clientX: number; clientY: number} | null = null;
 
     function getIsManual(): boolean {
       return instance.props.trigger.trim() === 'manual';
@@ -26,8 +20,10 @@ const followCursor: FollowCursor = {
       const isValidMouseEvent = getIsManual()
         ? true
         : // Check if a keyboard "click"
-          mouseCoords !== null &&
-          !(mouseCoords.clientX === 0 && mouseCoords.clientY === 0);
+          initialMouseCoords !== null &&
+          !(
+            initialMouseCoords.clientX === 0 && initialMouseCoords.clientY === 0
+          );
 
       return instance.props.followCursor && isValidMouseEvent;
     }
@@ -55,7 +51,7 @@ const followCursor: FollowCursor = {
 
     function triggerLastMouseMove(): void {
       if (getIsEnabled()) {
-        onMouseMove(lastMouseMoveEvent);
+        onMouseMove(initialMouseCoords as MouseEvent);
       }
     }
 
@@ -68,15 +64,18 @@ const followCursor: FollowCursor = {
     }
 
     function onMouseMove(event: MouseEvent): void {
-      const {clientX, clientY} = (lastMouseMoveEvent = event);
+      initialMouseCoords = {
+        clientX: event.clientX,
+        clientY: event.clientY,
+      };
 
       // If the instance is interactive, avoid updating the position unless it's
       // over the reference element
-      const isCursorOverReference = closestCallback(
-        event.target as Element,
-        (el: Element) => el === reference,
-      );
+      const isCursorOverReference = event.target
+        ? reference.contains(event.target as Node)
+        : true;
       const {followCursor} = instance.props;
+      const {clientX, clientY} = event;
 
       const rect = reference.getBoundingClientRect();
       const relativeX = clientX - rect.left;
@@ -130,23 +129,25 @@ const followCursor: FollowCursor = {
         if (getIsManual()) {
           // Since there's no trigger event to use, we have to use these as
           // baseline coords
-          mouseCoords = {clientX: 0, clientY: 0};
-          // Ensure `lastMouseMoveEvent` doesn't access any other properties
-          // of a MouseEvent here
-          lastMouseMoveEvent = mouseCoords as MouseEvent;
+          initialMouseCoords = {
+            clientX: 0,
+            clientY: 0,
+          };
 
           handleMouseMoveListener();
         }
       },
       onTrigger(_, event): void {
         // Tapping on touch devices can trigger `mouseenter` then `focus`
-        if (mouseCoords) {
+        if (initialMouseCoords) {
           return;
         }
 
         if (isMouseEvent(event)) {
-          mouseCoords = {clientX: event.clientX, clientY: event.clientY};
-          lastMouseMoveEvent = event;
+          initialMouseCoords = {
+            clientX: event.clientX,
+            clientY: event.clientY,
+          };
         }
 
         handleMouseMoveListener();
@@ -155,12 +156,12 @@ const followCursor: FollowCursor = {
         // If untriggered before showing (`onHidden` will never be invoked)
         if (!instance.state.isVisible) {
           removeListener();
-          mouseCoords = null;
+          initialMouseCoords = null;
         }
       },
       onHidden(): void {
         removeListener();
-        mouseCoords = null;
+        initialMouseCoords = null;
       },
     };
   },

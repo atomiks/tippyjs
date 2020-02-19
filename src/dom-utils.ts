@@ -60,21 +60,6 @@ export function setVisibilityState(
   });
 }
 
-export function closestCallback(
-  element: Element | null,
-  callback: Function,
-): Element | null {
-  while (element) {
-    if (callback(element)) {
-      return element;
-    }
-
-    element = element.parentElement;
-  }
-
-  return null;
-}
-
 export function getOwnerDocument(
   elementOrElements: Element | Element[],
 ): Document {

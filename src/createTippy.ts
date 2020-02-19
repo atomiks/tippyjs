@@ -30,7 +30,6 @@ import {
   setVisibilityState,
   isMouseEvent,
   getOwnerDocument,
-  closestCallback,
   isCursorOutsideInteractiveBorder,
   updateTransitionEndListener,
 } from './dom-utils';
@@ -489,10 +488,9 @@ export default function createTippy(
   }
 
   function onMouseMove(event: MouseEvent): void {
-    const isCursorOverReferenceOrPopper = closestCallback(
-      event.target as Element,
-      (el: Element) => el === reference || el === popper,
-    );
+    const target = event.target as Node;
+    const isCursorOverReferenceOrPopper =
+      reference.contains(target) || popper.contains(target);
 
     if (event.type === 'mousemove' && isCursorOverReferenceOrPopper) {
       return;
