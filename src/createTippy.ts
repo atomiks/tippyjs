@@ -564,17 +564,9 @@ export default function createTippy(
   }
 
   function isEventListenerStopped(event: Event): boolean {
-    const supportsTouch = 'ontouchstart' in window;
-    const isTouchEvent = event.type.indexOf('touch') >= 0;
-    const isCustomTouch = getIsCustomTouchBehavior();
-
-    return (
-      (supportsTouch &&
-        currentInput.isTouch &&
-        isCustomTouch &&
-        !isTouchEvent) ||
-      (currentInput.isTouch && !isCustomTouch && isTouchEvent)
-    );
+    return currentInput.isTouch
+      ? getIsCustomTouchBehavior() !== event.type.indexOf('touch') >= 0
+      : false;
   }
 
   function createPopperInstance(): void {
