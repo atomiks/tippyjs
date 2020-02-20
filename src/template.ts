@@ -119,12 +119,6 @@ export function render(
       box.removeAttribute('data-inertia');
     }
 
-    if (nextProps.interactive) {
-      box.setAttribute('data-interactive', '');
-    } else {
-      box.removeAttribute('data-interactive');
-    }
-
     box.style.maxWidth =
       typeof nextProps.maxWidth === 'number'
         ? `${nextProps.maxWidth}px`
