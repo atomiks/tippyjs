@@ -85,8 +85,6 @@ if necessary.
 
 ## Instance
 
-## Methods
-
 ### If you were using `instance.popperChildren`
 
 <details>
@@ -103,6 +101,8 @@ const box = instance.popper.firstElementChild;
 ```
 
 </details>
+
+## Methods
 
 ### If you were using `.show()` or `.hide()` with a duration argument
 
