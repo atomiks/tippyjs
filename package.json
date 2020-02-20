@@ -29,6 +29,7 @@
     "dist/",
     "animations/",
     "themes/",
+    "headless/",
     "index.d.ts"
   ],
   "repository": {
