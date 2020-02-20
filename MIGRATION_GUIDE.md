@@ -83,7 +83,26 @@ if necessary.
 
 </details>
 
+## Instance
+
 ## Methods
+
+### If you were using `instance.popperChildren`
+
+<details>
+<summary>View details</summary>
+
+This no longer exists due to the user's ability to specify any structured DOM
+with `render()` (Headless Tippy).
+
+To access the `.tippy-box` element with the default render function
+(`.tippy-tooltip` in v5):
+
+```js
+const box = instance.popper.firstElementChild;
+```
+
+</details>
 
 ### If you were using `.show()` or `.hide()` with a duration argument
 
