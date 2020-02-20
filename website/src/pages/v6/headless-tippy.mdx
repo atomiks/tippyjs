@@ -49,3 +49,12 @@ tippy(targets, {
 >
 > This has no effect on libraries/frameworks like React or Vue, provided you
 > don't specify these attributes.
+
+### Imports
+
+When using Headless Tippy, all imports (e.g. `followCursor`) should also be
+specified from import, otherwise you will end up with duplicate code bloat.
+
+```js
+import tippy, {followCursor} from 'tippy.js/headless';
+```
