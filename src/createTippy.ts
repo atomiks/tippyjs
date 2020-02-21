@@ -125,7 +125,7 @@ export default function createTippy(
   // ===========================================================================
   // Initial mutations
   // ===========================================================================
-  const {popper, update} = props.render(instance);
+  const {popper, onUpdate} = props.render(instance);
 
   popper.setAttribute('data-__NAMESPACE_PREFIX__-root', '');
   popper.id = `__NAMESPACE_PREFIX__-${instance.id}`;
@@ -856,8 +856,8 @@ export default function createTippy(
     handleAriaExpandedAttribute();
     handleInteractiveStyles();
 
-    if (update) {
-      update(prevProps, nextProps);
+    if (onUpdate) {
+      onUpdate(prevProps, nextProps);
     }
 
     if (instance.popperInstance) {

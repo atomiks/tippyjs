@@ -86,7 +86,7 @@ export interface Props extends LifecycleHooks, RenderProps {
         instance: Instance,
       ) => {
         popper: PopperElement;
-        update?: (prevProps: Props, nextProps: Props) => void;
+        onUpdate?: (prevProps: Props, nextProps: Props) => void;
       })
     | null;
   showOnCreate: boolean;

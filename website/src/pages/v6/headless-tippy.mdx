@@ -24,17 +24,18 @@ tippy(targets, {
     popper.className = 'my-custom-class';
     popper.textContent = props.content;
 
-    function update(prevProps, nextProps) {
+    function onUpdate(prevProps, nextProps) {
       if (prevProps.content !== nextProps.content) {
         popper.textContent = nextProps.content;
       }
     }
 
-    // Return an object with two properties: `popper` (the root popper element),
-    // and an `update` function whenever .setProps() or .setContent() is called
+    // Return an object with two properties:
+    // - `popper` (the root popper element),
+    // - `onUpdate` callback whenever .setProps() or .setContent() is called
     return {
       popper,
-      update
+      onUpdate // optional
     };
   }
 });

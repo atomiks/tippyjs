@@ -76,7 +76,7 @@ export function render(
   instance: Instance,
 ): {
   popper: PopperElement;
-  update?: (prevProps: Props, nextProps: Props) => void;
+  onUpdate?: (prevProps: Props, nextProps: Props) => void;
 } {
   const popper = div();
 
@@ -94,9 +94,9 @@ export function render(
   popper.appendChild(box);
   box.appendChild(content);
 
-  update(instance.props, instance.props);
+  onUpdate(instance.props, instance.props);
 
-  function update(prevProps: Props, nextProps: Props): void {
+  function onUpdate(prevProps: Props, nextProps: Props): void {
     const {box, content, arrow} = getChildren(popper);
 
     popper.style.zIndex = `${nextProps.zIndex}`;
@@ -148,7 +148,7 @@ export function render(
 
   return {
     popper,
-    update,
+    onUpdate,
   };
 }
 

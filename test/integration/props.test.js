@@ -913,7 +913,7 @@ describe('render', () => {
       render() {
         return {
           popper: h(),
-          update: spy,
+          onUpdate: spy,
         };
       },
     });
