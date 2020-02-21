@@ -1,4 +1,4 @@
-import {cleanDocumentBody, h} from '../utils';
+import {h} from '../utils';
 
 import tippy from '../../src';
 import * as Listeners from '../../src/bindGlobalEventListeners';

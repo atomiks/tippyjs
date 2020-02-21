@@ -1,9 +1,8 @@
 import {fireEvent} from '@testing-library/dom';
-import {h, cleanDocumentBody} from '../../utils';
+import {h} from '../../utils';
 
-import tippy from '../../../src';
 import delegate from '../../../src/addons/delegate';
-import {clean, getFormattedMessage} from '../../../src/validation';
+import {getFormattedMessage} from '../../../src/validation';
 import {normalizeToArray} from '../../../src/utils';
 
 let instance;

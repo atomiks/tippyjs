@@ -1,4 +1,4 @@
-import {h, cleanDocumentBody, IDENTIFIER} from '../utils';
+import {h, IDENTIFIER} from '../utils';
 
 import * as DomUtils from '../../src/dom-utils';
 import tippy from '../../src';

@@ -7,7 +7,6 @@ import {IOS_CLASS} from '../../src/constants';
 import animateFill from '../../src/plugins/animateFill';
 import {getChildren} from '../../src/template';
 import {getFormattedMessage} from '../../src/validation';
-import tippy from '../../src/types';
 
 let instance;
 

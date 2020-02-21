@@ -1,4 +1,4 @@
-import {h, cleanDocumentBody, setTestDefaultProps} from '../../utils';
+import {h} from '../../utils';
 
 import tippy from '../../../src';
 import animateFill from '../../../src/plugins/animateFill';

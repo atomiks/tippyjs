@@ -1,4 +1,4 @@
-import {h, cleanDocumentBody} from '../utils';
+import {h} from '../utils';
 
 import {
   getDataAttributeProps,

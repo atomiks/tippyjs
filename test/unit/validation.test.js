@@ -1,8 +1,4 @@
-import {
-  clean,
-  validateTargets,
-  getFormattedMessage,
-} from '../../src/validation';
+import {validateTargets, getFormattedMessage} from '../../src/validation';
 
 describe('validateTargets', () => {
   it('recognizes a falsy target', () => {

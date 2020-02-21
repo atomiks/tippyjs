@@ -1,10 +1,9 @@
 import {fireEvent} from '@testing-library/dom';
-import {h, cleanDocumentBody, setTestDefaultProps} from '../../utils';
+import {h} from '../../utils';
 
 import createSingleton from '../../../src/addons/createSingleton';
 import tippy from '../../../src';
-import {clean, getFormattedMessage} from '../../../src/validation';
-import {getChildren} from '../../../src/template';
+import {getFormattedMessage} from '../../../src/validation';
 
 describe('createSingleton', () => {
   it('shows when a tippy instance reference is triggered', () => {

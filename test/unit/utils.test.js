@@ -1,7 +1,4 @@
-import {h, cleanDocumentBody, IDENTIFIER} from '../utils';
-
 import * as Utils from '../../src/utils';
-import tippy from '../../src';
 
 describe('hasOwnProperty', () => {
   it('works for plain objects', () => {

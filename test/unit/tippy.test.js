@@ -1,8 +1,8 @@
-import {h, cleanDocumentBody} from '../utils';
+import {h} from '../utils';
 
 import {defaultProps, extraProps} from '../../src/props';
 import {POPPER_SELECTOR} from '../../src/constants';
-import tippy, {hideAll, createTippyWithPlugins} from '../../src';
+import tippy, {hideAll} from '../../src';
 import {getFormattedMessage} from '../../src/validation';
 
 describe('tippy', () => {
