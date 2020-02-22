@@ -139,7 +139,7 @@ export default function createTippy(
     'aria-expanded',
   );
 
-  addListenersToTriggerTarget();
+  addListeners();
   handleAriaExpandedAttribute();
 
   invokeHook('onCreate', [instance]);
@@ -397,7 +397,7 @@ export default function createTippy(
     });
   }
 
-  function addListenersToTriggerTarget(): void {
+  function addListeners(): void {
     if (getIsCustomTouchBehavior()) {
       on('touchstart', onTrigger, PASSIVE);
       on('touchend', onMouseLeave as EventListener, PASSIVE);
@@ -424,7 +424,7 @@ export default function createTippy(
     });
   }
 
-  function removeListenersFromTriggerTarget(): void {
+  function removeListeners(): void {
     listeners.forEach(({node, eventType, handler, options}: ListenerObject) => {
       node.removeEventListener(eventType, handler, options);
     });
@@ -823,7 +823,7 @@ export default function createTippy(
 
     invokeHook('onBeforeUpdate', [instance, partialProps]);
 
-    removeListenersFromTriggerTarget();
+    removeListeners();
 
     const prevProps = instance.props;
     const nextProps = evaluateProps(reference, {
@@ -834,7 +834,7 @@ export default function createTippy(
 
     instance.props = nextProps;
 
-    addListenersToTriggerTarget();
+    addListeners();
 
     if (prevProps.interactiveDebounce !== nextProps.interactiveDebounce) {
       cleanupInteractiveMouseListeners();
@@ -1054,7 +1054,7 @@ export default function createTippy(
     instance.clearDelayTimeouts();
     instance.unmount();
 
-    removeListenersFromTriggerTarget();
+    removeListeners();
 
     delete reference._tippy;
 
