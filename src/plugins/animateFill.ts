@@ -1,12 +1,24 @@
 import {AnimateFill} from '../types';
 import {BACKDROP_CLASS} from '../constants';
 import {div, setVisibilityState} from '../dom-utils';
-import {getChildren} from '../template';
+import {getChildren, isDefaultRenderFn} from '../template';
+import {errorWhen} from '../validation';
 
 const animateFill: AnimateFill = {
   name: 'animateFill',
   defaultValue: false,
   fn(instance) {
+    if (!isDefaultRenderFn(instance.props.render)) {
+      if (__DEV__) {
+        errorWhen(
+          true,
+          'The `animateFill` plugin requires the default render function.',
+        );
+      }
+
+      return {};
+    }
+
     const {box, content} = getChildren(instance.popper);
 
     const backdrop = instance.props.animateFill

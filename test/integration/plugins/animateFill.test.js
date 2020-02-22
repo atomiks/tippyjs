@@ -3,6 +3,7 @@ import {h} from '../../utils';
 import tippy from '../../../src';
 import animateFill from '../../../src/plugins/animateFill';
 import {getChildren} from '../../../src/template';
+import {getFormattedMessage} from '../../../src/validation';
 
 tippy.setDefaultProps({plugins: [animateFill]});
 
@@ -72,5 +73,24 @@ describe('animateFill', () => {
     instance.hide();
 
     expect(backdrop.getAttribute('data-state')).toBe('hidden');
+  });
+
+  it('should error when render function is not default', () => {
+    const spy = jest.spyOn(console, 'error');
+
+    tippy(h(), {
+      animateFill: true,
+      render() {
+        return {
+          popper: document.createElement('div'),
+        };
+      },
+    });
+
+    expect(spy).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        'The `animateFill` plugin requires the default render function.',
+      ),
+    );
   });
 });
