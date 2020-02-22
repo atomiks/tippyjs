@@ -14,24 +14,45 @@ features.
 
 ### Usage
 
+> **Note**
+>
+> Headless Tippy will not unmount the tippy from the DOM upon hide. It's up to
+> you to call `instance.unmount()`, which allows you to create hide animations.
+
+This demonstrates the basic usage — supply a `render` function and call
+`instance.unmount()` in the `onHide` lifecycle:
+
 ```js
 import tippy from 'tippy.js/headless';
 
 tippy(targets, {
   content: 'Hello!',
-  render({props}) {
+  // Required:
+  // This is where you'll perform your CSS or JavaScript animations and call
+  // the .unmount() method once the animation finishes
+  onHide(instance) {
+    instance.unmount();
+  },
+  render(instance) {
+    // The recommended structure is to use the popper as an outer wrapper
+    // element, with an inner `box` element
     const popper = document.createElement('div');
-    popper.className = 'my-custom-class';
-    popper.textContent = props.content;
+    const box = document.createElement('div');
+
+    popper.appendChild(box);
+
+    box.className = 'my-custom-class';
+    box.textContent = instance.props.content;
 
     function onUpdate(prevProps, nextProps) {
+      // DOM diffing
       if (prevProps.content !== nextProps.content) {
-        popper.textContent = nextProps.content;
+        box.textContent = nextProps.content;
       }
     }
 
     // Return an object with two properties:
-    // - `popper` (the root popper element),
+    // - `popper` (the root popper element)
     // - `onUpdate` callback whenever .setProps() or .setContent() is called
     return {
       popper,
@@ -41,15 +62,18 @@ tippy(targets, {
 });
 ```
 
-> **Mutations**
->
-> Two mutations are done to your popper element by Tippy:
->
-> - `id` attribute is set on it
-> - `data-tippy-root` attribute is set on it
->
-> This has no effect on libraries/frameworks like React or Vue, provided you
-> don't specify these attributes.
+### Mutations
+
+Although Headless Tippy tries to leave the rendering up to you as much as
+possible, it performs a few mutations to your element to ensure it works with
+Tippy correctly:
+
+- `id` attribute is set on it (for accessibility)
+- `data-tippy-root` attribute is set on it (to allow for nesting)
+- `_tippy` property is set on it (to allow for nesting)
+
+This has no effect on libraries/frameworks like React or Vue, provided you don't
+specify these attributes.
 
 ### Imports
 
