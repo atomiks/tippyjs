@@ -1052,6 +1052,7 @@ export default function createTippy(
     }
 
     instance.clearDelayTimeouts();
+    instance.hide();
     instance.unmount();
 
     removeListeners();
