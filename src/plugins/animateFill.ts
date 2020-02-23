@@ -1,7 +1,7 @@
-import {AnimateFill} from '../types';
 import {BACKDROP_CLASS} from '../constants';
 import {div, setVisibilityState} from '../dom-utils';
 import {getChildren, isDefaultRenderFn} from '../template';
+import {AnimateFill} from '../types';
 import {errorWhen} from '../validation';
 
 const animateFill: AnimateFill = {

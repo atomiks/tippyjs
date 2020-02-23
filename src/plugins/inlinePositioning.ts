@@ -1,6 +1,6 @@
-import {InlinePositioning, BasePlacement} from '../types';
-import {getBasePlacement, arrayFrom} from '../utils';
 import {Modifier, Placement} from '@popperjs/core';
+import {BasePlacement, InlinePositioning} from '../types';
+import {arrayFrom, getBasePlacement} from '../utils';
 
 // TODO: Work on a "cursor" value so it chooses a rect optimal to the cursor
 // position.

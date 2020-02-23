@@ -1,12 +1,12 @@
 import {
+  ARROW_CLASS,
+  BACKDROP_CLASS,
   BOX_CLASS,
   CONTENT_CLASS,
-  ARROW_CLASS,
   SVG_ARROW_CLASS,
-  BACKDROP_CLASS,
 } from './constants';
-import {PopperElement, PopperChildren, Props, Instance} from './types';
 import {div, isElement} from './dom-utils';
+import {Instance, PopperChildren, PopperElement, Props} from './types';
 import {arrayFrom} from './utils';
 
 const innerHTML = (): 'innerHTML' => 'innerHTML';

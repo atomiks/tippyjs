@@ -1,11 +1,11 @@
-import {defaultProps, setDefaultProps, validateProps} from './props';
-import createTippy, {mountedInstances} from './createTippy';
 import bindGlobalEventListeners, {
   currentInput,
 } from './bindGlobalEventListeners';
-import {getArrayOfElements, isReferenceElement, isElement} from './dom-utils';
-import {warnWhen, validateTargets} from './validation';
-import {Props, Instance, Targets, HideAllOptions, HideAll} from './types';
+import createTippy, {mountedInstances} from './createTippy';
+import {getArrayOfElements, isElement, isReferenceElement} from './dom-utils';
+import {defaultProps, setDefaultProps, validateProps} from './props';
+import {HideAll, HideAllOptions, Instance, Props, Targets} from './types';
+import {validateTargets, warnWhen} from './validation';
 
 function tippy(
   targets: Targets,

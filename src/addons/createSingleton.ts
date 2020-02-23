@@ -1,8 +1,8 @@
-import {Instance, CreateSingleton, Plugin} from '../types';
 import tippy from '..';
-import {errorWhen} from '../validation';
 import {div} from '../dom-utils';
+import {CreateSingleton, Instance, Plugin} from '../types';
 import {removeProperties} from '../utils';
+import {errorWhen} from '../validation';
 
 const createSingleton: CreateSingleton = (
   tippyInstances,

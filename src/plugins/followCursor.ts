@@ -1,6 +1,6 @@
-import {FollowCursor} from '../types';
-import {isMouseEvent, getOwnerDocument} from '../dom-utils';
 import {currentInput} from '../bindGlobalEventListeners';
+import {getOwnerDocument, isMouseEvent} from '../dom-utils';
+import {FollowCursor} from '../types';
 
 const followCursor: FollowCursor = {
   name: 'followCursor',

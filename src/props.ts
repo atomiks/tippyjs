@@ -1,4 +1,4 @@
-import {Props, DefaultProps, ReferenceElement, Plugin, Tippy} from './types';
+import {DefaultProps, Plugin, Props, ReferenceElement, Tippy} from './types';
 import {hasOwnProperty, removeProperties} from './utils';
 import {warnWhen} from './validation';
 

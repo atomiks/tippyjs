@@ -1,5 +1,5 @@
-import {Sticky, ReferenceElement} from '../types';
 import {VirtualElement} from '@popperjs/core';
+import {ReferenceElement, Sticky} from '../types';
 
 const sticky: Sticky = {
   name: 'sticky',

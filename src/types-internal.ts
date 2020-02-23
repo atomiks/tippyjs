@@ -1,4 +1,4 @@
-import {Props, BasePlacement} from './types';
+import {BasePlacement, Props} from './types';
 
 export interface ListenerObject {
   node: Element;

@@ -1,9 +1,9 @@
-import {Instance, Targets, Props} from '../types';
 import tippy from '..';
-import {errorWhen} from '../validation';
-import {removeProperties, normalizeToArray} from '../utils';
 import {defaultProps} from '../props';
+import {Instance, Props, Targets} from '../types';
 import {ListenerObject} from '../types-internal';
+import {normalizeToArray, removeProperties} from '../utils';
+import {errorWhen} from '../validation';
 
 const BUBBLING_EVENTS_MAP = {
   mouseover: 'mouseenter',

@@ -1,6 +1,6 @@
-import {isType, normalizeToArray, arrayFrom} from './utils';
-import {Targets, ReferenceElement} from './types';
+import {ReferenceElement, Targets} from './types';
 import {PopperTreeData} from './types-internal';
+import {arrayFrom, isType, normalizeToArray} from './utils';
 
 export function div(): HTMLDivElement {
   return document.createElement('div');

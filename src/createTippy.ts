@@ -1,40 +1,40 @@
 import {createPopper, Modifier} from '@popperjs/core';
-import {
-  ReferenceElement,
-  Props,
-  Instance,
-  Content,
-  LifecycleHooks,
-  PopperElement,
-  PopperChildren,
-} from './types';
-import {ListenerObject, PopperTreeData} from './types-internal';
-import {isIE, isIOS} from './browser';
-import {PASSIVE, IOS_CLASS} from './constants';
 import {currentInput} from './bindGlobalEventListeners';
-import {defaultProps, evaluateProps, getExtendedPassedProps} from './props';
-import {
-  getValueAtIndexOrReturn,
-  invokeWithArgsOrReturn,
-  debounce,
-  splitBySpaces,
-  normalizeToArray,
-  pushIfUnique,
-  unique,
-  getBasePlacement,
-  arrayFrom,
-} from './utils';
+import {isIE, isIOS} from './browser';
+import {IOS_CLASS, PASSIVE} from './constants';
 import {
   div,
-  setTransitionDuration,
-  setVisibilityState,
-  isMouseEvent,
   getOwnerDocument,
   isCursorOutsideInteractiveBorder,
+  isMouseEvent,
+  setTransitionDuration,
+  setVisibilityState,
   updateTransitionEndListener,
 } from './dom-utils';
-import {warnWhen, createMemoryLeakWarning, errorWhen} from './validation';
+import {defaultProps, evaluateProps, getExtendedPassedProps} from './props';
 import {getChildren, isDefaultRenderFn} from './template';
+import {
+  Content,
+  Instance,
+  LifecycleHooks,
+  PopperChildren,
+  PopperElement,
+  Props,
+  ReferenceElement,
+} from './types';
+import {ListenerObject, PopperTreeData} from './types-internal';
+import {
+  arrayFrom,
+  debounce,
+  getBasePlacement,
+  getValueAtIndexOrReturn,
+  invokeWithArgsOrReturn,
+  normalizeToArray,
+  pushIfUnique,
+  splitBySpaces,
+  unique,
+} from './utils';
+import {createMemoryLeakWarning, errorWhen, warnWhen} from './validation';
 
 let idCounter = 1;
 let mouseMoveListeners: ((event: MouseEvent) => void)[] = [];

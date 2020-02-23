@@ -1,4 +1,4 @@
-import {Placement, BasePlacement} from './types';
+import {BasePlacement, Placement} from './types';
 
 export function hasOwnProperty(obj: object, key: string): boolean {
   return {}.hasOwnProperty.call(obj, key);
