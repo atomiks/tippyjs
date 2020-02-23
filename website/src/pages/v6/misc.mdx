@@ -6,7 +6,43 @@ index: 15
 
 import EventDelegation from '../../components/examples/EventDelegation';
 import TriggerTarget from '../../components/examples/TriggerTarget';
-import mouseRest from '../../components/examples/mouseRestPlugin';
+import ContextMenu from '../../components/examples/ContextMenu';
+
+### Context menu
+
+```js
+const rightClickableArea = document.querySelector('#container');
+
+const instance = tippy(rightClickableArea, {
+  content: 'Context menu',
+  placement: 'right-start',
+  trigger: 'manual',
+  interactive: true,
+  arrow: false,
+  offset: [0, 0]
+});
+
+rightClickableArea.addEventListener('contextmenu', event => {
+  event.preventDefault();
+
+  instance.setProps({
+    getReferenceClientRect: () => ({
+      width: 0,
+      height: 0,
+      top: event.clientY,
+      bottom: event.clientY,
+      left: event.clientX,
+      right: event.clientX
+    })
+  });
+
+  instance.show();
+});
+```
+
+<Demo>
+  <ContextMenu />
+</Demo>
 
 ### Different trigger target
 
