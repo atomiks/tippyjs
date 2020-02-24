@@ -1,6 +1,6 @@
 import {ReferenceElement, Targets} from './types';
 import {PopperTreeData} from './types-internal';
-import {arrayFrom, isType, normalizeToArray} from './utils';
+import {arrayFrom, isType, normalizeToArray, getBasePlacement} from './utils';
 
 export function div(): HTMLDivElement {
   return document.createElement('div');
@@ -73,27 +73,31 @@ export function isCursorOutsideInteractiveBorder(
 ): boolean {
   const {clientX, clientY} = event;
 
-  return popperTreeData.every(
-    ({basePlacement, popperRect, props, offsetData}) => {
-      const {interactiveBorder} = props;
+  return popperTreeData.every(({popperRect, popperState, props}) => {
+    const {interactiveBorder} = props;
+    const basePlacement = getBasePlacement(popperState.placement);
+    const offsetData = popperState.modifiersData.offset;
 
-      const topDistance = basePlacement === 'bottom' ? offsetData.top.y : 0;
-      const bottomDistance = basePlacement === 'top' ? offsetData.bottom.y : 0;
-      const leftDistance = basePlacement === 'right' ? offsetData.left.x : 0;
-      const rightDistance = basePlacement === 'left' ? offsetData.right.x : 0;
+    if (!offsetData) {
+      return true;
+    }
 
-      const exceedsTop =
-        popperRect.top - clientY + topDistance > interactiveBorder;
-      const exceedsBottom =
-        clientY - popperRect.bottom - bottomDistance > interactiveBorder;
-      const exceedsLeft =
-        popperRect.left - clientX + leftDistance > interactiveBorder;
-      const exceedsRight =
-        clientX - popperRect.right - rightDistance > interactiveBorder;
+    const topDistance = basePlacement === 'bottom' ? offsetData.top.y : 0;
+    const bottomDistance = basePlacement === 'top' ? offsetData.bottom.y : 0;
+    const leftDistance = basePlacement === 'right' ? offsetData.left.x : 0;
+    const rightDistance = basePlacement === 'left' ? offsetData.right.x : 0;
 
-      return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight;
-    },
-  );
+    const exceedsTop =
+      popperRect.top - clientY + topDistance > interactiveBorder;
+    const exceedsBottom =
+      clientY - popperRect.bottom - bottomDistance > interactiveBorder;
+    const exceedsLeft =
+      popperRect.left - clientX + leftDistance > interactiveBorder;
+    const exceedsRight =
+      clientX - popperRect.right - rightDistance > interactiveBorder;
+
+    return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight;
+  });
 }
 
 export function updateTransitionEndListener(

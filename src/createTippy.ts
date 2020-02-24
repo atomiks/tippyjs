@@ -26,7 +26,6 @@ import {ListenerObject, PopperTreeData} from './types-internal';
 import {
   arrayFrom,
   debounce,
-  getBasePlacement,
   getValueAtIndexOrReturn,
   invokeWithArgsOrReturn,
   normalizeToArray,
@@ -76,8 +75,6 @@ export default function createTippy(
   const plugins = unique(props.plugins);
 
   const state = {
-    // The current real placement (`data-placement` attribute)
-    currentPlacement: null,
     // Is the instance currently enabled?
     isEnabled: true,
     // Is the tippy currently showing and not transitioning out?
@@ -500,12 +497,12 @@ export default function createTippy(
       .concat(popper)
       .map(popper => {
         const instance = popper._tippy!;
+        const state = instance.popperInstance?.state;
 
-        if (instance.popperInstance && instance.state.currentPlacement) {
+        if (state) {
           return {
             popperRect: popper.getBoundingClientRect(),
-            basePlacement: getBasePlacement(instance.state.currentPlacement),
-            offsetData: instance.popperInstance.state.modifiersData.offset,
+            popperState: state,
             props,
           };
         }
@@ -601,8 +598,6 @@ export default function createTippy(
             state.placement,
           );
         }
-
-        instance.state.currentPlacement = state.placement;
       },
     };
 

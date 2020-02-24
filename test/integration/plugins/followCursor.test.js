@@ -28,7 +28,7 @@ describe('followCursor', () => {
 
   function matches(receivedRect) {
     const isVerticalPlacement = ['top', 'bottom'].includes(
-      getBasePlacement(instance.state.currentPlacement),
+      getBasePlacement(instance.popperInstance.state.placement),
     );
 
     expect(rect.left).toBe(receivedRect.left);

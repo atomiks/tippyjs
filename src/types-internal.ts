@@ -1,4 +1,5 @@
-import {BasePlacement, Props} from './types';
+import {State} from '@popperjs/core';
+import {Props} from './types';
 
 export interface ListenerObject {
   node: Element;
@@ -9,7 +10,6 @@ export interface ListenerObject {
 
 export interface PopperTreeData {
   popperRect: ClientRect;
-  basePlacement: BasePlacement;
-  offsetData: any;
+  popperState: State;
   props: Props;
 }

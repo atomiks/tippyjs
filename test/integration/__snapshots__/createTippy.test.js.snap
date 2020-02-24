@@ -90,7 +90,6 @@ Object {
   "setProps": [Function],
   "show": [Function],
   "state": Object {
-    "currentPlacement": null,
     "isDestroyed": false,
     "isEnabled": true,
     "isMounted": false,

@@ -117,7 +117,6 @@ export interface Instance<TProps = Props> {
   setProps(partialProps: Partial<TProps>): void;
   show(): void;
   state: {
-    currentPlacement: Placement | null;
     isEnabled: boolean;
     isVisible: boolean;
     isDestroyed: boolean;
