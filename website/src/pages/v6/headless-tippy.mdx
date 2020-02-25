@@ -27,12 +27,6 @@ import tippy from 'tippy.js/headless';
 
 tippy(targets, {
   content: 'Hello!',
-  // Required:
-  // This is where you'll perform your CSS or JavaScript animations and call
-  // the .unmount() method once the animation finishes
-  onHide(instance) {
-    instance.unmount();
-  },
   render(instance) {
     // The recommended structure is to use the popper as an outer wrapper
     // element, with an inner `box` element
@@ -58,6 +52,24 @@ tippy(targets, {
       popper,
       onUpdate // optional
     };
+  }
+});
+```
+
+### Animations
+
+When using Headless Tippy, animations are not enabled (`animation: false`) by
+default. To enable animations, set `animation: true` (or a string) — this will
+require you to invoke `instance.unmount()` whenever your hide animation
+completes.
+
+```js
+tippy(targets, {
+  animation: true,
+  onHide(instance) {
+    // perform your hide animation...
+    // once it completes:
+    instance.unmount();
   }
 });
 ```

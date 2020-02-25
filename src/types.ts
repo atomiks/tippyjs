@@ -42,7 +42,7 @@ export interface LifecycleHooks<TProps = Props> {
 
 export interface RenderProps {
   allowHTML: boolean;
-  animation: string | false;
+  animation: string | boolean;
   arrow: boolean | string | SVGElement;
   content: Content;
   inertia: boolean;

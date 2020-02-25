@@ -1006,8 +1006,12 @@ export default function createTippy(
     handleAriaDescribedByAttribute();
     handleAriaExpandedAttribute();
 
-    if (instance.props.animation && isDefaultRenderFn(instance.props.render)) {
-      onTransitionedOut(duration, unmount);
+    if (instance.props.animation) {
+      if (isDefaultRenderFn(instance.props.render)) {
+        onTransitionedOut(duration, unmount);
+      }
+    } else {
+      instance.unmount();
     }
   }
 
