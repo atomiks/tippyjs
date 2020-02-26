@@ -46,6 +46,7 @@ const inlinePositioning: InlinePositioning = {
       onCreate(): void {
         instance.setProps({
           popperOptions: {
+            ...instance.props.popperOptions,
             modifiers: [
               ...(instance.popperInstance?.state.options.modifiers || []),
               modifier,
