@@ -107,7 +107,7 @@ export function render(
       box.removeAttribute('data-theme');
     }
 
-    if (nextProps.animation) {
+    if (typeof nextProps.animation === 'string') {
       box.setAttribute('data-animation', nextProps.animation);
     } else {
       box.removeAttribute('data-animation');
