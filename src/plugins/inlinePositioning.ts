@@ -48,7 +48,7 @@ const inlinePositioning: InlinePositioning = {
           popperOptions: {
             ...instance.props.popperOptions,
             modifiers: [
-              ...(instance.popperInstance?.state.options.modifiers || []),
+              ...(instance.props.popperOptions?.modifiers || []),
               modifier,
             ],
           },
