@@ -47,9 +47,11 @@ describe('appendTo', () => {
 });
 
 describe('aria', () => {
-  describe('"describedby"', () => {
-    it('works correctly', () => {
-      const instance = tippy(h(), {aria: 'describedby'});
+  describe('content', () => {
+    it('works correctly with "describedby"', () => {
+      const instance = tippy(h(), {
+        aria: {content: 'describedby'},
+      });
 
       instance.show();
       jest.runAllTimers();
@@ -58,11 +60,11 @@ describe('aria', () => {
         `__NAMESPACE_PREFIX__-${instance.id}`,
       );
     });
-  });
 
-  describe('"labelledby"', () => {
-    it('works correctly', () => {
-      const instance = tippy(h(), {aria: 'labelledby'});
+    it('works correctly with "labelledby"', () => {
+      const instance = tippy(h(), {
+        aria: {content: 'labelledby'},
+      });
 
       instance.show();
       jest.runAllTimers();
@@ -71,15 +73,53 @@ describe('aria', () => {
         `__NAMESPACE_PREFIX__-${instance.id}`,
       );
     });
+
+    it('does not add `aria-expanded` attribute by default', () => {
+      const instance = tippy(h());
+
+      instance.show();
+      jest.runAllTimers();
+
+      expect(instance.reference.hasAttribute('aria-expanded')).toBe(false);
+    });
   });
 
-  it('does not set any attribute if `null`', () => {
-    const instance = tippy(h(), {aria: null});
+  describe('expanded', () => {
+    it('does not set any attribute if `null` by default', () => {
+      const instance = tippy(h(), {
+        aria: {expanded: null},
+      });
 
-    instance.show();
-    jest.runAllTimers();
+      instance.show();
+      jest.runAllTimers();
 
-    expect(instance.reference).toMatchSnapshot();
+      expect(instance.reference.hasAttribute('aria-expanded')).toBe(false);
+    });
+
+    it('sets the attribute if interactive by default', () => {
+      const instance = tippy(h(), {interactive: true});
+
+      expect(instance.reference.getAttribute('aria-expanded')).toBe('false');
+
+      instance.show();
+      jest.runAllTimers();
+
+      expect(instance.reference.getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('does not set attribute if interactive and explicitly set to false', () => {
+      const instance = tippy(h(), {
+        interactive: true,
+        aria: {expanded: false},
+      });
+
+      expect(instance.reference.hasAttribute('aria-expanded')).toBe(false);
+
+      instance.show();
+      jest.runAllTimers();
+
+      expect(instance.reference.hasAttribute('aria-expanded')).toBe(false);
+    });
   });
 });
 

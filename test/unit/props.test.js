@@ -88,10 +88,7 @@ describe('evaluateProps', () => {
 
     reference.setAttribute('data-tippy-animation', 'fade');
 
-    expect(evaluateProps(reference, props)).toEqual({
-      animation: 'scale',
-      ignoreAttributes: true,
-    });
+    expect(evaluateProps(reference, props)).toMatchSnapshot();
   });
 
   it('does not ignore attributes if `ignoreAttributes: false`', () => {
@@ -100,10 +97,7 @@ describe('evaluateProps', () => {
 
     reference.setAttribute('data-tippy-animation', 'fade');
 
-    expect(evaluateProps(reference, props)).toEqual({
-      animation: 'fade',
-      ignoreAttributes: false,
-    });
+    expect(evaluateProps(reference, props)).toMatchSnapshot();
   });
 
   it('considers plugin props', () => {
@@ -113,10 +107,7 @@ describe('evaluateProps', () => {
 
     reference.setAttribute('data-tippy-plugin', 'y');
 
-    expect(evaluateProps(reference, props)).toEqual({
-      plugin: 'y',
-      plugins,
-    });
+    expect(evaluateProps(reference, props)).toMatchSnapshot();
   });
 });
 

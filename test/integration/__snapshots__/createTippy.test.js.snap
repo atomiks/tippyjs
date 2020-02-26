@@ -39,7 +39,10 @@ Object {
     "animateFill": false,
     "animation": "fade",
     "appendTo": [Function],
-    "aria": "describedby",
+    "aria": Object {
+      "content": "describedby",
+      "expanded": null,
+    },
     "arrow": true,
     "content": "tippy",
     "delay": 0,

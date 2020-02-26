@@ -215,7 +215,7 @@ describe('createSingleton', () => {
     expect(firstRef.getAttribute('aria-describedby')).toBe(id);
     expect(secondRef.getAttribute('aria-describedby')).toBe(id);
 
-    singletonInstance.setProps({aria: 'labelledby'});
+    singletonInstance.setProps({aria: {content: 'labelledby'}});
     singletonInstance.hide();
 
     fireEvent.mouseEnter(firstRef);

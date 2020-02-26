@@ -176,19 +176,38 @@ tippy(targets, {
 
 ### aria
 
-The `aria-*` attribute applied to the reference element.
+The aria attribute configuration. Both properties are optional:
 
-This allows screen reader software to announce the tippy content once the
-reference element is in focus.
+- `content`: The `aria-*` attribute applied to the reference element to announce
+  its content.
+- `expanded`: Whether to add an `aria-expanded` attribute to the reference
+  element.
+
+These defaults can be overridden if necessary. Specifying `null` for either
+property means you want Tippy to figure out the configuration automatically
+based on the supplied props.
 
 ```js
 tippy(targets, {
   // default
-  aria: 'describedby',
-  // `aria-label` replacement
-  aria: 'labelledby',
-  // disable it
-  aria: null
+  aria: {
+    content: 'describedby',
+    expanded: null
+  },
+  // announce as a label rather than a description
+  aria: {
+    content: 'labelledby'
+  },
+  // interactive: true default
+  aria: {
+    content: null,
+    expanded: true
+  },
+  // to abide by strict WCAG 2.1 rules with `interactive: true` to make it
+  // hoverable if it's not actually interactive
+  aria: {
+    expanded: false
+  }
 });
 ```
 

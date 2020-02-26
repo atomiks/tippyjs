@@ -231,14 +231,14 @@ export default function createTippy(
     }
   }
 
-  function handleAriaDescribedByAttribute(): void {
+  function handleAriaContentAttribute(): void {
     const {aria} = instance.props;
 
-    if (!aria) {
+    if (!aria.content) {
       return;
     }
 
-    const attr = `aria-${aria}`;
+    const attr = `aria-${aria.content}`;
     const id = popper.id;
     const nodes = normalizeToArray(instance.props.triggerTarget || reference);
 
@@ -260,10 +260,7 @@ export default function createTippy(
   }
 
   function handleAriaExpandedAttribute(): void {
-    // If the user has specified `aria-expanded` on their reference when the
-    // instance was created, we have to assume they're controlling it externally
-    // themselves
-    if (hadAriaExpandedAttributeOnCreate) {
+    if (hadAriaExpandedAttributeOnCreate || !instance.props.aria.expanded) {
       return;
     }
 
@@ -936,7 +933,7 @@ export default function createTippy(
         }
       }
 
-      handleAriaDescribedByAttribute();
+      handleAriaContentAttribute();
       handleAriaExpandedAttribute();
 
       pushIfUnique(mountedInstances, instance);
@@ -1003,7 +1000,7 @@ export default function createTippy(
       }
     }
 
-    handleAriaDescribedByAttribute();
+    handleAriaContentAttribute();
     handleAriaExpandedAttribute();
 
     if (instance.props.animation) {

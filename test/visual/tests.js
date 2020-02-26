@@ -41,6 +41,10 @@ const tests = window.state.tests;
 tests.default = () => {
   const [instance] = tippy('#default .reference', {
     content: 'Tippy',
+    interactive: true,
+    aria: {
+      expanded: false,
+    },
   });
 
   return instance.destroy;
