@@ -157,6 +157,5 @@ export function render(
 render.$$tippy = true;
 
 export function isDefaultRenderFn(render: any): boolean {
-  // @ts-ignore
   return render.$$tippy;
 }
