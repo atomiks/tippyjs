@@ -129,13 +129,6 @@ export interface Instance<TProps = Props> {
   unmount(): void;
 }
 
-export interface PopperChildren {
-  box: HTMLDivElement;
-  content: HTMLDivElement;
-  arrow: HTMLDivElement | null;
-  backdrop: HTMLDivElement | null;
-}
-
 export interface TippyStatics {
   readonly currentInput: {isTouch: boolean};
   readonly defaultProps: DefaultProps;

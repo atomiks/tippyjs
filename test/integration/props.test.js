@@ -1249,7 +1249,7 @@ describe('arrow', () => {
     it('creates an arrow', () => {
       const instance = tippy(h(), {arrow: true});
 
-      expect(getChildren(instance.popper).arrow).not.toBe(null);
+      expect(getChildren(instance.popper).arrow).not.toBe(undefined);
     });
   });
 
@@ -1257,7 +1257,7 @@ describe('arrow', () => {
     it('does not create an arrow', () => {
       const instance = tippy(h(), {arrow: false});
 
-      expect(getChildren(instance.popper).arrow).toBe(null);
+      expect(getChildren(instance.popper).arrow).toBe(undefined);
     });
   });
 
@@ -1292,16 +1292,16 @@ describe('arrow', () => {
 
     instance.setProps({arrow: false});
 
-    expect(getChildren(instance.popper).arrow).toBe(null);
+    expect(getChildren(instance.popper).arrow).toBe(undefined);
 
     instance.setProps({arrow: '<svg></svg>'});
 
-    expect(getChildren(instance.popper).arrow).not.toBe(null);
+    expect(getChildren(instance.popper).arrow).not.toBe(undefined);
 
     instance.setProps({arrow: '<svg><path d="" /></svg>'});
 
     expect(getChildren(instance.popper).arrow.querySelector('path')).not.toBe(
-      null,
+      undefined,
     );
   });
 });

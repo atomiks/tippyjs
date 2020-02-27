@@ -17,12 +17,11 @@ import {
   Content,
   Instance,
   LifecycleHooks,
-  PopperChildren,
   PopperElement,
   Props,
   ReferenceElement,
 } from './types';
-import {ListenerObject, PopperTreeData} from './types-internal';
+import {ListenerObject, PopperTreeData, PopperChildren} from './types-internal';
 import {
   arrayFrom,
   debounce,

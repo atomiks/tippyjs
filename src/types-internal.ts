@@ -13,3 +13,10 @@ export interface PopperTreeData {
   popperState: State;
   props: Props;
 }
+
+export interface PopperChildren {
+  box: HTMLDivElement;
+  content: HTMLDivElement;
+  arrow?: HTMLDivElement;
+  backdrop?: HTMLDivElement;
+}

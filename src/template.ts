@@ -6,7 +6,8 @@ import {
   SVG_ARROW_CLASS,
 } from './constants';
 import {div, isElement} from './dom-utils';
-import {Instance, PopperChildren, PopperElement, Props} from './types';
+import {Instance, PopperElement, Props} from './types';
+import {PopperChildren} from './types-internal';
 import {arrayFrom} from './utils';
 
 const innerHTML = (): 'innerHTML' => 'innerHTML';
@@ -61,14 +62,12 @@ export function getChildren(popper: PopperElement): PopperChildren {
   return {
     box,
     content: boxChildren.find(node => node.classList.contains(CONTENT_CLASS)),
-    arrow:
-      boxChildren.find(
-        node =>
-          node.classList.contains(ARROW_CLASS) ||
-          node.classList.contains(SVG_ARROW_CLASS),
-      ) || null,
-    backdrop:
-      boxChildren.find(node => node.classList.contains(BACKDROP_CLASS)) || null,
+    arrow: boxChildren.find(
+      node =>
+        node.classList.contains(ARROW_CLASS) ||
+        node.classList.contains(SVG_ARROW_CLASS),
+    ),
+    backdrop: boxChildren.find(node => node.classList.contains(BACKDROP_CLASS)),
   };
 }
 
