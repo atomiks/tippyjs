@@ -41,7 +41,7 @@ Object {
     "appendTo": [Function],
     "aria": Object {
       "content": "describedby",
-      "expanded": null,
+      "expanded": "interactive",
     },
     "arrow": true,
     "content": "tippy",

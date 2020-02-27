@@ -179,32 +179,30 @@ tippy(targets, {
 The aria attribute configuration. Both properties are optional:
 
 - `content`: The `aria-*` attribute applied to the reference element to announce
-  its content.
+  the tippy content.
 - `expanded`: Whether to add an `aria-expanded` attribute to the reference
   element.
 
-These defaults can be overridden if necessary. Specifying `null` for either
-property means you want Tippy to figure out the configuration automatically
-based on the supplied props.
+These defaults can be overridden if necessary.
 
 ```js
 tippy(targets, {
   // default
   aria: {
+    // aria-describedby, `null` when interactive: true
     content: 'describedby',
-    expanded: null
+    // aria-expanded only when interactive: true
+    expanded: 'interactive'
   },
+
   // announce as a label rather than a description
   aria: {
     content: 'labelledby'
   },
-  // interactive: true default
-  aria: {
-    content: null,
-    expanded: true
-  },
+
   // to abide by strict WCAG 2.1 rules with `interactive: true` to make it
-  // hoverable if it's not actually interactive
+  // hoverable if it's not actually interactive, so the content will still be
+  // announced
   aria: {
     expanded: false
   }

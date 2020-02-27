@@ -208,6 +208,40 @@ tippy(targets, {
 
 </details>
 
+### If you were using `aria`
+
+<details>
+<summary>View details</summary>
+
+This has become an object to allow for better configurability. By default Tippy
+will infer what to use based on the `interactive` prop, but this can be
+overridden.
+
+Types:
+
+```ts
+interface Props {
+  // ...
+  aria: {
+    content?: 'describedby' | 'labelledby' | null;
+    expanded?: 'interactive' | boolean;
+  };
+}
+```
+
+```js
+tippy(targets, {
+  aria: {
+    // `null` when interactive is enabled
+    content: 'describedby', // `aria-*` attribute
+    // `true` when interactive is enabled
+    expanded: 'interactive', // `aria-expanded` attribute
+  },
+});
+```
+
+</details>
+
 ### If you were using `multiple` or relying on its behavior
 
 <details>

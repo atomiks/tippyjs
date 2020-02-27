@@ -23,7 +23,7 @@ const renderProps = {
 
 export const defaultProps: DefaultProps = {
   appendTo: () => document.body,
-  aria: {content: 'describedby', expanded: null},
+  aria: {content: 'describedby', expanded: 'interactive'},
   content: '',
   delay: 0,
   duration: [300, 250],
@@ -142,7 +142,7 @@ export function evaluateProps(
 
   out.aria = {...defaultProps.aria, ...out.aria};
 
-  if (out.interactive && out.aria.expanded === null) {
+  if (out.interactive && out.aria.expanded === 'interactive') {
     out.aria = {expanded: true, content: null};
   }
 

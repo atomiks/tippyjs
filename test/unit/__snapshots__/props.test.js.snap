@@ -4,7 +4,7 @@ exports[`evaluateProps considers plugin props 1`] = `
 Object {
   "aria": Object {
     "content": "describedby",
-    "expanded": null,
+    "expanded": "interactive",
   },
   "plugin": "y",
   "plugins": Array [
@@ -21,7 +21,7 @@ Object {
   "animation": "fade",
   "aria": Object {
     "content": "describedby",
-    "expanded": null,
+    "expanded": "interactive",
   },
   "ignoreAttributes": false,
 }
@@ -32,7 +32,7 @@ Object {
   "animation": "scale",
   "aria": Object {
     "content": "describedby",
-    "expanded": null,
+    "expanded": "interactive",
   },
   "ignoreAttributes": true,
 }
