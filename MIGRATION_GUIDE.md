@@ -139,7 +139,8 @@ tippy(targets, {
       {
         name: 'preventOverflow',
         options: {
-          // `boundary` and `rootBoundary` are accepted here
+          // equivalent to boundary: 'window' in v1, usually NOT necessary in v2
+          rootBoundary: 'document',
         },
       },
     ],
