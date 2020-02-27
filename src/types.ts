@@ -1,6 +1,6 @@
 import * as Popper from '@popperjs/core';
 
-export type BasePlacement = Popper.Placement;
+export type BasePlacement = Popper.BasePlacement;
 
 export type Placement = Popper.Placement;
 
