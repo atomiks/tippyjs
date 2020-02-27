@@ -1004,7 +1004,7 @@ export default function createTippy(
 
     if (instance.props.animation) {
       if (isDefaultRenderFn(instance.props.render)) {
-        onTransitionedOut(duration, unmount);
+        onTransitionedOut(duration, instance.unmount);
       }
     } else {
       instance.unmount();
