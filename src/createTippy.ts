@@ -45,7 +45,7 @@ export default function createTippy(
   reference: ReferenceElement,
   passedProps: Partial<Props>,
 ): Instance {
-  const props: Props = evaluateProps(reference, {
+  const props = evaluateProps(reference, {
     ...defaultProps,
     ...getExtendedPassedProps(passedProps),
   });
