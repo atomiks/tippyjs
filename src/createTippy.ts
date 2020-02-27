@@ -158,7 +158,6 @@ export default function createTippy(
       instance.props.interactive &&
       instance.props.trigger.indexOf('mouseenter') >= 0
     ) {
-      debouncedOnMouseMove(event);
       doc.addEventListener('mousemove', debouncedOnMouseMove);
       debouncedOnMouseMove(event);
     }
