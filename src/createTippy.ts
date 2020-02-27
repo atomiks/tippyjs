@@ -1020,6 +1020,7 @@ export default function createTippy(
     // find a workaround if possible
     getNestedPopperTree().forEach(nestedPopper => {
       const instance = nestedPopper._tippy!;
+      instance.hide();
       instance.unmount();
     });
 
