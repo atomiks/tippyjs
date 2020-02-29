@@ -10,6 +10,7 @@ import {Instance, PopperElement, Props} from './types';
 import {PopperChildren} from './types-internal';
 import {arrayFrom} from './utils';
 
+// Firefox extensions don't allow .innerHTML = "..." property. This tricks it.
 const innerHTML = (): 'innerHTML' => 'innerHTML';
 
 function dangerouslySetInnerHTML(element: Element, html: string): void {
