@@ -33,6 +33,10 @@ class ImageReporter {
             fileContentType: 'image/png',
           },
           (err, data) => {
+            if (err) {
+              throw err;
+            }
+
             console.log(
               red(bold(`Uploaded image diff file to ${JSON.parse(data).url}`)),
             );
