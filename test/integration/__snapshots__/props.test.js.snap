@@ -60,12 +60,7 @@ Object {
     Object {
       "name": "flip",
       "options": Object {
-        "padding": Object {
-          "bottom": 2,
-          "left": 5,
-          "right": 5,
-          "top": 2,
-        },
+        "padding": 5,
       },
     },
     Object {

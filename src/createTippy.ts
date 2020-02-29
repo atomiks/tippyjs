@@ -634,12 +634,7 @@ export default function createTippy(
       {
         name: 'flip',
         options: {
-          padding: {
-            top: 2,
-            bottom: 2,
-            left: 5,
-            right: 5,
-          },
+          padding: 5,
         },
       },
       {
