@@ -585,13 +585,21 @@ export default function createTippy(
       requires: ['computeStyles'],
       fn({state}) {
         if (isDefaultRenderFn(instance.props.render)) {
-          // Replace `data-popper-placement` with `data-placement`
-          delete state.attributes.popper['data-popper-placement'];
+          const {box} = getDefaultTemplateChildren();
 
-          getDefaultTemplateChildren().box.setAttribute(
-            'data-placement',
-            state.placement,
-          );
+          ['placement', 'reference-hidden', 'escaped'].forEach(attr => {
+            if (attr === 'placement') {
+              box.setAttribute('data-placement', state.placement);
+            } else {
+              if (state.attributes.popper[`data-popper-${attr}`]) {
+                box.setAttribute(`data-${attr}`, '');
+              } else {
+                box.removeAttribute(`data-${attr}`);
+              }
+            }
+
+            delete state.attributes.popper[`data-popper-${attr}`];
+          });
         }
       },
     };
