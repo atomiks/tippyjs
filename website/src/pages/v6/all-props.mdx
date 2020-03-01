@@ -60,7 +60,7 @@ tippy(targets, {
 - [touch](#touch)
 - [trigger](#trigger)
 - [triggerTarget](#triggertarget)
-- [zIndex](#zindex)
+- [zIndex](#zindex) <RenderIcon />
 
 ---
 
@@ -99,9 +99,9 @@ Determines if the background fill color of the tippy should be animated.
 
 ```js
 tippy(targets, {
-  // Default
+  // default
   animateFill: false,
-  // Enable
+  // enable it
   animateFill: true
 });
 ```
@@ -564,8 +564,8 @@ it from hiding if the cursor left it.
 tippy(targets, {
   // default
   interactiveBorder: 2,
-  // 50px
-  interactiveBorder: 20
+  // 30px
+  interactiveBorder: 30
 });
 ```
 
@@ -771,6 +771,9 @@ tippy(targets, {
 });
 ```
 
+> You can optionally `return false` from this lifecycle to cancel a hide based
+> on a condition.
+
 ---
 
 ### onMount
@@ -799,6 +802,9 @@ tippy(targets, {
   }
 });
 ```
+
+> You can optionally `return false` from this lifecycle to cancel a show based
+> on a condition.
 
 ---
 
@@ -1062,6 +1068,7 @@ tippy(targets, {
   trigger: 'mouseenter focus',
   // others:
   trigger: 'click',
+  trigger: 'focusin',
   trigger: 'mouseenter click',
   // only programmatically trigger it
   trigger: 'manual'
@@ -1088,7 +1095,7 @@ tippy(targets, {
 
 ---
 
-### zIndex
+### zIndex <RenderIcon large />
 
 Specifies the `z-index` CSS on the root popper node.
 
