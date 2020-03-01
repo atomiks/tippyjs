@@ -69,8 +69,6 @@ const commonUMDOutputOptions = {
   globals: {'@popperjs/core': 'Popper'},
   format: 'umd',
   name: 'tippy',
-  esModule: false,
-  exports: 'named',
   sourcemap: true,
 };
 
@@ -136,7 +134,7 @@ const prodConfig = [
     },
   },
   {
-    input: 'build/headless.js',
+    input: 'build/headless-umd.js',
     plugins: pluginConfigs.umdBase,
     external: ['@popperjs/core'],
     output: {
@@ -145,7 +143,7 @@ const prodConfig = [
     },
   },
   {
-    input: 'build/headless.js',
+    input: 'build/headless-umd.js',
     plugins: pluginConfigs.umdBaseMin,
     external: ['@popperjs/core'],
     output: {
