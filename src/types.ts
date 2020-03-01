@@ -170,7 +170,7 @@ export interface Delegate<TProps = Props> {
 
 export type CreateSingleton<TProps = Props> = (
   tippyInstances: Instance<TProps | Props>[],
-  optionalProps?: Partial<TProps> & {overrides?: Array<keyof Props>},
+  optionalProps?: Partial<TProps> & {overrides?: Array<keyof TProps>},
 ) => Instance<TProps>;
 
 declare const delegate: Delegate;
