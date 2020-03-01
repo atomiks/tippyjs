@@ -3,19 +3,27 @@
 
 $color: white;
 
-.#{$namespace-prefix}-tooltip.light-theme {
+.#{$namespace-prefix}-box[data-theme~='light'] {
   color: #26323d;
   box-shadow: 0 0 20px 4px rgba(154, 161, 177, 0.15),
     0 4px 80px -8px rgba(36, 40, 47, 0.25),
     0 4px 4px -2px rgba(91, 94, 105, 0.15);
   background-color: $color;
 
-  @each $placement in $placements {
-    &[data-placement^='#{$placement}'] {
-      > .#{$namespace-prefix}-arrow {
-        @include arrow($placement, $arrow-size + 1, $color);
-      }
-    }
+  &[data-placement^='top'] > .#{$namespace-prefix}-arrow::before {
+    border-top-color: $color;
+  }
+
+  &[data-placement^='bottom'] > .#{$namespace-prefix}-arrow::before {
+    border-bottom-color: $color;
+  }
+
+  &[data-placement^='left'] > .#{$namespace-prefix}-arrow::before {
+    border-left-color: $color;
+  }
+
+  &[data-placement^='right'] > .#{$namespace-prefix}-arrow::before {
+    border-right-color: $color;
   }
 
   > .#{$namespace-prefix}-backdrop {

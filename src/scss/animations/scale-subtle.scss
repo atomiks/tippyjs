@@ -1,7 +1,7 @@
 @import '../_mixins.scss';
 @import '../_vars.scss';
 
-.#{$namespace-prefix}-tooltip {
+.#{$namespace-prefix}-box {
   &[data-animation='scale-subtle'] {
     @each $placement in $placements {
       &[data-placement^='#{$placement}'] {

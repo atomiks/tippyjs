@@ -1,0 +1,98 @@
+---
+title: Headless Tippy
+path: /v6/headless-tippy/
+index: 14
+---
+
+"Headless Tippy" refers to Tippy without any of the default element rendering or
+CSS. This allows you to create your own element from scratch and use Tippy for
+its logic only.
+
+This means all props marked with the R symbol in [All Props](../all-props/) no
+longer "work" by default, since it's your responsibility to create these
+features.
+
+### Usage
+
+This demonstrates the basic usage:
+
+```js
+import tippy from 'tippy.js/headless';
+
+tippy(targets, {
+  content: 'Hello!',
+  render(instance) {
+    // The recommended structure is to use the popper as an outer wrapper
+    // element, with an inner `box` element
+    const popper = document.createElement('div');
+    const box = document.createElement('div');
+
+    popper.appendChild(box);
+
+    box.className = 'my-custom-class';
+    box.textContent = instance.props.content;
+
+    function onUpdate(prevProps, nextProps) {
+      // DOM diffing
+      if (prevProps.content !== nextProps.content) {
+        box.textContent = nextProps.content;
+      }
+    }
+
+    // Return an object with two properties:
+    // - `popper` (the root popper element)
+    // - `onUpdate` callback whenever .setProps() or .setContent() is called
+    return {
+      popper,
+      onUpdate // optional
+    };
+  }
+});
+```
+
+### Animations
+
+When using Headless Tippy, animations are not enabled (`animation: false`) by
+default. To enable animations, set `animation: true` (or a string) — this will
+require you to invoke `instance.unmount()` whenever your hide animation
+completes.
+
+```js
+tippy(targets, {
+  animation: true,
+  onHide(instance) {
+    // perform your hide animation...
+    // once it completes:
+    instance.unmount();
+  }
+});
+```
+
+### Mutations
+
+Tippy performs a few mutations to your popper element, so you should avoid
+specifying these:
+
+#### Attributes
+
+- `id` attribute is set (for accessibility)
+- `data-tippy-root` attribute is set (to allow for nesting)
+
+#### Properties
+
+- `_tippy` property is set on it (to allow for nesting)
+
+#### Styles
+
+- `visibility` is changed on show or hide
+- `pointerEvents` is changed based on the `interactive` prop
+- `transition` is changed based on the `moveTransition` prop
+
+### Imports
+
+When using Headless Tippy, all imports (e.g. `followCursor`) should also be
+specified from this import, otherwise you will end up with duplicate code bloat.
+
+```js
+import tippy, {followCursor} from 'tippy.js/headless';
+```

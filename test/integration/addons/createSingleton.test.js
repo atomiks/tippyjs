@@ -1,14 +1,9 @@
 import {fireEvent} from '@testing-library/dom';
-import {h, cleanDocumentBody, setTestDefaultProps} from '../../utils';
+import {h} from '../../utils';
 
 import createSingleton from '../../../src/addons/createSingleton';
 import tippy from '../../../src';
-import {clean, getFormattedMessage} from '../../../src/validation';
-
-setTestDefaultProps();
-jest.useFakeTimers();
-
-afterEach(cleanDocumentBody);
+import {getFormattedMessage} from '../../../src/validation';
 
 describe('createSingleton', () => {
   it('shows when a tippy instance reference is triggered', () => {
@@ -188,20 +183,6 @@ describe('createSingleton', () => {
     });
   });
 
-  it('does not throw maximum call stack error due to stale lifecycle hooks', () => {
-    const tippyInstances = tippy([h(), h()]);
-    const instance = tippyInstances[0];
-    const singletonInstance = createSingleton(tippyInstances);
-
-    singletonInstance.destroy(false);
-
-    createSingleton(tippyInstances);
-
-    fireEvent.mouseEnter(instance.reference);
-
-    jest.runAllTimers();
-  });
-
   it('restores original state when destroyed', () => {
     const tippyInstances = tippy([h(), h()]);
     const prevInstanceProps = tippyInstances.map(instance => instance.props);
@@ -218,7 +199,7 @@ describe('createSingleton', () => {
     const tippyInstances = tippy([h(), h()]);
     const singletonInstance = createSingleton(tippyInstances, {delay: 100});
 
-    const id = singletonInstance.popperChildren.tooltip.id;
+    const id = `__NAMESPACE_PREFIX__-${singletonInstance.id}`;
     const {reference: firstRef} = tippyInstances[0];
     const {reference: secondRef} = tippyInstances[1];
 
@@ -226,34 +207,27 @@ describe('createSingleton', () => {
     jest.runAllTimers();
 
     expect(firstRef.getAttribute('aria-describedby')).toBe(id);
-
-    fireEvent.mouseLeave(firstRef);
-    fireEvent.mouseEnter(secondRef);
-
-    expect(firstRef.getAttribute('aria-describedby')).toBe(null);
     expect(secondRef.getAttribute('aria-describedby')).toBe(id);
 
-    singletonInstance.setProps({aria: 'labelledby'});
-
-    fireEvent.mouseLeave(secondRef);
-    fireEvent.mouseEnter(firstRef);
-
-    expect(firstRef.getAttribute('aria-labelledby')).toBe(id);
-    expect(secondRef.getAttribute('aria-labelledby')).toBe(null);
-
-    singletonInstance.setProps({aria: null});
-
     fireEvent.mouseLeave(firstRef);
     fireEvent.mouseEnter(secondRef);
+
+    expect(firstRef.getAttribute('aria-describedby')).toBe(id);
+    expect(secondRef.getAttribute('aria-describedby')).toBe(id);
+
+    singletonInstance.setProps({aria: {content: 'labelledby'}});
+    singletonInstance.hide();
+
+    fireEvent.mouseEnter(firstRef);
+    jest.runAllTimers();
+
+    expect(firstRef.getAttribute('aria-labelledby')).toBe(id);
+    expect(secondRef.getAttribute('aria-labelledby')).toBe(id);
+
+    fireEvent.mouseLeave(firstRef);
+    jest.advanceTimersByTime(100);
 
     expect(firstRef.getAttribute('aria-labelledby')).toBe(null);
     expect(secondRef.getAttribute('aria-labelledby')).toBe(null);
-  });
-
-  it('can accept plugins', () => {
-    const plugins = [{fn: () => ({})}];
-    const singletonInstance = createSingleton(tippy([h(), h()]), {}, plugins);
-
-    expect(singletonInstance.plugins.slice(1)).toEqual(plugins);
   });
 });

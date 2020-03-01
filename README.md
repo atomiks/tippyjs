@@ -4,7 +4,7 @@
 
 <div align="center">
   <h1>Tippy.js</h1>
-  <p>A highly customizable tooltip and popover library powered by Popper.js.</p>
+  <p>A highly customizable tooltip and popover library powered by Popper.</p>
   <a href="https://www.npmjs.com/package/tippy.js">
    <img src="https://img.shields.io/npm/dm/tippy.js.svg?color=%235599ff&style=for-the-badge" alt="npm Downloads per Month">
   <a>
@@ -19,9 +19,7 @@
 
 ➡️ **[View the latest demo & docs here](https://atomiks.github.io/tippyjs/)**
 
-[View migration guide from v4 to v5](https://github.com/atomiks/tippyjs/blob/master/MIGRATION_GUIDE.md)
-
-[4.x docs](https://github.com/atomiks/tippyjs/tree/623e8416fbb314741db603c997081512105c0d96/website/src/pages)
+[Migration Guide](https://github.com/atomiks/tippyjs/blob/master/MIGRATION_GUIDE.md)
 
 ## Installation
 
@@ -45,15 +43,16 @@ import 'tippy.js/dist/tippy.css';
 ### CDN
 
 ```html
-<script src="https://unpkg.com/popper.js@1"></script>
-<script src="https://unpkg.com/tippy.js@5"></script>
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
 ```
 
 The core CSS comes bundled with the default unpkg import.
 
 ## Usage
 
-For detailed usage information, [visit the docs](https://atomiks.github.io/tippyjs/creating-tooltips/).
+For detailed usage information,
+[visit the docs](https://atomiks.github.io/tippyjs/v6/creation/).
 
 ## Component Wrappers
 

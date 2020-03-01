@@ -53,9 +53,7 @@ function DimensionsTransition() {
           </>
         }
         interactive={true}
-        flipOnUpdate={true}
         arrow={false}
-        animation="fade"
         trigger="click"
       >
         <Button>Image transition (click)</Button>

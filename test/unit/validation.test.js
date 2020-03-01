@@ -1,8 +1,4 @@
-import {
-  clean,
-  validateTargets,
-  getFormattedMessage,
-} from '../../src/validation';
+import {validateTargets, getFormattedMessage} from '../../src/validation';
 
 describe('validateTargets', () => {
   it('recognizes a falsy target', () => {
@@ -21,18 +17,5 @@ describe('validateTargets', () => {
         ),
       );
     });
-  });
-
-  it('recognizes a plain object', () => {
-    validateTargets({});
-
-    expect(console.error).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        [
-          'tippy() was passed a plain object which is no longer supported as an argument.',
-          'See: https://atomiks.github.io/tippyjs/misc/#custom-position',
-        ].join(' '),
-      ),
-    );
   });
 });

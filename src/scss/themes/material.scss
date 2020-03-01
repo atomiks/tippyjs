@@ -3,21 +3,24 @@
 
 $color: #505355;
 
-.#{$namespace-prefix}-tooltip.material-theme {
+.#{$namespace-prefix}-box[data-theme~='material'] {
   background-color: $color;
-  font-size: 13px;
   font-weight: 600;
 
-  @each $placement in $placements {
-    &[data-placement^='#{$placement}'] {
-      > .#{$namespace-prefix}-arrow {
-        @include arrow($placement, $arrow-size + 1, $color);
-      }
-    }
+  &[data-placement^='top'] > .#{$namespace-prefix}-arrow::before {
+    border-top-color: $color;
   }
 
-  > .#{$namespace-prefix}-content {
-    padding: 4px 7px;
+  &[data-placement^='bottom'] > .#{$namespace-prefix}-arrow::before {
+    border-bottom-color: $color;
+  }
+
+  &[data-placement^='left'] > .#{$namespace-prefix}-arrow::before {
+    border-left-color: $color;
+  }
+
+  &[data-placement^='right'] > .#{$namespace-prefix}-arrow::before {
+    border-right-color: $color;
   }
 
   > .#{$namespace-prefix}-backdrop {

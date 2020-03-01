@@ -1,0 +1,72 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial !important;
+}
+
+#controls {
+  position: fixed;
+  top: 0;
+  right: 0;
+  overflow-y: auto;
+  width: calc(100vw - 816px);
+  height: 100vh;
+  padding: 15px 25px;
+  background: #eee;
+}
+
+.link {
+  position: relative;
+  display: block;
+  color: #333;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  font-size: 100%;
+  cursor: pointer;
+  margin: 5px 0;
+  outline: 0;
+}
+
+.link:focus {
+  box-shadow: 0 0 0 1px purple;
+}
+
+.link[data-current] {
+  font-weight: bold;
+  color: purple;
+}
+
+.link[data-current]::before {
+  content: '•';
+  color: purple;
+  position: absolute;
+  left: -10px;
+}
+
+button:not(.link) {
+  all: unset;
+  font-size: 16px;
+  border: none;
+  background: #eee;
+  padding: 8px 16px;
+}
+
+button:not(.link):focus {
+  outline: 1px solid;
+}
+
+.container {
+  position: relative;
+  display: none;
+  overflow: hidden;
+  border: 2px dashed red;
+  height: 500px;
+  width: 800px;
+  padding: 25px;
+  place-items: center;
+}

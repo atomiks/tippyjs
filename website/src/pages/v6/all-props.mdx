@@ -1,0 +1,1100 @@
+---
+title: All Props
+path: /v6/all-props/
+index: 4
+---
+
+import {BOLD_HELLO} from '../../utils';
+import RenderIcon from '../../components/RenderIcon';
+import PluginIcon from '../../components/PluginIcon';
+
+"Props" are configurable properties you can pass optionally to the `tippy()`
+constructor.
+
+```js
+tippy(targets, {
+  // props
+});
+```
+
+- [allowHTML](#allowhtml) <RenderIcon />
+- [animateFill](#animatefill) <RenderIcon /><PluginIcon />
+- [animation](#animation) <RenderIcon />
+- [appendTo](#appendto)
+- [aria](#aria)
+- [arrow](#arrow) <RenderIcon />
+- [content](#content) <RenderIcon />
+- [delay](#delay)
+- [duration](#duration) <RenderIcon />
+- [followCursor](#followcursor) <PluginIcon />
+- [getReferenceClientRect](#getreferenceclientrect)
+- [hideOnClick](#hideonclick)
+- [ignoreAttributes](#ignoreattributes)
+- [inertia](#inertia) <RenderIcon />
+- [inlinePositioning](#inlinepositioning) <PluginIcon />
+- [interactive](#interactive)
+- [interactiveBorder](#interactiveborder)
+- [interactiveDebounce](#interactivedebounce)
+- [maxWidth](#maxwidth) <RenderIcon />
+- [moveTransition](#movetransition)
+- [offset](#offset)
+- [onAfterUpdate](#onafterupdate)
+- [onBeforeUpdate](#onbeforeupdate)
+- [onCreate](#oncreate)
+- [onDestroy](#ondestroy)
+- [onHidden](#onhidden)
+- [onHide](#onhide)
+- [onMount](#onmount)
+- [onShow](#onshow)
+- [onShown](#onshown) <RenderIcon />
+- [onTrigger](#ontrigger)
+- [onUntrigger](#onuntrigger)
+- [placement](#placement)
+- [plugins](#plugins)
+- [popperOptions](#popperoptions)
+- [render](#render)
+- [role](#role) <RenderIcon />
+- [showOnCreate](#showoncreate)
+- [sticky](#sticky) <PluginIcon />
+- [theme](#theme) <RenderIcon />
+- [touch](#touch)
+- [trigger](#trigger)
+- [triggerTarget](#triggertarget)
+- [zIndex](#zindex)
+
+---
+
+### allowHTML <RenderIcon large />
+
+Determines if `content` strings are parsed as HTML instead of text.
+
+> **Warning**
+>
+> Make sure you are sanitizing any user data if rendering HTML to prevent XSS
+> attacks.
+
+```js
+tippy(targets, {
+  // default
+  allowHTML: false,
+  // parse `content` strings as HTML
+  allowHTML: true
+});
+```
+
+<Demo>
+  <Tippy content={BOLD_HELLO} allowHTML={true}>
+    <Button>allowHTML: true</Button>
+  </Tippy>
+  <Tippy content="<b>Hello</b>" allowHTML={false}>
+    <Button>allowHTML: false</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### animateFill <RenderIcon large /><PluginIcon large />
+
+Determines if the background fill color of the tippy should be animated.
+
+```js
+tippy(targets, {
+  // Default
+  animateFill: false,
+  // Enable
+  animateFill: true
+});
+```
+
+> **Plugin**
+>
+> When using modules (esm), you must import this plugin to use it.
+>
+> You must also import the `dist/backdrop.css` & `animations/shift-away.css`
+> stylesheets for styling to work.
+
+```js
+import tippy, {animateFill} from 'tippy.js';
+import 'tippy.js/dist/backdrop.css';
+import 'tippy.js/animations/shift-away.css';
+
+tippy(targets, {
+  animateFill: true,
+  plugins: [animateFill]
+});
+```
+
+<Demo>
+  <Tippy animateFill={true}>
+    <Button>animateFill: true</Button>
+  </Tippy>
+  <Tippy animateFill={false}>
+    <Button>animateFill: false</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### animation <RenderIcon large />
+
+The type of transition animation. See [Animations](../animations/) for details.
+
+```js
+tippy(targets, {
+  // default
+  animation: 'fade'
+});
+```
+
+> **Note**
+>
+> This is `false` by default when using [Headless Tippy](../headless-tippy/).
+
+---
+
+### appendTo
+
+The element to append the tippy to. If `interactive: true`, the default behavior
+is `appendTo: "parent"`. See [Accessibility](../accessibility/#interactivity)
+for more information.
+
+Sometimes the tippy needs to be appended to a different DOM context due to
+accessibility, clipping, or z-index issues.
+
+```js
+tippy(targets, {
+  // default (takes reference as an argument)
+  appendTo: () => document.body,
+  // append to reference's parentNode
+  appendTo: 'parent',
+  // append to an Element
+  appendTo: element
+});
+```
+
+---
+
+### aria
+
+The aria attribute configuration. Both properties are optional:
+
+- `content`: The `aria-*` attribute applied to the reference element to announce
+  the tippy content.
+- `expanded`: Whether to add an `aria-expanded` attribute to the reference
+  element.
+
+```js
+tippy(targets, {
+  // default
+  aria: {
+    // `null` when interactive: true, otherwise "describedby"
+    content: 'auto',
+    // matches `interactive` boolean
+    expanded: 'auto'
+  },
+
+  // announce as a label rather than a description
+  // the content will also be announced with `interactive: true`
+  aria: {
+    content: 'labelledby'
+  },
+
+  // to abide by strict WCAG 2.1 rules with `interactive: true` to make it
+  // hoverable if it's not actually interactive, but the content will still be
+  // announced
+  aria: {
+    content: 'describedby'
+  },
+
+  // disable completely, left up to you to control
+  aria: {
+    content: null,
+    expanded: false
+  }
+});
+```
+
+---
+
+### arrow <RenderIcon large />
+
+Determines if the tippy has an arrow.
+
+```js
+tippy(targets, {
+  // default
+  arrow: true,
+  // disable arrow
+  arrow: false,
+  // custom arrow string
+  arrow: '<svg>...</svg>',
+  // custom arrow element
+  arrow: svgElement
+});
+```
+
+> **Warning**
+>
+> A string is parsed as `.innerHTML`. Don't pass unknown user data to this prop.
+
+> **Note**
+>
+> To use the default round arrow, import `roundArrow` from the package
+> (`tippy.roundArrow` in the `umd` version) and pass it as the value.
+>
+> You must also import `dist/svg-arrow.css` when using SVG arrows for styling to
+> work.
+
+```js
+import tippy, {roundArrow} from 'tippy.js';
+import 'tippy.js/dist/svg-arrow.css';
+
+tippy(targets, {
+  arrow: roundArrow
+});
+```
+
+<Demo>
+  <Tippy arrow={true}>
+    <Button>arrow: true</Button>
+  </Tippy>
+  <Tippy arrow={false}>
+    <Button>arrow: false</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### content <RenderIcon large />
+
+The content of the tippy.
+
+```js
+tippy(targets, {
+  // default
+  content: '',
+  // string
+  content: 'Hello',
+  // Element
+  content: document.createElement('div'),
+  // (reference) => string | Element
+  content: reference => reference.getAttribute('title')
+});
+```
+
+> **Note**
+>
+> To render strings as HTML, set `allowHTML: true`. This can open you up to XSS
+> attacks, so be careful.
+
+---
+
+### delay
+
+Delay in ms once a trigger event is fired before a tippy shows or hides.
+
+```js
+tippy(targets, {
+  // default
+  delay: 0,
+  // show and hide delay are 100ms
+  delay: 100,
+  // show delay is 100ms, hide delay is 200ms
+  delay: [100, 200],
+  // show delay is 100ms, hide delay is the default
+  delay: [100, null]
+});
+```
+
+<Demo>
+  <Tippy delay={400}>
+    <Button>delay: 400</Button>
+  </Tippy>
+  <Tippy delay={[500, 250]}>
+    <Button>delay: [500, 250]</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### duration <RenderIcon large />
+
+Duration in ms of the transition animation.
+
+```js
+tippy(targets, {
+  // default
+  duration: [300, 250],
+  // show and hide durations are 100ms
+  duration: 100,
+  // show duration is 100ms, hide duration is 200ms
+  duration: [100, 200],
+  // show duration is 100ms, hide duration is the default
+  duration: [100, null]
+});
+```
+
+<Demo>
+  <Tippy duration={1000}>
+    <Button>duration: 1000</Button>
+  </Tippy>
+  <Tippy duration={[500, 0]}>
+    <Button>duration: [500, 0]</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### followCursor <PluginIcon large />
+
+Determines if the tippy follows the user's mouse cursor.
+
+```js
+tippy(targets, {
+  // default
+  followCursor: false,
+  // follow on both x and y axes
+  followCursor: true,
+  // follow on x axis
+  followCursor: 'horizontal',
+  // follow on y axis
+  followCursor: 'vertical',
+  // follow until it shows (taking into account `delay`)
+  followCursor: 'initial'
+});
+```
+
+> **Plugin**
+>
+> When using modules (esm), you must import this plugin to use it.
+
+```js
+import tippy, {followCursor} from 'tippy.js';
+
+tippy(targets, {
+  followCursor: true,
+  plugins: [followCursor]
+});
+```
+
+<Demo>
+  <Tippy followCursor={true}>
+    <Button>followCursor: true</Button>
+  </Tippy>
+  <Tippy followCursor="horizontal">
+    <Button>followCursor: "horizontal"</Button>
+  </Tippy>
+  <Tippy followCursor="initial" delay={400}>
+    <Button>followCursor: "initial"</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### getReferenceClientRect
+
+Used as the positioning reference for the tippy.
+
+```js
+tippy(targets, {
+  // default (uses the reference passed as first argument)
+  getReferenceClientRect: null,
+  // function that returns a ClientRect object
+  getReferenceClientRect: () => ({
+    width: 100,
+    height: 100,
+    left: 100,
+    right: 200,
+    top: 100,
+    bottom: 200
+  })
+});
+```
+
+---
+
+### hideOnClick
+
+Determines if the tippy hides upon clicking the reference or outside of the
+tippy. The behavior can depend upon the `trigger` events used.
+
+```js
+tippy(targets, {
+  // default
+  hideOnClick: true,
+  // never hide upon clicking
+  hideOnClick: false,
+  // hide only upon clicking the reference, but not outside
+  hideOnClick: 'toggle'
+});
+```
+
+`hideOnClick: true` with `click`:
+
+<Demo>
+  <Tippy hideOnClick={true} trigger="click">
+    <Button>trigger: "click"</Button>
+  </Tippy>
+</Demo>
+
+`hideOnClick: "toggle"` with `click`:
+
+<Demo>
+  <Tippy hideOnClick="toggle" trigger="click">
+    <Button>trigger: "click"</Button>
+  </Tippy>
+</Demo>
+
+`hideOnClick: false` with `mouseenter` (a `click` trigger will never hide):
+
+<Demo>
+  <Tippy hideOnClick={false} trigger="mouseenter">
+    <Button>trigger: "mouseenter"</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### ignoreAttributes
+
+When using UI (component) libraries like React, this is generally not necessary
+and slows down initialization perf a bit.
+
+```js
+tippy(targets, {
+  // default
+  ignoreAttributes: false,
+  // don't consider `data-tippy-*` attributes on the reference element
+  ignoreAttributes: true
+});
+```
+
+---
+
+### inertia <RenderIcon large />
+
+Determines if a (customizable) CSS spring-like animation is applied to the
+transition animation.
+
+Changing the show duration to a higher value makes this look better.
+
+```js
+tippy(targets, {
+  // default
+  inertia: false,
+  // enable it
+  inertia: true
+});
+```
+
+```css
+.tippy-box[data-inertia][data-state='visible'] {
+  transition-timing-function: cubic-bezier(...);
+}
+```
+
+<Demo>
+  <Tippy animation="scale" inertia={true} duration={[400, 200]}>
+    <Button>animation: "scale"</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### inlinePositioning <PluginIcon large />
+
+Provides enhanced support for `display: inline` elements. It will choose the
+most appropriate rect based on the placement.
+
+```js
+tippy(targets, {
+  // default
+  inlinePositioning: false,
+  // enable it
+  inlinePositioning: true
+});
+```
+
+> **Plugin**
+>
+> When using modules (esm), you must import this plugin to use it.
+
+```js
+import tippy, {inlinePositioning} from 'tippy.js';
+
+tippy(targets, {
+  inlinePositioning: true,
+  plugins: [inlinePositioning]
+});
+```
+
+---
+
+### interactive
+
+Determines if the tippy has interactive content inside of it, so that it can be
+hovered over and clicked inside without hiding.
+
+```js
+tippy(targets, {
+  // default
+  interactive: false,
+  // enable it
+  interactive: true
+});
+```
+
+<Demo>
+  <Tippy interactive={false}>
+    <Button>interactive: false</Button>
+  </Tippy>
+  <Tippy interactive={true}>
+    <Button>interactive: true</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### interactiveBorder
+
+Determines the size of the invisible border around the tippy that will prevent
+it from hiding if the cursor left it.
+
+```js
+tippy(targets, {
+  // default
+  interactiveBorder: 2,
+  // 50px
+  interactiveBorder: 20
+});
+```
+
+<Demo>
+  <Tippy interactive={true} interactiveBorder={5}>
+    <Button>interactiveBorder: 5</Button>
+  </Tippy>
+  <Tippy interactive={true} interactiveBorder={30}>
+    <Button>interactiveBorder: 30</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### interactiveDebounce
+
+Determines the time in ms to debounce the interactive hide handler when the
+cursor leaves the tippy's interactive region.
+
+Offers a temporal (rather than spacial) alternative to `interactiveBorder`,
+although it can be used in conjunction with it.
+
+```js
+tippy(targets, {
+  // default
+  interactiveDebounce: 0,
+  // 75ms
+  interactiveDebounce: 75
+});
+```
+
+<Demo>
+  <Tippy interactive={true} interactiveDebounce={0}>
+    <Button>interactiveDebounce: 0</Button>
+  </Tippy>
+  <Tippy interactive={true} interactiveDebounce={75}>
+    <Button>interactiveDebounce: 75</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### maxWidth <RenderIcon large />
+
+Specifies the maximum width of the tippy. Useful to prevent it from being too
+horizontally wide to read.
+
+> **Note**
+>
+> This is applied to the `.tippy-box` (inner element), rather than the root
+> positioned popper node. The core CSS applies `max-width: calc(100vw - 10px)`
+> on the root popper node to prevent it from exceeding the viewport width on
+> small screens.
+
+```js
+tippy(targets, {
+  // default
+  maxWidth: 350,
+  // no maxWidth
+  maxWidth: 'none'
+});
+```
+
+<Demo>
+  <Tippy
+    content="A large amount of content to demonstrate the differences in maxWidth."
+    maxWidth="none"
+  >
+    <Button>maxWidth: "none"</Button>
+  </Tippy>
+  <Tippy
+    content="A large amount of content to demonstrate the differences in maxWidth."
+    maxWidth={200}
+  >
+    <Button>maxWidth: 200</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### moveTransition
+
+Specifies the transition applied to the root positioned popper node. This
+describes the transition between "moves" (or position updates) of the popper
+element when it e.g. flips or changes target location.
+
+```js
+tippy(targets, {
+  // default
+  moveTransition: '',
+  // custom transition
+  moveTransition: 'transform 0.2s ease-out'
+});
+```
+
+---
+
+### offset
+
+Displaces the tippy from its reference element in pixels (skidding and
+distance).
+
+See [Popper's docs](https://popper.js.org/docs/v2/modifiers/offset/) for
+details.
+
+```js
+tippy(targets, {
+  // default [skidding, distance]
+  offset: [0, 10]
+});
+```
+
+<Demo>
+  <Tippy offset={[20, 5]}>
+    <Button>offset: [20, 5]</Button>
+  </Tippy>
+  <Tippy offset={[10, 20]}>
+    <Button>offset: [10, 20]</Button>
+  </Tippy>
+</Demo>
+
+---
+
+### onAfterUpdate
+
+Invoked after the tippy has been updated (via `.setProps()`).
+
+```js
+tippy(targets, {
+  onAfterUpdate(instance, partialProps) {
+    // ...
+  }
+});
+```
+
+---
+
+### onBeforeUpdate
+
+Invoked before the tippy has been updated (via `.setProps()`).
+
+```js
+tippy(targets, {
+  onBeforeUpdate(instance, partialProps) {
+    // ...
+  }
+});
+```
+
+---
+
+### onCreate
+
+Invoked once the tippy has been created.
+
+```js
+tippy(targets, {
+  onCreate(instance) {
+    // ...
+  }
+});
+```
+
+---
+
+### onDestroy
+
+Invoked once the tippy has been destroyed.
+
+```js
+tippy(targets, {
+  onDestroy(instance) {
+    // ...
+  }
+});
+```
+
+---
+
+### onHidden
+
+Invoked once the tippy has been fully hidden and unmounted from the DOM.
+
+```js
+tippy(targets, {
+  onHidden(instance) {
+    // ...
+  }
+});
+```
+
+---
+
+### onHide
+
+Invoked once the tippy begins to hide.
+
+```js
+tippy(targets, {
+  onHide(instance) {
+    // ...
+  }
+});
+```
+
+---
+
+### onMount
+
+Invoked once the tippy has been mounted to the DOM (and the popperInstance
+created).
+
+```js
+tippy(targets, {
+  onMount(instance) {
+    // ...
+  }
+});
+```
+
+---
+
+### onShow
+
+Invoked once the tippy begins to show.
+
+```js
+tippy(targets, {
+  onShow(instance) {
+    // ...
+  }
+});
+```
+
+---
+
+### onShown <RenderIcon large />
+
+Invoked once the tippy has been fully transitioned in.
+
+> **Note**
+>
+> Since this is achieved via CSS `transitionend`, it relies on your own event
+> listeners if using a custom `render` function. You'll need to call the
+> lifecycle manually in this case.
+
+```js
+tippy(targets, {
+  onShown(instance) {
+    // ...
+  }
+});
+```
+
+---
+
+### onTrigger
+
+Invoked once the tippy has been triggered by a DOM event (e.g. `mouseenter`).
+
+```js
+tippy(targets, {
+  onTrigger(instance, event) {
+    // ...
+  }
+});
+```
+
+---
+
+### onUntrigger
+
+Invoked once the tippy has been untriggered by a DOM event (e.g. `mouseleave`).
+
+```js
+tippy(targets, {
+  onUntrigger(instance, event) {
+    // ...
+  }
+});
+```
+
+---
+
+### placement
+
+The _preferred_ placement of the tippy. Note that Popper's `flip` modifier can
+change this to the opposite placement if it has more space.
+
+```js
+tippy(targets, {
+  // default
+  placement: 'top',
+
+  // full list:
+  placement: 'top-start',
+  placement: 'top-end',
+
+  placement: 'right',
+  placement: 'right-start',
+  placement: 'right-end',
+
+  placement: 'bottom',
+  placement: 'bottom-start',
+  placement: 'bottom-end',
+
+  placement: 'left',
+  placement: 'left-start',
+  placement: 'left-end',
+
+  // choose the side with most space
+  placement: 'auto',
+  placement: 'auto-start',
+  placement: 'auto-end'
+});
+```
+
+---
+
+### plugins
+
+Plugins to use. See [Plugins](../plugins/) for details.
+
+> **Note**
+>
+> If using `tippy.setDefaultProps()`, specifying default plugins causes the
+> default plugins to be merged with plugins specified in `tippy()` constructor
+> calls.
+
+```js
+tippy(targets, {
+  // default
+  plugins: []
+});
+```
+
+---
+
+### popperOptions
+
+Specifies custom Popper options. This gives you full control over the tippy's
+positioning. See [Popper's docs](https://popper.js.org/docs/v2/) for details.
+
+```js
+tippy(targets, {
+  // default
+  popperOptions: {},
+  // detailed example
+  popperOptions: {
+    strategy: 'fixed',
+    modifiers: [
+      {
+        name: 'flip',
+        options: {
+          fallbackPlacements: ['bottom', 'right']
+        }
+      },
+      {
+        name: 'preventOverflow',
+        options: {
+          altAxis: true,
+          tether: false
+        }
+      }
+    ]
+  }
+});
+```
+
+---
+
+### render
+
+Specifies a custom render function to use. This allows you to create your own
+tippy element DOM from scratch. Note that all `render` (R) related props are
+entirely controlled by you when specifying a custom function.
+
+See [Headless Tippy](../headless-tippy/) for details.
+
+---
+
+### role <RenderIcon large />
+
+Specifies the `role` attribute on the tippy element.
+
+```js
+tippy(targets, {
+  // default
+  role: 'tooltip'
+});
+```
+
+---
+
+### showOnCreate
+
+Determines if the tippy is shown once it gets created, respecting `delay`.
+
+```js
+tippy(targets, {
+  // default
+  showOnCreate: false,
+  // enable it
+  showOnCreate: true
+});
+```
+
+---
+
+### sticky <PluginIcon large />
+
+Determines if the tippy sticks to the reference element while it is mounted.
+This is usually _not_ needed, but is useful if the reference element's position
+is animating, or to automatically update the tippy position without needing to
+manually do it in certain cases where the DOM layout changes.
+
+> **Note**
+>
+> This has a performance cost since checks are run on every animation frame. Use
+> this only when necessary!
+
+```js
+tippy(targets, {
+  // default
+  sticky: false,
+  // enable it
+  sticky: true,
+  // only check the "reference" rect for changes
+  sticky: 'reference',
+  // only check the "popper" rect for changes
+  sticky: 'popper'
+});
+```
+
+> **Plugin**
+>
+> When using modules (esm), you must import this plugin to use it.
+
+```js
+import tippy, {sticky} from 'tippy.js';
+
+tippy(targets, {
+  sticky: true,
+  plugins: [sticky]
+});
+```
+
+---
+
+### theme <RenderIcon large />
+
+Determines the theme of the tippy element. The core CSS defaults to a dark
+`#333` theme. This can be overridden by a custom theme. See [Themes](../themes/)
+for details.
+
+```js
+tippy(targets, {
+  // default
+  theme: '',
+  // custom theme
+  theme: 'tomato'
+});
+```
+
+---
+
+### touch
+
+Determines the behavior on touch devices.
+
+```js
+tippy(targets, {
+  // default
+  touch: true,
+  // disable tippy from showing on touch devices
+  touch: false,
+  // require pressing & holding the screen to show it
+  touch: 'hold',
+  // same as above, but long-press behavior
+  touch: ['hold', 500]
+});
+```
+
+---
+
+### trigger
+
+Determines the events that cause the tippy to show. Multiple event names are
+separated by spaces.
+
+```js
+tippy(targets, {
+  // default
+  trigger: 'mouseenter focus',
+  // others:
+  trigger: 'click',
+  trigger: 'mouseenter click',
+  // only programmatically trigger it
+  trigger: 'manual'
+});
+```
+
+---
+
+### triggerTarget
+
+The element(s) that the trigger event listeners are added to. Allows you to
+separate the tippy's positioning from its trigger source.
+
+```js
+tippy(targets, {
+  // default (reference is used)
+  triggerTarget: null,
+  // Element
+  triggerTarget: someElement,
+  // Element[]
+  triggerTarget: [someElement1, someElement2]
+});
+```
+
+---
+
+### zIndex
+
+Specifies the `z-index` CSS on the root popper node.
+
+```js
+tippy(targets, {
+  // default
+  zIndex: 9999
+});
+```

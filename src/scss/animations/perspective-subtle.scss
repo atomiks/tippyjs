@@ -25,7 +25,7 @@
   }
 }
 
-.#{$namespace-prefix}-tooltip {
+.#{$namespace-prefix}-box {
   &[data-animation='perspective-subtle'] {
     @each $placement in $placements {
       &[data-placement^='#{$placement}'] {

@@ -1,3 +1,4 @@
+import {State} from '@popperjs/core';
 import {Props} from './types';
 
 export interface ListenerObject {
@@ -7,11 +8,15 @@ export interface ListenerObject {
   options: boolean | object;
 }
 
-export interface PropsV4 extends Props {
-  a11y: boolean;
-  arrowType: 'sharp' | 'round';
-  showOnInit: boolean;
-  size: 'small' | 'regular' | 'large';
-  target: string;
-  touchHold: boolean;
+export interface PopperTreeData {
+  popperRect: ClientRect;
+  popperState: State;
+  props: Props;
+}
+
+export interface PopperChildren {
+  box: HTMLDivElement;
+  content: HTMLDivElement;
+  arrow?: HTMLDivElement;
+  backdrop?: HTMLDivElement;
 }

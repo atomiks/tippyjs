@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`evaluateProps considers plugin props 1`] = `
+Object {
+  "aria": Object {
+    "content": "describedby",
+    "expanded": undefined,
+  },
+  "plugin": "y",
+  "plugins": Array [
+    Object {
+      "fn": [Function],
+      "name": "plugin",
+    },
+  ],
+}
+`;
+
+exports[`evaluateProps does not ignore attributes if \`ignoreAttributes: false\` 1`] = `
+Object {
+  "animation": "fade",
+  "aria": Object {
+    "content": "describedby",
+    "expanded": undefined,
+  },
+  "ignoreAttributes": false,
+}
+`;
+
+exports[`evaluateProps ignores attributes if \`ignoreAttributes: true\` 1`] = `
+Object {
+  "animation": "scale",
+  "aria": Object {
+    "content": "describedby",
+    "expanded": undefined,
+  },
+  "ignoreAttributes": true,
+}
+`;

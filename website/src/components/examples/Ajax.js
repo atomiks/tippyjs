@@ -26,7 +26,6 @@ function Ajax({children}) {
   return (
     <Tippy
       content={content}
-      flipOnUpdate={true}
       onShow={async () => {
         if (fetching || src || error) {
           return;

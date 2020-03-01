@@ -1,10 +1,8 @@
 @import '../_mixins.scss';
 @import '../_vars.scss';
 
-.#{$namespace-prefix}-tooltip {
-  &[data-animation='fade'] {
-    &[data-state='hidden'] {
-      opacity: 0;
-    }
+.#{$namespace-prefix}-box {
+  &[data-animation='fade'][data-state='hidden'] {
+    opacity: 0;
   }
 }

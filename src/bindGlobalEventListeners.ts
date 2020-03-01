@@ -1,5 +1,5 @@
 import {PASSIVE} from './constants';
-import {isReferenceElement} from './utils';
+import {isReferenceElement} from './dom-utils';
 
 export const currentInput = {isTouch: false};
 let lastMouseMoveTime = 0;
@@ -57,9 +57,6 @@ export function onWindowBlur(): void {
   }
 }
 
-/**
- * Adds the needed global event listeners
- */
 export default function bindGlobalEventListeners(): void {
   document.addEventListener('touchstart', onDocumentTouchStart, {
     ...PASSIVE,

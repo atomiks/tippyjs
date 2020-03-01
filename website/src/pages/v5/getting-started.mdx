@@ -1,0 +1,110 @@
+---
+title: Getting Started
+path: /v5/getting-started/
+index: 1
+---
+
+There are two ways to install the package.
+
+### 1. Package Manager
+
+```bash
+# npm
+npm i tippy.js
+
+# Yarn
+yarn add tippy.js
+```
+
+In your application, import the `tippy` module, and the core CSS:
+
+```js
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+```
+
+This assumes you're using a module bundler like webpack, Rollup, or Parcel. If
+you're getting an error message about `process` inside the browser,
+[see the FAQ for help.](../faq/#im-getting-uncaught-referenceerror-process-is-not-defined)
+
+### 2. CDN
+
+```html
+<script src="https://unpkg.com/popper.js@1"></script>
+<script src="https://unpkg.com/tippy.js@5"></script>
+```
+
+Place them at the very bottom of the `<body>`, ensuring they are placed before
+your own scripts. The version numbers after `@` are important, make sure they
+don't get removed.
+
+#### Development version
+
+While developing, it's recommended to use the development file which includes
+helpful warnings and error messages when something goes wrong:
+
+```html
+<script src="https://unpkg.com/popper.js@1"></script>
+<script src="https://unpkg.com/tippy.js@5/dist/tippy-bundle.iife.js"></script>
+```
+
+When you're finished developing (or deploying for production), you can remove
+everything after `@5` (the production file as listed before).
+
+### CSS
+
+Tippy includes a CSS stylesheet by default for the base tooltip styling, fade
+animation, CSS arrows, and other required CSS.
+
+#### CDN
+
+When including the script link above via CDN, the CSS stylesheet is injected
+into its own `<style>` tag in `<head>`. If you have CSP enabled, you should use
+`dist/tippy.iife.js` and link the stylesheet `dist/tippy.css` separately instead
+of relying on injection.
+
+#### Contents
+
+[View the package contents on unpkg](https://unpkg.com/tippy.js@5/)
+
+- `dist/tippy-bundle.js` = Core JS + Core CSS injected into `<head>` (default
+  for CDN version)
+- `dist/tippy.js` = Core JS (default for ESM/CJS versions)
+- `dist/tippy.css` = Core CSS
+
+### Optional extra imports
+
+For brevity, this documentation shows imports via a module bundler in Node. If
+you're using the CDN, you'll be using `<link>` tags instead.
+
+> **Note**
+>
+> This is not a required import — it's just a demonstration of how you will
+> import extra parts of the library depending on your choice when reading the
+> documentation.
+
+This optional extra import in the documentation:
+
+```js
+import 'tippy.js/animations/scale.css';
+```
+
+Is equivalent to this using a CDN in the browser:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/tippy.js@5/animations/scale.css"
+/>
+```
+
+### Component wrappers
+
+- React: [@tippy.js/react](https://github.com/atomiks/tippy.js-react)
+
+### JavaScript syntax
+
+This documentation is making use of new JavaScript features (ES6+) that old
+browsers like IE11 do not support. Although Tippy.js itself supports IE11, the
+code written in these docs may need to be transpiled using a tool like Babel to
+a compatible format if you want to copy and paste it.
