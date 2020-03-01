@@ -24,8 +24,8 @@ const renderProps = {
 export const defaultProps: DefaultProps = {
   appendTo: () => document.body,
   aria: {
-    content: 'infer',
-    expanded: 'infer',
+    content: 'auto',
+    expanded: 'auto',
   },
   content: '',
   delay: 0,
@@ -150,9 +150,9 @@ export function evaluateProps(
 
   out.aria = {
     expanded:
-      out.aria.expanded === 'infer' ? props.interactive : out.aria.expanded,
+      out.aria.expanded === 'auto' ? props.interactive : out.aria.expanded,
     content:
-      out.aria.content === 'infer'
+      out.aria.content === 'auto'
         ? props.interactive
           ? null
           : 'describedby'

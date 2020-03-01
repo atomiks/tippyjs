@@ -183,16 +183,14 @@ The aria attribute configuration. Both properties are optional:
 - `expanded`: Whether to add an `aria-expanded` attribute to the reference
   element.
 
-These defaults can be overridden if necessary.
-
 ```js
 tippy(targets, {
   // default
   aria: {
     // `null` when interactive: true, otherwise "describedby"
-    content: 'infer',
+    content: 'auto',
     // matches `interactive` boolean
-    expanded: 'infer'
+    expanded: 'auto'
   },
 
   // announce as a label rather than a description

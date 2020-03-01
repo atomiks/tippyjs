@@ -233,8 +233,7 @@ tippy(targets, {
 <summary>View details</summary>
 
 This has become an object to allow for better configurability. By default Tippy
-will infer what to use based on the `interactive` prop, but this can be
-overridden.
+will infer what to use (`auto`), but this can be overridden.
 
 Types:
 
@@ -242,8 +241,8 @@ Types:
 interface Props {
   // ...
   aria: {
-    content?: 'describedby' | 'labelledby' | null;
-    expanded?: 'interactive' | boolean;
+    content?: 'auto' | 'describedby' | 'labelledby' | null;
+    expanded?: 'auto' | boolean;
   };
 }
 ```
@@ -252,9 +251,9 @@ interface Props {
 tippy(targets, {
   aria: {
     // `null` when interactive is enabled
-    content: 'describedby', // `aria-*` attribute
+    content: 'auto', // `aria-*` attribute
     // `true` when interactive is enabled
-    expanded: 'interactive', // `aria-expanded` attribute
+    expanded: 'auto', // `aria-expanded` attribute
   },
 });
 ```
