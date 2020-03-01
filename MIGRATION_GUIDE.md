@@ -70,6 +70,24 @@ Has become:
 
 In addition, if you were altering the pixel values, it may need to be adjusted.
 
+In addition, Popper 2 changed some attribute names.
+
+This:
+
+```css
+.tippy-tooltip[data-out-of-boundaries] {
+  visibility: hidden;
+}
+```
+
+Has become:
+
+```css
+.tippy-box[data-reference-hidden] {
+  visibility: hidden;
+}
+```
+
 </details>
 
 ### If you were targeting `.tippy-popper`
