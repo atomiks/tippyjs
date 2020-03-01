@@ -597,9 +597,9 @@ export default function createTippy(
                 box.removeAttribute(`data-${attr}`);
               }
             }
-
-            delete state.attributes.popper[`data-popper-${attr}`];
           });
+
+          state.attributes.popper = {};
         }
       },
     };
