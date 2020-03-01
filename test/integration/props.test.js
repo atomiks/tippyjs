@@ -86,9 +86,7 @@ describe('aria', () => {
 
   describe('expanded', () => {
     it('does not set any attribute if `null` by default', () => {
-      const instance = tippy(h(), {
-        aria: {expanded: null},
-      });
+      const instance = tippy(h());
 
       instance.show();
       jest.runAllTimers();

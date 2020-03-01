@@ -189,21 +189,28 @@ These defaults can be overridden if necessary.
 tippy(targets, {
   // default
   aria: {
-    // aria-describedby, `null` when interactive: true
-    content: 'describedby',
-    // aria-expanded only when interactive: true
-    expanded: 'interactive'
+    // `null` when interactive: true, otherwise "describedby"
+    content: 'infer',
+    // matches `interactive` boolean
+    expanded: 'infer'
   },
 
   // announce as a label rather than a description
+  // the content will also be announced with `interactive: true`
   aria: {
     content: 'labelledby'
   },
 
   // to abide by strict WCAG 2.1 rules with `interactive: true` to make it
-  // hoverable if it's not actually interactive, so the content will still be
+  // hoverable if it's not actually interactive, but the content will still be
   // announced
   aria: {
+    content: 'describedby'
+  },
+
+  // disable completely, left up to you to control
+  aria: {
+    content: null,
     expanded: false
   }
 });

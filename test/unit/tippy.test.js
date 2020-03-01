@@ -12,11 +12,7 @@ describe('tippy', () => {
   });
 
   it('merges the default props with the supplied props', () => {
-    expect(tippy(h(), {placement: 'bottom-end'}).props).toEqual({
-      ...defaultProps,
-      ...extraProps,
-      placement: 'bottom-end',
-    });
+    expect(tippy(h(), {placement: 'bottom-end'}).props).toMatchSnapshot();
   });
 
   it('warns if invalid props(s) are supplied', () => {

@@ -45,6 +45,7 @@ tests.default = () => {
     aria: {
       expanded: false,
     },
+    trigger: 'click',
   });
 
   return instance.destroy;

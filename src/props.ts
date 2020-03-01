@@ -23,7 +23,10 @@ const renderProps = {
 
 export const defaultProps: DefaultProps = {
   appendTo: () => document.body,
-  aria: {content: 'describedby', expanded: 'interactive'},
+  aria: {
+    content: 'infer',
+    expanded: 'infer',
+  },
   content: '',
   delay: 0,
   duration: [300, 250],
@@ -140,11 +143,21 @@ export function evaluateProps(
       : getDataAttributeProps(reference, props.plugins)),
   };
 
-  out.aria = {...defaultProps.aria, ...out.aria};
+  out.aria = {
+    ...defaultProps.aria,
+    ...out.aria,
+  };
 
-  if (out.interactive && out.aria.expanded === 'interactive') {
-    out.aria = {expanded: true, content: null};
-  }
+  out.aria = {
+    expanded:
+      out.aria.expanded === 'infer' ? props.interactive : out.aria.expanded,
+    content:
+      out.aria.content === 'infer'
+        ? props.interactive
+          ? null
+          : 'describedby'
+        : out.aria.content,
+  };
 
   return out;
 }

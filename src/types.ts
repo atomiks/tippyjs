@@ -56,8 +56,8 @@ export interface Props extends LifecycleHooks, RenderProps {
   animateFill: boolean;
   appendTo: 'parent' | Element | ((ref: Element) => Element);
   aria: {
-    content?: 'describedby' | 'labelledby' | null;
-    expanded?: 'interactive' | boolean;
+    content?: 'infer' | 'describedby' | 'labelledby' | null;
+    expanded?: 'infer' | boolean;
   };
   delay: number | [number | null, number | null];
   duration: number | [number | null, number | null];

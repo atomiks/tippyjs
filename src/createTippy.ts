@@ -131,9 +131,7 @@ export default function createTippy(
   popper._tippy = instance;
 
   const pluginsHooks = plugins.map(plugin => plugin.fn(instance));
-  const hadAriaExpandedAttributeOnCreate = reference.hasAttribute(
-    'aria-expanded',
-  );
+  const hasAriaExpanded = reference.hasAttribute('aria-expanded');
 
   addListeners();
   handleAriaExpandedAttribute();
@@ -258,7 +256,7 @@ export default function createTippy(
   }
 
   function handleAriaExpandedAttribute(): void {
-    if (hadAriaExpandedAttributeOnCreate || !instance.props.aria.expanded) {
+    if (hasAriaExpanded || !instance.props.aria.expanded) {
       return;
     }
 
