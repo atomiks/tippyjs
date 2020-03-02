@@ -1,7 +1,7 @@
 @import './_mixins.scss';
 @import './_vars.scss';
 
-.#{$namespace-prefix}-tooltip {
+.#{$namespace-prefix}-box {
   @each $placement in $placements {
     &[data-placement^='#{$placement}'] {
       > .#{$namespace-prefix}-backdrop {
@@ -26,7 +26,7 @@
   }
 }
 
-.#{$namespace-prefix}-tooltip {
+.#{$namespace-prefix}-box {
   &[data-animatefill] {
     // Declared with !important so that custom themes don't need to specify
     // this property.

@@ -1,12 +1,11 @@
-import {h, cleanDocumentBody, setTestDefaultProps} from '../../utils';
+import {h} from '../../utils';
 
 import tippy from '../../../src';
 import animateFill from '../../../src/plugins/animateFill';
+import {getChildren} from '../../../src/template';
+import {getFormattedMessage} from '../../../src/validation';
 
-setTestDefaultProps({plugins: [animateFill]});
-jest.useFakeTimers();
-
-afterEach(cleanDocumentBody);
+tippy.setDefaultProps({plugins: [animateFill]});
 
 describe('animateFill', () => {
   it('true: sets `data-animatefill` attribute on tooltip', () => {
@@ -14,7 +13,7 @@ describe('animateFill', () => {
     const instance = tippy(ref, {animateFill: true});
 
     expect(
-      instance.popperChildren.tooltip.hasAttribute('data-animatefill'),
+      getChildren(instance.popper).box.hasAttribute('data-animatefill'),
     ).toBe(true);
   });
 
@@ -23,13 +22,13 @@ describe('animateFill', () => {
     const instance = tippy(ref, {animateFill: false});
 
     expect(
-      instance.popperChildren.tooltip.hasAttribute('data-animatefill'),
+      getChildren(instance.popper).box.hasAttribute('data-animatefill'),
     ).toBe(false);
   });
 
   it('true: sets `transitionDelay` style on content element', () => {
     const instance = tippy(h(), {animateFill: true, duration: 120});
-    const {content} = instance.popperChildren;
+    const {content} = getChildren(instance.popper);
 
     instance.show();
     jest.runAllTimers();
@@ -42,7 +41,7 @@ describe('animateFill', () => {
       animateFill: false,
       duration: 120,
     });
-    const {content} = instance.popperChildren;
+    const {content} = getChildren(instance.popper);
 
     instance.show();
     jest.runAllTimers();
@@ -62,7 +61,7 @@ describe('animateFill', () => {
 
   it('sets `data-state` correctly', () => {
     const instance = tippy(h(), {animateFill: true});
-    const {backdrop} = instance.popperChildren;
+    const {backdrop} = getChildren(instance.popper);
 
     expect(backdrop.getAttribute('data-state')).toBe('hidden');
 
@@ -74,5 +73,24 @@ describe('animateFill', () => {
     instance.hide();
 
     expect(backdrop.getAttribute('data-state')).toBe('hidden');
+  });
+
+  it('should error when render function is not default', () => {
+    const spy = jest.spyOn(console, 'error');
+
+    tippy(h(), {
+      animateFill: true,
+      render() {
+        return {
+          popper: document.createElement('div'),
+        };
+      },
+    });
+
+    expect(spy).toHaveBeenCalledWith(
+      ...getFormattedMessage(
+        'The `animateFill` plugin requires the default render function.',
+      ),
+    );
   });
 });

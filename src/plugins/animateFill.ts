@@ -1,39 +1,43 @@
-import {AnimateFill} from '../types';
 import {BACKDROP_CLASS} from '../constants';
-import {div, setVisibilityState} from '../utils';
-import {isUCBrowser} from '../browser';
-import {warnWhen} from '../validation';
+import {div, setVisibilityState} from '../dom-utils';
+import {getChildren, isDefaultRenderFn} from '../template';
+import {AnimateFill} from '../types';
+import {errorWhen} from '../validation';
 
 const animateFill: AnimateFill = {
   name: 'animateFill',
   defaultValue: false,
   fn(instance) {
-    const {tooltip, content} = instance.popperChildren;
+    if (!isDefaultRenderFn(instance.props.render)) {
+      if (__DEV__) {
+        errorWhen(
+          true,
+          'The `animateFill` plugin requires the default render function.',
+        );
+      }
 
-    const backdrop =
-      instance.props.animateFill && !isUCBrowser
-        ? createBackdropElement()
-        : null;
-
-    function addBackdropToPopperChildren(): void {
-      instance.popperChildren.backdrop = backdrop;
+      return {};
     }
+
+    const {box, content} = getChildren(instance.popper);
+
+    const backdrop = instance.props.animateFill
+      ? createBackdropElement()
+      : null;
 
     return {
       onCreate(): void {
         if (backdrop) {
-          addBackdropToPopperChildren();
+          box.insertBefore(backdrop, box.firstElementChild!);
+          box.setAttribute('data-animatefill', '');
+          box.style.overflow = 'hidden';
 
-          tooltip.insertBefore(backdrop, tooltip.firstElementChild!);
-          tooltip.setAttribute('data-animatefill', '');
-          tooltip.style.overflow = 'hidden';
-
-          instance.setProps({animation: 'shift-away', arrow: false});
+          instance.setProps({arrow: false, animation: 'shift-away'});
         }
       },
       onMount(): void {
         if (backdrop) {
-          const {transitionDuration} = tooltip.style;
+          const {transitionDuration} = box.style;
           const duration = Number(transitionDuration.replace('ms', ''));
 
           // The content should fade in after the backdrop has mostly filled the
@@ -43,25 +47,6 @@ const animateFill: AnimateFill = {
 
           backdrop.style.transitionDuration = transitionDuration;
           setVisibilityState([backdrop], 'visible');
-
-          // Warn if the stylesheets are not loaded
-          if (__DEV__) {
-            warnWhen(
-              getComputedStyle(backdrop).position !== 'absolute',
-              `The \`tippy.js/dist/backdrop.css\` stylesheet has not been
-              imported!
-              
-              The \`animateFill\` plugin requires this stylesheet to work.`,
-            );
-
-            warnWhen(
-              getComputedStyle(tooltip).transform === 'none',
-              `The \`tippy.js/animations/shift-away.css\` stylesheet has not
-              been imported!
-              
-              The \`animateFill\` plugin requires this stylesheet to work.`,
-            );
-          }
         }
       },
       onShow(): void {
@@ -73,13 +58,6 @@ const animateFill: AnimateFill = {
         if (backdrop) {
           setVisibilityState([backdrop], 'hidden');
         }
-      },
-      onAfterUpdate(): void {
-        // With this type of prop, it's highly unlikely it will be changed
-        // dynamically. We'll leave out the diff/update logic it to save bytes.
-
-        // `popperChildren` is assigned a new object onAfterUpdate
-        addBackdropToPopperChildren();
       },
     };
   },

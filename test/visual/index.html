@@ -1,0 +1,101 @@
+<!DOCTYPE html> <title>test</title>
+
+<meta charset="utf8" />
+<link rel="stylesheet" href="dist/bundle.css" />
+<link rel="stylesheet" href="index.css" />
+
+<div id="controls">
+  <h1>Tippy Development</h1>
+</div>
+
+<div class="container" id="default">
+  <div class="wrapper">
+    <button class="reference">Reference</button>
+  </div>
+</div>
+
+<div class="container" id="sticky">
+  <style>
+    @keyframes sticky-shift {
+      to {
+        transform: translate(0, -150px);
+      }
+    }
+
+    #sticky .animate {
+      animation: sticky-shift 2s ease-in-out infinite alternate;
+    }
+  </style>
+  <div class="wrapper">
+    <button class="reference">Reference</button>
+    <button class="animation">Enable animation</button>
+  </div>
+</div>
+
+<div class="container" id="inlinePositioning">
+  <style>
+    #inlinePositioning .wrapper {
+      max-width: 300px;
+    }
+
+    #inlinePositioning .reference {
+      color: white;
+      outline: 1px solid black;
+    }
+  </style>
+  <div class="wrapper">
+    This is some text and an inline element that
+    <span class="reference"
+      >spans over many lines to demonstrate this inline positioning
+      solution</span
+    >, and some more text.
+  </div>
+</div>
+
+<div class="container" id="followCursor">
+  <div class="wrapper">
+    <button class="reference" data-test="true">true</button>
+    <button class="reference" data-test="false">false</button>
+    <button class="reference" data-test="horizontal">horizontal</button>
+    <button class="reference" data-test="vertical">vertical</button>
+    <button class="reference" data-test="initial">initial</button>
+    <button class="reference" data-test="contentChange">contentChange</button>
+  </div>
+</div>
+
+<div class="container" id="themes">
+  <style>
+    #themes button {
+      font-size: 12px;
+      padding: 2px 4px;
+    }
+  </style>
+  <div class="wrapper" style="text-align: right;"></div>
+</div>
+
+<div class="container" id="animations">
+  <style>
+    #animations button {
+      margin: 5px;
+      font-size: 12px;
+    }
+  </style>
+  <div class="wrapper"></div>
+</div>
+
+<div class="container" id="createSingleton">
+  <div class="wrapper">
+    <button class="reference" data-tippy-content="Tippy A">Reference</button>
+    <button class="reference" data-tippy-content="Tippy B">Reference</button>
+    <button class="reference" data-tippy-content="Tippy C">Reference</button>
+  </div>
+</div>
+
+<div class="container" id="animateFill">
+  <div class="wrapper">
+    <button class="reference">Reference</button>
+  </div>
+</div>
+
+<script src="dist/bundle.js"></script>
+<script src="index.js"></script>

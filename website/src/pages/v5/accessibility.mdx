@@ -1,0 +1,88 @@
+---
+title: Accessibility
+path: /v5/accessibility/
+index: 12
+---
+
+Tooltip and popovers are usually not mouse-only UI elements. If vital
+functionality or information is contained within them, they should be accessible
+to keyboard and touch inputs so that users who navigate interfaces without using
+a mouse are not locked out. This is especially true for people with disabilities
+such as low vision who rely on screen reader technology to assist them with
+using an application.
+
+To ensure these users get the best possible experience, Tippy already employs
+baked-in defaults to ensure accessibility. However, some special consideration
+should be taken into account when using the library so you can be aware of
+potential accessibility problems that may arise.
+
+### Use natively focusable elements
+
+Tooltips should only be applied to natively focusable elements like `<button>`
+or `<input>`. If you are using a `<div>` or `<span>` element, ensure you add
+`tabindex="0"` so that it can receive focus.
+
+### Mouse, keyboard, and touch input
+
+The default trigger for tooltips is `"mouseenter focus"` This means both a hover
+via mouse and focus via keyboard navigation will trigger a tooltip. Both of
+these events also cover touch devices via a tap, with some mobile browsers
+firing `mouseenter` and others `focus` (or both).
+
+### Announcing tooltip content
+
+Non-interactive tooltips give the reference element an `aria-describedby`
+attribute once they show:
+
+```html
+<button aria-describedby="tippy-1">Text</button>
+<div id="tippy-1" role="tooltip" class="tippy-popper">
+  <!-- inner elements -->
+</div>
+```
+
+This allows screen reader software to announce the tooltip content describing
+the reference element once it's in focus.
+
+### Interactivity
+
+Tippy uses two techniques to ensure interactive popovers are accessible:
+
+- `aria-expanded` attribute
+- `appendTo: "parent"`
+
+This means once the reference element has focus, the assistive technology will
+let the user know it has an expandable popover attached to it.
+
+Once they open it, elements within the tippy can be tabbed to immediately once
+focus has left the reference element. This relies on there being no more
+focusable sibling elements after the reference element itself.
+
+Before opening the popover:
+
+```html
+<div id="parent">
+  <button aria-expanded="false">Text</button>
+</div>
+```
+
+After opening the popover:
+
+```html
+<div id="parent">
+  <button aria-expanded="true">Text</button>
+  <div id="tippy-1" role="tooltip" class="tippy-popper">
+    <!-- inner elements, with focusable content -->
+  </div>
+</div>
+```
+
+You should wrap the reference element in its own parent element (`<div>` or
+`<span>`) if it's not the only focusable sibling element.
+
+#### Clipping issues
+
+Sometimes, this behavior won't work for your app due to clipping issues. In this
+case, you need to specify a custom `appendTo` element outside of the parent node
+context and use a focus management solution to handle keyboard navigation.
+[More details here](../faq/#my-tooltip-appears-cut-off-or-is-not-showing-at-all).

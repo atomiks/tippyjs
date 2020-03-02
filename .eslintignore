@@ -6,4 +6,7 @@ demo/
 test/
 build/
 rollup.config.js
-rollup.pre-build.js
+rollup.css.js
+babel.config.js
+jest.config.js
+jest-puppeteer.config.js

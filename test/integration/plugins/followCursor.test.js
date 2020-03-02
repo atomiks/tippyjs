@@ -1,22 +1,13 @@
 import {fireEvent} from '@testing-library/dom';
-import {
-  h,
-  cleanDocumentBody,
-  enableTouchEnvironment,
-  disableTouchEnvironment,
-  setTestDefaultProps,
-} from '../../utils';
+import {h, enableTouchEnvironment, disableTouchEnvironment} from '../../utils';
 
 import tippy from '../../../src';
-import followCursor, {
-  getVirtualOffsets,
-} from '../../../src/plugins/followCursor';
-import {getBasePlacement} from '../../../src/popper';
+import followCursor from '../../../src/plugins/followCursor';
+import {getBasePlacement} from '../../../src/utils';
 
-setTestDefaultProps({plugins: [followCursor]});
-jest.useFakeTimers();
-
-afterEach(cleanDocumentBody);
+tippy.setDefaultProps({
+  plugins: [followCursor],
+});
 
 describe('followCursor', () => {
   // NOTE: Jest's simulated window dimensions are 1024 x 768. These values
@@ -37,14 +28,13 @@ describe('followCursor', () => {
 
   function matches(receivedRect) {
     const isVerticalPlacement = ['top', 'bottom'].includes(
-      getBasePlacement(instance.state.currentPlacement),
+      getBasePlacement(instance.popperInstance.state.placement),
     );
-    const {x, y} = getVirtualOffsets(instance.popper, isVerticalPlacement);
 
-    expect(rect.left).toBe(receivedRect.left - x);
-    expect(rect.right).toBe(receivedRect.right + x);
-    expect(rect.top).toBe(receivedRect.top - y);
-    expect(rect.bottom).toBe(receivedRect.bottom + y);
+    expect(rect.left).toBe(receivedRect.left);
+    expect(rect.right).toBe(receivedRect.right);
+    expect(rect.top).toBe(receivedRect.top);
+    expect(rect.bottom).toBe(receivedRect.bottom);
   }
 
   it('true: follows both axes', () => {
@@ -56,7 +46,7 @@ describe('followCursor', () => {
       jest.runAllTimers();
 
       fireEvent.mouseMove(instance.reference, first);
-      rect = instance.popperInstance.reference.getBoundingClientRect();
+      rect = instance.props.getReferenceClientRect();
       matches({
         top: first.clientY,
         bottom: first.clientY,
@@ -65,7 +55,7 @@ describe('followCursor', () => {
       });
 
       fireEvent.mouseMove(instance.reference, second);
-      rect = instance.popperInstance.reference.getBoundingClientRect();
+      rect = instance.props.getReferenceClientRect();
       matches({
         top: second.clientY,
         bottom: second.clientY,
@@ -88,7 +78,7 @@ describe('followCursor', () => {
       jest.runAllTimers();
 
       fireEvent.mouseMove(instance.reference, first);
-      rect = instance.popperInstance.reference.getBoundingClientRect();
+      rect = instance.props.getReferenceClientRect();
 
       matches({
         top: referenceRect.top,
@@ -98,7 +88,8 @@ describe('followCursor', () => {
       });
 
       fireEvent.mouseMove(instance.reference, second);
-      rect = instance.popperInstance.reference.getBoundingClientRect();
+      rect = instance.props.getReferenceClientRect();
+
       matches({
         top: referenceRect.top,
         bottom: referenceRect.bottom,
@@ -118,7 +109,8 @@ describe('followCursor', () => {
       jest.runAllTimers();
 
       fireEvent.mouseMove(instance.reference, first);
-      rect = instance.popperInstance.reference.getBoundingClientRect();
+      rect = instance.props.getReferenceClientRect();
+
       matches({
         top: first.clientY,
         bottom: first.clientY,
@@ -127,7 +119,8 @@ describe('followCursor', () => {
       });
 
       fireEvent.mouseMove(instance.reference, second);
-      rect = instance.popperInstance.reference.getBoundingClientRect();
+      rect = instance.props.getReferenceClientRect();
+
       matches({
         top: second.clientY,
         bottom: second.clientY,
@@ -149,7 +142,8 @@ describe('followCursor', () => {
       jest.runAllTimers();
 
       fireEvent.mouseMove(instance.reference, first);
-      rect = instance.popperInstance.reference.getBoundingClientRect();
+      rect = instance.props.getReferenceClientRect();
+
       matches({
         top: first.clientY,
         bottom: first.clientY,
@@ -158,7 +152,8 @@ describe('followCursor', () => {
       });
 
       fireEvent.mouseMove(instance.reference, second);
-      rect = instance.popperInstance.reference.getBoundingClientRect();
+      rect = instance.props.getReferenceClientRect();
+
       matches({
         top: first.clientY,
         bottom: first.clientY,
@@ -179,7 +174,8 @@ describe('followCursor', () => {
 
     jest.advanceTimersByTime(100);
 
-    rect = instance.popperInstance.reference.getBoundingClientRect();
+    rect = instance.props.getReferenceClientRect();
+
     matches({
       top: first.clientY,
       bottom: first.clientY,
@@ -197,7 +193,8 @@ describe('followCursor', () => {
 
     fireEvent.mouseMove(instance.reference, first);
 
-    rect = instance.popperInstance.reference.getBoundingClientRect();
+    rect = instance.props.getReferenceClientRect();
+
     matches({
       top: first.clientY,
       bottom: first.clientY,
@@ -209,7 +206,8 @@ describe('followCursor', () => {
 
     jest.runAllTimers();
 
-    rect = instance.popperInstance.reference.getBoundingClientRect();
+    rect = instance.props.getReferenceClientRect();
+
     matches({
       top: first.clientY,
       bottom: first.clientY,
@@ -231,7 +229,7 @@ describe('followCursor', () => {
     fireEvent.mouseMove(instance.reference, first);
 
     const referenceRect = instance.reference.getBoundingClientRect();
-    rect = instance.popperInstance.reference.getBoundingClientRect();
+    rect = instance.props.getReferenceClientRect();
 
     fireEvent.mouseMove(instance.reference, second);
 
@@ -253,7 +251,8 @@ describe('followCursor', () => {
     jest.runAllTimers();
 
     fireEvent.mouseMove(instance.reference, first);
-    rect = instance.popperInstance.reference.getBoundingClientRect();
+    rect = instance.props.getReferenceClientRect();
+
     matches({
       top: first.clientY,
       bottom: first.clientY,
@@ -262,7 +261,8 @@ describe('followCursor', () => {
     });
 
     fireEvent.mouseMove(instance.reference, second);
-    rect = instance.popperInstance.reference.getBoundingClientRect();
+    rect = instance.props.getReferenceClientRect();
+
     matches({
       top: first.clientY,
       bottom: first.clientY,
@@ -271,27 +271,6 @@ describe('followCursor', () => {
     });
 
     disableTouchEnvironment();
-  });
-
-  it('cleans up listener if untriggered before it shows', () => {
-    instance = tippy(h(), {
-      followCursor: true,
-      flip: false,
-      delay: 1000,
-    });
-
-    fireEvent.mouseEnter(instance.reference, defaultPosition);
-
-    jest.advanceTimersByTime(100);
-
-    fireEvent.mouseMove(instance.reference, first);
-    fireEvent.mouseLeave(instance.reference);
-
-    jest.advanceTimersByTime(900);
-
-    fireEvent.mouseMove(instance.reference, second);
-
-    rect = instance.popperInstance.reference.getBoundingClientRect();
   });
 
   it('should reset popperInstance.reference if triggered by `focus`', () => {
@@ -314,7 +293,7 @@ describe('followCursor', () => {
 
     fireEvent.focus(instance.reference);
 
-    expect(instance.popperInstance.reference).toBe(instance.reference);
+    expect(instance.props.getReferenceClientRect).toBe(null);
   });
 
   it('"initial": does not update if triggered again while still visible', () => {
@@ -328,7 +307,7 @@ describe('followCursor', () => {
 
     fireEvent.mouseMove(instance.reference, second);
 
-    rect = instance.popperInstance.reference.getBoundingClientRect();
+    rect = instance.props.getReferenceClientRect();
 
     matches({
       top: first.clientY,
@@ -336,96 +315,6 @@ describe('followCursor', () => {
       left: first.clientX,
       right: first.clientX,
     });
-  });
-
-  it('sets normalizedPlacement for shifted placements correctly', () => {
-    instance = tippy(h(), {
-      placement: 'top-start',
-      followCursor: true,
-    });
-
-    fireEvent.mouseEnter(instance.reference, defaultPosition);
-    jest.runAllTimers();
-
-    expect(instance.props.placement).toBe('top-end');
-
-    instance.setProps({placement: 'left-end'});
-
-    expect(instance.props.placement).toBe('left-start');
-
-    instance.setProps({followCursor: false});
-
-    fireEvent.mouseLeave(instance.reference, defaultPosition);
-    fireEvent.mouseEnter(instance.reference, defaultPosition);
-    jest.runAllTimers();
-
-    expect(instance.props.placement).toBe('left-end');
-  });
-
-  it('is disabled if MouseEvent.{clientX,clientY} are 0', () => {
-    instance = tippy(h(), {
-      followCursor: true,
-    });
-
-    fireEvent.mouseEnter(instance.reference);
-    jest.runAllTimers();
-
-    expect(instance.popperInstance.reference).toBe(instance.reference);
-  });
-
-  it('enables listeners for `true`', () => {
-    instance = tippy(h(), {
-      followCursor: true,
-    });
-
-    fireEvent.mouseEnter(instance.reference, defaultPosition);
-    jest.runAllTimers();
-
-    expect(instance.popperInstance.state.eventsEnabled).toBe(true);
-  });
-
-  it('enables listeners for `false`', () => {
-    instance = tippy(h(), {
-      followCursor: false,
-    });
-
-    fireEvent.mouseEnter(instance.reference, defaultPosition);
-    jest.runAllTimers();
-
-    expect(instance.popperInstance.state.eventsEnabled).toBe(true);
-  });
-
-  it('disables listeners for "initial"', () => {
-    instance = tippy(h(), {
-      followCursor: 'initial',
-    });
-
-    fireEvent.mouseEnter(instance.reference, defaultPosition);
-    jest.runAllTimers();
-
-    expect(instance.popperInstance.state.eventsEnabled).toBe(false);
-  });
-
-  it('disables listeners for "horizontal"', () => {
-    instance = tippy(h(), {
-      followCursor: 'horizontal',
-    });
-
-    fireEvent.mouseEnter(instance.reference, defaultPosition);
-    jest.runAllTimers();
-
-    expect(instance.popperInstance.state.eventsEnabled).toBe(false);
-  });
-
-  it('disables listeners for "vertical"', () => {
-    instance = tippy(h(), {
-      followCursor: 'vertical',
-    });
-
-    fireEvent.mouseEnter(instance.reference, defaultPosition);
-    jest.runAllTimers();
-
-    expect(instance.popperInstance.state.eventsEnabled).toBe(false);
   });
 
   it('works with manual trigger and .show()', () => {
@@ -439,12 +328,23 @@ describe('followCursor', () => {
 
     fireEvent.mouseMove(document, first);
 
-    rect = instance.popperInstance.reference.getBoundingClientRect();
+    rect = instance.props.getReferenceClientRect();
+
     matches({
       top: first.clientY,
       bottom: first.clientY,
       left: first.clientX,
       right: first.clientX,
     });
+  });
+
+  it('is cleaned up if untriggered before showing', () => {
+    instance = tippy(h(), {followCursor: true, delay: 100});
+
+    fireEvent.mouseEnter(instance.reference, first);
+    fireEvent.mouseLeave(instance.reference);
+    fireEvent.mouseMove(instance.reference, second);
+
+    expect(instance.props.getReferenceClientRect).toBe(null);
   });
 });

@@ -13,18 +13,14 @@
   }
 }
 
-.#{$namespace-prefix}-tooltip {
-  &[data-animation='shift-toward'] {
+.#{$namespace-prefix}-box {
+  &[data-animation='shift-toward'][data-state='hidden'] {
+    opacity: 0;
+
     @each $placement in $placements {
       &[data-placement^='#{$placement}'] {
-        &[data-state='hidden'] {
-          @include hidden-transform($placement);
-        }
+        @include hidden-transform($placement);
       }
-    }
-
-    &[data-state='hidden'] {
-      opacity: 0;
     }
   }
 }

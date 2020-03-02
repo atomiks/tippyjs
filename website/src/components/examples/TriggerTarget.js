@@ -17,8 +17,8 @@ function TriggerTarget() {
   }, []);
 
   return (
-    <div ref={ref} style={{marginBottom: 8}}>
-      Trigger target vs{' '}
+    <div style={{marginBottom: 8}}>
+      <span ref={ref}>Trigger target</span> vs{' '}
       {mounted && (
         <Tippy triggerTarget={ref.current}>
           <PositioningTarget>positioning target</PositioningTarget>

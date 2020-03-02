@@ -1,13 +1,9 @@
-import {h, cleanDocumentBody} from '../utils';
+import {h} from '../utils';
 
 import {defaultProps, extraProps} from '../../src/props';
 import {POPPER_SELECTOR} from '../../src/constants';
-import tippy, {hideAll, createTippyWithPlugins} from '../../src';
+import tippy, {hideAll} from '../../src';
 import {getFormattedMessage} from '../../src/validation';
-
-jest.useFakeTimers();
-
-afterEach(cleanDocumentBody);
 
 describe('tippy', () => {
   it('returns the expected object', () => {
@@ -16,11 +12,7 @@ describe('tippy', () => {
   });
 
   it('merges the default props with the supplied props', () => {
-    expect(tippy(h(), {placement: 'bottom-end'}).props).toEqual({
-      ...defaultProps,
-      ...extraProps,
-      placement: 'bottom-end',
-    });
+    expect(tippy(h(), {placement: 'bottom-end'}).props).toMatchSnapshot();
   });
 
   it('warns if invalid props(s) are supplied', () => {
@@ -56,12 +48,12 @@ describe('tippy', () => {
     expect(console.warn).toHaveBeenCalledWith(
       ...getFormattedMessage(
         [
-          'tippy() was passed an Element as the `content` prop, but more than one tippy',
-          'instance was created by this invocation. This means the content element will',
-          'only be appended to the last tippy instance.',
+          'tippy() was passed an Element as the `content` prop, but more than',
+          'one tippy instance was created by this invocation. This means the',
+          'content element will only be appended to the last tippy instance.',
           '\n\n',
-          'Instead, pass the .innerHTML of the element, or use a function that returns a',
-          'cloned version of the element instead.',
+          'Instead, pass the .innerHTML of the element, or use a function that',
+          'returns a cloned version of the element instead.',
           '\n\n',
           '1) content: element.innerHTML\n',
           '2) content: () => element.cloneNode(true)',
@@ -78,16 +70,6 @@ describe('tippy.setDefaultProps()', () => {
     tippy.setDefaultProps({placement: newPlacement});
 
     expect(defaultProps.placement).toBe(newPlacement);
-  });
-
-  it('is validated', () => {
-    tippy.setDefaultProps({theme: 'google'});
-
-    expect(console.warn).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        `The included theme "google" was renamed to "material" in v5.`,
-      ),
-    );
   });
 });
 
@@ -145,39 +127,5 @@ describe('hideAll()', () => {
     instances.forEach(instance => {
       expect(instance.state.isVisible).toBe(true);
     });
-  });
-});
-
-describe('createTippyWithPlugins', () => {
-  it('returns a higher order tippy function that passes plugins', () => {
-    const plugin = {fn: () => ({})};
-    const tippy = createTippyWithPlugins([plugin]);
-    const instance = tippy(document.createElement('div'));
-
-    expect(instance.plugins).toEqual([plugin]);
-  });
-
-  it('preserves statics', () => {
-    const plugin = {fn: () => ({})};
-    const tippy = createTippyWithPlugins([plugin]);
-
-    expect(tippy.version).toBeDefined();
-    expect(tippy.defaultProps).toBeDefined();
-    expect(tippy.setDefaultProps).toBeDefined();
-    expect(tippy.currentInput).toBeDefined();
-  });
-
-  it('warns', () => {
-    createTippyWithPlugins([]);
-
-    expect(console.warn).toHaveBeenCalledWith(
-      ...getFormattedMessage(
-        [
-          'createTippyWithPlugins([...]) has been deprecated.',
-          '\n\n',
-          'Use tippy.setDefaultProps({plugins: [...]}) instead.',
-        ].join(' '),
-      ),
-    );
   });
 });

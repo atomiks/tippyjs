@@ -2,7 +2,16 @@ import React, {Component} from 'react';
 import {SkipNavLink, SkipNavContent} from '@reach/skip-nav';
 import {MDXProvider} from '@mdx-js/react';
 import styled from '@emotion/styled';
-import {Container, Demo, Button, Row, Col, Flex, MEDIA} from './Framework';
+import {
+  Container,
+  Demo,
+  Button,
+  Row,
+  Col,
+  Flex,
+  MEDIA,
+  ExternalLink,
+} from './Framework';
 import Tippy, {TippySingleton} from './Tippy';
 import Nav from './Nav';
 import NavButtons from './NavButtons';
@@ -11,9 +20,8 @@ import Main from './Main';
 import Footer from './Footer';
 import SEO from './SEO';
 import Image from './Image';
-import Emoji from './Emoji';
+import Icon from './Icon';
 import CSS from '../css';
-import slugify from 'slugify';
 import elasticScroll from 'elastic-scroll-polyfill';
 
 import 'normalize.css';
@@ -30,7 +38,7 @@ const LinkIcon = styled.a`
   opacity: 0;
   transition: opacity 0.2s;
   width: 32px;
-  top: -12px;
+  top: -10px;
   right: -16px;
   color: #7761d1;
 
@@ -42,11 +50,9 @@ const LinkIcon = styled.a`
 
   ${MEDIA.md} {
     right: initial;
-    left: -0.9em;
-
-    &:focus {
-      width: 20px;
-    }
+    text-align: center;
+    width: 30px;
+    left: -30px;
   }
 `;
 
@@ -72,10 +78,14 @@ class Heading extends React.Component {
   constructor(props) {
     super(props);
 
-    let href = slugify(String(this.props.children), {
-      lower: true,
-      remove: /[*+~.()'"`!:@,?]/g,
-    });
+    let href = []
+      .concat(this.props.children)
+      .filter(child => typeof child === 'string')
+      .join(' ')
+      .replace(/[^a-zA-Z0-9]/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/-$/g, '')
+      .toLowerCase();
 
     // Check for duplicate #s
     if (hrefs.indexOf(href) !== -1) {
@@ -125,11 +135,12 @@ const components = {
   Col,
   Flex,
   Image,
-  Emoji,
+  Icon,
   a: props => {
     const extendedProps = {...props};
+    const re = /^(\.\.)?[/#]/.test(props.href);
 
-    if (props.href && props.href[0] !== '/') {
+    if (props.href && !re) {
       extendedProps.rel = 'nofollow noreferrer';
       extendedProps.target = '_blank';
     }
@@ -230,7 +241,15 @@ class Layout extends Component {
             </Container>
             <NavButtons next={pageContext.frontmatter.index + 1} />
           </SkipNavContent>
-          <Footer>© {new Date().getFullYear()} - MIT License</Footer>
+          <Footer>
+            <p>© {new Date().getFullYear()} — MIT License</p>
+            <small>
+              Icons made by Freepik from{' '}
+              <ExternalLink href="https://flaticon.com">
+                www.flaticon.com
+              </ExternalLink>
+            </small>
+          </Footer>
         </Main>
       </MDXProvider>
     );

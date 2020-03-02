@@ -1,0 +1,39 @@
+---
+title: Browser Support
+path: /v6/browser-support/
+index: 18
+---
+
+All modern browsers are supported. Proxy mobile browsers like Opera Mini are not
+supported.
+
+### IE11
+
+IE11 (and other older browsers) is supported with the following polyfills:
+
+- `Promise`
+- `Object.assign`
+- `Array.prototype.find`
+
+If not already polyfilling these in your app, the following script tag using the
+polyfill.io service placed before Tippy's scripts will polyfill these.
+
+```html
+<script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.find,Promise,Object.assign"></script>
+```
+
+It won't add extra cost (besides a negligible bundle size and HTTP request) to
+browsers that already support those built-in APIs.
+
+#### SVG in IE11
+
+If you need to support SVG elements in IE11, you will need to include a polyfill
+for `SVGElement.prototype.contains`.
+
+The polyfill is small:
+
+```js
+if (!SVGElement.prototype.contains) {
+  SVGElement.prototype.contains = HTMLDivElement.prototype.contains;
+}
+```

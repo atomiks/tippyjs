@@ -1,13 +1,9 @@
 import {fireEvent} from '@testing-library/dom';
-import {h, cleanDocumentBody} from '../../utils';
+import {h} from '../../utils';
 
-import tippy from '../../../src';
 import delegate from '../../../src/addons/delegate';
-import {clean, getFormattedMessage} from '../../../src/validation';
+import {getFormattedMessage} from '../../../src/validation';
 import {normalizeToArray} from '../../../src/utils';
-
-tippy.setDefaultProps({duration: 0, delay: 0});
-jest.useFakeTimers();
 
 let instance;
 let delegateElement = h();
@@ -18,8 +14,6 @@ afterEach(() => {
   }
 
   delegateElement = h();
-
-  cleanDocumentBody();
 });
 
 describe('delegate', () => {
@@ -151,17 +145,6 @@ describe('delegate', () => {
     instance.destroy(false);
 
     expect(button._tippy).toBeDefined();
-  });
-
-  it('can accept plugins', () => {
-    const button = h('button', {}, delegateElement);
-    const plugins = [{fn: () => ({})}];
-    instance = delegate(delegateElement, {target: 'button'}, plugins);
-
-    fireEvent.mouseOver(button);
-
-    expect(instance.plugins).toEqual(plugins);
-    expect(button._tippy.plugins).toEqual(plugins);
   });
 
   it('handles `data-tippy-trigger` attribute', () => {
