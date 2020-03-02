@@ -1,4 +1,22 @@
-dist: xenial
 language: node_js
 node_js:
   - 12
+jobs:
+  include:
+    - stage: Deploy docs
+      if: branch = master
+      node_js: 12
+      before_install:
+        - cd website
+        - source ./scripts/should-deploy-docs.sh
+      script: npm run build:ci
+      deploy:
+        # https://docs.travis-ci.com/user/deployment/pages/
+        provider: pages
+        local_dir: website/public
+        target_branch: gh-pages
+        skip_cleanup: true
+        keep_history: true
+        github_token: $GITHUB_TOKEN
+        on:
+          branch: master
