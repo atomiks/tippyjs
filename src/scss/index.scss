@@ -26,9 +26,10 @@ $color: #333;
     bottom: 0;
 
     &::before {
+      bottom: -7px;
+      left: 0;
       border-width: 8px 8px 0;
       border-top-color: $color;
-      bottom: -7px;
       transform-origin: center top;
     }
   }
@@ -38,6 +39,7 @@ $color: #333;
 
     &::before {
       top: -7px;
+      left: 0;
       border-width: 0 8px 8px;
       border-bottom-color: $color;
       transform-origin: center bottom;
@@ -82,8 +84,6 @@ $color: #333;
     position: absolute;
     border-color: transparent;
     border-style: solid;
-    // https://github.com/atomiks/tippyjs/issues/722
-    left: 0;
   }
 }
 
