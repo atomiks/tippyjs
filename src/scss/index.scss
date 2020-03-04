@@ -82,6 +82,8 @@ $color: #333;
     position: absolute;
     border-color: transparent;
     border-style: solid;
+    // https://github.com/atomiks/tippyjs/issues/722
+    left: 0;
   }
 }
 
