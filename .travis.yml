@@ -10,6 +10,14 @@ cache:
 
 jobs:
   include:
+    - stage: Tests & Code Check
+      name: DOM tests
+      script: npm test:dom
+
+    - stage: Tests & Code Check
+      name: Functional tests
+      script: npm test:functional
+
     - stage: Deploy docs
       if: branch = master
       node_js: 12
