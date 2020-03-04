@@ -1049,7 +1049,14 @@ export default function createTippy(
 
     instance.clearDelayTimeouts();
     instance.hide();
-    instance.unmount();
+
+    // The user may call this method in the `onHidden()` lifecycle, and without
+    // this guard it causes a stack overflow due to circular call loop because
+    // `onHidden()` also calls `unmount()`
+    // https://github.com/atomiks/tippyjs/issues/724
+    if (instance.state.isMounted) {
+      instance.unmount();
+    }
 
     removeListeners();
 
