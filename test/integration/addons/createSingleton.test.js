@@ -230,4 +230,17 @@ describe('createSingleton', () => {
     expect(firstRef.getAttribute('aria-labelledby')).toBe(null);
     expect(secondRef.getAttribute('aria-labelledby')).toBe(null);
   });
+
+  it('does not use the placeholder element content with a function', () => {
+    const refs = [h(), h()];
+    const instances = tippy(refs, {content: () => 'hello'});
+    const singleton = createSingleton(instances);
+    const firstRef = refs[0];
+
+    expect(singleton.props.content).toBe('__DEFAULT_TEST_CONTENT__');
+
+    fireEvent.mouseEnter(firstRef);
+
+    expect(singleton.props.content).toBe('hello');
+  });
 });

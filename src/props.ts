@@ -1,5 +1,9 @@
 import {DefaultProps, Plugin, Props, ReferenceElement, Tippy} from './types';
-import {hasOwnProperty, removeProperties} from './utils';
+import {
+  hasOwnProperty,
+  removeProperties,
+  invokeWithArgsOrReturn,
+} from './utils';
 import {warnWhen} from './validation';
 
 const pluginProps = {
@@ -138,6 +142,7 @@ export function evaluateProps(
 ): Props {
   const out = {
     ...props,
+    content: invokeWithArgsOrReturn(props.content, [reference]),
     ...(props.ignoreAttributes
       ? {}
       : getDataAttributeProps(reference, props.plugins)),

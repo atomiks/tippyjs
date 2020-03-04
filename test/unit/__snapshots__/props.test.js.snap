@@ -6,6 +6,7 @@ Object {
     "content": "describedby",
     "expanded": undefined,
   },
+  "content": undefined,
   "plugin": "y",
   "plugins": Array [
     Object {
@@ -23,6 +24,7 @@ Object {
     "content": "describedby",
     "expanded": undefined,
   },
+  "content": undefined,
   "ignoreAttributes": false,
 }
 `;
@@ -34,6 +36,7 @@ Object {
     "content": "describedby",
     "expanded": undefined,
   },
+  "content": undefined,
   "ignoreAttributes": true,
 }
 `;

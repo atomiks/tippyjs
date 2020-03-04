@@ -26,7 +26,7 @@ Object {
         class="__NAMESPACE_PREFIX__-content"
         data-state="hidden"
       >
-        tippy
+        __DEFAULT_TEST_CONTENT__
       </div>
       <div
         class="__NAMESPACE_PREFIX__-arrow"
@@ -44,7 +44,7 @@ Object {
       "expanded": false,
     },
     "arrow": true,
-    "content": "tippy",
+    "content": "__DEFAULT_TEST_CONTENT__",
     "delay": 0,
     "duration": 0,
     "followCursor": false,

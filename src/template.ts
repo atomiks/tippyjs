@@ -35,23 +35,15 @@ function createArrowElement(value: Props['arrow']): HTMLDivElement {
   return arrow;
 }
 
-export function setContent(
-  content: HTMLDivElement,
-  {props, reference}: Instance,
-): void {
-  const computedContent =
-    typeof props.content === 'function'
-      ? props.content(reference)
-      : props.content;
-
-  if (isElement(computedContent)) {
+export function setContent(content: HTMLDivElement, props: Props): void {
+  if (isElement(props.content)) {
     dangerouslySetInnerHTML(content, '');
-    content.appendChild(computedContent);
-  } else {
+    content.appendChild(props.content);
+  } else if (typeof props.content !== 'function') {
     if (props.allowHTML) {
-      dangerouslySetInnerHTML(content, computedContent);
+      dangerouslySetInnerHTML(content, props.content);
     } else {
-      content.textContent = computedContent;
+      content.textContent = props.content;
     }
   }
 }
@@ -89,7 +81,7 @@ export function render(
   content.className = CONTENT_CLASS;
   content.setAttribute('data-state', 'hidden');
 
-  setContent(content, instance);
+  setContent(content, instance.props);
 
   popper.appendChild(box);
   box.appendChild(content);
@@ -131,7 +123,7 @@ export function render(
     }
 
     if (prevProps.content !== nextProps.content) {
-      setContent(content, instance);
+      setContent(content, instance.props);
     }
 
     if (nextProps.arrow) {
