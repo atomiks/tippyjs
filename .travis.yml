@@ -12,11 +12,11 @@ jobs:
   include:
     - stage: Tests & Code Check
       name: DOM tests
-      script: npm test:dom
+      script: npm run test:dom
 
     - stage: Tests & Code Check
       name: Functional tests
-      script: npm test:functional
+      script: npm run test:functional
 
     - stage: Deploy docs
       if: branch = master
