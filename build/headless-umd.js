@@ -9,6 +9,7 @@ import {ROUND_ARROW} from '../src/constants';
 
 tippy.setDefaultProps({
   plugins: [animateFill, followCursor, inlinePositioning, sticky],
+  animation: false,
 });
 
 tippy.createSingleton = createSingleton;
