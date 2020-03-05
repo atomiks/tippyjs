@@ -1,3 +1,4 @@
+import {ARROW_CLASS} from './constants';
 import {createPopper, Modifier} from '@popperjs/core';
 import {currentInput} from './bindGlobalEventListeners';
 import {isIE, isIOS} from './browser';
@@ -562,6 +563,33 @@ export default function createTippy(
       : false;
   }
 
+  function styleArrow (): void {
+    const arrow = popper.getElementsByClassName(ARROW_CLASS)[0]
+    if (!arrow) return;
+
+    const boxStyle = window.getComputedStyle(popper.children[0])
+    const styleTags = Array.from(document.head.getElementsByTagName('style'))
+
+    let tippyStyleTag = styleTags.filter(tag => {
+      return tag.getAttribute('name') === 'tippyjs-styles'
+    })[0]
+
+    if (!tippyStyleTag) {
+      tippyStyleTag = document.head.appendChild(document.createElement('style'))
+      tippyStyleTag.setAttribute('name', 'tippyjs-styles');
+    }
+    const placement = instance.props.placement.split('-')[0]
+
+    tippyStyleTag.innerHTML += `
+      #${popper.id} .${ARROW_CLASS}::before {
+        border-${placement}-color: ${boxStyle['background-color']};
+      }
+      #${popper.id} .${ARROW_CLASS}::after {
+        border-${placement}-color: ${boxStyle['border-color']};
+      }
+    `
+  }
+
   function createPopperInstance(): void {
     destroyPopperInstance();
 
@@ -689,6 +717,10 @@ export default function createTippy(
     // updated as Popper needs to read its dimensions
     if (!parentNode.contains(popper)) {
       parentNode.appendChild(popper);
+    }
+
+    if (instance.props.arrowInheritsStyles) {
+      styleArrow();
     }
 
     createPopperInstance();
