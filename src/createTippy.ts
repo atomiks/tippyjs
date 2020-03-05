@@ -12,7 +12,7 @@ import {
   updateTransitionEndListener,
 } from './dom-utils';
 import {defaultProps, evaluateProps, getExtendedPassedProps} from './props';
-import {getChildren, isDefaultRenderFn} from './template';
+import {getChildren} from './template';
 import {
   Content,
   Instance,
@@ -172,6 +172,11 @@ export default function createTippy(
 
   function getIsCustomTouchBehavior(): boolean {
     return getNormalizedTouchSettings()[0] === 'hold';
+  }
+
+  function getIsDefaultRenderFn(): boolean {
+    // @ts-ignore
+    return !!instance.props.render?.$$tippy;
   }
 
   function getCurrentTarget(): Element {
@@ -568,9 +573,7 @@ export default function createTippy(
       moveTransition,
     } = instance.props;
 
-    const arrow = isDefaultRenderFn(instance.props.render)
-      ? getChildren(popper).arrow
-      : null;
+    const arrow = getIsDefaultRenderFn() ? getChildren(popper).arrow : null;
 
     const computedReference = getReferenceClientRect
       ? {getBoundingClientRect: getReferenceClientRect}
@@ -582,7 +585,7 @@ export default function createTippy(
       phase: 'beforeWrite',
       requires: ['computeStyles'],
       fn({state}) {
-        if (isDefaultRenderFn(instance.props.render)) {
+        if (getIsDefaultRenderFn()) {
           const {box} = getDefaultTemplateChildren();
 
           ['placement', 'reference-hidden', 'escaped'].forEach(attr => {
@@ -641,7 +644,7 @@ export default function createTippy(
           adaptive: !moveTransition,
         },
       },
-      ...(isDefaultRenderFn(instance.props.render) ? [arrowModifier] : []),
+      ...(getIsDefaultRenderFn() ? [arrowModifier] : []),
       ...(popperOptions?.modifiers || []),
       tippyModifier,
     ];
@@ -902,7 +905,10 @@ export default function createTippy(
     }
 
     instance.state.isVisible = true;
-    popper.style.visibility = 'visible';
+
+    if (getIsDefaultRenderFn()) {
+      popper.style.visibility = 'visible';
+    }
 
     handleInteractiveStyles();
     addDocumentMouseDownListener();
@@ -923,7 +929,7 @@ export default function createTippy(
 
       popper.style.transition = instance.props.moveTransition;
 
-      if (isDefaultRenderFn(instance.props.render)) {
+      if (getIsDefaultRenderFn()) {
         const {box, content} = getDefaultTemplateChildren();
 
         if (instance.props.animation) {
@@ -942,10 +948,7 @@ export default function createTippy(
       instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
 
-      if (
-        instance.props.animation &&
-        isDefaultRenderFn(instance.props.render)
-      ) {
+      if (instance.props.animation && getIsDefaultRenderFn()) {
         onTransitionedIn(duration, () => {
           instance.state.isShown = true;
           invokeHook('onShown', [instance]);
@@ -983,14 +986,17 @@ export default function createTippy(
 
     instance.state.isVisible = false;
     instance.state.isShown = false;
-    popper.style.visibility = 'hidden';
     ignoreOnFirstUpdate = false;
+
+    if (getIsDefaultRenderFn()) {
+      popper.style.visibility = 'hidden';
+    }
 
     cleanupInteractiveMouseListeners();
     removeDocumentMouseDownListener();
     handleInteractiveStyles();
 
-    if (isDefaultRenderFn(instance.props.render)) {
+    if (getIsDefaultRenderFn()) {
       const {box, content} = getDefaultTemplateChildren();
 
       if (instance.props.animation) {
@@ -1003,7 +1009,7 @@ export default function createTippy(
     handleAriaExpandedAttribute();
 
     if (instance.props.animation) {
-      if (isDefaultRenderFn(instance.props.render)) {
+      if (getIsDefaultRenderFn()) {
         onTransitionedOut(duration, instance.unmount);
       }
     } else {

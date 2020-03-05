@@ -147,7 +147,3 @@ export function render(
 // Runtime check to identify if the render function is the default one; this
 // way we can apply default CSS transitions logic and it can be tree-shaken away
 render.$$tippy = true;
-
-export function isDefaultRenderFn(render: any): boolean {
-  return render.$$tippy;
-}

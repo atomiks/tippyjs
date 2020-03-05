@@ -1,6 +1,6 @@
 import {BACKDROP_CLASS} from '../constants';
 import {div, setVisibilityState} from '../dom-utils';
-import {getChildren, isDefaultRenderFn} from '../template';
+import {getChildren} from '../template';
 import {AnimateFill} from '../types';
 import {errorWhen} from '../validation';
 
@@ -8,7 +8,8 @@ const animateFill: AnimateFill = {
   name: 'animateFill',
   defaultValue: false,
   fn(instance) {
-    if (!isDefaultRenderFn(instance.props.render)) {
+    // @ts-ignore
+    if (!instance.props.render?.$$tippy) {
       if (__DEV__) {
         errorWhen(
           true,
