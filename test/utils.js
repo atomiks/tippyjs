@@ -40,7 +40,7 @@ export async function screenshotTest(page, name) {
   await page.addStyleTag({
     content: `
     * { 
-      color: transparent !important; 
+      color: transparent; 
     }
 
     .container {
