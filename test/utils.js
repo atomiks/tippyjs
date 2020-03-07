@@ -35,14 +35,9 @@ export function disableTouchEnvironment() {
 }
 
 export async function screenshotTest(page, name) {
-  // Remove text rendering differences and the container border so the image
-  // is clean
+  // Remove container border so the image is clean
   await page.addStyleTag({
     content: `
-    * { 
-      color: transparent !important; 
-    }
-
     .container {
       border: none !important;
     }
