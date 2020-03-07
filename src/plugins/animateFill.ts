@@ -9,7 +9,7 @@ const animateFill: AnimateFill = {
   defaultValue: false,
   fn(instance) {
     // @ts-ignore
-    if (!instance.props.render?.$$tippy) {
+    if (instance.props.animateFill && !instance.props.render?.$$tippy) {
       if (__DEV__) {
         errorWhen(
           true,
