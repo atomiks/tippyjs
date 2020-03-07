@@ -119,31 +119,31 @@ index e167559..36c26c5 100644
 +.tippy-box[data-placement^=top]>.tippy-backdrop{transform-origin:0 25%;border-radius:40% 40% 0 0}.tippy-box[data-placement^=top]>.tippy-backdrop[data-state=visible]{transform:scale(1) translate(-50%,-55%)}.tippy-box[data-placement^=top]>.tippy-backdrop[data-state=hidden]{transform:scale(.2) translate(-50%,-45%)}.tippy-box[data-placement^=bottom]>.tippy-backdrop{transform-origin:0 -50%;border-radius:0 0 30% 30%}.tippy-box[data-placement^=bottom]>.tippy-backdrop[data-state=visible]{transform:scale(1) translate(-50%,-45%)}.tippy-box[data-placement^=bottom]>.tippy-backdrop[data-state=hidden]{transform:scale(.2) translate(-50%)}.tippy-box[data-placement^=left]>.tippy-backdrop{transform-origin:50% 0;border-radius:50% 0 0 50%}.tippy-box[data-placement^=left]>.tippy-backdrop[data-state=visible]{transform:scale(1) translate(-50%,-50%)}.tippy-box[data-placement^=left]>.tippy-backdrop[data-state=hidden]{transform:scale(.2) translate(-75%,-50%)}.tippy-box[data-placement^=right]>.tippy-backdrop{transform-origin:-50% 0;border-radius:0 50% 50% 0}.tippy-box[data-placement^=right]>.tippy-backdrop[data-state=visible]{transform:scale(1) translate(-50%,-50%)}.tippy-box[data-placement^=right]>.tippy-backdrop[data-state=hidden]{transform:scale(.2) translate(-25%,-50%)}.tippy-box[data-animatefill]{background-color:transparent!important}.tippy-backdrop{position:absolute;background-color:#333;border-radius:50%;width:calc(110% + 32px);left:50%;top:50%;z-index:-1;transition:all cubic-bezier(.46,.1,.52,.98);-webkit-backface-visibility:hidden;backface-visibility:hidden}.tippy-backdrop[data-state=hidden]{opacity:0}.tippy-backdrop:after{content:"";float:left;padding-top:100%}.tippy-backdrop+.tippy-content{transition-property:opacity;will-change:opacity}.tippy-backdrop+.tippy-content[data-state=hidden]{opacity:0}
 \ No newline at end of file
 diff --git a/node_modules/tippy.js/dist/svg-arrow.css b/node_modules/tippy.js/dist/svg-arrow.css
-index 3e862e6..7fa0c40 100644
+index 3e862e6..dd1a40c 100644
 --- a/node_modules/tippy.js/dist/svg-arrow.css
 +++ b/node_modules/tippy.js/dist/svg-arrow.css
 @@ -1 +1 @@
 -.tippy-tooltip[data-placement^=top]>.tippy-svg-arrow{transform-origin:50% 0;margin:0 3px;bottom:-6.5px}.tippy-tooltip[data-placement^=top]>.tippy-svg-arrow svg{transform:rotate(180deg)}.tippy-tooltip[data-placement^=bottom]>.tippy-svg-arrow{transform-origin:50% 7px;margin:0 3px;top:-7px}.tippy-tooltip[data-placement^=left]>.tippy-svg-arrow{transform-origin:33.33333333% 50%;margin:3px 0;right:-12px}.tippy-tooltip[data-placement^=left]>.tippy-svg-arrow svg{transform:rotate(90deg)}.tippy-tooltip[data-placement^=right]>.tippy-svg-arrow{transform-origin:66.66666666% 50%;margin:3px 0;left:-12px}.tippy-tooltip[data-placement^=right]>.tippy-svg-arrow svg{transform:rotate(-90deg)}.tippy-tooltip[data-interactive]>.tippy-svg-arrow path{pointer-events:auto}.tippy-svg-arrow{position:absolute;width:18px;height:7px;fill:#333;pointer-events:none}.tippy-svg-arrow svg{position:absolute;left:0}
 \ No newline at end of file
-+.tippy-box[data-placement^=top]>.tippy-svg-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-svg-arrow:after,.tippy-box[data-placement^=top]>.tippy-svg-arrow>svg{top:16px;transform:rotate(180deg)}.tippy-box[data-placement^=bottom]>.tippy-svg-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-svg-arrow>svg{bottom:16px}.tippy-box[data-placement^=left]>.tippy-svg-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-svg-arrow:after,.tippy-box[data-placement^=left]>.tippy-svg-arrow>svg{transform:rotate(90deg);top:calc(50% - 3px);left:11px}.tippy-box[data-placement^=right]>.tippy-svg-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-svg-arrow:after,.tippy-box[data-placement^=right]>.tippy-svg-arrow>svg{transform:rotate(-90deg);top:calc(50% - 3px);right:11px}.tippy-box[data-interactive]>.tippy-svg-arrow path{pointer-events:auto}.tippy-svg-arrow{width:16px;height:16px;fill:#333;pointer-events:none}.tippy-svg-arrow,.tippy-svg-arrow>svg{position:absolute}
++.tippy-box[data-placement^=top]>.tippy-svg-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-svg-arrow:after,.tippy-box[data-placement^=top]>.tippy-svg-arrow>svg{top:16px;transform:rotate(180deg)}.tippy-box[data-placement^=bottom]>.tippy-svg-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-svg-arrow>svg{bottom:16px}.tippy-box[data-placement^=left]>.tippy-svg-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-svg-arrow:after,.tippy-box[data-placement^=left]>.tippy-svg-arrow>svg{transform:rotate(90deg);top:calc(50% - 4px);left:11px}.tippy-box[data-placement^=right]>.tippy-svg-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-svg-arrow:after,.tippy-box[data-placement^=right]>.tippy-svg-arrow>svg{transform:rotate(-90deg);top:calc(50% - 4px);right:11px}.tippy-box[data-interactive]>.tippy-svg-arrow path{pointer-events:auto}.tippy-svg-arrow{width:16px;height:16px;fill:#333;pointer-events:none}.tippy-svg-arrow,.tippy-svg-arrow>svg{position:absolute}
 \ No newline at end of file
 diff --git a/node_modules/tippy.js/dist/tippy.css b/node_modules/tippy.js/dist/tippy.css
-index f9a296c..93393dc 100644
+index f9a296c..51c03e9 100644
 --- a/node_modules/tippy.js/dist/tippy.css
 +++ b/node_modules/tippy.js/dist/tippy.css
 @@ -1 +1 @@
 -.tippy-tooltip[data-animation=fade][data-state=hidden]{opacity:0}.tippy-iOS{cursor:pointer!important;-webkit-tap-highlight-color:transparent}.tippy-popper{pointer-events:none;max-width:calc(100vw - 10px);transition-timing-function:cubic-bezier(.165,.84,.44,1);transition-property:transform}.tippy-tooltip{position:relative;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;background-color:#333;transition-property:visibility,opacity,transform;outline:0}.tippy-tooltip[data-placement^=top]>.tippy-arrow{border-width:8px 8px 0;border-top-color:#333;margin:0 3px;transform-origin:50% 0;bottom:-7px}.tippy-tooltip[data-placement^=bottom]>.tippy-arrow{border-width:0 8px 8px;border-bottom-color:#333;margin:0 3px;transform-origin:50% 7px;top:-7px}.tippy-tooltip[data-placement^=left]>.tippy-arrow{border-width:8px 0 8px 8px;border-left-color:#333;margin:3px 0;transform-origin:0 50%;right:-7px}.tippy-tooltip[data-placement^=right]>.tippy-arrow{border-width:8px 8px 8px 0;border-right-color:#333;margin:3px 0;transform-origin:7px 50%;left:-7px}.tippy-tooltip[data-interactive][data-state=visible]{pointer-events:auto}.tippy-tooltip[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{position:absolute;border-color:transparent;border-style:solid}.tippy-content{padding:5px 9px}
 \ No newline at end of file
-+.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}.tippy-iOS{cursor:pointer!important;-webkit-tap-highlight-color:transparent}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{border-width:8px 8px 0;border-top-color:#333;bottom:-7px;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;border-width:0 8px 8px;border-bottom-color:#333;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:#333;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:#333;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow,.tippy-arrow:before{position:absolute}.tippy-arrow{pointer-events:none;width:16px;height:16px}.tippy-arrow:before{content:"";border-color:transparent;border-style:solid;pointer-events:auto}.tippy-content{padding:5px 9px}
++.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}.tippy-iOS{cursor:pointer!important;-webkit-tap-highlight-color:transparent}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:#333;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:#333;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:#333;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:#333;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}
 \ No newline at end of file
 diff --git a/node_modules/tippy.js/dist/tippy.esm.js b/node_modules/tippy.js/dist/tippy.esm.js
-index 2bac78e..1616426 100644
+index 2bac78e..1bd9060 100644
 --- a/node_modules/tippy.js/dist/tippy.esm.js
 +++ b/node_modules/tippy.js/dist/tippy.esm.js
-@@ -1,91 +1,1548 @@
+@@ -1,91 +1,1580 @@
  /**!
 -* tippy.js v5.2.0
-+* tippy.js v6.0.0-alpha.0
++* tippy.js v6.0.1
  * (c) 2017-2020 atomiks
  * MIT License
  */
@@ -152,6 +152,17 @@ index 2bac78e..1616426 100644
 -import 'popper.js';
 +import { createPopper } from '@popperjs/core';
  
++var PASSIVE = {
++  passive: true
++};
++var ROUND_ARROW = '<svg width="16" height="6" xmlns="http://www.w3.org/2000/svg"><path d="M0 6s1.796-.013 4.67-3.615C5.851.9 6.93.006 8 0c1.07-.006 2.148.887 3.343 2.385C14.233 6.005 16 6 16 6H0z"></svg>';
++var IOS_CLASS = "tippy-iOS";
++var BOX_CLASS = "tippy-box";
++var CONTENT_CLASS = "tippy-content";
++var BACKDROP_CLASS = "tippy-backdrop";
++var ARROW_CLASS = "tippy-arrow";
++var SVG_ARROW_CLASS = "tippy-svg-arrow";
++
 +function hasOwnProperty(obj, key) {
 +  return {}.hasOwnProperty.call(obj, key);
 +}
@@ -213,6 +224,164 @@ index 2bac78e..1616426 100644
 +function arrayFrom(value) {
 +  return [].slice.call(value);
 +}
++
++function div() {
++  return document.createElement('div');
++}
++function isElement(value) {
++  return isType(value, 'Element');
++}
++function isNodeList(value) {
++  return isType(value, 'NodeList');
++}
++function isMouseEvent(value) {
++  return isType(value, 'MouseEvent');
++}
++function isReferenceElement(value) {
++  return !!(value && value._tippy && value._tippy.reference === value);
++}
++function getArrayOfElements(value) {
++  if (isElement(value)) {
++    return [value];
++  }
++
++  if (isNodeList(value)) {
++    return arrayFrom(value);
++  }
++
++  if (Array.isArray(value)) {
++    return value;
++  }
++
++  return arrayFrom(document.querySelectorAll(value));
++}
++function setTransitionDuration(els, value) {
++  els.forEach(function (el) {
++    if (el) {
++      el.style.transitionDuration = value + "ms";
++    }
++  });
++}
++function setVisibilityState(els, state) {
++  els.forEach(function (el) {
++    if (el) {
++      el.setAttribute('data-state', state);
++    }
++  });
++}
++function getOwnerDocument(elementOrElements) {
++  var _normalizeToArray = normalizeToArray(elementOrElements),
++      element = _normalizeToArray[0];
++
++  return element ? element.ownerDocument || document : document;
++}
++function isCursorOutsideInteractiveBorder(popperTreeData, event) {
++  var clientX = event.clientX,
++      clientY = event.clientY;
++  return popperTreeData.every(function (_ref) {
++    var popperRect = _ref.popperRect,
++        popperState = _ref.popperState,
++        props = _ref.props;
++    var interactiveBorder = props.interactiveBorder;
++    var basePlacement = getBasePlacement(popperState.placement);
++    var offsetData = popperState.modifiersData.offset;
++
++    if (!offsetData) {
++      return true;
++    }
++
++    var topDistance = basePlacement === 'bottom' ? offsetData.top.y : 0;
++    var bottomDistance = basePlacement === 'top' ? offsetData.bottom.y : 0;
++    var leftDistance = basePlacement === 'right' ? offsetData.left.x : 0;
++    var rightDistance = basePlacement === 'left' ? offsetData.right.x : 0;
++    var exceedsTop = popperRect.top - clientY + topDistance > interactiveBorder;
++    var exceedsBottom = clientY - popperRect.bottom - bottomDistance > interactiveBorder;
++    var exceedsLeft = popperRect.left - clientX + leftDistance > interactiveBorder;
++    var exceedsRight = clientX - popperRect.right - rightDistance > interactiveBorder;
++    return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight;
++  });
++}
++function updateTransitionEndListener(box, action, listener) {
++  var method = action + "EventListener"; // some browsers apparently support `transition` (unprefixed) but only fire
++  // `webkitTransitionEnd`...
++
++  ['transitionend', 'webkitTransitionEnd'].forEach(function (event) {
++    box[method](event, listener);
++  });
++}
++
++var currentInput = {
++  isTouch: false
++};
++var lastMouseMoveTime = 0;
++/**
++ * When a `touchstart` event is fired, it's assumed the user is using touch
++ * input. We'll bind a `mousemove` event listener to listen for mouse input in
++ * the future. This way, the `isTouch` property is fully dynamic and will handle
++ * hybrid devices that use a mix of touch + mouse input.
++ */
++
++function onDocumentTouchStart() {
++  if (currentInput.isTouch) {
++    return;
++  }
++
++  currentInput.isTouch = true;
++
++  if (window.performance) {
++    document.addEventListener('mousemove', onDocumentMouseMove);
++  }
++}
++/**
++ * When two `mousemove` event are fired consecutively within 20ms, it's assumed
++ * the user is using mouse input again. `mousemove` can fire on touch devices as
++ * well, but very rarely that quickly.
++ */
++
++function onDocumentMouseMove() {
++  var now = performance.now();
++
++  if (now - lastMouseMoveTime < 20) {
++    currentInput.isTouch = false;
++    document.removeEventListener('mousemove', onDocumentMouseMove);
++  }
++
++  lastMouseMoveTime = now;
++}
+ /**
+- * Re-uses a single tippy element for many different tippy instances.
+- * Replaces v4's `tippy.group()`.
++ * When an element is in focus and has a tippy, leaving the tab/window and
++ * returning causes it to show again. For mouse users this is unexpected, but
++ * for keyboard use it makes sense.
++ * TODO: find a better technique to solve this problem
+  */
+ 
+-var createSingleton = function createSingleton(tippyInstances, optionalProps,
+-/** @deprecated use Props.plugins */
+-plugins) {
++function onWindowBlur() {
++  var activeElement = document.activeElement;
++
++  if (isReferenceElement(activeElement)) {
++    var instance = activeElement._tippy;
++
++    if (activeElement.blur && !instance.state.isVisible) {
++      activeElement.blur();
++    }
++  }
++}
++function bindGlobalEventListeners() {
++  document.addEventListener('touchstart', onDocumentTouchStart, Object.assign({}, PASSIVE, {
++    capture: true
++  }));
++  window.addEventListener('blur', onWindowBlur);
++}
++
++var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
++var ua = isBrowser ? navigator.userAgent : '';
++var isIE = /MSIE |Trident\//.test(ua);
++var isIOS = isBrowser && /iPhone|iPad|iPod/.test(navigator.platform);
 +
 +function createMemoryLeakWarning(method) {
 +  var txt = method === 'destroy' ? 'n already-' : ' ';
@@ -291,7 +460,10 @@ index 2bac78e..1616426 100644
 +  appendTo: function appendTo() {
 +    return document.body;
 +  },
-+  aria: 'describedby',
++  aria: {
++    content: 'auto',
++    expanded: 'auto'
++  },
 +  content: '',
 +  delay: 0,
 +  duration: [300, 250],
@@ -375,12 +547,14 @@ index 2bac78e..1616426 100644
 +  return props;
 +}
 +function evaluateProps(reference, props) {
-+  var out = Object.assign({}, props, {}, props.ignoreAttributes ? {} : getDataAttributeProps(reference, props.plugins));
-+
-+  if (out.interactive) {
-+    out.aria = null;
-+  }
-+
++  var out = Object.assign({}, props, {
++    content: invokeWithArgsOrReturn(props.content, [reference])
++  }, props.ignoreAttributes ? {} : getDataAttributeProps(reference, props.plugins));
++  out.aria = Object.assign({}, defaultProps.aria, {}, out.aria);
++  out.aria = {
++    expanded: out.aria.expanded === 'auto' ? props.interactive : out.aria.expanded,
++    content: out.aria.content === 'auto' ? props.interactive ? null : 'describedby' : out.aria.content
++  };
 +  return out;
 +}
 +function validateProps(partialProps, plugins) {
@@ -405,180 +579,6 @@ index 2bac78e..1616426 100644
 +
 +    warnWhen(didPassUnknownProp, ["`" + prop + "`", "is not a valid prop. You may have spelled it incorrectly, or if it's", 'a plugin, forgot to pass it in an array as props.plugins.', '\n\n', 'All props: https://atomiks.github.io/tippyjs/v6/all-props/\n', 'Plugins: https://atomiks.github.io/tippyjs/v6/plugins/'].join(' '));
 +  });
-+}
-+
-+var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
-+var ua = isBrowser ? navigator.userAgent : '';
-+var isIE = /MSIE |Trident\//.test(ua);
-+var isIOS = isBrowser && /iPhone|iPad|iPod/.test(navigator.platform);
-+
-+var PASSIVE = {
-+  passive: true
-+};
-+var ROUND_ARROW = '<svg width="16" height="6" xmlns="http://www.w3.org/2000/svg"><path d="M0 6s1.796-.013 4.67-3.615C5.851.9 6.93.006 8 0c1.07-.006 2.148.887 3.343 2.385C14.233 6.005 16 6 16 6H0z"></svg>';
-+var IOS_CLASS = "tippy-iOS";
-+var BOX_CLASS = "tippy-box";
-+var CONTENT_CLASS = "tippy-content";
-+var BACKDROP_CLASS = "tippy-backdrop";
-+var ARROW_CLASS = "tippy-arrow";
-+var SVG_ARROW_CLASS = "tippy-svg-arrow";
-+
-+function div() {
-+  return document.createElement('div');
-+}
-+function isElement(value) {
-+  return isType(value, 'Element');
-+}
-+function isNodeList(value) {
-+  return isType(value, 'NodeList');
-+}
-+function isMouseEvent(value) {
-+  return isType(value, 'MouseEvent');
-+}
-+function isReferenceElement(value) {
-+  return !!(value && value._tippy && value._tippy.reference === value);
-+}
-+function getArrayOfElements(value) {
-+  if (isElement(value)) {
-+    return [value];
-+  }
-+
-+  if (isNodeList(value)) {
-+    return arrayFrom(value);
-+  }
-+
-+  if (Array.isArray(value)) {
-+    return value;
-+  }
-+
-+  return arrayFrom(document.querySelectorAll(value));
-+}
-+function setTransitionDuration(els, value) {
-+  els.forEach(function (el) {
-+    if (el) {
-+      el.style.transitionDuration = value + "ms";
-+    }
-+  });
-+}
-+function setVisibilityState(els, state) {
-+  els.forEach(function (el) {
-+    if (el) {
-+      el.setAttribute('data-state', state);
-+    }
-+  });
-+}
-+function closestCallback(element, callback) {
-+  while (element) {
-+    if (callback(element)) {
-+      return element;
-+    }
-+
-+    element = element.parentElement;
-+  }
-+
-+  return null;
-+}
-+function getOwnerDocument(elementOrElements) {
-+  var _normalizeToArray = normalizeToArray(elementOrElements),
-+      element = _normalizeToArray[0];
-+
-+  return element ? element.ownerDocument || document : document;
-+}
-+function isCursorOutsideInteractiveBorder(popperTreeData, event) {
-+  var clientX = event.clientX,
-+      clientY = event.clientY;
-+  return popperTreeData.every(function (_ref) {
-+    var basePlacement = _ref.basePlacement,
-+        popperRect = _ref.popperRect,
-+        props = _ref.props,
-+        offsetData = _ref.offsetData;
-+    var interactiveBorder = props.interactiveBorder;
-+    var topDistance = basePlacement === 'bottom' ? offsetData.top.y : 0;
-+    var bottomDistance = basePlacement === 'top' ? offsetData.bottom.y : 0;
-+    var leftDistance = basePlacement === 'right' ? offsetData.left.x : 0;
-+    var rightDistance = basePlacement === 'left' ? offsetData.right.x : 0;
-+    var exceedsTop = popperRect.top - clientY + topDistance > interactiveBorder;
-+    var exceedsBottom = clientY - popperRect.bottom - bottomDistance > interactiveBorder;
-+    var exceedsLeft = popperRect.left - clientX + leftDistance > interactiveBorder;
-+    var exceedsRight = clientX - popperRect.right - rightDistance > interactiveBorder;
-+    return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight;
-+  });
-+}
-+function updateTransitionEndListener(box, action, listener) {
-+  var method = action + "EventListener"; // some browsers apparently support `transition` (unprefixed) but only fire
-+  // `webkitTransitionEnd`...
-+
-+  ['transitionend', 'webkitTransitionEnd'].forEach(function (event) {
-+    box[method](event, listener);
-+  });
-+}
-+
-+var currentInput = {
-+  isTouch: false
-+};
-+var lastMouseMoveTime = 0;
- /**
-- * Re-uses a single tippy element for many different tippy instances.
-- * Replaces v4's `tippy.group()`.
-+ * When a `touchstart` event is fired, it's assumed the user is using touch
-+ * input. We'll bind a `mousemove` event listener to listen for mouse input in
-+ * the future. This way, the `isTouch` property is fully dynamic and will handle
-+ * hybrid devices that use a mix of touch + mouse input.
-  */
- 
--var createSingleton = function createSingleton(tippyInstances, optionalProps,
--/** @deprecated use Props.plugins */
--plugins) {
-+function onDocumentTouchStart() {
-+  if (currentInput.isTouch) {
-+    return;
-+  }
-+
-+  currentInput.isTouch = true;
-+
-+  if (window.performance) {
-+    document.addEventListener('mousemove', onDocumentMouseMove);
-+  }
-+}
-+/**
-+ * When two `mousemove` event are fired consecutively within 20ms, it's assumed
-+ * the user is using mouse input again. `mousemove` can fire on touch devices as
-+ * well, but very rarely that quickly.
-+ */
-+
-+function onDocumentMouseMove() {
-+  var now = performance.now();
-+
-+  if (now - lastMouseMoveTime < 20) {
-+    currentInput.isTouch = false;
-+    document.removeEventListener('mousemove', onDocumentMouseMove);
-+  }
-+
-+  lastMouseMoveTime = now;
-+}
-+/**
-+ * When an element is in focus and has a tippy, leaving the tab/window and
-+ * returning causes it to show again. For mouse users this is unexpected, but
-+ * for keyboard use it makes sense.
-+ * TODO: find a better technique to solve this problem
-+ */
-+
-+function onWindowBlur() {
-+  var activeElement = document.activeElement;
-+
-+  if (isReferenceElement(activeElement)) {
-+    var instance = activeElement._tippy;
-+
-+    if (activeElement.blur && !instance.state.isVisible) {
-+      activeElement.blur();
-+    }
-+  }
-+}
-+function bindGlobalEventListeners() {
-+  document.addEventListener('touchstart', onDocumentTouchStart, Object.assign({}, PASSIVE, {
-+    capture: true
-+  }));
-+  window.addEventListener('blur', onWindowBlur);
 +}
 +
 +var innerHTML = function innerHTML() {
@@ -607,19 +607,15 @@ index 2bac78e..1616426 100644
 +  return arrow;
 +}
 +
-+function setContent(content, _ref) {
-+  var props = _ref.props,
-+      reference = _ref.reference;
-+  var computedContent = typeof props.content === 'function' ? props.content(reference) : props.content;
-+
-+  if (isElement(computedContent)) {
++function setContent(content, props) {
++  if (isElement(props.content)) {
 +    dangerouslySetInnerHTML(content, '');
-+    content.appendChild(computedContent);
-+  } else {
++    content.appendChild(props.content);
++  } else if (typeof props.content !== 'function') {
 +    if (props.allowHTML) {
-+      dangerouslySetInnerHTML(content, computedContent);
++      dangerouslySetInnerHTML(content, props.content);
 +    } else {
-+      content.textContent = computedContent;
++      content.textContent = props.content;
 +    }
 +  }
 +}
@@ -633,10 +629,10 @@ index 2bac78e..1616426 100644
 +    }),
 +    arrow: boxChildren.find(function (node) {
 +      return node.classList.contains(ARROW_CLASS) || node.classList.contains(SVG_ARROW_CLASS);
-+    }) || null,
++    }),
 +    backdrop: boxChildren.find(function (node) {
 +      return node.classList.contains(BACKDROP_CLASS);
-+    }) || null
++    })
 +  };
 +}
 +function render(instance) {
@@ -648,12 +644,12 @@ index 2bac78e..1616426 100644
 +  var content = div();
 +  content.className = CONTENT_CLASS;
 +  content.setAttribute('data-state', 'hidden');
-+  setContent(content, instance);
++  setContent(content, instance.props);
 +  popper.appendChild(box);
 +  box.appendChild(content);
-+  update(instance.props, instance.props);
++  onUpdate(instance.props, instance.props);
 +
-+  function update(prevProps, nextProps) {
++  function onUpdate(prevProps, nextProps) {
 +    var _getChildren = getChildren(popper),
 +        box = _getChildren.box,
 +        content = _getChildren.content,
@@ -667,7 +663,7 @@ index 2bac78e..1616426 100644
 +      box.removeAttribute('data-theme');
 +    }
 +
-+    if (nextProps.animation) {
++    if (typeof nextProps.animation === 'string') {
 +      box.setAttribute('data-animation', nextProps.animation);
 +    } else {
 +      box.removeAttribute('data-animation');
@@ -688,7 +684,7 @@ index 2bac78e..1616426 100644
 +    }
 +
 +    if (prevProps.content !== nextProps.content) {
-+      setContent(content, instance);
++      setContent(content, instance.props);
 +    }
 +
 +    if (nextProps.arrow) {
@@ -705,16 +701,12 @@ index 2bac78e..1616426 100644
 +
 +  return {
 +    popper: popper,
-+    update: update
++    onUpdate: onUpdate
 +  };
 +} // Runtime check to identify if the render function is the default one; this
 +// way we can apply default CSS transitions logic and it can be tree-shaken away
 +
 +render.$$tippy = true;
-+function isDefaultRenderFn(render) {
-+  // @ts-ignore
-+  return render.$$tippy;
-+}
 +
 +var idCounter = 1;
 +var mouseMoveListeners = []; // Used by `hideAll()`
@@ -745,8 +737,6 @@ index 2bac78e..1616426 100644
 +  var popperInstance = null;
 +  var plugins = unique(props.plugins);
 +  var state = {
-+    // The current real placement (`data-placement` attribute)
-+    currentPlacement: null,
 +    // Is the instance currently enabled?
 +    isEnabled: true,
 +    // Is the tippy currently showing and not transitioning out?
@@ -795,7 +785,7 @@ index 2bac78e..1616426 100644
 +
 +  var _props$render = props.render(instance),
 +      popper = _props$render.popper,
-+      update = _props$render.update;
++      onUpdate = _props$render.onUpdate;
 +
 +  popper.setAttribute('data-tippy-root', '');
 +  popper.id = "tippy-" + instance.id;
@@ -805,8 +795,8 @@ index 2bac78e..1616426 100644
 +  var pluginsHooks = plugins.map(function (plugin) {
 +    return plugin.fn(instance);
 +  });
-+  var hadAriaExpandedAttributeOnCreate = reference.hasAttribute('aria-expanded');
-+  addListenersToTriggerTarget();
++  var hasAriaExpanded = reference.hasAttribute('aria-expanded');
++  addListeners();
 +  handleAriaExpandedAttribute();
 +  invokeHook('onCreate', [instance]);
 +
@@ -838,6 +828,13 @@ index 2bac78e..1616426 100644
 +
 +  function getIsCustomTouchBehavior() {
 +    return getNormalizedTouchSettings()[0] === 'hold';
++  }
++
++  function getIsDefaultRenderFn() {
++    var _instance$props$rende;
++
++    // @ts-ignore
++    return !!((_instance$props$rende = instance.props.render) == null ? void 0 : _instance$props$rende.$$tippy);
 +  }
 +
 +  function getCurrentTarget() {
@@ -886,14 +883,14 @@ index 2bac78e..1616426 100644
 +    }
 +  }
 +
-+  function handleAriaDescribedByAttribute() {
++  function handleAriaContentAttribute() {
 +    var aria = instance.props.aria;
 +
-+    if (!aria) {
++    if (!aria.content) {
 +      return;
 +    }
 +
-+    var attr = "aria-" + aria;
++    var attr = "aria-" + aria.content;
 +    var id = popper.id;
 +    var nodes = normalizeToArray(instance.props.triggerTarget || reference);
 +    nodes.forEach(function (node) {
@@ -914,10 +911,7 @@ index 2bac78e..1616426 100644
 +  }
 +
 +  function handleAriaExpandedAttribute() {
-+    // If the user has specified `aria-expanded` on their reference when the
-+    // instance was created, we have to assume they're controlling it externally
-+    // themselves
-+    if (hadAriaExpandedAttributeOnCreate) {
++    if (hasAriaExpanded || !instance.props.aria.expanded) {
 +      return;
 +    }
 +
@@ -1034,7 +1028,7 @@ index 2bac78e..1616426 100644
 +    });
 +  }
 +
-+  function addListenersToTriggerTarget() {
++  function addListeners() {
 +    if (getIsCustomTouchBehavior()) {
 +      on('touchstart', onTrigger, PASSIVE);
 +      on('touchend', onMouseLeave, PASSIVE);
@@ -1063,7 +1057,7 @@ index 2bac78e..1616426 100644
 +    });
 +  }
 +
-+  function removeListenersFromTriggerTarget() {
++  function removeListeners() {
 +    listeners.forEach(function (_ref) {
 +      var node = _ref.node,
 +          eventType = _ref.eventType,
@@ -1124,22 +1118,23 @@ index 2bac78e..1616426 100644
 +  }
 +
 +  function onMouseMove(event) {
-+    var isCursorOverReferenceOrPopper = closestCallback(event.target, function (el) {
-+      return el === reference || el === popper;
-+    });
++    var target = event.target;
++    var isCursorOverReferenceOrPopper = reference.contains(target) || popper.contains(target);
 +
 +    if (event.type === 'mousemove' && isCursorOverReferenceOrPopper) {
 +      return;
 +    }
 +
 +    var popperTreeData = getNestedPopperTree().concat(popper).map(function (popper) {
-+      var instance = popper._tippy;
++      var _instance$popperInsta;
 +
-+      if (instance.popperInstance && instance.state.currentPlacement) {
++      var instance = popper._tippy;
++      var state = (_instance$popperInsta = instance.popperInstance) == null ? void 0 : _instance$popperInsta.state;
++
++      if (state) {
 +        return {
 +          popperRect: popper.getBoundingClientRect(),
-+          basePlacement: getBasePlacement(instance.state.currentPlacement),
-+          offsetData: instance.popperInstance.state.modifiersData.offset,
++          popperState: state,
 +          props: props
 +        };
 +      }
@@ -1196,7 +1191,7 @@ index 2bac78e..1616426 100644
 +        offset = _instance$props2.offset,
 +        getReferenceClientRect = _instance$props2.getReferenceClientRect,
 +        moveTransition = _instance$props2.moveTransition;
-+    var arrow = isDefaultRenderFn(instance.props.render) ? getChildren(popper).arrow : null;
++    var arrow = getIsDefaultRenderFn() ? getChildren(popper).arrow : null;
 +    var computedReference = getReferenceClientRect ? {
 +      getBoundingClientRect: getReferenceClientRect
 +    } : reference;
@@ -1208,13 +1203,23 @@ index 2bac78e..1616426 100644
 +      fn: function fn(_ref2) {
 +        var state = _ref2.state;
 +
-+        if (isDefaultRenderFn(instance.props.render)) {
-+          // Replace `data-popper-placement` with `data-placement`
-+          delete state.attributes.popper['data-popper-placement'];
-+          getDefaultTemplateChildren().box.setAttribute('data-placement', state.placement);
-+        }
++        if (getIsDefaultRenderFn()) {
++          var _getDefaultTemplateCh = getDefaultTemplateChildren(),
++              box = _getDefaultTemplateCh.box;
 +
-+        instance.state.currentPlacement = state.placement;
++          ['placement', 'reference-hidden', 'escaped'].forEach(function (attr) {
++            if (attr === 'placement') {
++              box.setAttribute('data-placement', state.placement);
++            } else {
++              if (state.attributes.popper["data-popper-" + attr]) {
++                box.setAttribute("data-" + attr, '');
++              } else {
++                box.removeAttribute("data-" + attr);
++              }
++            }
++          });
++          state.attributes.popper = {};
++        }
 +      }
 +    };
 +    var arrowModifier = {
@@ -1243,19 +1248,14 @@ index 2bac78e..1616426 100644
 +    }, {
 +      name: 'flip',
 +      options: {
-+        padding: {
-+          top: 2,
-+          bottom: 2,
-+          left: 5,
-+          right: 5
-+        }
++        padding: 5
 +      }
 +    }, {
 +      name: 'computeStyles',
 +      options: {
 +        adaptive: !moveTransition
 +      }
-+    }].concat(isDefaultRenderFn(instance.props.render) ? [arrowModifier] : [], (popperOptions == null ? void 0 : popperOptions.modifiers) || [], [tippyModifier]);
++    }].concat(getIsDefaultRenderFn() ? [arrowModifier] : [], (popperOptions == null ? void 0 : popperOptions.modifiers) || [], [tippyModifier]);
 +    instance.popperInstance = createPopper(computedReference, popper, Object.assign({}, popperOptions, {
 +      placement: placement,
 +      onFirstUpdate: onFirstUpdate,
@@ -1389,13 +1389,13 @@ index 2bac78e..1616426 100644
 +    }
 +
 +    invokeHook('onBeforeUpdate', [instance, partialProps]);
-+    removeListenersFromTriggerTarget();
++    removeListeners();
 +    var prevProps = instance.props;
 +    var nextProps = evaluateProps(reference, Object.assign({}, instance.props, {}, partialProps, {
 +      ignoreAttributes: true
 +    }));
 +    instance.props = nextProps;
-+    addListenersToTriggerTarget();
++    addListeners();
 +
 +    if (prevProps.interactiveDebounce !== nextProps.interactiveDebounce) {
 +      cleanupInteractiveMouseListeners();
@@ -1414,8 +1414,8 @@ index 2bac78e..1616426 100644
 +    handleAriaExpandedAttribute();
 +    handleInteractiveStyles();
 +
-+    if (update) {
-+      update(prevProps, nextProps);
++    if (onUpdate) {
++      onUpdate(prevProps, nextProps);
 +    }
 +
 +    if (instance.popperInstance) {
@@ -1462,12 +1462,26 @@ index 2bac78e..1616426 100644
 +    }
 +
 +    instance.state.isVisible = true;
-+    popper.style.visibility = 'visible';
++
++    if (getIsDefaultRenderFn()) {
++      popper.style.visibility = 'visible';
++    }
++
 +    handleInteractiveStyles();
 +    addDocumentMouseDownListener();
 +
 +    if (!instance.state.isMounted) {
 +      popper.style.transition = 'none';
++    } // If flipping to the opposite side after hiding at least once, the
++    // animation will use the wrong placement without resetting the duration
++
++
++    if (getIsDefaultRenderFn()) {
++      var _getDefaultTemplateCh2 = getDefaultTemplateChildren(),
++          box = _getDefaultTemplateCh2.box,
++          content = _getDefaultTemplateCh2.content;
++
++      setTransitionDuration([box, content], 0);
 +    }
 +
 +    onFirstUpdate = function onFirstUpdate() {
@@ -1480,25 +1494,23 @@ index 2bac78e..1616426 100644
 +      void popper.offsetHeight;
 +      popper.style.transition = instance.props.moveTransition;
 +
-+      if (isDefaultRenderFn(instance.props.render)) {
-+        var _getDefaultTemplateCh = getDefaultTemplateChildren(),
-+            box = _getDefaultTemplateCh.box,
-+            content = _getDefaultTemplateCh.content;
++      if (getIsDefaultRenderFn() && instance.props.animation) {
++        var _getDefaultTemplateCh3 = getDefaultTemplateChildren(),
++            _box = _getDefaultTemplateCh3.box,
++            _content = _getDefaultTemplateCh3.content;
 +
-+        if (instance.props.animation) {
-+          setTransitionDuration([box, content], duration);
-+          setVisibilityState([box, content], 'visible');
-+        }
++        setTransitionDuration([_box, _content], duration);
++        setVisibilityState([_box, _content], 'visible');
 +      }
 +
-+      handleAriaDescribedByAttribute();
++      handleAriaContentAttribute();
 +      handleAriaExpandedAttribute();
 +      pushIfUnique(mountedInstances, instance);
 +      updateIOSClass(true);
 +      instance.state.isMounted = true;
 +      invokeHook('onMount', [instance]);
 +
-+      if (instance.props.animation && isDefaultRenderFn(instance.props.render)) {
++      if (instance.props.animation && getIsDefaultRenderFn()) {
 +        onTransitionedIn(duration, function () {
 +          instance.state.isShown = true;
 +          invokeHook('onShown', [instance]);
@@ -1533,16 +1545,20 @@ index 2bac78e..1616426 100644
 +
 +    instance.state.isVisible = false;
 +    instance.state.isShown = false;
-+    popper.style.visibility = 'hidden';
 +    ignoreOnFirstUpdate = false;
++
++    if (getIsDefaultRenderFn()) {
++      popper.style.visibility = 'hidden';
++    }
++
 +    cleanupInteractiveMouseListeners();
 +    removeDocumentMouseDownListener();
 +    handleInteractiveStyles();
 +
-+    if (isDefaultRenderFn(instance.props.render)) {
-+      var _getDefaultTemplateCh2 = getDefaultTemplateChildren(),
-+          box = _getDefaultTemplateCh2.box,
-+          content = _getDefaultTemplateCh2.content;
++    if (getIsDefaultRenderFn()) {
++      var _getDefaultTemplateCh4 = getDefaultTemplateChildren(),
++          box = _getDefaultTemplateCh4.box,
++          content = _getDefaultTemplateCh4.content;
 +
 +      if (instance.props.animation) {
 +        setTransitionDuration([box, content], duration);
@@ -1550,11 +1566,15 @@ index 2bac78e..1616426 100644
 +      }
 +    }
 +
-+    handleAriaDescribedByAttribute();
++    handleAriaContentAttribute();
 +    handleAriaExpandedAttribute();
 +
-+    if (instance.props.animation && isDefaultRenderFn(instance.props.render)) {
-+      onTransitionedOut(duration, unmount);
++    if (instance.props.animation) {
++      if (getIsDefaultRenderFn()) {
++        onTransitionedOut(duration, instance.unmount);
++      }
++    } else {
++      instance.unmount();
 +    }
 +  }
 +
@@ -1565,6 +1585,7 @@ index 2bac78e..1616426 100644
 +
 +    getNestedPopperTree().forEach(function (nestedPopper) {
 +      var instance = nestedPopper._tippy;
++      instance.hide();
 +      instance.unmount();
 +    });
 +
@@ -1595,8 +1616,16 @@ index 2bac78e..1616426 100644
 +    }
 +
 +    instance.clearDelayTimeouts();
-+    instance.unmount();
-+    removeListenersFromTriggerTarget();
++    instance.hide(); // The user may call this method in the `onHidden()` lifecycle, and without
++    // this guard it causes a stack overflow due to circular call loop because
++    // `onHidden()` also calls `unmount()`
++    // https://github.com/atomiks/tippyjs/issues/724
++
++    if (instance.state.isMounted) {
++      instance.unmount();
++    }
++
++    removeListeners();
 +    delete reference._tippy;
 +    instance.state.isDestroyed = true;
 +    invokeHook('onDestroy', [instance]);
@@ -1616,8 +1645,8 @@ index 2bac78e..1616426 100644
 +  if (process.env.NODE_ENV !== "production") {
 +    validateTargets(targets);
 +    validateProps(optionalProps, plugins);
-   }
- 
++  }
++
 +  bindGlobalEventListeners();
 +  var passedProps = Object.assign({}, optionalProps, {
 +    plugins: plugins
@@ -1625,16 +1654,12 @@ index 2bac78e..1616426 100644
 +  var elements = getArrayOfElements(targets);
 +  /* istanbul ignore else */
 +
-   if (process.env.NODE_ENV !== "production") {
--    errorWhen(!Array.isArray(tippyInstances), ['The first argument passed to createSingleton() must be an array of tippy', 'instances. The passed value was', String(tippyInstances)].join(' '));
++  if (process.env.NODE_ENV !== "production") {
 +    var isSingleContentElement = isElement(passedProps.content);
 +    var isMoreThanOneReferenceElement = elements.length > 1;
 +    warnWhen(isSingleContentElement && isMoreThanOneReferenceElement, ['tippy() was passed an Element as the `content` prop, but more than', 'one tippy instance was created by this invocation. This means the', 'content element will only be appended to the last tippy instance.', '\n\n', 'Instead, pass the .innerHTML of the element, or use a function that', 'returns a cloned version of the element instead.', '\n\n', '1) content: element.innerHTML\n', '2) content: () => element.cloneNode(true)'].join(' '));
-   }
- 
--  plugins = optionalProps.plugins || plugins;
--  tippyInstances.forEach(function (instance) {
--    instance.disable();
++  }
++
 +  var instances = elements.reduce(function (acc, reference) {
 +    var instance = reference && createTippy(reference, passedProps);
 +
@@ -1668,28 +1693,35 @@ index 2bac78e..1616426 100644
 +        duration: duration
 +      });
 +      instance.hide();
-+      instance.setProps({
-+        duration: originalDuration
-+      });
++
++      if (!instance.state.isDestroyed) {
++        instance.setProps({
++          duration: originalDuration
++        });
++      }
 +    }
-   });
++  });
 +};
 +
 +var createSingleton = function createSingleton(tippyInstances, optionalProps) {
 +  if (optionalProps === void 0) {
 +    optionalProps = {};
-+  }
+   }
  
--  var userAria = _extends({}, defaultProps, {}, optionalProps).aria;
 +  /* istanbul ignore else */
-+  if (process.env.NODE_ENV !== "production") {
+   if (process.env.NODE_ENV !== "production") {
+-    errorWhen(!Array.isArray(tippyInstances), ['The first argument passed to createSingleton() must be an array of tippy', 'instances. The passed value was', String(tippyInstances)].join(' '));
 +    errorWhen(!Array.isArray(tippyInstances), ['The first argument passed to createSingleton() must be an array of', 'tippy instances. The passed value was', String(tippyInstances)].join(' '));
-+  }
+   }
  
+-  plugins = optionalProps.plugins || plugins;
+   tippyInstances.forEach(function (instance) {
+     instance.disable();
+   });
+-
+-  var userAria = _extends({}, defaultProps, {}, optionalProps).aria;
+-
 -  var currentAria;
-+  tippyInstances.forEach(function (instance) {
-+    instance.disable();
-+  });
    var currentTarget;
 -  var shouldSkipUpdate = false;
    var references = tippyInstances.map(function (instance) {
@@ -1746,7 +1778,7 @@ index 2bac78e..1616426 100644
            var target = event.currentTarget;
            var index = references.indexOf(target); // bail-out
  
-@@ -94,21 +1551,21 @@ plugins) {
+@@ -94,21 +1583,21 @@ plugins) {
            }
  
            currentTarget = target;
@@ -1779,7 +1811,7 @@ index 2bac78e..1616426 100644
      triggerTarget: references
    }));
  };
-@@ -123,33 +1580,22 @@ var BUBBLING_EVENTS_MAP = {
+@@ -123,33 +1612,22 @@ var BUBBLING_EVENTS_MAP = {
   * for child elements (`target` CSS selector).
   */
  
@@ -1817,7 +1849,7 @@ index 2bac78e..1616426 100644
    var returnValue = tippy(targets, parentProps);
    var normalizedReturnValue = normalizeToArray(returnValue);
  
-@@ -168,9 +1614,11 @@ plugins) {
+@@ -168,9 +1646,11 @@ plugins) {
      // 3. Fallback to `defaultProps.trigger`
  
  
@@ -1831,7 +1863,7 @@ index 2bac78e..1616426 100644
        return;
      }
  
-@@ -243,43 +1691,33 @@ var animateFill = {
+@@ -243,43 +1723,44 @@ var animateFill = {
    name: 'animateFill',
    defaultValue: false,
    fn: function fn(instance) {
@@ -1839,14 +1871,23 @@ index 2bac78e..1616426 100644
 -        tooltip = _instance$popperChild.tooltip,
 -        content = _instance$popperChild.content;
 -    var backdrop = instance.props.animateFill && !isUCBrowser ? createBackdropElement() : null;
--
++    var _instance$props$rende;
+ 
 -    function addBackdropToPopperChildren() {
 -      instance.popperChildren.backdrop = backdrop;
--    }
++    // @ts-ignore
++    if (!((_instance$props$rende = instance.props.render) == null ? void 0 : _instance$props$rende.$$tippy)) {
++      if (process.env.NODE_ENV !== "production") {
++        errorWhen(true, 'The `animateFill` plugin requires the default render function.');
++      }
++
++      return {};
+     }
+ 
 +    var _getChildren = getChildren(instance.popper),
 +        box = _getChildren.box,
 +        content = _getChildren.content;
- 
++
 +    var backdrop = instance.props.animateFill ? createBackdropElement() : null;
      return {
        onCreate: function onCreate() {
@@ -1886,7 +1927,7 @@ index 2bac78e..1616426 100644
          }
        },
        onShow: function onShow() {
-@@ -291,12 +1729,6 @@ var animateFill = {
+@@ -291,12 +1772,6 @@ var animateFill = {
          if (backdrop) {
            setVisibilityState([backdrop], 'hidden');
          }
@@ -1899,21 +1940,20 @@ index 2bac78e..1616426 100644
        }
      };
    }
-@@ -313,9 +1745,7 @@ var followCursor = {
+@@ -313,27 +1788,9 @@ var followCursor = {
    name: 'followCursor',
    defaultValue: false,
    fn: function fn(instance) {
 -    var reference = instance.reference,
 -        popper = instance.popper;
 -    var originalReference = null; // Support iframe contexts
-+    var reference = instance.reference; // Support iframe contexts
-     // Static check that assumes any of the `triggerTarget` or `reference`
-     // nodes will never change documents, even when they are updated
- 
-@@ -323,17 +1753,6 @@ var followCursor = {
- 
-     var lastMouseMoveEvent;
-     var mouseCoords = null;
+-    // Static check that assumes any of the `triggerTarget` or `reference`
+-    // nodes will never change documents, even when they are updated
+-
+-    var doc = getOwnerDocument(instance.props.triggerTarget || reference); // Internal state
+-
+-    var lastMouseMoveEvent;
+-    var mouseCoords = null;
 -    var isInternallySettingControlledProp = false; // These are controlled by this plugin, so we need to store the user's
 -    // original prop value
 -
@@ -1925,13 +1965,26 @@ index 2bac78e..1616426 100644
 -        userProps[prop] = useIfDefined(props[prop], userProps[prop]);
 -      });
 -    }
++    var reference = instance.reference;
++    var doc = getOwnerDocument(instance.props.triggerTarget || reference);
++    var initialMouseCoords = null;
  
      function getIsManual() {
        return instance.props.trigger.trim() === 'manual';
-@@ -351,39 +1770,9 @@ var followCursor = {
+@@ -342,7 +1799,7 @@ var followCursor = {
+     function getIsEnabled() {
+       // #597
+       var isValidMouseEvent = getIsManual() ? true : // Check if a keyboard "click"
+-      mouseCoords !== null && !(mouseCoords.clientX === 0 && mouseCoords.clientY === 0);
++      initialMouseCoords !== null && !(initialMouseCoords.clientX === 0 && initialMouseCoords.clientY === 0);
+       return instance.props.followCursor && isValidMouseEvent;
      }
  
-     function resetReference() {
+@@ -350,39 +1807,11 @@ var followCursor = {
+       return currentInput.isTouch || instance.props.followCursor === 'initial' && instance.state.isVisible;
+     }
+ 
+-    function resetReference() {
 -      if (instance.popperInstance && originalReference) {
 -        instance.popperInstance.reference = originalReference;
 -      }
@@ -1948,10 +2001,9 @@ index 2bac78e..1616426 100644
 -      var placement = userProps.placement;
 -      var shift = placement.split('-')[1];
 -      isInternallySettingControlledProp = true;
-       instance.setProps({
+-      instance.setProps({
 -        placement: getIsEnabled() && shift ? placement.replace(shift, shift === 'start' ? 'end' : 'start') : placement
-+        getReferenceClientRect: null
-       });
+-      });
 -      isInternallySettingControlledProp = false;
 -    }
 -
@@ -1965,27 +2017,53 @@ index 2bac78e..1616426 100644
 -
 -      if (getIsEnabled() && (getIsInitialBehavior() || instance.props.followCursor !== true)) {
 -        instance.popperInstance.disableEventListeners();
--      }
++    function unsetReferenceClientRect(shouldUnset) {
++      if (shouldUnset) {
++        instance.setProps({
++          getReferenceClientRect: null
++        });
+       }
      }
  
-     function handleMouseMoveListener() {
-@@ -411,52 +1800,44 @@ var followCursor = {
+@@ -390,13 +1819,13 @@ var followCursor = {
+       if (getIsEnabled()) {
+         addListener();
+       } else {
+-        resetReference();
++        unsetReferenceClientRect(instance.props.followCursor);
+       }
+     }
+ 
+     function triggerLastMouseMove() {
+       if (getIsEnabled()) {
+-        onMouseMove(lastMouseMoveEvent);
++        onMouseMove(initialMouseCoords);
+       }
+     }
+ 
+@@ -409,54 +1838,46 @@ var followCursor = {
+     }
+ 
      function onMouseMove(event) {
-       var _lastMouseMoveEvent = lastMouseMoveEvent = event,
-           clientX = _lastMouseMoveEvent.clientX,
+-      var _lastMouseMoveEvent = lastMouseMoveEvent = event,
+-          clientX = _lastMouseMoveEvent.clientX,
 -          clientY = _lastMouseMoveEvent.clientY;
 -
 -      if (!instance.popperInstance || !instance.state.currentPlacement) {
 -        return;
 -      } // If the instance is interactive, avoid updating the position unless it's
-+          clientY = _lastMouseMoveEvent.clientY; // If the instance is interactive, avoid updating the position unless it's
++      initialMouseCoords = {
++        clientX: event.clientX,
++        clientY: event.clientY
++      }; // If the instance is interactive, avoid updating the position unless it's
        // over the reference element
  
- 
-       var isCursorOverReference = closestCallback(event.target, function (el) {
-         return el === reference;
-       });
+-
+-      var isCursorOverReference = closestCallback(event.target, function (el) {
+-        return el === reference;
+-      });
 -      var rect = reference.getBoundingClientRect();
++      var isCursorOverReference = event.target ? reference.contains(event.target) : true;
        var followCursor = instance.props.followCursor;
 -      var isHorizontal = followCursor === 'horizontal';
 -      var isVertical = followCursor === 'vertical';
@@ -1995,6 +2073,8 @@ index 2bac78e..1616426 100644
 -          size = _getVirtualOffsets.size,
 -          x = _getVirtualOffsets.x,
 -          y = _getVirtualOffsets.y;
++      var clientX = event.clientX,
++          clientY = event.clientY;
 +      var rect = reference.getBoundingClientRect();
 +      var relativeX = clientX - rect.left;
 +      var relativeY = clientY - rect.top;
@@ -2047,14 +2127,16 @@ index 2bac78e..1616426 100644
        }
  
        if (getIsInitialBehavior()) {
-@@ -465,27 +1846,8 @@ var followCursor = {
+@@ -465,86 +1886,58 @@ var followCursor = {
      }
  
      return {
 -      onAfterUpdate: function onAfterUpdate(_, partialProps) {
 -        if (!isInternallySettingControlledProp) {
 -          setUserProps(partialProps);
--
++      onAfterUpdate: function onAfterUpdate(_, _ref) {
++        var followCursor = _ref.followCursor;
+ 
 -          if (partialProps.placement) {
 -            handlePlacement();
 -          }
@@ -2068,30 +2150,64 @@ index 2bac78e..1616426 100644
 -
 -
 -        requestAnimationFrame(triggerLastMouseMove);
--      },
++        if (followCursor !== undefined && !followCursor) {
++          unsetReferenceClientRect(true);
++        }
+       },
        onMount: function onMount() {
          triggerLastMouseMove();
 -        handlePopperListeners();
        },
        onShow: function onShow() {
          if (getIsManual()) {
-@@ -498,7 +1860,6 @@ var followCursor = {
-           // of a MouseEvent here
- 
-           lastMouseMoveEvent = mouseCoords;
+           // Since there's no trigger event to use, we have to use these as
+           // baseline coords
+-          mouseCoords = {
++          initialMouseCoords = {
+             clientX: 0,
+             clientY: 0
+-          }; // Ensure `lastMouseMoveEvent` doesn't access any other properties
+-          // of a MouseEvent here
+-
+-          lastMouseMoveEvent = mouseCoords;
 -          handlePlacement();
++          };
            handleMouseMoveListener();
          }
        },
-@@ -516,7 +1877,6 @@ var followCursor = {
-           lastMouseMoveEvent = event;
+       onTrigger: function onTrigger(_, event) {
+         // Tapping on touch devices can trigger `mouseenter` then `focus`
+-        if (mouseCoords) {
++        if (initialMouseCoords) {
+           return;
+         }
+ 
+         if (isMouseEvent(event)) {
+-          mouseCoords = {
++          initialMouseCoords = {
+             clientX: event.clientX,
+             clientY: event.clientY
+           };
+-          lastMouseMoveEvent = event;
          }
  
 -        handlePlacement();
          handleMouseMoveListener();
        },
        onUntrigger: function onUntrigger() {
-@@ -534,48 +1894,54 @@ var followCursor = {
+         // If untriggered before showing (`onHidden` will never be invoked)
+         if (!instance.state.isVisible) {
+           removeListener();
+-          mouseCoords = null;
++          initialMouseCoords = null;
+         }
+       },
+       onHidden: function onHidden() {
+         removeListener();
+-        resetReference();
+-        mouseCoords = null;
++        initialMouseCoords = null;
+       }
      };
    }
  };
@@ -2103,15 +2219,14 @@ index 2bac78e..1616426 100644
 -    y: isVerticalPlacement ? 0 : size
 -  };
 -}
--
+ 
 -// position. This will require the `followCursor` plugin's fixes for overflow
 -// due to using event.clientX/Y values. (normalizedPlacement, getVirtualOffsets)
- 
-+// TODO: Work on a "cursor" value so it chooses a rect optimal to the cursor
 +// position.
+ 
  var inlinePositioning = {
    name: 'inlinePositioning',
-   defaultValue: false,
+@@ -552,30 +1945,45 @@ var inlinePositioning = {
    fn: function fn(instance) {
      var reference = instance.reference;
  
@@ -2150,14 +2265,6 @@ index 2bac78e..1616426 100644
          }
 +      }
 +    };
-+
-+    function _getReferenceClientRect(placement) {
-+      return getInlineBoundingClientRect(getBasePlacement(placement), reference.getBoundingClientRect(), arrayFrom(reference.getClientRects()));
-+    }
-+
-+    return {
-+      onCreate: function onCreate() {
-+        var _instance$popperInsta;
  
 -        instance.popperInstance.reference = {
 -          referenceNode: reference,
@@ -2166,16 +2273,25 @@ index 2bac78e..1616426 100644
 -          clientHeight: 0,
 -          getBoundingClientRect: function getBoundingClientRect() {
 -            return getInlineBoundingClientRect(instance.state.currentPlacement && getBasePlacement(instance.state.currentPlacement), reference.getBoundingClientRect(), arrayFrom(reference.getClientRects()));
-+        instance.setProps({
-+          popperOptions: {
-+            modifiers: [].concat(((_instance$popperInsta = instance.popperInstance) == null ? void 0 : _instance$popperInsta.state.options.modifiers) || [], [modifier])
-           }
+-          }
 -        };
++    function _getReferenceClientRect(placement) {
++      return getInlineBoundingClientRect(getBasePlacement(placement), reference.getBoundingClientRect(), arrayFrom(reference.getClientRects()));
++    }
++
++    return {
++      onCreate: function onCreate() {
++        var _instance$props$poppe;
++
++        instance.setProps({
++          popperOptions: Object.assign({}, instance.props.popperOptions, {
++            modifiers: [].concat(((_instance$props$poppe = instance.props.popperOptions) == null ? void 0 : _instance$props$poppe.modifiers) || [], [modifier])
++          })
 +        });
        }
      };
    }
-@@ -655,7 +2021,7 @@ var sticky = {
+@@ -655,7 +2063,7 @@ var sticky = {
          popper = instance.popper;
  
      function getReference() {
@@ -2184,7 +2300,7 @@ index 2bac78e..1616426 100644
      }
  
      function shouldCheck(value) {
-@@ -670,7 +2036,9 @@ var sticky = {
+@@ -670,7 +2078,9 @@ var sticky = {
        var currentPopRect = shouldCheck('popper') ? popper.getBoundingClientRect() : null;
  
        if (currentRefRect && areRectsDifferent(prevRefRect, currentRefRect) || currentPopRect && areRectsDifferent(prevPopRect, currentPopRect)) {
@@ -2195,7 +2311,7 @@ index 2bac78e..1616426 100644
        }
  
        prevRefRect = currentRefRect;
-@@ -699,5 +2067,10 @@ function areRectsDifferent(rectA, rectB) {
+@@ -699,5 +2109,10 @@ function areRectsDifferent(rectA, rectB) {
    return true;
  }
  
