@@ -82,9 +82,13 @@ export const hideAll: HideAll = ({
 
     if (!isExcluded) {
       const originalDuration = instance.props.duration;
+
       instance.setProps({duration});
       instance.hide();
-      instance.setProps({duration: originalDuration});
+
+      if (!instance.state.isDestroyed) {
+        instance.setProps({duration: originalDuration});
+      }
     }
   });
 };

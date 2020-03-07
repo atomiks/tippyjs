@@ -36,7 +36,7 @@ attribute once they show:
 
 ```html
 <button aria-describedby="tippy-1">Text</button>
-<div id="tippy-1" role="tooltip" class="tippy-popper">
+<div id="tippy-1" data-tippy-root>
   <!-- inner elements -->
 </div>
 ```
@@ -71,7 +71,7 @@ After opening the popover:
 ```html
 <div id="parent">
   <button aria-expanded="true">Text</button>
-  <div id="tippy-1" role="tooltip" class="tippy-popper">
+  <div id="tippy-1" data-tippy-root>
     <!-- inner elements, with focusable content -->
   </div>
 </div>
