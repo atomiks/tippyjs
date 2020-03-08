@@ -1,5 +1,6 @@
 @import './_vars.scss';
 @import './animations/fade.scss';
+@import './after.scss';
 
 $color: #333;
 
@@ -32,13 +33,6 @@ $color: #333;
       border-top-color: initial;
       transform-origin: center top;
     }
-
-    &::after {
-      border-top-color: inherit;
-      border-width: 8px 8px 0;
-      bottom: -8px;
-      left: 0;
-    }
   }
 
   &[data-placement^='bottom'] > .#{$namespace-prefix}-arrow {
@@ -51,13 +45,6 @@ $color: #333;
       border-bottom-color: initial;
       transform-origin: center bottom;
     }
-
-    &::after {
-      border-bottom-color: inherit;
-      border-width: 0 8px 8px;
-      top: -8px;
-      left: 0;
-    }
   }
 
   &[data-placement^='left'] > .#{$namespace-prefix}-arrow {
@@ -69,13 +56,6 @@ $color: #333;
       right: -7px;
       transform-origin: center left;
     }
-
-    &::after {
-      border-left-color: inherit;
-      border-width: 8px 0 8px 8px;
-      right: -8px;
-      top: 0;
-    }
   }
 
   &[data-placement^='right'] > .#{$namespace-prefix}-arrow {
@@ -86,13 +66,6 @@ $color: #333;
       border-width: 8px 8px 8px 0;
       border-right-color: initial;
       transform-origin: center right;
-    }
-
-    &::after {
-      border-width: 8px 8px 8px 0;
-      left: -8px;
-      top: 0;
-      border-right-color: inherit;
     }
   }
 
@@ -106,17 +79,6 @@ $color: #333;
     width: $arrow-size;
     height: $arrow-size;
     color: $color;
-    //'inherit' would be better but causes breaking changes if someone have
-    //border on box, but not on arrow
-    border-color: transparent;
-  }
-
-  &::after {
-    content: '';
-    z-index: -1;
-    position: absolute;
-    border-color: transparent;
-    border-style: solid;
   }
 
   &::before {
