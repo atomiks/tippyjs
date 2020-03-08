@@ -1,6 +1,8 @@
 @import './_vars.scss';
 
 .#{$namespace-prefix}-box {
+  border-color: transparent;
+
   &[data-placement^='top'] > .#{$namespace-prefix}-arrow {
     &::after {
       border-top-color: inherit;
@@ -40,7 +42,7 @@
 
 .#{$namespace-prefix}-arrow {
   & {
-    border-color: transparent;
+    border-color: inherit;
   }
 
   &::after {
