@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Highly customizable tooltip and popover library",
   "main": "dist/tippy.umd.js",
   "module": "dist/tippy.esm.js",
@@ -136,6 +136,6 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "@popperjs/core": "^2.0.6"
+    "@popperjs/core": "^2.1.0"
   }
 }

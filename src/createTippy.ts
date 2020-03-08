@@ -917,6 +917,13 @@ export default function createTippy(
       popper.style.transition = 'none';
     }
 
+    // If flipping to the opposite side after hiding at least once, the
+    // animation will use the wrong placement without resetting the duration
+    if (getIsDefaultRenderFn()) {
+      const {box, content} = getDefaultTemplateChildren();
+      setTransitionDuration([box, content], 0);
+    }
+
     onFirstUpdate = (): void => {
       if (!instance.state.isVisible || ignoreOnFirstUpdate) {
         return;
@@ -929,13 +936,10 @@ export default function createTippy(
 
       popper.style.transition = instance.props.moveTransition;
 
-      if (getIsDefaultRenderFn()) {
+      if (getIsDefaultRenderFn() && instance.props.animation) {
         const {box, content} = getDefaultTemplateChildren();
-
-        if (instance.props.animation) {
-          setTransitionDuration([box, content], duration);
-          setVisibilityState([box, content], 'visible');
-        }
+        setTransitionDuration([box, content], duration);
+        setVisibilityState([box, content], 'visible');
       }
 
       handleAriaContentAttribute();

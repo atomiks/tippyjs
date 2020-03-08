@@ -136,16 +136,6 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
     }
   }
 
-  &[data-placement^='left'],
-  &[data-placement^='right'] {
-    > .#{$namespace-prefix}-svg-arrow {
-      > svg,
-      &::after {
-        top: calc(50% - 4px);
-      }
-    }
-  }
-
   > .#{$namespace-prefix}-svg-arrow {
     fill: white;
 
