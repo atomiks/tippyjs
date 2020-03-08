@@ -2,7 +2,7 @@ module.exports = {
   pathPrefix: '/tippyjs',
   siteMetadata: {
     title: `Tippy.js`,
-    description: `Highly customizable library to create tooltips and popovers with ease.`,
+    description: `The complete tooltip, popover, dropdown, and menu solution for the web`,
     author: `@atomiks`,
   },
   plugins: [

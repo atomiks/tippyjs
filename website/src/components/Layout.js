@@ -236,7 +236,9 @@ class Layout extends Component {
           <Nav isOpen={isNavOpen} close={this.closeNav} />
           <SkipNavContent>
             <Container>
-              <h2>{pageContext.frontmatter.title}</h2>
+              {pageContext.frontmatter.title !== 'Demo' && (
+                <h2>{pageContext.frontmatter.title}</h2>
+              )}
               {children}
             </Container>
             <NavButtons next={pageContext.frontmatter.index + 1} />
