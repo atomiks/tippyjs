@@ -1,7 +1,7 @@
 @import './_vars.scss';
 
 .#{$namespace-prefix}-box {
-  border-color: transparent;
+  border: 1px transparent;
 
   &[data-placement^='top'] > .#{$namespace-prefix}-arrow {
     &::after {
