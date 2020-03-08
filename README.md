@@ -4,7 +4,7 @@
 
 <div align="center">
   <h1>Tippy.js</h1>
-  <p>The complete tooltip, popover, dropdown, menu, combobox etc. solution for the web</p>
+  <p>The complete tooltip, popover, dropdown, and menu solution for the web</p>
   <a href="https://www.npmjs.com/package/tippy.js">
    <img src="https://img.shields.io/npm/dm/tippy.js.svg?color=%235599ff&style=for-the-badge" alt="npm Downloads per Month">
   <a>
