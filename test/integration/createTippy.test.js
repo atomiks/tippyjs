@@ -277,6 +277,23 @@ describe('instance.destroy()', () => {
 
     expect(spy).toHaveBeenCalledTimes(1);
   });
+
+  it('does not cause a circular call loop if called within onHidden()', () => {
+    instance = createTippy(h(), {
+      ...defaultProps,
+      onHidden() {
+        instance.destroy();
+      },
+    });
+
+    instance.show();
+    jest.runAllTimers();
+
+    instance.hide();
+
+    expect(instance.state.isDestroyed).toBe(true);
+    expect(instance.state.isMounted).toBe(false);
+  });
 });
 
 describe('instance.show()', () => {
