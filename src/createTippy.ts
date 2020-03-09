@@ -1022,6 +1022,10 @@ export default function createTippy(
   }
 
   function unmount(): void {
+    if (!instance.state.isMounted) {
+      return;
+    }
+
     destroyPopperInstance();
 
     // If a popper is not interactive, it will be appended outside the popper
@@ -1059,14 +1063,7 @@ export default function createTippy(
 
     instance.clearDelayTimeouts();
     instance.hide();
-
-    // The user may call this method in the `onHidden()` lifecycle, and without
-    // this guard it causes a stack overflow due to circular call loop because
-    // `onHidden()` also calls `unmount()`
-    // https://github.com/atomiks/tippyjs/issues/724
-    if (instance.state.isMounted) {
-      instance.unmount();
-    }
+    instance.unmount();
 
     removeListeners();
 

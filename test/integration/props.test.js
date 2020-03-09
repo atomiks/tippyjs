@@ -713,9 +713,12 @@ describe('onHidden', () => {
     const onHidden = jest.fn();
     const instance = tippy(h(), {onHidden});
 
+    instance.show();
+    jest.runAllTimers();
+
     expect(onHidden).toHaveBeenCalledTimes(0);
 
-    instance.unmount();
+    instance.hide();
 
     expect(onHidden).toHaveBeenCalledTimes(1);
     expect(onHidden).toHaveBeenCalledWith(instance);
