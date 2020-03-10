@@ -1024,6 +1024,10 @@ export default function createTippy(
   }
 
   function unmount(): void {
+    if (instance.state.isVisible) {
+      instance.hide();
+    }
+
     if (!instance.state.isMounted) {
       return;
     }
@@ -1034,9 +1038,7 @@ export default function createTippy(
     // tree by default. This seems mainly for interactive tippies, but we should
     // find a workaround if possible
     getNestedPopperTree().forEach(nestedPopper => {
-      const instance = nestedPopper._tippy!;
-      instance.hide();
-      instance.unmount();
+      nestedPopper._tippy!.unmount();
     });
 
     if (popper.parentNode) {
@@ -1064,7 +1066,6 @@ export default function createTippy(
     }
 
     instance.clearDelayTimeouts();
-    instance.hide();
     instance.unmount();
 
     removeListeners();

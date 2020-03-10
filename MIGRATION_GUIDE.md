@@ -133,7 +133,6 @@ These no longer take a duration argument. Instead, use
 To replicate `.hide(0)`:
 
 ```js
-instance.hide();
 instance.unmount();
 ```
 
