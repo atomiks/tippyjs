@@ -135,6 +135,7 @@ export default function createTippy(
 
   addListeners();
   handleAriaExpandedAttribute();
+  handleStyles();
 
   invokeHook('onCreate', [instance]);
 
@@ -206,9 +207,10 @@ export default function createTippy(
     );
   }
 
-  function handleInteractiveStyles(): void {
+  function handleStyles(): void {
     popper.style.pointerEvents =
       instance.props.interactive && instance.state.isVisible ? '' : 'none';
+    popper.style.zIndex = `${instance.props.zIndex}`;
   }
 
   function updateIOSClass(isAdd: boolean): void {
@@ -848,7 +850,7 @@ export default function createTippy(
     }
 
     handleAriaExpandedAttribute();
-    handleInteractiveStyles();
+    handleStyles();
 
     if (onUpdate) {
       onUpdate(prevProps, nextProps);
@@ -910,7 +912,7 @@ export default function createTippy(
       popper.style.visibility = 'visible';
     }
 
-    handleInteractiveStyles();
+    handleStyles();
     addDocumentMouseDownListener();
 
     if (!instance.state.isMounted) {
@@ -998,7 +1000,7 @@ export default function createTippy(
 
     cleanupInteractiveMouseListeners();
     removeDocumentMouseDownListener();
-    handleInteractiveStyles();
+    handleStyles();
 
     if (getIsDefaultRenderFn()) {
       const {box, content} = getDefaultTemplateChildren();

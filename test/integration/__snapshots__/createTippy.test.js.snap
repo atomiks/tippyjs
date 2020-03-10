@@ -12,7 +12,7 @@ Object {
   "popper": <div
     data-__namespace_prefix__-root=""
     id="__NAMESPACE_PREFIX__-1"
-    style="z-index: 9999;"
+    style="pointer-events: none; z-index: 9999;"
   >
     <div
       class="__NAMESPACE_PREFIX__-box"

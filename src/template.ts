@@ -91,8 +91,6 @@ export function render(
   function onUpdate(prevProps: Props, nextProps: Props): void {
     const {box, content, arrow} = getChildren(popper);
 
-    popper.style.zIndex = `${nextProps.zIndex}`;
-
     if (nextProps.theme) {
       box.setAttribute('data-theme', nextProps.theme);
     } else {
