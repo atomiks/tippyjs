@@ -56,7 +56,7 @@ For detailed usage information,
 
 ## Component Wrappers
 
-React: [@tippy.js/react](https://github.com/atomiks/tippy.js-react)
+React: [@tippyjs/react](https://github.com/atomiks/tippyjs-react)
 
 ## License
 
