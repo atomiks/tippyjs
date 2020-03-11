@@ -858,6 +858,16 @@ export default function createTippy(
 
     if (instance.popperInstance) {
       createPopperInstance();
+
+      // Fixes an issue with nested tippies if they are all getting re-rendered,
+      // and the nested ones get re-rendered first.
+      // https://github.com/atomiks/tippyjs-react/issues/177
+      // TODO: find a cleaner / more efficient solution(!)
+      getNestedPopperTree().forEach(nestedPopper => {
+        // React (and other UI libs likely) requires a rAF wrapper as it flushes
+        // its work in one
+        requestAnimationFrame(nestedPopper._tippy!.popperInstance!.forceUpdate);
+      });
     }
 
     invokeHook('onAfterUpdate', [instance, partialProps]);
