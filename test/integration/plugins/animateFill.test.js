@@ -75,7 +75,7 @@ describe('animateFill', () => {
     expect(backdrop.getAttribute('data-state')).toBe('hidden');
   });
 
-  it('should error when render function is not default', () => {
+  it('true: should error when render function is not default', () => {
     const spy = jest.spyOn(console, 'error');
 
     tippy(h(), {
@@ -92,5 +92,33 @@ describe('animateFill', () => {
         'The `animateFill` plugin requires the default render function.',
       ),
     );
+  });
+
+  it('false: should not error when render function is not default', () => {
+    const spy = jest.spyOn(console, 'error');
+
+    tippy(h(), {
+      animateFill: false,
+      render() {
+        return {
+          popper: document.createElement('div'),
+        };
+      },
+    });
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('should not error if render fn is not default', () => {
+    const spy = jest.spyOn(console, 'error');
+
+    tippy(h(), {
+      animateFill: false,
+      render() {
+        return {
+          popper: document.createElement('div'),
+        };
+      },
+    });
   });
 });
