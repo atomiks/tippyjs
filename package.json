@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "description": "The complete tooltip, popover, dropdown, and menu solution for the web",
   "main": "dist/tippy.umd.js",
   "module": "dist/tippy.esm.js",
