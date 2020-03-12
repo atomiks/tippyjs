@@ -1,4 +1,4 @@
-import {fireEvent} from '@testing-library/dom';
+import {fireEvent, createEvent} from '@testing-library/dom';
 import {h, enableTouchEnvironment, disableTouchEnvironment} from '../utils';
 
 import tippy from '../../src';
@@ -316,6 +316,46 @@ describe('getReferenceClientRect', () => {
     expect(instance.popperInstance.state.elements.reference).toBe(
       instance.reference,
     );
+  });
+});
+
+describe('onClickOutside', () => {
+  it('should be called on document mousedown if provided', () => {
+    const onClickOutside = jest.fn();
+    const instance = tippy(h(), {onClickOutside});
+
+    instance.show();
+    jest.runAllTimers();
+    const outsideClickEvent = createEvent.mouseDown(document.body);
+    fireEvent(document.body, outsideClickEvent);
+    // fire events multiple times to be sure its called once
+    fireEvent(document.body, outsideClickEvent);
+    fireEvent(document.body, outsideClickEvent);
+
+    expect(onClickOutside).toHaveBeenCalledTimes(1);
+    expect(onClickOutside).toHaveBeenCalledWith(instance, outsideClickEvent);
+  });
+
+  it('should not be called if instance not shown', () => {
+    const onClickOutside = jest.fn();
+    tippy(h(), {onClickOutside});
+
+    fireEvent.mouseDown(document.body);
+
+    expect(onClickOutside).toHaveBeenCalledTimes(0);
+  });
+
+  it('should not be called if instance already hidden', () => {
+    const onClickOutside = jest.fn();
+    const instance = tippy(h(), {onClickOutside});
+
+    instance.show();
+    jest.runAllTimers();
+    instance.hide();
+    jest.runAllTimers();
+    fireEvent.mouseDown(document.body);
+
+    expect(onClickOutside).toHaveBeenCalledTimes(0);
   });
 });
 

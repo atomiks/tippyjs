@@ -38,6 +38,7 @@ export interface LifecycleHooks<TProps = Props> {
   onShown(instance: Instance<TProps>): void;
   onTrigger(instance: Instance<TProps>, event: Event): void;
   onUntrigger(instance: Instance<TProps>, event: Event): void;
+  onClickOutside(instance: Instance<TProps>, event: Event): void;
 }
 
 export interface RenderProps {

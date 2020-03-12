@@ -53,6 +53,7 @@ export const defaultProps: DefaultProps = {
   onShown() {},
   onTrigger() {},
   onUntrigger() {},
+  onClickOutside() {},
   placement: 'top',
   plugins: [],
   popperOptions: {},
