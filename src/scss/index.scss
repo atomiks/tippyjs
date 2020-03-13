@@ -29,7 +29,7 @@ $color: #333;
       bottom: -7px;
       left: 0;
       border-width: 8px 8px 0;
-      border-top-color: $color;
+      border-top-color: initial;
       transform-origin: center top;
     }
   }
@@ -41,7 +41,7 @@ $color: #333;
       top: -7px;
       left: 0;
       border-width: 0 8px 8px;
-      border-bottom-color: $color;
+      border-bottom-color: initial;
       transform-origin: center bottom;
     }
   }
@@ -51,7 +51,7 @@ $color: #333;
 
     &::before {
       border-width: 8px 0 8px 8px;
-      border-left-color: $color;
+      border-left-color: initial;
       right: -7px;
       transform-origin: center left;
     }
@@ -63,7 +63,7 @@ $color: #333;
     &::before {
       left: -7px;
       border-width: 8px 8px 8px 0;
-      border-right-color: $color;
+      border-right-color: initial;
       transform-origin: center right;
     }
   }
@@ -77,6 +77,7 @@ $color: #333;
   & {
     width: $arrow-size;
     height: $arrow-size;
+    color: $color;
   }
 
   &::before {

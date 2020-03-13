@@ -38,8 +38,8 @@ export async function screenshotTest(page, name) {
   // Remove container border so the image is clean
   await page.addStyleTag({
     content: `
-    * {
-      color: transparent !important;
+    * { 
+      color: transparent; 
     }
 
     .container {

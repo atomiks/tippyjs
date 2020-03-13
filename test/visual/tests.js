@@ -8,6 +8,7 @@ import animateFill from '../../src/plugins/animateFill';
 import createSingleton from '../../src/addons/createSingleton';
 
 import '../../src/scss/index.scss';
+import '../../src/scss/after.scss';
 import '../../src/scss/svg-arrow.scss';
 import '../../src/scss/backdrop.scss';
 

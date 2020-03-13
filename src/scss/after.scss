@@ -1,0 +1,55 @@
+@import './_vars.scss';
+
+.#{$namespace-prefix}-box {
+  border: 1px transparent;
+
+  &[data-placement^='top'] > .#{$namespace-prefix}-arrow {
+    &::after {
+      border-top-color: inherit;
+      border-width: 8px 8px 0;
+      bottom: -8px;
+      left: 0;
+    }
+  }
+
+  &[data-placement^='bottom'] > .#{$namespace-prefix}-arrow {
+    &::after {
+      border-bottom-color: inherit;
+      border-width: 0 8px 8px;
+      top: -8px;
+      left: 0;
+    }
+  }
+
+  &[data-placement^='left'] > .#{$namespace-prefix}-arrow {
+    &::after {
+      border-left-color: inherit;
+      border-width: 8px 0 8px 8px;
+      right: -8px;
+      top: 0;
+    }
+  }
+
+  &[data-placement^='right'] > .#{$namespace-prefix}-arrow {
+    &::after {
+      border-width: 8px 8px 8px 0;
+      left: -8px;
+      top: 0;
+      border-right-color: inherit;
+    }
+  }
+}
+
+.#{$namespace-prefix}-arrow {
+  & {
+    border-color: inherit;
+  }
+
+  &::after {
+    content: '';
+    z-index: -1;
+    position: absolute;
+    border-color: transparent;
+    border-style: solid;
+  }
+}
