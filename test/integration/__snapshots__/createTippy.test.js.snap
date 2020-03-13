@@ -64,6 +64,7 @@ Object {
     ],
     "onAfterUpdate": [Function],
     "onBeforeUpdate": [Function],
+    "onClickOutside": [Function],
     "onCreate": [Function],
     "onDestroy": [Function],
     "onHidden": [Function],
