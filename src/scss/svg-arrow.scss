@@ -40,12 +40,6 @@
       right: 11px;
     }
   }
-
-  &[data-interactive] {
-    > .#{$namespace-prefix}-svg-arrow path {
-      pointer-events: auto;
-    }
-  }
 }
 
 .#{$namespace-prefix}-svg-arrow {
@@ -53,7 +47,6 @@
   width: $arrow-size;
   height: $arrow-size;
   fill: #333;
-  pointer-events: none;
 
   > svg {
     position: absolute;
