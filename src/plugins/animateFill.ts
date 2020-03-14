@@ -10,13 +10,11 @@ const animateFill: AnimateFill = {
   fn(instance) {
     // @ts-ignore
     if (!instance.props.render?.$$tippy) {
-      if (instance.props.animateFill) {
-        if (__DEV__) {
-          errorWhen(
-            true,
-            'The `animateFill` plugin requires the default render function.',
-          );
-        }
+      if (__DEV__) {
+        errorWhen(
+          instance.props.animateFill,
+          'The `animateFill` plugin requires the default render function.',
+        );
       }
 
       return {};
