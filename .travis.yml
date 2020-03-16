@@ -10,11 +10,19 @@ cache:
 
 jobs:
   include:
-    - stage: Tests & Code Check
+    - stage: Code check
+      name: Linting
+      script: npm run lint
+
+    - stage: Code check
+      name: Type checking
+      script: npm run check-types
+
+    - stage: Tests
       name: DOM tests
       script: npm run test:dom
 
-    - stage: Tests & Code Check
+    - stage: Tests
       name: Functional tests
       script: npm run test:functional
 
