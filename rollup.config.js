@@ -134,6 +134,30 @@ const prodConfig = [
     },
   },
   {
+    input: 'build/base.js',
+    plugins: pluginConfigs.bundle,
+    external: ['@popperjs/core'],
+    output: {
+      file: 'dist/tippy.cjs.js',
+      format: 'cjs',
+      exports: 'named',
+      banner,
+      sourcemap: true,
+    },
+  },
+  {
+    input: 'build/headless.js',
+    plugins: pluginConfigs.base,
+    external: ['@popperjs/core'],
+    output: {
+      file: 'headless/dist/tippy-headless.cjs.js',
+      format: 'cjs',
+      exports: 'named',
+      banner,
+      sourcemap: true,
+    },
+  },
+  {
     input: 'build/headless-umd.js',
     plugins: pluginConfigs.umdBase,
     external: ['@popperjs/core'],

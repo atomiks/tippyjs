@@ -2,7 +2,7 @@
   "name": "tippy.js",
   "version": "6.0.3",
   "description": "The complete tooltip, popover, dropdown, and menu solution for the web",
-  "main": "dist/tippy.umd.js",
+  "main": "dist/tippy.cjs.js",
   "module": "dist/tippy.esm.js",
   "unpkg": "dist/tippy-bundle.umd.min.js",
   "types": "index.d.ts",
