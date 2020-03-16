@@ -70,3 +70,38 @@ button:not(.link):focus {
   padding: 25px;
   place-items: center;
 }
+
+.__NAMESPACE_PREFIX__-box[data-theme~='border'] {
+  border: 1px solid blue;
+  background-color: white;
+  color: blue;
+}
+
+.__NAMESPACE_PREFIX__-box[data-placement^='top'][data-theme~='border']
+  > .__NAMESPACE_PREFIX__-arrow::before {
+  border-top-color: white;
+}
+.__NAMESPACE_PREFIX__-box[data-placement^='bottom'][data-theme~='border']
+  > .__NAMESPACE_PREFIX__-arrow::before {
+  border-bottom-color: white;
+}
+.__NAMESPACE_PREFIX__-box[data-placement^='left'][data-theme~='border']
+  > .__NAMESPACE_PREFIX__-arrow::before {
+  border-left-color: white;
+}
+.__NAMESPACE_PREFIX__-box[data-placement^='right'][data-theme~='border']
+  > .__NAMESPACE_PREFIX__-arrow::before {
+  border-right-color: white;
+}
+
+.__NAMESPACE_PREFIX__-box[data-theme~='border']
+  > .__NAMESPACE_PREFIX__-svg-arrow
+  > svg:first-child {
+  fill: blue;
+}
+
+.__NAMESPACE_PREFIX__-box[data-theme~='border']
+  > .__NAMESPACE_PREFIX__-svg-arrow
+  > svg:last-child {
+  fill: white;
+}

@@ -8,7 +8,7 @@ import animateFill from '../../src/plugins/animateFill';
 import createSingleton from '../../src/addons/createSingleton';
 
 import '../../src/scss/index.scss';
-import '../../src/scss/after.scss';
+import '../../src/scss/border.scss';
 import '../../src/scss/svg-arrow.scss';
 import '../../src/scss/backdrop.scss';
 
@@ -247,6 +247,39 @@ tests.animateFill = () => {
 
     instances.push(instance);
   });
+
+  return () => {
+    instances.forEach(instance => instance.destroy());
+  };
+};
+
+tests.border = () => {
+  const props = {
+    content: 'Tippy',
+    theme: 'border',
+    duration: 0,
+    showOnCreate: true,
+  };
+
+  const instances = [
+    tippy('#border .reference:first-child', props),
+    tippy('#border .reference:first-child', {
+      ...props,
+      placement: 'bottom',
+    }),
+    tippy('#border .reference:first-child', {
+      ...props,
+      placement: 'right',
+    }),
+    tippy('#border .reference:first-child', {
+      ...props,
+      placement: 'left',
+    }),
+    tippy('#border .reference:last-child', {
+      arrow: roundArrow + roundArrow,
+      ...props,
+    }),
+  ].flat();
 
   return () => {
     instances.forEach(instance => instance.destroy());
