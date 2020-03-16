@@ -279,6 +279,21 @@ tests.border = () => {
       arrow: roundArrow + roundArrow,
       ...props,
     }),
+    tippy('#border .reference:last-child', {
+      arrow: roundArrow + roundArrow,
+      placement: 'bottom',
+      ...props,
+    }),
+    tippy('#border .reference:last-child', {
+      arrow: roundArrow + roundArrow,
+      placement: 'right',
+      ...props,
+    }),
+    tippy('#border .reference:last-child', {
+      arrow: roundArrow + roundArrow,
+      placement: 'left',
+      ...props,
+    }),
   ].flat();
 
   return () => {
