@@ -204,6 +204,50 @@ Instead, you will need to change the size of the arrow in pixels directly.
   </Tippy>
 </Demo>
 
+### Arrow border
+
+There is a stylesheet to aid in adding borders to your tippies:
+
+```js
+import 'tippy.js/dist/border.css';
+```
+
+This adds color inheritance for borders when using the default CSS arrow, and
+aids in creating SVG arrow borders.
+
+#### CSS arrow
+
+```css
+/* The border of the arrow will now match the border of the box */
+.tippy-box[data-theme~='tomato'] {
+  background: tomato;
+  border: 1px solid yellow;
+}
+```
+
+#### SVG arrow
+
+Duplicate the SVG arrow so that there are two of them, like so:
+
+```js
+tippy(targets, {
+  // concatenates the two SVG strings together
+  arrow: roundArrow + roundArrow
+});
+```
+
+```css
+/* The border */
+.tippy-box[data-theme~='tomato'] > .tippy-svg-arrow > svg:first-child {
+  fill: yellow;
+}
+
+/* The fill */
+.tippy-box[data-theme~='tomato'] > .tippy-svg-arrow > svg:last-child {
+  fill: tomato;
+}
+```
+
 ### Browser DevTools
 
 It's highly recommended you inspect a tippy element via your browser's DevTools.
