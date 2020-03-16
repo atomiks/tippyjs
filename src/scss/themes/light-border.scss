@@ -19,9 +19,6 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
 
   > .#{$namespace-prefix}-arrow,
   > .#{$namespace-prefix}-svg-arrow {
-    width: 18px;
-    height: 18px;
-
     &::after {
       content: '';
       position: absolute;
@@ -43,18 +40,18 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
       &::after {
         border-top-color: $transparent-darker;
         border-width: 7px 7px 0;
-        top: 19px;
+        top: $arrow-size + 1;
         left: 1px;
       }
     }
 
     > .#{$namespace-prefix}-svg-arrow {
       > svg {
-        top: 18px;
+        top: $arrow-size;
       }
 
       &::after {
-        top: 19px;
+        top: $arrow-size + 1;
       }
     }
   }
@@ -63,24 +60,24 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
     > .#{$namespace-prefix}-arrow {
       &::before {
         border-bottom-color: $color;
-        bottom: 18px;
+        bottom: $arrow-size;
       }
 
       &::after {
         border-bottom-color: $transparent-darker;
         border-width: 0 7px 7px;
-        bottom: 19px;
+        bottom: $arrow-size + 1;
         left: 1px;
       }
     }
 
     > .#{$namespace-prefix}-svg-arrow {
       > svg {
-        bottom: 18px;
+        bottom: $arrow-size;
       }
 
       &::after {
-        bottom: 19px;
+        bottom: $arrow-size + 1;
       }
     }
   }
@@ -94,18 +91,18 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
       &::after {
         border-left-color: $transparent-darker;
         border-width: 7px 0 7px 7px;
-        left: 19px;
+        left: $arrow-size + 1;
         top: 1px;
       }
     }
 
     > .#{$namespace-prefix}-svg-arrow {
       > svg {
-        left: 13px;
+        left: 11px;
       }
 
       &::after {
-        left: 14px;
+        left: 12px;
       }
     }
   }
@@ -114,12 +111,12 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
     > .#{$namespace-prefix}-arrow {
       &::before {
         border-right-color: $color;
-        right: 18px;
+        right: $arrow-size;
       }
 
       &::after {
         border-width: 7px 7px 7px 0;
-        right: 19px;
+        right: $arrow-size + 1;
         top: 1px;
         border-right-color: $transparent-darker;
       }
@@ -127,11 +124,11 @@ $transparent-darker: rgba(0, 8, 16, 0.2);
 
     > .#{$namespace-prefix}-svg-arrow {
       > svg {
-        right: 13px;
+        right: 11px;
       }
 
       &::after {
-        right: 14px;
+        right: 12px;
       }
     }
   }

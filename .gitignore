@@ -1,9 +1,8 @@
 .DS_Store
-.parcel-cache/
 coverage/
 .devserver/
 node_modules/
 dist/
-themes/
-animations/
+/themes
+/animations
 index.d.ts

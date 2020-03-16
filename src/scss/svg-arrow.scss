@@ -25,7 +25,7 @@
     &::after,
     > svg {
       transform: rotate(90deg);
-      top: calc(50% - 4px);
+      top: calc(50% - 3px);
       left: 11px;
     }
   }
@@ -36,7 +36,7 @@
     &::after,
     > svg {
       transform: rotate(-90deg);
-      top: calc(50% - 4px);
+      top: calc(50% - 3px);
       right: 11px;
     }
   }
