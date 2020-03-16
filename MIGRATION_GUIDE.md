@@ -13,7 +13,7 @@ APIs have changed. You can
 
 ## Imports
 
-`iife` and `cjs` were replaced with `umd` (Rollup chunking has been removed).
+`iife` was replaced with `umd` (Rollup chunking has been removed).
 
 ## HTML Content
 
