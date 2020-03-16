@@ -40,6 +40,7 @@ tippy(targets, {
 - [offset](#offset)
 - [onAfterUpdate](#onafterupdate)
 - [onBeforeUpdate](#onbeforeupdate)
+- [onClickOutside](#onclickoutside)
 - [onCreate](#oncreate)
 - [onDestroy](#ondestroy)
 - [onHidden](#onhidden)
@@ -710,6 +711,20 @@ Invoked before the tippy has been updated (via `.setProps()`).
 ```js
 tippy(targets, {
   onBeforeUpdate(instance, partialProps) {
+    // ...
+  }
+});
+```
+
+---
+
+### onClickOutside
+
+Invoked when the user clicks anywhere outside of the tippy or reference element.
+
+```js
+tippy(targets, {
+  onClickOutside(instance, event) {
     // ...
   }
 });
