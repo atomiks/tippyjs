@@ -38,6 +38,30 @@
       border-right-color: inherit;
     }
   }
+
+  &[data-placement^='top']
+    > .#{$namespace-prefix}-svg-arrow
+    > svg:first-child:not(:last-child) {
+    top: 17px;
+  }
+
+  &[data-placement^='bottom']
+    > .#{$namespace-prefix}-svg-arrow
+    > svg:first-child:not(:last-child) {
+    bottom: 17px;
+  }
+
+  &[data-placement^='left']
+    > .#{$namespace-prefix}-svg-arrow
+    > svg:first-child:not(:last-child) {
+    left: 12px;
+  }
+
+  &[data-placement^='right']
+    > .#{$namespace-prefix}-svg-arrow
+    > svg:first-child:not(:last-child) {
+    right: 12px;
+  }
 }
 
 .#{$namespace-prefix}-arrow {
