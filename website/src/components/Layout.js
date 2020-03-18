@@ -196,6 +196,11 @@ const components = {
 };
 
 class Layout extends Component {
+  constructor() {
+    super();
+    hrefs = new Set();
+  }
+
   state = {
     isNavOpen: false,
   };
@@ -207,10 +212,6 @@ class Layout extends Component {
   closeNav = () => {
     this.setState({isNavOpen: false});
   };
-
-  componentWillUnmount() {
-    hrefs = new Set();
-  }
 
   render() {
     const {isNavOpen} = this.state;
