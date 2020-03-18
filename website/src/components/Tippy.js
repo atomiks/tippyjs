@@ -1,5 +1,5 @@
 import React, {forwardRef} from 'react';
-import Tippy, {TippySingleton, tippy} from '@tippy.js/react';
+import Tippy, {useSingleton, tippy} from '@tippyjs/react';
 import {
   roundArrow,
   followCursor,
@@ -51,4 +51,4 @@ export default forwardRef(({...props}, ref) => {
   );
 });
 
-export {TippySingleton, tippy};
+export {useSingleton, tippy};
