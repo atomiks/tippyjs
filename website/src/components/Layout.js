@@ -72,7 +72,7 @@ const A = styled.a`
   }
 `;
 
-let hrefs = [];
+let hrefs = new Set();
 
 class Heading extends React.Component {
   constructor(props) {
@@ -88,23 +88,19 @@ class Heading extends React.Component {
       .toLowerCase();
 
     // Check for duplicate #s
-    if (hrefs.indexOf(href) !== -1) {
+    if (hrefs.has(href)) {
       let counter = 1;
 
-      while (hrefs.indexOf(href + counter) !== -1) {
+      while (hrefs.has(href + counter)) {
         counter++;
       }
 
       href = `${href}-${counter}`;
     }
 
-    hrefs.push(href);
+    hrefs.add(href);
 
     this.state = {href};
-  }
-
-  componentWillUnmount() {
-    hrefs = hrefs.filter(href => href !== this.state.href);
   }
 
   render() {
@@ -212,8 +208,8 @@ class Layout extends Component {
     this.setState({isNavOpen: false});
   };
 
-  componentDidMount() {
-    hrefs = [];
+  componentWillUnmount() {
+    hrefs = new Set();
   }
 
   render() {
