@@ -147,39 +147,6 @@ const components = {
   h4: props => <Heading {...props} level={4} />,
   h5: props => <Heading {...props} level={5} />,
   h6: props => <Heading {...props} level={6} />,
-  tr: props => {
-    const maybeStrongNode = props.children[0].props.children[0]; // <strong>
-    const isPluginRow =
-      maybeStrongNode && maybeStrongNode.props
-        ? maybeStrongNode.props.mdxType === 'strong'
-        : false;
-    return <tr {...props} className={isPluginRow ? 'plugin-prop' : ''} />;
-  },
-  // TODO: find a better way to do this
-  td: class extends React.Component {
-    ref = React.createRef();
-
-    state = {dataLabel: ''};
-
-    componentDidMount() {
-      let child = this.ref.current;
-      let i = 0;
-
-      while ((child = child.previousSibling) != null) {
-        i++;
-      }
-
-      this.setState({
-        dataLabel: ['Prop', 'Default', 'Description'][i],
-      });
-    }
-
-    render() {
-      return (
-        <td ref={this.ref} {...this.props} data-label={this.state.dataLabel} />
-      );
-    }
-  },
   pre: class extends React.Component {
     ref = React.createRef();
 
