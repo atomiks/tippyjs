@@ -12,9 +12,43 @@ This means all props marked with the R symbol in [All Props](../all-props/) no
 longer "work" by default, since it's your responsibility to create these
 features.
 
+### Imports
+
+Replace your imports:
+
+```diff
+- import tippy from 'tippy.js';
++ import tippy from 'tippy.js/headless';
+```
+
+```diff
+- <script src="https://unpkg.com/tippy.js@6"></script>
++ <script src="https://unpkg.com/tippy.js@6/headless/dist/tippy-headless.umd.min.js"></script>
+```
+
+When using Headless Tippy, all imports (e.g. `followCursor`) should also be
+specified from this import, otherwise you will end up with duplicate code bloat.
+
+```js
+import tippy, {followCursor} from 'tippy.js/headless';
+```
+
+#### Use in conjunction with Default Tippy
+
+You can use Tippy in headless mode when using the default import as well, but
+you should disable animations by default:
+
+```js
+import tippy from 'tippy.js';
+
+// This ensures your tippy will unmount if you haven't yet implemented
+// animations.
+tippy.setDefaultProps({animation: false});
+```
+
 ### Usage
 
-This demonstrates the basic usage:
+The `render` prop is how you create your own tippy element:
 
 ```js
 import tippy from 'tippy.js/headless';
@@ -53,9 +87,10 @@ tippy(targets, {
 ### Animations
 
 When using Headless Tippy, animations are not enabled (`animation: false`) by
-default. To enable animations, set `animation: true` (or a string) — this will
-require you to invoke `instance.unmount()` whenever your hide animation
-completes.
+default.
+
+To enable animations, set `animation: true` (or a `string`) — this will require
+you to invoke `instance.unmount()` whenever your hide animation completes.
 
 ```js
 tippy(targets, {
@@ -87,12 +122,3 @@ specifying these:
 - `pointerEvents` is changed based on the `interactive` prop
 - `transition` is changed based on the `moveTransition` prop
 - `zIndex` is changed based on the `zIndex` prop
-
-### Imports
-
-When using Headless Tippy, all imports (e.g. `followCursor`) should also be
-specified from this import, otherwise you will end up with duplicate code bloat.
-
-```js
-import tippy, {followCursor} from 'tippy.js/headless';
-```
