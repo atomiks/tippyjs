@@ -29,8 +29,8 @@ function Singleton({group, transition}) {
     return (
       <>
         {sourceElement}
-        {Children.map(children, child =>
-          cloneElement(child, {singleton: target}),
+        {Children.map(children, (child) =>
+          cloneElement(child, {singleton: target})
         )}
       </>
     );

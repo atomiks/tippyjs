@@ -40,7 +40,7 @@ should match the child elements which should receive a tippy.
 import {delegate} from 'tippy.js';
 
 delegate('#parent', {
-  target: '.child'
+  target: '.child',
 });
 ```
 
@@ -53,11 +53,11 @@ value depending on the type supplied, just like `tippy()`.
 
 ```js
 const delegateInstances = delegate('.parent', {
-  target: '.child'
+  target: '.child',
 }); // Instance[]
 
 const delegateInstance = delegate(parentElement, {
-  target: '.child'
+  target: '.child',
 }); // Instance
 ```
 
@@ -69,7 +69,7 @@ behavior, pass `false` as an argument:
 
 ```js
 const delegateInstance = delegate(parentElement, {
-  target: '.child'
+  target: '.child',
 });
 
 // Prevents further creation and destroys any created child tippy instances
@@ -121,7 +121,7 @@ position updates of the tippy element:
 ```js
 const singleton = createSingleton(tippyInstances, {
   delay: 1000,
-  updateDuration: 500
+  updateDuration: 500,
 });
 ```
 
@@ -136,7 +136,7 @@ To solve this, constrain the tippy to the viewport:
 
 ```js
 createSingleton(instances, {
-  boundary: 'viewport'
+  boundary: 'viewport',
 });
 ```
 
@@ -152,6 +152,6 @@ const singleton = createSingleton(tippyInstances, {
   onCreate({popper}) {
     // Any easing function you want.
     popper.style.transitionTimingFunction = 'cubic-bezier(...)';
-  }
+  },
 });
 ```

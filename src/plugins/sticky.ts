@@ -59,7 +59,7 @@ export default sticky;
 
 function areRectsDifferent(
   rectA: ClientRect | null,
-  rectB: ClientRect | null,
+  rectB: ClientRect | null
 ): boolean {
   if (rectA && rectB) {
     return (

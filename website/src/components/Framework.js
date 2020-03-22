@@ -23,7 +23,7 @@ export const Center = styled.div`
 export const Container = styled.div`
   position: relative;
   max-width: 800px;
-  padding: 0 ${props => props.mobilePadding || '16'}px;
+  padding: 0 ${(props) => props.mobilePadding || '16'}px;
   margin: 0 auto;
 
   ${MEDIA.sm} {
@@ -41,20 +41,20 @@ export const Row = styled(({spacing, ...rest}) => <div {...rest} />)`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 0 -${props => props.spacing || '8'}px;
+  margin: 0 -${(props) => props.spacing || '8'}px;
 `;
 
-export const Col = props => {
+export const Col = (props) => {
   const {spacing = 8, base, xs, sm, md, lg, xl, ...rest} = props;
 
   const mediaCss = ['xs', 'sm', 'md', 'lg', 'xl']
-    .filter(size => props[size])
+    .filter((size) => props[size])
     .map(
-      size => css`
+      (size) => css`
         ${MEDIA[size]} {
           flex-basis: calc(${(100 * props[size]) / 12}% - ${2 * spacing}px);
         }
-      `,
+      `
     );
 
   return (
@@ -70,7 +70,7 @@ export const Col = props => {
   );
 };
 
-export const Link = props => (
+export const Link = (props) => (
   <GatsbyLink
     css={css`
       color: inherit;
@@ -82,7 +82,7 @@ export const Link = props => (
   />
 );
 
-export const ExternalLink = props => (
+export const ExternalLink = (props) => (
   <a
     target="_blank"
     rel="noopener noreferrer"
@@ -104,13 +104,13 @@ export const ExternalLink = props => (
 
 export const Flex = styled.div`
   display: flex;
-  justify-content: ${props => props.justify || 'space-between'};
-  align-items: ${props => props.align || 'center'};
+  justify-content: ${(props) => props.justify || 'space-between'};
+  align-items: ${(props) => props.align || 'center'};
 
   > div {
     margin-right: 15px;
     margin-bottom: 15px;
-    flex: ${props => props.type === 'even' && 1};
+    flex: ${(props) => props.type === 'even' && 1};
   }
 `;
 
@@ -124,7 +124,7 @@ export const Button = styled.button`
   font-weight: 600;
   padding: 8px 16px;
   border-radius: 4px;
-  margin: ${props => (props.marginless ? '0' : '0 8px 8px 0')};
+  margin: ${(props) => (props.marginless ? '0' : '0 8px 8px 0')};
   transition: background 0.2s, color 0.1s;
 
   &:hover {

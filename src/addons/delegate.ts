@@ -17,7 +17,7 @@ const BUBBLING_EVENTS_MAP = {
  */
 function delegate(
   targets: Targets,
-  props: Partial<Props> & {target: string},
+  props: Partial<Props> & {target: string}
 ): Instance | Instance[] {
   /* istanbul ignore else */
   if (__DEV__) {
@@ -26,7 +26,7 @@ function delegate(
       [
         'You must specity a `target` prop indicating a CSS selector string matching',
         'the target elements that should receive a tippy.',
-      ].join(' '),
+      ].join(' ')
     );
   }
 
@@ -83,7 +83,7 @@ function delegate(
     node: Element,
     eventType: string,
     handler: EventListener,
-    options: object | boolean = false,
+    options: object | boolean = false
   ): void {
     node.addEventListener(eventType, handler, options);
     listeners.push({node, eventType, handler, options});
@@ -108,7 +108,7 @@ function delegate(
     const originalDestroy = instance.destroy;
     instance.destroy = (shouldDestroyChildInstances = true): void => {
       if (shouldDestroyChildInstances) {
-        childTippyInstances.forEach(instance => {
+        childTippyInstances.forEach((instance) => {
           instance.destroy();
         });
       }

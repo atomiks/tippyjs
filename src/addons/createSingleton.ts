@@ -6,7 +6,7 @@ import {errorWhen} from '../validation';
 
 const createSingleton: CreateSingleton = (
   tippyInstances,
-  optionalProps = {},
+  optionalProps = {}
 ) => {
   /* istanbul ignore else */
   if (__DEV__) {
@@ -16,23 +16,23 @@ const createSingleton: CreateSingleton = (
         'The first argument passed to createSingleton() must be an array of',
         'tippy instances. The passed value was',
         String(tippyInstances),
-      ].join(' '),
+      ].join(' ')
     );
   }
 
-  tippyInstances.forEach(instance => {
+  tippyInstances.forEach((instance) => {
     instance.disable();
   });
 
   let currentTarget: Element;
 
-  const references = tippyInstances.map(instance => instance.reference);
+  const references = tippyInstances.map((instance) => instance.reference);
 
   const singleton: Plugin = {
     fn() {
       return {
         onDestroy(): void {
-          tippyInstances.forEach(instance => {
+          tippyInstances.forEach((instance) => {
             instance.enable();
           });
         },

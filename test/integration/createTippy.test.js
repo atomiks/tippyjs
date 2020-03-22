@@ -155,7 +155,7 @@ describe('createTippy', () => {
     instance = createTippy(h(), {render: null});
 
     expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage('render() function has not been supplied.'),
+      ...getFormattedMessage('render() function has not been supplied.')
     );
   });
 
@@ -166,7 +166,7 @@ describe('createTippy', () => {
     instance = createTippy(h(), {content: null});
 
     expect(spy).toHaveBeenCalledWith(
-      ...getFormattedMessage('content has not been supplied.'),
+      ...getFormattedMessage('content has not been supplied.')
     );
   });
 });
@@ -433,13 +433,13 @@ describe('instance.setProps()', () => {
     instance = createTippy(h(), defaultProps);
 
     expect(
-      instance.popper.querySelector('.__NAMESPACE_PREFIX__-arrow'),
+      instance.popper.querySelector('.__NAMESPACE_PREFIX__-arrow')
     ).not.toBeNull();
 
     instance.setProps({arrow: false});
 
     expect(
-      instance.popper.querySelector('.__NAMESPACE_PREFIX__-arrow'),
+      instance.popper.querySelector('.__NAMESPACE_PREFIX__-arrow')
     ).toBeNull();
   });
 

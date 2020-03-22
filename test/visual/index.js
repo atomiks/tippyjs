@@ -1,6 +1,6 @@
 const containers = document.querySelectorAll('.container');
 
-containers.forEach(container => {
+containers.forEach((container) => {
   const button = document.createElement('button');
 
   button.textContent = container.id;
@@ -24,7 +24,7 @@ containers.forEach(container => {
 function hide() {
   const container = document.getElementById(state.currentTest);
   const button = document.querySelector(
-    `button[data-id="${state.currentTest}"]`,
+    `button[data-id="${state.currentTest}"]`
   );
 
   if (container) {
@@ -36,7 +36,7 @@ function hide() {
 function show() {
   const container = document.getElementById(state.currentTest);
   const button = document.querySelector(
-    `button[data-id="${state.currentTest}"]`,
+    `button[data-id="${state.currentTest}"]`
   );
 
   if (container) {

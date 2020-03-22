@@ -26,7 +26,7 @@ normal.
 
 ```js
 tippy(targets, {
-  followCursor: true
+  followCursor: true,
 });
 ```
 
@@ -40,7 +40,7 @@ import tippy, {followCursor} from 'tippy.js';
 
 tippy(targets, {
   followCursor: true,
-  plugins: [followCursor]
+  plugins: [followCursor],
 });
 ```
 
@@ -60,7 +60,7 @@ const plugin = {
     return {
       // Lifecycle hooks
     };
-  }
+  },
 };
 ```
 
@@ -76,7 +76,7 @@ const hideOnPopperBlur = {
   fn(instance) {
     return {
       onCreate() {
-        instance.popper.addEventListener('focusout', event => {
+        instance.popper.addEventListener('focusout', (event) => {
           if (
             instance.props.hideOnPopperBlur &&
             event.relatedTarget &&
@@ -85,14 +85,14 @@ const hideOnPopperBlur = {
             instance.hide();
           }
         });
-      }
+      },
     };
-  }
+  },
 };
 
 // Our new prop is enabled by default (defaultValue: true)
 tippy(targets, {
-  plugins: [hideOnPopperBlur]
+  plugins: [hideOnPopperBlur],
 });
 ```
 
@@ -120,7 +120,7 @@ type ExtendedProps = FilteredProps & LifecycleHooks<FilteredProps>;
 export const myCustomProp: Plugin<ExtendedProps> = {
   name: 'myCustomProp',
   defaultValue: false,
-  fn: () => ({})
+  fn: () => ({}),
 };
 
 export default (tippy as unknown) as Tippy<ExtendedProps>;

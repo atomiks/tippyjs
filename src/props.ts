@@ -68,20 +68,20 @@ export const defaultProps: DefaultProps = {
 
 const defaultKeys = Object.keys(defaultProps);
 
-export const setDefaultProps: Tippy['setDefaultProps'] = partialProps => {
+export const setDefaultProps: Tippy['setDefaultProps'] = (partialProps) => {
   /* istanbul ignore else */
   if (__DEV__) {
     validateProps(partialProps, []);
   }
 
   const keys = Object.keys(partialProps) as Array<keyof DefaultProps>;
-  keys.forEach(key => {
+  keys.forEach((key) => {
     (defaultProps as any)[key] = partialProps[key];
   });
 };
 
 export function getExtendedPassedProps(
-  passedProps: Partial<Props> & Record<string, unknown>,
+  passedProps: Partial<Props> & Record<string, unknown>
 ): Partial<Props> {
   const plugins = passedProps.plugins || [];
   const pluginProps = plugins.reduce<Record<string, unknown>>((acc, plugin) => {
@@ -103,7 +103,7 @@ export function getExtendedPassedProps(
 
 export function getDataAttributeProps(
   reference: ReferenceElement,
-  plugins: Plugin[],
+  plugins: Plugin[]
 ): Record<string, unknown> {
   const propKeys = plugins
     ? Object.keys(getExtendedPassedProps({...defaultProps, plugins}))
@@ -131,7 +131,7 @@ export function getDataAttributeProps(
 
       return acc;
     },
-    {},
+    {}
   );
 
   return props;
@@ -139,7 +139,7 @@ export function getDataAttributeProps(
 
 export function evaluateProps(
   reference: ReferenceElement,
-  props: Props,
+  props: Props
 ): Props {
   const out = {
     ...props,
@@ -170,13 +170,13 @@ export function evaluateProps(
 
 export function validateProps(
   partialProps: Partial<Props> = {},
-  plugins: Plugin[] = [],
+  plugins: Plugin[] = []
 ): void {
   const keys = Object.keys(partialProps) as Array<keyof Props>;
-  keys.forEach(prop => {
+  keys.forEach((prop) => {
     const nonPluginProps = removeProperties(
       defaultProps,
-      Object.keys(pluginProps),
+      Object.keys(pluginProps)
     );
 
     let didPassUnknownProp = !hasOwnProperty(nonPluginProps, prop);
@@ -184,7 +184,7 @@ export function validateProps(
     // Check if the prop exists in `plugins`
     if (didPassUnknownProp) {
       didPassUnknownProp =
-        plugins.filter(plugin => plugin.name === prop).length === 0;
+        plugins.filter((plugin) => plugin.name === prop).length === 0;
     }
 
     warnWhen(
@@ -196,7 +196,7 @@ export function validateProps(
         '\n\n',
         'All props: https://atomiks.github.io/tippyjs/v6/all-props/\n',
         'Plugins: https://atomiks.github.io/tippyjs/v6/plugins/',
-      ].join(' '),
+      ].join(' ')
     );
   });
 }

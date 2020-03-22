@@ -28,7 +28,7 @@ Now, let's add some JavaScript:
 tippy('#ajax-tippy', {
   content: 'Loading...',
   // This prop is recommended if your tooltip changes size while showing
-  flipOnUpdate: true
+  flipOnUpdate: true,
 });
 ```
 
@@ -49,7 +49,7 @@ tippy('#ajax-tippy', {
   flipOnUpdate: true,
   onShow(instance) {
     // Code here is executed every time the tippy shows
-  }
+  },
 });
 ```
 
@@ -60,8 +60,8 @@ tippy('#ajax-tippy', {
   // ...
   onShow(instance) {
     fetch('https://unsplash.it/200/?random')
-      .then(response => response.blob())
-      .then(blob => {
+      .then((response) => response.blob())
+      .then((blob) => {
         // Convert the blob into a URL
         const url = URL.createObjectURL(blob);
         // Create an image
@@ -73,11 +73,11 @@ tippy('#ajax-tippy', {
         // Update the tippy content with the image
         instance.setContent(image);
       })
-      .catch(error => {
+      .catch((error) => {
         // Fallback if the network request failed
         instance.setContent(`Request failed. ${error}`);
       });
-  }
+  },
 });
 ```
 
@@ -95,7 +95,7 @@ tippy('#ajax-tippy', {
   // ...
   onHidden(instance) {
     instance.setContent('Loading...');
-  }
+  },
 });
 ```
 
@@ -118,13 +118,13 @@ tippy('#ajax-tippy', {
     instance._isFetching = true;
 
     fetch('https://unsplash.it/200/?random')
-      .then(response => response.blob())
-      .then(blob => {
+      .then((response) => response.blob())
+      .then((blob) => {
         const src = URL.createObjectURL(blob);
         instance._src = src;
         // ...
       })
-      .catch(error => {
+      .catch((error) => {
         instance._error = error;
         instance.setContent(`Request failed. ${error}`);
       })
@@ -137,6 +137,6 @@ tippy('#ajax-tippy', {
     // Unset these properties so new network requests can be initiated
     instance._src = null;
     instance._error = null;
-  }
+  },
 });
 ```

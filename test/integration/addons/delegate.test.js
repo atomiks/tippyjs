@@ -10,7 +10,7 @@ let delegateElement = h();
 
 afterEach(() => {
   if (instance) {
-    normalizeToArray(instance).forEach(i => i.destroy());
+    normalizeToArray(instance).forEach((i) => i.destroy());
   }
 
   delegateElement = h();
@@ -49,7 +49,7 @@ describe('delegate', () => {
   it('handles an array of delegate targets', () => {
     const refs = [h(), h()];
 
-    refs.forEach(ref => ref.append(document.createElement('button')));
+    refs.forEach((ref) => ref.append(document.createElement('button')));
 
     instance = delegate(refs, {target: 'button'});
     const button = refs[0].querySelector('button');
@@ -60,7 +60,7 @@ describe('delegate', () => {
 
     expect(button._tippy).toBeDefined();
 
-    instance.forEach(instance => instance.destroy());
+    instance.forEach((instance) => instance.destroy());
   });
 
   it('does not show its own tippy', () => {
@@ -86,8 +86,8 @@ describe('delegate', () => {
           '`' + String(null) + '`',
           'as its targets (first) argument. Valid types are: String, Element, Element[],',
           'or NodeList.',
-        ].join(' '),
-      ),
+        ].join(' ')
+      )
     );
   });
 
@@ -99,8 +99,8 @@ describe('delegate', () => {
         [
           'You must specity a `target` prop indicating a CSS selector string matching',
           'the target elements that should receive a tippy.',
-        ].join(' '),
-      ),
+        ].join(' ')
+      )
     );
   });
 
@@ -112,8 +112,8 @@ describe('delegate', () => {
         [
           'You must specity a `target` prop indicating a CSS selector string matching',
           'the target elements that should receive a tippy.',
-        ].join(' '),
-      ),
+        ].join(' ')
+      )
     );
   });
 
@@ -151,12 +151,12 @@ describe('delegate', () => {
     const clickButton = h(
       'button',
       {'data-tippy-trigger': 'click'},
-      delegateElement,
+      delegateElement
     );
     const focusButton = h(
       'button',
       {'data-tippy-trigger': 'focus'},
-      delegateElement,
+      delegateElement
     );
 
     instance = delegate(delegateElement, {

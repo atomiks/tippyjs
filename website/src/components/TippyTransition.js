@@ -127,7 +127,7 @@ function TippyTransition({children, onChange}) {
       tooltip.style.height = `${prevDimensions.height}px`;
     }
 
-    Object.keys(instance.popperChildren).forEach(key => {
+    Object.keys(instance.popperChildren).forEach((key) => {
       if (instance.popperChildren[key]) {
         instance.popperChildren[key].style.transitionDuration = '0ms';
         instance.popperChildren[key].style.transitionProperty =
@@ -221,19 +221,19 @@ function TippyTransition({children, onChange}) {
       onCreate(data) {
         preserveInvocation(
           child.props.popperOptions && child.props.popperOptions.onCreate,
-          [data],
+          [data]
         );
         popperOnCreate(data);
       },
       onUpdate(data) {
         preserveInvocation(
           child.props.popperOptions && child.props.popperOptions.onUpdate,
-          [data],
+          [data]
         );
         popperOnUpdate(data);
       },
     }),
-    [child.props.popperOptions],
+    [child.props.popperOptions]
   );
 
   return cloneElement(child, {

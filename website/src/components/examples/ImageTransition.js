@@ -14,8 +14,8 @@ function DimensionsTransition() {
   const imageContainerRef = useRef();
 
   function onClick() {
-    setExpanded(expanded => !expanded);
-    setDisplay(display => (display === 'none' ? 'block' : 'none'));
+    setExpanded((expanded) => !expanded);
+    setDisplay((display) => (display === 'none' ? 'block' : 'none'));
   }
 
   function onChange(instance) {

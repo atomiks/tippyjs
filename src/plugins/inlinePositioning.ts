@@ -38,7 +38,7 @@ const inlinePositioning: InlinePositioning = {
       return getInlineBoundingClientRect(
         getBasePlacement(placement),
         reference.getBoundingClientRect(),
-        arrayFrom(reference.getClientRects()),
+        arrayFrom(reference.getClientRects())
       );
     }
 
@@ -63,7 +63,7 @@ export default inlinePositioning;
 export function getInlineBoundingClientRect(
   currentBasePlacement: BasePlacement | null,
   boundingRect: ClientRect,
-  clientRects: ClientRect[],
+  clientRects: ClientRect[]
 ): ClientRect {
   // Not an inline element, or placement is not yet known
   if (clientRects.length < 2 || currentBasePlacement === null) {
@@ -88,12 +88,12 @@ export function getInlineBoundingClientRect(
     }
     case 'left':
     case 'right': {
-      const minLeft = Math.min(...clientRects.map(rects => rects.left));
-      const maxRight = Math.max(...clientRects.map(rects => rects.right));
-      const measureRects = clientRects.filter(rect =>
+      const minLeft = Math.min(...clientRects.map((rects) => rects.left));
+      const maxRight = Math.max(...clientRects.map((rects) => rects.right));
+      const measureRects = clientRects.filter((rect) =>
         currentBasePlacement === 'left'
           ? rect.left === minLeft
-          : rect.right === maxRight,
+          : rect.right === maxRight
       );
 
       const top = measureRects[0].top;

@@ -32,7 +32,7 @@ describe('createSingleton', () => {
 
   it('uses the relevant tippy instance content', () => {
     const configs = [{content: 'hi'}, {content: 'bye'}];
-    const instances = configs.map(props => tippy(h(), props));
+    const instances = configs.map((props) => tippy(h(), props));
     const singletonInstance = createSingleton(instances);
 
     fireEvent.mouseEnter(instances[0].reference);
@@ -106,8 +106,8 @@ describe('createSingleton', () => {
           'The first argument passed to createSingleton() must be an array of tippy',
           'instances. The passed value was',
           String(null),
-        ].join(' '),
-      ),
+        ].join(' ')
+      )
     );
   });
 
@@ -178,14 +178,14 @@ describe('createSingleton', () => {
     const tippyInstances = tippy([h(), h()]);
     const singletonInstance = createSingleton(tippyInstances);
     singletonInstance.destroy(false);
-    tippyInstances.forEach(instance => {
+    tippyInstances.forEach((instance) => {
       expect(instance.state.isDestroyed).toBe(false);
     });
   });
 
   it('restores original state when destroyed', () => {
     const tippyInstances = tippy([h(), h()]);
-    const prevInstanceProps = tippyInstances.map(instance => instance.props);
+    const prevInstanceProps = tippyInstances.map((instance) => instance.props);
     const singletonInstance = createSingleton(tippyInstances);
 
     singletonInstance.destroy(false);

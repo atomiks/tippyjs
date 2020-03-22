@@ -23,7 +23,7 @@ export function sortActivePages(edges, location) {
       ({node}) =>
         shouldShowLink(node.frontmatter.path, location.pathname) ||
         (HOME_PATHS.includes(node.frontmatter.path) &&
-          getVersionFromPath(location.pathname) === CURRENT_MAJOR),
+          getVersionFromPath(location.pathname) === CURRENT_MAJOR)
     );
 }
 
@@ -35,7 +35,7 @@ export const ALL_PLACEMENTS = ['top', 'right', 'bottom', 'left'].reduce(
   (acc, placement) => {
     return acc.concat(placement, `${placement}-start`, `${placement}-end`);
   },
-  [],
+  []
 );
 
 export const EXTRA_ANIMATIONS = [

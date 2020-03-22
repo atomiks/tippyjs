@@ -20,9 +20,9 @@ class ImageReporter {
       testResult.failureMessage.match(/different from snapshot/)
     ) {
       const files = fs.readdirSync(
-        './test/functional/__image_snapshots__/__diff_output__/',
+        './test/functional/__image_snapshots__/__diff_output__/'
       );
-      files.forEach(async value => {
+      files.forEach(async (value) => {
         const file = `./test/functional/__image_snapshots__/__diff_output__/${value}`;
 
         poster.post(
@@ -38,9 +38,9 @@ class ImageReporter {
             }
 
             console.log(
-              red(bold(`Uploaded image diff file to ${JSON.parse(data).url}`)),
+              red(bold(`Uploaded image diff file to ${JSON.parse(data).url}`))
             );
-          },
+          }
         );
       });
     }

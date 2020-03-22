@@ -13,7 +13,7 @@ describe('injectCSS', () => {
     injectCSS(styles);
 
     const stylesheet = document.head.querySelector(
-      '[data-__NAMESPACE_PREFIX__-stylesheet]',
+      '[data-__NAMESPACE_PREFIX__-stylesheet]'
     );
 
     expect(stylesheet).not.toBe(null);
@@ -28,7 +28,7 @@ describe('injectCSS', () => {
     injectCSS(styles);
 
     const stylesheet = document.head.querySelector(
-      '[data-__NAMESPACE_PREFIX__-stylesheet]',
+      '[data-__NAMESPACE_PREFIX__-stylesheet]'
     );
 
     expect(document.head.children[1]).toBe(stylesheet);
@@ -42,7 +42,7 @@ describe('injectCSS', () => {
     injectCSS(styles);
 
     const stylesheet = document.head.querySelector(
-      '[data-__NAMESPACE_PREFIX__-stylesheet]',
+      '[data-__NAMESPACE_PREFIX__-stylesheet]'
     );
 
     expect(document.head.children[1]).toBe(stylesheet);

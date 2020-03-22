@@ -13,7 +13,7 @@ const animateFill: AnimateFill = {
       if (__DEV__) {
         errorWhen(
           instance.props.animateFill,
-          'The `animateFill` plugin requires the default render function.',
+          'The `animateFill` plugin requires the default render function.'
         );
       }
 

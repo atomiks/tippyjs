@@ -35,8 +35,8 @@ describe('tippy', () => {
           '`' + String(null) + '`',
           'as its targets (first) argument. Valid types are: String, Element, Element[],',
           'or NodeList.',
-        ].join(' '),
-      ),
+        ].join(' ')
+      )
     );
   });
 
@@ -57,8 +57,8 @@ describe('tippy', () => {
           '\n\n',
           '1) content: element.innerHTML\n',
           '2) content: () => element.cloneNode(true)',
-        ].join(' '),
-      ),
+        ].join(' ')
+      )
     );
   });
 });
@@ -81,7 +81,7 @@ describe('hideAll()', () => {
     jest.runAllTimers();
     hideAll();
 
-    instances.forEach(instance => {
+    instances.forEach((instance) => {
       expect(instance.state.isVisible).toBe(false);
     });
   });
@@ -93,7 +93,7 @@ describe('hideAll()', () => {
     jest.runAllTimers();
     hideAll({duration: 0});
 
-    instances.forEach(instance => {
+    instances.forEach((instance) => {
       expect(instance.state.isMounted).toBe(false);
     });
   });
@@ -105,9 +105,9 @@ describe('hideAll()', () => {
     jest.runAllTimers();
     hideAll({exclude: instances[0]});
 
-    instances.forEach(instance => {
+    instances.forEach((instance) => {
       expect(instance.state.isVisible).toBe(
-        instance === instances[0] ? true : false,
+        instance === instances[0] ? true : false
       );
     });
   });
@@ -121,10 +121,10 @@ describe('hideAll()', () => {
     hideAll({exclude: ref});
 
     const instances = [...document.querySelectorAll(POPPER_SELECTOR)].map(
-      popper => popper._tippy,
+      (popper) => popper._tippy
     );
 
-    instances.forEach(instance => {
+    instances.forEach((instance) => {
       expect(instance.state.isVisible).toBe(true);
     });
   });

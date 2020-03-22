@@ -6,7 +6,7 @@ function SEO({title, description, lang, meta, keywords, pageContext}) {
   return (
     <StaticQuery
       query={detailsQuery}
-      render={data => {
+      render={(data) => {
         const metaDescription =
           description || data.site.siteMetadata.description;
         const isIndex = pageContext.frontmatter.title === 'Demo';
@@ -64,7 +64,7 @@ function SEO({title, description, lang, meta, keywords, pageContext}) {
                       name: `keywords`,
                       content: keywords.join(`, `),
                     }
-                  : [],
+                  : []
               )
               .concat(meta)}
           />

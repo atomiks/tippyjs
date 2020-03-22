@@ -78,7 +78,7 @@ tests.sticky = () => {
 tests.inlinePositioning = () => {
   const instances = [];
 
-  ['top', 'right', 'bottom', 'left'].forEach(placement => {
+  ['top', 'right', 'bottom', 'left'].forEach((placement) => {
     const [instance] = tippy('#inlinePositioning .reference', {
       placement,
       content: 'tippy',
@@ -94,7 +94,7 @@ tests.inlinePositioning = () => {
   });
 
   return () => {
-    instances.forEach(instance => instance.destroy());
+    instances.forEach((instance) => instance.destroy());
   };
 };
 
@@ -102,7 +102,7 @@ tests.followCursor = () => {
   const instances = [];
 
   [true, false, 'vertical', 'horizontal', 'initial', 'contentChange'].forEach(
-    test => {
+    (test) => {
       let interval;
 
       const [instance] = tippy(`#followCursor [data-test="${test}"]`, {
@@ -132,11 +132,11 @@ tests.followCursor = () => {
       });
 
       instances.push(instance);
-    },
+    }
   );
 
   return () => {
-    instances.forEach(instance => instance.destroy());
+    instances.forEach((instance) => instance.destroy());
   };
 };
 
@@ -149,13 +149,13 @@ tests.themes = () => {
 
   const container = document.querySelector('#themes .wrapper');
 
-  themes.forEach(theme => {
+  themes.forEach((theme) => {
     const heading = document.createElement('h3');
     heading.textContent = theme;
     container.appendChild(heading);
 
-    placements.forEach(placement => {
-      arrows.forEach(arrow => {
+    placements.forEach((placement) => {
+      arrows.forEach((arrow) => {
         const button = document.createElement('button');
         button.textContent = 'ref';
         button.style.margin = '0 5px';
@@ -178,7 +178,7 @@ tests.themes = () => {
   });
 
   return () => {
-    instances.forEach(instance => instance.destroy());
+    instances.forEach((instance) => instance.destroy());
     container.innerHTML = '';
   };
 };
@@ -190,14 +190,14 @@ tests.animations = () => {
     ['shift-away', 'shift-toward', 'scale', 'perspective'].reduce(
       (acc, animation) =>
         acc.concat(animation, `${animation}-subtle`, `${animation}-extreme`),
-      [],
-    ),
+      []
+    )
   );
   const placements = ['top', 'bottom', 'left', 'right'];
   const container = document.querySelector('#animations .wrapper');
 
-  animations.forEach(animation => {
-    placements.forEach(placement => {
+  animations.forEach((animation) => {
+    placements.forEach((placement) => {
       const button = document.createElement('button');
       button.textContent = animation;
       container.appendChild(button);
@@ -213,7 +213,7 @@ tests.animations = () => {
   });
 
   return () => {
-    instances.forEach(instance => instance.destroy());
+    instances.forEach((instance) => instance.destroy());
     container.innerHTML = '';
   };
 };
@@ -229,7 +229,7 @@ tests.createSingleton = () => {
   });
 
   return () => {
-    instances.forEach(instance => instance.destroy());
+    instances.forEach((instance) => instance.destroy());
     singleton.destroy();
   };
 };
@@ -237,7 +237,7 @@ tests.createSingleton = () => {
 tests.animateFill = () => {
   const instances = [];
 
-  ['top', 'right', 'bottom', 'left'].forEach(placement => {
+  ['top', 'right', 'bottom', 'left'].forEach((placement) => {
     const [instance] = tippy('#animateFill .reference', {
       placement,
       content: 'Tippy',
@@ -249,7 +249,7 @@ tests.animateFill = () => {
   });
 
   return () => {
-    instances.forEach(instance => instance.destroy());
+    instances.forEach((instance) => instance.destroy());
   };
 };
 
@@ -297,6 +297,6 @@ tests.border = () => {
   ].flat();
 
   return () => {
-    instances.forEach(instance => instance.destroy());
+    instances.forEach((instance) => instance.destroy());
   };
 };

@@ -11,7 +11,7 @@ import ElasticScroll from './ElasticScroll';
 import Tippy from './Tippy';
 
 const Navbar = styled.nav`
-  display: ${props => (props.isMounted ? 'block' : 'none')};
+  display: ${(props) => (props.isMounted ? 'block' : 'none')};
   position: fixed;
   top: 0;
   bottom: 0;
@@ -21,17 +21,17 @@ const Navbar = styled.nav`
   color: white;
   overflow-y: auto;
   z-index: 2;
-  transform: ${props =>
+  transform: ${(props) =>
     props.isOpen
       ? 'translate3d(-4%, 0, 0) scaleX(1)'
       : 'translate3d(-100%, 0, 0) scaleX(0)'};
-  transition: transform ${props => (props.isOpen ? '0.55s' : '0.3s')},
+  transition: transform ${(props) => (props.isOpen ? '0.55s' : '0.3s')},
     visibility 0.2s, opacity 0.8s;
-  transition-timing-function: ${props =>
+  transition-timing-function: ${(props) =>
     props.isOpen ? 'cubic-bezier(.165, 1.3, 0.4, 1)' : 'ease'};
-  visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
+  visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
   box-shadow: 4px 0 32px 0 rgba(0, 32, 64, 0.25);
-  opacity: ${props => (props.isOpen ? 1 : 0)};
+  opacity: ${(props) => (props.isOpen ? 1 : 0)};
 
   ${MEDIA.lg} {
     padding-top: 0;
@@ -148,13 +148,13 @@ class Nav extends Component {
     this.props.close();
   };
 
-  handleBlur = e => {
+  handleBlur = (e) => {
     if (!e.currentTarget.contains(e.relatedTarget)) {
       this.props.close();
     }
   };
 
-  handleOutsideClick = e => {
+  handleOutsideClick = (e) => {
     if (this.props.isOpen && !this.ref.current.contains(e.target)) {
       this.props.close();
     }
@@ -243,7 +243,7 @@ class Nav extends Component {
                 </div>
                 <StaticQuery
                   query={allMdxQuery}
-                  render={data => {
+                  render={(data) => {
                     return sortActivePages(data.allMdx.edges, location).map(
                       ({node}) => (
                         <ListItem key={node.frontmatter.path}>
@@ -251,7 +251,7 @@ class Nav extends Component {
                             {node.frontmatter.title}
                           </Link>
                         </ListItem>
-                      ),
+                      )
                     );
                   }}
                 />

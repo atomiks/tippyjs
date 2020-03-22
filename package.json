@@ -116,7 +116,7 @@
     "lint-staged": "^9.5.0",
     "postcss": "^7.0.26",
     "poster": "0.0.9",
-    "prettier": "^1.19.1",
+    "prettier": "^2.0.1",
     "promise": "^8.0.3",
     "puppeteer": "^2.1.0",
     "rimraf": "^3.0.0",

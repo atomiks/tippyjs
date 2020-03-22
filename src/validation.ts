@@ -78,7 +78,7 @@ export function validateTargets(targets: Targets): void {
       '`' + String(targets) + '`',
       'as its targets (first) argument. Valid types are: String, Element,',
       'Element[], or NodeList.',
-    ].join(' '),
+    ].join(' ')
   );
 
   errorWhen(
@@ -86,6 +86,6 @@ export function validateTargets(targets: Targets): void {
     [
       'tippy() was passed a plain object which is not supported as an argument',
       'for virtual positioning. Use props.getReferenceClientRect instead.',
-    ].join(' '),
+    ].join(' ')
   );
 }

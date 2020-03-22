@@ -57,7 +57,7 @@ function createPluginSCSS(output, shouldInjectNodeEnvTheme = false) {
     processor(css) {
       return postcss([autoprefixer, cssnano])
         .process(css, {from: undefined})
-        .then(result => result.css);
+        .then((result) => result.css);
     },
   });
 }
@@ -79,8 +79,8 @@ async function build() {
     const cssConfig = createRollupConfig(
       `css/${filename}`,
       PLUGIN_CONFIG.concat(
-        createPluginSCSS(`./dist/${filename.replace('.js', '.css')}`, true),
-      ),
+        createPluginSCSS(`./dist/${filename.replace('.js', '.css')}`, true)
+      )
     );
     const cssBundle = await rollup(cssConfig);
     await cssBundle.write({
@@ -99,7 +99,7 @@ async function build() {
 
       const config = createRollupConfig(
         `${folder}/${filename}`,
-        PLUGIN_CONFIG.concat(createPluginSCSS(outputFile)),
+        PLUGIN_CONFIG.concat(createPluginSCSS(outputFile))
       );
       const bundle = await rollup(config);
       await bundle.write({

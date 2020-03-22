@@ -27,7 +27,7 @@ if (TRAVIS_COMMIT_RANGE) {
   }
 
   const commitList = execSync(
-    `git rev-list ${COMMIT_RANGE} --oneline`,
+    `git rev-list ${COMMIT_RANGE} --oneline`
   ).toString();
 
   console.log(`Commits included in this build:\n${commitList}`);
@@ -35,17 +35,17 @@ if (TRAVIS_COMMIT_RANGE) {
   commitMessages = commitList
     .split('\n')
     // filter out empty lines
-    .filter(line => line)
+    .filter((line) => line)
     // extract commit message, line should be something like: `dbede8c message`
-    .map(line => line.slice(8));
+    .map((line) => line.slice(8));
 } else {
   commitMessages = [TRAVIS_COMMIT_MESSAGE];
 }
 
 const DOCS_PREFIXES = ['docs', 'release'];
 
-const shouldDeployDocs = commitMessages.some(message => {
-  return DOCS_PREFIXES.some(prefix => message.startsWith(`${prefix}: `));
+const shouldDeployDocs = commitMessages.some((message) => {
+  return DOCS_PREFIXES.some((prefix) => message.startsWith(`${prefix}: `));
 });
 
 console.log(`SHOULD_DEPLOY_DOCS=${shouldDeployDocs}`);

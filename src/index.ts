@@ -9,7 +9,7 @@ import {validateTargets, warnWhen} from './validation';
 
 function tippy(
   targets: Targets,
-  optionalProps: Partial<Props> = {},
+  optionalProps: Partial<Props> = {}
 ): Instance | Instance[] {
   const plugins = defaultProps.plugins.concat(optionalProps.plugins || []);
 
@@ -41,7 +41,7 @@ function tippy(
         '\n\n',
         '1) content: element.innerHTML\n',
         '2) content: () => element.cloneNode(true)',
-      ].join(' '),
+      ].join(' ')
     );
   }
 
@@ -55,7 +55,7 @@ function tippy(
 
       return acc;
     },
-    [],
+    []
   );
 
   return isElement(targets) ? instances[0] : instances;
@@ -71,7 +71,7 @@ export const hideAll: HideAll = ({
   exclude: excludedReferenceOrInstance,
   duration,
 }: HideAllOptions = {}) => {
-  mountedInstances.forEach(instance => {
+  mountedInstances.forEach((instance) => {
     let isExcluded = false;
 
     if (excludedReferenceOrInstance) {

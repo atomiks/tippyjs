@@ -142,9 +142,9 @@ function NavButtons({next}) {
           {({location}) => (
             <StaticQuery
               query={allMdxQuery}
-              render={data => {
+              render={(data) => {
                 const links = sortActivePages(data.allMdx.edges, location).map(
-                  ({node}) => node,
+                  ({node}) => node
                 );
                 const nextLink = links[next];
                 const prevLink = next > 1 ? links[next - 2] : null;

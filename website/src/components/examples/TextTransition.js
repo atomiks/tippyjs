@@ -23,7 +23,7 @@ function DimensionsTransition() {
   const component = useInstance({currentIndex: 0});
 
   function scheduleNextContent() {
-    const currentIndex = contents.findIndex(c => c === content);
+    const currentIndex = contents.findIndex((c) => c === content);
     const nextIndex =
       currentIndex === contents.length - 1 ? 0 : currentIndex + 1;
     const nextContent = contents[nextIndex];

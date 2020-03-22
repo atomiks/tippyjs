@@ -16,7 +16,7 @@ describe('getArrayOfElements', () => {
   it('returns an array of elements when given a valid selector string', () => {
     [...Array(10)].map(() => h());
     const allAreElements = DomUtils.getArrayOfElements(IDENTIFIER).every(
-      value => value instanceof Element,
+      (value) => value instanceof Element
     );
     expect(allAreElements).toBe(true);
   });
@@ -39,7 +39,7 @@ describe('getArrayOfElements', () => {
   it('returns an array if given a NodeList', () => {
     const ref = h();
     const arr = DomUtils.getArrayOfElements(
-      document.querySelectorAll(`.${IDENTIFIER}`),
+      document.querySelectorAll(`.${IDENTIFIER}`)
     );
 
     expect(arr[0]).toBe(ref);
@@ -88,7 +88,7 @@ describe('isReferenceElement', () => {
     const instance = tippy(h());
 
     expect(DomUtils.isReferenceElement(document.createElement('div'))).toBe(
-      false,
+      false
     );
     expect(DomUtils.isReferenceElement(instance.reference)).toBe(true);
     expect(DomUtils.isReferenceElement(instance.popper)).toBe(false);

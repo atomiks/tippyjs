@@ -66,7 +66,7 @@ You can initialize it like so:
 
 ```js
 tippy('#myButton', {
-  content: "I'm a Tippy tooltip!"
+  content: "I'm a Tippy tooltip!",
 });
 ```
 
@@ -99,22 +99,22 @@ Additionally, the tooltip can be shifted along the axis using the suffix
             modifiers: [
               {
                 name: 'flip',
-                enabled: false
+                enabled: false,
               },
               {
                 name: 'preventOverflow',
                 options: {
                   altAxis: true,
-                }
-              }
-            ]
+                },
+              },
+            ],
           }}
         >
           <Button
             style={{
               display: 'inline-block',
               width: '100%',
-              height: '100%'
+              height: '100%',
             }}
           >
             {placement}
@@ -170,7 +170,7 @@ These animations are included in the package and can be imported separately.
 
 <Demo>
   <Row>
-    {EXTRA_ANIMATIONS.map(animation => (
+    {EXTRA_ANIMATIONS.map((animation) => (
       <Col
         key={animation}
         base={12}
@@ -183,7 +183,7 @@ These animations are included in the package and can be imported separately.
           <Button
             style={{
               width: '100%',
-              height: '100%'
+              height: '100%',
             }}
           >
             {animation}
@@ -207,8 +207,8 @@ These animations are included in the package and can be imported separately.
 Add CSS spring physics to the animation using `transition-timing-function`.
 
 <Demo>
-  {EXTRA_ANIMATIONS.filter(animation => animation.includes('scale')).map(
-    animation => (
+  {EXTRA_ANIMATIONS.filter((animation) => animation.includes('scale')).map(
+    (animation) => (
       <Tippy
         key={animation}
         animation={animation}
@@ -232,7 +232,7 @@ for example using the `animate.css` package:
     animation="fade"
     animateFill={false}
     duration={[500, 200]}
-    onMount={instance => {
+    onMount={(instance) => {
       requestAnimationFrame(() => {
         instance.popper.firstElementChild.classList.add(
           'rubberBand',
@@ -240,7 +240,7 @@ for example using the `animate.css` package:
         );
       });
     }}
-    onHidden={instance => {
+    onHidden={(instance) => {
       instance.popper.firstElementChild.classList.remove(
         'rubberBand',
         'animated'
@@ -253,12 +253,12 @@ for example using the `animate.css` package:
     animation="fade"
     animateFill={false}
     duration={[500, 200]}
-    onMount={instance => {
+    onMount={(instance) => {
       requestAnimationFrame(() => {
         instance.popper.firstElementChild.classList.add('tada', 'animated');
       });
     }}
-    onHidden={instance => {
+    onHidden={(instance) => {
       instance.popper.firstElementChild.classList.remove('tada', 'animated');
     }}
   >
@@ -294,7 +294,7 @@ Tooltips can have custom styling.
 These themes are included in the package and can be imported separately.
 
 <Demo>
-  {['light', 'light-border', 'material', 'translucent'].map(theme => (
+  {['light', 'light-border', 'material', 'translucent'].map((theme) => (
     <Tippy key={theme} theme={theme} animateFill={false}>
       <Button>{theme}</Button>
     </Tippy>
@@ -306,7 +306,7 @@ These themes are included in the package and can be imported separately.
 You can apply any CSS to a tippy via a theme.
 
 <Demo>
-  {['gradient', 'retro', 'forest'].map(theme => (
+  {['gradient', 'retro', 'forest'].map((theme) => (
     <Tippy key={theme} theme={theme} animateFill={false} arrow={false}>
       <Button>{theme}</Button>
     </Tippy>

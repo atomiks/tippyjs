@@ -79,7 +79,7 @@ tippy(targets, {
   // default
   allowHTML: false,
   // parse `content` strings as HTML
-  allowHTML: true
+  allowHTML: true,
 });
 ```
 
@@ -103,7 +103,7 @@ tippy(targets, {
   // default
   animateFill: false,
   // enable it
-  animateFill: true
+  animateFill: true,
 });
 ```
 
@@ -121,7 +121,7 @@ import 'tippy.js/animations/shift-away.css';
 
 tippy(targets, {
   animateFill: true,
-  plugins: [animateFill]
+  plugins: [animateFill],
 });
 ```
 
@@ -143,7 +143,7 @@ The type of transition animation. See [Animations](../animations/) for details.
 ```js
 tippy(targets, {
   // default
-  animation: 'fade'
+  animation: 'fade',
 });
 ```
 
@@ -169,7 +169,7 @@ tippy(targets, {
   // append to reference's parentNode
   appendTo: 'parent',
   // append to an Element
-  appendTo: element
+  appendTo: element,
 });
 ```
 
@@ -191,27 +191,27 @@ tippy(targets, {
     // `null` when interactive: true, otherwise "describedby"
     content: 'auto',
     // matches `interactive` boolean
-    expanded: 'auto'
+    expanded: 'auto',
   },
 
   // announce as a label rather than a description
   // the content will also be announced with `interactive: true`
   aria: {
-    content: 'labelledby'
+    content: 'labelledby',
   },
 
   // to abide by strict WCAG 2.1 rules with `interactive: true` to make it
   // hoverable if it's not actually interactive, but the content will still be
   // announced
   aria: {
-    content: 'describedby'
+    content: 'describedby',
   },
 
   // disable completely, left up to you to control
   aria: {
     content: null,
-    expanded: false
-  }
+    expanded: false,
+  },
 });
 ```
 
@@ -230,7 +230,7 @@ tippy(targets, {
   // custom arrow string
   arrow: '<svg>...</svg>',
   // custom arrow element
-  arrow: svgElement
+  arrow: svgElement,
 });
 ```
 
@@ -251,7 +251,7 @@ import tippy, {roundArrow} from 'tippy.js';
 import 'tippy.js/dist/svg-arrow.css';
 
 tippy(targets, {
-  arrow: roundArrow
+  arrow: roundArrow,
 });
 ```
 
@@ -279,7 +279,7 @@ tippy(targets, {
   // Element
   content: document.createElement('div'),
   // (reference) => string | Element
-  content: reference => reference.getAttribute('title')
+  content: (reference) => reference.getAttribute('title'),
 });
 ```
 
@@ -303,7 +303,7 @@ tippy(targets, {
   // show delay is 100ms, hide delay is 200ms
   delay: [100, 200],
   // show delay is 100ms, hide delay is the default
-  delay: [100, null]
+  delay: [100, null],
 });
 ```
 
@@ -331,7 +331,7 @@ tippy(targets, {
   // show duration is 100ms, hide duration is 200ms
   duration: [100, 200],
   // show duration is 100ms, hide duration is the default
-  duration: [100, null]
+  duration: [100, null],
 });
 ```
 
@@ -361,7 +361,7 @@ tippy(targets, {
   // follow on y axis
   followCursor: 'vertical',
   // follow until it shows (taking into account `delay`)
-  followCursor: 'initial'
+  followCursor: 'initial',
 });
 ```
 
@@ -374,7 +374,7 @@ import tippy, {followCursor} from 'tippy.js';
 
 tippy(targets, {
   followCursor: true,
-  plugins: [followCursor]
+  plugins: [followCursor],
 });
 ```
 
@@ -407,8 +407,8 @@ tippy(targets, {
     left: 100,
     right: 200,
     top: 100,
-    bottom: 200
-  })
+    bottom: 200,
+  }),
 });
 ```
 
@@ -426,7 +426,7 @@ tippy(targets, {
   // never hide upon clicking
   hideOnClick: false,
   // hide only upon clicking the reference, but not outside
-  hideOnClick: 'toggle'
+  hideOnClick: 'toggle',
 });
 ```
 
@@ -466,7 +466,7 @@ tippy(targets, {
   // default
   ignoreAttributes: false,
   // don't consider `data-tippy-*` attributes on the reference element
-  ignoreAttributes: true
+  ignoreAttributes: true,
 });
 ```
 
@@ -484,7 +484,7 @@ tippy(targets, {
   // default
   inertia: false,
   // enable it
-  inertia: true
+  inertia: true,
 });
 ```
 
@@ -512,7 +512,7 @@ tippy(targets, {
   // default
   inlinePositioning: false,
   // enable it
-  inlinePositioning: true
+  inlinePositioning: true,
 });
 ```
 
@@ -525,7 +525,7 @@ import tippy, {inlinePositioning} from 'tippy.js';
 
 tippy(targets, {
   inlinePositioning: true,
-  plugins: [inlinePositioning]
+  plugins: [inlinePositioning],
 });
 ```
 
@@ -541,7 +541,7 @@ tippy(targets, {
   // default
   interactive: false,
   // enable it
-  interactive: true
+  interactive: true,
 });
 ```
 
@@ -566,7 +566,7 @@ tippy(targets, {
   // default
   interactiveBorder: 2,
   // 30px
-  interactiveBorder: 30
+  interactiveBorder: 30,
 });
 ```
 
@@ -594,7 +594,7 @@ tippy(targets, {
   // default
   interactiveDebounce: 0,
   // 75ms
-  interactiveDebounce: 75
+  interactiveDebounce: 75,
 });
 ```
 
@@ -626,7 +626,7 @@ tippy(targets, {
   // default
   maxWidth: 350,
   // no maxWidth
-  maxWidth: 'none'
+  maxWidth: 'none',
 });
 ```
 
@@ -658,7 +658,7 @@ tippy(targets, {
   // default
   moveTransition: '',
   // custom transition
-  moveTransition: 'transform 0.2s ease-out'
+  moveTransition: 'transform 0.2s ease-out',
 });
 ```
 
@@ -675,7 +675,7 @@ details.
 ```js
 tippy(targets, {
   // default [skidding, distance]
-  offset: [0, 10]
+  offset: [0, 10],
 });
 ```
 
@@ -698,7 +698,7 @@ Invoked after the tippy has been updated (via `.setProps()`).
 tippy(targets, {
   onAfterUpdate(instance, partialProps) {
     // ...
-  }
+  },
 });
 ```
 
@@ -712,7 +712,7 @@ Invoked before the tippy has been updated (via `.setProps()`).
 tippy(targets, {
   onBeforeUpdate(instance, partialProps) {
     // ...
-  }
+  },
 });
 ```
 
@@ -726,7 +726,7 @@ Invoked when the user clicks anywhere outside of the tippy or reference element.
 tippy(targets, {
   onClickOutside(instance, event) {
     // ...
-  }
+  },
 });
 ```
 
@@ -740,7 +740,7 @@ Invoked once the tippy has been created.
 tippy(targets, {
   onCreate(instance) {
     // ...
-  }
+  },
 });
 ```
 
@@ -754,7 +754,7 @@ Invoked once the tippy has been destroyed.
 tippy(targets, {
   onDestroy(instance) {
     // ...
-  }
+  },
 });
 ```
 
@@ -768,7 +768,7 @@ Invoked once the tippy has been fully hidden and unmounted from the DOM.
 tippy(targets, {
   onHidden(instance) {
     // ...
-  }
+  },
 });
 ```
 
@@ -782,7 +782,7 @@ Invoked once the tippy begins to hide.
 tippy(targets, {
   onHide(instance) {
     // ...
-  }
+  },
 });
 ```
 
@@ -800,7 +800,7 @@ created).
 tippy(targets, {
   onMount(instance) {
     // ...
-  }
+  },
 });
 ```
 
@@ -814,7 +814,7 @@ Invoked once the tippy begins to show.
 tippy(targets, {
   onShow(instance) {
     // ...
-  }
+  },
 });
 ```
 
@@ -837,7 +837,7 @@ Invoked once the tippy has been fully transitioned in.
 tippy(targets, {
   onShown(instance) {
     // ...
-  }
+  },
 });
 ```
 
@@ -851,7 +851,7 @@ Invoked once the tippy has been triggered by a DOM event (e.g. `mouseenter`).
 tippy(targets, {
   onTrigger(instance, event) {
     // ...
-  }
+  },
 });
 ```
 
@@ -865,7 +865,7 @@ Invoked once the tippy has been untriggered by a DOM event (e.g. `mouseleave`).
 tippy(targets, {
   onUntrigger(instance, event) {
     // ...
-  }
+  },
 });
 ```
 
@@ -900,7 +900,7 @@ tippy(targets, {
   // choose the side with most space
   placement: 'auto',
   placement: 'auto-start',
-  placement: 'auto-end'
+  placement: 'auto-end',
 });
 ```
 
@@ -919,7 +919,7 @@ Plugins to use. See [Plugins](../plugins/) for details.
 ```js
 tippy(targets, {
   // default
-  plugins: []
+  plugins: [],
 });
 ```
 
@@ -941,18 +941,18 @@ tippy(targets, {
       {
         name: 'flip',
         options: {
-          fallbackPlacements: ['bottom', 'right']
-        }
+          fallbackPlacements: ['bottom', 'right'],
+        },
       },
       {
         name: 'preventOverflow',
         options: {
           altAxis: true,
-          tether: false
-        }
-      }
-    ]
-  }
+          tether: false,
+        },
+      },
+    ],
+  },
 });
 ```
 
@@ -975,7 +975,7 @@ Specifies the `role` attribute on the tippy element.
 ```js
 tippy(targets, {
   // default
-  role: 'tooltip'
+  role: 'tooltip',
 });
 ```
 
@@ -990,7 +990,7 @@ tippy(targets, {
   // default
   showOnCreate: false,
   // enable it
-  showOnCreate: true
+  showOnCreate: true,
 });
 ```
 
@@ -1017,7 +1017,7 @@ tippy(targets, {
   // only check the "reference" rect for changes
   sticky: 'reference',
   // only check the "popper" rect for changes
-  sticky: 'popper'
+  sticky: 'popper',
 });
 ```
 
@@ -1030,7 +1030,7 @@ import tippy, {sticky} from 'tippy.js';
 
 tippy(targets, {
   sticky: true,
-  plugins: [sticky]
+  plugins: [sticky],
 });
 ```
 
@@ -1047,7 +1047,7 @@ tippy(targets, {
   // default
   theme: '',
   // custom theme
-  theme: 'tomato'
+  theme: 'tomato',
 });
 ```
 
@@ -1066,7 +1066,7 @@ tippy(targets, {
   // require pressing & holding the screen to show it
   touch: 'hold',
   // same as above, but long-press behavior
-  touch: ['hold', 500]
+  touch: ['hold', 500],
 });
 ```
 
@@ -1086,7 +1086,7 @@ tippy(targets, {
   trigger: 'focusin',
   trigger: 'mouseenter click',
   // only programmatically trigger it
-  trigger: 'manual'
+  trigger: 'manual',
 });
 ```
 
@@ -1104,7 +1104,7 @@ tippy(targets, {
   // Element
   triggerTarget: someElement,
   // Element[]
-  triggerTarget: [someElement1, someElement2]
+  triggerTarget: [someElement1, someElement2],
 });
 ```
 
@@ -1117,6 +1117,6 @@ Specifies the `z-index` CSS on the root popper node.
 ```js
 tippy(targets, {
   // default
-  zIndex: 9999
+  zIndex: 9999,
 });
 ```

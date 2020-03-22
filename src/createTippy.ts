@@ -42,7 +42,7 @@ export let mountedInstances: Instance[] = [];
 
 export default function createTippy(
   reference: ReferenceElement,
-  passedProps: Partial<Props>,
+  passedProps: Partial<Props>
 ): Instance {
   const props = evaluateProps(reference, {
     ...defaultProps,
@@ -130,7 +130,7 @@ export default function createTippy(
   reference._tippy = instance;
   popper._tippy = instance;
 
-  const pluginsHooks = plugins.map(plugin => plugin.fn(instance));
+  const pluginsHooks = plugins.map((plugin) => plugin.fn(instance));
   const hasAriaExpanded = reference.hasAttribute('aria-expanded');
 
   addListeners();
@@ -151,7 +151,7 @@ export default function createTippy(
     }
   });
 
-  popper.addEventListener('mouseleave', event => {
+  popper.addEventListener('mouseleave', (event) => {
     if (
       instance.props.interactive &&
       instance.props.trigger.indexOf('mouseenter') >= 0
@@ -203,7 +203,7 @@ export default function createTippy(
     return getValueAtIndexOrReturn(
       instance.props.delay,
       isShow ? 0 : 1,
-      defaultProps.delay,
+      defaultProps.delay
     );
   }
 
@@ -221,9 +221,9 @@ export default function createTippy(
   function invokeHook(
     hook: keyof LifecycleHooks,
     args: [Instance, any?],
-    shouldInvokePropsHook = true,
+    shouldInvokePropsHook = true
   ): void {
-    pluginsHooks.forEach(pluginHooks => {
+    pluginsHooks.forEach((pluginHooks) => {
       if (pluginHooks[hook]) {
         pluginHooks[hook]!(...args);
       }
@@ -245,7 +245,7 @@ export default function createTippy(
     const id = popper.id;
     const nodes = normalizeToArray(instance.props.triggerTarget || reference);
 
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       const currentValue = node.getAttribute(attr);
 
       if (instance.state.isVisible) {
@@ -269,13 +269,13 @@ export default function createTippy(
 
     const nodes = normalizeToArray(instance.props.triggerTarget || reference);
 
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       if (instance.props.interactive) {
         node.setAttribute(
           'aria-expanded',
           instance.state.isVisible && node === getCurrentTarget()
             ? 'true'
-            : 'false',
+            : 'false'
         );
       } else {
         node.removeAttribute('aria-expanded');
@@ -287,7 +287,7 @@ export default function createTippy(
     doc.body.removeEventListener('mouseleave', scheduleHide);
     doc.removeEventListener('mousemove', debouncedOnMouseMove);
     mouseMoveListeners = mouseMoveListeners.filter(
-      listener => listener !== debouncedOnMouseMove,
+      (listener) => listener !== debouncedOnMouseMove
     );
   }
 
@@ -387,10 +387,10 @@ export default function createTippy(
   function on(
     eventType: string,
     handler: EventListener,
-    options: boolean | object = false,
+    options: boolean | object = false
   ): void {
     const nodes = normalizeToArray(instance.props.triggerTarget || reference);
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       node.addEventListener(eventType, handler, options);
       listeners.push({node, eventType, handler, options});
     });
@@ -402,7 +402,7 @@ export default function createTippy(
       on('touchend', onMouseLeave as EventListener, PASSIVE);
     }
 
-    splitBySpaces(instance.props.trigger).forEach(eventType => {
+    splitBySpaces(instance.props.trigger).forEach((eventType) => {
       if (eventType === 'manual') {
         return;
       }
@@ -451,7 +451,7 @@ export default function createTippy(
       // over a new target, but `mousemove` events don't get fired. This
       // causes interactive tooltips to get stuck open until the cursor is
       // moved
-      mouseMoveListeners.forEach(listener => listener(event));
+      mouseMoveListeners.forEach((listener) => listener(event));
     }
 
     // Toggle show/hide when clicking click-triggered tooltips
@@ -497,7 +497,7 @@ export default function createTippy(
 
     const popperTreeData = getNestedPopperTree()
       .concat(popper)
-      .map(popper => {
+      .map((popper) => {
         const instance = popper._tippy!;
         const state = instance.popperInstance?.state;
 
@@ -592,7 +592,7 @@ export default function createTippy(
         if (getIsDefaultRenderFn()) {
           const {box} = getDefaultTemplateChildren();
 
-          ['placement', 'reference-hidden', 'escaped'].forEach(attr => {
+          ['placement', 'reference-hidden', 'escaped'].forEach((attr) => {
             if (attr === 'placement') {
               box.setAttribute('data-placement', state.placement);
             } else {
@@ -717,14 +717,14 @@ export default function createTippy(
           'keyboard navigation.',
           '\n\n',
           'See: https://atomiks.github.io/tippyjs/v6/accessibility/#interactivity',
-        ].join(' '),
+        ].join(' ')
       );
     }
   }
 
   function getNestedPopperTree(): PopperElement[] {
     return arrayFrom(
-      popper.querySelectorAll('[data-__NAMESPACE_PREFIX__-root]'),
+      popper.querySelectorAll('[data-__NAMESPACE_PREFIX__-root]')
     );
   }
 
@@ -838,13 +838,13 @@ export default function createTippy(
       cleanupInteractiveMouseListeners();
       debouncedOnMouseMove = debounce(
         onMouseMove,
-        nextProps.interactiveDebounce,
+        nextProps.interactiveDebounce
       );
     }
 
     // Ensure stale aria-expanded attributes are removed
     if (prevProps.triggerTarget && !nextProps.triggerTarget) {
-      normalizeToArray(prevProps.triggerTarget).forEach(node => {
+      normalizeToArray(prevProps.triggerTarget).forEach((node) => {
         node.removeAttribute('aria-expanded');
       });
     } else if (nextProps.triggerTarget) {
@@ -865,7 +865,7 @@ export default function createTippy(
       // and the nested ones get re-rendered first.
       // https://github.com/atomiks/tippyjs-react/issues/177
       // TODO: find a cleaner / more efficient solution(!)
-      getNestedPopperTree().forEach(nestedPopper => {
+      getNestedPopperTree().forEach((nestedPopper) => {
         // React (and other UI libs likely) requires a rAF wrapper as it flushes
         // its work in one
         requestAnimationFrame(nestedPopper._tippy!.popperInstance!.forceUpdate);
@@ -894,7 +894,7 @@ export default function createTippy(
     const duration = getValueAtIndexOrReturn(
       instance.props.duration,
       0,
-      defaultProps.duration,
+      defaultProps.duration
     );
 
     if (
@@ -990,7 +990,7 @@ export default function createTippy(
     const duration = getValueAtIndexOrReturn(
       instance.props.duration,
       1,
-      defaultProps.duration,
+      defaultProps.duration
     );
 
     if (isAlreadyHidden || isDestroyed || isDisabled) {
@@ -1049,7 +1049,7 @@ export default function createTippy(
     // If a popper is not interactive, it will be appended outside the popper
     // tree by default. This seems mainly for interactive tippies, but we should
     // find a workaround if possible
-    getNestedPopperTree().forEach(nestedPopper => {
+    getNestedPopperTree().forEach((nestedPopper) => {
       nestedPopper._tippy!.unmount();
     });
 
@@ -1057,7 +1057,7 @@ export default function createTippy(
       popper.parentNode.removeChild(popper);
     }
 
-    mountedInstances = mountedInstances.filter(i => i !== instance);
+    mountedInstances = mountedInstances.filter((i) => i !== instance);
 
     if (mountedInstances.length === 0) {
       updateIOSClass(false);

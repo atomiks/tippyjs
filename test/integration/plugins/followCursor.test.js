@@ -28,7 +28,7 @@ describe('followCursor', () => {
 
   function matches(receivedRect) {
     const isVerticalPlacement = ['top', 'bottom'].includes(
-      getBasePlacement(instance.popperInstance.state.placement),
+      getBasePlacement(instance.popperInstance.state.placement)
     );
 
     expect(rect.left).toBe(receivedRect.left);
@@ -38,7 +38,7 @@ describe('followCursor', () => {
   }
 
   it('true: follows both axes', () => {
-    placements.forEach(placement => {
+    placements.forEach((placement) => {
       instance = tippy(h(), {followCursor: true, placement});
 
       fireEvent.mouseEnter(instance.reference, defaultPosition);
@@ -66,7 +66,7 @@ describe('followCursor', () => {
   });
 
   it('"horizontal": follows x-axis', () => {
-    placements.forEach(placement => {
+    placements.forEach((placement) => {
       instance = tippy(h(), {
         followCursor: 'horizontal',
         placement,
@@ -100,7 +100,7 @@ describe('followCursor', () => {
   });
 
   it('"vertical": follows y-axis', () => {
-    placements.forEach(placement => {
+    placements.forEach((placement) => {
       instance = tippy(h(), {followCursor: 'vertical', placement});
       const referenceRect = instance.reference.getBoundingClientRect();
 
@@ -131,12 +131,12 @@ describe('followCursor', () => {
   });
 
   it('"initial": only follows once', () => {
-    placements.forEach(placement => {
+    placements.forEach((placement) => {
       instance = tippy(h(), {followCursor: 'initial', placement});
 
       // lastMouseMove event is used in this case
       instance.reference.dispatchEvent(
-        new MouseEvent('mouseenter', {...first}),
+        new MouseEvent('mouseenter', {...first})
       );
 
       jest.runAllTimers();

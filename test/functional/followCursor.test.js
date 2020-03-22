@@ -18,7 +18,7 @@ describe('followCursor', () => {
       await navigateToTest(page, 'followCursor');
 
       const reference = await page.$(selector);
-      const rect = await page.evaluate(ref => {
+      const rect = await page.evaluate((ref) => {
         const {top, left} = ref.getBoundingClientRect();
         return {top, left};
       }, reference);
@@ -55,7 +55,7 @@ describe('followCursor', () => {
       await navigateToTest(page, 'followCursor');
 
       const reference = await page.$(selector);
-      const rect = await page.evaluate(ref => {
+      const rect = await page.evaluate((ref) => {
         const {top, left} = ref.getBoundingClientRect();
         return {top, left};
       }, reference);
@@ -78,7 +78,7 @@ describe('followCursor', () => {
       await navigateToTest(page, 'followCursor');
 
       const reference = await page.$(selector);
-      const rect = await page.evaluate(ref => {
+      const rect = await page.evaluate((ref) => {
         const {top, left} = ref.getBoundingClientRect();
         return {top, left};
       }, reference);
@@ -101,7 +101,7 @@ describe('followCursor', () => {
       await navigateToTest(page, 'followCursor');
 
       const reference = await page.$(selector);
-      const rect = await page.evaluate(ref => {
+      const rect = await page.evaluate((ref) => {
         const {top, left} = ref.getBoundingClientRect();
         return {top, left};
       }, reference);
@@ -124,7 +124,7 @@ describe('followCursor', () => {
       await navigateToTest(page, 'followCursor');
 
       const reference = await page.$(selector);
-      const rect = await page.evaluate(ref => {
+      const rect = await page.evaluate((ref) => {
         const {top, left} = ref.getBoundingClientRect();
         return {top, left};
       }, reference);

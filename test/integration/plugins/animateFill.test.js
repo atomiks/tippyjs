@@ -13,7 +13,7 @@ describe('animateFill', () => {
     const instance = tippy(ref, {animateFill: true});
 
     expect(
-      getChildren(instance.popper).box.hasAttribute('data-animatefill'),
+      getChildren(instance.popper).box.hasAttribute('data-animatefill')
     ).toBe(true);
   });
 
@@ -22,7 +22,7 @@ describe('animateFill', () => {
     const instance = tippy(ref, {animateFill: false});
 
     expect(
-      getChildren(instance.popper).box.hasAttribute('data-animatefill'),
+      getChildren(instance.popper).box.hasAttribute('data-animatefill')
     ).toBe(false);
   });
 
@@ -89,8 +89,8 @@ describe('animateFill', () => {
 
     expect(spy).toHaveBeenCalledWith(
       ...getFormattedMessage(
-        'The `animateFill` plugin requires the default render function.',
-      ),
+        'The `animateFill` plugin requires the default render function.'
+      )
     );
   });
 

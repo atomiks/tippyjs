@@ -23,7 +23,7 @@ describe('getDataAttributeProps', () => {
 
     ref.setAttribute('data-tippy-content', '3333333333333333333333333');
     expect(getDataAttributeProps(ref).content).toBe(
-      '3333333333333333333333333',
+      '3333333333333333333333333'
     );
   });
 
@@ -124,8 +124,8 @@ describe('validateProps', () => {
           '\n\n',
           'All props: https://atomiks.github.io/tippyjs/v6/all-props/\n',
           'Plugins: https://atomiks.github.io/tippyjs/v6/plugins/',
-        ].join(' '),
-      ),
+        ].join(' ')
+      )
     );
   });
 
@@ -143,8 +143,8 @@ describe('validateProps', () => {
           '\n\n',
           'All props: https://atomiks.github.io/tippyjs/v6/all-props/\n',
           'Plugins: https://atomiks.github.io/tippyjs/v6/plugins/',
-        ].join(' '),
-      ),
+        ].join(' ')
+      )
     );
 
     console.warn.mockClear();
@@ -167,8 +167,8 @@ describe('validateProps', () => {
           '\n\n',
           'All props: https://atomiks.github.io/tippyjs/v6/all-props/\n',
           'Plugins: https://atomiks.github.io/tippyjs/v6/plugins/',
-        ].join(' '),
-      ),
+        ].join(' ')
+      )
     );
 
     console.warn.mockClear();

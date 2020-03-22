@@ -13,7 +13,7 @@ To interact with the content inside the tippy, set `interactive: true`.
 ```js
 tippy('button', {
   content: '<strong>Bolded content</strong>',
-  allowHTML: true
+  allowHTML: true,
 });
 ```
 
@@ -38,7 +38,7 @@ const template = document.getElementById('template');
 
 tippy('button', {
   content: template.innerHTML,
-  allowHTML: true
+  allowHTML: true,
 });
 ```
 
@@ -52,7 +52,7 @@ const template = document.getElementById('example');
 template.style.display = 'block';
 
 tippy(singleButton, {
-  content: template
+  content: template,
 });
 ```
 
@@ -93,6 +93,6 @@ tippy('button', {
     const template = document.getElementById(id);
     return template.innerHTML;
   },
-  allowHTML: true
+  allowHTML: true,
 });
 ```

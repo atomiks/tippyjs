@@ -7,7 +7,7 @@ export function hasOwnProperty(obj: object, key: string): boolean {
 export function getValueAtIndexOrReturn<T>(
   value: T | [T | null, T | null],
   index: number,
-  defaultValue: T | [T, T],
+  defaultValue: T | [T, T]
 ): T {
   if (Array.isArray(value)) {
     const v = value[index];
@@ -32,7 +32,7 @@ export function invokeWithArgsOrReturn(value: any, args: any[]): any {
 
 export function debounce<T>(
   fn: (arg: T) => void,
-  ms: number,
+  ms: number
 ): (arg: T) => void {
   // Avoid wrapping in `setTimeout` if ms is 0 anyway
   if (ms === 0) {
@@ -51,7 +51,7 @@ export function debounce<T>(
 
 export function removeProperties<T>(obj: T, keys: string[]): Partial<T> {
   const clone = {...obj};
-  keys.forEach(key => {
+  keys.forEach((key) => {
     delete (clone as any)[key];
   });
   return clone;

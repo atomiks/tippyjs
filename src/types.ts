@@ -23,11 +23,11 @@ export interface PopperElement<TProps = Props> extends HTMLDivElement {
 export interface LifecycleHooks<TProps = Props> {
   onAfterUpdate(
     instance: Instance<TProps>,
-    partialProps: Partial<TProps>,
+    partialProps: Partial<TProps>
   ): void;
   onBeforeUpdate(
     instance: Instance<TProps>,
-    partialProps: Partial<TProps>,
+    partialProps: Partial<TProps>
   ): void;
   onCreate(instance: Instance<TProps>): void;
   onDestroy(instance: Instance<TProps>): void;
@@ -87,7 +87,7 @@ export interface Props extends LifecycleHooks, RenderProps {
   popperOptions: Partial<Popper.Options>;
   render:
     | ((
-        instance: Instance,
+        instance: Instance
       ) => {
         popper: PopperElement;
         onUpdate?: (prevProps: Props, nextProps: Props) => void;
@@ -158,20 +158,20 @@ export interface DelegateInstance<TProps = Props> extends Instance<TProps> {
 export interface Delegate<TProps = Props> {
   (
     targets: SingleTarget,
-    props: Partial<TProps> & {target: string},
+    props: Partial<TProps> & {target: string}
   ): DelegateInstance<TProps>;
 }
 
 export interface Delegate<TProps = Props> {
   (
     targets: MultipleTargets,
-    props: Partial<TProps> & {target: string},
+    props: Partial<TProps> & {target: string}
   ): DelegateInstance<TProps>[];
 }
 
 export type CreateSingleton<TProps = Props> = (
   tippyInstances: Instance<TProps | Props>[],
-  optionalProps?: Partial<TProps> & {overrides?: Array<keyof TProps>},
+  optionalProps?: Partial<TProps> & {overrides?: Array<keyof TProps>}
 ) => Instance<TProps>;
 
 declare const delegate: Delegate;

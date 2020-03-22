@@ -48,7 +48,7 @@ createSingleton(tippyInstances, {
   placement: 'right',
   theme: 'spaceship',
   // The props in the current `tippyInstance` will override the ones above
-  overrides: ['placement', 'theme']
+  overrides: ['placement', 'theme'],
 });
 ```
 
@@ -60,7 +60,7 @@ Utilize the `moveTransition` prop, which is the transition between moves
 ```js
 const singleton = createSingleton(tippyInstances, {
   delay: 1000,
-  moveTransition: 'transform 0.2s ease-out'
+  moveTransition: 'transform 0.2s ease-out',
 });
 ```
 
@@ -99,7 +99,7 @@ should match the child elements which should receive a tippy.
 import {delegate} from 'tippy.js';
 
 delegate('#parent', {
-  target: '.child'
+  target: '.child',
 });
 ```
 
@@ -112,11 +112,11 @@ value depending on the type supplied, just like `tippy()`.
 
 ```js
 const delegateInstances = delegate('.parent', {
-  target: '.child'
+  target: '.child',
 }); // Instance[]
 
 const delegateInstance = delegate(parentElement, {
-  target: '.child'
+  target: '.child',
 }); // Instance
 ```
 
@@ -128,7 +128,7 @@ behavior, pass `false` as an argument:
 
 ```js
 const delegateInstance = delegate(parentElement, {
-  target: '.child'
+  target: '.child',
 });
 
 // Prevents further creation and destroys any created child tippy instances

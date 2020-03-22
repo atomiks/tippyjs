@@ -19,7 +19,7 @@ jest.useFakeTimers();
 // We want to use macrotask timers that can be mocked by Jest
 global.Promise = require('promise');
 
-global.requestAnimationFrame = cb => cb();
+global.requestAnimationFrame = (cb) => cb();
 
 // Prevents console from spamming test output while still allowing for debugging
 // while writing tests

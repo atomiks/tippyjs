@@ -29,7 +29,7 @@ Pass the animation name as the `animation` prop:
 
 ```js
 tippy('button', {
-  animation: 'scale'
+  animation: 'scale',
 });
 ```
 
@@ -61,7 +61,7 @@ To create your own animation:
 
 ```js
 tippy('button', {
-  animation: 'rotate'
+  animation: 'rotate',
 });
 ```
 
@@ -72,7 +72,7 @@ tippy, which is a limited CSS-only way to mimic spring physics.
 
 ```js
 tippy('button', {
-  inertia: true
+  inertia: true,
 });
 ```
 
@@ -98,7 +98,7 @@ import 'tippy.js/animations/shift-away.css';
 
 tippy(targets, {
   animateFill: true,
-  plugins: [animateFill]
+  plugins: [animateFill],
 });
 ```
 
@@ -120,7 +120,7 @@ tippy('button', {
     const box = instance.popper.firstElementChild;
     box.classList.remove('animated');
     box.classList.remove('wobble');
-  }
+  },
 });
 ```
 

@@ -48,7 +48,7 @@ export async function screenshotTest(page, name) {
     `,
   });
 
-  const rect = await page.evaluate(selector => {
+  const rect = await page.evaluate((selector) => {
     const element = document.querySelector(selector);
     const {x, y, width, height} = element.getBoundingClientRect();
     return {left: x, top: y, width, height, id: element.id};
@@ -66,5 +66,5 @@ export async function screenshotTest(page, name) {
 }
 
 export async function navigateToTest(page, name) {
-  return page.$eval(`button[data-id="${name}"]`, el => el.click());
+  return page.$eval(`button[data-id="${name}"]`, (el) => el.click());
 }

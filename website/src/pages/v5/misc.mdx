@@ -24,9 +24,9 @@ tippy(targets, {
         return {
           // ...
         };
-      }
+      },
     };
-  }
+  },
 });
 ```
 
@@ -68,7 +68,7 @@ const innerOrangeSpanElement = document.querySelector('span');
 const outerDivElement = document.querySelector('div');
 
 tippy(innerOrangeSpanElement, {
-  triggerTarget: outerDivElement
+  triggerTarget: outerDivElement,
 });
 ```
 
@@ -114,7 +114,7 @@ tippy(button, {
     if (isIOS) {
       button.click();
     }
-  }
+  },
 });
 ```
 
@@ -130,7 +130,7 @@ hybrid devices which can use a mix of mouse and touch input.
 function emulateIOS(listener) {
   let clicks = 0;
 
-  return function() {
+  return function () {
     clicks++;
 
     if (clicks === 2 || isIOS || !tippy.currentInput.isTouch) {
@@ -153,11 +153,11 @@ button.addEventListener('click', onClick);
 ```js
 // Will only show the tippy while the user is pressing the screen (not a tap)
 tippy(button, {
-  touch: 'hold'
+  touch: 'hold',
 });
 
 // Will only show the tippy on a "long press" hold
 tippy(button, {
-  touch: ['hold', 500] // 500ms delay
+  touch: ['hold', 500], // 500ms delay
 });
 ```

@@ -20,7 +20,7 @@ exports.createPages = ({graphql, actions}) => {
     'motivation',
   ];
 
-  paths.forEach(path => {
+  paths.forEach((path) => {
     createRedirect({
       fromPath: `/${path}/`,
       toPath: `/v5/${path}/`,

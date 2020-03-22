@@ -78,9 +78,9 @@ tippy(targets, {
     // - `onUpdate` callback whenever .setProps() or .setContent() is called
     return {
       popper,
-      onUpdate // optional
+      onUpdate, // optional
     };
-  }
+  },
 });
 ```
 
@@ -101,7 +101,7 @@ tippy(targets, {
 
     // Example: unmounting must be async (like a real animation)
     requestAnimationFrame(instance.unmount);
-  }
+  },
 });
 ```
 

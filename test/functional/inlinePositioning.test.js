@@ -12,7 +12,7 @@ describe('inlinePositioning', () => {
     await navigateToTest(page, 'inlinePositioning');
 
     expect(
-      await screenshotTest(page, 'inlinePositioning'),
+      await screenshotTest(page, 'inlinePositioning')
     ).toMatchImageSnapshot();
   });
 });

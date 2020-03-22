@@ -54,18 +54,20 @@ export function getChildren(popper: PopperElement): PopperChildren {
 
   return {
     box,
-    content: boxChildren.find(node => node.classList.contains(CONTENT_CLASS)),
+    content: boxChildren.find((node) => node.classList.contains(CONTENT_CLASS)),
     arrow: boxChildren.find(
-      node =>
+      (node) =>
         node.classList.contains(ARROW_CLASS) ||
-        node.classList.contains(SVG_ARROW_CLASS),
+        node.classList.contains(SVG_ARROW_CLASS)
     ),
-    backdrop: boxChildren.find(node => node.classList.contains(BACKDROP_CLASS)),
+    backdrop: boxChildren.find((node) =>
+      node.classList.contains(BACKDROP_CLASS)
+    ),
   };
 }
 
 export function render(
-  instance: Instance,
+  instance: Instance
 ): {
   popper: PopperElement;
   onUpdate?: (prevProps: Props, nextProps: Props) => void;

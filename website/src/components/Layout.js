@@ -80,7 +80,7 @@ class Heading extends React.Component {
 
     let href = []
       .concat(this.props.children)
-      .filter(child => typeof child === 'string')
+      .filter((child) => typeof child === 'string')
       .join(' ')
       .replace(/[^a-zA-Z0-9]/g, '-')
       .replace(/-+/g, '-')
@@ -132,7 +132,7 @@ const components = {
   Flex,
   Image,
   Icon,
-  a: props => {
+  a: (props) => {
     const extendedProps = {...props};
     const re = /^(\.\.)?[/#]/.test(props.href);
 
@@ -143,10 +143,10 @@ const components = {
 
     return <A {...extendedProps} />;
   },
-  h3: props => <Heading {...props} level={3} />,
-  h4: props => <Heading {...props} level={4} />,
-  h5: props => <Heading {...props} level={5} />,
-  h6: props => <Heading {...props} level={6} />,
+  h3: (props) => <Heading {...props} level={3} />,
+  h4: (props) => <Heading {...props} level={4} />,
+  h5: (props) => <Heading {...props} level={5} />,
+  h6: (props) => <Heading {...props} level={6} />,
   pre: class extends React.Component {
     ref = React.createRef();
 

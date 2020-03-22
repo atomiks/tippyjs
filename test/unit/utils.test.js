@@ -103,8 +103,8 @@ describe('isType', () => {
     expect(
       Utils.isType(
         document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-        'Element',
-      ),
+        'Element'
+      )
     ).toBe(true);
     expect(Utils.isType({}, 'Element')).toBe(false);
     expect(Utils.isType('button', 'Element')).toBe(false);

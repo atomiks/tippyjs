@@ -37,9 +37,9 @@ const Image = ({name}) => (
         }
       }
     `}
-    render={data => {
+    render={(data) => {
       const image = data.allImageSharp.edges.find(
-        edge => edge.node.fluid.originalName === name,
+        (edge) => edge.node.fluid.originalName === name
       );
 
       return image ? (

@@ -57,7 +57,7 @@ describe('aria', () => {
       jest.runAllTimers();
 
       expect(instance.reference.getAttribute('aria-describedby')).toBe(
-        `__NAMESPACE_PREFIX__-${instance.id}`,
+        `__NAMESPACE_PREFIX__-${instance.id}`
       );
     });
 
@@ -70,7 +70,7 @@ describe('aria', () => {
       jest.runAllTimers();
 
       expect(instance.reference.getAttribute('aria-labelledby')).toBe(
-        `__NAMESPACE_PREFIX__-${instance.id}`,
+        `__NAMESPACE_PREFIX__-${instance.id}`
       );
     });
 
@@ -303,7 +303,7 @@ describe('getReferenceClientRect', () => {
     jest.runAllTimers();
 
     expect(
-      instance.popperInstance.state.elements.reference.getBoundingClientRect,
+      instance.popperInstance.state.elements.reference.getBoundingClientRect
     ).toBe(getBoundingClientRect);
   });
 
@@ -314,7 +314,7 @@ describe('getReferenceClientRect', () => {
     jest.runAllTimers();
 
     expect(instance.popperInstance.state.elements.reference).toBe(
-      instance.reference,
+      instance.reference
     );
   });
 });
@@ -598,8 +598,8 @@ describe('interactive', () => {
             'keyboard navigation.',
             '\n\n',
             'See: https://atomiks.github.io/tippyjs/v6/accessibility/#interactivity',
-          ].join(' '),
-        ),
+          ].join(' ')
+        )
       );
 
       instance.reference.parentNode.removeChild(inbetweenNode);
@@ -667,8 +667,8 @@ describe('moveTransition', () => {
 
     expect(
       instance.popperInstance.state.options.modifiers.find(
-        modifier => modifier.name === 'computeStyles',
-      ).options.adaptive,
+        (modifier) => modifier.name === 'computeStyles'
+      ).options.adaptive
     ).toBe(false);
   });
 });
@@ -682,8 +682,8 @@ describe('offset', () => {
 
     expect(
       instance.popperInstance.state.options.modifiers.find(
-        modifier => modifier.name === 'offset',
-      ).options.offset,
+        (modifier) => modifier.name === 'offset'
+      ).options.offset
     ).toEqual([5, 20]);
   });
 });
@@ -876,7 +876,7 @@ describe('onTrigger', () => {
     expect(onTrigger).toHaveBeenCalledTimes(1);
     expect(onTrigger).toHaveBeenCalledWith(
       instance,
-      new MouseEvent('mouseenter'),
+      new MouseEvent('mouseenter')
     );
   });
 });
@@ -900,7 +900,7 @@ describe('onTrigger', () => {
     expect(onUntrigger).toHaveBeenCalledTimes(1);
     expect(onUntrigger).toHaveBeenCalledWith(
       instance,
-      new MouseEvent('mouseleave'),
+      new MouseEvent('mouseleave')
     );
   });
 });
@@ -1234,7 +1234,7 @@ describe('animation', () => {
     const instance = tippy(h(), {animation: 'anything'});
 
     expect(
-      getChildren(instance.popper).box.getAttribute('data-animation'),
+      getChildren(instance.popper).box.getAttribute('data-animation')
     ).toBe('anything');
   });
 });
@@ -1245,7 +1245,7 @@ describe('allowHTML', () => {
       const instance = tippy(h(), {content: '<b>hello</b>', allowHTML: true});
 
       expect(getChildren(instance.popper).content.querySelector('b')).not.toBe(
-        null,
+        null
       );
     });
   });
@@ -1255,7 +1255,7 @@ describe('allowHTML', () => {
       const instance = tippy(h(), {content: '<b>hello</b>', allowHTML: false});
 
       expect(getChildren(instance.popper).content.querySelector('b')).toBe(
-        null,
+        null
       );
     });
   });
@@ -1266,7 +1266,7 @@ describe('inertia', () => {
     const instance = tippy(h(), {inertia: true});
 
     expect(getChildren(instance.popper).box.hasAttribute('data-inertia')).toBe(
-      true,
+      true
     );
   });
 
@@ -1274,13 +1274,13 @@ describe('inertia', () => {
     const instance = tippy(h(), {inertia: false});
 
     expect(getChildren(instance.popper).box.hasAttribute('data-inertia')).toBe(
-      false,
+      false
     );
 
     instance.setProps({inertia: true});
 
     expect(getChildren(instance.popper).box.hasAttribute('data-inertia')).toBe(
-      true,
+      true
     );
   });
 });
@@ -1307,10 +1307,10 @@ describe('arrow', () => {
       const instance = tippy(h(), {arrow: '<svg></svg>'});
 
       expect(getChildren(instance.popper).arrow.className).toBe(
-        '__NAMESPACE_PREFIX__-svg-arrow',
+        '__NAMESPACE_PREFIX__-svg-arrow'
       );
       expect(getChildren(instance.popper).arrow.querySelector('svg')).not.toBe(
-        null,
+        null
       );
     });
   });
@@ -1321,10 +1321,10 @@ describe('arrow', () => {
     });
 
     expect(getChildren(instance.popper).arrow.className).toBe(
-      '__NAMESPACE_PREFIX__-svg-arrow',
+      '__NAMESPACE_PREFIX__-svg-arrow'
     );
     expect(getChildren(instance.popper).arrow.querySelector('svg')).not.toBe(
-      null,
+      null
     );
   });
 
@@ -1342,7 +1342,7 @@ describe('arrow', () => {
     instance.setProps({arrow: '<svg><path d="" /></svg>'});
 
     expect(getChildren(instance.popper).arrow.querySelector('path')).not.toBe(
-      undefined,
+      undefined
     );
   });
 });
@@ -1359,7 +1359,7 @@ describe('content', () => {
       const instance = tippy(h(), {content: '<b>hello</b>'});
 
       expect(getChildren(instance.popper).content.innerHTML).not.toBe(
-        '<b>hello</b>',
+        '<b>hello</b>'
       );
     });
   });
@@ -1370,7 +1370,7 @@ describe('content', () => {
       const instance = tippy(h(), {content});
 
       expect(getChildren(instance.popper).content.firstElementChild).toBe(
-        content,
+        content
       );
     });
   });
@@ -1460,7 +1460,7 @@ describe('theme', () => {
     const instance = tippy(h(), {theme: 'a bunch of themes'});
 
     expect(getChildren(instance.popper).box.getAttribute('data-theme')).toBe(
-      'a bunch of themes',
+      'a bunch of themes'
     );
   });
 
@@ -1468,7 +1468,7 @@ describe('theme', () => {
     const instance = tippy(h(), {theme: null});
 
     expect(getChildren(instance.popper).box.hasAttribute('data-theme')).toBe(
-      false,
+      false
     );
   });
 });

@@ -40,9 +40,9 @@ export function getArrayOfElements(value: Targets): Element[] {
 
 export function setTransitionDuration(
   els: (HTMLDivElement | null)[],
-  value: number,
+  value: number
 ): void {
-  els.forEach(el => {
+  els.forEach((el) => {
     if (el) {
       el.style.transitionDuration = `${value}ms`;
     }
@@ -51,9 +51,9 @@ export function setTransitionDuration(
 
 export function setVisibilityState(
   els: (HTMLDivElement | null)[],
-  state: 'visible' | 'hidden',
+  state: 'visible' | 'hidden'
 ): void {
-  els.forEach(el => {
+  els.forEach((el) => {
     if (el) {
       el.setAttribute('data-state', state);
     }
@@ -61,7 +61,7 @@ export function setVisibilityState(
 }
 
 export function getOwnerDocument(
-  elementOrElements: Element | Element[],
+  elementOrElements: Element | Element[]
 ): Document {
   const [element] = normalizeToArray(elementOrElements);
   return element ? element.ownerDocument || document : document;
@@ -69,7 +69,7 @@ export function getOwnerDocument(
 
 export function isCursorOutsideInteractiveBorder(
   popperTreeData: PopperTreeData[],
-  event: MouseEvent,
+  event: MouseEvent
 ): boolean {
   const {clientX, clientY} = event;
 
@@ -103,7 +103,7 @@ export function isCursorOutsideInteractiveBorder(
 export function updateTransitionEndListener(
   box: HTMLDivElement,
   action: 'add' | 'remove',
-  listener: (event: TransitionEvent) => void,
+  listener: (event: TransitionEvent) => void
 ): void {
   const method = `${action}EventListener` as
     | 'addEventListener'
@@ -111,7 +111,7 @@ export function updateTransitionEndListener(
 
   // some browsers apparently support `transition` (unprefixed) but only fire
   // `webkitTransitionEnd`...
-  ['transitionend', 'webkitTransitionEnd'].forEach(event => {
+  ['transitionend', 'webkitTransitionEnd'].forEach((event) => {
     box[method](event, listener as EventListener);
   });
 }
