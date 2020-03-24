@@ -4,7 +4,11 @@ export type BasePlacement = Popper.BasePlacement;
 
 export type Placement = Popper.Placement;
 
-export type Content = string | Element | ((ref: Element) => Element | string);
+export type Content =
+  | string
+  | Element
+  | DocumentFragment
+  | ((ref: Element) => Element | string);
 
 export type SingleTarget = Element;
 
@@ -44,7 +48,7 @@ export interface LifecycleHooks<TProps = Props> {
 export interface RenderProps {
   allowHTML: boolean;
   animation: string | boolean;
-  arrow: boolean | string | SVGElement;
+  arrow: boolean | string | SVGElement | DocumentFragment;
   content: Content;
   inertia: boolean;
   maxWidth: number | string;

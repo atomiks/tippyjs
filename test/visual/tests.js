@@ -40,12 +40,17 @@ window.state = {
 const tests = window.state.tests;
 
 tests.default = () => {
+  const content = document.createDocumentFragment();
+  const svgA = document.createElement('svg');
+  const svgB = document.createElement('svg');
+
+  content.appendChild(svgA);
+  content.appendChild(svgB);
+
   const [instance] = tippy('#default .reference', {
-    content: 'Tippy',
+    content: 'hello',
+    arrow: content,
     interactive: true,
-    aria: {
-      expanded: false,
-    },
     trigger: 'click',
   });
 

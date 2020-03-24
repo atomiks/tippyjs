@@ -146,6 +146,17 @@ describe('content', () => {
     });
   });
 
+  describe('DocumentFragment', () => {
+    it('is injected into the tippy node', () => {
+      const fragment = document.createDocumentFragment();
+      const node = h();
+      fragment.appendChild(node);
+      const instance = tippy(h(), {content: fragment});
+
+      expect(getChildren(instance.popper).content).toMatchSnapshot();
+    });
+  });
+
   describe('Function', () => {
     it('is injected into the tippy node', () => {
       const instance = tippy(h(), {content: () => 'string'});
@@ -1316,16 +1327,35 @@ describe('arrow', () => {
   });
 
   describe('Element', () => {
-    const instance = tippy(h(), {
-      arrow: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-    });
+    it('uses an svg', () => {
+      const instance = tippy(h(), {
+        arrow: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
+      });
 
-    expect(getChildren(instance.popper).arrow.className).toBe(
-      '__NAMESPACE_PREFIX__-svg-arrow'
-    );
-    expect(getChildren(instance.popper).arrow.querySelector('svg')).not.toBe(
-      null
-    );
+      expect(getChildren(instance.popper).arrow.className).toBe(
+        '__NAMESPACE_PREFIX__-svg-arrow'
+      );
+      expect(getChildren(instance.popper).arrow.querySelector('svg')).not.toBe(
+        null
+      );
+    });
+  });
+
+  describe('Fragment', () => {
+    it('uses an svg', () => {
+      const fragment = document.createDocumentFragment();
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+      fragment.appendChild(svg);
+
+      const instance = tippy(h(), {
+        arrow: fragment,
+      });
+
+      expect(getChildren(instance.popper).arrow.querySelector('svg')).not.toBe(
+        null
+      );
+    });
   });
 
   it('is updated correctly by .setProps()', () => {

@@ -6,8 +6,8 @@ export function div(): HTMLDivElement {
   return document.createElement('div');
 }
 
-export function isElement(value: unknown): value is Element {
-  return isType(value, 'Element');
+export function isElement(value: unknown): value is Element | DocumentFragment {
+  return ['Element', 'Fragment'].some((type) => isType(value, type));
 }
 
 export function isNodeList(value: unknown): value is NodeList {

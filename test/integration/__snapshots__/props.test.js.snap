@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`content DocumentFragment is injected into the tippy node 1`] = `
+<div
+  class="__NAMESPACE_PREFIX__-content"
+  data-state="hidden"
+>
+  <button
+    class="__tippy"
+  />
+</div>
+`;
+
 exports[`content Element is injected into the tippy node 1`] = `
 <div
   class="__NAMESPACE_PREFIX__-content"
