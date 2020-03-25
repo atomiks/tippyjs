@@ -87,7 +87,7 @@ export interface Props extends LifecycleHooks, RenderProps {
         reference: Popper.Rect;
       }) => [number, number]);
   placement: Placement;
-  plugins: Plugin[];
+  plugins: Plugin<unknown>[];
   popperOptions: Partial<Popper.Options>;
   render:
     | ((

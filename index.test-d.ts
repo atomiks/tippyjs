@@ -1,6 +1,9 @@
 import {expectType} from 'tsd';
 import tippy, {
   Instance,
+  Props,
+  Tippy,
+  LifecycleHooks,
   delegate,
   DelegateInstance,
   createSingleton,
@@ -11,7 +14,7 @@ import tippy, {
   sticky,
   hideAll,
   roundArrow,
-} from '.';
+} from './src/types';
 
 const singleTarget = document.createElement('div');
 const mulitpleTargets = document.querySelectorAll('div');
@@ -43,15 +46,34 @@ expectType<Instance>(
   })
 );
 
-const customPlugin: Plugin = {
+interface CustomProps {
+  custom: number;
+}
+
+type FilteredProps = CustomProps &
+  Omit<Props, keyof CustomProps | keyof LifecycleHooks>;
+
+type ExtendedProps = FilteredProps & LifecycleHooks<FilteredProps>;
+
+declare const tippyExtended: Tippy<ExtendedProps>;
+
+const customPlugin: Plugin<ExtendedProps> = {
   name: 'custom',
   defaultValue: 42,
   fn(instance) {
-    expectType<Instance>(instance);
+    expectType<Instance<ExtendedProps>>(instance);
+    expectType<number>(instance.props.custom);
+
     return {};
   },
 };
-expectType<Instance>(tippy(singleTarget, {plugins: [customPlugin]}));
+
+expectType<Instance<ExtendedProps>>(
+  tippyExtended(singleTarget, {
+    custom: 42,
+    plugins: [customPlugin],
+  })
+);
 
 expectType<void>(hideAll({duration: 50, exclude: tippy(singleTarget)}));
 
