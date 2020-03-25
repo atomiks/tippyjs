@@ -43,8 +43,8 @@
     "serve": "serve test/visual",
     "test:dom": "jest unit integration --coverage",
     "test:functional": "jest functional",
-    "test": "npm run test:dom && npm run test:functional",
-    "check-types": "tsc",
+    "test:types": "tsc && tsd",
+    "test": "npm run test:types && npm run test:dom && npm run test:functional",
     "lint": "eslint . --ext .ts,.js",
     "format": "prettier --write \"**/*.{js,ts,json,md,mdx,scss,css}\"",
     "clean": "rimraf dist/ themes/ animations/ coverage/ .devserver/ .cache/ ./index.d.ts",
@@ -133,6 +133,7 @@
     "rollup-plugin-terser": "^5.2.0",
     "sass": "^1.25.0",
     "serve": "^11.3.0",
+    "tsd": "^0.11.0",
     "typescript": "^3.7.5"
   },
   "dependencies": {

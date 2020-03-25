@@ -16,7 +16,7 @@ jobs:
 
     - stage: Code check
       name: Type checking
-      script: npm run check-types
+      script: npm run test:types
 
     - stage: Tests
       name: DOM tests

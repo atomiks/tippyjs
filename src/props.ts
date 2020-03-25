@@ -31,7 +31,6 @@ export const defaultProps: DefaultProps = {
     content: 'auto',
     expanded: 'auto',
   },
-  content: '',
   delay: 0,
   duration: [300, 250],
   getReferenceClientRect: null,
