@@ -580,7 +580,10 @@ export default function createTippy(
     const arrow = getIsDefaultRenderFn() ? getChildren(popper).arrow : null;
 
     const computedReference = getReferenceClientRect
-      ? {getBoundingClientRect: getReferenceClientRect}
+      ? {
+          getBoundingClientRect: getReferenceClientRect,
+          contextElement: getCurrentTarget(),
+        }
       : reference;
 
     const tippyModifier: Modifier<{}> = {
