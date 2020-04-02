@@ -1,4 +1,9 @@
-import {validateTargets, getFormattedMessage} from '../../src/validation';
+import {
+  validateTargets,
+  getFormattedMessage,
+  warnWhen,
+  errorWhen,
+} from '../../src/validation';
 
 describe('validateTargets', () => {
   it('recognizes a falsy target', () => {
@@ -17,5 +22,23 @@ describe('validateTargets', () => {
         )
       );
     });
+  });
+});
+
+describe('warnWhen', () => {
+  it('should only ever emit a warning of the same message once', () => {
+    warnWhen(true, 'warning');
+    warnWhen(true, 'warning');
+
+    expect(console.warn).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('errorWhen', () => {
+  it('should only ever emit an error of the same message once', () => {
+    errorWhen(true, 'error');
+    errorWhen(true, 'error');
+
+    expect(console.error).toHaveBeenCalledTimes(1);
   });
 });

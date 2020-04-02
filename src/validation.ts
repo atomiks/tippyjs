@@ -41,30 +41,30 @@ export function getFormattedMessage(message: string): string[] {
   ];
 }
 
-/**
- * Helpful wrapper around `console.warn()`.
- * TODO: Should we use a cache so it only warns a single time and not spam the
- * console? (Need to consider hot reloading and invalidation though). Chrome
- * already batches warnings as well.
- */
+// Assume warnings and errors never have the same message
+let visitedMessages: Set<string>;
+if (__DEV__) {
+  resetVisitedMessages();
+}
+
+export function resetVisitedMessages(): void {
+  visitedMessages = new Set();
+}
+
 export function warnWhen(condition: boolean, message: string): void {
-  if (condition) {
+  if (condition && !visitedMessages.has(message)) {
+    visitedMessages.add(message);
     console.warn(...getFormattedMessage(message));
   }
 }
 
-/**
- * Helpful wrapper around `console.error()`
- */
 export function errorWhen(condition: boolean, message: string): void {
-  if (condition) {
+  if (condition && !visitedMessages.has(message)) {
+    visitedMessages.add(message);
     console.error(...getFormattedMessage(message));
   }
 }
 
-/**
- * Validates the `targets` value passed to `tippy()`
- */
 export function validateTargets(targets: Targets): void {
   const didPassFalsyValue = !targets;
   const didPassPlainObject =

@@ -4,6 +4,7 @@ import tippy from '../src';
 import {render} from '../src/template';
 import {cleanDocumentBody} from './utils';
 import {toMatchImageSnapshot} from 'jest-image-snapshot';
+import {resetVisitedMessages} from '../src/validation';
 
 expect.extend({toMatchImageSnapshot});
 
@@ -32,6 +33,8 @@ global.console = {
 afterEach(() => {
   global.console.warn.mockReset();
   global.console.error.mockReset();
+
+  resetVisitedMessages();
 
   if (typeof document !== 'undefined') {
     cleanDocumentBody();
