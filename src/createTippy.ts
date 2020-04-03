@@ -464,17 +464,7 @@ export default function createTippy(
     ) {
       shouldScheduleClickHide = true;
     } else {
-      const [value, duration] = getNormalizedTouchSettings();
-
-      if (currentInput.isTouch && value === 'hold' && duration) {
-        // We can hijack the show timeout here, it will be cleared by
-        // `scheduleHide()` when necessary
-        showTimeout = setTimeout(() => {
-          scheduleShow(event);
-        }, duration);
-      } else {
-        scheduleShow(event);
-      }
+      scheduleShow(event);
     }
 
     if (event.type === 'click') {
@@ -740,7 +730,12 @@ export default function createTippy(
 
     addDocumentMouseDownListener();
 
-    const delay = getDelay(true);
+    let delay = getDelay(true);
+    const [touchValue, touchDelay] = getNormalizedTouchSettings();
+
+    if (currentInput.isTouch && touchValue === 'hold' && touchDelay) {
+      delay = touchDelay;
+    }
 
     if (delay) {
       showTimeout = setTimeout(() => {

@@ -6,6 +6,7 @@ import inlinePositioning from '../../src/plugins/inlinePositioning';
 import followCursor from '../../src/plugins/followCursor';
 import animateFill from '../../src/plugins/animateFill';
 import createSingleton from '../../src/addons/createSingleton';
+import delegate from '../../src/addons/delegate';
 
 import '../../src/scss/index.scss';
 import '../../src/scss/border.scss';
@@ -237,6 +238,21 @@ tests.createSingleton = () => {
     instances.forEach((instance) => instance.destroy());
     singleton.destroy();
   };
+};
+
+tests.delegate = () => {
+  const refs = Array.from(document.querySelectorAll('#delegate button'));
+
+  refs.forEach((ref) => {
+    ref.oncontextmenu = (e) => e.preventDefault();
+  });
+
+  const instance = delegate('#delegate', {
+    target: 'button',
+    touch: ['hold', 500],
+  });
+
+  return instance.destroy;
 };
 
 tests.animateFill = () => {

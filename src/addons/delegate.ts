@@ -36,7 +36,7 @@ function delegate(
   const {target} = props;
 
   const nativeProps = removeProperties(props, ['target']);
-  const parentProps = {...nativeProps, trigger: 'manual'};
+  const parentProps = {...nativeProps, trigger: 'manual', touch: false};
   const childProps = {...nativeProps, showOnCreate: true};
 
   const returnValue = tippy(targets, parentProps);
@@ -62,12 +62,18 @@ function delegate(
       props.trigger ||
       defaultProps.trigger;
 
-    // Only create the instance if the bubbling event matches the trigger type,
-    // or the node already has a tippy instance attached
+    // @ts-ignore
+    if (targetNode._tippy) {
+      return;
+    }
+
+    if (event.type === 'touchstart' && typeof childProps.touch === 'boolean') {
+      return;
+    }
+
     if (
-      trigger.indexOf((BUBBLING_EVENTS_MAP as any)[event.type]) < 0 ||
-      // @ts-ignore
-      targetNode._tippy
+      event.type !== 'touchstart' &&
+      trigger.indexOf((BUBBLING_EVENTS_MAP as any)[event.type])
     ) {
       return;
     }
@@ -92,6 +98,7 @@ function delegate(
   function addEventListeners(instance: Instance): void {
     const {reference} = instance;
 
+    on(reference, 'touchstart', onTrigger);
     on(reference, 'mouseover', onTrigger);
     on(reference, 'focusin', onTrigger);
     on(reference, 'click', onTrigger);
