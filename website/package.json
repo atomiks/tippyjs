@@ -32,9 +32,11 @@
     "gatsby-redirect-from": "^0.2.1",
     "gatsby-remark-autolink-headers": "^2.1.10",
     "gatsby-remark-prismjs": "^3.3.13",
+    "gatsby-remark-vscode": "^2.0.3",
     "gatsby-source-filesystem": "^2.1.22",
     "gatsby-transformer-remark": "^2.6.22",
     "gatsby-transformer-sharp": "^2.2.14",
+    "moonlight": "github:atomiks/moonlight-vscode-theme",
     "normalize.css": "^8.0.1",
     "prismjs": "^1.17.1",
     "prop-types": "^15.7.2",
@@ -58,7 +60,7 @@
     "format": "prettier --write \"src/**/*.js\"",
     "deploy": "gatsby build --prefix-paths && gh-pages -d public",
     "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\"",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package && cd node_modules/moonlight && node build"
   },
   "devDependencies": {
     "@mdx-js/loader": "^1.5.5",
