@@ -4,7 +4,6 @@ node_js:
 cache:
   directories:
     - node_modules
-    - website/.cache
     - website/node_modules
     - website/public
 
