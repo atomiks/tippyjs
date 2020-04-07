@@ -30,6 +30,26 @@ import 'tippy.js/animations/shift-toward.css';
 import 'tippy.js/animations/shift-toward-subtle.css';
 import 'tippy.js/animations/shift-toward-extreme.css';
 
+const hideOnPopperBlur = {
+  name: 'hideOnPopperBlur',
+  defaultValue: true,
+  fn(instance) {
+    return {
+      onCreate() {
+        instance.popper.addEventListener('focusout', (event) => {
+          if (
+            instance.props.hideOnPopperBlur &&
+            event.relatedTarget &&
+            !instance.popper.contains(event.relatedTarget)
+          ) {
+            instance.hide();
+          }
+        });
+      },
+    };
+  },
+};
+
 export default forwardRef(({...props}, ref) => {
   if (props.arrow === 'round') {
     props.arrow = roundArrow;
@@ -43,6 +63,7 @@ export default forwardRef(({...props}, ref) => {
         animateFill,
         inlinePositioning,
         sticky,
+        hideOnPopperBlur,
         ...(props.plugins || []),
       ]}
       {...props}
