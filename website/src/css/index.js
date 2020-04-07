@@ -62,6 +62,11 @@ const core = css`
     &:hover .link-icon {
       opacity: 1;
     }
+
+    .link-icon.focus-visible {
+      outline: 0;
+      box-shadow: 0 0 0 1px;
+    }
   }
 
   h1 {
@@ -287,7 +292,7 @@ const core = css`
 
   button,
   a {
-    &.focus-visible {
+    &.focus-visible:not(.link-icon) {
       outline: 0;
       box-shadow: 0 0 0 2px rgb(255, 255, 255), 0 0 0 5px rgb(150, 180, 255);
     }
