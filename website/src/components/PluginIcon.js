@@ -21,7 +21,7 @@ function RenderIcon({large}) {
           {
             name: 'flip',
             options: {
-              fallbackPlacements: ['top'],
+              fallbackPlacements: ['auto'],
             },
           },
         ],
