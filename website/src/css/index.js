@@ -57,6 +57,7 @@ const core = css`
     margin-top: 0;
     margin-bottom: 16px;
     color: #333;
+    word-break: break-word;
 
     &:hover .link-icon {
       opacity: 1;
@@ -107,10 +108,14 @@ const core = css`
   }
 
   h3 {
-    font-size: 32px;
+    font-size: 28px;
     margin-top: 60px;
     margin-bottom: 24px;
     padding-right: 30px;
+
+    ${MEDIA.sm} {
+      font-size: 32px;
+    }
 
     ${MEDIA.md} {
       font-size: 36px;
