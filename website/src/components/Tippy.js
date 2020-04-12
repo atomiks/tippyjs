@@ -50,6 +50,27 @@ const hideOnPopperBlur = {
   },
 };
 
+const hideOnEsc = {
+  name: 'hideOnEsc',
+  defaultValue: false,
+  fn({hide}) {
+    function onKeyDown(event) {
+      if (event.keyCode === 27) {
+        hide();
+      }
+    }
+
+    return {
+      onShow() {
+        document.addEventListener('keydown', onKeyDown);
+      },
+      onHide() {
+        document.removeEventListener('keydown', onKeyDown);
+      },
+    };
+  },
+};
+
 export default forwardRef(({...props}, ref) => {
   if (props.arrow === 'round') {
     props.arrow = roundArrow;
@@ -64,6 +85,7 @@ export default forwardRef(({...props}, ref) => {
         inlinePositioning,
         sticky,
         hideOnPopperBlur,
+        hideOnEsc,
         ...(props.plugins || []),
       ]}
       {...props}
