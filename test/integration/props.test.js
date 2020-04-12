@@ -1270,6 +1270,18 @@ describe('allowHTML', () => {
       );
     });
   });
+
+  it('should update even if content does not change', () => {
+    const instance = tippy(h(), {content: '<b>hello</b>', allowHTML: true});
+
+    expect(getChildren(instance.popper).content.querySelector('b')).not.toBe(
+      null
+    );
+
+    instance.setProps({allowHTML: false});
+
+    expect(getChildren(instance.popper).content.querySelector('b')).toBe(null);
+  });
 });
 
 describe('inertia', () => {

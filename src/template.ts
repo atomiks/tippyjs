@@ -122,7 +122,10 @@ export function render(
       box.removeAttribute('role');
     }
 
-    if (prevProps.content !== nextProps.content) {
+    if (
+      prevProps.content !== nextProps.content ||
+      prevProps.allowHTML !== nextProps.allowHTML
+    ) {
       setContent(content, instance.props);
     }
 
