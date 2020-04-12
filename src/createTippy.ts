@@ -313,7 +313,7 @@ export default function createTippy(
         return;
       }
     } else {
-      instance.props.onClickOutside(instance, event);
+      invokeHook('onClickOutside', [instance, event]);
     }
 
     if (instance.props.hideOnClick === true) {
