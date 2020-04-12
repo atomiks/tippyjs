@@ -64,6 +64,13 @@ const singleton = createSingleton(tippyInstances, {
 });
 ```
 
+#### Destroy
+
+When you call `singleton.destroy()`, the `tippyInstances` you passed as an
+argument will **not** be destroyed also. They are separate instances that can be
+reused again elsewhere. You should also destroy the tippy instances upon
+cleanup.
+
 ---
 
 ### Event delegation
