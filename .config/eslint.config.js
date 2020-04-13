@@ -28,4 +28,15 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
   },
+  ignorePatterns: [
+    'node_modules',
+    'build',
+    'animations',
+    'themes',
+    'test',
+    'headless',
+    'website',
+    'dist',
+    'coverage',
+  ],
 };
