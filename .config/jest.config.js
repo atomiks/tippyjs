@@ -6,6 +6,7 @@ process.env.JEST_PUPPETEER_CONFIG = require.resolve(
 module.exports = {
   preset: 'jest-puppeteer',
   testMatch: ['<rootDir>/test/**/*.test.js'],
+  testTimeout: 30000,
   globals: {
     __DEV__: true,
   },
