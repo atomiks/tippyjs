@@ -1,4 +1,4 @@
-import {createPopper, Modifier} from '@popperjs/core';
+import {createPopper, StrictModifiers, Modifier} from '@popperjs/core';
 import {currentInput} from './bindGlobalEventListeners';
 import {isIE, isIOS} from './browser';
 import {IOS_CLASS, PASSIVE} from './constants';
@@ -576,7 +576,7 @@ export default function createTippy(
         }
       : reference;
 
-    const tippyModifier: Modifier<{}> = {
+    const tippyModifier: Modifier<'$$tippy', {}> = {
       name: '$$tippy',
       enabled: true,
       phase: 'beforeWrite',
@@ -602,56 +602,60 @@ export default function createTippy(
       },
     };
 
-    const arrowModifier = {
-      name: 'arrow',
-      enabled: !!arrow,
-      options: {
-        element: arrow,
-        padding: 3,
-      },
-    };
-
-    const modifiers: Array<Partial<Modifier<any>>> = [
+    instance.popperInstance = createPopper<StrictModifiers>(
+      computedReference,
+      popper,
       {
-        name: 'offset',
-        options: {
-          offset,
-        },
-      },
-      {
-        name: 'preventOverflow',
-        options: {
-          padding: {
-            top: 2,
-            bottom: 2,
-            left: 5,
-            right: 5,
+        ...popperOptions,
+        placement,
+        onFirstUpdate,
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset,
+            },
           },
-        },
-      },
-      {
-        name: 'flip',
-        options: {
-          padding: 5,
-        },
-      },
-      {
-        name: 'computeStyles',
-        options: {
-          adaptive: !moveTransition,
-        },
-      },
-      ...(getIsDefaultRenderFn() ? [arrowModifier] : []),
-      ...(popperOptions?.modifiers || []),
-      tippyModifier,
-    ];
-
-    instance.popperInstance = createPopper(computedReference, popper, {
-      ...popperOptions,
-      placement,
-      onFirstUpdate,
-      modifiers,
-    });
+          {
+            name: 'preventOverflow',
+            options: {
+              padding: {
+                top: 2,
+                bottom: 2,
+                left: 5,
+                right: 5,
+              },
+            },
+          },
+          {
+            name: 'flip',
+            options: {
+              padding: 5,
+            },
+          },
+          {
+            name: 'computeStyles',
+            options: {
+              adaptive: !moveTransition,
+            },
+          },
+          ...(getIsDefaultRenderFn()
+            ? [
+                {
+                  name: 'arrow',
+                  enabled: !!arrow,
+                  options: {
+                    element: arrow,
+                    padding: 3,
+                  },
+                },
+              ]
+            : []),
+          ...(popperOptions?.modifiers || []),
+          tippyModifier,
+        ],
+      }
+    );
   }
 
   function destroyPopperInstance(): void {

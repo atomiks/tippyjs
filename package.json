@@ -151,6 +151,6 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "@popperjs/core": "^2.2.0"
+    "@popperjs/core": "^2.3.2"
   }
 }
