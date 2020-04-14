@@ -82,14 +82,12 @@ Object {
     },
     Object {
       "enabled": true,
-      "name": "arrow",
-      "options": Object {
-        "element": <div
-          class="__NAMESPACE_PREFIX__-arrow"
-          style="position: absolute; left: 0px; transform: translate(3px, 0px);"
-        />,
-        "padding": 3,
-      },
+      "fn": [Function],
+      "name": "$$tippy",
+      "phase": "beforeWrite",
+      "requires": Array [
+        "computeStyles",
+      ],
     },
     Object {
       "name": "flip",
@@ -110,13 +108,14 @@ Object {
       "name": "offset",
     },
     Object {
-      "enabled": true,
-      "fn": [Function],
-      "name": "$$tippy",
-      "phase": "beforeWrite",
-      "requires": Array [
-        "computeStyles",
-      ],
+      "name": "arrow",
+      "options": Object {
+        "element": <div
+          class="__NAMESPACE_PREFIX__-arrow"
+          style="position: absolute; left: 0px; transform: translate(3px, 0px);"
+        />,
+        "padding": 3,
+      },
     },
   ],
   "onFirstUpdate": [Function],

@@ -602,58 +602,62 @@ export default function createTippy(
       },
     };
 
-    instance.popperInstance = createPopper<StrictModifiers>(
+    type TippyModifier = Modifier<'$$tippy', {}>;
+    type ExtendedModifiers = StrictModifiers | Partial<TippyModifier>;
+
+    const modifiers: Array<ExtendedModifiers> = [
+      {
+        name: 'offset',
+        options: {
+          offset,
+        },
+      },
+      {
+        name: 'preventOverflow',
+        options: {
+          padding: {
+            top: 2,
+            bottom: 2,
+            left: 5,
+            right: 5,
+          },
+        },
+      },
+      {
+        name: 'flip',
+        options: {
+          padding: 5,
+        },
+      },
+      {
+        name: 'computeStyles',
+        options: {
+          adaptive: !moveTransition,
+        },
+      },
+      tippyModifier,
+    ];
+
+    modifiers.push(...(popperOptions?.modifiers || []));
+
+    if (getIsDefaultRenderFn() && arrow) {
+      modifiers.push({
+        name: 'arrow',
+        options: {
+          element: arrow,
+          padding: 3,
+        },
+      });
+    }
+
+    instance.popperInstance = createPopper<ExtendedModifiers>(
       computedReference,
       popper,
       {
         ...popperOptions,
         placement,
         onFirstUpdate,
-        modifiers: [
-          {
-            name: 'offset',
-            options: {
-              offset,
-            },
-          },
-          {
-            name: 'preventOverflow',
-            options: {
-              padding: {
-                top: 2,
-                bottom: 2,
-                left: 5,
-                right: 5,
-              },
-            },
-          },
-          {
-            name: 'flip',
-            options: {
-              padding: 5,
-            },
-          },
-          {
-            name: 'computeStyles',
-            options: {
-              adaptive: !moveTransition,
-            },
-          },
-          ...(getIsDefaultRenderFn()
-            ? [
-                {
-                  name: 'arrow',
-                  enabled: !!arrow,
-                  options: {
-                    element: arrow,
-                    padding: 3,
-                  },
-                },
-              ]
-            : []),
-          ...(popperOptions?.modifiers || []),
-          tippyModifier,
-        ],
+        modifiers,
       }
     );
   }
