@@ -1,0 +1,20 @@
+name: Functional Tests
+on: [push, pull_request]
+env:
+  CI: true
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+
+jobs:
+  functional-chromium:
+    name: Chromium Functional Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          args: install
+      - uses: mujo-code/puppeteer-headful@master
+      - uses: actions/checkout@v2
+        with:
+          args: npm run test:functional
+        env:
+          PUPPETEER_BROWSER: chromium
