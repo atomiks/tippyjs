@@ -1,0 +1,26 @@
+name: DOM Tests
+
+on: [push, pull_request]
+
+env:
+  CI: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          args: install
+      - name: Linting
+        uses: actions/checkout@v2
+        with:
+          args: npm run lint
+      - name: Types
+        uses: actions/checkout@v2
+        with:
+          args: npm run test:types
+      - name: DOM tests
+        uses: actions/checkout@v2
+        with:
+          args: npm run test:dom
