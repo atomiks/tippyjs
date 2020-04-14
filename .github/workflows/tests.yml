@@ -1,0 +1,36 @@
+name: Tests
+on: [push, pull_request]
+env:
+  CI: true
+
+jobs:
+  checks:
+    name: Code check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: CultureHQ/actions-yarn@master
+        with:
+          args: install
+      - name: Lint
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: lint
+      - name: Types
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: test:types
+
+  dom-tests:
+    name: DOM tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: mujo-code/puppeteer-headful@master
+      - uses: CultureHQ/actions-yarn@master
+        with:
+          args: install
+      - name: Jest unit and integration tests
+        uses: mujo-code/puppeteer-headful@master
+        with:
+          args: yarn test:dom
