@@ -82,10 +82,10 @@ export function isCursorOutsideInteractiveBorder(
       return true;
     }
 
-    const topDistance = basePlacement === 'bottom' ? offsetData.top.y : 0;
-    const bottomDistance = basePlacement === 'top' ? offsetData.bottom.y : 0;
-    const leftDistance = basePlacement === 'right' ? offsetData.left.x : 0;
-    const rightDistance = basePlacement === 'left' ? offsetData.right.x : 0;
+    const topDistance = basePlacement === 'bottom' ? offsetData.top!.y : 0;
+    const bottomDistance = basePlacement === 'top' ? offsetData.bottom!.y : 0;
+    const leftDistance = basePlacement === 'right' ? offsetData.left!.x : 0;
+    const rightDistance = basePlacement === 'left' ? offsetData.right!.x : 0;
 
     const exceedsTop =
       popperRect.top - clientY + topDistance > interactiveBorder;

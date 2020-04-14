@@ -16,7 +16,7 @@ const inlinePositioning: InlinePositioning = {
 
     let placement: Placement;
 
-    const modifier: Modifier<{}> = {
+    const modifier: Modifier<'tippyInlinePositioning', {}> = {
       name: 'tippyInlinePositioning',
       enabled: true,
       phase: 'afterWrite',
