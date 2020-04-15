@@ -8,7 +8,7 @@ describe('border', () => {
     const page = await browser.newPage();
     await page.setViewport({width: 1200, height: 800});
 
-    await page.goto('http://localhost:5000');
+    await page.goto('http://host.docker.internal:5000');
     await navigateToTest(page, 'border');
 
     expect(await screenshotTest(page, 'border')).toMatchImageSnapshot();
