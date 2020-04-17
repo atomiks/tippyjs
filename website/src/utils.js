@@ -16,6 +16,21 @@ function shouldShowLink(path, currentPath) {
   return currentPath.includes(version);
 }
 
+export function uniqueBy(arr, fn) {
+  const identifiers = new Set();
+
+  return arr.filter((item) => {
+    const identifier = fn(item);
+
+    if (!identifiers.has(identifier)) {
+      identifiers.add(identifier);
+      return true;
+    }
+
+    return false;
+  });
+}
+
 export function sortActivePages(edges, location) {
   return [...edges]
     .sort((a, b) => a.node.frontmatter.index - b.node.frontmatter.index)
