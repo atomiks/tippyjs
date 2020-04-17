@@ -4,4 +4,3 @@ export const isBrowser =
 const ua = isBrowser ? navigator.userAgent : '';
 
 export const isIE = /MSIE |Trident\//.test(ua);
-export const isIOS = isBrowser && /iPhone|iPad|iPod/.test(navigator.platform);

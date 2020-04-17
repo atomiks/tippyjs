@@ -1,7 +1,7 @@
 import {createPopper, StrictModifiers, Modifier} from '@popperjs/core';
 import {currentInput} from './bindGlobalEventListeners';
-import {isIE, isIOS} from './browser';
-import {IOS_CLASS, PASSIVE} from './constants';
+import {isIE} from './browser';
+import {PASSIVE} from './constants';
 import {
   div,
   getOwnerDocument,
@@ -213,11 +213,6 @@ export default function createTippy(
     popper.style.zIndex = `${instance.props.zIndex}`;
   }
 
-  function updateIOSClass(isAdd: boolean): void {
-    const shouldAdd = isAdd && isIOS && currentInput.isTouch;
-    doc.body.classList[shouldAdd ? 'add' : 'remove'](IOS_CLASS);
-  }
-
   function invokeHook(
     hook: keyof LifecycleHooks,
     args: [Instance, any?],
@@ -291,7 +286,11 @@ export default function createTippy(
     );
   }
 
-  function onDocumentMouseDown(event: MouseEvent): void {
+  function onDocumentPress(event: MouseEvent | TouchEvent): void {
+    if (event.type === 'mousedown' && currentInput.isTouch) {
+      return;
+    }
+
     // Clicked on interactive popper
     if (
       instance.props.interactive &&
@@ -333,17 +332,19 @@ export default function createTippy(
       // before it shows, and hide()'s early bail-out behavior can prevent it
       // from being cleaned up
       if (!instance.state.isMounted) {
-        removeDocumentMouseDownListener();
+        removeDocumentPress();
       }
     }
   }
 
-  function addDocumentMouseDownListener(): void {
-    doc.addEventListener('mousedown', onDocumentMouseDown, true);
+  function addDocumentPress(): void {
+    doc.addEventListener('mousedown', onDocumentPress, true);
+    doc.addEventListener('touchend', onDocumentPress, true);
   }
 
-  function removeDocumentMouseDownListener(): void {
-    doc.removeEventListener('mousedown', onDocumentMouseDown, true);
+  function removeDocumentPress(): void {
+    doc.removeEventListener('mousedown', onDocumentPress, true);
+    doc.removeEventListener('touchend', onDocumentPress, true);
   }
 
   function onTransitionedOut(duration: number, callback: () => void): void {
@@ -737,7 +738,7 @@ export default function createTippy(
       invokeHook('onTrigger', [instance, event]);
     }
 
-    addDocumentMouseDownListener();
+    addDocumentPress();
 
     let delay = getDelay(true);
     const [touchValue, touchDelay] = getNormalizedTouchSettings();
@@ -761,7 +762,7 @@ export default function createTippy(
     invokeHook('onUntrigger', [instance, event]);
 
     if (!instance.state.isVisible) {
-      removeDocumentMouseDownListener();
+      removeDocumentPress();
 
       return;
     }
@@ -932,7 +933,7 @@ export default function createTippy(
     }
 
     handleStyles();
-    addDocumentMouseDownListener();
+    addDocumentPress();
 
     if (!instance.state.isMounted) {
       popper.style.transition = 'none';
@@ -967,8 +968,6 @@ export default function createTippy(
       handleAriaExpandedAttribute();
 
       pushIfUnique(mountedInstances, instance);
-
-      updateIOSClass(true);
 
       instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
@@ -1018,7 +1017,7 @@ export default function createTippy(
     }
 
     cleanupInteractiveMouseListeners();
-    removeDocumentMouseDownListener();
+    removeDocumentPress();
     handleStyles();
 
     if (getIsDefaultRenderFn()) {
@@ -1065,10 +1064,6 @@ export default function createTippy(
     }
 
     mountedInstances = mountedInstances.filter((i) => i !== instance);
-
-    if (mountedInstances.length === 0) {
-      updateIOSClass(false);
-    }
 
     instance.state.isMounted = false;
     invokeHook('onHidden', [instance]);
