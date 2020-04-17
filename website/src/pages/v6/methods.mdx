@@ -25,6 +25,19 @@ Programmatically hide the tippy at any time:
 instance.hide();
 ```
 
+#### hideWithInteractivity
+
+> Available from `v6.2.0`
+
+Will hide the tippy only if the cursor is outside of the tippy's interactive
+region. This allows you to programmatically hook into `interactive` behavior
+upon a `mouseleave` event if implementing custom event listeners.
+
+```js
+// Required: pass the mouse event object in from your event listener
+instance.hideWithInteractivity(mouseEvent);
+```
+
 #### disable
 
 Temporarily prevent a tippy from showing or hiding:
@@ -72,6 +85,15 @@ instance.unmount();
 This allows you to integrate spring animation libraries as an alternative to
 CSS. For instance, you'd call this in their `onComplete()` (or equivalent)
 callback.
+
+#### clearDelayTimeouts
+
+Clears the instance's `delay` timeouts. There will likely be only very rare use
+cases for this.
+
+```js
+instance.clearDelayTimeouts();
+```
 
 #### destroy
 
