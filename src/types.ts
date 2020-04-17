@@ -57,6 +57,11 @@ export interface RenderProps {
   zIndex: number;
 }
 
+export interface GetReferenceClientRect {
+  (): ClientRect | DOMRect;
+  contextElement?: Element;
+}
+
 export interface Props extends LifecycleHooks, RenderProps {
   animateFill: boolean;
   appendTo: 'parent' | Element | ((ref: Element) => Element);
@@ -67,7 +72,7 @@ export interface Props extends LifecycleHooks, RenderProps {
   delay: number | [number | null, number | null];
   duration: number | [number | null, number | null];
   followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
-  getReferenceClientRect: null | (() => ClientRect);
+  getReferenceClientRect: null | GetReferenceClientRect;
   hideOnClick: boolean | 'toggle';
   ignoreAttributes: boolean;
   inlinePositioning: boolean;

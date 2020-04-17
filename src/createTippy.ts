@@ -572,7 +572,8 @@ export default function createTippy(
     const computedReference = getReferenceClientRect
       ? {
           getBoundingClientRect: getReferenceClientRect,
-          contextElement: getCurrentTarget(),
+          contextElement:
+            getReferenceClientRect.contextElement || getCurrentTarget(),
         }
       : reference;
 
