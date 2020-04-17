@@ -101,6 +101,7 @@ export default function createTippy(
     setContent,
     show,
     hide,
+    hideInteractive,
     enable,
     disable,
     unmount,
@@ -522,11 +523,7 @@ export default function createTippy(
     }
 
     if (instance.props.interactive) {
-      doc.body.addEventListener('mouseleave', scheduleHide);
-      doc.addEventListener('mousemove', debouncedOnMouseMove);
-      pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
-      debouncedOnMouseMove(event);
-
+      instance.hideInteractive(event);
       return;
     }
 
@@ -1041,6 +1038,13 @@ export default function createTippy(
     } else {
       instance.unmount();
     }
+  }
+
+  function hideInteractive(event: MouseEvent): void {
+    doc.body.addEventListener('mouseleave', scheduleHide);
+    doc.addEventListener('mousemove', debouncedOnMouseMove);
+    pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
+    debouncedOnMouseMove(event);
   }
 
   function unmount(): void {

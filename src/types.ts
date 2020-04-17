@@ -120,6 +120,7 @@ export interface Instance<TProps = Props> {
   disable(): void;
   enable(): void;
   hide(): void;
+  hideInteractive(event: MouseEvent): void;
   id: number;
   plugins: Plugin<TProps>[];
   popper: PopperElement<TProps>;
