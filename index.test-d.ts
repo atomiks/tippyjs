@@ -14,6 +14,7 @@ import tippy, {
   sticky,
   hideAll,
   roundArrow,
+  CreateSingletonInstance,
 } from './src/types';
 
 const singleTarget = document.createElement('div');
@@ -36,9 +37,13 @@ expectType<DelegateInstance[]>(
 );
 
 const tippyInstances = [tippy(singleTarget), tippy(singleTarget)];
-expectType<Instance>(createSingleton(tippyInstances));
-expectType<Instance>(createSingleton(tippyInstances, {content: 'hello'}));
-expectType<Instance>(createSingleton(tippyInstances, {overrides: ['content']}));
+expectType<CreateSingletonInstance>(createSingleton(tippyInstances));
+expectType<CreateSingletonInstance>(
+  createSingleton(tippyInstances, {content: 'hello'})
+);
+expectType<CreateSingletonInstance>(
+  createSingleton(tippyInstances, {overrides: ['content']})
+);
 
 expectType<Instance>(
   tippy(singleTarget, {

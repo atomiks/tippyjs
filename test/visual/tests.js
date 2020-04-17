@@ -225,14 +225,30 @@ tests.animations = () => {
 };
 
 tests.createSingleton = () => {
-  const instances = tippy('#createSingleton .reference', {
+  const wrapper = document.querySelector('#createSingleton .wrapper');
+  const newReference = document.createElement('button');
+
+  newReference.textContent = 'Reference';
+  wrapper.append(newReference);
+
+  let instances = tippy('#createSingleton .reference', {
     placement: 'bottom',
     duration: 0,
   });
+
   const singleton = createSingleton(instances, {
     delay: 500,
     overrides: ['placement', 'duration'],
   });
+
+  instances = instances.concat(
+    tippy(newReference, {
+      content: 'hello',
+    })
+  );
+
+  singleton.setInstances(instances);
+  singleton.setProps({overrides: ['duration']});
 
   return () => {
     instances.forEach((instance) => instance.destroy());
