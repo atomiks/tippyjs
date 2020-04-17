@@ -58,7 +58,7 @@ export default function createTippy(
   let isVisibleFromClick = false;
   let didHideDueToDocumentMouseDown = false;
   let ignoreOnFirstUpdate = false;
-  let lastTriggerEvent: Event;
+  let lastTriggerEvent: Event | undefined;
   let currentTransitionEndListener: (event: TransitionEvent) => void;
   let onFirstUpdate: () => void;
   let listeners: ListenerObject[] = [];
@@ -442,6 +442,8 @@ export default function createTippy(
       return;
     }
 
+    const wasFocused = lastTriggerEvent?.type === 'focus';
+
     lastTriggerEvent = event;
     currentTarget = event.currentTarget as Element;
 
@@ -472,7 +474,7 @@ export default function createTippy(
       isVisibleFromClick = !shouldScheduleClickHide;
     }
 
-    if (shouldScheduleClickHide) {
+    if (shouldScheduleClickHide && !wasFocused) {
       scheduleHide(event);
     }
   }

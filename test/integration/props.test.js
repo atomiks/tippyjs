@@ -1179,6 +1179,22 @@ describe('trigger', () => {
       expect(instance.state.isVisible).toBe(false);
     });
   });
+
+  describe('click focus', () => {
+    it('does not hide immediately and can be toggled', () => {
+      const instance = tippy(h(), {trigger: 'click focus'});
+
+      fireEvent.focus(instance.reference);
+
+      fireEvent.click(instance.reference);
+
+      expect(instance.state.isVisible).toBe(true);
+
+      fireEvent.click(instance.reference);
+
+      expect(instance.state.isVisible).toBe(false);
+    });
+  });
 });
 
 describe('triggerTarget', () => {
