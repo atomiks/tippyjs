@@ -17,6 +17,17 @@ import tippy, {
   CreateSingletonInstance,
 } from './src/types';
 
+interface CustomProps {
+  custom: number;
+}
+
+type FilteredProps = CustomProps &
+  Omit<Props, keyof CustomProps | keyof LifecycleHooks>;
+
+type ExtendedProps = FilteredProps & LifecycleHooks<FilteredProps>;
+
+declare const tippyExtended: Tippy<ExtendedProps>;
+
 const singleTarget = document.createElement('div');
 const mulitpleTargets = document.querySelectorAll('div');
 
@@ -37,6 +48,8 @@ expectType<DelegateInstance[]>(
 );
 
 const tippyInstances = [tippy(singleTarget), tippy(singleTarget)];
+const singleton = createSingleton(tippyInstances);
+
 expectType<CreateSingletonInstance>(createSingleton(tippyInstances));
 expectType<CreateSingletonInstance>(
   createSingleton(tippyInstances, {content: 'hello'})
@@ -44,23 +57,18 @@ expectType<CreateSingletonInstance>(
 expectType<CreateSingletonInstance>(
   createSingleton(tippyInstances, {overrides: ['content']})
 );
+expectType<(instances: Instance<any>[]) => void>(singleton.setInstances);
+
+// TODO: I want to assert that these *don't* error, but `tsd` does not provide
+// such a function(?)
+createSingleton(tippyExtended('button'));
+singleton.setInstances(tippyExtended('button'));
 
 expectType<Instance>(
   tippy(singleTarget, {
     plugins: [animateFill, followCursor, inlinePositioning, sticky],
   })
 );
-
-interface CustomProps {
-  custom: number;
-}
-
-type FilteredProps = CustomProps &
-  Omit<Props, keyof CustomProps | keyof LifecycleHooks>;
-
-type ExtendedProps = FilteredProps & LifecycleHooks<FilteredProps>;
-
-declare const tippyExtended: Tippy<ExtendedProps>;
 
 const customPlugin: Plugin<ExtendedProps> = {
   name: 'custom',

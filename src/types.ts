@@ -185,11 +185,11 @@ export type CreateSingletonProps<TProps = Props> = TProps & {
 export type CreateSingletonInstance<TProps = CreateSingletonProps> = Instance<
   TProps
 > & {
-  setInstances(instances: Instance<TProps>[]): void;
+  setInstances(instances: Instance<any>[]): void;
 };
 
 export type CreateSingleton<TProps = Props> = (
-  tippyInstances: Instance<TProps | Props>[],
+  tippyInstances: Instance<any>[],
   optionalProps?: Partial<CreateSingletonProps<TProps>>
 ) => CreateSingletonInstance<CreateSingletonProps<TProps>>;
 
