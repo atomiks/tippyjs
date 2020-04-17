@@ -101,7 +101,7 @@ export default function createTippy(
     setContent,
     show,
     hide,
-    hideInteractive,
+    hideWithInteractivity,
     enable,
     disable,
     unmount,
@@ -523,7 +523,7 @@ export default function createTippy(
     }
 
     if (instance.props.interactive) {
-      instance.hideInteractive(event);
+      instance.hideWithInteractivity(event);
       return;
     }
 
@@ -1040,14 +1040,29 @@ export default function createTippy(
     }
   }
 
-  function hideInteractive(event: MouseEvent): void {
-    doc.body.addEventListener('mouseleave', scheduleHide);
-    doc.addEventListener('mousemove', debouncedOnMouseMove);
-    pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
-    debouncedOnMouseMove(event);
+  function hideWithInteractivity(event: MouseEvent): void {
+    /* istanbul ignore else */
+    if (__DEV__) {
+      warnWhen(
+        instance.state.isDestroyed,
+        createMemoryLeakWarning('hideWithInteractivity')
+      );
+    }
+
+    if (instance.state.isVisible) {
+      doc.body.addEventListener('mouseleave', scheduleHide);
+      doc.addEventListener('mousemove', debouncedOnMouseMove);
+      pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
+      debouncedOnMouseMove(event);
+    }
   }
 
   function unmount(): void {
+    /* istanbul ignore else */
+    if (__DEV__) {
+      warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('unmount'));
+    }
+
     if (instance.state.isVisible) {
       instance.hide();
     }

@@ -7,7 +7,7 @@ Object {
   "disable": [Function],
   "enable": [Function],
   "hide": [Function],
-  "hideInteractive": [Function],
+  "hideWithInteractivity": [Function],
   "id": 1,
   "plugins": Array [],
   "popper": <div
