@@ -20,17 +20,16 @@ In your application, import the `tippy` module, and the core CSS:
 
 ```js
 import tippy from 'tippy.js';
-import 'tippy.js/dist/tippy.css';
+import 'tippy.js/dist/tippy.css'; // optional for styling
 ```
 
 This assumes you're using a module bundler like webpack, Rollup, or Parcel. If
 you're getting an error message about `process` inside the browser,
 [see the FAQ for help.](../faq/#im-getting-uncaught-referenceerror-process-is-not-defined)
 
-The core CSS is not required, but provides a base styling for you to use, and
-enables "click outside" behavior on iOS. If you'd like to use Tippy "headless"
-without any of the default element rendering or CSS, use
-[Headless Tippy](../headless-tippy/).
+The core CSS is not required, but provides a base styling for you to use. If
+you'd like to use Tippy "headless" without any of the default element rendering
+or CSS, use [Headless Tippy](../headless-tippy/).
 
 ### 2. CDN
 
