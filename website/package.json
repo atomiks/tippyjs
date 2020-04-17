@@ -52,11 +52,11 @@
   "scripts": {
     "build": "gatsby build",
     "build:ci": "gatsby build --prefix-paths",
-    "develop": "gatsby develop",
-    "start": "npm run develop",
-    "dev": "npm start",
+    "start": "gatsby develop",
+    "clean": "rimraf .cache/",
+    "dev": "yarn clean && yarn start",
     "format": "prettier --write \"src/**/*.js\"",
-    "deploy": "gatsby build --prefix-paths && gh-pages -d public",
+    "deploy": "yarn clean && gatsby build --prefix-paths && gh-pages -d public",
     "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\"",
     "postinstall": "cd node_modules/moonlight && node build"
   },
@@ -65,7 +65,8 @@
     "eslint-config-react-app": "^5.0.2",
     "gh-pages": "^2.1.1",
     "loader-utils": "^1.2.3",
-    "prettier": "github:prettier/prettier"
+    "prettier": "github:prettier/prettier",
+    "rimraf": "^3.0.2"
   },
   "repository": {
     "type": "git",
