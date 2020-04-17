@@ -5,7 +5,7 @@ import {css} from '@emotion/core';
 import {ChevronDown} from 'react-feather';
 import {Location} from '@reach/router';
 import {MEDIA, Link, Button} from './Framework';
-import {sortActivePages, getVersionFromPath, uniqueBy} from '../utils';
+import {sortActivePages, getVersionFromPath} from '../utils';
 import X from 'react-feather/dist/icons/x';
 import ElasticScroll from './ElasticScroll';
 import Tippy from './Tippy';
@@ -244,14 +244,7 @@ class Nav extends Component {
                 <StaticQuery
                   query={allMdxQuery}
                   render={(data) => {
-                    // HACK: gatsby-mdx has a bug(?) where duplicate nodes are
-                    // being added...
-                    const uniqueEdges = uniqueBy(
-                      data.allMdx.edges,
-                      ({node}) => node.frontmatter.path
-                    );
-
-                    return sortActivePages(uniqueEdges, location).map(
+                    return sortActivePages(data.allMdx.edges, location).map(
                       ({node}) => (
                         <ListItem key={node.frontmatter.path}>
                           <Link to={node.frontmatter.path}>
