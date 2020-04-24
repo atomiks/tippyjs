@@ -9,28 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: CultureHQ/actions-yarn@master
-        with:
-          args: install
-      - name: Lint
-        uses: CultureHQ/actions-yarn@master
-        with:
-          args: lint
-      - name: Types
-        uses: CultureHQ/actions-yarn@master
-        with:
-          args: test:types
+      - uses: actions/setup-node@v1
+      - run: npm install
+      - run: npm run lint
+      - run: npm run test:types
 
   dom-tests:
     name: DOM tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
       - uses: mujo-code/puppeteer-headful@master
-      - uses: CultureHQ/actions-yarn@master
-        with:
-          args: install
-      - name: Jest unit and integration tests
-        uses: mujo-code/puppeteer-headful@master
-        with:
-          args: yarn test:dom
+      - run: npm install
+      - run: npm run test:dom
