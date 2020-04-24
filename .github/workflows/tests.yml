@@ -6,7 +6,7 @@ env:
 
 jobs:
   checks:
-    name: Linting and Typechecking
+    name: Linting and Type checking
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,7 +16,7 @@ jobs:
       - run: npm run test:types
 
   dom-tests:
-    name: Unit / Integration
+    name: Unit and Integration
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,7 +26,7 @@ jobs:
       - run: npm run test:dom
 
   functional-tests:
-    name: Chromium
+    name: Chromium Functional
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
