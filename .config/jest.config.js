@@ -3,17 +3,20 @@ process.env.JEST_PUPPETEER_CONFIG = require.resolve(
   './jest-puppeteer.config.js'
 );
 
+const jestPuppeteerDocker = require('jest-puppeteer-docker/jest-preset');
+
 module.exports = {
-  preset: 'jest-puppeteer',
   testMatch: ['<rootDir>/test/**/*.test.js'],
   testTimeout: 30000,
   globals: {
     __DEV__: true,
   },
-  globalSetup: 'jest-environment-puppeteer/setup',
-  globalTeardown: 'jest-environment-puppeteer/teardown',
-  testEnvironment: 'jest-environment-jsdom-fourteen',
-  setupFilesAfterEnv: [require.resolve('../test/setup.js')],
   setupFiles: ['dotenv/config'],
   reporters: ['default', require.resolve('../test/image-reporter.js')],
+  ...jestPuppeteerDocker,
+  testEnvironment: 'jest-environment-jsdom-fourteen',
+  setupFilesAfterEnv: [
+    require.resolve('../test/setup.js'),
+    ...jestPuppeteerDocker.setupFilesAfterEnv,
+  ],
 };

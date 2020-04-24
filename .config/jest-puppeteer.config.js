@@ -1,14 +1,19 @@
 require('dotenv').config();
 
+const getConfig = require('jest-puppeteer-docker/lib/config');
+const baseConfig = getConfig();
+
 module.exports = {
   browser: 'chromium',
   launch: {
-    dumpio: true,
+    dumpio: false,
     headless: process.env.HEADLESS !== 'false',
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   },
   server: {
-    command: 'npm run build:visual && npm run serve',
+    command: 'yarn build:visual && yarn serve',
     port: 5000,
     launchTimeout: 20000,
   },
+  ...baseConfig,
 };
