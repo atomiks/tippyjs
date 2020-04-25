@@ -1,4 +1,5 @@
 import {Modifier, Placement} from '@popperjs/core';
+import {isMouseEvent} from '../dom-utils';
 import {BasePlacement, InlinePositioning} from '../types';
 import {arrayFrom, getBasePlacement} from '../utils';
 
@@ -15,6 +16,7 @@ const inlinePositioning: InlinePositioning = {
     }
 
     let placement: Placement;
+    let cursorRectIndex: number | null = null;
 
     const modifier: Modifier<'tippyInlinePositioning', {}> = {
       name: 'tippyInlinePositioning',
@@ -38,7 +40,8 @@ const inlinePositioning: InlinePositioning = {
       return getInlineBoundingClientRect(
         getBasePlacement(placement),
         reference.getBoundingClientRect(),
-        arrayFrom(reference.getClientRects())
+        arrayFrom(reference.getClientRects()),
+        cursorRectIndex
       );
     }
 
@@ -54,6 +57,23 @@ const inlinePositioning: InlinePositioning = {
           },
         });
       },
+      onTrigger(_, event): void {
+        if (isMouseEvent(event)) {
+          const rects = arrayFrom(instance.reference.getClientRects());
+          const cursorRect = rects.find(
+            (rect) =>
+              rect.left - 1 <= event.clientX &&
+              rect.right + 1 >= event.clientX &&
+              rect.top - 1 <= event.clientY &&
+              rect.bottom + 1 >= event.clientY
+          );
+
+          cursorRectIndex = rects.indexOf(cursorRect);
+        }
+      },
+      onUntrigger(): void {
+        cursorRectIndex = null;
+      },
     };
   },
 };
@@ -63,11 +83,21 @@ export default inlinePositioning;
 export function getInlineBoundingClientRect(
   currentBasePlacement: BasePlacement | null,
   boundingRect: ClientRect,
-  clientRects: ClientRect[]
+  clientRects: ClientRect[],
+  cursorRectIndex: number | null
 ): ClientRect {
   // Not an inline element, or placement is not yet known
   if (clientRects.length < 2 || currentBasePlacement === null) {
     return boundingRect;
+  }
+
+  // There are two rects and they are disjoined
+  if (
+    clientRects.length === 2 &&
+    cursorRectIndex &&
+    clientRects[0].left > clientRects[1].right
+  ) {
+    return clientRects[cursorRectIndex] || boundingRect;
   }
 
   switch (currentBasePlacement) {
