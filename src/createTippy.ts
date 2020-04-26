@@ -639,8 +639,6 @@ export default function createTippy(
       tippyModifier,
     ];
 
-    modifiers.push(...(popperOptions?.modifiers || []));
-
     if (getIsDefaultRenderFn() && arrow) {
       modifiers.push({
         name: 'arrow',
@@ -650,6 +648,8 @@ export default function createTippy(
         },
       });
     }
+
+    modifiers.push(...(popperOptions?.modifiers || []));
 
     instance.popperInstance = createPopper<ExtendedModifiers>(
       computedReference,

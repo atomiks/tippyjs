@@ -971,6 +971,12 @@ describe('popperOptions', () => {
             name: 'offset',
             enabled: false,
           },
+          {
+            name: 'arrow',
+            options: {
+              padding: 999,
+            },
+          },
         ],
       },
     });
@@ -978,7 +984,7 @@ describe('popperOptions', () => {
     instance.show();
     jest.runAllTimers();
 
-    expect(instance.popperInstance.state.options).toMatchSnapshot();
+    expect(instance.popperInstance.state.orderedModifiers).toMatchSnapshot();
   });
 });
 
