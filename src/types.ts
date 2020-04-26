@@ -8,7 +8,7 @@ export type Content =
   | string
   | Element
   | DocumentFragment
-  | ((ref: Element) => Element | string);
+  | ((ref: Element) => string | Element | DocumentFragment);
 
 export type SingleTarget = Element;
 
