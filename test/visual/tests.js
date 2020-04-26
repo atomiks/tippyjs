@@ -100,27 +100,30 @@ tests.inlinePositioning = () => {
   });
 
   for (let i = 0; i < 2; i++) {
-    const [instance] = tippy('#inlinePositioning .reference-disconnected', {
-      content: 'tippy',
-      inlinePositioning: true,
-      plugins: [inlinePositioning],
-      hideOnClick: false,
-      showOnCreate: true,
-      duration: 0,
+    ['top', 'right', 'bottom', 'left'].forEach((placement) => {
+      const [instance] = tippy('#inlinePositioning .reference-disconnected', {
+        placement,
+        content: 'tippy',
+        inlinePositioning: true,
+        plugins: [inlinePositioning],
+        hideOnClick: false,
+        showOnCreate: true,
+        duration: 0,
+      });
+
+      const rects = instance.reference.getClientRects();
+
+      instance.reference.dispatchEvent(
+        new MouseEvent('mouseenter', {
+          clientX: rects[i].left,
+          clientY: rects[i].top,
+        })
+      );
+
+      instance.setProps({trigger: 'manual'});
+
+      instances.push(instance);
     });
-
-    const rects = instance.reference.getClientRects();
-
-    instance.reference.dispatchEvent(
-      new MouseEvent('mouseenter', {
-        clientX: rects[i].left,
-        clientY: rects[i].top,
-      })
-    );
-
-    instance.setProps({trigger: 'manual'});
-
-    instances.push(instance);
   }
 
   return () => {

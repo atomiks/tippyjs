@@ -3,8 +3,6 @@ import {isMouseEvent} from '../dom-utils';
 import {BasePlacement, InlinePositioning} from '../types';
 import {arrayFrom, getBasePlacement} from '../utils';
 
-// TODO: Work on a "cursor" value so it chooses a rect optimal to the cursor
-// position.
 const inlinePositioning: InlinePositioning = {
   name: 'inlinePositioning',
   defaultValue: false,
@@ -94,7 +92,7 @@ export function getInlineBoundingClientRect(
   // There are two rects and they are disjoined
   if (
     clientRects.length === 2 &&
-    cursorRectIndex &&
+    cursorRectIndex !== null &&
     clientRects[0].left > clientRects[1].right
   ) {
     return clientRects[cursorRectIndex] || boundingRect;
