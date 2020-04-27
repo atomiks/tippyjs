@@ -14,7 +14,7 @@ const inlinePositioning: InlinePositioning = {
     }
 
     let placement: Placement;
-    let cursorRectIndex: number | null = null;
+    let cursorRectIndex = -1;
 
     const modifier: Modifier<'tippyInlinePositioning', {}> = {
       name: 'tippyInlinePositioning',
@@ -70,7 +70,7 @@ const inlinePositioning: InlinePositioning = {
         }
       },
       onUntrigger(): void {
-        cursorRectIndex = null;
+        cursorRectIndex = -1;
       },
     };
   },
@@ -82,7 +82,7 @@ export function getInlineBoundingClientRect(
   currentBasePlacement: BasePlacement | null,
   boundingRect: ClientRect,
   clientRects: ClientRect[],
-  cursorRectIndex: number | null
+  cursorRectIndex: number
 ): ClientRect {
   // Not an inline element, or placement is not yet known
   if (clientRects.length < 2 || currentBasePlacement === null) {
@@ -92,7 +92,7 @@ export function getInlineBoundingClientRect(
   // There are two rects and they are disjoined
   if (
     clientRects.length === 2 &&
-    cursorRectIndex !== null &&
+    cursorRectIndex >= 0 &&
     clientRects[0].left > clientRects[1].right
   ) {
     return clientRects[cursorRectIndex] || boundingRect;
