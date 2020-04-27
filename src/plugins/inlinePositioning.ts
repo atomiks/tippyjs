@@ -1,7 +1,21 @@
 import {Modifier, Placement} from '@popperjs/core';
 import {isMouseEvent} from '../dom-utils';
-import {BasePlacement, InlinePositioning} from '../types';
+import {BasePlacement, InlinePositioning, Props} from '../types';
 import {arrayFrom, getBasePlacement} from '../utils';
+
+function getProps(props: Props, modifier: Modifier<any, any>): Partial<Props> {
+  return {
+    popperOptions: {
+      ...props.popperOptions,
+      modifiers: [
+        ...(props.popperOptions?.modifiers || []).filter(
+          ({name}) => name !== modifier.name
+        ),
+        modifier,
+      ],
+    },
+  };
+}
 
 const inlinePositioning: InlinePositioning = {
   name: 'inlinePositioning',
@@ -15,6 +29,7 @@ const inlinePositioning: InlinePositioning = {
 
     let placement: Placement;
     let cursorRectIndex = -1;
+    let isInternalUpdate = false;
 
     const modifier: Modifier<'tippyInlinePositioning', {}> = {
       name: 'tippyInlinePositioning',
@@ -43,18 +58,21 @@ const inlinePositioning: InlinePositioning = {
       );
     }
 
+    function setInternalProps(partialProps: Partial<Props>): void {
+      isInternalUpdate = true;
+      instance.setProps(partialProps);
+      isInternalUpdate = false;
+    }
+
+    function addModifier(): void {
+      if (!isInternalUpdate) {
+        setInternalProps(getProps(instance.props, modifier));
+      }
+    }
+
     return {
-      onCreate(): void {
-        instance.setProps({
-          popperOptions: {
-            ...instance.props.popperOptions,
-            modifiers: [
-              ...(instance.props.popperOptions?.modifiers || []),
-              modifier,
-            ],
-          },
-        });
-      },
+      onCreate: addModifier,
+      onAfterUpdate: addModifier,
       onTrigger(_, event): void {
         if (isMouseEvent(event)) {
           const rects = arrayFrom(instance.reference.getClientRects());
