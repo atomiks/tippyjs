@@ -60,10 +60,10 @@ const inlinePositioning: InlinePositioning = {
           const rects = arrayFrom(instance.reference.getClientRects());
           const cursorRect = rects.find(
             (rect) =>
-              rect.left - 1 <= event.clientX &&
-              rect.right + 1 >= event.clientX &&
-              rect.top - 1 <= event.clientY &&
-              rect.bottom + 1 >= event.clientY
+              rect.left - 2 <= event.clientX &&
+              rect.right + 2 >= event.clientX &&
+              rect.top - 2 <= event.clientY &&
+              rect.bottom + 2 >= event.clientY
           );
 
           cursorRectIndex = rects.indexOf(cursorRect);
