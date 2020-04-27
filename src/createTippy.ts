@@ -1,7 +1,7 @@
 import {createPopper, StrictModifiers, Modifier} from '@popperjs/core';
 import {currentInput} from './bindGlobalEventListeners';
 import {isIE} from './browser';
-import {PASSIVE} from './constants';
+import {TOUCH_OPTIONS} from './constants';
 import {
   div,
   getOwnerDocument,
@@ -57,6 +57,7 @@ export default function createTippy(
   let scheduleHideAnimationFrame: number;
   let isVisibleFromClick = false;
   let didHideDueToDocumentMouseDown = false;
+  let didTouchMove = false;
   let ignoreOnFirstUpdate = false;
   let lastTriggerEvent: Event | undefined;
   let currentTransitionEndListener: (event: TransitionEvent) => void;
@@ -288,8 +289,11 @@ export default function createTippy(
   }
 
   function onDocumentPress(event: MouseEvent | TouchEvent): void {
-    if (event.type === 'mousedown' && currentInput.isTouch) {
-      return;
+    // Moved finger to scroll instead of an intentional tap outside
+    if (currentInput.isTouch) {
+      if (didTouchMove || event.type === 'mousedown') {
+        return;
+      }
     }
 
     // Clicked on interactive popper
@@ -338,14 +342,26 @@ export default function createTippy(
     }
   }
 
+  function onTouchMove(): void {
+    didTouchMove = true;
+  }
+
+  function onTouchStart(): void {
+    didTouchMove = false;
+  }
+
   function addDocumentPress(): void {
     doc.addEventListener('mousedown', onDocumentPress, true);
-    doc.addEventListener('touchend', onDocumentPress, true);
+    doc.addEventListener('touchend', onDocumentPress, TOUCH_OPTIONS);
+    doc.addEventListener('touchstart', onTouchStart, TOUCH_OPTIONS);
+    doc.addEventListener('touchmove', onTouchMove, TOUCH_OPTIONS);
   }
 
   function removeDocumentPress(): void {
     doc.removeEventListener('mousedown', onDocumentPress, true);
-    doc.removeEventListener('touchend', onDocumentPress, true);
+    doc.removeEventListener('touchend', onDocumentPress, TOUCH_OPTIONS);
+    doc.removeEventListener('touchstart', onTouchStart, TOUCH_OPTIONS);
+    doc.removeEventListener('touchmove', onTouchMove, TOUCH_OPTIONS);
   }
 
   function onTransitionedOut(duration: number, callback: () => void): void {
@@ -400,8 +416,8 @@ export default function createTippy(
 
   function addListeners(): void {
     if (getIsCustomTouchBehavior()) {
-      on('touchstart', onTrigger, PASSIVE);
-      on('touchend', onMouseLeave as EventListener, PASSIVE);
+      on('touchstart', onTrigger, {passive: true});
+      on('touchend', onMouseLeave as EventListener, {passive: true});
     }
 
     splitBySpaces(instance.props.trigger).forEach((eventType) => {

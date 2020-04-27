@@ -401,6 +401,31 @@ describe('hideOnClick', () => {
 
       expect(instance.state.isVisible).toBe(true);
     });
+
+    it('does not hide on unintentional tap outside', () => {
+      const instance = tippy(h(), {hideOnClick: true});
+
+      instance.show();
+      jest.runAllTimers();
+
+      fireEvent.touchStart(instance.popper);
+      fireEvent.touchMove(instance.popper);
+      fireEvent.touchEnd(instance.popper);
+
+      expect(instance.state.isVisible).toBe(true);
+    });
+
+    it('hides on intentional tap outside', () => {
+      const instance = tippy(h(), {hideOnClick: true});
+
+      instance.show();
+      jest.runAllTimers();
+
+      fireEvent.touchStart(instance.popper);
+      fireEvent.touchEnd(instance.popper);
+
+      expect(instance.state.isVisible).toBe(false);
+    });
   });
 
   describe('false', () => {
