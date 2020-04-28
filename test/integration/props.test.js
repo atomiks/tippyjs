@@ -641,6 +641,17 @@ describe('interactive', () => {
       instance.reference.parentNode.removeChild(inbetweenNode);
     });
 
+    it('it cleans up correctly if cursor entered and left before show with `delay`', () => {
+      const instance = tippy(h(), {interactive: true, delay: 100});
+
+      fireEvent.mouseEnter(instance.reference);
+      fireEvent.mouseLeave(instance.reference);
+
+      jest.runAllTimers();
+
+      expect(instance.state.isVisible).toBe(false);
+    });
+
     it('handles `aria-expanded` attribute correctly with .setProps()', () => {
       const instance = tippy(h(), {interactive: true});
 

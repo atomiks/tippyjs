@@ -1065,12 +1065,10 @@ export default function createTippy(
       );
     }
 
-    if (instance.state.isVisible) {
-      doc.body.addEventListener('mouseleave', scheduleHide);
-      doc.addEventListener('mousemove', debouncedOnMouseMove);
-      pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
-      debouncedOnMouseMove(event);
-    }
+    doc.body.addEventListener('mouseleave', scheduleHide);
+    doc.addEventListener('mousemove', debouncedOnMouseMove);
+    pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
+    debouncedOnMouseMove(event);
   }
 
   function unmount(): void {
