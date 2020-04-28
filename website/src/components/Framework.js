@@ -122,7 +122,7 @@ export const Button = styled.button`
   will-change: opacity;
   font-size: 16px;
   font-weight: 600;
-  padding: 8px 16px;
+  padding: 10px 16px;
   border-radius: 4px;
   transition: background 0.2s, color 0.1s;
 
