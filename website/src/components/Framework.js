@@ -124,7 +124,6 @@ export const Button = styled.button`
   font-weight: 600;
   padding: 8px 16px;
   border-radius: 4px;
-  margin: ${(props) => (props.marginless ? '0' : '0 8px 8px 0')};
   transition: background 0.2s, color 0.1s;
 
   &:hover {
@@ -136,7 +135,7 @@ export const Button = styled.button`
 export const Demo = styled.div`
   background: #eeeefa;
   margin: 15px -16px 25px;
-  padding: 25px 16px 16px;
+  padding: 25px 16px;
 
   ${MEDIA.sm} {
     padding-left: 25px;
@@ -147,5 +146,9 @@ export const Demo = styled.div`
 
   ${MEDIA.md} {
     border-radius: 8px;
+  }
+
+  > ${Button}:not(:last-child) {
+    margin-right: 10px;
   }
 `;
