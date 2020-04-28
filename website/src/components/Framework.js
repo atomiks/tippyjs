@@ -148,7 +148,7 @@ export const Demo = styled.div`
     border-radius: 8px;
   }
 
-  > ${Button}:not(:last-child) {
-    margin-right: 10px;
+  > ${Button} {
+    margin: 5px;
   }
 `;
