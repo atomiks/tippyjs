@@ -17,21 +17,21 @@ const Navbar = styled.nav`
   bottom: 0;
   left: 0;
   width: 250px;
-  background: linear-gradient(180deg, rgba(121, 148, 198, 0.92), #565791);
+  background: linear-gradient(180deg, rgba(121, 148, 198, 0.6), #565791);
   color: white;
   overflow-y: auto;
   z-index: 2;
   transform: ${(props) =>
-    props.isOpen
-      ? 'translate3d(-4%, 0, 0) scaleX(1)'
-      : 'translate3d(-100%, 0, 0) scaleX(0)'};
-  transition: transform ${(props) => (props.isOpen ? '0.55s' : '0.3s')},
-    visibility 0.2s, opacity 0.8s;
+    props.isOpen ? 'translate3d(0, 0, 0)' : 'translate3d(-100%, 0, 0)'};
+  transition: ${(props) =>
+      props.isOpen ? 'transform 0.5s' : 'transform 0.5s 0.15s'},
+    visibility 0.15s, opacity 0.15s;
   transition-timing-function: ${(props) =>
-    props.isOpen ? 'cubic-bezier(.165, 1.3, 0.4, 1)' : 'ease'};
+    props.isOpen ? 'cubic-bezier(0.22, 1, 0.36, 1)' : 'ease'};
   visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
   box-shadow: 4px 0 32px 0 rgba(0, 32, 64, 0.25);
-  opacity: ${(props) => (props.isOpen ? 1 : 0)};
+  backdrop-filter: blur(15px) saturate(180%);
+  opacity: ${(props) => (props.isOpen ? '1' : '0')};
 
   ${MEDIA.lg} {
     padding-top: 0;
@@ -41,6 +41,8 @@ const Navbar = styled.nav`
     box-shadow: none;
     opacity: 1;
     will-change: transform, opacity;
+    backdrop-filter: none;
+    background: linear-gradient(180deg, rgba(121, 148, 198, 0.92), #565791);
   }
 `;
 
@@ -60,7 +62,6 @@ const ListItem = styled.li`
   > a {
     display: block;
     padding: 4px 25px;
-    padding-left: calc(25px + 4%);
     font-size: 17px;
     border: 1px dashed transparent;
 
@@ -149,7 +150,7 @@ class Nav extends Component {
   };
 
   handleBlur = (e) => {
-    if (!e.currentTarget.contains(e.relatedTarget)) {
+    if (!this.ref.current.contains(e.relatedTarget)) {
       this.props.close();
     }
   };
@@ -193,6 +194,7 @@ class Nav extends Component {
               isOpen={isOpen}
               isMounted={isMounted}
               onBlur={this.handleBlur}
+              tabIndex="-1"
             >
               <XButton aria-label="Close Menu" onClick={this.handleClose}>
                 <XIcon />
@@ -211,6 +213,7 @@ class Nav extends Component {
                       font-size: 16px;
                       padding: 8px;
                     `}
+                    sticky={true}
                     content={
                       <ul
                         css={css`

@@ -86,8 +86,8 @@ const ButtonLink = styled(ExternalLink)`
 
 export const MenuButton = styled.button`
   position: absolute;
-  top: -8px;
-  left: 15px;
+  top: -10px;
+  left: 25px;
   color: rgb(36, 58, 89);
   font-weight: bold;
   border: none;
