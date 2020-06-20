@@ -18,7 +18,7 @@
     "animate.css": "^3.7.2",
     "elastic-scroll-polyfill": "^2.1.0",
     "focus-visible": "^5.0.2",
-    "gatsby": "^2.15.16",
+    "gatsby": "^2.23.7",
     "gatsby-image": "^2.2.19",
     "gatsby-plugin-catch-links": "^2.1.9",
     "gatsby-plugin-client-side-redirect": "0.0.2",
