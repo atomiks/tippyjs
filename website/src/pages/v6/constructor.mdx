@@ -1,26 +1,28 @@
 ---
-title: Creation
-path: /v6/creation/
+title: Constructor
+path: /v6/constructor/
 index: 2
 ---
 
-Give elements you would like to give tooltips to a `data-tippy-content`
-attribute:
+The `tippy()` constructor (a plain function) creates individual tippy instances.
+To give the tippy content you have two options:
+
+### Attribute
+
+With some elements on the document:
 
 ```html
 <button data-tippy-content="Tooltip">Text</button>
 <button data-tippy-content="Another Tooltip">Text</button>
 ```
 
-To give them a tippy tooltip, call the `tippy()` function with a CSS selector
-matching these elements:
+Call the `tippy()` constructor with a CSS selector matching them:
 
 ```js
 tippy('[data-tippy-content]');
 ```
 
-The `data-tippy-content` attribute allows you to give different tooltip content
-to many different elements, while only needing to initialize once.
+### Prop
 
 If targeting a single element, you can use the `content` prop instead of the
 attribute:

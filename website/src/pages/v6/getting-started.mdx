@@ -53,6 +53,29 @@ don't get removed.
 > (`tippy-bundle`). With CSP enabled, you may need to separately link
 > `dist/tippy.css` and use `dist/tippy.umd.min.js` instead.
 
+### Usage
+
+```html
+<html>
+  <head>
+    <title>Tippy</title>
+  </head>
+  <body>
+    <button id="myButton">My button</button>
+
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>
+      // With the above scripts loaded, you can call `tippy()` with a CSS
+      // selector and a `content` prop:
+      tippy('#myButton', {
+        content: 'My tooltip!',
+      });
+    </script>
+  </body>
+</html>
+```
+
 ### React
 
 Using React? Use the

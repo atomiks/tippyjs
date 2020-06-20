@@ -12,7 +12,7 @@ import {
   MEDIA,
   ExternalLink,
 } from './Framework';
-import Tippy, {TippySingleton} from './Tippy';
+import Tippy from './Tippy';
 import Nav from './Nav';
 import NavButtons from './NavButtons';
 import Header from './Header';
@@ -124,7 +124,6 @@ class Heading extends React.Component {
 
 const components = {
   Tippy,
-  TippySingleton,
   Demo,
   Button,
   Row,
