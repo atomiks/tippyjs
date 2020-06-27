@@ -1,4 +1,3 @@
-import {currentInput} from '../bindGlobalEventListeners';
 import {getOwnerDocument, isMouseEvent} from '../dom-utils';
 import {FollowCursor} from '../types';
 
@@ -30,8 +29,7 @@ const followCursor: FollowCursor = {
 
     function getIsInitialBehavior(): boolean {
       return (
-        currentInput.isTouch ||
-        (instance.props.followCursor === 'initial' && instance.state.isVisible)
+        instance.props.followCursor === 'initial' && instance.state.isVisible
       );
     }
 
