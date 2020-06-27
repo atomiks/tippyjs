@@ -170,3 +170,21 @@ describe('getNumber', () => {
     expect(Utils.getNumber('-21.35em')).toBe(-21.35);
   });
 });
+
+describe('removeUndefinedProps', () => {
+  it('removes properties that are set to `undefined`', () => {
+    expect(
+      Utils.removeUndefinedProps({
+        a: undefined,
+        b: null,
+        c: 0,
+        d: true,
+        e: undefined,
+      })
+    ).toEqual({
+      b: null,
+      c: 0,
+      d: true,
+    });
+  });
+});

@@ -31,6 +31,7 @@ import {
   pushIfUnique,
   splitBySpaces,
   unique,
+  removeUndefinedProps,
 } from './utils';
 import {createMemoryLeakWarning, errorWhen, warnWhen} from './validation';
 
@@ -46,7 +47,7 @@ export default function createTippy(
 ): Instance {
   const props = evaluateProps(reference, {
     ...defaultProps,
-    ...getExtendedPassedProps(passedProps),
+    ...getExtendedPassedProps(removeUndefinedProps(passedProps)),
   });
 
   // ===========================================================================
@@ -281,7 +282,6 @@ export default function createTippy(
   }
 
   function cleanupInteractiveMouseListeners(): void {
-    doc.body.removeEventListener('mouseleave', scheduleHide);
     doc.removeEventListener('mousemove', debouncedOnMouseMove);
     mouseMoveListeners = mouseMoveListeners.filter(
       (listener) => listener !== debouncedOnMouseMove
@@ -1065,7 +1065,6 @@ export default function createTippy(
       );
     }
 
-    doc.body.addEventListener('mouseleave', scheduleHide);
     doc.addEventListener('mousemove', debouncedOnMouseMove);
     pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
     debouncedOnMouseMove(event);

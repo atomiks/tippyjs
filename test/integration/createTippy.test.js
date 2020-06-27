@@ -23,6 +23,14 @@ describe('createTippy', () => {
     expect(instance).toMatchSnapshot();
   });
 
+  it('sets `undefined` prop to the default', () => {
+    instance = createTippy(h(), {
+      theme: undefined,
+    });
+
+    expect(instance.props.theme).not.toBe(undefined);
+  });
+
   it('increments the `id` on each call with valid arguments', () => {
     const instances = [
       createTippy(h(), defaultProps),
