@@ -26,6 +26,7 @@ const followCursor: FollowCursor = {
     let isInternalUpdate = false;
     let wasFocusEvent = false;
     let isUnmounted = true;
+    let prevProps = instance.props;
 
     function getIsInitialBehavior(): boolean {
       return (
@@ -111,11 +112,34 @@ const followCursor: FollowCursor = {
     return {
       onCreate: create,
       onDestroy: destroy,
+      onBeforeUpdate(): void {
+        prevProps = instance.props;
+      },
       onAfterUpdate(_, {followCursor}): void {
-        if (!isInternalUpdate && followCursor === false) {
+        if (isInternalUpdate) {
+          return;
+        }
+
+        if (
+          followCursor !== undefined &&
+          prevProps.followCursor !== followCursor
+        ) {
           destroy();
-          removeListener();
-          unsetGetReferenceClientRect();
+
+          if (followCursor) {
+            create();
+
+            if (
+              instance.state.isMounted &&
+              !wasFocusEvent &&
+              !getIsInitialBehavior()
+            ) {
+              addListener();
+            }
+          } else {
+            removeListener();
+            unsetGetReferenceClientRect();
+          }
         }
       },
       onMount(): void {
