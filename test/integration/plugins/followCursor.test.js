@@ -134,11 +134,9 @@ describe('followCursor', () => {
     placements.forEach((placement) => {
       instance = tippy(h(), {followCursor: 'initial', placement});
 
-      // lastMouseMove event is used in this case
-      instance.reference.dispatchEvent(
-        new MouseEvent('mouseenter', {...first})
-      );
+      fireEvent.mouseMove(instance.reference, first);
 
+      instance.show();
       jest.runAllTimers();
 
       fireEvent.mouseMove(instance.reference, first);
@@ -269,8 +267,9 @@ describe('followCursor', () => {
       followCursor: 'initial',
     });
 
-    fireEvent.mouseEnter(instance.reference, first);
+    fireEvent.mouseMove(instance.reference, first);
 
+    instance.show();
     jest.runAllTimers();
 
     fireEvent.mouseMove(instance.reference, second);

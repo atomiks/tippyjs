@@ -1,5 +1,20 @@
-import {getOwnerDocument, isMouseEvent} from '../dom-utils';
-import {FollowCursor} from '../types';
+import {getOwnerDocument} from '../dom-utils';
+import {FollowCursor, Instance} from '../types';
+
+let mouseCoords = {clientX: 0, clientY: 0};
+let activeInstances: Array<{instance: Instance; doc: Document}> = [];
+
+function storeMouseCoords({clientX, clientY}: MouseEvent): void {
+  mouseCoords = {clientX, clientY};
+}
+
+function addMouseCoordsListener(doc: Document): void {
+  doc.addEventListener('mousemove', storeMouseCoords);
+}
+
+function removeMouseCoordsListener(doc: Document): void {
+  doc.removeEventListener('mousemove', storeMouseCoords);
+}
 
 const followCursor: FollowCursor = {
   name: 'followCursor',
@@ -8,49 +23,15 @@ const followCursor: FollowCursor = {
     const reference = instance.reference;
     const doc = getOwnerDocument(instance.props.triggerTarget || reference);
 
-    let initialMouseCoords: {clientX: number; clientY: number} | null = null;
-
-    function getIsManual(): boolean {
-      return instance.props.trigger.trim() === 'manual';
-    }
-
-    function getIsEnabled(): boolean {
-      // #597
-      const isValidMouseEvent = getIsManual()
-        ? true
-        : // Check if a keyboard "click"
-          initialMouseCoords !== null &&
-          !(
-            initialMouseCoords.clientX === 0 && initialMouseCoords.clientY === 0
-          );
-
-      return instance.props.followCursor && isValidMouseEvent;
-    }
+    let isInternalUpdate = false;
+    let wasFocusEvent = false;
+    let isUnmounted = true;
+    let prevProps = instance.props;
 
     function getIsInitialBehavior(): boolean {
       return (
         instance.props.followCursor === 'initial' && instance.state.isVisible
       );
-    }
-
-    function unsetReferenceClientRect(shouldUnset: any): void {
-      if (shouldUnset) {
-        instance.setProps({getReferenceClientRect: null});
-      }
-    }
-
-    function handleMouseMoveListener(): void {
-      if (getIsEnabled()) {
-        addListener();
-      } else {
-        unsetReferenceClientRect(instance.props.followCursor);
-      }
-    }
-
-    function triggerLastMouseMove(): void {
-      if (getIsEnabled()) {
-        onMouseMove(initialMouseCoords as MouseEvent);
-      }
     }
 
     function addListener(): void {
@@ -61,12 +42,13 @@ const followCursor: FollowCursor = {
       doc.removeEventListener('mousemove', onMouseMove);
     }
 
-    function onMouseMove(event: MouseEvent): void {
-      initialMouseCoords = {
-        clientX: event.clientX,
-        clientY: event.clientY,
-      };
+    function unsetGetReferenceClientRect(): void {
+      isInternalUpdate = true;
+      instance.setProps({getReferenceClientRect: null});
+      isInternalUpdate = false;
+    }
 
+    function onMouseMove(event: MouseEvent): void {
       // If the instance is interactive, avoid updating the position unless it's
       // over the reference element
       const isCursorOverReference = event.target
@@ -108,58 +90,77 @@ const followCursor: FollowCursor = {
           },
         });
       }
+    }
 
-      if (getIsInitialBehavior()) {
-        removeListener();
+    function create(): void {
+      if (instance.props.followCursor) {
+        activeInstances.push({instance, doc});
+        addMouseCoordsListener(doc);
+      }
+    }
+
+    function destroy(): void {
+      activeInstances = activeInstances.filter(
+        (data) => data.instance !== instance
+      );
+
+      if (activeInstances.filter((data) => data.doc === doc).length === 0) {
+        removeMouseCoordsListener(doc);
       }
     }
 
     return {
+      onCreate: create,
+      onDestroy: destroy,
+      onBeforeUpdate(): void {
+        prevProps = instance.props;
+      },
       onAfterUpdate(_, {followCursor}): void {
-        if (followCursor !== undefined && !followCursor) {
-          unsetReferenceClientRect(true);
-        }
-      },
-      onMount(): void {
-        triggerLastMouseMove();
-      },
-      onShow(): void {
-        if (getIsManual()) {
-          // Since there's no trigger event to use, we have to use these as
-          // baseline coords
-          initialMouseCoords = {
-            clientX: 0,
-            clientY: 0,
-          };
-
-          handleMouseMoveListener();
-        }
-      },
-      onTrigger(_, event): void {
-        // Tapping on touch devices can trigger `mouseenter` then `focus`
-        if (initialMouseCoords) {
+        if (isInternalUpdate) {
           return;
         }
 
-        if (isMouseEvent(event)) {
-          initialMouseCoords = {
-            clientX: event.clientX,
-            clientY: event.clientY,
-          };
-        }
+        if (
+          followCursor !== undefined &&
+          prevProps.followCursor !== followCursor
+        ) {
+          destroy();
 
-        handleMouseMoveListener();
-      },
-      onUntrigger(): void {
-        // If untriggered before showing (`onHidden` will never be invoked)
-        if (!instance.state.isVisible) {
-          removeListener();
-          initialMouseCoords = null;
+          if (followCursor) {
+            create();
+
+            if (
+              instance.state.isMounted &&
+              !wasFocusEvent &&
+              !getIsInitialBehavior()
+            ) {
+              addListener();
+            }
+          } else {
+            removeListener();
+            unsetGetReferenceClientRect();
+          }
         }
+      },
+      onMount(): void {
+        if (instance.props.followCursor) {
+          if (isUnmounted) {
+            onMouseMove(mouseCoords as MouseEvent);
+            isUnmounted = false;
+          }
+
+          if (!wasFocusEvent && !getIsInitialBehavior()) {
+            addListener();
+          }
+        }
+      },
+      onTrigger(_, {type}): void {
+        wasFocusEvent = type === 'focus';
       },
       onHidden(): void {
         removeListener();
-        initialMouseCoords = null;
+        unsetGetReferenceClientRect();
+        isUnmounted = true;
       },
     };
   },
