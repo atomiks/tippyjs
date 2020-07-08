@@ -158,9 +158,11 @@ const followCursor: FollowCursor = {
         wasFocusEvent = type === 'focus';
       },
       onHidden(): void {
-        removeListener();
-        unsetGetReferenceClientRect();
-        isUnmounted = true;
+        if (instance.props.followCursor) {
+          unsetGetReferenceClientRect();
+          removeListener();
+          isUnmounted = true;
+        }
       },
     };
   },
