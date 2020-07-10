@@ -499,7 +499,7 @@ export default function createTippy(
   function onMouseMove(event: MouseEvent): void {
     const target = event.target as Node;
     const isCursorOverReferenceOrPopper =
-      reference.contains(target) || popper.contains(target);
+      getCurrentTarget().contains(target) || popper.contains(target);
 
     if (event.type === 'mousemove' && isCursorOverReferenceOrPopper) {
       return;
