@@ -321,7 +321,6 @@ export default function createTippy(
     }
 
     if (instance.props.hideOnClick === true) {
-      isVisibleFromClick = false;
       instance.clearDelayTimeouts();
       instance.hide();
 
@@ -1026,6 +1025,7 @@ export default function createTippy(
     instance.state.isVisible = false;
     instance.state.isShown = false;
     ignoreOnFirstUpdate = false;
+    isVisibleFromClick = false;
 
     if (getIsDefaultRenderFn()) {
       popper.style.visibility = 'hidden';
