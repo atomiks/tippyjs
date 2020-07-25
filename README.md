@@ -49,6 +49,11 @@ import 'tippy.js/dist/tippy.css';
 
 The core CSS comes bundled with the default unpkg import.
 
+## Usage
+
+For detailed usage information,
+[visit the docs](https://atomiks.github.io/tippyjs/v6/getting-started/).
+
 ## Component Wrappers
 
 React: [@tippyjs/react](https://github.com/atomiks/tippyjs-react)
