@@ -69,8 +69,8 @@
     "rimraf": "^3.0.2"
   },
   "resolutions": {
-    "tippy.js": "^6.2.4",
-    "@popperjs/core": "^2.4.3"
+    "tippy.js": "^6.2.5",
+    "@popperjs/core": "^2.4.4"
   },
   "repository": {
     "type": "git",
