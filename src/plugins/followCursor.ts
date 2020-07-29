@@ -1,4 +1,4 @@
-import {getOwnerDocument} from '../dom-utils';
+import {getOwnerDocument, isMouseEvent} from '../dom-utils';
 import {FollowCursor, Instance} from '../types';
 
 let mouseCoords = {clientX: 0, clientY: 0};
@@ -143,19 +143,22 @@ const followCursor: FollowCursor = {
         }
       },
       onMount(): void {
-        if (instance.props.followCursor) {
+        if (instance.props.followCursor && !wasFocusEvent) {
           if (isUnmounted) {
             onMouseMove(mouseCoords as MouseEvent);
             isUnmounted = false;
           }
 
-          if (!wasFocusEvent && !getIsInitialBehavior()) {
+          if (!getIsInitialBehavior()) {
             addListener();
           }
         }
       },
-      onTrigger(_, {type}): void {
-        wasFocusEvent = type === 'focus';
+      onTrigger(_, event): void {
+        if (isMouseEvent(event)) {
+          mouseCoords = {clientX: event.clientX, clientY: event.clientY};
+        }
+        wasFocusEvent = event.type === 'focus';
       },
       onHidden(): void {
         if (instance.props.followCursor) {
