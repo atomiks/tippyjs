@@ -73,7 +73,7 @@ function delegate(
 
     if (
       event.type !== 'touchstart' &&
-      trigger.indexOf((BUBBLING_EVENTS_MAP as any)[event.type])
+      trigger.indexOf((BUBBLING_EVENTS_MAP as any)[event.type]) < 0
     ) {
       return;
     }
