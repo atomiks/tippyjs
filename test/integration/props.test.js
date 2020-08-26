@@ -401,6 +401,31 @@ describe('hideOnClick', () => {
 
       expect(instance.state.isVisible).toBe(true);
     });
+
+    it('does not hide on unintentional tap outside', () => {
+      const instance = tippy(h(), {hideOnClick: true});
+
+      instance.show();
+      jest.runAllTimers();
+
+      fireEvent.touchStart(instance.popper);
+      fireEvent.touchMove(instance.popper);
+      fireEvent.touchEnd(instance.popper);
+
+      expect(instance.state.isVisible).toBe(true);
+    });
+
+    it('hides on intentional tap outside', () => {
+      const instance = tippy(h(), {hideOnClick: true});
+
+      instance.show();
+      jest.runAllTimers();
+
+      fireEvent.touchStart(instance.popper);
+      fireEvent.touchEnd(instance.popper);
+
+      expect(instance.state.isVisible).toBe(false);
+    });
   });
 
   describe('false', () => {
@@ -614,6 +639,17 @@ describe('interactive', () => {
       );
 
       instance.reference.parentNode.removeChild(inbetweenNode);
+    });
+
+    it('it cleans up correctly if cursor entered and left before show with `delay`', () => {
+      const instance = tippy(h(), {interactive: true, delay: 100});
+
+      fireEvent.mouseEnter(instance.reference);
+      fireEvent.mouseLeave(instance.reference);
+
+      jest.runAllTimers();
+
+      expect(instance.state.isVisible).toBe(false);
     });
 
     it('handles `aria-expanded` attribute correctly with .setProps()', () => {
@@ -971,6 +1007,12 @@ describe('popperOptions', () => {
             name: 'offset',
             enabled: false,
           },
+          {
+            name: 'arrow',
+            options: {
+              padding: 999,
+            },
+          },
         ],
       },
     });
@@ -978,7 +1020,7 @@ describe('popperOptions', () => {
     instance.show();
     jest.runAllTimers();
 
-    expect(instance.popperInstance.state.options).toMatchSnapshot();
+    expect(instance.popperInstance.state.orderedModifiers).toMatchSnapshot();
   });
 });
 
@@ -1179,6 +1221,22 @@ describe('trigger', () => {
       expect(instance.state.isVisible).toBe(false);
     });
   });
+
+  describe('click focus', () => {
+    it('does not hide immediately and can be toggled', () => {
+      const instance = tippy(h(), {trigger: 'click focus'});
+
+      fireEvent.focus(instance.reference);
+
+      fireEvent.click(instance.reference);
+
+      expect(instance.state.isVisible).toBe(true);
+
+      fireEvent.click(instance.reference);
+
+      expect(instance.state.isVisible).toBe(false);
+    });
+  });
 });
 
 describe('triggerTarget', () => {
@@ -1269,6 +1327,18 @@ describe('allowHTML', () => {
         null
       );
     });
+  });
+
+  it('should update even if content does not change', () => {
+    const instance = tippy(h(), {content: '<b>hello</b>', allowHTML: true});
+
+    expect(getChildren(instance.popper).content.querySelector('b')).not.toBe(
+      null
+    );
+
+    instance.setProps({allowHTML: false});
+
+    expect(getChildren(instance.popper).content.querySelector('b')).toBe(null);
   });
 });
 

@@ -12,7 +12,7 @@ import {
   MEDIA,
   ExternalLink,
 } from './Framework';
-import Tippy, {TippySingleton} from './Tippy';
+import Tippy from './Tippy';
 import Nav from './Nav';
 import NavButtons from './NavButtons';
 import Header from './Header';
@@ -21,8 +21,8 @@ import Footer from './Footer';
 import SEO from './SEO';
 import Image from './Image';
 import Icon from './Icon';
+import ElasticScroll from './ElasticScroll';
 import CSS from '../css';
-import elasticScroll from 'elastic-scroll-polyfill';
 
 import 'normalize.css';
 import 'animate.css/source/_base.css';
@@ -124,7 +124,6 @@ class Heading extends React.Component {
 
 const components = {
   Tippy,
-  TippySingleton,
   Demo,
   Button,
   Row,
@@ -147,19 +146,11 @@ const components = {
   h4: (props) => <Heading {...props} level={4} />,
   h5: (props) => <Heading {...props} level={5} />,
   h6: (props) => <Heading {...props} level={6} />,
-  pre: class extends React.Component {
-    ref = React.createRef();
-
-    componentDidMount() {
-      if (/Mac/.test(navigator.userAgent)) {
-        elasticScroll({targets: this.ref.current});
-      }
-    }
-
-    render() {
-      return <pre ref={this.ref} {...this.props} />;
-    }
-  },
+  pre: (props) => (
+    <ElasticScroll>
+      <pre {...props} />
+    </ElasticScroll>
+  ),
 };
 
 class Layout extends Component {

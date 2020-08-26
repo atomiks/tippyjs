@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`inlinePositioning does not have its popper modifier removed when updating popperOptions 1`] = `
+Object {
+  "modifiers": Array [
+    Object {
+      "enabled": true,
+      "fn": [Function],
+      "name": "tippyInlinePositioning",
+      "phase": "afterWrite",
+    },
+  ],
+}
+`;

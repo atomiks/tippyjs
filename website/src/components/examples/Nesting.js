@@ -1,59 +1,48 @@
 import React from 'react';
-import styled from '@emotion/styled';
+import {css} from '@emotion/core';
 import Tippy from '../Tippy';
 import {Button} from '../Framework';
 
-const Wrapper = styled.div`
-  margin-top: 8px;
-  margin-left: 8px;
+const padding = css`
+  padding: 10px;
 `;
+
+const commonProps = {
+  onCreate({popper}) {
+    popper.style.width = 'max-content';
+  },
+  interactive: true,
+  theme: 'light-border',
+  css: padding,
+};
 
 function Nesting() {
   return (
     <Tippy
-      theme="light-border"
-      interactive={true}
+      {...commonProps}
       content={
-        <Wrapper>
-          <Tippy
-            theme="light-border"
-            interactive={true}
-            onCreate={({popper}) => {
-              popper.style.width = 'max-content';
-            }}
-            content={
-              <Wrapper>
+        <Tippy
+          {...commonProps}
+          content={
+            <Tippy
+              {...commonProps}
+              placement="right"
+              content={
                 <Tippy
-                  placement="right"
-                  theme="light-border"
-                  interactive={true}
-                  onCreate={({popper}) => {
-                    popper.style.width = 'max-content';
-                  }}
-                  content={
-                    <Wrapper>
-                      <Tippy
-                        placement="bottom"
-                        theme="light-border"
-                        interactive={true}
-                        onCreate={({popper}) => {
-                          popper.style.width = 'max-content';
-                        }}
-                        content="Level 4 (final)"
-                      >
-                        <Button>Level 3</Button>
-                      </Tippy>
-                    </Wrapper>
-                  }
+                  {...commonProps}
+                  placement="bottom"
+                  content="Level 4 (final)"
                 >
-                  <Button>Level 2</Button>
+                  <Button>Level 3</Button>
                 </Tippy>
-              </Wrapper>
-            }
-          >
-            <Button>Level 1</Button>
-          </Tippy>
-        </Wrapper>
+              }
+            >
+              <Button>Level 2</Button>
+            </Tippy>
+          }
+        >
+          <Button>Level 1</Button>
+        </Tippy>
       }
     >
       <Button>Level 0</Button>

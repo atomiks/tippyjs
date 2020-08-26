@@ -46,81 +46,117 @@ exports[`content string is injected into the tippy node 1`] = `
 `;
 
 exports[`popperOptions merges modifiers correctly 1`] = `
-Object {
-  "modifiers": Array [
-    Object {
-      "name": "offset",
-      "options": Object {
-        "offset": Array [
-          0,
-          10,
-        ],
-      },
+Array [
+  Object {
+    "data": Object {},
+    "enabled": true,
+    "fn": [Function],
+    "name": "popperOffsets",
+    "phase": "read",
+  },
+  Object {
+    "data": Object {
+      "_skip": false,
     },
-    Object {
-      "name": "preventOverflow",
-      "options": Object {
-        "padding": Object {
-          "bottom": 2,
-          "left": 5,
-          "right": 5,
-          "top": 2,
-        },
-      },
-    },
-    Object {
-      "name": "flip",
-      "options": Object {
-        "padding": 5,
-      },
-    },
-    Object {
-      "name": "computeStyles",
-      "options": Object {
-        "adaptive": true,
-      },
-    },
-    Object {
-      "enabled": true,
-      "name": "arrow",
-      "options": Object {
-        "element": <div
-          class="__NAMESPACE_PREFIX__-arrow"
-          style="position: absolute; left: 0px; transform: translate(3px, 0px);"
-        />,
-        "padding": 3,
-      },
-    },
-    Object {
-      "name": "flip",
-      "options": Object {
-        "fallbackPlacements": Array [
-          "right",
-        ],
-      },
-    },
-    Object {
-      "name": "preventOverflow",
-      "options": Object {
-        "rootBoundary": "document",
-      },
-    },
-    Object {
-      "enabled": false,
-      "name": "offset",
-    },
-    Object {
-      "enabled": true,
-      "fn": [Function],
-      "name": "$$tippy",
-      "phase": "beforeWrite",
-      "requires": Array [
-        "computeStyles",
+    "enabled": true,
+    "fn": [Function],
+    "name": "flip",
+    "options": Object {
+      "fallbackPlacements": Array [
+        "right",
       ],
+      "padding": 5,
     },
-  ],
-  "onFirstUpdate": [Function],
-  "placement": "top",
-  "strategy": "fixed",
-}
+    "phase": "main",
+    "requiresIfExists": Array [
+      "offset",
+    ],
+  },
+  Object {
+    "data": Object {},
+    "enabled": true,
+    "fn": [Function],
+    "name": "preventOverflow",
+    "options": Object {
+      "padding": Object {
+        "bottom": 2,
+        "left": 5,
+        "right": 5,
+        "top": 2,
+      },
+      "rootBoundary": "document",
+    },
+    "phase": "main",
+    "requiresIfExists": Array [
+      "offset",
+    ],
+  },
+  Object {
+    "data": Object {},
+    "effect": [Function],
+    "enabled": true,
+    "fn": [Function],
+    "name": "arrow",
+    "options": Object {
+      "element": <div
+        class="__NAMESPACE_PREFIX__-arrow"
+        style="position: absolute; left: 0px; transform: translate(999px, 0px);"
+      />,
+      "padding": 999,
+    },
+    "phase": "main",
+    "requires": Array [
+      "popperOffsets",
+    ],
+    "requiresIfExists": Array [
+      "preventOverflow",
+    ],
+  },
+  Object {
+    "enabled": true,
+    "fn": [Function],
+    "name": "hide",
+    "phase": "main",
+    "requiresIfExists": Array [
+      "preventOverflow",
+    ],
+  },
+  Object {
+    "data": Object {},
+    "enabled": true,
+    "fn": [Function],
+    "name": "computeStyles",
+    "options": Object {
+      "adaptive": true,
+    },
+    "phase": "beforeWrite",
+  },
+  Object {
+    "enabled": true,
+    "fn": [Function],
+    "name": "$$tippy",
+    "phase": "beforeWrite",
+    "requires": Array [
+      "computeStyles",
+    ],
+  },
+  Object {
+    "data": Object {},
+    "effect": [Function],
+    "enabled": true,
+    "fn": [Function],
+    "name": "eventListeners",
+    "phase": "write",
+  },
+  Object {
+    "effect": [Function],
+    "enabled": true,
+    "fn": [Function],
+    "name": "applyStyles",
+    "phase": "write",
+    "requires": Array [
+      "computeStyles",
+    ],
+  },
+]
 `;

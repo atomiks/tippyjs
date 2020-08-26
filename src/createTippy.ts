@@ -1,7 +1,7 @@
-import {createPopper, Modifier} from '@popperjs/core';
+import {createPopper, StrictModifiers, Modifier} from '@popperjs/core';
 import {currentInput} from './bindGlobalEventListeners';
-import {isIE, isIOS} from './browser';
-import {IOS_CLASS, PASSIVE} from './constants';
+import {isIE} from './browser';
+import {TOUCH_OPTIONS} from './constants';
 import {
   div,
   getOwnerDocument,
@@ -31,6 +31,7 @@ import {
   pushIfUnique,
   splitBySpaces,
   unique,
+  removeUndefinedProps,
 } from './utils';
 import {createMemoryLeakWarning, errorWhen, warnWhen} from './validation';
 
@@ -46,7 +47,7 @@ export default function createTippy(
 ): Instance {
   const props = evaluateProps(reference, {
     ...defaultProps,
-    ...getExtendedPassedProps(passedProps),
+    ...getExtendedPassedProps(removeUndefinedProps(passedProps)),
   });
 
   // ===========================================================================
@@ -57,8 +58,9 @@ export default function createTippy(
   let scheduleHideAnimationFrame: number;
   let isVisibleFromClick = false;
   let didHideDueToDocumentMouseDown = false;
+  let didTouchMove = false;
   let ignoreOnFirstUpdate = false;
-  let lastTriggerEvent: Event;
+  let lastTriggerEvent: Event | undefined;
   let currentTransitionEndListener: (event: TransitionEvent) => void;
   let onFirstUpdate: () => void;
   let listeners: ListenerObject[] = [];
@@ -101,6 +103,7 @@ export default function createTippy(
     setContent,
     show,
     hide,
+    hideWithInteractivity,
     enable,
     disable,
     unmount,
@@ -213,11 +216,6 @@ export default function createTippy(
     popper.style.zIndex = `${instance.props.zIndex}`;
   }
 
-  function updateIOSClass(isAdd: boolean): void {
-    const shouldAdd = isAdd && isIOS && currentInput.isTouch;
-    doc.body.classList[shouldAdd ? 'add' : 'remove'](IOS_CLASS);
-  }
-
   function invokeHook(
     hook: keyof LifecycleHooks,
     args: [Instance, any?],
@@ -284,14 +282,20 @@ export default function createTippy(
   }
 
   function cleanupInteractiveMouseListeners(): void {
-    doc.body.removeEventListener('mouseleave', scheduleHide);
     doc.removeEventListener('mousemove', debouncedOnMouseMove);
     mouseMoveListeners = mouseMoveListeners.filter(
       (listener) => listener !== debouncedOnMouseMove
     );
   }
 
-  function onDocumentMouseDown(event: MouseEvent): void {
+  function onDocumentPress(event: MouseEvent | TouchEvent): void {
+    // Moved finger to scroll instead of an intentional tap outside
+    if (currentInput.isTouch) {
+      if (didTouchMove || event.type === 'mousedown') {
+        return;
+      }
+    }
+
     // Clicked on interactive popper
     if (
       instance.props.interactive &&
@@ -313,11 +317,10 @@ export default function createTippy(
         return;
       }
     } else {
-      instance.props.onClickOutside(instance, event);
+      invokeHook('onClickOutside', [instance, event]);
     }
 
     if (instance.props.hideOnClick === true) {
-      isVisibleFromClick = false;
       instance.clearDelayTimeouts();
       instance.hide();
 
@@ -333,17 +336,31 @@ export default function createTippy(
       // before it shows, and hide()'s early bail-out behavior can prevent it
       // from being cleaned up
       if (!instance.state.isMounted) {
-        removeDocumentMouseDownListener();
+        removeDocumentPress();
       }
     }
   }
 
-  function addDocumentMouseDownListener(): void {
-    doc.addEventListener('mousedown', onDocumentMouseDown, true);
+  function onTouchMove(): void {
+    didTouchMove = true;
   }
 
-  function removeDocumentMouseDownListener(): void {
-    doc.removeEventListener('mousedown', onDocumentMouseDown, true);
+  function onTouchStart(): void {
+    didTouchMove = false;
+  }
+
+  function addDocumentPress(): void {
+    doc.addEventListener('mousedown', onDocumentPress, true);
+    doc.addEventListener('touchend', onDocumentPress, TOUCH_OPTIONS);
+    doc.addEventListener('touchstart', onTouchStart, TOUCH_OPTIONS);
+    doc.addEventListener('touchmove', onTouchMove, TOUCH_OPTIONS);
+  }
+
+  function removeDocumentPress(): void {
+    doc.removeEventListener('mousedown', onDocumentPress, true);
+    doc.removeEventListener('touchend', onDocumentPress, TOUCH_OPTIONS);
+    doc.removeEventListener('touchstart', onTouchStart, TOUCH_OPTIONS);
+    doc.removeEventListener('touchmove', onTouchMove, TOUCH_OPTIONS);
   }
 
   function onTransitionedOut(duration: number, callback: () => void): void {
@@ -398,8 +415,8 @@ export default function createTippy(
 
   function addListeners(): void {
     if (getIsCustomTouchBehavior()) {
-      on('touchstart', onTrigger, PASSIVE);
-      on('touchend', onMouseLeave as EventListener, PASSIVE);
+      on('touchstart', onTrigger, {passive: true});
+      on('touchend', onMouseLeave as EventListener, {passive: true});
     }
 
     splitBySpaces(instance.props.trigger).forEach((eventType) => {
@@ -441,6 +458,8 @@ export default function createTippy(
       return;
     }
 
+    const wasFocused = lastTriggerEvent?.type === 'focus';
+
     lastTriggerEvent = event;
     currentTarget = event.currentTarget as Element;
 
@@ -464,24 +483,14 @@ export default function createTippy(
     ) {
       shouldScheduleClickHide = true;
     } else {
-      const [value, duration] = getNormalizedTouchSettings();
-
-      if (currentInput.isTouch && value === 'hold' && duration) {
-        // We can hijack the show timeout here, it will be cleared by
-        // `scheduleHide()` when necessary
-        showTimeout = setTimeout(() => {
-          scheduleShow(event);
-        }, duration);
-      } else {
-        scheduleShow(event);
-      }
+      scheduleShow(event);
     }
 
     if (event.type === 'click') {
       isVisibleFromClick = !shouldScheduleClickHide;
     }
 
-    if (shouldScheduleClickHide) {
+    if (shouldScheduleClickHide && !wasFocused) {
       scheduleHide(event);
     }
   }
@@ -489,7 +498,7 @@ export default function createTippy(
   function onMouseMove(event: MouseEvent): void {
     const target = event.target as Node;
     const isCursorOverReferenceOrPopper =
-      reference.contains(target) || popper.contains(target);
+      getCurrentTarget().contains(target) || popper.contains(target);
 
     if (event.type === 'mousemove' && isCursorOverReferenceOrPopper) {
       return;
@@ -529,11 +538,7 @@ export default function createTippy(
     }
 
     if (instance.props.interactive) {
-      doc.body.addEventListener('mouseleave', scheduleHide);
-      doc.addEventListener('mousemove', debouncedOnMouseMove);
-      pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
-      debouncedOnMouseMove(event);
-
+      instance.hideWithInteractivity(event);
       return;
     }
 
@@ -582,11 +587,12 @@ export default function createTippy(
     const computedReference = getReferenceClientRect
       ? {
           getBoundingClientRect: getReferenceClientRect,
-          contextElement: getCurrentTarget(),
+          contextElement:
+            getReferenceClientRect.contextElement || getCurrentTarget(),
         }
       : reference;
 
-    const tippyModifier: Modifier<{}> = {
+    const tippyModifier: Modifier<'$$tippy', {}> = {
       name: '$$tippy',
       enabled: true,
       phase: 'beforeWrite',
@@ -612,16 +618,10 @@ export default function createTippy(
       },
     };
 
-    const arrowModifier = {
-      name: 'arrow',
-      enabled: !!arrow,
-      options: {
-        element: arrow,
-        padding: 3,
-      },
-    };
+    type TippyModifier = Modifier<'$$tippy', {}>;
+    type ExtendedModifiers = StrictModifiers | Partial<TippyModifier>;
 
-    const modifiers: Array<Partial<Modifier<any>>> = [
+    const modifiers: Array<ExtendedModifiers> = [
       {
         name: 'offset',
         options: {
@@ -651,17 +651,31 @@ export default function createTippy(
           adaptive: !moveTransition,
         },
       },
-      ...(getIsDefaultRenderFn() ? [arrowModifier] : []),
-      ...(popperOptions?.modifiers || []),
       tippyModifier,
     ];
 
-    instance.popperInstance = createPopper(computedReference, popper, {
-      ...popperOptions,
-      placement,
-      onFirstUpdate,
-      modifiers,
-    });
+    if (getIsDefaultRenderFn() && arrow) {
+      modifiers.push({
+        name: 'arrow',
+        options: {
+          element: arrow,
+          padding: 3,
+        },
+      });
+    }
+
+    modifiers.push(...(popperOptions?.modifiers || []));
+
+    instance.popperInstance = createPopper<ExtendedModifiers>(
+      computedReference,
+      popper,
+      {
+        ...popperOptions,
+        placement,
+        onFirstUpdate,
+        modifiers,
+      }
+    );
   }
 
   function destroyPopperInstance(): void {
@@ -738,9 +752,14 @@ export default function createTippy(
       invokeHook('onTrigger', [instance, event]);
     }
 
-    addDocumentMouseDownListener();
+    addDocumentPress();
 
-    const delay = getDelay(true);
+    let delay = getDelay(true);
+    const [touchValue, touchDelay] = getNormalizedTouchSettings();
+
+    if (currentInput.isTouch && touchValue === 'hold' && touchDelay) {
+      delay = touchDelay;
+    }
 
     if (delay) {
       showTimeout = setTimeout(() => {
@@ -757,7 +776,7 @@ export default function createTippy(
     invokeHook('onUntrigger', [instance, event]);
 
     if (!instance.state.isVisible) {
-      removeDocumentMouseDownListener();
+      removeDocumentPress();
 
       return;
     }
@@ -928,7 +947,7 @@ export default function createTippy(
     }
 
     handleStyles();
-    addDocumentMouseDownListener();
+    addDocumentPress();
 
     if (!instance.state.isMounted) {
       popper.style.transition = 'none';
@@ -963,8 +982,6 @@ export default function createTippy(
       handleAriaExpandedAttribute();
 
       pushIfUnique(mountedInstances, instance);
-
-      updateIOSClass(true);
 
       instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
@@ -1008,13 +1025,14 @@ export default function createTippy(
     instance.state.isVisible = false;
     instance.state.isShown = false;
     ignoreOnFirstUpdate = false;
+    isVisibleFromClick = false;
 
     if (getIsDefaultRenderFn()) {
       popper.style.visibility = 'hidden';
     }
 
     cleanupInteractiveMouseListeners();
-    removeDocumentMouseDownListener();
+    removeDocumentPress();
     handleStyles();
 
     if (getIsDefaultRenderFn()) {
@@ -1038,7 +1056,26 @@ export default function createTippy(
     }
   }
 
+  function hideWithInteractivity(event: MouseEvent): void {
+    /* istanbul ignore else */
+    if (__DEV__) {
+      warnWhen(
+        instance.state.isDestroyed,
+        createMemoryLeakWarning('hideWithInteractivity')
+      );
+    }
+
+    doc.addEventListener('mousemove', debouncedOnMouseMove);
+    pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
+    debouncedOnMouseMove(event);
+  }
+
   function unmount(): void {
+    /* istanbul ignore else */
+    if (__DEV__) {
+      warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('unmount'));
+    }
+
     if (instance.state.isVisible) {
       instance.hide();
     }
@@ -1061,10 +1098,6 @@ export default function createTippy(
     }
 
     mountedInstances = mountedInstances.filter((i) => i !== instance);
-
-    if (mountedInstances.length === 0) {
-      updateIOSClass(false);
-    }
 
     instance.state.isMounted = false;
     invokeHook('onHidden', [instance]);

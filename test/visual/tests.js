@@ -6,6 +6,7 @@ import inlinePositioning from '../../src/plugins/inlinePositioning';
 import followCursor from '../../src/plugins/followCursor';
 import animateFill from '../../src/plugins/animateFill';
 import createSingleton from '../../src/addons/createSingleton';
+import delegate from '../../src/addons/delegate';
 
 import '../../src/scss/index.scss';
 import '../../src/scss/border.scss';
@@ -51,7 +52,7 @@ tests.default = () => {
     content: 'hello',
     arrow: content,
     interactive: true,
-    trigger: 'click',
+    trigger: 'click focus',
   });
 
   return instance.destroy;
@@ -84,19 +85,46 @@ tests.inlinePositioning = () => {
   const instances = [];
 
   ['top', 'right', 'bottom', 'left'].forEach((placement) => {
-    const [instance] = tippy('#inlinePositioning .reference', {
+    const [instance] = tippy('#inlinePositioning .reference-connected', {
       placement,
       content: 'tippy',
       trigger: 'manual',
       inlinePositioning: true,
       plugins: [inlinePositioning],
+      hideOnClick: false,
       showOnCreate: true,
       duration: 0,
-      hideOnClick: false,
     });
 
     instances.push(instance);
   });
+
+  for (let i = 0; i < 2; i++) {
+    ['top', 'right', 'bottom', 'left'].forEach((placement) => {
+      const [instance] = tippy('#inlinePositioning .reference-disconnected', {
+        placement,
+        content: 'tippy',
+        inlinePositioning: true,
+        plugins: [inlinePositioning],
+        hideOnClick: false,
+        showOnCreate: true,
+        duration: 0,
+      });
+
+      const rects = instance.reference.getClientRects();
+
+      instance.reference.dispatchEvent(
+        new MouseEvent('mouseenter', {
+          clientX: rects[i].left,
+          clientY: rects[i].top,
+        })
+      );
+
+      instance.setProps({trigger: 'manual'});
+
+      instances.push(instance);
+    });
+  }
 
   return () => {
     instances.forEach((instance) => instance.destroy());
@@ -224,19 +252,50 @@ tests.animations = () => {
 };
 
 tests.createSingleton = () => {
-  const instances = tippy('#createSingleton .reference', {
+  const wrapper = document.querySelector('#createSingleton .wrapper');
+  const newReference = document.createElement('button');
+
+  newReference.textContent = 'Reference';
+  wrapper.append(newReference);
+
+  let instances = tippy('#createSingleton .reference', {
     placement: 'bottom',
     duration: 0,
   });
+
   const singleton = createSingleton(instances, {
     delay: 500,
     overrides: ['placement', 'duration'],
   });
 
+  instances = instances.concat(
+    tippy(newReference, {
+      content: 'hello',
+    })
+  );
+
+  singleton.setInstances(instances);
+  singleton.setProps({overrides: ['duration']});
+
   return () => {
     instances.forEach((instance) => instance.destroy());
     singleton.destroy();
   };
+};
+
+tests.delegate = () => {
+  const refs = Array.from(document.querySelectorAll('#delegate button'));
+
+  refs.forEach((ref) => {
+    ref.oncontextmenu = (e) => e.preventDefault();
+  });
+
+  const instance = delegate('#delegate', {
+    target: 'button',
+    touch: ['hold', 500],
+  });
+
+  return instance.destroy;
 };
 
 tests.animateFill = () => {

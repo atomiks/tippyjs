@@ -23,6 +23,14 @@ describe('createTippy', () => {
     expect(instance).toMatchSnapshot();
   });
 
+  it('sets `undefined` prop to the default', () => {
+    instance = createTippy(h(), {
+      theme: undefined,
+    });
+
+    expect(instance.props.theme).not.toBe(undefined);
+  });
+
   it('increments the `id` on each call with valid arguments', () => {
     const instances = [
       createTippy(h(), defaultProps),
@@ -117,13 +125,6 @@ describe('createTippy', () => {
 
     fireEvent.focusOut(instance.reference);
     expect(instance.state.isVisible).toBe(false);
-
-    // As above, bubble the mouseLeave event so the document.body handler
-    // invokes scheduleHide (but exits early and doesn't actually hide the tippy
-    // in this case).
-    fireEvent.mouseEnter(instance.reference);
-    fireEvent.mouseLeave(getChildren(instance.popper).content, {bubbles: true});
-    expect(instance.state.isVisible).toBe(true);
   });
 
   it('extends `instance.props` with plugin props', () => {

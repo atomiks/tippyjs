@@ -55,11 +55,10 @@ module.exports = {
         },
         gatsbyRemarkPlugins: [
           {
-            resolve: `gatsby-remark-prismjs`,
+            resolve: `gatsby-remark-vscode`,
             options: {
-              classPrefix: 'language-',
-              inlineCodeMarker: null,
-              aliases: {},
+              theme: `Moonlight II`,
+              extensions: ['moonlight'],
             },
           },
         ],

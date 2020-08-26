@@ -1,6 +1,6 @@
 {
   "name": "tippy.js",
-  "version": "6.1.0",
+  "version": "6.2.6",
   "description": "The complete tooltip, popover, dropdown, and menu solution for the web",
   "main": "dist/tippy.cjs.js",
   "module": "dist/tippy.esm.js",
@@ -37,18 +37,32 @@
     "url": "git+https://github.com/atomiks/tippyjs.git"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev rollup -c --watch",
-    "build": "node build/index.js && rollup -c && bundlesize",
-    "build:visual": "cross-env NODE_ENV=test rollup -c",
+    "dev": "cross-env NODE_ENV=dev rollup -c .config/rollup.config.js --watch",
+    "build": "node build/index.js && rollup -c .config/rollup.config.js && bundlesize",
+    "build:visual": "cross-env NODE_ENV=test rollup -c .config/rollup.config.js",
     "serve": "serve test/visual",
     "test:dom": "jest unit integration --coverage",
     "test:functional": "jest functional",
     "test:types": "tsc && tsd",
-    "test": "npm run test:types && npm run test:dom && npm run test:functional",
+    "test": "yarn test:types && yarn test:dom && yarn test:functional",
     "lint": "eslint . --ext .ts,.js",
-    "format": "prettier --write \"**/*.{js,ts,json,md,mdx,scss,css}\"",
+    "format": "prettier --write \"**/*.{js,ts,json,md,mdx,scss,css}\" --ignore-path .config/.prettierignore",
     "clean": "rimraf dist/ themes/ animations/ coverage/ .devserver/ .cache/ ./index.d.ts",
-    "prepare": "npm run clean && npm run build"
+    "prepare": "yarn clean && yarn build"
+  },
+  "babel": {
+    "extends": "./.config/babel.config"
+  },
+  "jest": {
+    "preset": "./.config/jest.config"
+  },
+  "eslintConfig": {
+    "extends": "./.config/eslint.config"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "bracketSpacing": false,
+    "proseWrap": "always"
   },
   "browserslist": [
     "> 0.5%",
@@ -98,7 +112,7 @@
     "@typescript-eslint/eslint-plugin": "^2.21.0",
     "@typescript-eslint/parser": "^2.21.0",
     "autoprefixer": "^9.7.4",
-    "babel-jest": "^24.9.0",
+    "babel-jest": "^25.3.0",
     "babel-plugin-dev-expression": "^0.2.2",
     "bundlesize": "^0.18.0",
     "colorette": "^1.1.0",
@@ -109,16 +123,17 @@
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "husky": "^3.1.0",
-    "jest": "^24.9.0",
+    "jest": "^25.3.0",
     "jest-environment-jsdom-fourteen": "^1.0.1",
     "jest-image-snapshot": "^2.12.0",
     "jest-puppeteer": "^4.4.0",
+    "jest-puppeteer-docker": "^1.3.2",
     "lint-staged": "^9.5.0",
     "postcss": "^7.0.26",
     "poster": "0.0.9",
     "prettier": "^2.0.1",
     "promise": "^8.0.3",
-    "puppeteer": "^2.1.0",
+    "puppeteer": "^2.1.1",
     "rimraf": "^3.0.0",
     "rollup": "^1.29.1",
     "rollup-plugin-babel": "^4.3.3",
@@ -137,6 +152,6 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "@popperjs/core": "^2.1.1"
+    "@popperjs/core": "^2.4.4"
   }
 }

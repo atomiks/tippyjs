@@ -14,7 +14,7 @@ describe('followCursor', () => {
       const page = await browser.newPage();
 
       await page.setViewport({width: 1200, height: 800});
-      await page.goto('http://localhost:5000');
+      await page.goto('http://host.docker.internal:5000');
       await navigateToTest(page, 'followCursor');
 
       const reference = await page.$(selector);
@@ -36,7 +36,7 @@ describe('followCursor', () => {
     const page = await browser.newPage();
 
     await page.setViewport({width: 1200, height: 800});
-    await page.goto('http://localhost:5000');
+    await page.goto('http://host.docker.internal:5000');
     await navigateToTest(page, 'followCursor');
 
     await page.hover(selector);
@@ -51,7 +51,7 @@ describe('followCursor', () => {
       const page = await browser.newPage();
 
       await page.setViewport({width: 1200, height: 800});
-      await page.goto('http://localhost:5000');
+      await page.goto('http://host.docker.internal:5000');
       await navigateToTest(page, 'followCursor');
 
       const reference = await page.$(selector);
@@ -74,7 +74,7 @@ describe('followCursor', () => {
       const page = await browser.newPage();
 
       await page.setViewport({width: 1200, height: 800});
-      await page.goto('http://localhost:5000');
+      await page.goto('http://host.docker.internal:5000');
       await navigateToTest(page, 'followCursor');
 
       const reference = await page.$(selector);
@@ -97,7 +97,7 @@ describe('followCursor', () => {
       const page = await browser.newPage();
 
       await page.setViewport({width: 1200, height: 800});
-      await page.goto('http://localhost:5000');
+      await page.goto('http://host.docker.internal:5000');
       await navigateToTest(page, 'followCursor');
 
       const reference = await page.$(selector);
@@ -120,7 +120,7 @@ describe('followCursor', () => {
       const page = await browser.newPage();
 
       await page.setViewport({width: 1200, height: 800});
-      await page.goto('http://localhost:5000');
+      await page.goto('http://host.docker.internal:5000');
       await navigateToTest(page, 'followCursor');
 
       const reference = await page.$(selector);

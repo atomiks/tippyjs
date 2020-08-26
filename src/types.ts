@@ -8,7 +8,7 @@ export type Content =
   | string
   | Element
   | DocumentFragment
-  | ((ref: Element) => Element | string);
+  | ((ref: Element) => string | Element | DocumentFragment);
 
 export type SingleTarget = Element;
 
@@ -57,6 +57,11 @@ export interface RenderProps {
   zIndex: number;
 }
 
+export interface GetReferenceClientRect {
+  (): ClientRect | DOMRect;
+  contextElement?: Element;
+}
+
 export interface Props extends LifecycleHooks, RenderProps {
   animateFill: boolean;
   appendTo: 'parent' | Element | ((ref: Element) => Element);
@@ -67,7 +72,7 @@ export interface Props extends LifecycleHooks, RenderProps {
   delay: number | [number | null, number | null];
   duration: number | [number | null, number | null];
   followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
-  getReferenceClientRect: null | (() => ClientRect);
+  getReferenceClientRect: null | GetReferenceClientRect;
   hideOnClick: boolean | 'toggle';
   ignoreAttributes: boolean;
   inlinePositioning: boolean;
@@ -115,6 +120,7 @@ export interface Instance<TProps = Props> {
   disable(): void;
   enable(): void;
   hide(): void;
+  hideWithInteractivity(event: MouseEvent): void;
   id: number;
   plugins: Plugin<TProps>[];
   popper: PopperElement<TProps>;
@@ -173,10 +179,20 @@ export interface Delegate<TProps = Props> {
   ): DelegateInstance<TProps>[];
 }
 
+export type CreateSingletonProps<TProps = Props> = TProps & {
+  overrides: Array<keyof TProps>;
+};
+
+export type CreateSingletonInstance<TProps = CreateSingletonProps> = Instance<
+  TProps
+> & {
+  setInstances(instances: Instance<any>[]): void;
+};
+
 export type CreateSingleton<TProps = Props> = (
-  tippyInstances: Instance<TProps | Props>[],
-  optionalProps?: Partial<TProps> & {overrides?: Array<keyof TProps>}
-) => Instance<TProps>;
+  tippyInstances: Instance<any>[],
+  optionalProps?: Partial<CreateSingletonProps<TProps>>
+) => CreateSingletonInstance<CreateSingletonProps<TProps>>;
 
 declare const delegate: Delegate;
 declare const createSingleton: CreateSingleton;

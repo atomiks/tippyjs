@@ -122,28 +122,6 @@ bundler environment. If you're using the CDN version, then you'll be using
 
 ### What global side effects are there?
 
-Tippy has some environment side effects to make it work better across different
-devices.
-
-#### iOS's inability to employ "click outside" behavior
-
-Tippy adds this class to the `<body>` for iOS when there are any instances
-showing:
-
-```css
-.tippy-iOS {
-  cursor: pointer !important;
-  -webkit-tap-highlight-color: transparent;
-}
-```
-
-This allows tooltips to hide when the user taps off a reference element. This
-has a side effect of allowing `mouse` related events to fire on "unclickable"
-elements on iOS, which is normally not possible. Android browsers on the other
-hand allow this, so it effectively makes iOS & Android browsers behave the same.
-
-#### Document and window listeners
-
 There are global listeners to determine the user's current input type (e.g.
 `touch`), and other UX helpers.
 

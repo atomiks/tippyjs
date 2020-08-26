@@ -38,17 +38,24 @@
       max-width: 300px;
     }
 
-    #inlinePositioning .reference {
+    #inlinePositioning [class^='reference'] {
       color: white;
       outline: 1px solid black;
     }
   </style>
   <div class="wrapper">
-    This is some text and an inline element that
-    <span class="reference"
-      >spans over many lines to demonstrate this inline positioning
-      solution</span
+    This is
+    <span class="reference-connected"
+      >some text and an inline element that spans over many lines to demonstrate
+      this inline positioning solution</span
     >, and some more text.
+  </div>
+
+  <div class="wrapper">
+    This is some text and an
+    <span class="reference-disconnected">inline element that</span>
+    spans over many lines to demonstrate this inline positioning solution , and
+    some more text.
   </div>
 </div>
 
@@ -84,6 +91,14 @@
 </div>
 
 <div class="container" id="createSingleton">
+  <div class="wrapper">
+    <button class="reference" data-tippy-content="Tippy A">Reference</button>
+    <button class="reference" data-tippy-content="Tippy B">Reference</button>
+    <button class="reference" data-tippy-content="Tippy C">Reference</button>
+  </div>
+</div>
+
+<div class="container" id="delegate">
   <div class="wrapper">
     <button class="reference" data-tippy-content="Tippy A">Reference</button>
     <button class="reference" data-tippy-content="Tippy B">Reference</button>

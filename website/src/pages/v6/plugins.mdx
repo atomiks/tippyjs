@@ -64,10 +64,16 @@ const plugin = {
 };
 ```
 
-The plugin's function `fn` returns an object of lifecycle hooks.
+The plugin's function `fn` returns an object of lifecycle hooks. Plugins are
+invoked per-instance and the plugin function definition takes the instance as an
+argument, so you can use private variables to create internal state in the
+plugin closure.
 
-Here's an example of a plugin that causes a popper to hide if no elements within
-it are in focus (for interactivity):
+Here are some examples:
+
+#### hideOnPopperBlur
+
+Causes a popper to hide if no elements within it are in focus.
 
 ```js
 const hideOnPopperBlur = {
@@ -89,16 +95,68 @@ const hideOnPopperBlur = {
     };
   },
 };
-
-// Our new prop is enabled by default (defaultValue: true)
-tippy(targets, {
-  plugins: [hideOnPopperBlur],
-});
 ```
 
-Plugins are invoked per-instance and the plugin function definition takes the
-instance as an argument, so you can use private variables to create internal
-state in the plugin closure. This is how the `followCursor` plugin works.
+#### globalStore
+
+Manages tippy instances within a global store.
+
+```js
+let tippyInstances = [];
+
+const globalStore = {
+  fn(instance) {
+    return {
+      onCreate() {
+        tippyInstances.push(instance);
+      },
+      onDestroy() {
+        tippyInstances = tippyInstances.filter((i) => i !== instance);
+      },
+    };
+  },
+};
+
+// APIs to manipulate all tippy instances
+export function updateAll(props) {
+  tippyInstances.forEach((instance) => {
+    instance.setProps(props);
+  });
+}
+```
+
+#### hideOnEsc
+
+Hides the tippy when the escape key is pressed.
+
+```js
+const hideOnEsc = {
+  name: 'hideOnEsc',
+  defaultValue: true,
+  fn({hide}) {
+    function onKeyDown(event) {
+      if (event.keyCode === 27) {
+        hide();
+      }
+    }
+
+    return {
+      onShow() {
+        document.addEventListener('keydown', onKeyDown);
+      },
+      onHide() {
+        document.removeEventListener('keydown', onKeyDown);
+      },
+    };
+  },
+};
+```
+
+<Demo>
+  <Tippy hideOnEsc>
+    <Button>Focus me then press `esc`</Button>
+  </Tippy>
+</Demo>
 
 ### TypeScript
 

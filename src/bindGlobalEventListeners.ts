@@ -1,4 +1,4 @@
-import {PASSIVE} from './constants';
+import {TOUCH_OPTIONS} from './constants';
 import {isReferenceElement} from './dom-utils';
 
 export const currentInput = {isTouch: false};
@@ -58,9 +58,6 @@ export function onWindowBlur(): void {
 }
 
 export default function bindGlobalEventListeners(): void {
-  document.addEventListener('touchstart', onDocumentTouchStart, {
-    ...PASSIVE,
-    capture: true,
-  });
+  document.addEventListener('touchstart', onDocumentTouchStart, TOUCH_OPTIONS);
   window.addEventListener('blur', onWindowBlur);
 }

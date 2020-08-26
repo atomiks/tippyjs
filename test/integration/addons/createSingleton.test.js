@@ -244,3 +244,52 @@ describe('createSingleton', () => {
     expect(singleton.props.content).toBe('hello');
   });
 });
+
+describe('overrides prop', () => {
+  it('individual tippy instance props override singleton instance props', () => {
+    const tippyInstances = tippy([h(), h()], {delay: 100});
+    const singletonInstance = createSingleton(tippyInstances, {
+      delay: 0,
+      overrides: ['delay'],
+    });
+
+    fireEvent.mouseEnter(tippyInstances[0].reference);
+
+    expect(singletonInstance.props.delay).toBe(100);
+  });
+
+  it('can be updated via .setProps()', () => {
+    const tippyInstances = tippy([h(), h()], {delay: 100});
+    const singletonInstance = createSingleton(tippyInstances, {
+      delay: 0,
+      overrides: ['delay'],
+    });
+
+    singletonInstance.setProps({overrides: []});
+
+    fireEvent.mouseEnter(tippyInstances[0].reference);
+
+    expect(singletonInstance.props.delay).toBe(0);
+  });
+});
+
+describe('.setInstances() method', () => {
+  it('updates the singleton instances', () => {
+    const initialRefs = [h(), h()];
+    const nextRefs = [initialRefs[0], h()];
+
+    const initialInstances = tippy(initialRefs);
+    const nextInstances = tippy(nextRefs);
+
+    const singleton = createSingleton(initialInstances);
+
+    singleton.setInstances(nextInstances);
+
+    expect(initialInstances[1].state.isEnabled).toBe(true);
+    expect(nextInstances[1].state.isEnabled).toBe(false);
+
+    fireEvent.mouseEnter(nextRefs[1]);
+
+    expect(singleton.state.isVisible).toBe(true);
+  });
+});

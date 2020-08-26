@@ -27,8 +27,6 @@ Now, let's add some JavaScript:
 ```js
 tippy('#ajax-tippy', {
   content: 'Loading...',
-  // This prop is recommended if your tooltip changes size while showing
-  flipOnUpdate: true,
 });
 ```
 
@@ -46,7 +44,6 @@ lifecycle:
 ```js
 tippy('#ajax-tippy', {
   content: 'Loading...',
-  flipOnUpdate: true,
   onShow(instance) {
     // Code here is executed every time the tippy shows
   },

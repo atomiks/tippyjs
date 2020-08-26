@@ -1,0 +1,38 @@
+name: Tests
+on: [push, pull_request]
+env:
+  CI: true
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+
+jobs:
+  checks:
+    name: Linting and Type checking
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: npm install
+      - run: npm run lint
+      - run: npm run test:types
+
+  dom-tests:
+    name: Unit and Integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - uses: mujo-code/puppeteer-headful@master
+      - run: npm install
+      - run: npm run test:dom
+
+  functional-tests:
+    name: Chromium Functional
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - uses: mujo-code/puppeteer-headful@master
+      - run: npm install
+      - run: npm run test:functional
+        env:
+          PUPPETEER_BROWSER: chromium

@@ -134,11 +134,9 @@ describe('followCursor', () => {
     placements.forEach((placement) => {
       instance = tippy(h(), {followCursor: 'initial', placement});
 
-      // lastMouseMove event is used in this case
-      instance.reference.dispatchEvent(
-        new MouseEvent('mouseenter', {...first})
-      );
+      fireEvent.mouseMove(instance.reference, first);
 
+      instance.show();
       jest.runAllTimers();
 
       fireEvent.mouseMove(instance.reference, first);
@@ -241,38 +239,6 @@ describe('followCursor', () => {
     });
   });
 
-  it('touch device behavior is "initial"', () => {
-    enableTouchEnvironment();
-
-    instance = tippy(h(), {followCursor: true, flip: false});
-
-    fireEvent.mouseEnter(instance.reference, first);
-
-    jest.runAllTimers();
-
-    fireEvent.mouseMove(instance.reference, first);
-    rect = instance.props.getReferenceClientRect();
-
-    matches({
-      top: first.clientY,
-      bottom: first.clientY,
-      left: first.clientX,
-      right: first.clientX,
-    });
-
-    fireEvent.mouseMove(instance.reference, second);
-    rect = instance.props.getReferenceClientRect();
-
-    matches({
-      top: first.clientY,
-      bottom: first.clientY,
-      left: first.clientX,
-      right: first.clientX,
-    });
-
-    disableTouchEnvironment();
-  });
-
   it('should reset popperInstance.reference if triggered by `focus`', () => {
     instance = tippy(h(), {
       followCursor: true,
@@ -301,8 +267,9 @@ describe('followCursor', () => {
       followCursor: 'initial',
     });
 
-    fireEvent.mouseEnter(instance.reference, first);
+    fireEvent.mouseMove(instance.reference, first);
 
+    instance.show();
     jest.runAllTimers();
 
     fireEvent.mouseMove(instance.reference, second);
