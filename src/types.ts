@@ -156,6 +156,10 @@ export interface Tippy<TProps = Props> extends TippyStatics {
   >[];
 }
 
+export interface Tippy<TProps = Props> extends TippyStatics {
+  (targets: Targets, optionalProps?: Partial<TProps>): Instance<TProps> | Instance<TProps>[];
+}
+
 declare const tippy: Tippy;
 
 // =============================================================================
