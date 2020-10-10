@@ -274,10 +274,6 @@ tests.createSingleton = () => {
     })
   );
 
-  setInterval(() => {
-    instances.slice(-1)[0].setContent(Math.random());
-  }, 1000);
-
   singleton.setInstances(instances);
   singleton.setProps({overrides: ['duration']});
 
@@ -294,12 +290,12 @@ tests.delegate = () => {
     ref.oncontextmenu = (e) => e.preventDefault();
   });
 
-  const instance = delegate('#delegate', {
+  const instances = delegate('#delegate', {
     target: 'button',
     touch: ['hold', 500],
   });
 
-  return instance.destroy;
+  return () => instances.forEach((instance) => instance.destroy());
 };
 
 tests.animateFill = () => {

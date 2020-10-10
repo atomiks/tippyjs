@@ -32,6 +32,7 @@ function delegate(
 
   let listeners: ListenerObject[] = [];
   let childTippyInstances: Instance[] = [];
+  let disabled = false;
 
   const {target} = props;
 
@@ -43,7 +44,7 @@ function delegate(
   const normalizedReturnValue = normalizeToArray(returnValue);
 
   function onTrigger(event: Event): void {
-    if (!event.target) {
+    if (!event.target || disabled) {
       return;
     }
 
@@ -113,6 +114,9 @@ function delegate(
 
   function applyMutations(instance: Instance): void {
     const originalDestroy = instance.destroy;
+    const originalEnable = instance.enable;
+    const originalDisable = instance.disable;
+
     instance.destroy = (shouldDestroyChildInstances = true): void => {
       if (shouldDestroyChildInstances) {
         childTippyInstances.forEach((instance) => {
@@ -124,6 +128,18 @@ function delegate(
 
       removeEventListeners();
       originalDestroy();
+    };
+
+    instance.enable = (): void => {
+      originalEnable();
+      childTippyInstances.forEach((instance) => instance.enable());
+      disabled = false;
+    };
+
+    instance.disable = (): void => {
+      originalDisable();
+      childTippyInstances.forEach((instance) => instance.disable());
+      disabled = true;
     };
 
     addEventListeners(instance);
