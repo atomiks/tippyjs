@@ -274,6 +274,10 @@ tests.createSingleton = () => {
     })
   );
 
+  setInterval(() => {
+    instances.slice(-1)[0].setContent(Math.random());
+  }, 1000);
+
   singleton.setInstances(instances);
   singleton.setProps({overrides: ['duration']});
 

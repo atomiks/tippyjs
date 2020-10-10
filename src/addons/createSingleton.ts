@@ -6,6 +6,7 @@ import {
   CreateSingletonProps,
   ReferenceElement,
   CreateSingletonInstance,
+  Instance,
 } from '../types';
 import {removeProperties} from '../utils';
 import {errorWhen} from '../validation';
@@ -26,17 +27,18 @@ const createSingleton: CreateSingleton = (
     );
   }
 
-  let mutTippyInstances = tippyInstances;
+  let individualInstances = tippyInstances;
   let references: Array<ReferenceElement> = [];
   let currentTarget: Element;
   let overrides = optionalProps.overrides;
+  let interceptSetPropsCleanups: Array<() => void> = [];
 
   function setReferences(): void {
-    references = mutTippyInstances.map((instance) => instance.reference);
+    references = individualInstances.map((instance) => instance.reference);
   }
 
   function enableInstances(isEnabled: boolean): void {
-    mutTippyInstances.forEach((instance) => {
+    individualInstances.forEach((instance) => {
       if (isEnabled) {
         instance.enable();
       } else {
@@ -45,10 +47,28 @@ const createSingleton: CreateSingleton = (
     });
   }
 
+  function interceptSetProps(singleton: Instance): Array<() => void> {
+    return individualInstances.map((instance) => {
+      const originalSetProps = instance.setProps;
+
+      instance.setProps = (props): void => {
+        originalSetProps(props);
+
+        if (instance.reference === currentTarget) {
+          singleton.setProps(props);
+        }
+      };
+
+      return (): void => {
+        instance.setProps = originalSetProps;
+      };
+    });
+  }
+
   enableInstances(false);
   setReferences();
 
-  const singleton: Plugin = {
+  const plugin: Plugin = {
     fn() {
       return {
         onDestroy(): void {
@@ -68,7 +88,7 @@ const createSingleton: CreateSingleton = (
           const overrideProps = (overrides || [])
             .concat('content')
             .reduce((acc, prop) => {
-              (acc as any)[prop] = mutTippyInstances[index].props[prop];
+              (acc as any)[prop] = individualInstances[index].props[prop];
               return acc;
             }, {});
 
@@ -81,31 +101,35 @@ const createSingleton: CreateSingleton = (
     },
   };
 
-  const instance = tippy(div(), {
+  const singleton = tippy(div(), {
     ...removeProperties(optionalProps, ['overrides']),
-    plugins: [singleton, ...(optionalProps.plugins || [])],
+    plugins: [plugin, ...(optionalProps.plugins || [])],
     triggerTarget: references,
   }) as CreateSingletonInstance<CreateSingletonProps>;
 
-  const originalSetProps = instance.setProps;
+  const originalSetProps = singleton.setProps;
 
-  instance.setProps = (props): void => {
+  singleton.setProps = (props): void => {
     overrides = props.overrides || overrides;
     originalSetProps(props);
   };
 
-  instance.setInstances = (nextInstances): void => {
+  singleton.setInstances = (nextInstances): void => {
     enableInstances(true);
+    interceptSetPropsCleanups.forEach((fn) => fn());
 
-    mutTippyInstances = nextInstances;
+    individualInstances = nextInstances;
 
     enableInstances(false);
     setReferences();
+    interceptSetProps(singleton);
 
-    instance.setProps({triggerTarget: references});
+    singleton.setProps({triggerTarget: references});
   };
 
-  return instance;
+  interceptSetPropsCleanups = interceptSetProps(singleton);
+
+  return singleton;
 };
 
 export default createSingleton;
