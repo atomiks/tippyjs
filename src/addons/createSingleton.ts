@@ -7,6 +7,7 @@ import {
   ReferenceElement,
   CreateSingletonInstance,
   Instance,
+  Props,
 } from '../types';
 import {removeProperties} from '../utils';
 import {errorWhen} from '../validation';
@@ -85,7 +86,7 @@ const createSingleton: CreateSingleton = (
 
           currentTarget = target;
 
-          const overrideProps = (overrides || [])
+          const overrideProps: Partial<Props> = (overrides || [])
             .concat('content')
             .reduce((acc, prop) => {
               (acc as any)[prop] = individualInstances[index].props[prop];
@@ -94,7 +95,10 @@ const createSingleton: CreateSingleton = (
 
           instance.setProps({
             ...overrideProps,
-            getReferenceClientRect: () => target.getBoundingClientRect(),
+            getReferenceClientRect:
+              typeof overrideProps.getReferenceClientRect === 'function'
+                ? overrideProps.getReferenceClientRect
+                : (): ClientRect => target.getBoundingClientRect(),
           });
         },
       };
