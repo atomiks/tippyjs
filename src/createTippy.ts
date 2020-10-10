@@ -66,7 +66,6 @@ export default function createTippy(
   let listeners: ListenerObject[] = [];
   let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce);
   let currentTarget: Element;
-  const doc = getOwnerDocument(props.triggerTarget || reference);
 
   // ===========================================================================
   // 🔑 Public members
@@ -159,7 +158,7 @@ export default function createTippy(
       instance.props.interactive &&
       instance.props.trigger.indexOf('mouseenter') >= 0
     ) {
-      doc.addEventListener('mousemove', debouncedOnMouseMove);
+      getDocument().addEventListener('mousemove', debouncedOnMouseMove);
       debouncedOnMouseMove(event);
     }
   });
@@ -185,6 +184,11 @@ export default function createTippy(
 
   function getCurrentTarget(): Element {
     return currentTarget || reference;
+  }
+
+  function getDocument(): Document {
+    const parent = getCurrentTarget().parentNode as Element;
+    return parent ? getOwnerDocument(parent) : document;
   }
 
   function getDefaultTemplateChildren(): PopperChildren {
@@ -282,7 +286,7 @@ export default function createTippy(
   }
 
   function cleanupInteractiveMouseListeners(): void {
-    doc.removeEventListener('mousemove', debouncedOnMouseMove);
+    getDocument().removeEventListener('mousemove', debouncedOnMouseMove);
     mouseMoveListeners = mouseMoveListeners.filter(
       (listener) => listener !== debouncedOnMouseMove
     );
@@ -350,6 +354,7 @@ export default function createTippy(
   }
 
   function addDocumentPress(): void {
+    const doc = getDocument();
     doc.addEventListener('mousedown', onDocumentPress, true);
     doc.addEventListener('touchend', onDocumentPress, TOUCH_OPTIONS);
     doc.addEventListener('touchstart', onTouchStart, TOUCH_OPTIONS);
@@ -357,6 +362,7 @@ export default function createTippy(
   }
 
   function removeDocumentPress(): void {
+    const doc = getDocument();
     doc.removeEventListener('mousedown', onDocumentPress, true);
     doc.removeEventListener('touchend', onDocumentPress, TOUCH_OPTIONS);
     doc.removeEventListener('touchstart', onTouchStart, TOUCH_OPTIONS);
@@ -1065,7 +1071,7 @@ export default function createTippy(
       );
     }
 
-    doc.addEventListener('mousemove', debouncedOnMouseMove);
+    getDocument().addEventListener('mousemove', debouncedOnMouseMove);
     pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
     debouncedOnMouseMove(event);
   }
