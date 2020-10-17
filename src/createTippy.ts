@@ -989,6 +989,10 @@ export default function createTippy(
 
       pushIfUnique(mountedInstances, instance);
 
+      // certain modifiers (e.g. `maxSize`) require a second update after the
+      // popper has been positioned for the first time
+      instance.popperInstance?.forceUpdate();
+
       instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
 
