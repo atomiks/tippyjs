@@ -64,7 +64,9 @@ export function getOwnerDocument(
   elementOrElements: Element | Element[]
 ): Document {
   const [element] = normalizeToArray(elementOrElements);
-  return element ? element.ownerDocument || document : document;
+
+  // Elements created via a <template> have an ownerDocument with no reference to the body
+  return element?.ownerDocument?.body ? element.ownerDocument : document;
 }
 
 export function isCursorOutsideInteractiveBorder(

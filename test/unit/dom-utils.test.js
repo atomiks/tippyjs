@@ -98,3 +98,19 @@ describe('isReferenceElement', () => {
     expect(DomUtils.isReferenceElement(instance.popper)).toBe(false);
   });
 });
+
+describe('getOwnerDocument', () => {
+  it('finds the ownerDocument of an element', () => {
+    expect(DomUtils.getOwnerDocument(document.createElement('div'))).toBe(document);
+  });
+
+  it('uses the default document if the element was created from a template', () => {
+    const template = document.createElement('template');
+
+    template.innerHTML = '<div></div>';
+
+    const div = template.content.firstChild;
+
+    expect(DomUtils.getOwnerDocument(div)).toBe(document);
+  });
+});
