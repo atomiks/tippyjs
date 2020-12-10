@@ -83,12 +83,9 @@ const inlinePositioning: InlinePositioning = {
               rect.top - 2 <= event.clientY &&
               rect.bottom + 2 >= event.clientY
           );
-
-          cursorRectIndex = rects.indexOf(cursorRect);
+          const index = rects.indexOf(cursorRect);
+          cursorRectIndex = index > -1 ? index : cursorRectIndex;
         }
-      },
-      onUntrigger(): void {
-        cursorRectIndex = -1;
       },
     };
   },
