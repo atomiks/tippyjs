@@ -87,6 +87,9 @@ const inlinePositioning: InlinePositioning = {
           cursorRectIndex = index > -1 ? index : cursorRectIndex;
         }
       },
+      onHidden(): void {
+        cursorRectIndex = -1;
+      },
     };
   },
 };
