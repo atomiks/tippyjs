@@ -30,9 +30,10 @@ const createSingleton: CreateSingleton = (
 
   let individualInstances = tippyInstances;
   let references: Array<ReferenceElement> = [];
-  let currentTarget: Element;
+  let currentTarget: Element | null;
   let overrides = optionalProps.overrides;
   let interceptSetPropsCleanups: Array<() => void> = [];
+  let shownOnCreate = false;
 
   function setReferences(): void {
     references = individualInstances.map((instance) => instance.reference);
@@ -66,6 +67,36 @@ const createSingleton: CreateSingleton = (
     });
   }
 
+  // have to pass singleton, as it maybe undefined on first call
+  function prepareInstance(
+    singleton: Instance,
+    target: ReferenceElement
+  ): void {
+    const index = references.indexOf(target);
+
+    // bail-out
+    if (target === currentTarget) {
+      return;
+    }
+
+    currentTarget = target;
+
+    const overrideProps: Partial<Props> = (overrides || [])
+      .concat('content')
+      .reduce((acc, prop) => {
+        (acc as any)[prop] = individualInstances[index].props[prop];
+        return acc;
+      }, {});
+
+    singleton.setProps({
+      ...overrideProps,
+      getReferenceClientRect:
+        typeof overrideProps.getReferenceClientRect === 'function'
+          ? overrideProps.getReferenceClientRect
+          : (): ClientRect => target.getBoundingClientRect(),
+    });
+  }
+
   enableInstances(false);
   setReferences();
 
@@ -75,31 +106,23 @@ const createSingleton: CreateSingleton = (
         onDestroy(): void {
           enableInstances(true);
         },
-        onTrigger(instance, event): void {
-          const target = event.currentTarget as Element;
-          const index = references.indexOf(target);
-
-          // bail-out
-          if (target === currentTarget) {
-            return;
+        onHidden(): void {
+          currentTarget = null;
+        },
+        onClickOutside(instance): void {
+          if (instance.props.showOnCreate && !shownOnCreate) {
+            shownOnCreate = true;
+            currentTarget = null;
           }
-
-          currentTarget = target;
-
-          const overrideProps: Partial<Props> = (overrides || [])
-            .concat('content')
-            .reduce((acc, prop) => {
-              (acc as any)[prop] = individualInstances[index].props[prop];
-              return acc;
-            }, {});
-
-          instance.setProps({
-            ...overrideProps,
-            getReferenceClientRect:
-              typeof overrideProps.getReferenceClientRect === 'function'
-                ? overrideProps.getReferenceClientRect
-                : (): ClientRect => target.getBoundingClientRect(),
-          });
+        },
+        onShow(instance): void {
+          if (instance.props.showOnCreate && !shownOnCreate) {
+            shownOnCreate = true;
+            prepareInstance(instance, references[0]);
+          }
+        },
+        onTrigger(instance, event): void {
+          prepareInstance(instance, event.currentTarget as Element);
         },
       };
     },
@@ -110,6 +133,61 @@ const createSingleton: CreateSingleton = (
     plugins: [plugin, ...(optionalProps.plugins || [])],
     triggerTarget: references,
   }) as CreateSingletonInstance<CreateSingletonProps>;
+
+  const originalShow = singleton.show;
+
+  singleton.show = (target?: ReferenceElement | Instance | number): void => {
+    originalShow();
+
+    // first time, showOnCreate or programmatic call with no params
+    // default to showing first instance
+    if (!currentTarget && target == null) {
+      return prepareInstance(singleton, references[0]);
+    }
+
+    // triggered from event (do nothing as prepareInstance already called by onTrigger)
+    // programmatic call with no params when already visible (do nothing again)
+    if (currentTarget && target == null) {
+      return;
+    }
+
+    // target is index of instance
+    if (typeof target === 'number') {
+      return (
+        references[target] && prepareInstance(singleton, references[target])
+      );
+    }
+
+    // target is a child tippy instance
+    if (individualInstances.includes(target as Instance)) {
+      const ref = (target as Instance).reference;
+      return prepareInstance(singleton, ref);
+    }
+
+    // target is a ReferenceElement
+    if (references.includes(target as ReferenceElement)) {
+      return prepareInstance(singleton, target as ReferenceElement);
+    }
+  };
+
+  singleton.showNext = (): void => {
+    const first = references[0];
+    if (!currentTarget) {
+      return singleton.show(0);
+    }
+    const index = references.indexOf(currentTarget);
+    singleton.show(references[index + 1] || first);
+  };
+
+  singleton.showPrevious = (): void => {
+    const last = references[references.length - 1];
+    if (!currentTarget) {
+      return singleton.show(last);
+    }
+    const index = references.indexOf(currentTarget);
+    const target = references[index - 1] || last;
+    singleton.show(target);
+  };
 
   const originalSetProps = singleton.setProps;
 

@@ -266,6 +266,7 @@ tests.createSingleton = () => {
   const singleton = createSingleton(instances, {
     delay: 500,
     overrides: ['placement', 'duration'],
+    showOnCreate: true,
   });
 
   instances = instances.concat(

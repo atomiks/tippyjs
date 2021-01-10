@@ -64,6 +64,46 @@ const singleton = createSingleton(tippyInstances, {
 });
 ```
 
+### Showing specific tippy instance
+
+The `.show()` method of singleton accepts an additional parameter:
+
+```js
+// Show first child tippy instance if no parameter given
+singleton.show();
+
+// Show given child tippy instance
+singleton.show(tippyInstances[1]);
+
+// Show child tippy instance related to given reference element
+singleton.show(document.querySelector('button'));
+
+// Show child tippy instance at given index
+singleton.show(2); // i.e equivalent to passing tippyInstances[2]
+```
+
+### Show instances in order
+
+The `.showNext()` and `showPrevious()` methods allow you to loop through and
+show the child tippy instances in forward or reverse order respectively,
+relative to `tippyInstances` array given in `createSingleton`
+
+```js
+// if no child tippy is shown, show first one, otherwise show the next one
+singleton.showNext();
+
+// if no child tippy is shown, show last one, otherwise show the previous one
+singleton.showPrevious();
+```
+
+Both methods will loop to the other end, like pac-man
+
+```js
+singleton.show(0); // show first
+singleton.showPrevious(); // loops back and shows last item
+singleton.showNext(); // loops to the front and shows first item
+```
+
 #### Update
 
 You can update the singleton's instances with the `.setInstances()` method:
