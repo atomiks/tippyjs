@@ -293,3 +293,159 @@ describe('.setInstances() method', () => {
     expect(singleton.state.isVisible).toBe(true);
   });
 });
+
+describe('.show() method', () => {
+  const getInstances = () =>
+    [{content: 'first'}, {content: 'second'}, {content: 'last'}].map((props) =>
+      tippy(h(), props)
+    );
+
+  it('shows the first tippy instance when no parameters are passed', () => {
+    const singletonInstance = createSingleton(getInstances());
+
+    singletonInstance.show();
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('first');
+  });
+
+  it('shows the tippy instance passed as an argument', () => {
+    const tippyInstances = getInstances();
+    const singletonInstance = createSingleton(tippyInstances);
+
+    singletonInstance.show(tippyInstances[1]);
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('second');
+  });
+
+  it('shows the tippy instance related to the reference element passed as an argument', () => {
+    const tippyInstances = getInstances();
+    const singletonInstance = createSingleton(tippyInstances);
+
+    singletonInstance.show(tippyInstances[1].reference);
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('second');
+  });
+
+  it('shows the tippy instance at the given index number', () => {
+    const singletonInstance = createSingleton(getInstances());
+
+    singletonInstance.show(1);
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('second');
+  });
+});
+
+describe('.showNext() method', () => {
+  const getInstances = () =>
+    [{content: 'first'}, {content: 'second'}, {content: 'last'}].map((props) =>
+      tippy(h(), props)
+    );
+
+  it('shows the first tippy instance if none is visible', () => {
+    const singletonInstance = createSingleton(getInstances());
+
+    singletonInstance.showNext();
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('first');
+  });
+  it('shows the tippy instance after the currently visible one', () => {
+    const singletonInstance = createSingleton(getInstances());
+
+    singletonInstance.show();
+
+    expect(singletonInstance.props.content).toBe('first');
+    singletonInstance.showNext();
+    expect(singletonInstance.props.content).toBe('second');
+    singletonInstance.showNext();
+    expect(singletonInstance.props.content).toBe('last');
+  });
+  it('loops to the beginning if the last instance is visible', () => {
+    const singletonInstance = createSingleton(getInstances());
+
+    singletonInstance.show(2);
+
+    expect(singletonInstance.props.content).toBe('last');
+    singletonInstance.showNext();
+    expect(singletonInstance.props.content).toBe('first');
+  });
+});
+
+describe('.showPrevious() method', () => {
+  const getInstances = () =>
+    [{content: 'first'}, {content: 'second'}, {content: 'last'}].map((props) =>
+      tippy(h(), props)
+    );
+
+  it('shows the last tippy instance if none is visible', () => {
+    const singletonInstance = createSingleton(getInstances());
+
+    singletonInstance.showPrevious();
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('last');
+  });
+  it('shows the tippy instance before the currently visible one', () => {
+    const singletonInstance = createSingleton(getInstances(), {
+      showOnCreate: true,
+    });
+
+    singletonInstance.hide();
+    singletonInstance.show(2);
+
+    expect(singletonInstance.props.content).toBe('last');
+    singletonInstance.showPrevious();
+    expect(singletonInstance.props.content).toBe('second');
+    singletonInstance.showPrevious();
+    expect(singletonInstance.props.content).toBe('first');
+  });
+  it('loops to the end if the first instance is visible', () => {
+    const singletonInstance = createSingleton(getInstances());
+
+    singletonInstance.show();
+
+    expect(singletonInstance.props.content).toBe('first');
+    singletonInstance.showPrevious();
+    expect(singletonInstance.props.content).toBe('last');
+  });
+});
+
+describe('showOnCreate prop', () => {
+  it('shows the first tippy instance on creation', () => {
+    const tippyInstances = [
+      {content: 'first'},
+      {content: 'second'},
+    ].map((props) => tippy(h(), props));
+
+    const singletonInstance = createSingleton(tippyInstances, {
+      showOnCreate: true,
+    });
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('first');
+  });
+
+  it('resets correctly if showOnCreate is cancelled by a click outside', () => {
+    const tippyInstances = [
+      {content: 'first'},
+      {content: 'second'},
+    ].map((props) => tippy(h(), props));
+
+    const singletonInstance = createSingleton(tippyInstances, {
+      showOnCreate: true,
+      delay: 500,
+    });
+
+    fireEvent.mouseDown(document.body);
+    jest.runAllTimers();
+    fireEvent.mouseEnter(tippyInstances[1].reference);
+    jest.runAllTimers();
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('second');
+  });
+});
