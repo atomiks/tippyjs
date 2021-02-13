@@ -187,6 +187,9 @@ export type CreateSingletonInstance<TProps = CreateSingletonProps> = Instance<
   TProps
 > & {
   setInstances(instances: Instance<any>[]): void;
+  show(target?: ReferenceElement | Instance | number): void;
+  showNext(): void;
+  showPrevious(): void;
 };
 
 export type CreateSingleton<TProps = Props> = (
