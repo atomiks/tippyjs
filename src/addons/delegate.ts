@@ -1,4 +1,5 @@
 import tippy from '..';
+import {TOUCH_OPTIONS} from '../constants';
 import {defaultProps} from '../props';
 import {Instance, Props, Targets} from '../types';
 import {ListenerObject} from '../types-internal';
@@ -99,7 +100,7 @@ function delegate(
   function addEventListeners(instance: Instance): void {
     const {reference} = instance;
 
-    on(reference, 'touchstart', onTrigger);
+    on(reference, 'touchstart', onTrigger, TOUCH_OPTIONS);
     on(reference, 'mouseover', onTrigger);
     on(reference, 'focusin', onTrigger);
     on(reference, 'click', onTrigger);
