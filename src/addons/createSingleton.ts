@@ -11,6 +11,39 @@ import {
 } from '../types';
 import {removeProperties} from '../utils';
 import {errorWhen} from '../validation';
+import {applyStyles, Modifier} from '@popperjs/core';
+
+// The default `applyStyles` modifier has a cleanup function that gets called
+// every time the popper is destroyed (i.e. a new target), removing the styles
+// and causing transitions to break for singletons when the console is open, but
+// most notably for non-transform styles being used, `gpuAcceleration: false`.
+const applyStylesModifier: Modifier<'applyStyles', {}> = {
+  ...applyStyles,
+  effect({state}) {
+    const initialStyles = {
+      popper: {
+        position: state.options.strategy,
+        left: '0',
+        top: '0',
+        margin: '0',
+      },
+      arrow: {
+        position: 'absolute',
+      },
+      reference: {},
+    };
+
+    Object.assign(state.elements.popper.style, initialStyles.popper);
+    state.styles = initialStyles;
+
+    if (state.elements.arrow) {
+      Object.assign(state.elements.arrow.style, initialStyles.arrow);
+    }
+
+    // intentionally return no cleanup function
+    // return () => { ... }
+  },
+};
 
 const createSingleton: CreateSingleton = (
   tippyInstances,
@@ -132,6 +165,12 @@ const createSingleton: CreateSingleton = (
     ...removeProperties(optionalProps, ['overrides']),
     plugins: [plugin, ...(optionalProps.plugins || [])],
     triggerTarget: references,
+    popperOptions: {
+      modifiers: [
+        ...(optionalProps.popperOptions?.modifiers || []),
+        applyStylesModifier,
+      ],
+    },
   }) as CreateSingletonInstance<CreateSingletonProps>;
 
   const originalShow = singleton.show;
