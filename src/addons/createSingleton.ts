@@ -166,6 +166,7 @@ const createSingleton: CreateSingleton = (
     plugins: [plugin, ...(optionalProps.plugins || [])],
     triggerTarget: references,
     popperOptions: {
+      ...optionalProps.popperOptions,
       modifiers: [
         ...(optionalProps.popperOptions?.modifiers || []),
         applyStylesModifier,
