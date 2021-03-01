@@ -301,9 +301,10 @@ export default function createTippy(
     }
 
     // Clicked on interactive popper
+    const actualTarget = (event.composedPath && event.composedPath()[0]) || event.target;
     if (
       instance.props.interactive &&
-      popper.contains(event.target as Element)
+      popper.contains(actualTarget as Element)
     ) {
       return;
     }
