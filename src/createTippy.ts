@@ -302,16 +302,27 @@ export default function createTippy(
 
     const actualTarget = (event.composedPath && event.composedPath()[0]) || event.target;
 
+    function actualContains(parent: Element, child: Element): boolean {
+      let target = child;
+      while(target) {
+        if (parent.contains(target)) {
+          return true;
+        }
+        target = (child.getRootNode() as any)?.host;
+      }
+      return false;
+    }
+    
     // Clicked on interactive popper
     if (
       instance.props.interactive &&
-      popper.contains(actualTarget as Element)
+      actualContains(popper, actualTarget as Element)
     ) {
       return;
     }
 
     // Clicked on the event listeners target
-    if (getCurrentTarget().contains(actualTarget as Element)) {
+    if (actualContains(getCurrentTarget(), actualTarget as Element)) {
       if (currentInput.isTouch) {
         return;
       }
