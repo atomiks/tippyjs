@@ -117,3 +117,18 @@ export function updateTransitionEndListener(
     box[method](event, listener as EventListener);
   });
 }
+
+/**
+ * check if parent contains child
+ * compared to xxx.contains, this function works for dom structures with shadow dom
+ */
+export function actualContains(parent: Element, child: Element): boolean {
+  let target = child;
+  while (target) {
+    if (parent.contains(target)) {
+      return true;
+    }
+    target = (target.getRootNode() as any)?.host;
+  }
+  return false;
+}

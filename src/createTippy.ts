@@ -3,6 +3,7 @@ import {currentInput} from './bindGlobalEventListeners';
 import {isIE} from './browser';
 import {TOUCH_OPTIONS} from './constants';
 import {
+  actualContains,
   div,
   getOwnerDocument,
   isCursorOutsideInteractiveBorder,
@@ -300,19 +301,9 @@ export default function createTippy(
       }
     }
 
-    const actualTarget = (event.composedPath && event.composedPath()[0]) || event.target;
+    const actualTarget =
+      (event.composedPath && event.composedPath()[0]) || event.target;
 
-    function actualContains(parent: Element, child: Element): boolean {
-      let target = child;
-      while(target) {
-        if (parent.contains(target)) {
-          return true;
-        }
-        target = (child.getRootNode() as any)?.host;
-      }
-      return false;
-    }
-    
     // Clicked on interactive popper
     if (
       instance.props.interactive &&
