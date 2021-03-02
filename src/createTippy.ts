@@ -300,8 +300,9 @@ export default function createTippy(
       }
     }
 
-    // Clicked on interactive popper
     const actualTarget = (event.composedPath && event.composedPath()[0]) || event.target;
+
+    // Clicked on interactive popper
     if (
       instance.props.interactive &&
       popper.contains(actualTarget as Element)
@@ -310,7 +311,7 @@ export default function createTippy(
     }
 
     // Clicked on the event listeners target
-    if (getCurrentTarget().contains(event.target as Element)) {
+    if (getCurrentTarget().contains(actualTarget as Element)) {
       if (currentInput.isTouch) {
         return;
       }
