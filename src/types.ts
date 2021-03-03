@@ -12,7 +12,7 @@ export type Content =
 
 export type SingleTarget = Element;
 
-export type MultipleTargets = string | Element[] | NodeList;
+export type MultipleTargets = string | readonly Element[] | NodeList;
 
 export type Targets = SingleTarget | MultipleTargets;
 
@@ -46,15 +46,15 @@ export interface LifecycleHooks<TProps = Props> {
 }
 
 export interface RenderProps {
-  allowHTML: boolean;
-  animation: string | boolean;
-  arrow: boolean | string | SVGElement | DocumentFragment;
-  content: Content;
-  inertia: boolean;
-  maxWidth: number | string;
-  role: string;
-  theme: string;
-  zIndex: number;
+  readonly allowHTML: boolean;
+  readonly animation: string | boolean;
+  readonly arrow: boolean | string | SVGElement | DocumentFragment;
+  readonly content: Content;
+  readonly inertia: boolean;
+  readonly maxWidth: number | string;
+  readonly role: string;
+  readonly theme: string;
+  readonly zIndex: number;
 }
 
 export interface GetReferenceClientRect {
@@ -63,55 +63,55 @@ export interface GetReferenceClientRect {
 }
 
 export interface Props extends LifecycleHooks, RenderProps {
-  animateFill: boolean;
-  appendTo: 'parent' | Element | ((ref: Element) => Element);
-  aria: {
-    content?: 'auto' | 'describedby' | 'labelledby' | null;
-    expanded?: 'auto' | boolean;
+  readonly animateFill: boolean;
+  readonly appendTo: 'parent' | Element | ((ref: Element) => Element);
+  readonly aria: {
+    readonly content?: 'auto' | 'describedby' | 'labelledby' | null;
+    readonly expanded?: 'auto' | boolean;
   };
-  delay: number | [number | null, number | null];
-  duration: number | [number | null, number | null];
-  followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
-  getReferenceClientRect: null | GetReferenceClientRect;
-  hideOnClick: boolean | 'toggle';
-  ignoreAttributes: boolean;
-  inlinePositioning: boolean;
-  interactive: boolean;
-  interactiveBorder: number;
-  interactiveDebounce: number;
-  moveTransition: string;
-  offset:
-    | [number, number]
+  readonly delay: number | [number | null, number | null];
+  readonly duration: number | [number | null, number | null];
+  readonly followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
+  readonly getReferenceClientRect: null | GetReferenceClientRect;
+  readonly hideOnClick: boolean | 'toggle';
+  readonly ignoreAttributes: boolean;
+  readonly inlinePositioning: boolean;
+  readonly interactive: boolean;
+  readonly interactiveBorder: number;
+  readonly interactiveDebounce: number;
+  readonly moveTransition: string;
+  readonly offset:
+    | readonly [number, number]
     | (({
         placement,
         popper,
         reference,
       }: {
-        placement: Placement;
-        popper: Popper.Rect;
-        reference: Popper.Rect;
+        readonly placement: Placement;
+        readonly popper: Popper.Rect;
+        readonly reference: Popper.Rect;
       }) => [number, number]);
-  placement: Placement;
-  plugins: Plugin<unknown>[];
-  popperOptions: Partial<Popper.Options>;
-  render:
+  readonly placement: Placement;
+  readonly plugins: Plugin<unknown>[];
+  readonly popperOptions: Partial<Popper.Options>;
+  readonly render:
     | ((
         instance: Instance
       ) => {
-        popper: PopperElement;
-        onUpdate?: (prevProps: Props, nextProps: Props) => void;
+        readonly popper: PopperElement;
+        readonly onUpdate?: (prevProps: Props, nextProps: Props) => void;
       })
     | null;
-  showOnCreate: boolean;
-  sticky: boolean | 'reference' | 'popper';
-  touch: boolean | 'hold' | ['hold', number];
-  trigger: string;
-  triggerTarget: Element | Element[] | null;
+  readonly showOnCreate: boolean;
+  readonly sticky: boolean | 'reference' | 'popper';
+  readonly touch: boolean | 'hold' | ['hold', number];
+  readonly trigger: string;
+  readonly triggerTarget: Element | readonly Element[] | null;
 }
 
 export interface DefaultProps extends Omit<Props, 'delay' | 'duration'> {
-  delay: number | [number, number];
-  duration: number | [number, number];
+  readonly delay: number | readonly [number, number];
+  readonly duration: number | readonly [number, number];
 }
 
 export interface Instance<TProps = Props> {
@@ -131,17 +131,17 @@ export interface Instance<TProps = Props> {
   setProps(partialProps: Partial<TProps>): void;
   show(): void;
   state: {
-    isEnabled: boolean;
-    isVisible: boolean;
-    isDestroyed: boolean;
-    isMounted: boolean;
-    isShown: boolean;
+    readonly isEnabled: boolean;
+    readonly isVisible: boolean;
+    readonly isDestroyed: boolean;
+    readonly isMounted: boolean;
+    readonly isShown: boolean;
   };
   unmount(): void;
 }
 
 export interface TippyStatics {
-  readonly currentInput: {isTouch: boolean};
+  readonly currentInput: {readonly isTouch: boolean};
   readonly defaultProps: DefaultProps;
   setDefaultProps(partialProps: Partial<DefaultProps>): void;
 }
@@ -151,9 +151,10 @@ export interface Tippy<TProps = Props> extends TippyStatics {
 }
 
 export interface Tippy<TProps = Props> extends TippyStatics {
-  (targets: MultipleTargets, optionalProps?: Partial<TProps>): Instance<
-    TProps
-  >[];
+  (
+    targets: MultipleTargets,
+    optionalProps?: Partial<TProps>
+  ): Instance<TProps>[];
 }
 
 declare const tippy: Tippy;
@@ -183,9 +184,9 @@ export type CreateSingletonProps<TProps = Props> = TProps & {
   overrides: Array<keyof TProps>;
 };
 
-export type CreateSingletonInstance<TProps = CreateSingletonProps> = Instance<
-  TProps
-> & {
+export type CreateSingletonInstance<
+  TProps = CreateSingletonProps
+> = Instance<TProps> & {
   setInstances(instances: Instance<any>[]): void;
   show(target?: ReferenceElement | Instance | number): void;
   showNext(): void;
@@ -193,7 +194,7 @@ export type CreateSingletonInstance<TProps = CreateSingletonProps> = Instance<
 };
 
 export type CreateSingleton<TProps = Props> = (
-  tippyInstances: Instance<any>[],
+  tippyInstances: readonly Instance<any>[],
   optionalProps?: Partial<CreateSingletonProps<TProps>>
 ) => CreateSingletonInstance<CreateSingletonProps<TProps>>;
 
@@ -204,29 +205,29 @@ declare const createSingleton: CreateSingleton;
 // Plugin types
 // =============================================================================
 export interface Plugin<TProps = Props> {
-  name?: string;
-  defaultValue?: any;
+  readonly name?: string;
+  readonly defaultValue?: any;
   fn(instance: Instance<TProps>): Partial<LifecycleHooks<TProps>>;
 }
 
 export interface AnimateFill extends Plugin {
-  name: 'animateFill';
-  defaultValue: false;
+  readonly name: 'animateFill';
+  readonly defaultValue: false;
 }
 
 export interface FollowCursor extends Plugin {
-  name: 'followCursor';
-  defaultValue: false;
+  readonly name: 'followCursor';
+  readonly defaultValue: false;
 }
 
 export interface InlinePositioning extends Plugin {
-  name: 'inlinePositioning';
-  defaultValue: false;
+  readonly name: 'inlinePositioning';
+  readonly defaultValue: false;
 }
 
 export interface Sticky extends Plugin {
-  name: 'sticky';
-  defaultValue: false;
+  readonly name: 'sticky';
+  readonly defaultValue: false;
 }
 
 declare const animateFill: AnimateFill;
@@ -238,8 +239,8 @@ declare const sticky: Sticky;
 // Misc types
 // =============================================================================
 export interface HideAllOptions {
-  duration?: number;
-  exclude?: Instance | ReferenceElement;
+  readonly duration?: number;
+  readonly exclude?: Instance | ReferenceElement;
 }
 
 export type HideAll = (options?: HideAllOptions) => void;
