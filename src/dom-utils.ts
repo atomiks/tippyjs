@@ -119,8 +119,8 @@ export function updateTransitionEndListener(
 }
 
 /**
- * check if parent contains child
- * compared to xxx.contains, this function works for dom structures with shadow dom
+ * Compared to xxx.contains, this function works for dom structures with shadow
+ * dom
  */
 export function actualContains(parent: Element, child: Element): boolean {
   let target = child;
@@ -128,7 +128,7 @@ export function actualContains(parent: Element, child: Element): boolean {
     if (parent.contains(target)) {
       return true;
     }
-    target = (target.getRootNode() as any)?.host;
+    target = (target.getRootNode?.() as any)?.host;
   }
   return false;
 }

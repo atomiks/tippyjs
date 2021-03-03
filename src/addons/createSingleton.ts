@@ -199,13 +199,13 @@ const createSingleton: CreateSingleton = (
     }
 
     // target is a child tippy instance
-    if (individualInstances.includes(target as Instance)) {
+    if (individualInstances.indexOf(target as Instance) >= 0) {
       const ref = (target as Instance).reference;
       return prepareInstance(singleton, ref);
     }
 
     // target is a ReferenceElement
-    if (references.includes(target as ReferenceElement)) {
+    if (references.indexOf(target as ReferenceElement) >= 0) {
       return prepareInstance(singleton, target as ReferenceElement);
     }
   };
