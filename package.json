@@ -148,10 +148,10 @@
     "rollup-plugin-terser": "^5.2.0",
     "sass": "^1.25.0",
     "serve": "^11.3.0",
-    "tsd": "^0.11.0",
-    "typescript": "^3.7.5"
+    "tsd": "^0.14.0",
+    "typescript": "^4.2.2"
   },
   "dependencies": {
-    "@popperjs/core": "^2.8.3"
+    "@popperjs/core": "^2.9.0"
   }
 }
