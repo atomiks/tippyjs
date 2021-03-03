@@ -91,7 +91,7 @@ function delegate(
     node: Element,
     eventType: string,
     handler: EventListener,
-    options: object | boolean = false
+    options: boolean | Record<string, unknown> = false
   ): void {
     node.addEventListener(eventType, handler, options);
     listeners.push({node, eventType, handler, options});

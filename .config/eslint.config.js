@@ -27,6 +27,8 @@ module.exports = {
     '@typescript-eslint/array-type': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
   ignorePatterns: [
     'node_modules',

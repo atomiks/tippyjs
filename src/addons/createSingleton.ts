@@ -17,7 +17,7 @@ import {applyStyles, Modifier} from '@popperjs/core';
 // every time the popper is destroyed (i.e. a new target), removing the styles
 // and causing transitions to break for singletons when the console is open, but
 // most notably for non-transform styles being used, `gpuAcceleration: false`.
-const applyStylesModifier: Modifier<'applyStyles', {}> = {
+const applyStylesModifier: Modifier<'applyStyles', Record<string, unknown>> = {
   ...applyStyles,
   effect({state}) {
     const initialStyles = {

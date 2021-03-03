@@ -5,7 +5,7 @@ export interface ListenerObject {
   node: Element;
   eventType: string;
   handler: EventListenerOrEventListenerObject;
-  options: boolean | object;
+  options: boolean | Record<string, unknown>;
 }
 
 export interface PopperTreeData {

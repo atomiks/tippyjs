@@ -31,7 +31,10 @@ const inlinePositioning: InlinePositioning = {
     let cursorRectIndex = -1;
     let isInternalUpdate = false;
 
-    const modifier: Modifier<'tippyInlinePositioning', {}> = {
+    const modifier: Modifier<
+      'tippyInlinePositioning',
+      Record<string, unknown>
+    > = {
       name: 'tippyInlinePositioning',
       enabled: true,
       phase: 'afterWrite',

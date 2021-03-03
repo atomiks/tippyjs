@@ -414,7 +414,7 @@ export default function createTippy(
   function on(
     eventType: string,
     handler: EventListener,
-    options: boolean | object = false
+    options: boolean | Record<string, unknown> = false
   ): void {
     const nodes = normalizeToArray(instance.props.triggerTarget || reference);
     nodes.forEach((node) => {
@@ -602,7 +602,7 @@ export default function createTippy(
         }
       : reference;
 
-    const tippyModifier: Modifier<'$$tippy', {}> = {
+    const tippyModifier: Modifier<'$$tippy', Record<string, unknown>> = {
       name: '$$tippy',
       enabled: true,
       phase: 'beforeWrite',
@@ -628,7 +628,7 @@ export default function createTippy(
       },
     };
 
-    type TippyModifier = Modifier<'$$tippy', {}>;
+    type TippyModifier = Modifier<'$$tippy', Record<string, unknown>>;
     type ExtendedModifiers = StrictModifiers | Partial<TippyModifier>;
 
     const modifiers: Array<ExtendedModifiers> = [

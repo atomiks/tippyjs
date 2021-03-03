@@ -1,6 +1,9 @@
 import {BasePlacement, Placement} from './types';
 
-export function hasOwnProperty(obj: object, key: string): boolean {
+export function hasOwnProperty(
+  obj: Record<string, unknown>,
+  key: string
+): boolean {
   return {}.hasOwnProperty.call(obj, key);
 }
 
