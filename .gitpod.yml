@@ -1,0 +1,22 @@
+tasks:
+  - name: Rollup
+    init: |
+      yarn install
+      gp sync-done install
+    command: |
+      export CLIENT_URL="$(gp url 35729)/livereload.js?snipver=1&port=443"
+      yarn dev
+
+  - name: Website
+    before: cd website/
+    init: |
+      gp sync-await install
+      yarn install
+    command: yarn dev
+    openMode: split-right
+
+ports:
+  - port: 1234
+    onOpen: open-preview
+  - port: 8000
+    onOpen: open-preview

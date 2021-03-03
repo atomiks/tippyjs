@@ -193,7 +193,9 @@ const configs = {
         contentBase: 'test/visual',
         port: 1234,
       }),
-      livereload(),
+      livereload({
+        clientUrl: process.env.CLIENT_URL
+      }),
     ],
     output: {
       file: 'test/visual/dist/bundle.js',
