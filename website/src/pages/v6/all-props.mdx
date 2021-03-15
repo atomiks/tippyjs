@@ -430,7 +430,7 @@ tippy(targets, {
 });
 ```
 
-`hideOnClick: true` with `click`:
+`hideOnClick: true` with `trigger: "click"`:
 
 <Demo>
   <Tippy hideOnClick={true} trigger="click">
@@ -438,7 +438,7 @@ tippy(targets, {
   </Tippy>
 </Demo>
 
-`hideOnClick: "toggle"` with `click`:
+`hideOnClick: "toggle"` with `trigger: "click"`:
 
 <Demo>
   <Tippy hideOnClick="toggle" trigger="click">
@@ -446,7 +446,7 @@ tippy(targets, {
   </Tippy>
 </Demo>
 
-`hideOnClick: false` with `mouseenter` (a `click` trigger will never hide):
+`hideOnClick: false` with `trigger: "mouseenter"` (a `click` trigger will never hide):
 
 <Demo>
   <Tippy hideOnClick={false} trigger="mouseenter">
