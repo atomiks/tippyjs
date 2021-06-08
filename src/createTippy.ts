@@ -218,7 +218,7 @@ export default function createTippy(
   function handleStyles(): void {
     popper.style.pointerEvents =
       instance.props.interactive && instance.state.isVisible ? '' : 'none';
-    popper.style.zIndex = `${instance.props.zIndex}`;
+    popper.style.zIndex = instance.props.zIndex ?? 9999;
   }
 
   function invokeHook(
