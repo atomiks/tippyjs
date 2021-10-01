@@ -31,7 +31,7 @@ import '../../src/scss/animations/scale.scss';
 import '../../src/scss/animations/scale-subtle.scss';
 import '../../src/scss/animations/scale-extreme.scss';
 
-tippy.setDefaultProps({render});
+tippy.setDefaultProps({render, appendTo: document.body});
 
 window.state = {
   currentTest: '',
@@ -54,6 +54,8 @@ tests.default = () => {
     interactive: true,
     trigger: 'click focus',
   });
+
+  console.log(instance.props.appendTo);
 
   return instance.destroy;
 };

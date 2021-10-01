@@ -5,6 +5,7 @@ import {
   invokeWithArgsOrReturn,
 } from './utils';
 import {warnWhen} from './validation';
+import {TIPPY_DEFAULT_APPEND_TO} from './constants';
 
 const pluginProps = {
   animateFill: false,
@@ -26,7 +27,7 @@ const renderProps = {
 };
 
 export const defaultProps: DefaultProps = {
-  appendTo: () => document.body,
+  appendTo: TIPPY_DEFAULT_APPEND_TO,
   aria: {
     content: 'auto',
     expanded: 'auto',

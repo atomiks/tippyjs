@@ -8,3 +8,5 @@ export const ARROW_CLASS = `__NAMESPACE_PREFIX__-arrow`;
 export const SVG_ARROW_CLASS = `__NAMESPACE_PREFIX__-svg-arrow`;
 
 export const TOUCH_OPTIONS = {passive: true, capture: true};
+
+export const TIPPY_DEFAULT_APPEND_TO = () => document.body;

@@ -1,7 +1,7 @@
 import {createPopper, StrictModifiers, Modifier} from '@popperjs/core';
 import {currentInput} from './bindGlobalEventListeners';
 import {isIE} from './browser';
-import {TOUCH_OPTIONS} from './constants';
+import {TIPPY_DEFAULT_APPEND_TO, TOUCH_OPTIONS} from './constants';
 import {
   actualContains,
   div,
@@ -708,7 +708,7 @@ export default function createTippy(
     const node = getCurrentTarget();
 
     if (
-      (instance.props.interactive && appendTo === defaultProps.appendTo) ||
+      (instance.props.interactive && appendTo === TIPPY_DEFAULT_APPEND_TO) ||
       appendTo === 'parent'
     ) {
       parentNode = node.parentNode;
