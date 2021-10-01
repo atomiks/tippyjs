@@ -1,6 +1,6 @@
 import {createPopper, StrictModifiers, Modifier} from '@popperjs/core';
 import {currentInput} from './bindGlobalEventListeners';
-import {isIE} from './browser';
+import {isIE11} from './browser';
 import {TIPPY_DEFAULT_APPEND_TO, TOUCH_OPTIONS} from './constants';
 import {
   actualContains,
@@ -441,7 +441,7 @@ export default function createTippy(
           on('mouseleave', onMouseLeave as EventListener);
           break;
         case 'focus':
-          on(isIE ? 'focusout' : 'blur', onBlurOrFocusOut as EventListener);
+          on(isIE11 ? 'focusout' : 'blur', onBlurOrFocusOut as EventListener);
           break;
         case 'focusin':
           on('focusout', onBlurOrFocusOut as EventListener);
