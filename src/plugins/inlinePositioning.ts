@@ -42,6 +42,7 @@ const inlinePositioning: InlinePositioning = {
         if (isEnabled()) {
           if (placement !== state.placement) {
             instance.setProps({
+              // @ts-ignore - unneeded DOMRect properties
               getReferenceClientRect: () =>
                 getReferenceClientRect(state.placement),
             });
@@ -52,7 +53,7 @@ const inlinePositioning: InlinePositioning = {
       },
     };
 
-    function getReferenceClientRect(placement: Placement): ClientRect {
+    function getReferenceClientRect(placement: Placement): Partial<DOMRect> {
       return getInlineBoundingClientRect(
         getBasePlacement(placement),
         reference.getBoundingClientRect(),
@@ -101,10 +102,17 @@ export default inlinePositioning;
 
 export function getInlineBoundingClientRect(
   currentBasePlacement: BasePlacement | null,
-  boundingRect: ClientRect,
-  clientRects: ClientRect[],
+  boundingRect: DOMRect,
+  clientRects: DOMRect[],
   cursorRectIndex: number
-): ClientRect {
+): {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+  width: number;
+  height: number;
+} {
   // Not an inline element, or placement is not yet known
   if (clientRects.length < 2 || currentBasePlacement === null) {
     return boundingRect;

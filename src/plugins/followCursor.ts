@@ -63,6 +63,7 @@ const followCursor: FollowCursor = {
 
       if (isCursorOverReference || !instance.props.interactive) {
         instance.setProps({
+          // @ts-ignore - unneeded DOMRect properties
           getReferenceClientRect() {
             const rect = reference.getBoundingClientRect();
 
