@@ -4,8 +4,10 @@ import {
   getDataAttributeProps,
   evaluateProps,
   validateProps,
+  setDefaultProps,
 } from '../../src/props';
 import {getFormattedMessage} from '../../src/validation';
+import tippy from '../../src';
 
 describe('getDataAttributeProps', () => {
   it('uses data-tippy-content', () => {
@@ -175,5 +177,29 @@ describe('validateProps', () => {
 
     validateProps({[prop]: true}, plugins);
     expect(console.warn).not.toHaveBeenCalled();
+  });
+});
+
+describe('setDefaultProps', () => {
+  it('is preferred over .defaultValue on Plugin objects', () => {
+    const instance1 = tippy(h());
+    expect(instance1.props.followCursor).toBe(false);
+    setDefaultProps({followCursor: 'initial'});
+    const instance2 = tippy(h());
+    expect(instance2.props.followCursor).toBe('initial');
+    const instance3 = tippy(h(), {followCursor: true});
+    expect(instance3.props.followCursor).toBe(true);
+  });
+
+  it('works as expected with non-default plugins', () => {
+    const instance1 = tippy(h(), {
+      plugins: [{name: 'testPlugin', defaultValue: 'new', fn: () => ({})}],
+    });
+    expect(instance1.props.testPlugin).toBe('new');
+    setDefaultProps({testPlugin: false});
+    const instance2 = tippy(h(), {
+      plugins: [{name: 'testPlugin', defaultValue: 'new', fn: () => ({})}],
+    });
+    expect(instance2.props.testPlugin).toBe(false);
   });
 });

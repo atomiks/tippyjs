@@ -88,7 +88,9 @@ export function getExtendedPassedProps(
 
     if (name) {
       acc[name] =
-        passedProps[name] !== undefined ? passedProps[name] : defaultValue;
+        passedProps[name] !== undefined
+          ? passedProps[name]
+          : (defaultProps as any)[name] ?? defaultValue;
     }
 
     return acc;
