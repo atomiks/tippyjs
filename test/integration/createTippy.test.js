@@ -170,6 +170,16 @@ describe('createTippy', () => {
       ...getFormattedMessage('content has not been supplied.')
     );
   });
+
+  it('does not pass props that are `undefined`', () => {
+    instance = createTippy(h(), {placement: undefined});
+
+    expect(instance.props.placement).toBe('top');
+
+    instance.setProps({placement: undefined});
+
+    expect(instance.props.placement).toBe('top');
+  });
 });
 
 describe('instance.destroy()', () => {

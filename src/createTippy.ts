@@ -857,8 +857,8 @@ export default function createTippy(
 
     const prevProps = instance.props;
     const nextProps = evaluateProps(reference, {
-      ...instance.props,
-      ...partialProps,
+      ...prevProps,
+      ...removeUndefinedProps(partialProps),
       ignoreAttributes: true,
     });
 

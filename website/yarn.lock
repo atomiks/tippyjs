@@ -2652,10 +2652,10 @@
     native-url "^0.2.6"
     schema-utils "^2.6.5"
 
-"@popperjs/core@^2.3.2", "@popperjs/core@^2.4.3":
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.4.3.tgz#9b10ec423989d3a7fe46f3d8a9cafe8589ccf354"
-  integrity sha512-r0jArf9l4hXBJVgWlFiDj3rC+51G9d+AfycAp2YacHeKZnslGQblxGdRpbprZ2snXzYVjrSu0Tt0TZFQAILipg==
+"@popperjs/core@^2.4.4", "@popperjs/core@^2.9.0":
+  version "2.10.2"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.10.2.tgz#0798c03351f0dea1a5a4cabddf26a55a7cbee590"
+  integrity sha512-IXf3XA7+XyN7CP9gGh/XB0UxVMlvARGEgGXLubFICsUMGz6Q+DU+i4gGlpOxTjKvXjkJDJC8YdqdKkDj9qZHEQ==
 
 "@reach/router@^1.3.3":
   version "1.3.3"
@@ -12906,11 +12906,11 @@ prettier@^2.0.5:
     "@angular/compiler" "9.0.5"
     "@babel/code-frame" "7.8.3"
     "@babel/parser" "7.9.4"
-    "@glimmer/syntax" "0.50.2"
-    "@iarna/toml" "2.2.3"
-    "@typescript-eslint/typescript-estree" "2.27.0"
+    "@glimmer/syntax" "0.51.0"
+    "@iarna/toml" "2.2.5"
+    "@typescript-eslint/typescript-estree" "2.29.0"
     angular-estree-parser "1.3.0"
-    angular-html-parser "1.4.0"
+    angular-html-parser "1.5.0"
     camelcase "6.0.0"
     chalk "4.0.0"
     ci-info watson/ci-info#f43f6a1cefff47fb361c88cf4b943fdbcaafe540
@@ -12921,7 +12921,7 @@ prettier@^2.0.5:
     diff "4.0.2"
     editorconfig "0.15.3"
     editorconfig-to-prettier "0.1.1"
-    escape-string-regexp "3.0.0"
+    escape-string-regexp "4.0.0"
     esutils "2.0.3"
     fast-glob "3.2.2"
     find-parent-dir "0.3.0"
@@ -12953,7 +12953,8 @@ prettier@^2.0.5:
     regexp-util "1.2.2"
     remark-math "1.0.6"
     remark-parse "5.0.0"
-    semver "7.3.0"
+    resolve "1.17.0"
+    semver "7.3.2"
     srcset "2.0.1"
     string-width "4.2.0"
     typescript "3.8.3"
@@ -15498,12 +15499,12 @@ tinycolor2@^1.4.1:
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
   integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
 
-tippy.js@^6.2.0, tippy.js@^6.2.4:
-  version "6.2.4"
-  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-6.2.4.tgz#b76000080cc035745cab4f20ac7a30e1ccb1b6bb"
-  integrity sha512-S3qLJhx7cpeGDpHw411jU62W1RvOGPkt3r68y8nwPi7wm/aexrSYAADbVb1ZNYCjspEwLWQvtAx76COvPcLvCw==
+tippy.js@^6.2.0, tippy.js@^6.2.5:
+  version "6.3.2"
+  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-6.3.2.tgz#c03a0b88f170dffeba42f569771801dddc1f6340"
+  integrity sha512-35XVQI7Zl/jHZ51+8eHu/vVRXBjWYGobPm5G9FxOchj4r5dWhghKGS0nm0ARUKZTF96V7pPn7EbXS191NTwldw==
   dependencies:
-    "@popperjs/core" "^2.3.2"
+    "@popperjs/core" "^2.9.0"
 
 title-case@^2.1.0:
   version "2.1.1"
