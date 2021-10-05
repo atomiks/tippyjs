@@ -1,4 +1,4 @@
-name: Tests
+name: CI
 on: [push, pull_request]
 env:
   CI: true
@@ -36,3 +36,15 @@ jobs:
       - run: npm run test:functional
         env:
           PUPPETEER_BROWSER: chromium
+
+  website:
+    if: ${{ startsWith(github.event.commits[0].message, 'docs:') }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./website
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: npm install
+      - run: npm run deploy
