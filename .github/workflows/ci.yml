@@ -37,14 +37,24 @@ jobs:
         env:
           PUPPETEER_BROWSER: chromium
 
-  website:
+  publish:
     if: ${{ startsWith(github.event.commits[0].message, 'docs:') }}
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./website
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-      - run: npm install
-      - run: npm run deploy
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: |
+          npm install
+          npm run clean
+          npm run build:ci
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
