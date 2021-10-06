@@ -49,9 +49,9 @@ const NavButton = styled(Link)`
   }
 
   &:hover {
-    color: #2161f2;
-    background: #f0f4fe;
-    border-bottom: 2px solid #2161f2;
+    color: #7cbbff;
+    background: rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #425991;
     text-decoration: none;
   }
 

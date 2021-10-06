@@ -6,7 +6,6 @@ import TippyLogo from '../images/logo.svg';
 import {MEDIA, Container, Flex, ExternalLink} from './Framework';
 import GitHub from 'react-feather/dist/icons/github';
 import Menu from 'react-feather/dist/icons/menu';
-import TextGradient from './TextGradient';
 import {version} from '../../../package.json';
 import {Link} from 'gatsby';
 import {getVersionFromPath, CURRENT_MAJOR} from '../utils';
@@ -25,18 +24,16 @@ const hover = keyframes`
 
 const HeaderRoot = styled.header`
   position: relative;
-  background-image: radial-gradient(
-    circle at 0% 20%,
-    #a09eff,
-    #4884f0,
-    #b3e0fa
-  );
+  background-image: linear-gradient(45deg, #0058ff, #df72a1, #f7ffbb);
   background-repeat: no-repeat;
   background-size: cover;
   padding: 25px 0;
   text-align: center;
   margin-bottom: 50px;
   color: white;
+  left: -250px;
+  padding-left: 250px;
+  width: 100%;
 
   &::before {
     content: '';
@@ -47,6 +44,7 @@ const HeaderRoot = styled.header`
     background-size: cover;
     width: 100%;
     height: calc(100vh + 50px);
+    left: 0;
   }
 `;
 
@@ -60,17 +58,19 @@ const Logo = styled.img`
 const Title = styled.h1`
   display: inline-block;
   font-size: 56px;
-  font-weight: 400;
+  font-weight: bold;
+  color: white;
   margin-top: 0;
   margin-bottom: 25px;
+  text-shadow: 0px 2px 6px #00000047, -1px 2px 1px #0000003b;
 `;
 
 const ButtonLink = styled(ExternalLink)`
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.4);
   padding: 12px 24px;
   border-radius: 4px;
   transition: all 0.25s;
-  color: #ffffff;
+  color: #000;
   margin: 0 8px 8px;
   font-weight: bold;
   font-size: 18px;
@@ -104,12 +104,9 @@ export const MenuButton = styled.button`
 
 const Version = styled.a`
   display: inline-block;
-  background: rgb(255, 255, 255, 0.95);
-  color: #7761d1;
+  color: #fff;
   font-weight: bold;
   margin: 16px 0;
-  padding: 6px 12px;
-  border-radius: 16px;
   font-size: 14px;
 
   ${MEDIA.md} {
@@ -123,7 +120,7 @@ const OldVersionWarning = styled.div`
   color: #333;
   z-index: 2;
   text-align: center;
-  padding: 10px 0;
+  padding: 25px 0;
   font-size: 16px;
   font-weight: bold;
 `;
@@ -183,9 +180,7 @@ class Header extends Component {
         <HeaderRoot>
           <Container>
             <Logo src={TippyLogo} draggable="false" alt="Tippy Logo" />
-            <Title>
-              <TextGradient>Tippy.js</TextGradient>
-            </Title>
+            <Title>Tippy.js</Title>
             <Flex justify="center">
               <ButtonLink href="https://github.com/atomiks/tippyjs">
                 <GitHub style={githubStyles} />
@@ -193,7 +188,7 @@ class Header extends Component {
               </ButtonLink>
             </Flex>
             <Version href="https://github.com/atomiks/tippyjs/releases">
-              Currently v{version}
+              v{version}
             </Version>
             <MenuButton
               aria-label="Menu"
@@ -207,7 +202,7 @@ class Header extends Component {
             css={svgStyles}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 1920 240"
-            fill="white"
+            fill="#1f2028"
           >
             <g>
               <path d="M1920,144.5l0,95.5l-1920,0l0,-65.5c196,-36 452.146,-15.726 657.5,8.5c229.698,27.098 870,57 1262.5,-38.5Z" />

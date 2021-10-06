@@ -4,8 +4,8 @@ path: /v6/customization/
 index: 3
 ---
 
-The `tippy()` function takes an object of optional props (configuration
-properties) as a second argument to customize the tooltips being created:
+`tippy()` takes an object of optional props (configuration properties) as a
+second argument to customize your tippies:
 
 ```js
 tippy('button', {
@@ -15,7 +15,7 @@ tippy('button', {
 });
 ```
 
-You can also specify props on the element using data attributes:
+These can also be specified on the element using data attributes:
 
 ```html
 <button
@@ -27,7 +27,11 @@ You can also specify props on the element using data attributes:
 </button>
 ```
 
-Note that only JSON values are valid in attributes.
+> **Note**
+>
+> Only JSON is valid in attributes.
+
+### Mixing attributes and props
 
 It can be useful to use the function for "global" config and choose attributes
 for individual config here and there:

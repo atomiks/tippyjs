@@ -40,7 +40,7 @@ const LinkIcon = styled.a`
   width: 32px;
   top: -10px;
   right: -16px;
-  color: #7761d1;
+  color: #81edff;
 
   &:hover,
   &:focus {
@@ -58,12 +58,12 @@ const LinkIcon = styled.a`
 
 const A = styled.a`
   font-weight: bold;
-  border-bottom: 2px solid #e2eafd;
+  border-bottom: 2px solid #425991;
+  transition: color 0.25s, border-color 0.2s;
 
   &:hover {
-    color: #2161f2;
-    background: #f0f4fe;
-    border-bottom: 2px solid #2161f2;
+    color: #fff;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.6);
     text-decoration: none;
   }
 

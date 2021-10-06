@@ -13,7 +13,8 @@ const core = css`
     font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI',
       Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
     margin: 0;
-    color: #515168;
+    background-color: #1f2028;
+    color: #bfc3d9;
     height: 100%;
     font-size: 17px;
     -webkit-tap-highlight-color: transparent;
@@ -39,7 +40,7 @@ const core = css`
   }
 
   a {
-    color: #5183f5;
+    color: #7cbbff;
     text-decoration: none;
 
     &:hover {
@@ -56,7 +57,7 @@ const core = css`
     position: relative;
     margin-top: 0;
     margin-bottom: 16px;
-    color: #333;
+    color: #fff;
     word-break: break-word;
 
     &:hover .link-icon {
@@ -78,8 +79,8 @@ const core = css`
     font-size: 48px;
     display: inline-block;
     color: inherit;
-    text-shadow: -2px 2px 0px #ffffff, -4px 3px 0px #ffffff;
-    color: #7761d1;
+    text-shadow: -2px 2px 0px #000, -4px 3px 0px #000;
+    color: #fff;
     padding: 10px 0;
     transition: color 0.3s;
 
@@ -101,7 +102,7 @@ const core = css`
       bottom: 0;
       width: calc(15% + 40px);
       margin-left: -25px;
-      background: linear-gradient(45deg, #fff2df, #99ffec, #faa7ff);
+      background: linear-gradient(45deg, #0058ff, #df72a1, #f7ffbb);
       z-index: -1;
       transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       border-radius: 3px;
@@ -130,7 +131,6 @@ const core = css`
   h4 {
     font-size: 24px;
     margin-top: 35px;
-    color: #666c80;
 
     ${MEDIA.md} {
       font-size: 28px;
@@ -177,7 +177,7 @@ const core = css`
     }
 
     &:nth-of-type(even) {
-      background-color: rgba(0, 32, 128, 0.04);
+      background-color: #272935;
     }
   }
 
@@ -294,14 +294,14 @@ const core = css`
   a {
     &.focus-visible:not(.link-icon) {
       outline: 0;
-      box-shadow: 0 0 0 2px rgb(255, 255, 255), 0 0 0 5px rgb(150, 180, 255);
+      box-shadow: 0 0 0 2px rgb(0, 0, 0), 0 0 0 4px rgb(100, 150, 255);
     }
   }
 
   blockquote {
-    border-left: 8px solid #ffc56d;
-    background: #fff5c5;
-    color: #333;
+    border-left: 5px solid #6db4ff;
+    background: #323b57;
+    color: #fff;
     margin: 0;
     padding: 5px 15px;
     margin-left: -15px;
@@ -323,6 +323,78 @@ const core = css`
 `;
 
 const tippy = css`
+  .tippy-backdrop {
+    background: #3e55e1;
+  }
+
+  .tippy-svg-arrow {
+    fill: #3e55e1;
+  }
+
+  .tippy-backdrop ~ .tippy-box {
+    box-shadow: none;
+  }
+
+  .tippy-box {
+    background: #3e55e1;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    &[data-placement^='top'] {
+      > .tippy-arrow::before {
+        border-top-color: #3e55e1;
+      }
+    }
+
+    &[data-placement^='bottom'] {
+      > .tippy-arrow::before {
+        border-bottom-color: #3e55e1;
+      }
+    }
+
+    &[data-placement^='left'] {
+      > .tippy-arrow::before {
+        border-left-color: #3e55e1;
+      }
+    }
+
+    &[data-placement^='right'] {
+      > .tippy-arrow::before {
+        border-right-color: #3e55e1;
+      }
+    }
+  }
+
+  .tippy-box[data-theme~='default'] {
+    background: #424557;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    &[data-placement^='top'] {
+      > .tippy-arrow::before {
+        border-top-color: #424557;
+      }
+    }
+
+    &[data-placement^='bottom'] {
+      > .tippy-arrow::before {
+        border-bottom-color: #424557;
+      }
+    }
+
+    &[data-placement^='left'] {
+      > .tippy-arrow::before {
+        border-left-color: #424557;
+      }
+    }
+
+    &[data-placement^='right'] {
+      > .tippy-arrow::before {
+        border-right-color: #424557;
+      }
+    }
+  }
+
   .tippy-box[data-theme~='ajax'] {
     position: absolute;
     width: 200px;
@@ -384,7 +456,7 @@ const tippy = css`
 
   .tippy-box[data-theme~='gradient'] {
     background: linear-gradient(130deg, #507bf4, #ff8bcb);
-    box-shadow: 0 8px 12px #c9a0ff;
+    box-shadow: 0 8px 12px #402860;
     font-weight: bold;
   }
 
@@ -404,14 +476,13 @@ const tippy = css`
 
 const code = css`
   code:not(.grvsc-code) {
-    background: rgba(69, 0, 179, 0.1);
-    color: #4e1cc7;
+    color: #81edff;
     font-family: ${MONOSPACE_FONT_STACK};
-    font-weight: bold;
-    padding: 0.15em 0.4em;
+    padding: 0.15em 0.25em;
     border-radius: 0.25em;
     line-height: inherit;
     font-size: 90%;
+    background: none;
   }
 
   .grvsc-container {
@@ -424,6 +495,7 @@ const code = css`
   }
 
   .moonlight-ii {
+    background-color: #272935 !important;
     margin-left: -16px;
     margin-right: -16px;
 

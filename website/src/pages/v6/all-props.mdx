@@ -238,13 +238,11 @@ tippy(targets, {
 >
 > A string is parsed as `.innerHTML`. Don't pass unknown user data to this prop.
 
-> **Note**
->
-> To use the default round arrow, import `roundArrow` from the package
-> (`tippy.roundArrow` in the `umd` version) and pass it as the value.
->
-> You must also import `dist/svg-arrow.css` when using SVG arrows for styling to
-> work.
+To use the default round arrow, import `roundArrow` from the package
+(`tippy.roundArrow` in the `umd` version) and pass it as the value.
+
+You must also import `dist/svg-arrow.css` when using SVG arrows for styling to
+work.
 
 ```js
 import tippy, {roundArrow} from 'tippy.js';
@@ -446,7 +444,8 @@ tippy(targets, {
   </Tippy>
 </Demo>
 
-`hideOnClick: false` with `trigger: "mouseenter"` (a `click` trigger will never hide):
+`hideOnClick: false` with `trigger: "mouseenter"` (a `click` trigger will never
+hide):
 
 <Demo>
   <Tippy hideOnClick={false} trigger="mouseenter">
@@ -614,13 +613,6 @@ tippy(targets, {
 Specifies the maximum width of the tippy. Useful to prevent it from being too
 horizontally wide to read.
 
-> **Note**
->
-> This is applied to the `.tippy-box` (inner element), rather than the root
-> positioned popper node. The core CSS applies `max-width: calc(100vw - 10px)`
-> on the root popper node to prevent it from exceeding the viewport width on
-> small screens.
-
 ```js
 tippy(targets, {
   // default
@@ -644,6 +636,11 @@ tippy(targets, {
     <Button>maxWidth: 200</Button>
   </Tippy>
 </Demo>
+
+> **Note**
+>
+> If the viewport's width is smaller than `maxWidth`, tippy's core CSS ensures
+> the tippy remains smaller than the screen.
 
 ---
 

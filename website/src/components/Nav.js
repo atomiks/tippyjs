@@ -17,8 +17,7 @@ const Navbar = styled.nav`
   bottom: 0;
   left: 0;
   width: 250px;
-  background: linear-gradient(180deg, rgba(121, 148, 198, 0.6), #565791);
-  color: white;
+  background: #1f202899;
   overflow-y: auto;
   z-index: 2;
   transform: ${(props) =>
@@ -41,8 +40,7 @@ const Navbar = styled.nav`
     box-shadow: none;
     opacity: 1;
     will-change: transform, opacity;
-    backdrop-filter: none;
-    background: linear-gradient(180deg, rgba(121, 148, 198, 0.92), #565791);
+    backdrop-filter: blur(30px) saturate(100%);
   }
 `;
 
@@ -63,20 +61,15 @@ const ListItem = styled.li`
     display: block;
     padding: 4px 25px;
     font-size: 17px;
-    border: 1px dashed transparent;
+    padding-left: 40px;
 
     ${MEDIA.lg} {
-      padding-left: 25px;
     }
 
     &:hover {
       border-bottom-color: transparent;
       text-decoration: none;
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    &:active {
-      border-color: white;
+      color: white;
     }
   }
 `;
@@ -91,13 +84,11 @@ const XButton = styled.button`
   height: 40px;
   width: 40px;
   cursor: pointer;
-  background: white;
-  color: #7761d1;
-  box-shadow: 0 5px 0 rgba(0, 32, 64, 0.2);
+  background: transparent;
+  color: #fff;
 
   &:active {
     box-shadow: 0 2px 0 rgba(0, 32, 64, 0.2);
-    transform: translateY(4px);
   }
 
   ${MEDIA.lg} {
@@ -106,17 +97,21 @@ const XButton = styled.button`
 `;
 
 const XIcon = styled(X)`
+  margin-top: 4px;
   height: 32px;
   width: 32px;
 `;
 
 const VersionButton = styled(Button)`
+  background: #424557;
+  color: #81edff;
   border: none;
   margin: 15px 25px;
+  margin-left: 40px;
 
   &:hover {
     background-color: white;
-    color: #555;
+    color: #000;
   }
 `;
 

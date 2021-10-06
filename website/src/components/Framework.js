@@ -70,17 +70,27 @@ export const Col = (props) => {
   );
 };
 
-export const Link = (props) => (
-  <GatsbyLink
-    css={css`
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.15s;
-    `}
-    activeStyle={{fontWeight: '600', background: 'white', color: '#7761d1'}}
-    {...props}
-  />
-);
+export const Link = (props) =>
+  console.log(props) || (
+    <GatsbyLink
+      css={css`
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.15s;
+      `}
+      activeStyle={
+        props.children.startsWith('v')
+          ? {fontWeight: '600'}
+          : {
+              fontWeight: '600',
+              background: 'linear-gradient(to right, #424557, transparent)',
+              color: '#fff',
+              borderWidth: '0',
+            }
+      }
+      {...props}
+    />
+  );
 
 export const ExternalLink = (props) => (
   <a
@@ -116,26 +126,26 @@ export const Flex = styled.div`
 
 export const Button = styled.button`
   border: none;
-  background: white;
-  color: #5183f5;
-  border: 2px dashed #5183f5;
+  color: #fff;
+  background: #424557;
   will-change: opacity;
   font-size: 16px;
   font-weight: 600;
   padding: 10px 16px;
   border-radius: 4px;
-  transition: background 0.2s, color 0.1s;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 1px 4px -2px black,
+    inset 0 2px 1px -1px rgba(255, 255, 255, 0.1);
 
   &:hover {
-    background: #5183f5;
-    color: white;
+    color: #81edff;
   }
 `;
 
 export const Demo = styled.div`
-  background: #eeeefa;
+  background-color: #272935;
   margin: 15px -16px 25px;
-  padding: 25px 16px;
+  padding: 25px 10px;
 
   ${MEDIA.sm} {
     padding-left: 25px;
