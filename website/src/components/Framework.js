@@ -70,27 +70,26 @@ export const Col = (props) => {
   );
 };
 
-export const Link = (props) =>
-  console.log(props) || (
-    <GatsbyLink
-      css={css`
-        color: inherit;
-        text-decoration: none;
-        transition: color 0.15s;
-      `}
-      activeStyle={
-        props.children.startsWith('v')
-          ? {fontWeight: '600'}
-          : {
-              fontWeight: '600',
-              background: 'linear-gradient(to right, #424557, transparent)',
-              color: '#fff',
-              borderWidth: '0',
-            }
-      }
-      {...props}
-    />
-  );
+export const Link = (props) => (
+  <GatsbyLink
+    css={css`
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
+    `}
+    activeStyle={
+      props.children.startsWith('v')
+        ? {fontWeight: '600'}
+        : {
+            fontWeight: '600',
+            background: 'linear-gradient(to right, #424557, transparent)',
+            color: '#fff',
+            borderWidth: '0',
+          }
+    }
+    {...props}
+  />
+);
 
 export const ExternalLink = (props) => (
   <a
