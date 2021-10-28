@@ -30,6 +30,7 @@ const inlinePositioning: InlinePositioning = {
     let placement: Placement;
     let cursorRectIndex = -1;
     let isInternalUpdate = false;
+    let triedPlacements: Array<string> = [];
 
     const modifier: Modifier<
       'tippyInlinePositioning',
@@ -40,7 +41,15 @@ const inlinePositioning: InlinePositioning = {
       phase: 'afterWrite',
       fn({state}) {
         if (isEnabled()) {
-          if (placement !== state.placement) {
+          if (triedPlacements.indexOf(state.placement) !== -1) {
+            triedPlacements = [];
+          }
+
+          if (
+            placement !== state.placement &&
+            triedPlacements.indexOf(state.placement) === -1
+          ) {
+            triedPlacements.push(state.placement);
             instance.setProps({
               // @ts-ignore - unneeded DOMRect properties
               getReferenceClientRect: () =>
