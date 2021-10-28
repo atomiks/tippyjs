@@ -898,9 +898,13 @@ export default function createTippy(
       // https://github.com/atomiks/tippyjs-react/issues/177
       // TODO: find a cleaner / more efficient solution(!)
       getNestedPopperTree().forEach((nestedPopper) => {
-        // React (and other UI libs likely) requires a rAF wrapper as it flushes
-        // its work in one
-        requestAnimationFrame(nestedPopper._tippy!.popperInstance!.forceUpdate);
+        const popperInstance = nestedPopper._tippy?.popperInstance;
+        
+        if (popperInstance) {
+          // React (and other UI libs likely) requires a rAF wrapper as it flushes
+          // its work in one
+          requestAnimationFrame(popperInstance.forceUpdate);
+        }
       });
     }
 
