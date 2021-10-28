@@ -27,7 +27,7 @@ function tippy(
 
   /* istanbul ignore else */
   if (__DEV__) {
-    const isSingleContentElement = isElement(passedProps.content);
+    const isSingleContentElement = isElement(passedProps.render?.content);
     const isMoreThanOneReferenceElement = elements.length > 1;
     warnWhen(
       isSingleContentElement && isMoreThanOneReferenceElement,

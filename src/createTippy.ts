@@ -56,7 +56,6 @@ export default function createTippy(
   // ===========================================================================
   let showTimeout: any;
   let hideTimeout: any;
-  let scheduleHideAnimationFrame: number;
   let isVisibleFromClick = false;
   let didHideDueToDocumentMouseDown = false;
   let didTouchMove = false;
@@ -124,7 +123,7 @@ export default function createTippy(
   // ===========================================================================
   // Initial mutations
   // ===========================================================================
-  const {popper, onUpdate} = props.render(instance);
+  const {popper, onUpdate} = props.render(props);
 
   popper.setAttribute('data-__NAMESPACE_PREFIX__-root', '');
   popper.id = `__NAMESPACE_PREFIX__-${instance.id}`;
@@ -154,7 +153,7 @@ export default function createTippy(
     }
   });
 
-  popper.addEventListener('mouseleave', (event) => {
+  popper.addEventListener('mouseleave', (event: MouseEvent) => {
     if (
       instance.props.interactive &&
       instance.props.trigger.indexOf('mouseenter') >= 0
@@ -813,11 +812,7 @@ export default function createTippy(
         }
       }, delay);
     } else {
-      // Fixes a `transitionend` problem when it fires 1 frame too
-      // late sometimes, we don't want hide() to be called.
-      scheduleHideAnimationFrame = requestAnimationFrame(() => {
-        instance.hide();
-      });
+      instance.hide();
     }
   }
 
@@ -838,7 +833,6 @@ export default function createTippy(
   function clearDelayTimeouts(): void {
     clearTimeout(showTimeout);
     clearTimeout(hideTimeout);
-    cancelAnimationFrame(scheduleHideAnimationFrame);
   }
 
   function setProps(partialProps: Partial<Props>): void {
@@ -886,9 +880,7 @@ export default function createTippy(
     handleAriaExpandedAttribute();
     handleStyles();
 
-    if (onUpdate) {
-      onUpdate(prevProps, nextProps);
-    }
+    onUpdate?.(prevProps, nextProps);
 
     if (instance.popperInstance) {
       createPopperInstance();
@@ -952,10 +944,6 @@ export default function createTippy(
 
     instance.state.isVisible = true;
 
-    if (getIsDefaultRenderFn()) {
-      popper.style.visibility = 'visible';
-    }
-
     handleStyles();
     addDocumentPress();
 
@@ -963,9 +951,11 @@ export default function createTippy(
       popper.style.transition = 'none';
     }
 
+    const animation = instance.props.animation;
+
     // If flipping to the opposite side after hiding at least once, the
     // animation will use the wrong placement without resetting the duration
-    if (getIsDefaultRenderFn()) {
+    if (animation && getIsDefaultRenderFn()) {
       const {box, content} = getDefaultTemplateChildren();
       setTransitionDuration([box, content], 0);
     }
@@ -980,9 +970,10 @@ export default function createTippy(
       // reflow
       void popper.offsetHeight;
 
+      popper.style.visibility = 'visible';
       popper.style.transition = instance.props.moveTransition;
 
-      if (getIsDefaultRenderFn() && instance.props.animation) {
+      if (getIsDefaultRenderFn() && typeof animation === 'string') {
         const {box, content} = getDefaultTemplateChildren();
         setTransitionDuration([box, content], duration);
         setVisibilityState([box, content], 'visible');
@@ -1000,11 +991,17 @@ export default function createTippy(
       instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
 
-      if (instance.props.animation && getIsDefaultRenderFn()) {
-        onTransitionedIn(duration, () => {
-          instance.state.isShown = true;
-          invokeHook('onShown', [instance]);
-        });
+      if (animation) {
+        if (typeof animation === 'string') {
+          if (getIsDefaultRenderFn()) {
+            onTransitionedIn(duration, () => {
+              instance.state.isShown = true;
+              invokeHook('onShown', [instance]);
+            });
+          }
+        } else if (typeof animation === 'object') {
+          animation.show(instance);
+        }
       }
     };
 
@@ -1041,29 +1038,29 @@ export default function createTippy(
     ignoreOnFirstUpdate = false;
     isVisibleFromClick = false;
 
-    if (getIsDefaultRenderFn()) {
-      popper.style.visibility = 'hidden';
-    }
-
     cleanupInteractiveMouseListeners();
     removeDocumentPress();
     handleStyles();
 
-    if (getIsDefaultRenderFn()) {
-      const {box, content} = getDefaultTemplateChildren();
+    const animation = instance.props.animation;
 
-      if (instance.props.animation) {
-        setTransitionDuration([box, content], duration);
-        setVisibilityState([box, content], 'hidden');
-      }
+    if (getIsDefaultRenderFn() && typeof animation === 'string') {
+      popper.style.visibility = 'hidden';
+      const {box, content} = getDefaultTemplateChildren();
+      setTransitionDuration([box, content], duration);
+      setVisibilityState([box, content], 'hidden');
     }
 
     handleAriaContentAttribute();
     handleAriaExpandedAttribute();
 
-    if (instance.props.animation) {
-      if (getIsDefaultRenderFn()) {
-        onTransitionedOut(duration, instance.unmount);
+    if (animation) {
+      if (typeof animation === 'string') {
+        if (getIsDefaultRenderFn()) {
+          onTransitionedOut(duration, instance.unmount);
+        }
+      } else if (typeof animation === 'object') {
+        animation.hide(instance);
       }
     } else {
       instance.unmount();

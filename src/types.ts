@@ -47,9 +47,16 @@ export interface LifecycleHooks<TProps = Props> {
 
 export interface RenderProps {
   allowHTML: boolean;
-  animation: string | boolean;
+  animation:
+    | string
+    | boolean
+    | {
+        show: (instance: Instance) => void;
+        hide: (instance: Instance) => void;
+      };
   arrow: boolean | string | SVGElement | DocumentFragment;
   content: Content;
+  duration: number | [number | null, number | null];
   inertia: boolean;
   maxWidth: number | string;
   role: string;
@@ -70,7 +77,6 @@ export interface Props extends LifecycleHooks, RenderProps {
     expanded?: 'auto' | boolean;
   };
   delay: number | [number | null, number | null];
-  duration: number | [number | null, number | null];
   followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
   getReferenceClientRect: null | GetReferenceClientRect;
   hideOnClick: boolean | 'toggle';
@@ -96,7 +102,7 @@ export interface Props extends LifecycleHooks, RenderProps {
   popperOptions: Partial<Popper.Options>;
   render:
     | ((
-        instance: Instance
+        props: Props
       ) => {
         popper: PopperElement;
         onUpdate?: (prevProps: Props, nextProps: Props) => void;

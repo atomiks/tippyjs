@@ -6,7 +6,7 @@ import {
   SVG_ARROW_CLASS,
 } from './constants';
 import {div, isElement} from './dom-utils';
-import {Instance, PopperElement, Props} from './types';
+import {PopperElement, RenderProps} from './types';
 import {PopperChildren} from './types-internal';
 import {arrayFrom} from './utils';
 
@@ -17,7 +17,7 @@ function dangerouslySetInnerHTML(element: Element, html: string): void {
   element[innerHTML()] = html;
 }
 
-function createArrowElement(value: Props['arrow']): HTMLDivElement {
+function createArrowElement(value: RenderProps['arrow']): HTMLDivElement {
   const arrow = div();
 
   if (value === true) {
@@ -35,7 +35,7 @@ function createArrowElement(value: Props['arrow']): HTMLDivElement {
   return arrow;
 }
 
-export function setContent(content: HTMLDivElement, props: Props): void {
+export function setContent(content: HTMLDivElement, props: RenderProps): void {
   if (isElement(props.content)) {
     dangerouslySetInnerHTML(content, '');
     content.appendChild(props.content);
@@ -67,10 +67,10 @@ export function getChildren(popper: PopperElement): PopperChildren {
 }
 
 export function render(
-  instance: Instance
+  props: RenderProps
 ): {
   popper: PopperElement;
-  onUpdate?: (prevProps: Props, nextProps: Props) => void;
+  onUpdate?: (prevProps: RenderProps, nextProps: RenderProps) => void;
 } {
   const popper = div();
 
@@ -83,14 +83,14 @@ export function render(
   content.className = CONTENT_CLASS;
   content.setAttribute('data-state', 'hidden');
 
-  setContent(content, instance.props);
+  setContent(content, props);
 
   popper.appendChild(box);
   box.appendChild(content);
 
-  onUpdate(instance.props, instance.props);
+  onUpdate(props, props);
 
-  function onUpdate(prevProps: Props, nextProps: Props): void {
+  function onUpdate(prevProps: RenderProps, nextProps: RenderProps): void {
     const {box, content, arrow} = getChildren(popper);
 
     if (nextProps.theme) {
@@ -126,7 +126,7 @@ export function render(
       prevProps.content !== nextProps.content ||
       prevProps.allowHTML !== nextProps.allowHTML
     ) {
-      setContent(content, instance.props);
+      setContent(content, props);
     }
 
     if (nextProps.arrow) {

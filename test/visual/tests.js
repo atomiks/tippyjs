@@ -48,14 +48,38 @@ tests.default = () => {
   content.appendChild(svgA);
   content.appendChild(svgB);
 
+  let currentValue = 0;
+  let animation;
+  const animateTippy = ({box, to, unmount}) => {
+    box.style.transformOrigin = 'bottom';
+    animation?.stop();
+    animation = popmotion.animate({
+      type: 'spring',
+      from: Math.max(0, currentValue),
+      to,
+      onUpdate(value) {
+        currentValue = value;
+        box.style.transform = `scale(${currentValue})`;
+        box.style.opacity = value;
+      },
+      onComplete: unmount,
+    });
+  };
+
   const [instance] = tippy('#default .reference', {
     content: 'hello',
-    arrow: content,
+    arrow: true,
+    animation: {
+      show({popper}) {
+        animateTippy({box: popper.firstElementChild, to: 1});
+      },
+      hide({popper, unmount}) {
+        animateTippy({box: popper.firstElementChild, to: 0, unmount});
+      },
+    },
     interactive: true,
-    trigger: 'click focus',
+    // trigger: 'click focus',
   });
-
-  console.log(instance.props.appendTo);
 
   return instance.destroy;
 };
@@ -65,10 +89,10 @@ tests.sticky = () => {
 
   const instance = tippy(reference, {
     content: 'tippy',
+    animation: false,
     sticky: true,
     plugins: [sticky],
     showOnCreate: true,
-    duration: 0,
     hideOnClick: false,
     trigger: 'manual',
     onMount() {
@@ -90,12 +114,12 @@ tests.inlinePositioning = () => {
     const [instance] = tippy('#inlinePositioning .reference-connected', {
       placement,
       content: 'tippy',
+      duration: 0,
       trigger: 'manual',
       inlinePositioning: true,
       plugins: [inlinePositioning],
       hideOnClick: false,
       showOnCreate: true,
-      duration: 0,
     });
 
     instances.push(instance);
@@ -106,11 +130,11 @@ tests.inlinePositioning = () => {
       const [instance] = tippy('#inlinePositioning .reference-disconnected', {
         placement,
         content: 'tippy',
+        animation: false,
         inlinePositioning: true,
         plugins: [inlinePositioning],
         hideOnClick: false,
         showOnCreate: true,
-        duration: 0,
       });
 
       const rects = instance.reference.getClientRects();
@@ -142,10 +166,10 @@ tests.followCursor = () => {
 
       const [instance] = tippy(`#followCursor [data-test="${test}"]`, {
         content: 'tippy',
+        animation: false,
         followCursor: test === 'contentChange' ? true : test,
         plugins: [followCursor],
         delay: [50, 0],
-        duration: 0,
         appendTo: 'parent',
         ...(test === 'contentChange' && {
           onCreate({setContent}) {
@@ -198,12 +222,12 @@ tests.themes = () => {
 
         const instance = tippy(button, {
           content: '.',
-          showOnCreate: true,
-          duration: 0,
-          trigger: 'manual',
-          hideOnClick: false,
+          animation: false,
           arrow,
           theme,
+          showOnCreate: true,
+          trigger: 'manual',
+          hideOnClick: false,
           placement,
         });
 
@@ -323,8 +347,8 @@ tests.animateFill = () => {
 tests.border = () => {
   const props = {
     content: 'Tippy',
+    animation: false,
     theme: 'border',
-    duration: 0,
     showOnCreate: true,
   };
 
