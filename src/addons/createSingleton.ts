@@ -244,7 +244,7 @@ const createSingleton: CreateSingleton = (
 
     enableInstances(false);
     setReferences();
-    interceptSetProps(singleton);
+    interceptSetPropsCleanups = interceptSetProps(singleton);
 
     singleton.setProps({triggerTarget: references});
   };
