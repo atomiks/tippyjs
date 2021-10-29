@@ -785,9 +785,7 @@ export default function createTippy(
     invokeHook('onUntrigger', [instance, event]);
 
     if (!instance.state.isVisible) {
-      removeDocumentPress();
-
-      return;
+      return removeDocumentPress();
     }
 
     // For interactive tippies, scheduleHide is added to a document.body handler
@@ -915,25 +913,17 @@ export default function createTippy(
     const isDisabled = !instance.state.isEnabled;
     const isTouchAndTouchDisabled =
       currentInput.isTouch && !instance.props.touch;
-    const duration = getValueAtIndexOrReturn(
-      instance.props.duration,
-      0,
-      defaultProps.duration
-    );
 
     if (
       isAlreadyVisible ||
       isDestroyed ||
       isDisabled ||
-      isTouchAndTouchDisabled
+      isTouchAndTouchDisabled ||
+      // Normalize `disabled` behavior across browsers.
+      // Firefox allows events on disabled elements, but Chrome doesn't.
+      // Using a wrapper element (i.e. <span>) is recommended.
+      getCurrentTarget().hasAttribute('disabled')
     ) {
-      return;
-    }
-
-    // Normalize `disabled` behavior across browsers.
-    // Firefox allows events on disabled elements, but Chrome doesn't.
-    // Using a wrapper element (i.e. <span>) is recommended.
-    if (getCurrentTarget().hasAttribute('disabled')) {
       return;
     }
 
@@ -944,13 +934,18 @@ export default function createTippy(
 
     instance.state.isVisible = true;
 
-    handleStyles();
-    addDocumentPress();
-
     if (!instance.state.isMounted) {
       popper.style.transition = 'none';
     }
 
+    handleStyles();
+    addDocumentPress();
+
+    const duration = getValueAtIndexOrReturn(
+      instance.props.duration,
+      0,
+      defaultProps.duration
+    );
     const animation = instance.props.animation;
 
     // If flipping to the opposite side after hiding at least once, the
@@ -966,10 +961,18 @@ export default function createTippy(
       }
 
       ignoreOnFirstUpdate = true;
+      instance.state.isMounted = true;
+      invokeHook('onMount', [instance]);
+      pushIfUnique(mountedInstances, instance);
+      handleAriaContentAttribute();
+      handleAriaExpandedAttribute();
 
-      // reflow
+      // certain modifiers (e.g. `maxSize`) require a second update after the
+      // popper has been positioned for the first time
+      instance.popperInstance?.forceUpdate();
+
+      // reflow to begin CSS transition
       void popper.offsetHeight;
-
       popper.style.visibility = 'visible';
       popper.style.transition = instance.props.moveTransition;
 
@@ -977,31 +980,15 @@ export default function createTippy(
         const {box, content} = getDefaultTemplateChildren();
         setTransitionDuration([box, content], duration);
         setVisibilityState([box, content], 'visible');
+
+        onTransitionedIn(duration, () => {
+          instance.state.isShown = true;
+          invokeHook('onShown', [instance]);
+        });
       }
 
-      handleAriaContentAttribute();
-      handleAriaExpandedAttribute();
-
-      pushIfUnique(mountedInstances, instance);
-
-      // certain modifiers (e.g. `maxSize`) require a second update after the
-      // popper has been positioned for the first time
-      instance.popperInstance?.forceUpdate();
-
-      instance.state.isMounted = true;
-      invokeHook('onMount', [instance]);
-
-      if (animation) {
-        if (typeof animation === 'string') {
-          if (getIsDefaultRenderFn()) {
-            onTransitionedIn(duration, () => {
-              instance.state.isShown = true;
-              invokeHook('onShown', [instance]);
-            });
-          }
-        } else if (typeof animation === 'object') {
-          animation.show(instance);
-        }
+      if (typeof animation === 'object') {
+        animation.show(instance);
       }
     };
 
@@ -1014,15 +1001,9 @@ export default function createTippy(
       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('hide'));
     }
 
-    // Early bail-out
     const isAlreadyHidden = !instance.state.isVisible;
     const isDestroyed = instance.state.isDestroyed;
     const isDisabled = !instance.state.isEnabled;
-    const duration = getValueAtIndexOrReturn(
-      instance.props.duration,
-      1,
-      defaultProps.duration
-    );
 
     if (isAlreadyHidden || isDestroyed || isDisabled) {
       return;
@@ -1033,6 +1014,7 @@ export default function createTippy(
       return;
     }
 
+    popper.style.visibility = 'hidden';
     instance.state.isVisible = false;
     instance.state.isShown = false;
     ignoreOnFirstUpdate = false;
@@ -1041,28 +1023,26 @@ export default function createTippy(
     cleanupInteractiveMouseListeners();
     removeDocumentPress();
     handleStyles();
-
-    const animation = instance.props.animation;
-
-    if (getIsDefaultRenderFn() && typeof animation === 'string') {
-      popper.style.visibility = 'hidden';
-      const {box, content} = getDefaultTemplateChildren();
-      setTransitionDuration([box, content], duration);
-      setVisibilityState([box, content], 'hidden');
-    }
-
     handleAriaContentAttribute();
     handleAriaExpandedAttribute();
 
-    if (animation) {
-      if (typeof animation === 'string') {
-        if (getIsDefaultRenderFn()) {
-          onTransitionedOut(duration, instance.unmount);
-        }
-      } else if (typeof animation === 'object') {
-        animation.hide(instance);
-      }
-    } else {
+    const duration = getValueAtIndexOrReturn(
+      instance.props.duration,
+      1,
+      defaultProps.duration
+    );
+    const animation = instance.props.animation;
+
+    if (getIsDefaultRenderFn() && typeof animation === 'string') {
+      const {box, content} = getDefaultTemplateChildren();
+      setTransitionDuration([box, content], duration);
+      setVisibilityState([box, content], 'hidden');
+      onTransitionedOut(duration, instance.unmount);
+    }
+
+    if (typeof animation === 'object') {
+      animation.hide(instance);
+    } else if (!animation) {
       instance.unmount();
     }
   }
