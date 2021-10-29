@@ -105,3 +105,8 @@ export function removeUndefinedProps(
     return acc;
   }, {});
 }
+
+export function getIsDefaultRenderFn(fn: unknown): boolean {
+  // @ts-ignore
+  return fn?.$$tippy;
+}

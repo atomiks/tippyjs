@@ -105,7 +105,7 @@ export function isCursorOutsideInteractiveBorder(
 export function updateTransitionEndListener(
   box: HTMLDivElement,
   action: 'add' | 'remove',
-  listener: (event: TransitionEvent) => void
+  listener?: (event: TransitionEvent) => void
 ): void {
   const method = `${action}EventListener` as
     | 'addEventListener'

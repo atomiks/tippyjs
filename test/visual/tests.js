@@ -5,6 +5,7 @@ import sticky from '../../src/plugins/sticky';
 import inlinePositioning from '../../src/plugins/inlinePositioning';
 import followCursor from '../../src/plugins/followCursor';
 import animateFill from '../../src/plugins/animateFill';
+import {animation as animationPlugin} from '../../src/plugins/animation';
 import createSingleton from '../../src/addons/createSingleton';
 import delegate from '../../src/addons/delegate';
 
@@ -69,14 +70,16 @@ tests.default = () => {
   const [instance] = tippy('#default .reference', {
     content: 'hello',
     arrow: true,
-    animation: {
-      show({popper}) {
-        animateTippy({box: popper.firstElementChild, to: 1});
-      },
-      hide({popper, unmount}) {
-        animateTippy({box: popper.firstElementChild, to: 0, unmount});
-      },
-    },
+    plugins: [animationPlugin],
+    // animation: {
+    //   show({popper}) {
+    //     animateTippy({box: popper.firstElementChild, to: 1});
+    //   },
+    //   hide({popper, unmount}) {
+    //     animateTippy({box: popper.firstElementChild, to: 0, unmount});
+    //   },
+    // },
+    animation: '',
     interactive: true,
     // trigger: 'click focus',
   });
@@ -114,7 +117,7 @@ tests.inlinePositioning = () => {
     const [instance] = tippy('#inlinePositioning .reference-connected', {
       placement,
       content: 'tippy',
-      duration: 0,
+      duration: 1,
       trigger: 'manual',
       inlinePositioning: true,
       plugins: [inlinePositioning],

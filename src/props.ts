@@ -151,22 +151,6 @@ export function evaluateProps(
       : getDataAttributeProps(reference, props.plugins)),
   };
 
-  out.aria = {
-    ...defaultProps.aria,
-    ...out.aria,
-  };
-
-  out.aria = {
-    expanded:
-      out.aria.expanded === 'auto' ? props.interactive : out.aria.expanded,
-    content:
-      out.aria.content === 'auto'
-        ? props.interactive
-          ? null
-          : 'describedby'
-        : out.aria.content,
-  };
-
   return out;
 }
 

@@ -8,9 +8,6 @@ import {
   getOwnerDocument,
   isCursorOutsideInteractiveBorder,
   isMouseEvent,
-  setTransitionDuration,
-  setVisibilityState,
-  updateTransitionEndListener,
 } from './dom-utils';
 import {defaultProps, evaluateProps, getExtendedPassedProps} from './props';
 import {getChildren} from './template';
@@ -22,7 +19,7 @@ import {
   Props,
   ReferenceElement,
 } from './types';
-import {ListenerObject, PopperTreeData, PopperChildren} from './types-internal';
+import {ListenerObject, PopperTreeData} from './types-internal';
 import {
   arrayFrom,
   debounce,
@@ -33,6 +30,7 @@ import {
   splitBySpaces,
   unique,
   removeUndefinedProps,
+  getIsDefaultRenderFn,
 } from './utils';
 import {createMemoryLeakWarning, errorWhen, warnWhen} from './validation';
 
@@ -61,11 +59,9 @@ export default function createTippy(
   let didTouchMove = false;
   let ignoreOnFirstUpdate = false;
   let lastTriggerEvent: Event | undefined;
-  let currentTransitionEndListener: (event: TransitionEvent) => void;
   let onFirstUpdate: () => void;
   let listeners: ListenerObject[] = [];
   let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce);
-  let currentTarget: Element;
 
   // ===========================================================================
   // 🔑 Public members
@@ -85,6 +81,7 @@ export default function createTippy(
     isMounted: false,
     // Has the tippy finished transitioning in?
     isShown: false,
+    currentTarget: null,
   };
 
   const instance: Instance = {
@@ -133,10 +130,11 @@ export default function createTippy(
   popper._tippy = instance;
 
   const pluginsHooks = plugins.map((plugin) => plugin.fn(instance));
-  const hasAriaExpanded = reference.hasAttribute('aria-expanded');
+  const hasAnimationPlugin = props.plugins.find(
+    (plugin) => plugin.name === 'animation'
+  );
 
   addListeners();
-  handleAriaExpandedAttribute();
   handleStyles();
 
   invokeHook('onCreate', [instance]);
@@ -177,22 +175,13 @@ export default function createTippy(
     return getNormalizedTouchSettings()[0] === 'hold';
   }
 
-  function getIsDefaultRenderFn(): boolean {
-    // @ts-ignore
-    return !!instance.props.render?.$$tippy;
-  }
-
   function getCurrentTarget(): Element {
-    return currentTarget || reference;
+    return instance.state.currentTarget || reference;
   }
 
   function getDocument(): Document {
     const parent = getCurrentTarget().parentNode as Element;
     return parent ? getOwnerDocument(parent) : document;
-  }
-
-  function getDefaultTemplateChildren(): PopperChildren {
-    return getChildren(popper);
   }
 
   function getDelay(isShow: boolean): number {
@@ -234,55 +223,6 @@ export default function createTippy(
     if (shouldInvokePropsHook) {
       instance.props[hook](...args);
     }
-  }
-
-  function handleAriaContentAttribute(): void {
-    const {aria} = instance.props;
-
-    if (!aria.content) {
-      return;
-    }
-
-    const attr = `aria-${aria.content}`;
-    const id = popper.id;
-    const nodes = normalizeToArray(instance.props.triggerTarget || reference);
-
-    nodes.forEach((node) => {
-      const currentValue = node.getAttribute(attr);
-
-      if (instance.state.isVisible) {
-        node.setAttribute(attr, currentValue ? `${currentValue} ${id}` : id);
-      } else {
-        const nextValue = currentValue && currentValue.replace(id, '').trim();
-
-        if (nextValue) {
-          node.setAttribute(attr, nextValue);
-        } else {
-          node.removeAttribute(attr);
-        }
-      }
-    });
-  }
-
-  function handleAriaExpandedAttribute(): void {
-    if (hasAriaExpanded || !instance.props.aria.expanded) {
-      return;
-    }
-
-    const nodes = normalizeToArray(instance.props.triggerTarget || reference);
-
-    nodes.forEach((node) => {
-      if (instance.props.interactive) {
-        node.setAttribute(
-          'aria-expanded',
-          instance.state.isVisible && node === getCurrentTarget()
-            ? 'true'
-            : 'false'
-        );
-      } else {
-        node.removeAttribute('aria-expanded');
-      }
-    });
   }
 
   function cleanupInteractiveMouseListeners(): void {
@@ -372,44 +312,6 @@ export default function createTippy(
     doc.removeEventListener('touchmove', onTouchMove, TOUCH_OPTIONS);
   }
 
-  function onTransitionedOut(duration: number, callback: () => void): void {
-    onTransitionEnd(duration, () => {
-      if (
-        !instance.state.isVisible &&
-        popper.parentNode &&
-        popper.parentNode.contains(popper)
-      ) {
-        callback();
-      }
-    });
-  }
-
-  function onTransitionedIn(duration: number, callback: () => void): void {
-    onTransitionEnd(duration, callback);
-  }
-
-  function onTransitionEnd(duration: number, callback: () => void): void {
-    const box = getDefaultTemplateChildren().box;
-
-    function listener(event: TransitionEvent): void {
-      if (event.target === box) {
-        updateTransitionEndListener(box, 'remove', listener);
-        callback();
-      }
-    }
-
-    // Make callback synchronous if duration is 0
-    // `transitionend` won't fire otherwise
-    if (duration === 0) {
-      return callback();
-    }
-
-    updateTransitionEndListener(box, 'remove', currentTransitionEndListener);
-    updateTransitionEndListener(box, 'add', listener);
-
-    currentTransitionEndListener = listener;
-  }
-
   function on(
     eventType: string,
     handler: EventListener,
@@ -470,9 +372,7 @@ export default function createTippy(
     const wasFocused = lastTriggerEvent?.type === 'focus';
 
     lastTriggerEvent = event;
-    currentTarget = event.currentTarget as Element;
-
-    handleAriaExpandedAttribute();
+    instance.state.currentTarget = event.currentTarget as Element;
 
     if (!instance.state.isVisible && isMouseEvent(event)) {
       // If scrolling, `mouseenter` events can be fired if the cursor lands
@@ -591,7 +491,9 @@ export default function createTippy(
       moveTransition,
     } = instance.props;
 
-    const arrow = getIsDefaultRenderFn() ? getChildren(popper).arrow : null;
+    const arrow = getIsDefaultRenderFn(instance.props.render)
+      ? getChildren(popper).arrow
+      : null;
 
     const computedReference = getReferenceClientRect
       ? {
@@ -607,8 +509,8 @@ export default function createTippy(
       phase: 'beforeWrite',
       requires: ['computeStyles'],
       fn({state}) {
-        if (getIsDefaultRenderFn()) {
-          const {box} = getDefaultTemplateChildren();
+        if (getIsDefaultRenderFn(instance.props.render)) {
+          const {box} = getChildren(instance.popper);
 
           ['placement', 'reference-hidden', 'escaped'].forEach((attr) => {
             if (attr === 'placement') {
@@ -663,7 +565,7 @@ export default function createTippy(
       tippyModifier,
     ];
 
-    if (getIsDefaultRenderFn() && arrow) {
+    if (getIsDefaultRenderFn(instance.props.render) && arrow) {
       modifiers.push({
         name: 'arrow',
         options: {
@@ -781,6 +683,7 @@ export default function createTippy(
 
   function scheduleHide(event: Event): void {
     instance.clearDelayTimeouts();
+    instance.state.currentTarget = null;
 
     invokeHook('onUntrigger', [instance, event]);
 
@@ -875,7 +778,6 @@ export default function createTippy(
       reference.removeAttribute('aria-expanded');
     }
 
-    handleAriaExpandedAttribute();
     handleStyles();
 
     onUpdate?.(prevProps, nextProps);
@@ -907,18 +809,11 @@ export default function createTippy(
       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('show'));
     }
 
-    // Early bail-out
-    const isAlreadyVisible = instance.state.isVisible;
-    const isDestroyed = instance.state.isDestroyed;
-    const isDisabled = !instance.state.isEnabled;
-    const isTouchAndTouchDisabled =
-      currentInput.isTouch && !instance.props.touch;
-
     if (
-      isAlreadyVisible ||
-      isDestroyed ||
-      isDisabled ||
-      isTouchAndTouchDisabled ||
+      instance.state.isVisible ||
+      instance.state.isDestroyed ||
+      !instance.state.isEnabled ||
+      (currentInput.isTouch && !instance.props.touch) ||
       // Normalize `disabled` behavior across browsers.
       // Firefox allows events on disabled elements, but Chrome doesn't.
       // Using a wrapper element (i.e. <span>) is recommended.
@@ -927,10 +822,12 @@ export default function createTippy(
       return;
     }
 
-    invokeHook('onShow', [instance], false);
-    if (instance.props.onShow(instance) === false) {
-      return;
-    }
+    invokeHook('onShow', [instance]);
+
+    // TODO: Make this feature unnecessary
+    // if (instance.props.onShow(instance) === false) {
+    //   return;
+    // }
 
     instance.state.isVisible = true;
 
@@ -941,20 +838,6 @@ export default function createTippy(
     handleStyles();
     addDocumentPress();
 
-    const duration = getValueAtIndexOrReturn(
-      instance.props.duration,
-      0,
-      defaultProps.duration
-    );
-    const animation = instance.props.animation;
-
-    // If flipping to the opposite side after hiding at least once, the
-    // animation will use the wrong placement without resetting the duration
-    if (animation && getIsDefaultRenderFn()) {
-      const {box, content} = getDefaultTemplateChildren();
-      setTransitionDuration([box, content], 0);
-    }
-
     onFirstUpdate = (): void => {
       if (!instance.state.isVisible || ignoreOnFirstUpdate) {
         return;
@@ -962,34 +845,14 @@ export default function createTippy(
 
       ignoreOnFirstUpdate = true;
       instance.state.isMounted = true;
+
       invokeHook('onMount', [instance]);
       pushIfUnique(mountedInstances, instance);
-      handleAriaContentAttribute();
-      handleAriaExpandedAttribute();
 
-      // certain modifiers (e.g. `maxSize`) require a second update after the
-      // popper has been positioned for the first time
+      // Certain modifiers (e.g. `maxSize`) require a second update after the
+      // popper has been positioned for the first time.
       instance.popperInstance?.forceUpdate();
-
-      // reflow to begin CSS transition
-      void popper.offsetHeight;
-      popper.style.visibility = 'visible';
-      popper.style.transition = instance.props.moveTransition;
-
-      if (getIsDefaultRenderFn() && typeof animation === 'string') {
-        const {box, content} = getDefaultTemplateChildren();
-        setTransitionDuration([box, content], duration);
-        setVisibilityState([box, content], 'visible');
-
-        onTransitionedIn(duration, () => {
-          instance.state.isShown = true;
-          invokeHook('onShown', [instance]);
-        });
-      }
-
-      if (typeof animation === 'object') {
-        animation.show(instance);
-      }
+      instance.popper.style.transition = instance.props.moveTransition;
     };
 
     mount();
@@ -1001,48 +864,31 @@ export default function createTippy(
       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('hide'));
     }
 
-    const isAlreadyHidden = !instance.state.isVisible;
-    const isDestroyed = instance.state.isDestroyed;
-    const isDisabled = !instance.state.isEnabled;
-
-    if (isAlreadyHidden || isDestroyed || isDisabled) {
+    if (
+      !instance.state.isVisible ||
+      instance.state.isDestroyed ||
+      !instance.state.isEnabled
+    ) {
       return;
     }
 
-    invokeHook('onHide', [instance], false);
-    if (instance.props.onHide(instance) === false) {
-      return;
-    }
-
-    popper.style.visibility = 'hidden';
     instance.state.isVisible = false;
     instance.state.isShown = false;
     ignoreOnFirstUpdate = false;
     isVisibleFromClick = false;
 
+    invokeHook('onHide', [instance]);
+
+    // TODO: Make this feature unnecessary
+    // if (instance.props.onHide(instance) === false) {
+    //   return;
+    // }
+
     cleanupInteractiveMouseListeners();
     removeDocumentPress();
     handleStyles();
-    handleAriaContentAttribute();
-    handleAriaExpandedAttribute();
 
-    const duration = getValueAtIndexOrReturn(
-      instance.props.duration,
-      1,
-      defaultProps.duration
-    );
-    const animation = instance.props.animation;
-
-    if (getIsDefaultRenderFn() && typeof animation === 'string') {
-      const {box, content} = getDefaultTemplateChildren();
-      setTransitionDuration([box, content], duration);
-      setVisibilityState([box, content], 'hidden');
-      onTransitionedOut(duration, instance.unmount);
-    }
-
-    if (typeof animation === 'object') {
-      animation.hide(instance);
-    } else if (!animation) {
+    if (!hasAnimationPlugin) {
       instance.unmount();
     }
   }

@@ -142,6 +142,7 @@ export interface Instance<TProps = Props> {
     isDestroyed: boolean;
     isMounted: boolean;
     isShown: boolean;
+    currentTarget: Element | null;
   };
   unmount(): void;
 }
