@@ -7,36 +7,36 @@ import {
 import {warnWhen} from './validation';
 import {TIPPY_DEFAULT_APPEND_TO} from './constants';
 
-const pluginProps = {
-  animateFill: false,
-  followCursor: false,
-  inlinePositioning: false,
-  sticky: false,
-};
+const PLUGIN_PROPS = [
+  'animateFill',
+  'animation',
+  'aria',
+  'followCursor',
+  'inlinePositioning',
+  'sticky',
+];
 
 const renderProps = {
   allowHTML: false,
   animation: 'fade',
   arrow: true,
   content: '',
-  inertia: false,
   maxWidth: 350,
-  role: 'tooltip',
   theme: '',
   zIndex: 9999,
 };
 
 export const defaultProps: DefaultProps = {
+  animateFill: false,
   appendTo: TIPPY_DEFAULT_APPEND_TO,
-  aria: {
-    content: 'auto',
-    expanded: 'auto',
-  },
+  aria: {content: 'auto', expanded: 'auto', role: 'tooltip'},
   delay: 0,
   duration: [300, 250],
+  followCursor: false,
   getReferenceClientRect: null,
   hideOnClick: true,
   ignoreAttributes: false,
+  inlinePositioning: false,
   interactive: false,
   interactiveBorder: 2,
   interactiveDebounce: 0,
@@ -59,10 +59,10 @@ export const defaultProps: DefaultProps = {
   popperOptions: {},
   render: null,
   showOnCreate: false,
+  sticky: false,
   touch: true,
   trigger: 'mouseenter focus',
   triggerTarget: null,
-  ...pluginProps,
   ...renderProps,
 };
 
@@ -143,15 +143,13 @@ export function evaluateProps(
   reference: ReferenceElement,
   props: Props
 ): Props {
-  const out = {
+  return {
     ...props,
     content: invokeWithArgsOrReturn(props.content, [reference]),
     ...(props.ignoreAttributes
       ? {}
       : getDataAttributeProps(reference, props.plugins)),
   };
-
-  return out;
 }
 
 export function validateProps(
@@ -160,11 +158,7 @@ export function validateProps(
 ): void {
   const keys = Object.keys(partialProps) as Array<keyof Props>;
   keys.forEach((prop) => {
-    const nonPluginProps = removeProperties(
-      defaultProps,
-      Object.keys(pluginProps)
-    );
-
+    const nonPluginProps = removeProperties(defaultProps, PLUGIN_PROPS);
     let didPassUnknownProp = !hasOwnProperty(nonPluginProps, prop);
 
     // Check if the prop exists in `plugins`

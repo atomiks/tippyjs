@@ -6,6 +6,7 @@ import inlinePositioning from '../../src/plugins/inlinePositioning';
 import followCursor from '../../src/plugins/followCursor';
 import animateFill from '../../src/plugins/animateFill';
 import {animation as animationPlugin} from '../../src/plugins/animation';
+import aria from '../../src/plugins/aria';
 import createSingleton from '../../src/addons/createSingleton';
 import delegate from '../../src/addons/delegate';
 
@@ -70,18 +71,18 @@ tests.default = () => {
   const [instance] = tippy('#default .reference', {
     content: 'hello',
     arrow: true,
-    plugins: [animationPlugin],
-    // animation: {
-    //   show({popper}) {
-    //     animateTippy({box: popper.firstElementChild, to: 1});
-    //   },
-    //   hide({popper, unmount}) {
-    //     animateTippy({box: popper.firstElementChild, to: 0, unmount});
-    //   },
-    // },
-    animation: '',
+    plugins: [animationPlugin, aria],
+    animation: {
+      show({popper}) {
+        animateTippy({box: popper.firstElementChild, to: 1});
+      },
+      hide({popper, unmount}) {
+        animateTippy({box: popper.firstElementChild, to: 0, unmount});
+      },
+    },
+    // animation: '',
     interactive: true,
-    // trigger: 'click focus',
+    trigger: 'click',
   });
 
   return instance.destroy;

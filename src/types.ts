@@ -47,19 +47,10 @@ export interface LifecycleHooks<TProps = Props> {
 
 export interface RenderProps {
   allowHTML: boolean;
-  animation:
-    | string
-    | boolean
-    | {
-        show: (instance: Instance) => void;
-        hide: (instance: Instance) => void;
-      };
   arrow: boolean | string | SVGElement | DocumentFragment;
   content: Content;
   duration: number | [number | null, number | null];
-  inertia: boolean;
   maxWidth: number | string;
-  role: string;
   theme: string;
   zIndex: number;
 }
@@ -69,19 +60,31 @@ export interface GetReferenceClientRect {
   contextElement?: Element;
 }
 
-export interface Props extends LifecycleHooks, RenderProps {
+interface PluginProps {
   animateFill: boolean;
-  appendTo: 'parent' | Element | ((ref: Element) => Element);
+  animation:
+    | string
+    | boolean
+    | {
+        show: (instance: Instance) => void;
+        hide: (instance: Instance) => void;
+      };
   aria: {
     content?: 'auto' | 'describedby' | 'labelledby' | null;
     expanded?: 'auto' | boolean;
+    role?: string;
   };
-  delay: number | [number | null, number | null];
   followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
+  inlinePositioning: boolean;
+  sticky: boolean | 'reference' | 'popper';
+}
+
+export interface Props extends LifecycleHooks, RenderProps, PluginProps {
+  appendTo: 'parent' | Element | ((ref: Element) => Element);
+  delay: number | [number | null, number | null];
   getReferenceClientRect: null | GetReferenceClientRect;
   hideOnClick: boolean | 'toggle';
   ignoreAttributes: boolean;
-  inlinePositioning: boolean;
   interactive: boolean;
   interactiveBorder: number;
   interactiveDebounce: number;
@@ -109,15 +112,13 @@ export interface Props extends LifecycleHooks, RenderProps {
       })
     | null;
   showOnCreate: boolean;
-  sticky: boolean | 'reference' | 'popper';
   touch: boolean | 'hold' | ['hold', number];
   trigger: string;
   triggerTarget: Element | Element[] | null;
 }
 
-export interface DefaultProps extends Omit<Props, 'delay' | 'duration'> {
+export interface DefaultProps extends Omit<Props, 'delay'> {
   delay: number | [number, number];
-  duration: number | [number, number];
 }
 
 export interface Instance<TProps = Props> {

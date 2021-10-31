@@ -18,6 +18,14 @@ $color: #333;
   outline: 0;
   transition-property: transform, visibility, opacity;
 
+  &[data-state='visible'] {
+    transition-duration: 250ms;
+  }
+
+  &[data-state='hidden'] {
+    transition-duration: 0ms;
+  }
+
   &[data-placement^='top'] > .#{$namespace-prefix}-arrow {
     bottom: 0;
 
@@ -64,9 +72,9 @@ $color: #333;
     }
   }
 
-  &[data-inertia][data-state='visible'] {
-    transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
-  }
+  // &[data-inertia][data-state='visible'] {
+  //   transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
+  // }
 }
 
 .#{$namespace-prefix}-arrow {

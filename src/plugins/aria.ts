@@ -1,26 +1,55 @@
-import {Plugin} from '../types';
+import {Plugin, Props} from '../types';
 import {normalizeToArray} from '../utils';
+
+const ARIA_EXPANDED = 'aria-expanded';
 
 interface Aria extends Plugin {
   name: 'aria';
   defaultValue: {
-    content: 'describedby';
-    expanded: true;
+    content: 'auto';
+    expanded: 'auto';
+    role: 'tooltip';
+  };
+}
+
+function computeAriaPropValue({aria, interactive}: Props) {
+  return {
+    expanded: aria.expanded === 'auto' ? interactive : aria.expanded,
+    content:
+      aria.content === 'auto'
+        ? interactive
+          ? null
+          : 'describedby'
+        : aria.content,
+    role: aria.role,
   };
 }
 
 const aria: Aria = {
   name: 'aria',
   defaultValue: {
-    content: 'describedby',
-    expanded: true,
+    content: 'auto',
+    expanded: 'auto',
+    role: 'tooltip',
   },
   fn(instance) {
-    const hasAriaExpanded = instance.reference.hasAttribute('aria-expanded');
+    let prevProps = instance.props;
+
+    const hasAriaExpandedOnCreate = instance.reference.hasAttribute(
+      ARIA_EXPANDED
+    );
     handleAriaExpandedAttribute();
 
+    function handleRoleAttribute(): void {
+      if (instance.props.aria.role) {
+        instance.popper.setAttribute('role', instance.props.aria.role);
+      } else {
+        instance.popper.removeAttribute('role');
+      }
+    }
+
     function handleAriaContentAttribute(): void {
-      const {aria} = instance.props;
+      const aria = computeAriaPropValue(instance.props);
 
       if (!aria.content) {
         return;
@@ -50,7 +79,9 @@ const aria: Aria = {
     }
 
     function handleAriaExpandedAttribute(): void {
-      if (hasAriaExpanded || !instance.props.aria.expanded) {
+      const aria = computeAriaPropValue(instance.props);
+
+      if (hasAriaExpandedOnCreate || !aria.expanded) {
         return;
       }
 
@@ -61,19 +92,32 @@ const aria: Aria = {
       nodes.forEach((node) => {
         if (instance.props.interactive) {
           node.setAttribute(
-            'aria-expanded',
+            ARIA_EXPANDED,
             instance.state.isVisible &&
               node === (instance.state.currentTarget || instance.reference)
               ? 'true'
               : 'false'
           );
         } else {
-          node.removeAttribute('aria-expanded');
+          node.removeAttribute(ARIA_EXPANDED);
         }
       });
     }
 
+    function handleAriaUpdate(prevProps: Props, nextProps: Props) {
+      if (prevProps.triggerTarget && !nextProps.triggerTarget) {
+        normalizeToArray(prevProps.triggerTarget).forEach((node) => {
+          node.removeAttribute(ARIA_EXPANDED);
+        });
+      } else if (nextProps.triggerTarget) {
+        instance.reference.removeAttribute(ARIA_EXPANDED);
+      }
+    }
+
     return {
+      onCreate() {
+        handleRoleAttribute();
+      },
       onMount() {
         handleAriaContentAttribute();
         handleAriaExpandedAttribute();
@@ -85,8 +129,13 @@ const aria: Aria = {
       onTrigger() {
         handleAriaExpandedAttribute();
       },
+      onBeforeUpdate() {
+        prevProps = instance.props;
+      },
       onAfterUpdate() {
         handleAriaExpandedAttribute();
+        handleRoleAttribute();
+        handleAriaUpdate(prevProps, instance.props);
       },
     };
   },

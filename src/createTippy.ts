@@ -211,18 +211,17 @@ export default function createTippy(
 
   function invokeHook(
     hook: keyof LifecycleHooks,
-    args: [Instance, any?],
-    shouldInvokePropsHook = true
-  ): void {
+    args: [Instance, any?]
+  ): Array<boolean | void> {
+    const returns: Array<boolean | void> = [];
+
     pluginsHooks.forEach((pluginHooks) => {
       if (pluginHooks[hook]) {
-        pluginHooks[hook]!(...args);
+        returns.push(pluginHooks[hook]!(...args));
       }
     });
 
-    if (shouldInvokePropsHook) {
-      instance.props[hook](...args);
-    }
+    return [...returns, instance.props[hook](...args)];
   }
 
   function cleanupInteractiveMouseListeners(): void {
@@ -769,15 +768,6 @@ export default function createTippy(
       );
     }
 
-    // Ensure stale aria-expanded attributes are removed
-    if (prevProps.triggerTarget && !nextProps.triggerTarget) {
-      normalizeToArray(prevProps.triggerTarget).forEach((node) => {
-        node.removeAttribute('aria-expanded');
-      });
-    } else if (nextProps.triggerTarget) {
-      reference.removeAttribute('aria-expanded');
-    }
-
     handleStyles();
 
     onUpdate?.(prevProps, nextProps);
@@ -813,7 +803,6 @@ export default function createTippy(
       instance.state.isVisible ||
       instance.state.isDestroyed ||
       !instance.state.isEnabled ||
-      (currentInput.isTouch && !instance.props.touch) ||
       // Normalize `disabled` behavior across browsers.
       // Firefox allows events on disabled elements, but Chrome doesn't.
       // Using a wrapper element (i.e. <span>) is recommended.
@@ -822,12 +811,10 @@ export default function createTippy(
       return;
     }
 
-    invokeHook('onShow', [instance]);
-
-    // TODO: Make this feature unnecessary
-    // if (instance.props.onShow(instance) === false) {
-    //   return;
-    // }
+    const returns = invokeHook('onShow', [instance]);
+    if (returns.some((value) => value === false)) {
+      return;
+    }
 
     instance.state.isVisible = true;
 
@@ -877,12 +864,10 @@ export default function createTippy(
     ignoreOnFirstUpdate = false;
     isVisibleFromClick = false;
 
-    invokeHook('onHide', [instance]);
-
-    // TODO: Make this feature unnecessary
-    // if (instance.props.onHide(instance) === false) {
-    //   return;
-    // }
+    const returns = invokeHook('onHide', [instance]);
+    if (returns.some((value) => value === false)) {
+      return;
+    }
 
     cleanupInteractiveMouseListeners();
     removeDocumentPress();

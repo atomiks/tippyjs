@@ -105,22 +105,10 @@ export function render(
       box.removeAttribute('data-animation');
     }
 
-    if (nextProps.inertia) {
-      box.setAttribute('data-inertia', '');
-    } else {
-      box.removeAttribute('data-inertia');
-    }
-
     box.style.maxWidth =
       typeof nextProps.maxWidth === 'number'
         ? `${nextProps.maxWidth}px`
         : nextProps.maxWidth;
-
-    if (nextProps.role) {
-      box.setAttribute('role', nextProps.role);
-    } else {
-      box.removeAttribute('role');
-    }
 
     if (
       prevProps.content !== nextProps.content ||
