@@ -6,7 +6,7 @@ import {
   SVG_ARROW_CLASS,
 } from './constants';
 import {div, isElement} from './dom-utils';
-import {PopperElement, RenderProps} from './types';
+import {PopperElement, Props} from './types';
 import {PopperChildren} from './types-internal';
 import {arrayFrom} from './utils';
 
@@ -17,7 +17,7 @@ function dangerouslySetInnerHTML(element: Element, html: string): void {
   element[innerHTML()] = html;
 }
 
-function createArrowElement(value: RenderProps['arrow']): HTMLDivElement {
+function createArrowElement(value: Props['arrow']): HTMLDivElement {
   const arrow = div();
 
   if (value === true) {
@@ -35,7 +35,7 @@ function createArrowElement(value: RenderProps['arrow']): HTMLDivElement {
   return arrow;
 }
 
-export function setContent(content: HTMLDivElement, props: RenderProps): void {
+export function setContent(content: HTMLDivElement, props: Props): void {
   if (isElement(props.content)) {
     dangerouslySetInnerHTML(content, '');
     content.appendChild(props.content);
@@ -67,10 +67,10 @@ export function getChildren(popper: PopperElement): PopperChildren {
 }
 
 export function render(
-  props: RenderProps
+  props: Props
 ): {
   popper: PopperElement;
-  onUpdate?: (prevProps: RenderProps, nextProps: RenderProps) => void;
+  onUpdate?: (prevProps: Props, nextProps: Props) => void;
 } {
   const popper = div();
 
@@ -90,7 +90,7 @@ export function render(
 
   onUpdate(props, props);
 
-  function onUpdate(prevProps: RenderProps, nextProps: RenderProps): void {
+  function onUpdate(prevProps: Props, nextProps: Props): void {
     const {box, content, arrow} = getChildren(popper);
 
     if (nextProps.theme) {

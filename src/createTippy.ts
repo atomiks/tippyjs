@@ -37,7 +37,6 @@ import {createMemoryLeakWarning, errorWhen, warnWhen} from './validation';
 let idCounter = 1;
 let mouseMoveListeners: ((event: MouseEvent) => void)[] = [];
 
-// Used by `hideAll()`
 export let mountedInstances: Instance[] = [];
 
 export default function createTippy(
@@ -274,9 +273,6 @@ export default function createTippy(
       // currentTarget. This lets a tippy with `focus` trigger know that it
       // should not show
       didHideDueToDocumentMouseDown = true;
-      setTimeout(() => {
-        didHideDueToDocumentMouseDown = false;
-      });
 
       // The listener gets added in `scheduleShow()`, but this may be hiding it
       // before it shows, and hide()'s early bail-out behavior can prevent it
@@ -360,11 +356,12 @@ export default function createTippy(
   function onTrigger(event: Event): void {
     let shouldScheduleClickHide = false;
 
-    if (
-      !instance.state.isEnabled ||
-      isEventListenerStopped(event) ||
-      didHideDueToDocumentMouseDown
-    ) {
+    if (event.type === 'focus' && didHideDueToDocumentMouseDown) {
+      didHideDueToDocumentMouseDown = false;
+      return;
+    }
+
+    if (!instance.state.isEnabled || isEventListenerStopped(event)) {
       return;
     }
 
@@ -803,6 +800,7 @@ export default function createTippy(
       instance.state.isVisible ||
       instance.state.isDestroyed ||
       !instance.state.isEnabled ||
+      (currentInput.isTouch && !instance.props.touch) ||
       // Normalize `disabled` behavior across browsers.
       // Firefox allows events on disabled elements, but Chrome doesn't.
       // Using a wrapper element (i.e. <span>) is recommended.

@@ -1,0 +1,1450 @@
+diff --git a/.github/FUNDING.yml b/.github/FUNDING.yml
+new file mode 100644
+index 00000000..e4b7d81f
+--- /dev/null
++++ b/.github/FUNDING.yml
+@@ -0,0 +1,12 @@
++# These are supported funding model platforms
++
++github: [atomiks]
++patreon: # Replace with a single Patreon username
++open_collective: # Replace with a single Open Collective username
++ko_fi: # Replace with a single Ko-fi username
++tidelift: # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
++community_bridge: # Replace with a single Community Bridge project-name e.g., cloud-foundry
++liberapay: # Replace with a single Liberapay username
++issuehunt: # Replace with a single IssueHunt username
++otechie: # Replace with a single Otechie username
++custom: # Replace with up to 4 custom sponsorship URLs e.g., ['link1', 'link2']
+diff --git a/package.json b/package.json
+index 359c3dfb..4ef29e2f 100644
+--- a/package.json
++++ b/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "tippy.js",
+-  "version": "6.3.2",
++  "version": "6.3.3",
+   "description": "The complete tooltip, popover, dropdown, and menu solution for the web",
+   "main": "dist/tippy.cjs.js",
+   "module": "dist/tippy.esm.js",
+diff --git a/src/addons/createSingleton.ts b/src/addons/createSingleton.ts
+index 13a3b0b5..a4aa301f 100644
+--- a/src/addons/createSingleton.ts
++++ b/src/addons/createSingleton.ts
+@@ -244,7 +244,7 @@ const createSingleton: CreateSingleton = (
+ 
+     enableInstances(false);
+     setReferences();
+-    interceptSetProps(singleton);
++    interceptSetPropsCleanups = interceptSetProps(singleton);
+ 
+     singleton.setProps({triggerTarget: references});
+   };
+diff --git a/src/createTippy.ts b/src/createTippy.ts
+index 071e2907..08c857ec 100644
+--- a/src/createTippy.ts
++++ b/src/createTippy.ts
+@@ -8,6 +8,9 @@ import {
+   getOwnerDocument,
+   isCursorOutsideInteractiveBorder,
+   isMouseEvent,
++  setTransitionDuration,
++  setVisibilityState,
++  updateTransitionEndListener,
+ } from './dom-utils';
+ import {defaultProps, evaluateProps, getExtendedPassedProps} from './props';
+ import {getChildren} from './template';
+@@ -19,7 +22,7 @@ import {
+   Props,
+   ReferenceElement,
+ } from './types';
+-import {ListenerObject, PopperTreeData} from './types-internal';
++import {ListenerObject, PopperTreeData, PopperChildren} from './types-internal';
+ import {
+   arrayFrom,
+   debounce,
+@@ -30,7 +33,6 @@ import {
+   splitBySpaces,
+   unique,
+   removeUndefinedProps,
+-  getIsDefaultRenderFn,
+ } from './utils';
+ import {createMemoryLeakWarning, errorWhen, warnWhen} from './validation';
+ 
+@@ -54,14 +56,17 @@ export default function createTippy(
+   // ===========================================================================
+   let showTimeout: any;
+   let hideTimeout: any;
++  let scheduleHideAnimationFrame: number;
+   let isVisibleFromClick = false;
+   let didHideDueToDocumentMouseDown = false;
+   let didTouchMove = false;
+   let ignoreOnFirstUpdate = false;
+   let lastTriggerEvent: Event | undefined;
++  let currentTransitionEndListener: (event: TransitionEvent) => void;
+   let onFirstUpdate: () => void;
+   let listeners: ListenerObject[] = [];
+   let debouncedOnMouseMove = debounce(onMouseMove, props.interactiveDebounce);
++  let currentTarget: Element;
+ 
+   // ===========================================================================
+   // 🔑 Public members
+@@ -81,7 +86,6 @@ export default function createTippy(
+     isMounted: false,
+     // Has the tippy finished transitioning in?
+     isShown: false,
+-    currentTarget: null,
+   };
+ 
+   const instance: Instance = {
+@@ -120,7 +124,7 @@ export default function createTippy(
+   // ===========================================================================
+   // Initial mutations
+   // ===========================================================================
+-  const {popper, onUpdate} = props.render(props);
++  const {popper, onUpdate} = props.render(instance);
+ 
+   popper.setAttribute('data-__NAMESPACE_PREFIX__-root', '');
+   popper.id = `__NAMESPACE_PREFIX__-${instance.id}`;
+@@ -130,11 +134,10 @@ export default function createTippy(
+   popper._tippy = instance;
+ 
+   const pluginsHooks = plugins.map((plugin) => plugin.fn(instance));
+-  const hasAnimationPlugin = props.plugins.find(
+-    (plugin) => plugin.name === 'animation'
+-  );
++  const hasAriaExpanded = reference.hasAttribute('aria-expanded');
+ 
+   addListeners();
++  handleAriaExpandedAttribute();
+   handleStyles();
+ 
+   invokeHook('onCreate', [instance]);
+@@ -151,7 +154,7 @@ export default function createTippy(
+     }
+   });
+ 
+-  popper.addEventListener('mouseleave', (event: MouseEvent) => {
++  popper.addEventListener('mouseleave', (event) => {
+     if (
+       instance.props.interactive &&
+       instance.props.trigger.indexOf('mouseenter') >= 0
+@@ -175,8 +178,13 @@ export default function createTippy(
+     return getNormalizedTouchSettings()[0] === 'hold';
+   }
+ 
++  function getIsDefaultRenderFn(): boolean {
++    // @ts-ignore
++    return !!instance.props.render?.$$tippy;
++  }
++
+   function getCurrentTarget(): Element {
+-    return instance.state.currentTarget || reference;
++    return currentTarget || reference;
+   }
+ 
+   function getDocument(): Document {
+@@ -184,6 +192,10 @@ export default function createTippy(
+     return parent ? getOwnerDocument(parent) : document;
+   }
+ 
++  function getDefaultTemplateChildren(): PopperChildren {
++    return getChildren(popper);
++  }
++
+   function getDelay(isShow: boolean): number {
+     // For touch or keyboard input, force `0` delay for UX reasons
+     // Also if the instance is mounted but not visible (transitioning out),
+@@ -211,17 +223,67 @@ export default function createTippy(
+ 
+   function invokeHook(
+     hook: keyof LifecycleHooks,
+-    args: [Instance, any?]
+-  ): Array<boolean | void> {
+-    const returns: Array<boolean | void> = [];
+-
++    args: [Instance, any?],
++    shouldInvokePropsHook = true
++  ): void {
+     pluginsHooks.forEach((pluginHooks) => {
+       if (pluginHooks[hook]) {
+-        returns.push(pluginHooks[hook]!(...args));
++        pluginHooks[hook]!(...args);
+       }
+     });
+ 
+-    return [...returns, instance.props[hook](...args)];
++    if (shouldInvokePropsHook) {
++      instance.props[hook](...args);
++    }
++  }
++
++  function handleAriaContentAttribute(): void {
++    const {aria} = instance.props;
++
++    if (!aria.content) {
++      return;
++    }
++
++    const attr = `aria-${aria.content}`;
++    const id = popper.id;
++    const nodes = normalizeToArray(instance.props.triggerTarget || reference);
++
++    nodes.forEach((node) => {
++      const currentValue = node.getAttribute(attr);
++
++      if (instance.state.isVisible) {
++        node.setAttribute(attr, currentValue ? `${currentValue} ${id}` : id);
++      } else {
++        const nextValue = currentValue && currentValue.replace(id, '').trim();
++
++        if (nextValue) {
++          node.setAttribute(attr, nextValue);
++        } else {
++          node.removeAttribute(attr);
++        }
++      }
++    });
++  }
++
++  function handleAriaExpandedAttribute(): void {
++    if (hasAriaExpanded || !instance.props.aria.expanded) {
++      return;
++    }
++
++    const nodes = normalizeToArray(instance.props.triggerTarget || reference);
++
++    nodes.forEach((node) => {
++      if (instance.props.interactive) {
++        node.setAttribute(
++          'aria-expanded',
++          instance.state.isVisible && node === getCurrentTarget()
++            ? 'true'
++            : 'false'
++        );
++      } else {
++        node.removeAttribute('aria-expanded');
++      }
++    });
+   }
+ 
+   function cleanupInteractiveMouseListeners(): void {
+@@ -311,6 +373,44 @@ export default function createTippy(
+     doc.removeEventListener('touchmove', onTouchMove, TOUCH_OPTIONS);
+   }
+ 
++  function onTransitionedOut(duration: number, callback: () => void): void {
++    onTransitionEnd(duration, () => {
++      if (
++        !instance.state.isVisible &&
++        popper.parentNode &&
++        popper.parentNode.contains(popper)
++      ) {
++        callback();
++      }
++    });
++  }
++
++  function onTransitionedIn(duration: number, callback: () => void): void {
++    onTransitionEnd(duration, callback);
++  }
++
++  function onTransitionEnd(duration: number, callback: () => void): void {
++    const box = getDefaultTemplateChildren().box;
++
++    function listener(event: TransitionEvent): void {
++      if (event.target === box) {
++        updateTransitionEndListener(box, 'remove', listener);
++        callback();
++      }
++    }
++
++    // Make callback synchronous if duration is 0
++    // `transitionend` won't fire otherwise
++    if (duration === 0) {
++      return callback();
++    }
++
++    updateTransitionEndListener(box, 'remove', currentTransitionEndListener);
++    updateTransitionEndListener(box, 'add', listener);
++
++    currentTransitionEndListener = listener;
++  }
++
+   function on(
+     eventType: string,
+     handler: EventListener,
+@@ -371,7 +471,9 @@ export default function createTippy(
+     const wasFocused = lastTriggerEvent?.type === 'focus';
+ 
+     lastTriggerEvent = event;
+-    instance.state.currentTarget = event.currentTarget as Element;
++    currentTarget = event.currentTarget as Element;
++
++    handleAriaExpandedAttribute();
+ 
+     if (!instance.state.isVisible && isMouseEvent(event)) {
+       // If scrolling, `mouseenter` events can be fired if the cursor lands
+@@ -490,9 +592,7 @@ export default function createTippy(
+       moveTransition,
+     } = instance.props;
+ 
+-    const arrow = getIsDefaultRenderFn(instance.props.render)
+-      ? getChildren(popper).arrow
+-      : null;
++    const arrow = getIsDefaultRenderFn() ? getChildren(popper).arrow : null;
+ 
+     const computedReference = getReferenceClientRect
+       ? {
+@@ -508,8 +608,8 @@ export default function createTippy(
+       phase: 'beforeWrite',
+       requires: ['computeStyles'],
+       fn({state}) {
+-        if (getIsDefaultRenderFn(instance.props.render)) {
+-          const {box} = getChildren(instance.popper);
++        if (getIsDefaultRenderFn()) {
++          const {box} = getDefaultTemplateChildren();
+ 
+           ['placement', 'reference-hidden', 'escaped'].forEach((attr) => {
+             if (attr === 'placement') {
+@@ -564,7 +664,7 @@ export default function createTippy(
+       tippyModifier,
+     ];
+ 
+-    if (getIsDefaultRenderFn(instance.props.render) && arrow) {
++    if (getIsDefaultRenderFn() && arrow) {
+       modifiers.push({
+         name: 'arrow',
+         options: {
+@@ -682,12 +782,13 @@ export default function createTippy(
+ 
+   function scheduleHide(event: Event): void {
+     instance.clearDelayTimeouts();
+-    instance.state.currentTarget = null;
+ 
+     invokeHook('onUntrigger', [instance, event]);
+ 
+     if (!instance.state.isVisible) {
+-      return removeDocumentPress();
++      removeDocumentPress();
++
++      return;
+     }
+ 
+     // For interactive tippies, scheduleHide is added to a document.body handler
+@@ -712,7 +813,11 @@ export default function createTippy(
+         }
+       }, delay);
+     } else {
+-      instance.hide();
++      // Fixes a `transitionend` problem when it fires 1 frame too
++      // late sometimes, we don't want hide() to be called.
++      scheduleHideAnimationFrame = requestAnimationFrame(() => {
++        instance.hide();
++      });
+     }
+   }
+ 
+@@ -733,6 +838,7 @@ export default function createTippy(
+   function clearDelayTimeouts(): void {
+     clearTimeout(showTimeout);
+     clearTimeout(hideTimeout);
++    cancelAnimationFrame(scheduleHideAnimationFrame);
+   }
+ 
+   function setProps(partialProps: Partial<Props>): void {
+@@ -768,9 +874,21 @@ export default function createTippy(
+       );
+     }
+ 
++    // Ensure stale aria-expanded attributes are removed
++    if (prevProps.triggerTarget && !nextProps.triggerTarget) {
++      normalizeToArray(prevProps.triggerTarget).forEach((node) => {
++        node.removeAttribute('aria-expanded');
++      });
++    } else if (nextProps.triggerTarget) {
++      reference.removeAttribute('aria-expanded');
++    }
++
++    handleAriaExpandedAttribute();
+     handleStyles();
+ 
+-    onUpdate?.(prevProps, nextProps);
++    if (onUpdate) {
++      onUpdate(prevProps, nextProps);
++    }
+ 
+     if (instance.popperInstance) {
+       createPopperInstance();
+@@ -799,47 +917,95 @@ export default function createTippy(
+       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('show'));
+     }
+ 
++    // Early bail-out
++    const isAlreadyVisible = instance.state.isVisible;
++    const isDestroyed = instance.state.isDestroyed;
++    const isDisabled = !instance.state.isEnabled;
++    const isTouchAndTouchDisabled =
++      currentInput.isTouch && !instance.props.touch;
++    const duration = getValueAtIndexOrReturn(
++      instance.props.duration,
++      0,
++      defaultProps.duration
++    );
++
+     if (
+-      instance.state.isVisible ||
+-      instance.state.isDestroyed ||
+-      !instance.state.isEnabled ||
+-      // Normalize `disabled` behavior across browsers.
+-      // Firefox allows events on disabled elements, but Chrome doesn't.
+-      // Using a wrapper element (i.e. <span>) is recommended.
+-      getCurrentTarget().hasAttribute('disabled')
++      isAlreadyVisible ||
++      isDestroyed ||
++      isDisabled ||
++      isTouchAndTouchDisabled
+     ) {
+       return;
+     }
+ 
+-    const returns = invokeHook('onShow', [instance]);
+-    if (returns.some((value) => value === false)) {
++    // Normalize `disabled` behavior across browsers.
++    // Firefox allows events on disabled elements, but Chrome doesn't.
++    // Using a wrapper element (i.e. <span>) is recommended.
++    if (getCurrentTarget().hasAttribute('disabled')) {
++      return;
++    }
++
++    invokeHook('onShow', [instance], false);
++    if (instance.props.onShow(instance) === false) {
+       return;
+     }
+ 
+     instance.state.isVisible = true;
+ 
+-    if (!instance.state.isMounted) {
+-      popper.style.transition = 'none';
++    if (getIsDefaultRenderFn()) {
++      popper.style.visibility = 'visible';
+     }
+ 
+     handleStyles();
+     addDocumentPress();
+ 
++    if (!instance.state.isMounted) {
++      popper.style.transition = 'none';
++    }
++
++    // If flipping to the opposite side after hiding at least once, the
++    // animation will use the wrong placement without resetting the duration
++    if (getIsDefaultRenderFn()) {
++      const {box, content} = getDefaultTemplateChildren();
++      setTransitionDuration([box, content], 0);
++    }
++
+     onFirstUpdate = (): void => {
+       if (!instance.state.isVisible || ignoreOnFirstUpdate) {
+         return;
+       }
+ 
+       ignoreOnFirstUpdate = true;
+-      instance.state.isMounted = true;
+ 
+-      invokeHook('onMount', [instance]);
++      // reflow
++      void popper.offsetHeight;
++
++      popper.style.transition = instance.props.moveTransition;
++
++      if (getIsDefaultRenderFn() && instance.props.animation) {
++        const {box, content} = getDefaultTemplateChildren();
++        setTransitionDuration([box, content], duration);
++        setVisibilityState([box, content], 'visible');
++      }
++
++      handleAriaContentAttribute();
++      handleAriaExpandedAttribute();
++
+       pushIfUnique(mountedInstances, instance);
+ 
+-      // Certain modifiers (e.g. `maxSize`) require a second update after the
+-      // popper has been positioned for the first time.
++      // certain modifiers (e.g. `maxSize`) require a second update after the
++      // popper has been positioned for the first time
+       instance.popperInstance?.forceUpdate();
+-      instance.popper.style.transition = instance.props.moveTransition;
++
++      instance.state.isMounted = true;
++      invokeHook('onMount', [instance]);
++
++      if (instance.props.animation && getIsDefaultRenderFn()) {
++        onTransitionedIn(duration, () => {
++          instance.state.isShown = true;
++          invokeHook('onShown', [instance]);
++        });
++      }
+     };
+ 
+     mount();
+@@ -851,11 +1017,22 @@ export default function createTippy(
+       warnWhen(instance.state.isDestroyed, createMemoryLeakWarning('hide'));
+     }
+ 
+-    if (
+-      !instance.state.isVisible ||
+-      instance.state.isDestroyed ||
+-      !instance.state.isEnabled
+-    ) {
++    // Early bail-out
++    const isAlreadyHidden = !instance.state.isVisible;
++    const isDestroyed = instance.state.isDestroyed;
++    const isDisabled = !instance.state.isEnabled;
++    const duration = getValueAtIndexOrReturn(
++      instance.props.duration,
++      1,
++      defaultProps.duration
++    );
++
++    if (isAlreadyHidden || isDestroyed || isDisabled) {
++      return;
++    }
++
++    invokeHook('onHide', [instance], false);
++    if (instance.props.onHide(instance) === false) {
+       return;
+     }
+ 
+@@ -864,16 +1041,31 @@ export default function createTippy(
+     ignoreOnFirstUpdate = false;
+     isVisibleFromClick = false;
+ 
+-    const returns = invokeHook('onHide', [instance]);
+-    if (returns.some((value) => value === false)) {
+-      return;
++    if (getIsDefaultRenderFn()) {
++      popper.style.visibility = 'hidden';
+     }
+ 
+     cleanupInteractiveMouseListeners();
+     removeDocumentPress();
+     handleStyles();
+ 
+-    if (!hasAnimationPlugin) {
++    if (getIsDefaultRenderFn()) {
++      const {box, content} = getDefaultTemplateChildren();
++
++      if (instance.props.animation) {
++        setTransitionDuration([box, content], duration);
++        setVisibilityState([box, content], 'hidden');
++      }
++    }
++
++    handleAriaContentAttribute();
++    handleAriaExpandedAttribute();
++
++    if (instance.props.animation) {
++      if (getIsDefaultRenderFn()) {
++        onTransitionedOut(duration, instance.unmount);
++      }
++    } else {
+       instance.unmount();
+     }
+   }
+diff --git a/src/dom-utils.ts b/src/dom-utils.ts
+index 59cf832a..3b681d28 100644
+--- a/src/dom-utils.ts
++++ b/src/dom-utils.ts
+@@ -105,7 +105,7 @@ export function isCursorOutsideInteractiveBorder(
+ export function updateTransitionEndListener(
+   box: HTMLDivElement,
+   action: 'add' | 'remove',
+-  listener?: (event: TransitionEvent) => void
++  listener: (event: TransitionEvent) => void
+ ): void {
+   const method = `${action}EventListener` as
+     | 'addEventListener'
+diff --git a/src/index.ts b/src/index.ts
+index a99c93fa..c7e5b53d 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -27,7 +27,7 @@ function tippy(
+ 
+   /* istanbul ignore else */
+   if (__DEV__) {
+-    const isSingleContentElement = isElement(passedProps.render?.content);
++    const isSingleContentElement = isElement(passedProps.content);
+     const isMoreThanOneReferenceElement = elements.length > 1;
+     warnWhen(
+       isSingleContentElement && isMoreThanOneReferenceElement,
+diff --git a/src/plugins/animation.ts b/src/plugins/animation.ts
+deleted file mode 100644
+index b82b5fbf..00000000
+--- a/src/plugins/animation.ts
++++ /dev/null
+@@ -1,150 +0,0 @@
+-import {setVisibilityState, updateTransitionEndListener} from '../dom-utils';
+-import {getChildren} from '../template';
+-import {Instance, Plugin} from '../types';
+-import {getIsDefaultRenderFn} from '../utils';
+-
+-interface Animation extends Plugin {
+-  name: 'animation';
+-  defaultValue: 'fade';
+-}
+-
+-interface HeadlessAnimation extends Plugin {
+-  name: 'animation';
+-  defaultValue: false;
+-}
+-
+-function onTransitionedOut(
+-  instance: Instance,
+-  currentListener: ((event: TransitionEvent) => void) | undefined,
+-  callback: () => void
+-): ((event: TransitionEvent) => void) | undefined {
+-  return onTransitionEnd(instance, currentListener, () => {
+-    if (
+-      !instance.state.isVisible &&
+-      instance.popper.parentNode &&
+-      instance.popper.parentNode.contains(instance.popper)
+-    ) {
+-      callback();
+-    }
+-  });
+-}
+-
+-function onTransitionedIn(
+-  instance: Instance,
+-  currentListener: ((event: TransitionEvent) => void) | undefined,
+-  callback: () => void
+-): ((event: TransitionEvent) => void) | undefined {
+-  return onTransitionEnd(instance, currentListener, callback);
+-}
+-
+-function onTransitionEnd(
+-  instance: Instance,
+-  currentListener: ((event: TransitionEvent) => void) | undefined,
+-  callback: () => void
+-): ((event: TransitionEvent) => void) | undefined {
+-  const {box} = getChildren(instance.popper);
+-
+-  function listener(event: TransitionEvent): void {
+-    if (event.target === box) {
+-      updateTransitionEndListener(box, 'remove', listener);
+-      callback();
+-    }
+-  }
+-
+-  // Make callback synchronous if duration is 0
+-  // `transitionend` won't fire otherwise
+-  if (getComputedStyle(box).transitionDuration === '0s') {
+-    callback();
+-    return;
+-  }
+-
+-  updateTransitionEndListener(box, 'remove', currentListener);
+-  updateTransitionEndListener(box, 'add', listener);
+-
+-  return listener;
+-}
+-
+-function objectMount(instance: Instance): void {
+-  if (typeof instance.props.animation === 'object') {
+-    instance.props.animation.show(instance);
+-  }
+-}
+-
+-function objectHide(instance: Instance): void {
+-  if (typeof instance.props.animation === 'object') {
+-    instance.props.animation.hide(instance);
+-  } else if (!instance.props.animation) {
+-    instance.unmount();
+-  }
+-}
+-
+-const animation: Animation = {
+-  name: 'animation',
+-  defaultValue: 'fade',
+-  fn(instance) {
+-    let currentListener: ((event: TransitionEvent) => void) | undefined;
+-
+-    return {
+-      onMount() {
+-        // reflow to begin CSS transition
+-        void instance.popper.offsetHeight;
+-
+-        const animation = instance.props.animation;
+-
+-        if (
+-          getIsDefaultRenderFn(instance.props.render) &&
+-          typeof animation === 'string'
+-        ) {
+-          instance.popper.style.visibility = 'visible';
+-          const {box, content} = getChildren(instance.popper);
+-          setVisibilityState([box, content], 'visible');
+-
+-          currentListener = onTransitionedIn(instance, currentListener, () => {
+-            // TODO: Decide what to do with `onShown`.
+-            // instance.state.isShown = true;
+-            // invokeHook('onShown', [instance]);
+-          });
+-        }
+-
+-        objectMount(instance);
+-      },
+-      onHide() {
+-        const animation = instance.props.animation;
+-
+-        if (
+-          getIsDefaultRenderFn(instance.props.render) &&
+-          typeof animation === 'string'
+-        ) {
+-          instance.popper.style.visibility = 'hidden';
+-          const {box, content} = getChildren(instance.popper);
+-          setVisibilityState([box, content], 'hidden');
+-
+-          currentListener = onTransitionedOut(
+-            instance,
+-            currentListener,
+-            instance.unmount
+-          );
+-        }
+-
+-        objectHide(instance);
+-      },
+-    };
+-  },
+-};
+-
+-const headlessAnimation: HeadlessAnimation = {
+-  name: 'animation',
+-  defaultValue: false,
+-  fn(instance) {
+-    return {
+-      onMount() {
+-        objectMount(instance);
+-      },
+-      onHide() {
+-        objectHide(instance);
+-      },
+-    };
+-  },
+-};
+-
+-export {animation, headlessAnimation};
+diff --git a/src/plugins/aria.ts b/src/plugins/aria.ts
+deleted file mode 100644
+index ef14339d..00000000
+--- a/src/plugins/aria.ts
++++ /dev/null
+@@ -1,144 +0,0 @@
+-import {Plugin, Props} from '../types';
+-import {normalizeToArray} from '../utils';
+-
+-const ARIA_EXPANDED = 'aria-expanded';
+-
+-interface Aria extends Plugin {
+-  name: 'aria';
+-  defaultValue: {
+-    content: 'auto';
+-    expanded: 'auto';
+-    role: 'tooltip';
+-  };
+-}
+-
+-function computeAriaPropValue({aria, interactive}: Props) {
+-  return {
+-    expanded: aria.expanded === 'auto' ? interactive : aria.expanded,
+-    content:
+-      aria.content === 'auto'
+-        ? interactive
+-          ? null
+-          : 'describedby'
+-        : aria.content,
+-    role: aria.role,
+-  };
+-}
+-
+-const aria: Aria = {
+-  name: 'aria',
+-  defaultValue: {
+-    content: 'auto',
+-    expanded: 'auto',
+-    role: 'tooltip',
+-  },
+-  fn(instance) {
+-    let prevProps = instance.props;
+-
+-    const hasAriaExpandedOnCreate = instance.reference.hasAttribute(
+-      ARIA_EXPANDED
+-    );
+-    handleAriaExpandedAttribute();
+-
+-    function handleRoleAttribute(): void {
+-      if (instance.props.aria.role) {
+-        instance.popper.setAttribute('role', instance.props.aria.role);
+-      } else {
+-        instance.popper.removeAttribute('role');
+-      }
+-    }
+-
+-    function handleAriaContentAttribute(): void {
+-      const aria = computeAriaPropValue(instance.props);
+-
+-      if (!aria.content) {
+-        return;
+-      }
+-
+-      const attr = `aria-${aria.content}`;
+-      const id = instance.popper.id;
+-      const nodes = normalizeToArray(
+-        instance.props.triggerTarget || instance.reference
+-      );
+-
+-      nodes.forEach((node) => {
+-        const currentValue = node.getAttribute(attr);
+-
+-        if (instance.state.isVisible) {
+-          node.setAttribute(attr, currentValue ? `${currentValue} ${id}` : id);
+-        } else {
+-          const nextValue = currentValue && currentValue.replace(id, '').trim();
+-
+-          if (nextValue) {
+-            node.setAttribute(attr, nextValue);
+-          } else {
+-            node.removeAttribute(attr);
+-          }
+-        }
+-      });
+-    }
+-
+-    function handleAriaExpandedAttribute(): void {
+-      const aria = computeAriaPropValue(instance.props);
+-
+-      if (hasAriaExpandedOnCreate || !aria.expanded) {
+-        return;
+-      }
+-
+-      const nodes = normalizeToArray(
+-        instance.props.triggerTarget || instance.reference
+-      );
+-
+-      nodes.forEach((node) => {
+-        if (instance.props.interactive) {
+-          node.setAttribute(
+-            ARIA_EXPANDED,
+-            instance.state.isVisible &&
+-              node === (instance.state.currentTarget || instance.reference)
+-              ? 'true'
+-              : 'false'
+-          );
+-        } else {
+-          node.removeAttribute(ARIA_EXPANDED);
+-        }
+-      });
+-    }
+-
+-    function handleAriaUpdate(prevProps: Props, nextProps: Props) {
+-      if (prevProps.triggerTarget && !nextProps.triggerTarget) {
+-        normalizeToArray(prevProps.triggerTarget).forEach((node) => {
+-          node.removeAttribute(ARIA_EXPANDED);
+-        });
+-      } else if (nextProps.triggerTarget) {
+-        instance.reference.removeAttribute(ARIA_EXPANDED);
+-      }
+-    }
+-
+-    return {
+-      onCreate() {
+-        handleRoleAttribute();
+-      },
+-      onMount() {
+-        handleAriaContentAttribute();
+-        handleAriaExpandedAttribute();
+-      },
+-      onHide() {
+-        handleAriaContentAttribute();
+-        handleAriaExpandedAttribute();
+-      },
+-      onTrigger() {
+-        handleAriaExpandedAttribute();
+-      },
+-      onBeforeUpdate() {
+-        prevProps = instance.props;
+-      },
+-      onAfterUpdate() {
+-        handleAriaExpandedAttribute();
+-        handleRoleAttribute();
+-        handleAriaUpdate(prevProps, instance.props);
+-      },
+-    };
+-  },
+-};
+-
+-export default aria;
+diff --git a/src/plugins/inlinePositioning.ts b/src/plugins/inlinePositioning.ts
+index 7c269a99..a137ac06 100644
+--- a/src/plugins/inlinePositioning.ts
++++ b/src/plugins/inlinePositioning.ts
+@@ -30,6 +30,7 @@ const inlinePositioning: InlinePositioning = {
+     let placement: Placement;
+     let cursorRectIndex = -1;
+     let isInternalUpdate = false;
++    let triedPlacements: Array<string> = [];
+ 
+     const modifier: Modifier<
+       'tippyInlinePositioning',
+@@ -40,7 +41,15 @@ const inlinePositioning: InlinePositioning = {
+       phase: 'afterWrite',
+       fn({state}) {
+         if (isEnabled()) {
+-          if (placement !== state.placement) {
++          if (triedPlacements.indexOf(state.placement) !== -1) {
++            triedPlacements = [];
++          }
++
++          if (
++            placement !== state.placement &&
++            triedPlacements.indexOf(state.placement) === -1
++          ) {
++            triedPlacements.push(state.placement);
+             instance.setProps({
+               // @ts-ignore - unneeded DOMRect properties
+               getReferenceClientRect: () =>
+diff --git a/src/plugins/interactive.ts b/src/plugins/interactive.ts
+deleted file mode 100644
+index 73ed98ec..00000000
+--- a/src/plugins/interactive.ts
++++ /dev/null
+@@ -1,16 +0,0 @@
+-import {Plugin} from '../types';
+-
+-interface Interactive extends Plugin {
+-  name: 'interactive';
+-  defaultValue: false;
+-}
+-
+-const interactive: Interactive = {
+-  name: 'interactive',
+-  defaultValue: false,
+-  fn(instance) {
+-    return {};
+-  },
+-};
+-
+-export default interactive;
+diff --git a/src/plugins/touch.ts b/src/plugins/touch.ts
+deleted file mode 100644
+index 1febfc97..00000000
+--- a/src/plugins/touch.ts
++++ /dev/null
+@@ -1,23 +0,0 @@
+-import {currentInput} from '../bindGlobalEventListeners';
+-import {Plugin} from '../types';
+-
+-interface Touch extends Plugin {
+-  name: 'touch';
+-  defaultValue: true;
+-}
+-
+-const touch: Touch = {
+-  name: 'touch',
+-  defaultValue: true,
+-  fn(instance) {
+-    return {
+-      onShow() {
+-        if (currentInput.isTouch && !instance.props.touch) {
+-          return false;
+-        }
+-      },
+-    };
+-  },
+-};
+-
+-export default touch;
+diff --git a/src/props.ts b/src/props.ts
+index 0e3a60e5..417c35d1 100644
+--- a/src/props.ts
++++ b/src/props.ts
+@@ -7,36 +7,36 @@ import {
+ import {warnWhen} from './validation';
+ import {TIPPY_DEFAULT_APPEND_TO} from './constants';
+ 
+-const PLUGIN_PROPS = [
+-  'animateFill',
+-  'animation',
+-  'aria',
+-  'followCursor',
+-  'inlinePositioning',
+-  'sticky',
+-];
++const pluginProps = {
++  animateFill: false,
++  followCursor: false,
++  inlinePositioning: false,
++  sticky: false,
++};
+ 
+ const renderProps = {
+   allowHTML: false,
+   animation: 'fade',
+   arrow: true,
+   content: '',
++  inertia: false,
+   maxWidth: 350,
++  role: 'tooltip',
+   theme: '',
+   zIndex: 9999,
+ };
+ 
+ export const defaultProps: DefaultProps = {
+-  animateFill: false,
+   appendTo: TIPPY_DEFAULT_APPEND_TO,
+-  aria: {content: 'auto', expanded: 'auto', role: 'tooltip'},
++  aria: {
++    content: 'auto',
++    expanded: 'auto',
++  },
+   delay: 0,
+   duration: [300, 250],
+-  followCursor: false,
+   getReferenceClientRect: null,
+   hideOnClick: true,
+   ignoreAttributes: false,
+-  inlinePositioning: false,
+   interactive: false,
+   interactiveBorder: 2,
+   interactiveDebounce: 0,
+@@ -59,10 +59,10 @@ export const defaultProps: DefaultProps = {
+   popperOptions: {},
+   render: null,
+   showOnCreate: false,
+-  sticky: false,
+   touch: true,
+   trigger: 'mouseenter focus',
+   triggerTarget: null,
++  ...pluginProps,
+   ...renderProps,
+ };
+ 
+@@ -143,13 +143,31 @@ export function evaluateProps(
+   reference: ReferenceElement,
+   props: Props
+ ): Props {
+-  return {
++  const out = {
+     ...props,
+     content: invokeWithArgsOrReturn(props.content, [reference]),
+     ...(props.ignoreAttributes
+       ? {}
+       : getDataAttributeProps(reference, props.plugins)),
+   };
++
++  out.aria = {
++    ...defaultProps.aria,
++    ...out.aria,
++  };
++
++  out.aria = {
++    expanded:
++      out.aria.expanded === 'auto' ? props.interactive : out.aria.expanded,
++    content:
++      out.aria.content === 'auto'
++        ? props.interactive
++          ? null
++          : 'describedby'
++        : out.aria.content,
++  };
++
++  return out;
+ }
+ 
+ export function validateProps(
+@@ -158,7 +176,11 @@ export function validateProps(
+ ): void {
+   const keys = Object.keys(partialProps) as Array<keyof Props>;
+   keys.forEach((prop) => {
+-    const nonPluginProps = removeProperties(defaultProps, PLUGIN_PROPS);
++    const nonPluginProps = removeProperties(
++      defaultProps,
++      Object.keys(pluginProps)
++    );
++
+     let didPassUnknownProp = !hasOwnProperty(nonPluginProps, prop);
+ 
+     // Check if the prop exists in `plugins`
+diff --git a/src/scss/index.scss b/src/scss/index.scss
+index 2127c46b..06a5ff46 100644
+--- a/src/scss/index.scss
++++ b/src/scss/index.scss
+@@ -18,14 +18,6 @@ $color: #333;
+   outline: 0;
+   transition-property: transform, visibility, opacity;
+ 
+-  &[data-state='visible'] {
+-    transition-duration: 250ms;
+-  }
+-
+-  &[data-state='hidden'] {
+-    transition-duration: 0ms;
+-  }
+-
+   &[data-placement^='top'] > .#{$namespace-prefix}-arrow {
+     bottom: 0;
+ 
+@@ -72,9 +64,9 @@ $color: #333;
+     }
+   }
+ 
+-  // &[data-inertia][data-state='visible'] {
+-  //   transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
+-  // }
++  &[data-inertia][data-state='visible'] {
++    transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
++  }
+ }
+ 
+ .#{$namespace-prefix}-arrow {
+diff --git a/src/template.ts b/src/template.ts
+index cc609111..e568accc 100644
+--- a/src/template.ts
++++ b/src/template.ts
+@@ -6,7 +6,7 @@ import {
+   SVG_ARROW_CLASS,
+ } from './constants';
+ import {div, isElement} from './dom-utils';
+-import {PopperElement, RenderProps} from './types';
++import {Instance, PopperElement, Props} from './types';
+ import {PopperChildren} from './types-internal';
+ import {arrayFrom} from './utils';
+ 
+@@ -17,7 +17,7 @@ function dangerouslySetInnerHTML(element: Element, html: string): void {
+   element[innerHTML()] = html;
+ }
+ 
+-function createArrowElement(value: RenderProps['arrow']): HTMLDivElement {
++function createArrowElement(value: Props['arrow']): HTMLDivElement {
+   const arrow = div();
+ 
+   if (value === true) {
+@@ -35,7 +35,7 @@ function createArrowElement(value: RenderProps['arrow']): HTMLDivElement {
+   return arrow;
+ }
+ 
+-export function setContent(content: HTMLDivElement, props: RenderProps): void {
++export function setContent(content: HTMLDivElement, props: Props): void {
+   if (isElement(props.content)) {
+     dangerouslySetInnerHTML(content, '');
+     content.appendChild(props.content);
+@@ -67,10 +67,10 @@ export function getChildren(popper: PopperElement): PopperChildren {
+ }
+ 
+ export function render(
+-  props: RenderProps
++  instance: Instance
+ ): {
+   popper: PopperElement;
+-  onUpdate?: (prevProps: RenderProps, nextProps: RenderProps) => void;
++  onUpdate?: (prevProps: Props, nextProps: Props) => void;
+ } {
+   const popper = div();
+ 
+@@ -83,14 +83,14 @@ export function render(
+   content.className = CONTENT_CLASS;
+   content.setAttribute('data-state', 'hidden');
+ 
+-  setContent(content, props);
++  setContent(content, instance.props);
+ 
+   popper.appendChild(box);
+   box.appendChild(content);
+ 
+-  onUpdate(props, props);
++  onUpdate(instance.props, instance.props);
+ 
+-  function onUpdate(prevProps: RenderProps, nextProps: RenderProps): void {
++  function onUpdate(prevProps: Props, nextProps: Props): void {
+     const {box, content, arrow} = getChildren(popper);
+ 
+     if (nextProps.theme) {
+@@ -105,16 +105,28 @@ export function render(
+       box.removeAttribute('data-animation');
+     }
+ 
++    if (nextProps.inertia) {
++      box.setAttribute('data-inertia', '');
++    } else {
++      box.removeAttribute('data-inertia');
++    }
++
+     box.style.maxWidth =
+       typeof nextProps.maxWidth === 'number'
+         ? `${nextProps.maxWidth}px`
+         : nextProps.maxWidth;
+ 
++    if (nextProps.role) {
++      box.setAttribute('role', nextProps.role);
++    } else {
++      box.removeAttribute('role');
++    }
++
+     if (
+       prevProps.content !== nextProps.content ||
+       prevProps.allowHTML !== nextProps.allowHTML
+     ) {
+-      setContent(content, props);
++      setContent(content, instance.props);
+     }
+ 
+     if (nextProps.arrow) {
+diff --git a/src/types.ts b/src/types.ts
+index f4d7655d..4c389188 100644
+--- a/src/types.ts
++++ b/src/types.ts
+@@ -47,10 +47,12 @@ export interface LifecycleHooks<TProps = Props> {
+ 
+ export interface RenderProps {
+   allowHTML: boolean;
++  animation: string | boolean;
+   arrow: boolean | string | SVGElement | DocumentFragment;
+   content: Content;
+-  duration: number | [number | null, number | null];
++  inertia: boolean;
+   maxWidth: number | string;
++  role: string;
+   theme: string;
+   zIndex: number;
+ }
+@@ -60,31 +62,20 @@ export interface GetReferenceClientRect {
+   contextElement?: Element;
+ }
+ 
+-interface PluginProps {
++export interface Props extends LifecycleHooks, RenderProps {
+   animateFill: boolean;
+-  animation:
+-    | string
+-    | boolean
+-    | {
+-        show: (instance: Instance) => void;
+-        hide: (instance: Instance) => void;
+-      };
++  appendTo: 'parent' | Element | ((ref: Element) => Element);
+   aria: {
+     content?: 'auto' | 'describedby' | 'labelledby' | null;
+     expanded?: 'auto' | boolean;
+-    role?: string;
+   };
+-  followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
+-  inlinePositioning: boolean;
+-  sticky: boolean | 'reference' | 'popper';
+-}
+-
+-export interface Props extends LifecycleHooks, RenderProps, PluginProps {
+-  appendTo: 'parent' | Element | ((ref: Element) => Element);
+   delay: number | [number | null, number | null];
++  duration: number | [number | null, number | null];
++  followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
+   getReferenceClientRect: null | GetReferenceClientRect;
+   hideOnClick: boolean | 'toggle';
+   ignoreAttributes: boolean;
++  inlinePositioning: boolean;
+   interactive: boolean;
+   interactiveBorder: number;
+   interactiveDebounce: number;
+@@ -105,20 +96,22 @@ export interface Props extends LifecycleHooks, RenderProps, PluginProps {
+   popperOptions: Partial<Popper.Options>;
+   render:
+     | ((
+-        props: Props
++        instance: Instance
+       ) => {
+         popper: PopperElement;
+         onUpdate?: (prevProps: Props, nextProps: Props) => void;
+       })
+     | null;
+   showOnCreate: boolean;
++  sticky: boolean | 'reference' | 'popper';
+   touch: boolean | 'hold' | ['hold', number];
+   trigger: string;
+   triggerTarget: Element | Element[] | null;
+ }
+ 
+-export interface DefaultProps extends Omit<Props, 'delay'> {
++export interface DefaultProps extends Omit<Props, 'delay' | 'duration'> {
+   delay: number | [number, number];
++  duration: number | [number, number];
+ }
+ 
+ export interface Instance<TProps = Props> {
+@@ -143,7 +136,6 @@ export interface Instance<TProps = Props> {
+     isDestroyed: boolean;
+     isMounted: boolean;
+     isShown: boolean;
+-    currentTarget: Element | null;
+   };
+   unmount(): void;
+ }
+diff --git a/src/utils.ts b/src/utils.ts
+index fd22cfd6..c298ae6a 100644
+--- a/src/utils.ts
++++ b/src/utils.ts
+@@ -105,8 +105,3 @@ export function removeUndefinedProps(
+     return acc;
+   }, {});
+ }
+-
+-export function getIsDefaultRenderFn(fn: unknown): boolean {
+-  // @ts-ignore
+-  return fn?.$$tippy;
+-}
+diff --git a/test/visual/index.html b/test/visual/index.html
+index 3152d7e9..ba0718e1 100644
+--- a/test/visual/index.html
++++ b/test/visual/index.html
+@@ -119,6 +119,5 @@
+   </div>
+ </div>
+ 
+-<script src="https://unpkg.com/popmotion@10.0.2/dist/popmotion.min.js"></script>
+ <script src="dist/bundle.js"></script>
+ <script src="index.js"></script>
+diff --git a/test/visual/tests.js b/test/visual/tests.js
+index 435a01d0..338a1d46 100644
+--- a/test/visual/tests.js
++++ b/test/visual/tests.js
+@@ -5,8 +5,6 @@ import sticky from '../../src/plugins/sticky';
+ import inlinePositioning from '../../src/plugins/inlinePositioning';
+ import followCursor from '../../src/plugins/followCursor';
+ import animateFill from '../../src/plugins/animateFill';
+-import {animation as animationPlugin} from '../../src/plugins/animation';
+-import aria from '../../src/plugins/aria';
+ import createSingleton from '../../src/addons/createSingleton';
+ import delegate from '../../src/addons/delegate';
+ 
+@@ -50,41 +48,15 @@ tests.default = () => {
+   content.appendChild(svgA);
+   content.appendChild(svgB);
+ 
+-  let currentValue = 0;
+-  let animation;
+-  const animateTippy = ({box, to, unmount}) => {
+-    box.style.transformOrigin = 'bottom';
+-    animation?.stop();
+-    animation = popmotion.animate({
+-      type: 'spring',
+-      from: Math.max(0, currentValue),
+-      to,
+-      onUpdate(value) {
+-        currentValue = value;
+-        box.style.transform = `scale(${currentValue})`;
+-        box.style.opacity = value;
+-      },
+-      onComplete: unmount,
+-    });
+-  };
+-
+   const [instance] = tippy('#default .reference', {
+     content: 'hello',
+-    arrow: true,
+-    plugins: [animationPlugin, aria],
+-    animation: {
+-      show({popper}) {
+-        animateTippy({box: popper.firstElementChild, to: 1});
+-      },
+-      hide({popper, unmount}) {
+-        animateTippy({box: popper.firstElementChild, to: 0, unmount});
+-      },
+-    },
+-    // animation: '',
++    arrow: content,
+     interactive: true,
+-    trigger: 'click',
++    trigger: 'click focus',
+   });
+ 
++  console.log(instance.props.appendTo);
++
+   return instance.destroy;
+ };
+ 
+@@ -93,10 +65,10 @@ tests.sticky = () => {
+ 
+   const instance = tippy(reference, {
+     content: 'tippy',
+-    animation: false,
+     sticky: true,
+     plugins: [sticky],
+     showOnCreate: true,
++    duration: 0,
+     hideOnClick: false,
+     trigger: 'manual',
+     onMount() {
+@@ -118,12 +90,12 @@ tests.inlinePositioning = () => {
+     const [instance] = tippy('#inlinePositioning .reference-connected', {
+       placement,
+       content: 'tippy',
+-      duration: 1,
+       trigger: 'manual',
+       inlinePositioning: true,
+       plugins: [inlinePositioning],
+       hideOnClick: false,
+       showOnCreate: true,
++      duration: 0,
+     });
+ 
+     instances.push(instance);
+@@ -134,11 +106,11 @@ tests.inlinePositioning = () => {
+       const [instance] = tippy('#inlinePositioning .reference-disconnected', {
+         placement,
+         content: 'tippy',
+-        animation: false,
+         inlinePositioning: true,
+         plugins: [inlinePositioning],
+         hideOnClick: false,
+         showOnCreate: true,
++        duration: 0,
+       });
+ 
+       const rects = instance.reference.getClientRects();
+@@ -170,10 +142,10 @@ tests.followCursor = () => {
+ 
+       const [instance] = tippy(`#followCursor [data-test="${test}"]`, {
+         content: 'tippy',
+-        animation: false,
+         followCursor: test === 'contentChange' ? true : test,
+         plugins: [followCursor],
+         delay: [50, 0],
++        duration: 0,
+         appendTo: 'parent',
+         ...(test === 'contentChange' && {
+           onCreate({setContent}) {
+@@ -226,12 +198,12 @@ tests.themes = () => {
+ 
+         const instance = tippy(button, {
+           content: '.',
+-          animation: false,
+-          arrow,
+-          theme,
+           showOnCreate: true,
++          duration: 0,
+           trigger: 'manual',
+           hideOnClick: false,
++          arrow,
++          theme,
+           placement,
+         });
+ 
+@@ -351,8 +323,8 @@ tests.animateFill = () => {
+ tests.border = () => {
+   const props = {
+     content: 'Tippy',
+-    animation: false,
+     theme: 'border',
++    duration: 0,
+     showOnCreate: true,
+   };
+ 

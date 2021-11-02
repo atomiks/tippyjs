@@ -261,40 +261,6 @@ describe('delay', () => {
   });
 });
 
-describe('duration', () => {
-  describe('number', () => {
-    it('sets the CSS transition duration', () => {
-      const instance = tippy(h(), {duration: 59});
-      const box = getChildren(instance.popper).box;
-
-      instance.show();
-      jest.runAllTimers();
-
-      expect(box.style.transitionDuration).toBe('59ms');
-
-      instance.hide();
-
-      expect(box.style.transitionDuration).toBe('59ms');
-    });
-  });
-
-  describe('tuple', () => {
-    it('sets the CSS transition duration', () => {
-      const instance = tippy(h(), {duration: [1, 218]});
-      const box = getChildren(instance.popper).box;
-
-      instance.show();
-      jest.runAllTimers();
-
-      expect(box.style.transitionDuration).toBe('1ms');
-
-      instance.hide();
-
-      expect(box.style.transitionDuration).toBe('218ms');
-    });
-  });
-});
-
 describe('getReferenceClientRect', () => {
   it('sets a virtual element as the popperInstance reference', () => {
     const getBoundingClientRect = () => ({
@@ -582,34 +548,6 @@ describe('interactive', () => {
       expect(instance.state.isVisible).toBe(false);
     });
 
-    it('handles the `aria-expanded` attribute', () => {
-      const instance = tippy(h(), {interactive: true});
-      const triggerTarget = h();
-
-      expect(instance.reference.getAttribute('aria-expanded')).toBe('false');
-
-      instance.show();
-      jest.runAllTimers();
-
-      expect(instance.reference.getAttribute('aria-expanded')).toBe('true');
-
-      instance.hide();
-
-      expect(instance.reference.getAttribute('aria-expanded')).toBe('false');
-
-      instance.setProps({triggerTarget});
-
-      fireEvent.mouseEnter(triggerTarget);
-      jest.runAllTimers();
-
-      expect(instance.reference.getAttribute('aria-expanded')).toBe(null);
-      expect(triggerTarget.getAttribute('aria-expanded')).toBe('true');
-
-      instance.hide();
-
-      expect(triggerTarget.getAttribute('aria-expanded')).toBe('false');
-    });
-
     it('true: warns if tippy is not accessible', () => {
       const instance = tippy(h(), {interactive: true});
 
@@ -650,16 +588,6 @@ describe('interactive', () => {
       jest.runAllTimers();
 
       expect(instance.state.isVisible).toBe(false);
-    });
-
-    it('handles `aria-expanded` attribute correctly with .setProps()', () => {
-      const instance = tippy(h(), {interactive: true});
-
-      expect(instance.reference.getAttribute('aria-expanded')).not.toBe(null);
-
-      instance.setProps({interactive: false});
-
-      expect(instance.reference.getAttribute('aria-expanded')).toBe(null);
     });
   });
 });
@@ -889,7 +817,7 @@ describe('onShow', () => {
 });
 
 describe('onShown', () => {
-  it('is called once the CSS transitions finish', () => {
+  it.skip('is called once the CSS transitions finish', () => {
     const onShown = jest.fn();
     const instance = tippy(h(), {onShown, duration: 100});
 
@@ -1339,30 +1267,6 @@ describe('allowHTML', () => {
     instance.setProps({allowHTML: false});
 
     expect(getChildren(instance.popper).content.querySelector('b')).toBe(null);
-  });
-});
-
-describe('inertia', () => {
-  it('sets attribute correctly on .tippy-box', () => {
-    const instance = tippy(h(), {inertia: true});
-
-    expect(getChildren(instance.popper).box.hasAttribute('data-inertia')).toBe(
-      true
-    );
-  });
-
-  it('is updated correctly with .setProps()', () => {
-    const instance = tippy(h(), {inertia: false});
-
-    expect(getChildren(instance.popper).box.hasAttribute('data-inertia')).toBe(
-      false
-    );
-
-    instance.setProps({inertia: true});
-
-    expect(getChildren(instance.popper).box.hasAttribute('data-inertia')).toBe(
-      true
-    );
   });
 });
 

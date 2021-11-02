@@ -49,7 +49,6 @@ export interface RenderProps {
   allowHTML: boolean;
   arrow: boolean | string | SVGElement | DocumentFragment;
   content: Content;
-  duration: number | [number | null, number | null];
   maxWidth: number | string;
   theme: string;
   zIndex: number;
@@ -245,19 +244,10 @@ declare const sticky: Sticky;
 // =============================================================================
 // Misc types
 // =============================================================================
-export interface HideAllOptions {
-  duration?: number;
-  exclude?: Instance | ReferenceElement;
-}
-
-export type HideAll = (options?: HideAllOptions) => void;
-
-declare const hideAll: HideAll;
 declare const roundArrow: string;
 
 export default tippy;
 export {
-  hideAll,
   delegate,
   createSingleton,
   animateFill,

@@ -23,7 +23,7 @@ $color: #333;
   }
 
   &[data-state='hidden'] {
-    transition-duration: 0ms;
+    transition-duration: 200ms;
   }
 
   &[data-placement^='top'] > .#{$namespace-prefix}-arrow {

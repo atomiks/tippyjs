@@ -53,9 +53,8 @@ describe('getDataAttributeProps', () => {
     const ref = h();
 
     ref.setAttribute('data-tippy-delay', '129');
-    ref.setAttribute('data-tippy-duration', '111');
 
-    expect(getDataAttributeProps(ref)).toEqual({delay: 129, duration: 111});
+    expect(getDataAttributeProps(ref)).toEqual({delay: 129});
   });
 
   it('correctly parses JSON-serializable props', () => {
@@ -67,7 +66,6 @@ describe('getDataAttributeProps', () => {
 
     expect(getDataAttributeProps(ref)).toEqual({
       delay: [100, 255],
-      duration: [0, 999],
       popperOptions: {placement: 'right'},
     });
   });

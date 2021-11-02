@@ -5,7 +5,10 @@ import sticky from '../../src/plugins/sticky';
 import inlinePositioning from '../../src/plugins/inlinePositioning';
 import followCursor from '../../src/plugins/followCursor';
 import animateFill from '../../src/plugins/animateFill';
-import {animation as animationPlugin} from '../../src/plugins/animation';
+import {
+  animation,
+  animation as animationPlugin,
+} from '../../src/plugins/animation';
 import aria from '../../src/plugins/aria';
 import createSingleton from '../../src/addons/createSingleton';
 import delegate from '../../src/addons/delegate';
@@ -82,7 +85,7 @@ tests.default = () => {
     },
     // animation: '',
     interactive: true,
-    trigger: 'click',
+    trigger: 'mouseenter focus',
   });
 
   return instance.destroy;
@@ -95,7 +98,7 @@ tests.sticky = () => {
     content: 'tippy',
     animation: false,
     sticky: true,
-    plugins: [sticky],
+    plugins: [sticky, animationPlugin],
     showOnCreate: true,
     hideOnClick: false,
     trigger: 'manual',
@@ -118,10 +121,9 @@ tests.inlinePositioning = () => {
     const [instance] = tippy('#inlinePositioning .reference-connected', {
       placement,
       content: 'tippy',
-      duration: 1,
       trigger: 'manual',
       inlinePositioning: true,
-      plugins: [inlinePositioning],
+      plugins: [inlinePositioning, animationPlugin],
       hideOnClick: false,
       showOnCreate: true,
     });
@@ -136,7 +138,7 @@ tests.inlinePositioning = () => {
         content: 'tippy',
         animation: false,
         inlinePositioning: true,
-        plugins: [inlinePositioning],
+        plugins: [inlinePositioning, animationPlugin],
         hideOnClick: false,
         showOnCreate: true,
       });
@@ -172,7 +174,7 @@ tests.followCursor = () => {
         content: 'tippy',
         animation: false,
         followCursor: test === 'contentChange' ? true : test,
-        plugins: [followCursor],
+        plugins: [followCursor, animationPlugin],
         delay: [50, 0],
         appendTo: 'parent',
         ...(test === 'contentChange' && {
@@ -269,6 +271,7 @@ tests.animations = () => {
         content: 'Tippy',
         animation,
         placement,
+        plugins: [animationPlugin],
       });
 
       instances.push(instance);
@@ -290,13 +293,13 @@ tests.createSingleton = () => {
 
   let instances = tippy('#createSingleton .reference', {
     placement: 'bottom',
-    duration: 0,
   });
 
   const singleton = createSingleton(instances, {
     delay: 500,
-    overrides: ['placement', 'duration'],
+    overrides: ['placement'],
     showOnCreate: true,
+    plugins: [animationPlugin],
   });
 
   instances = instances.concat(
@@ -306,7 +309,6 @@ tests.createSingleton = () => {
   );
 
   singleton.setInstances(instances);
-  singleton.setProps({overrides: ['duration']});
 
   return () => {
     instances.forEach((instance) => instance.destroy());

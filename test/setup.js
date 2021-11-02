@@ -11,7 +11,6 @@ expect.extend({toMatchImageSnapshot});
 tippy.setDefaultProps({
   render,
   content: '__DEFAULT_TEST_CONTENT__',
-  duration: 0,
   delay: 0,
 });
 

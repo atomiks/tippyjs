@@ -434,10 +434,10 @@ describe('instance.setProps()', () => {
     expect(instance.props.arrow).toBe(defaultProps.arrow);
     expect(instance.props.duration).toBe(defaultProps.duration);
 
-    instance.setProps({arrow: !defaultProps.arrow, duration: 82});
+    instance.setProps({arrow: !defaultProps.arrow, delay: 10});
 
     expect(instance.props.arrow).toBe(!defaultProps.arrow);
-    expect(instance.props.duration).toBe(82);
+    expect(instance.props.delay).toBe(10);
   });
 
   it('redraws the tooltip by creating a new popper element', () => {

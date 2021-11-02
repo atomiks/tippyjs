@@ -1,82 +1,27 @@
 {
-  "name": "gatsby-starter-default",
-  "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
-  "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
-  "browserslist": [
-    ">5%",
-    "not dead"
-  ],
-  "dependencies": {
-    "@emotion/core": "^10.0.27",
-    "@emotion/styled": "^10.0.27",
-    "@mdx-js/mdx": "^1.5.5",
-    "@mdx-js/react": "^1.5.5",
-    "@reach/skip-nav": "^0.1.3",
-    "@tippyjs/react": "^4.1.0",
-    "animate.css": "^3.7.2",
-    "elastic-scroll-polyfill": "^2.1.0",
-    "focus-visible": "^5.0.2",
-    "gatsby": "^2.32.13",
-    "gatsby-image": "^2.2.19",
-    "gatsby-plugin-catch-links": "^2.1.9",
-    "gatsby-plugin-client-side-redirect": "0.0.2",
-    "gatsby-plugin-emotion": "^4.1.18",
-    "gatsby-plugin-google-analytics": "^2.1.16",
-    "gatsby-plugin-manifest": "^2.2.16",
-    "gatsby-plugin-mdx": "^1.1.5",
-    "gatsby-plugin-offline": "^3.0.7",
-    "gatsby-plugin-react-helmet": "^3.1.7",
-    "gatsby-plugin-sharp": "^2.2.22",
-    "gatsby-redirect-from": "^0.2.1",
-    "gatsby-remark-autolink-headers": "^2.1.10",
-    "gatsby-remark-vscode": "^2.0.3",
-    "gatsby-source-filesystem": "^2.1.22",
-    "gatsby-transformer-remark": "^2.6.22",
-    "gatsby-transformer-sharp": "^2.2.14",
-    "moonlight": "github:atomiks/moonlight-vscode-theme",
-    "normalize.css": "^8.0.1",
-    "prop-types": "^15.7.2",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-feather": "^2.0.3",
-    "react-flip-toolkit": "^6.6.3",
-    "react-helmet": "^5.2.1",
-    "rehype-react": "^3.1.0"
-  },
-  "keywords": [
-    "gatsby"
-  ],
-  "license": "MIT",
+  "name": "website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "build": "gatsby build",
-    "build:ci": "gatsby build --prefix-paths",
-    "start": "gatsby develop",
-    "clean": "rimraf .cache/",
-    "dev": "yarn clean && yarn start",
-    "format": "prettier --write \"src/**/*.js\"",
-    "deploy": "yarn clean && gatsby build --prefix-paths && gh-pages -d public",
-    "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\"",
-    "postinstall": "cd node_modules/moonlight && node build"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "@mdx-js/loader": "^1.5.5",
-    "eslint-config-react-app": "^5.0.2",
-    "gh-pages": "^2.1.1",
-    "loader-utils": "^1.2.3",
-    "prettier": "github:prettier/prettier",
-    "rimraf": "^3.0.2"
+    "@svgr/webpack": "^5.5.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.3.11",
+    "tailwindcss": "^2.2.19"
   },
-  "resolutions": {
-    "tippy.js": "^6.2.5",
-    "@popperjs/core": "^2.4.4"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
-  },
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+  "dependencies": {
+    "@tippyjs/react": "^4.2.6",
+    "next": "^12.0.1",
+    "prism-react-renderer": "^1.2.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }

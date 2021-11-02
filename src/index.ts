@@ -2,9 +2,9 @@ import bindGlobalEventListeners, {
   currentInput,
 } from './bindGlobalEventListeners';
 import createTippy, {mountedInstances} from './createTippy';
-import {getArrayOfElements, isElement, isReferenceElement} from './dom-utils';
+import {getArrayOfElements, isElement} from './dom-utils';
 import {defaultProps, setDefaultProps, validateProps} from './props';
-import {HideAll, HideAllOptions, Instance, Props, Targets} from './types';
+import {Instance, Props, Targets} from './types';
 import {validateTargets, warnWhen} from './validation';
 
 function tippy(
@@ -27,7 +27,7 @@ function tippy(
 
   /* istanbul ignore else */
   if (__DEV__) {
-    const isSingleContentElement = isElement(passedProps.render?.content);
+    const isSingleContentElement = isElement(passedProps.content);
     const isMoreThanOneReferenceElement = elements.length > 1;
     warnWhen(
       isSingleContentElement && isMoreThanOneReferenceElement,
@@ -64,31 +64,6 @@ function tippy(
 tippy.defaultProps = defaultProps;
 tippy.setDefaultProps = setDefaultProps;
 tippy.currentInput = currentInput;
+tippy.mountedInstances = mountedInstances;
 
 export default tippy;
-
-export const hideAll: HideAll = ({
-  exclude: excludedReferenceOrInstance,
-  duration,
-}: HideAllOptions = {}) => {
-  mountedInstances.forEach((instance) => {
-    let isExcluded = false;
-
-    if (excludedReferenceOrInstance) {
-      isExcluded = isReferenceElement(excludedReferenceOrInstance)
-        ? instance.reference === excludedReferenceOrInstance
-        : instance.popper === (excludedReferenceOrInstance as Instance).popper;
-    }
-
-    if (!isExcluded) {
-      const originalDuration = instance.props.duration;
-
-      instance.setProps({duration});
-      instance.hide();
-
-      if (!instance.state.isDestroyed) {
-        instance.setProps({duration: originalDuration});
-      }
-    }
-  });
-};

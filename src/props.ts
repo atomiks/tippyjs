@@ -31,7 +31,6 @@ export const defaultProps: DefaultProps = {
   appendTo: TIPPY_DEFAULT_APPEND_TO,
   aria: {content: 'auto', expanded: 'auto', role: 'tooltip'},
   delay: 0,
-  duration: [300, 250],
   followCursor: false,
   getReferenceClientRect: null,
   hideOnClick: true,

@@ -2,10 +2,6 @@
 
 exports[`evaluateProps considers plugin props 1`] = `
 Object {
-  "aria": Object {
-    "content": "describedby",
-    "expanded": undefined,
-  },
   "content": undefined,
   "plugin": "y",
   "plugins": Array [
@@ -20,10 +16,6 @@ Object {
 exports[`evaluateProps does not ignore attributes if \`ignoreAttributes: false\` 1`] = `
 Object {
   "animation": "fade",
-  "aria": Object {
-    "content": "describedby",
-    "expanded": undefined,
-  },
   "content": undefined,
   "ignoreAttributes": false,
 }
@@ -32,10 +24,6 @@ Object {
 exports[`evaluateProps ignores attributes if \`ignoreAttributes: true\` 1`] = `
 Object {
   "animation": "scale",
-  "aria": Object {
-    "content": "describedby",
-    "expanded": undefined,
-  },
   "content": undefined,
   "ignoreAttributes": true,
 }
