@@ -70,7 +70,9 @@
   },
   "resolutions": {
     "tippy.js": "^6.2.5",
-    "@popperjs/core": "^2.4.4"
+    "@popperjs/core": "^2.4.4",
+    "sharp": "^0.29.0",
+    "oniguruma": "^7.2.3"
   },
   "repository": {
     "type": "git",
