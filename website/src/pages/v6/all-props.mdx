@@ -544,6 +544,13 @@ tippy(targets, {
 });
 ```
 
+> **Note**
+>
+> When `true`, the tippy will be appended to the `targets` parent element for
+> accessibility reasons by default. This means it can inherit styling, such as
+> `text-align: center`. If you are experiencing issues with positioning, add
+> `appendTo: () => document.body` to your props.
+
 <Demo>
   <Tippy interactive={false}>
     <Button>interactive: false</Button>
