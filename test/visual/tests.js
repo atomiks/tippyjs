@@ -295,7 +295,7 @@ tests.delegate = () => {
 
   const instances = delegate('#delegate', {
     target: 'button',
-    touch: ['hold', 500],
+    trigger: 'click',
   });
 
   return () => instances.forEach((instance) => instance.destroy());
