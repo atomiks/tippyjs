@@ -154,13 +154,12 @@ export default function createTippy(
     }
   });
 
-  popper.addEventListener('mouseleave', (event) => {
+  popper.addEventListener('mouseleave', () => {
     if (
       instance.props.interactive &&
       instance.props.trigger.indexOf('mouseenter') >= 0
     ) {
       getDocument().addEventListener('mousemove', debouncedOnMouseMove);
-      debouncedOnMouseMove(event);
     }
   });
 
