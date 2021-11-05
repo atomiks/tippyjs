@@ -4,6 +4,7 @@ import {h} from '../../utils';
 import createSingleton from '../../../src/addons/createSingleton';
 import tippy from '../../../src';
 import {getFormattedMessage} from '../../../src/validation';
+import {currentInput} from '../../../src/bindGlobalEventListeners';
 
 describe('createSingleton', () => {
   it('shows when a tippy instance reference is triggered', () => {
@@ -416,10 +417,9 @@ describe('.showPrevious() method', () => {
 
 describe('showOnCreate prop', () => {
   it('shows the first tippy instance on creation', () => {
-    const tippyInstances = [
-      {content: 'first'},
-      {content: 'second'},
-    ].map((props) => tippy(h(), props));
+    const tippyInstances = [{content: 'first'}, {content: 'second'}].map(
+      (props) => tippy(h(), props)
+    );
 
     const singletonInstance = createSingleton(tippyInstances, {
       showOnCreate: true,
@@ -430,10 +430,9 @@ describe('showOnCreate prop', () => {
   });
 
   it('resets correctly if showOnCreate is cancelled by a click outside', () => {
-    const tippyInstances = [
-      {content: 'first'},
-      {content: 'second'},
-    ].map((props) => tippy(h(), props));
+    const tippyInstances = [{content: 'first'}, {content: 'second'}].map(
+      (props) => tippy(h(), props)
+    );
 
     const singletonInstance = createSingleton(tippyInstances, {
       showOnCreate: true,
@@ -446,6 +445,62 @@ describe('showOnCreate prop', () => {
     jest.runAllTimers();
 
     expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('second');
+  });
+
+  it('does not hide tippy upon clicking next target', () => {
+    currentInput.isTouch = true;
+
+    const tippyInstances = [{content: 'first'}, {content: 'second'}].map(
+      (props) => tippy(h(), props)
+    );
+
+    const singletonInstance = createSingleton(tippyInstances);
+
+    fireEvent.mouseEnter(tippyInstances[0].reference);
+    fireEvent.mouseDown(document.body);
+    fireEvent.mouseEnter(tippyInstances[1].reference);
+
+    jest.runAllTimers();
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('second');
+
+    currentInput.isTouch = false;
+  });
+
+  it('accepts custom `triggerTarget` in individual instances', () => {
+    const ref1 = h();
+    const ref2 = h();
+    const triggerTarget1 = h();
+    const triggerTarget2 = h();
+
+    const tippyInstances = [
+      {ref: ref1, content: 'first', triggerTarget: triggerTarget1},
+      {ref: ref2, content: 'second', triggerTarget: triggerTarget2},
+    ].map(({ref, ...props}) => tippy(ref, props));
+
+    const singletonInstance = createSingleton(tippyInstances);
+
+    fireEvent.mouseEnter(ref1);
+    jest.runAllTimers();
+    expect(singletonInstance.state.isVisible).toBe(false);
+
+    fireEvent.mouseEnter(triggerTarget1);
+    jest.runAllTimers();
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('first');
+
+    fireEvent.mouseEnter(triggerTarget2);
+    jest.runAllTimers();
+
+    expect(singletonInstance.state.isVisible).toBe(true);
+    expect(singletonInstance.props.content).toBe('second');
+
+    fireEvent.mouseEnter(ref1);
+    jest.runAllTimers();
+
     expect(singletonInstance.props.content).toBe('second');
   });
 });

@@ -312,7 +312,11 @@ export default function createTippy(
     }
 
     // Clicked on the event listeners target
-    if (actualContains(getCurrentTarget(), actualTarget as Element)) {
+    if (
+      normalizeToArray(instance.props.triggerTarget || reference).indexOf(
+        actualTarget as Element
+      ) !== -1
+    ) {
       if (currentInput.isTouch) {
         return;
       }

@@ -9,7 +9,7 @@ import {
   Instance,
   Props,
 } from '../types';
-import {removeProperties} from '../utils';
+import {normalizeToArray, removeProperties} from '../utils';
 import {errorWhen} from '../validation';
 import {applyStyles, Modifier} from '@popperjs/core';
 
@@ -63,10 +63,19 @@ const createSingleton: CreateSingleton = (
 
   let individualInstances = tippyInstances;
   let references: Array<ReferenceElement> = [];
+  let triggerTargets: Array<Element> = [];
   let currentTarget: Element | null;
   let overrides = optionalProps.overrides;
   let interceptSetPropsCleanups: Array<() => void> = [];
   let shownOnCreate = false;
+
+  function setTriggerTargets(): void {
+    triggerTargets = individualInstances
+      .map((instance) =>
+        normalizeToArray(instance.props.triggerTarget || instance.reference)
+      )
+      .reduce((acc, item) => acc.concat(item), []);
+  }
 
   function setReferences(): void {
     references = individualInstances.map((instance) => instance.reference);
@@ -105,7 +114,7 @@ const createSingleton: CreateSingleton = (
     singleton: Instance,
     target: ReferenceElement
   ): void {
-    const index = references.indexOf(target);
+    const index = triggerTargets.indexOf(target);
 
     // bail-out
     if (target === currentTarget) {
@@ -126,12 +135,13 @@ const createSingleton: CreateSingleton = (
       getReferenceClientRect:
         typeof overrideProps.getReferenceClientRect === 'function'
           ? overrideProps.getReferenceClientRect
-          : (): ClientRect => target.getBoundingClientRect(),
+          : (): ClientRect => references[index].getBoundingClientRect(),
     });
   }
 
   enableInstances(false);
   setReferences();
+  setTriggerTargets();
 
   const plugin: Plugin = {
     fn() {
@@ -164,7 +174,7 @@ const createSingleton: CreateSingleton = (
   const singleton = tippy(div(), {
     ...removeProperties(optionalProps, ['overrides']),
     plugins: [plugin, ...(optionalProps.plugins || [])],
-    triggerTarget: references,
+    triggerTarget: triggerTargets,
     popperOptions: {
       ...optionalProps.popperOptions,
       modifiers: [
@@ -244,9 +254,10 @@ const createSingleton: CreateSingleton = (
 
     enableInstances(false);
     setReferences();
+    setTriggerTargets();
     interceptSetPropsCleanups = interceptSetProps(singleton);
 
-    singleton.setProps({triggerTarget: references});
+    singleton.setProps({triggerTarget: triggerTargets});
   };
 
   interceptSetPropsCleanups = interceptSetProps(singleton);
