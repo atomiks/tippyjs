@@ -214,9 +214,9 @@ export default function createTippy(
     );
   }
 
-  function handleStyles(): void {
+  function handleStyles(fromHide = false): void {
     popper.style.pointerEvents =
-      instance.props.interactive && instance.state.isVisible ? '' : 'none';
+      instance.props.interactive && !fromHide ? '' : 'none';
     popper.style.zIndex = `${instance.props.zIndex}`;
   }
 
@@ -1050,7 +1050,7 @@ export default function createTippy(
 
     cleanupInteractiveMouseListeners();
     removeDocumentPress();
-    handleStyles();
+    handleStyles(true);
 
     if (getIsDefaultRenderFn()) {
       const {box, content} = getDefaultTemplateChildren();
