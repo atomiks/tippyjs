@@ -135,7 +135,7 @@ const createSingleton: CreateSingleton = (
       getReferenceClientRect:
         typeof overrideProps.getReferenceClientRect === 'function'
           ? overrideProps.getReferenceClientRect
-          : (): ClientRect => references[index].getBoundingClientRect(),
+          : (): ClientRect => references[index]?.getBoundingClientRect(),
     });
   }
 
