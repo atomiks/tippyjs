@@ -725,6 +725,8 @@ export default function createTippy(
       parentNode.appendChild(popper);
     }
 
+    instance.state.isMounted = true;
+
     createPopperInstance();
 
     /* istanbul ignore else */
@@ -1000,7 +1002,6 @@ export default function createTippy(
       // popper has been positioned for the first time
       instance.popperInstance?.forceUpdate();
 
-      instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
 
       if (instance.props.animation && getIsDefaultRenderFn()) {
