@@ -1220,6 +1220,24 @@ describe('trigger', () => {
 
       expect(instance.state.isVisible).toBe(false);
     });
+
+    it('toggles on repeated clicks with inner element target', () => {
+      const inner = h();
+      const outer = h();
+      outer.appendChild(inner);
+
+      const instance = tippy(outer, {trigger: 'click'});
+
+      fireEvent.mouseDown(inner, {bubbles: true});
+      fireEvent.click(inner);
+
+      expect(instance.state.isVisible).toBe(true);
+
+      fireEvent.mouseDown(inner, {bubbles: true});
+      fireEvent.click(instance.reference);
+
+      expect(instance.state.isVisible).toBe(false);
+    });
   });
 
   describe('click focus', () => {
