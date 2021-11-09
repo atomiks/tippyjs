@@ -1229,12 +1229,12 @@ describe('trigger', () => {
       const instance = tippy(outer, {trigger: 'click'});
 
       fireEvent.mouseDown(inner, {bubbles: true});
-      fireEvent.click(inner);
+      fireEvent.click(inner, {bubbles: true});
 
       expect(instance.state.isVisible).toBe(true);
 
       fireEvent.mouseDown(inner, {bubbles: true});
-      fireEvent.click(instance.reference);
+      fireEvent.click(inner, {bubbles: true});
 
       expect(instance.state.isVisible).toBe(false);
     });
