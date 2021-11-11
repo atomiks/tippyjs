@@ -1,5 +1,5 @@
 ---
-name: Feature request
+name: ✨ Feature request
 about: Suggest a feature
 title: ''
 labels: "\U0001F48E enhancement"

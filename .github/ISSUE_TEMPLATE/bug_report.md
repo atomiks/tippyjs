@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: 🐞 Bug report
 about: Something is broken
 title: ''
 labels: "\U0001F41B bug, \U0001F6A7 unconfirmed"
