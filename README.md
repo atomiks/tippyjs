@@ -56,7 +56,8 @@ For detailed usage information,
 
 ## Component Wrappers
 
-React: [@tippyjs/react](https://github.com/atomiks/tippyjs-react)
+- React: [@tippyjs/react](https://github.com/atomiks/tippyjs-react) (official)
+- Ember: [ember-tippy](https://github.com/nag5000/ember-tippy) (unofficial)
 
 ## License
 
