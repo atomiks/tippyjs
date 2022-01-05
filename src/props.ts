@@ -71,7 +71,8 @@ const defaultKeys = Object.keys(defaultProps);
 export const setDefaultProps: Tippy['setDefaultProps'] = (partialProps) => {
   /* istanbul ignore else */
   if (__DEV__) {
-    validateProps(partialProps, []);
+    const plugins = defaultProps.plugins.concat(partialProps.plugins || []);
+    validateProps(partialProps, plugins);
   }
 
   const keys = Object.keys(partialProps) as Array<keyof DefaultProps>;
