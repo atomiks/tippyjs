@@ -132,10 +132,6 @@ const svgStyles = css`
     margin: -10% 0 -32px;
     margin-left: -250px;
   }
-
-  @media (min-width: 1700px) {
-    margin: -9% 0 -32px;
-  }
 `;
 
 const iconStyles = {
