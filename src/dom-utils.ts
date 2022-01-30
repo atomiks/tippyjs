@@ -107,15 +107,17 @@ export function updateTransitionEndListener(
   action: 'add' | 'remove',
   listener: (event: TransitionEvent) => void
 ): void {
-  const method = `${action}EventListener` as
-    | 'addEventListener'
-    | 'removeEventListener';
+  if(listener) {
+      const method = `${action}EventListener` as
+      | 'addEventListener'
+      | 'removeEventListener';
 
-  // some browsers apparently support `transition` (unprefixed) but only fire
-  // `webkitTransitionEnd`...
-  ['transitionend', 'webkitTransitionEnd'].forEach((event) => {
-    box[method](event, listener as EventListener);
-  });
+    // some browsers apparently support `transition` (unprefixed) but only fire
+    // `webkitTransitionEnd`...
+    ['transitionend', 'webkitTransitionEnd'].forEach((event) => {
+      box[method](event, listener as EventListener);
+    });
+  }
 }
 
 /**
