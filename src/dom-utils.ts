@@ -107,8 +107,8 @@ export function updateTransitionEndListener(
   action: 'add' | 'remove',
   listener: (event: TransitionEvent) => void
 ): void {
-  if(listener) {
-      const method = `${action}EventListener` as
+  if (listener) {
+    const method = `${action}EventListener` as
       | 'addEventListener'
       | 'removeEventListener';
 
