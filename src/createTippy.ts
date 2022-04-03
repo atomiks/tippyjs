@@ -677,7 +677,17 @@ export default function createTippy(
       });
     }
 
-    modifiers.push(...(popperOptions?.modifiers || []));
+    (popperOptions?.modifiers || []).forEach((modifier) => {
+      const tippyModifier = modifiers.find((x) => x.name === modifier.name);
+      if (tippyModifier) {
+        modifiers[modifiers.indexOf(tippyModifier)] = {
+          ...tippyModifier,
+          ...modifier,
+        };
+      } else {
+        modifiers.push(modifier);
+      }
+    });
 
     instance.popperInstance = createPopper<ExtendedModifiers>(
       computedReference,
