@@ -462,7 +462,7 @@ describe('instance.setProps()', () => {
     expect(instance.popper._tippy).toBe(instance);
   });
 
-  it('changing `trigger` or `touchHold` changes listeners', () => {
+  it('changing `trigger` changes listeners', () => {
     const ref = h();
     instance = createTippy(ref, defaultProps);
 
