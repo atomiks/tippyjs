@@ -156,7 +156,7 @@ tippy(targets, {
 ### appendTo
 
 The element to append the tippy to. If `interactive: true`, the default behavior
-is `appendTo: () => document.body`. See [Accessibility](../accessibility/#interactivity)
+is `appendTo: parent`; if `interactive: false`, the default is `appendTo: () => document.body`. See [Accessibility](../accessibility/#interactivity)
 for more information.
 
 Sometimes the tippy needs to be appended to a different DOM context due to
