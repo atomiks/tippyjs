@@ -165,7 +165,7 @@ accessibility, clipping, or z-index issues.
 ```js
 tippy(targets, {
   // default (takes reference as an argument)
-  appendTo: () => document.body,
+  appendTo: (element) => document.body,
   // append to reference's parentNode
   appendTo: 'parent',
   // append to an Element
