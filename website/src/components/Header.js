@@ -50,7 +50,7 @@ const HeaderRoot = styled.header`
 
 const Logo = styled.img`
   display: block;
-  height: 72px;
+  height: 100px;
   margin: 0 auto 10px;
   animation: ${hover} 2s ease-in-out infinite alternate;
 `;
@@ -131,10 +131,6 @@ const svgStyles = css`
   ${MEDIA.md} {
     margin: -10% 0 -32px;
     margin-left: -250px;
-  }
-
-  @media (min-width: 1700px) {
-    margin: -9% 0 -32px;
   }
 `;
 

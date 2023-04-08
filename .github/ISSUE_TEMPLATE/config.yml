@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 👋 Stack Overflow
+    url: https://stackoverflow.com/questions/tagged/tippyjs
+    about: Having trouble with Tippy? Try asking on Stack Overflow!
+  - name: 💬 Discussions
+    url: https://github.com/atomiks/tippyjs/discussions
+    about: Talk with others about Tippy, its usage and future!

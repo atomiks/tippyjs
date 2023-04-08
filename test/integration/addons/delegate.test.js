@@ -191,4 +191,16 @@ describe('delegate', () => {
 
     expect(button._tippy.state.isVisible).toBe(true);
   });
+
+  it('does not hide tippy with touch input using click trigger', () => {
+    const button = h('button', {}, delegateElement);
+    instance = delegate(delegateElement, {target: 'button', trigger: 'click'});
+
+    fireEvent.touchStart(button, {bubbles: true});
+    fireEvent.click(button, {bubbles: true});
+
+    jest.runAllTimers();
+
+    expect(button._tippy.state.isVisible).toBe(true);
+  });
 });

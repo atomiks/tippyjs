@@ -39,7 +39,11 @@ function delegate(
 
   const nativeProps = removeProperties(props, ['target']);
   const parentProps = {...nativeProps, trigger: 'manual', touch: false};
-  const childProps = {...nativeProps, showOnCreate: true};
+  const childProps = {
+    touch: defaultProps.touch,
+    ...nativeProps,
+    showOnCreate: true,
+  };
 
   const returnValue = tippy(targets, parentProps);
   const normalizedReturnValue = normalizeToArray(returnValue);

@@ -1,0 +1,29 @@
+name: CD
+on: [push]
+env:
+  CI: true
+
+jobs:
+  publish:
+    if:
+      ${{ startsWith(github.event.commits[0].message, 'docs:') ||
+      startsWith(github.event.commits[0].message, 'release:') }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./website
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: |
+          npm install
+          npm run clean
+          npm run build:ci
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: ./website/public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

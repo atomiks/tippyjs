@@ -154,13 +154,12 @@ export default function createTippy(
     }
   });
 
-  popper.addEventListener('mouseleave', (event) => {
+  popper.addEventListener('mouseleave', () => {
     if (
       instance.props.interactive &&
       instance.props.trigger.indexOf('mouseenter') >= 0
     ) {
       getDocument().addEventListener('mousemove', debouncedOnMouseMove);
-      debouncedOnMouseMove(event);
     }
   });
 
@@ -215,9 +214,9 @@ export default function createTippy(
     );
   }
 
-  function handleStyles(): void {
+  function handleStyles(fromHide = false): void {
     popper.style.pointerEvents =
-      instance.props.interactive && instance.state.isVisible ? '' : 'none';
+      instance.props.interactive && !fromHide ? '' : 'none';
     popper.style.zIndex = `${instance.props.zIndex}`;
   }
 
@@ -313,7 +312,11 @@ export default function createTippy(
     }
 
     // Clicked on the event listeners target
-    if (actualContains(getCurrentTarget(), actualTarget as Element)) {
+    if (
+      normalizeToArray(instance.props.triggerTarget || reference).some((el) =>
+        actualContains(el, actualTarget as Element)
+      )
+    ) {
       if (currentInput.isTouch) {
         return;
       }
@@ -722,6 +725,8 @@ export default function createTippy(
       parentNode.appendChild(popper);
     }
 
+    instance.state.isMounted = true;
+
     createPopperInstance();
 
     /* istanbul ignore else */
@@ -997,7 +1002,6 @@ export default function createTippy(
       // popper has been positioned for the first time
       instance.popperInstance?.forceUpdate();
 
-      instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
 
       if (instance.props.animation && getIsDefaultRenderFn()) {
@@ -1047,7 +1051,7 @@ export default function createTippy(
 
     cleanupInteractiveMouseListeners();
     removeDocumentPress();
-    handleStyles();
+    handleStyles(true);
 
     if (getIsDefaultRenderFn()) {
       const {box, content} = getDefaultTemplateChildren();
