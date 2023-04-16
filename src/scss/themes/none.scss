@@ -1,0 +1,33 @@
+@import '../_mixins.scss';
+@import '../_vars.scss';
+
+$color: transparent;
+
+.#{$namespace-prefix}-box[data-theme~='none'] {
+  color: inherit;
+  background-color: $color;
+
+  &[data-placement^='top'] > .#{$namespace-prefix}-arrow::before {
+    border-top-color: $color;
+  }
+
+  &[data-placement^='bottom'] > .#{$namespace-prefix}-arrow::before {
+    border-bottom-color: $color;
+  }
+
+  &[data-placement^='left'] > .#{$namespace-prefix}-arrow::before {
+    border-left-color: $color;
+  }
+
+  &[data-placement^='right'] > .#{$namespace-prefix}-arrow::before {
+    border-right-color: $color;
+  }
+
+  > .#{$namespace-prefix}-backdrop {
+    background-color: $color;
+  }
+
+  > .#{$namespace-prefix}-svg-arrow {
+    fill: $color;
+  }
+}
