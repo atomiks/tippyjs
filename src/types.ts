@@ -73,6 +73,7 @@ export interface Props extends LifecycleHooks, RenderProps {
   duration: number | [number | null, number | null];
   followCursor: boolean | 'horizontal' | 'vertical' | 'initial';
   getReferenceClientRect: null | GetReferenceClientRect;
+  getNestedPopperElements: null | ((popper: PopperElement) => PopperElement[]);
   hideOnClick: boolean | 'toggle';
   ignoreAttributes: boolean;
   inlinePositioning: boolean;

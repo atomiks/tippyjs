@@ -755,9 +755,16 @@ export default function createTippy(
   }
 
   function getNestedPopperTree(): PopperElement[] {
-    return arrayFrom(
-      popper.querySelectorAll('[data-__NAMESPACE_PREFIX__-root]')
+    const popperElements: PopperElement[] = [];
+    if (typeof instance.props.getNestedPopperElements === 'function') {
+      popperElements.push(...instance.props.getNestedPopperElements(popper));
+    }
+
+    popperElements.push(
+      ...arrayFrom(popper.querySelectorAll('[data-__NAMESPACE_PREFIX__-root]'))
     );
+
+    return popperElements;
   }
 
   function scheduleShow(event?: Event): void {
