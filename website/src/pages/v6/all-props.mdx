@@ -28,6 +28,7 @@ tippy(targets, {
 - [duration](#duration) <RenderIcon />
 - [followCursor](#followcursor) <PluginIcon />
 - [getReferenceClientRect](#getreferenceclientrect)
+- [getNestedPopperElements](#getnestedpopperelements)
 - [hideOnClick](#hideonclick)
 - [ignoreAttributes](#ignoreattributes)
 - [inertia](#inertia) <RenderIcon />
@@ -407,6 +408,21 @@ tippy(targets, {
     top: 100,
     bottom: 200,
   }),
+});
+```
+
+---
+
+### getNestedPopperElements
+
+Used for keeping tippy open when mouse is over child tippy instances.
+
+```js
+tippy(targets, {
+  // default (uses the reference passed as first argument)
+  getNestedPopperElements: null,
+  // function that returns custom popper elements
+  getNestedPopperElements: (popperElement) => Array.from(popperElement.querySelectorAll('.my-custom-tooltips'),
 });
 ```
 

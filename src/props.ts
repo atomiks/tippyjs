@@ -35,6 +35,7 @@ export const defaultProps: DefaultProps = {
   delay: 0,
   duration: [300, 250],
   getReferenceClientRect: null,
+  getNestedPopperElements: null,
   hideOnClick: true,
   ignoreAttributes: false,
   interactive: false,
